@@ -49,5 +49,6 @@ JS框架：jquery-2.1.4，Bootstrap 3.6，jquery weui微信移动框架（微信前段的瑞士军刀
 2、git下载项目后，在Eclipse 左侧空白处右击->import-import-> Existing Maven Projects
 
 
-JFinalMall4.0 特别说明
-捐赠下载JFinalMall1.0二次开发，详细介绍请联系QQ：24582711
+JFinalMall 1.0 特别说明
+捐赠下载JFinalMall 4.0二次开发，详细介绍请联系QQ：24582711
+付费进群获取最新源码
