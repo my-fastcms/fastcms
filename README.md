@@ -10,7 +10,7 @@ http://admin.dbumama.com/admin
 密码：123456
 
 微信端演示，请扫描下面二维码：
-![微信商城演示](http://git.oschina.net/uploads/images/2017/0315/114850_dfd2e903_471938.jpeg "在这里输入图片标题")
+![微信商城演示](http://git.oschina.net/uploads/images/2017/0315/115304_3ffab174_471938.jpeg "微商城")
 
 JFinalMall 1.0 功能简介
 功能列表
