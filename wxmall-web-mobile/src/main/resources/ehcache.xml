@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="ehcache.xsd"
+         updateCheck="true" monitoring="autodetect"
+         dynamicConfig="true">
+    <diskStore path="java.io.tmpdir"/>
+<!-- <diskStore path="D:/temp/ehcache"/> -->
+    <defaultCache
+           maxEntriesLocalHeap="10000"
+           eternal="false"
+           overflowToDisk="true"
+           timeToIdleSeconds="20"
+           timeToLiveSeconds="60">
+    </defaultCache>
+
+<cache name="comp_tiket_cache" maxEntriesLocalHeap="20" eternal="false" overflowToDisk="true" timeToIdleSeconds="1800" timeToLiveSeconds="86400"></cache>
+
+<cache name="/prize/list" maxEntriesLocalHeap="20" eternal="false" overflowToDisk="true" timeToIdleSeconds="300" timeToLiveSeconds="86400"></cache>
+<cache name="lottery" maxEntriesLocalHeap="20" eternal="false" overflowToDisk="true" timeToIdleSeconds="1800" timeToLiveSeconds="86400"></cache>
+<cache name="coustomlottery" maxEntriesLocalHeap="20" eternal="false" overflowToDisk="true" timeToIdleSeconds="1800" timeToLiveSeconds="86400"></cache>
+</ehcache>
