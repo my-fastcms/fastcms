@@ -42,6 +42,6 @@ JFinalMall 1.0 特别说明
 捐赠下载JFinalMall 1.0二次开发，详细介绍请联系QQ：24582711
 
 微信捐赠：
-![微信](http://git.oschina.net/uploads/images/2017/0316/093735_66b48253_471938.png "在这里输入图片标题")
+![微信](http://git.oschina.net/uploads/images/2017/0316/094150_84f9ab78_471938.png "在这里输入图片标题")
 支付宝捐赠
-![支付宝](http://git.oschina.net/uploads/images/2017/0316/093802_1b28873e_471938.jpeg "在这里输入图片标题")
+![输入图片说明](http://git.oschina.net/uploads/images/2017/0316/094215_df7acb7f_471938.jpeg "在这里输入图片标题")
