@@ -28,7 +28,7 @@ wxmall-web-mobile ：公众号微信端。
 JFinalMall 1.0 技术选型
 核心框架：JFinal 2.2，spring 3.0+
 数据库：mysql 5.6 + 
-JS框架：jquery-2.1.4，Bootstrap 3.6，jquery weui微信移动框架（微信前段的瑞士军刀）
+JS框架：jquery-2.1.4，Bootstrap 3.6，jquery weui微信移动框架（微信前端开发的瑞士军刀）
 
 运行项目配置说明
 1、具备运行环境：JDK 1.7+、Maven 3.0+、MySQL 5.6+、Eclipse mars 
