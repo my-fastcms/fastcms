@@ -2,8 +2,6 @@ package com.dbumama.market.service.provider;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -266,44 +264,9 @@ public class AgentServiceImpl implements AgentService{
 
 	@Override
 	public List<Agent> getSelfAndParent(Long agentId) {
-		List<Agent> agents = getAgents(agentId, null);
-		if(agents == null) return null;
-		Collections.sort(agents, new Comparator<Agent>(){  
-	        /*  
-	         * int compare(Agent o1, Agent o2) 返回一个基本类型的整型，  
-	         * 返回负数表示：o1 小于o2，  
-	         * 返回0 表示：o1和o2相等，  
-	         * 返回正数表示：o1大于o2。  
-	         */  
-	        public int compare(Agent o1, Agent o2) {
-	        	if(o1.getId() > o2.getId()){
-                    return 1;  
-                }  
-                if(o1.getId() == o2.getId()){
-                    return 0;  
-                }  
-	            return -1;  
-	        }  
-	    });  
-		return agents;
+		return null;
 	}
 	
-	
-	/**
-	 * 获取所有父级分销商，包含自身
-	 * @param agentId
-	 * @param agents
-	 * @return
-	 */
-	private List<Agent> getAgents (Long agentId, List<Agent> agents){
-		Agent agent = Agent.dao.findById(agentId);
-		if(agent == null ) return null;
-		if(agents == null) agents = new ArrayList<Agent>();
-		agents.add(agent);
-		if(agent.getParentId() == null) return agents;
-		return getAgents(agent.getParentId(), agents);
-	}
-
 	@Override
 	public BigDecimal getAgentCommission(Agent agent, Order order) throws AgentException {
 		if(agent == null || agent.getStatus()!=1) throw new AgentException("获取佣金失败");

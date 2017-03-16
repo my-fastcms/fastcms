@@ -2,8 +2,6 @@ package com.dbumama.market.service.provider;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -12,15 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.dbumama.market.model.AuthUser;
 import com.dbumama.market.model.BuyerReceiver;
 import com.dbumama.market.model.BuyerUser;
 import com.dbumama.market.model.Cart;
-import com.dbumama.market.model.DeliverySet;
-import com.dbumama.market.model.DeliveryTemplate;
 import com.dbumama.market.model.Order;
 import com.dbumama.market.model.OrderItem;
 import com.dbumama.market.model.Product;
@@ -35,9 +30,7 @@ import com.dbumama.market.service.api.order.OrderListParamDto;
 import com.dbumama.market.service.api.order.OrderMobileResultDto;
 import com.dbumama.market.service.api.order.OrderResultDto;
 import com.dbumama.market.service.api.order.OrderService;
-import com.dbumama.market.service.api.product.ProductFullCutResultDto;
 import com.dbumama.market.service.api.serinum.SerinumService;
-import com.dbumama.market.service.api.ump.PromotionService;
 import com.dbumama.market.service.base.AbstractServiceImpl;
 import com.dbumama.market.service.enmu.OrderStatus;
 import com.dbumama.market.service.enmu.PaymentStatus;
@@ -56,8 +49,6 @@ public class OrderServiceImpl extends AbstractServiceImpl implements OrderServic
 
 	@Autowired
 	private AuthUserService authUserService;
-	@Autowired
-	private PromotionService promotionService;
 	@Autowired
 	private SerinumService serinumService;
 	
@@ -512,255 +503,9 @@ public class OrderServiceImpl extends AbstractServiceImpl implements OrderServic
 	
 	@Override
 	public OrderResultDto balance(Long buyerId, Long receiverId, String items) throws OrderException {
-		if(StrKit.isBlank(items) || buyerId == null) throw new OrderException("调用结算接口参数异常");
-
-		JSONArray jsonArray = null;
-		try {
-			 jsonArray = JSONArray.parseArray(items);
-		} catch (Exception e) {
-			throw new OrderException(e.getMessage());
-		}
-		
-		if(jsonArray==null || jsonArray.size()<=0) throw new OrderException("请选择要结算的项");
-		
-		BuyerReceiver receiver = null;
-		if(receiverId == null){
-			receiver = BuyerReceiver.dao.findFirst(" select * from " + BuyerReceiver.table + " where buyer_id=? and is_default=1", buyerId);
-		}else{
-			receiver = BuyerReceiver.dao.findById(receiverId);
-		}
-		//if(receiver == null) throw new OrderException("结算订单出错，收货地址不存在");  首次购买没有收货地址，同样需要结算，此时不需要算运费
-		
-		OrderResultDto orderDto = new OrderResultDto();
-		List<OrderItemResultDto> orderItemDtos = new ArrayList<OrderItemResultDto>();
-		orderDto.setOrderItems(orderItemDtos);
-		for(int i=0; i<jsonArray.size(); i++){
-			JSONObject jsonObj = jsonArray.getJSONObject(i);
-			final String prodId = jsonObj.getString("productId");
-			final String specivalues = jsonObj.getString("speci");
-			Product product = Product.dao.findById(prodId);
-			if(product.getIsMarketable() == true 
-					&& product.getStock()!=null && product.getStock()>0){
-				OrderItemResultDto orderItem = new OrderItemResultDto();
-				orderItem.setProductName(product.getName());
-				orderItem.setQuantity(
-						product.getStock()!=null && jsonObj.getInteger("pcount")>product.getStock()
-						? product.getStock()
-						: jsonObj.getInteger("pcount"));
-				orderItem.setPrice(product.getPrice());
-				orderItem.setProductId(product.getId());
-				orderItem.setSn(product.getSn());
-				orderItem.setProductImg(product.getImage());
-				if(StrKit.isBlank(specivalues)){
-					//没有传规格值，视统一规格
-					String promoPrice = promotionService.getProductPromotionPrice(product);
-	    			if(StrKit.notBlank(promoPrice)) orderItem.setPrice(promoPrice);
-				}else{
-					//多规格
-					final StringBuffer sfvalueBuff = new StringBuffer();
-					List<SpecificationValue> specificationValues = new ArrayList<SpecificationValue>();
-	        		JSONArray jsonArr = JSON.parseArray(specivalues);
-	        		for(int k=0;k<jsonArr.size();k++){
-	        			JSONObject json = jsonArr.getJSONObject(k);
-	        			Long spvid = json.getLong("spvId");
-	        			sfvalueBuff.append(spvid).append(",");
-	        			specificationValues.add(SpecificationValue.dao.findById(spvid));
-	        		}
-	        		orderItem.setSpecificationValues(specificationValues);
-	        		ProductSpecItem stock=ProductSpecItem.dao.findFirst(
-	        				"select * FROM "+ProductSpecItem.table+" WHERE product_id = ? and specification_value = ?", 
-	        				product.getId(), sfvalueBuff.deleteCharAt(sfvalueBuff.length()-1).toString());
-	        		if(stock != null && stock.getPrice() != null){
-	        			orderItem.setPrice(stock.getPrice().toString());
-	        		}
-	        		//限时折扣价
-	        		String promoPrice = promotionService.getProductPromotionPrice(product, stock);
-	        		if(StrKit.notBlank(promoPrice)) orderItem.setPrice(promoPrice);
-				}
-				//订单项商品小计金额
-				orderItem.setTotalPrice(new BigDecimal(orderItem.getQuantity())
-						.multiply(new BigDecimal(orderItem.getPrice())).setScale(2, BigDecimal.ROUND_HALF_UP));
-				orderItemDtos.add(orderItem);
-			}
-		}
-		
-		//商品总数量
-		Integer num = 0;
-		for(OrderItemResultDto orderItemDto : orderDto.getOrderItems()){
-			num += orderItemDto.getQuantity();
-		}
-		orderDto.setNum(num);
-		//订单总金额，不包含邮费
-		BigDecimal totalPrice = new BigDecimal(0);
-		for(OrderItemResultDto orderItemDto : orderDto.getOrderItems()){
-			totalPrice = totalPrice.add(orderItemDto.getTotalPrice());
-		}
-		orderDto.setTotalPrice(totalPrice);
-		
-		//计算邮费
-		BigDecimal orderPostFee = new BigDecimal(0);
-		if(receiver != null){
-			for(OrderItemResultDto orderItemDto : orderDto.getOrderItems()){
-				Product product = Product.dao.findById(orderItemDto.getProductId());
-				BigDecimal postFees = getDeliveryFees(product, orderDto, receiver, orderDto.getNum());
-				orderPostFee = orderPostFee.add(postFees);	
-			}
-		}
-		orderDto.setPostFee(orderPostFee);
-		//计算满减
-		setFullCut(orderDto);
-		//最终得出订单应支付金额
-		orderDto.setPayFee(orderDto.getTotalPrice().add(orderDto.getPostFee()).setScale(2, BigDecimal.ROUND_HALF_UP));
-		return orderDto;
+		return null;
 	}
 	
-	/**
-	 * 计算订单是否包含满减商品
-	 * @param orderDto
-	 */
-	private void setFullCut(OrderResultDto orderDto){
-		//该订单的满减数据，算法是：把订单中所有商品的满减设置数据找出来，
-		//然后从小到大进行排序，最后把订单总金额跟集合中的满减数据一一比较，从小比到大，直到找到符合条件的满减数据
-		List<ProductFullCutResultDto> orderFullCutDtos = new ArrayList<ProductFullCutResultDto>();
-		for(OrderItemResultDto orderItemDto : orderDto.getOrderItems()){
-			if(orderItemDto.getFullCutDtos() != null && orderItemDto.getFullCutDtos().size()>0){
-				orderFullCutDtos.addAll(orderItemDto.getFullCutDtos());
-			}
-		}
-		/**
-		 * 按满减的金额进行升序排列
-		 */
-		Collections.sort(orderFullCutDtos, new Comparator<ProductFullCutResultDto>(){
-
-			@Override
-			public int compare(ProductFullCutResultDto o1, ProductFullCutResultDto o2) {
-				return o1.getMeet().subtract(o2.getMeet()).intValue();
-			}
-			
-		});
-		BigDecimal fullCutTotalPrice = new BigDecimal(0);
-		for(ProductFullCutResultDto fullCut : orderFullCutDtos){
-			if(orderDto.getTotalPrice().compareTo(fullCut.getMeet()) != -1){//一个个比，从小比到大
-				if(fullCut.getCash() != null){
-					fullCutTotalPrice = orderDto.getTotalPrice().subtract(fullCut.getCash()).setScale(2, BigDecimal.ROUND_HALF_UP);
-				}
-				if(fullCut.getPostage() == 1){
-					//说明包邮
-					if(orderDto.getPostFee().compareTo(new BigDecimal(0)) ==1){
-						orderDto.setOldPostFee(orderDto.getPostFee());
-						orderDto.setPostFee(new BigDecimal(0));
-					}
-				}
-			}
-		}
-		
-		//说明有满减价格
-		if(fullCutTotalPrice.compareTo(new BigDecimal(0)) ==1){
-			orderDto.setOldPrice(orderDto.getTotalPrice());
-			orderDto.setTotalPrice(fullCutTotalPrice);
-		}
-	}
-    
-	/**
-	 * 算商品邮费
-	 * @param product
-	 * @param orderDto
-	 * @param buyerReceiver
-	 * @param pnum （订单中商品的总数量）按件算邮费使用
-	 * @return
-	 */
-	private BigDecimal getDeliveryFees(Product product, OrderResultDto orderDto, BuyerReceiver buyerReceiver, final int pnum) throws OrderException{
-		if(product.getDeliveryType() == null || product.getDeliveryType()==0)
-			//统一邮费
-			return product.getDeliveryFees() == null ? new BigDecimal(0) : product.getDeliveryFees();
-			
-		//根据邮费模板算邮费
-		BigDecimal deliveryFees = new BigDecimal(0);
-		DeliveryTemplate dt = DeliveryTemplate.dao.findById(product.getDeliveryTemplateId());
-		if(dt == null || dt.getActive() !=1) throw new OrderException("计算邮费出错，运费模板不存在或被删除");
-		
-		//找出买家收货地址id
-		final String areaId=buyerReceiver.getAreaTreePath()+buyerReceiver.getAreaId();
-		//找出运费模板的配置项
-		List<DeliverySet> ds = DeliverySet.dao.find("SELECT * FROM "+DeliverySet.table+"  WHERE template_id = ? and active =1", product.getDeliveryTemplateId());
-		if(ds == null || ds.size()<=0) throw new OrderException("计算邮费出错，运费模板没有配置项");
-    	if(dt.getValuationType()==1){
-    		//按商品件数计算邮费
-    		for (DeliverySet deliverySet : ds) {
-				String setAreaIds = deliverySet.getAreaId();
-				if(contains(setAreaIds, areaId)){
-					if(pnum<=deliverySet.getAddStandards()){
-						//如果商品数量少于或等于模板中设置的起始值，按起始邮费算
-						return deliverySet.getStartFees();
-					}else{
-						//如果商品数量大于起始值，计算超过的商品数量
-						final int overNum = pnum - deliverySet.getStartStandards();
-						//看看商品到底超过多少件
-						final int count = overNum % deliverySet.getAddStandards() == 0 ? overNum/deliverySet.getAddStandards() : overNum/deliverySet.getAddStandards() + 1;
-						return deliverySet.getStartFees().add(new BigDecimal(count).multiply(deliverySet.getAddFees()));
-					}
-				}
-			}	
-    	}else if(dt.getValuationType()==2){
-    		//按商品物流重量算邮费
-    		//1.获取规格
-    		List<SpecificationValue> specificationValues = null;
-    		List<OrderItemResultDto> orderItems = orderDto.getOrderItems();
-    		for(OrderItemResultDto orderItem : orderItems){
-    			if(orderItem.getProductId() == product.getId()){
-    				specificationValues = orderItem.getSpecificationValues();
-    				break;
-    			}
-    		}
-    		
-    		if(specificationValues == null) throw new OrderException("计算邮费出错，找不到对应的规格值");
-    		
-    		StringBuffer specifValues = new StringBuffer();
-    		for(SpecificationValue sv : specificationValues){
-    			specifValues.append(sv).append(",");
-    		}
-    		
-    		ProductSpecItem productStock = ProductSpecItem.dao.findFirst(
-    				"select * from " + ProductSpecItem.table + " where product_id=? and specification_value=? ",
-    				product.getId(), specifValues.deleteCharAt(specifValues.length()-1).toString());
-    		
-    		if(productStock == null) throw new OrderException("计算邮费出错，找不到对应规格设置的物流重量值");
-    		
-    		final int weight = productStock.getWeight().intValue();//物流重量
-    		for (DeliverySet deliverySet : ds) {
-    			String setAreaIds = deliverySet.getAreaId();
-    			if(contains(setAreaIds, areaId)){
-    				if(weight<=deliverySet.getAddStandards()){
-						//如果商品数量少于或等于模板中设置的起始值，按起始邮费算
-						return deliverySet.getStartFees();
-					}else{
-						//如果商品数量大于起始值，计算超过的重量
-						final int overNum = weight - deliverySet.getStartStandards();
-						//看看商品到底超过多少重量
-						final int count = overNum % deliverySet.getAddStandards() == 0 ? overNum/deliverySet.getAddStandards() : overNum/deliverySet.getAddStandards() + 1;
-						return deliverySet.getStartFees().add(new BigDecimal(count).multiply(deliverySet.getAddFees()));
-					}
-    			}
-			}
-    	}
-		return deliveryFees;
-	}
-	
-	/**
-	 * 判断邮件模板中设置的地址是否包含买家的收货地址
-	 * @param areaIdsets
-	 * @param areaIds
-	 * @return
-	 */
-	private boolean contains(String areaIdsets, String areaIds){
-		for(String areaIdSet : areaIdsets.split(",")){
-			for(String areaId : areaIds.split(",")){
-				if(areaIdSet.equals(areaId)) return true;
-			}
-		}
-		return false;
-	}
-
 	public Boolean isReviewed(Long buyerId, Long orderId, Long productId) throws OrderException {
 		String sql = "SELECT count(*) FROM `t_product_review` review WHERE review.buyer_id = ? AND review.product_id = ? AND review.order_id= ?";
 		Long count =Db.queryLong(sql,buyerId,productId,orderId);

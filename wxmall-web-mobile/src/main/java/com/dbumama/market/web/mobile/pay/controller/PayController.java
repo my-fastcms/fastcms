@@ -1,8 +1,5 @@
 package com.dbumama.market.web.mobile.pay.controller;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import com.dbumama.market.model.Area;
 import com.dbumama.market.model.BuyerReceiver;
 import com.dbumama.market.service.api.order.OrderResultDto;
@@ -14,13 +11,6 @@ import com.jfinal.kit.StrKit;
 
 @RouteBind(path="pay")
 public class PayController extends BaseMobileController{
-
-	//返回成功的xml给微信
-	static final String TO_RES_WEIXIN = "<xml><return_code><![CDATA[SUCCESS]]></return_code>"
-			+ "<return_msg><![CDATA[OK]]></return_msg></xml>";
-	
-	//正在处理的用户订单
-	public static Set<String> userTradeSet = new HashSet<String>();
 
 	@BY_NAME
 	private OrderService orderService;
