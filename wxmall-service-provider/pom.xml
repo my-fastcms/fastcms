@@ -99,16 +99,7 @@
 			<groupId>org.freemarker</groupId>
 			<artifactId>freemarker</artifactId>
 		</dependency>
-        <dependency>
-		  	<groupId>com.taobao.sdk</groupId>
-		  	<artifactId>dbtech-taobao-sms</artifactId>
-		 </dependency>
-		 <dependency>
-		    <groupId>org.csource</groupId>
-		    <artifactId>fastdfs</artifactId>
-		    <version>1.1.9</version>
-		 </dependency>
-		 <dependency>
+     	 <dependency>
 		    <groupId>net.coobird</groupId>
 		    <artifactId>thumbnailator</artifactId>
 		 </dependency>

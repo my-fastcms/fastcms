@@ -184,11 +184,6 @@
 			    <artifactId>dom4j</artifactId>
 			    <version>1.6.1</version>
 			</dependency>
-			<dependency>
-			  	<groupId>com.taobao.sdk</groupId>
-			  	<artifactId>dbtech-taobao-sms</artifactId>
-			  	<version>1.0</version>
-			 </dependency>
 			
 		</dependencies>
 	</dependencyManagement>
