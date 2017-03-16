@@ -6,18 +6,12 @@
  */
 package com.dbumama.market.service.provider;
 
-import java.util.Date;
-import java.util.Random;
-
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.dbumama.market.model.Agent;
 import com.dbumama.market.model.SellerUser;
-import com.dbumama.market.model.UserCode;
 import com.dbumama.market.service.api.user.PhoneCodeService;
 import com.dbumama.market.service.api.user.UserException;
-import com.dbumama.market.service.utils.SendSmsMessageUtil;
 
 
 /**
@@ -53,38 +47,7 @@ public class PhoneCodeServiceImpl implements PhoneCodeService{
 	}
 
 	private String sendCode(String phone, String ip) throws UserException {
-	
-		JSONObject jsonObj = new JSONObject();
-		//生成验证码
-		Random random = new Random();
-		int x = random.nextInt(899999) + 100000;
-		
-		String returnStr = "";
-		returnStr = "0,success";
-		boolean bl=SendSmsMessageUtil.sendCheckCodeSMS(phone, x+"");
-		if(!bl){
-			throw new UserException("验证码发送失败");
-		}
-		
-		
-		//发送短信成功
-		try{
-			//插入
-		    UserCode userCode = new UserCode();
-		    userCode.set("ip", ip);
-			userCode.setVcodePhone(phone);
-			userCode.setVcodeCode(x+"");
-			userCode.setUpdated(new Date());
-			userCode.setCreated(new Date());
-			userCode.save();
-			
-		}catch(Exception ex){	
-			throw new UserException("短信验证码错误");
-		}
-		
-		jsonObj.put("returnmessage", returnStr);
-		jsonObj.put("phone", phone);
-		return jsonObj.toString();
+		return null;
 	}
 
 	@Override
