@@ -50,7 +50,5 @@ JFinalMall 1.0 特别说明
 捐赠后进群获取最新源码 QQ群：376490170
 
 微信捐赠：
-![微信](http://git.oschina.net/uploads/images/2017/0316/100838_de7033b2_471938.png "在这里输入图片标题")
-支付宝捐赠：
-![支付宝](http://git.oschina.net/uploads/images/2017/0316/100857_9acfcd71_471938.jpeg "在这里输入图片标题")
+![微信](http://git.oschina.net/uploads/images/2017/0316/100838_de7033b2_471938.png "在这里输入图片标题")![支付宝](http://git.oschina.net/uploads/images/2017/0316/100857_9acfcd71_471938.jpeg "在这里输入图片标题")
 
