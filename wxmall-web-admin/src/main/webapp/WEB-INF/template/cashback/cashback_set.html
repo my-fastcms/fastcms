@@ -1,0 +1,436 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>设置限时折扣</title>
+[#include "/includes/header.html" /]
+<style type="text/css">
+.nav-tabs li{width:200px;}
+.app-image-list li {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    display: block;
+    float: left;
+    height: 40px;
+    margin: 0 10px 10px 0;
+    position: relative;
+    width: 40px;
+}
+ .app-image-list li a {
+    display: block;
+    height: 100%;
+}
+.app-image-list li img {
+    height: 100%;
+    width: 100%;
+}
+.app-image-list li .add-goods, .app-image-list li .add {
+    cursor: pointer;
+    display: inline-block;
+    height: 100%;
+    line-height: 40px;
+    text-align: center;
+    width: 100%;
+}
+.app-image-list li:hover .close-modal {
+    display: block;
+}
+.w30{
+background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
+width: 50px;
+}
+.controls{
+ margin-left: 160px;
+}
+</style>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+[#include "/includes/menus.html" /]
+<div class="wrapper wrapper-content">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	           <a href="${webctx}/promotion" class="J_menuTab">限时打折</a>
+		       <a href="${webctx}/cashback" class="J_menuTab active">订单返现</a>
+		       <a href="${webctx}/reward" class="J_menuTab">满减送</a>
+	       </div>
+	   	</nav>
+	</div>
+	<div class="ibox float-e-margins">
+		<div class="ibox-title row">
+			<h5><small><a href="${webctx}/cashback">《返回列表</a></small></h5>
+		</div>
+		<div class="row ibox-content active_statistics col-sm-9">
+		<div class="title_query padtop">
+			<form id="cashbackForm" class="form-horizontal">
+				<input type="hidden" name="id" id="id" value="${cashback.id }"/>
+				<div class="form-group">
+		            <label class="col-md-2 control-label">活动名称<span style="color: red;"><em>*</em></span></label>
+		            <div class="col-md-8" id="error_name">
+		                <input id="name" name= "name" value="${cashback.name}" maxlength="20" type="text" class="form-control" style="width: 400px" >
+		                <label class="control-label" for="name"></label>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		            <label class="col-md-2 control-label">生效时间<span style="color: red;"><em>*</em></span></label>
+		            <div class="col-sm-9">
+	                   	<div class="row">
+	                   		[#if cashback??]
+		                   		<div class="col-lg-3 col-md-3" id="error_start_date">
+			                        <input type="text" id="start_date" name="start_date" class="form-control" readonly="readonly" style="width: 160px;" value="${cashback.start_time}" />
+									<label class="control-label" for="start_date"></label>
+			                    </div>
+			                    <div class="col-lg-3 col-md-3" id="error_end_date">
+			                        <input type="text" id="end_date" name="end_date" class="form-control" readonly="readonly" style="width: 160px;" value="${cashback.end_time}" />	
+									<label class="control-label" for="end_date"></label>
+			                    </div>
+	                   		[#else]
+								<div class="col-lg-3 col-md-3" id="error_start_time">
+			                        <input type="text" id="start_date" name="start_time" readonly="readonly" style="width: 160px;"
+									onfocus="WdatePicker({skin:'twoer', isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd %H:%m:%s',minDate:'%y-%M-%d %H:%m:%s',maxDate:'#F{$dp.$D(\'end_date\')}'})"
+									class="Wdate" value="" />
+									<label class="control-label" for="start_date"></label>
+			                    </div>
+			                    <div class="col-lg-3 col-md-3" id="error_end_time">
+			                        <input type="text" id="end_date" name="end_time" readonly="readonly" style="width: 160px;"
+									onfocus="WdatePicker({skin:'twoer', isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd %H:%m:%s',minDate:'#F{$dp.$D(\'start_date\',{d:7});}'})"
+									class="Wdate" value="" />	
+									<label class="control-label" for="end_date"></label>
+			                    </div>	
+			                    <div class="col-lg-3 col-md-3">
+			                    	<a class="label label-default" href="javascript:dateTimeTag(7);">一周</a>
+			                    	<a class="label label-default" href="javascript:dateTimeTag(15);">半个月</a>
+			                    </div>                   		
+	                   		[/#if]
+		                </div>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		            <label class="col-md-2 control-label">返现方式<span style="color: red;"><em>*</em></span></label>
+		            <div class="col-lg-8">
+		                <label class="radio-inline" for="inline-radio1">
+							<input name="cashback_method" value="0" [#if cashback.cashback_method==0] checked="checked"[/#if] [#if cashback??][#else]checked="checked"[/#if] type="radio" onclick="changeType();">
+							<span class="label-text">随机返现</span>
+						</label>
+						<label class="radio-inline" for="inline-radio1">
+							<input name="cashback_method" value="1" type="radio" [#if cashback.cashback_method==1] checked="checked"[/#if] onclick="changeType();">
+							<span class="label-text">固定返现</span>
+						</label>
+		            </div>
+		        </div>
+		         <div class="form-group">
+		            <label class="col-md-2 control-label">返现区间<span style="color: red;"><em>*</em></span></label>
+		             <div class="controls" id="error_cashback_start">
+				        <input name="cashback_start" id="cashback_start" class="js-start-percent w30" value="${cashback.cashback_start}" type="text">
+				        <span>%</span>
+				         <label class="control-label" for="cashback_start"></label>
+				        <span class="js-random-back" id="error_cashback_end" style="display: inline;">
+				            <span>至</span>
+				            <input name="cashback_end" id="cashback_end" class="js-end-percent w30" value="${cashback.cashback_end}" type="text">
+				            <span>%</span>
+				            <label class="control-label" for="cashback_end"></label>
+				        </span>
+				    </div>
+		        </div>
+		         <div class="form-group">
+		            <label class="col-md-2 control-label">返现限制<span style="color: red;"><em>*</em></span></label>
+		            <div class="controls" id="error_cashback_limit">
+						<span>前</span>
+						<input class="js-end-percent w30" id="cashback_limit" name="cashback_limit" value="${cashback.cashback_limit}" type="text">
+						<span>笔订单</span>
+						<span class="gray datetime-tips">(活动时间内每个买家在该店的前N笔订单)</span>
+						<a class="js-help-notes help-notes-icon" href="javascript:void(0);">?</a>
+						<label class="control-label" for="cashback_limit"></label>
+						</div>
+		        </div>
+		        
+		        <ol class="breadcrumb">
+					<li><i class="fa fa-home"></i><a href="javascript:selectProduct();">选择活动商品</a></li>
+				</ol>
+				
+			 <div class="panel-body">
+                      <table class="table table-striped table-bordered bootstrap-datatable datatable"  border="0" style="width: 80%">
+								<thead>
+									<tr>
+										<th><span style="vertical-align: middle;">&nbsp;&nbsp;商品</span></th>
+										<th>价格</th>
+										<th>库存</th>
+										<th>操作</th>
+									</tr>
+								</thead>
+								<tbody class="seletctProductLotGrid">
+								</tbody>
+						</table>
+			 </div>	
+            	</form>
+            	<div class="panel-footer" align="center">
+		   	 	<button onclick="saveCashback();" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>提交</button>
+			</div>
+			  </div>
+			</div>
+		<div class="col-sm-3 ">
+            <div class="wrapper wrapper-content project-manager">
+                <h4>帮助说明</h4>
+                <ol>
+                    <li>订单返现。</li>
+                </ol>
+            </div>
+        </div>
+	</div>
+</div>
+<div class="modal fade" id="selectProduct">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">选择活动商品</h4>
+			</div>
+			<div class="modal-body">    
+		       		<div id="myTabContent" class="tab-content">
+						<div class="tab-pane active" id="select_items_div">
+							<table class="table table-striped table-bordered bootstrap-datatable datatable" id="mainTable" border="0" style="width: 100%">
+								<thead>
+									<tr>
+										<th><input type="checkbox" id="all" title="全选/反选" style="margin-right: 4px; vertical-align: middle;"/></th>
+										<th><span style="vertical-align: middle;">&nbsp;&nbsp;商品</span></th>
+										<th>价格</th>
+										<th>库存</th>
+										<!-- <th>操作</th> -->
+									</tr>
+								</thead>
+								<tbody class="productLotGrid">
+								</tbody>
+							</table>
+							<div id="productToolsbar" class="panel-body">
+								<div id="pager" class="jqpager" style="margin-bottom: 1px;float: right;"></div>
+							</div>
+						</div>
+					</div>
+			</div>
+			<div class="modal-footer" >
+			<div  style="display: block;" align="center">
+				<button id="selectAllProduct" type="button" class="btn btn-sm btn-primary">确      定</button>	
+			</div>	
+        	</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+
+function saveCashback(){
+	var params = {}, error = {};	
+	var CashbackId = $("#id").val(),cashbackMethod = $("input[name='cashback_method']:checked").val();
+	    name = $("#name").val(), cashbackStart = $("#cashback_start").val(),cashbackEnd = $("#cashback_end").val(),
+		startDate = $("#start_date").val(), endDate = $("#end_date").val(),cashbackLimit=$("#cashback_limit").val();
+	if(CashbackId!=null && CashbackId!="") params.id = CashbackId;
+	if($.trim(name) =="") {error.error_name = "活动名称不能为空"; } else {error.error_name=""; params.name = $.trim(name);}
+	if($.trim(startDate) =="") {error.error_start_time = "开始时间不能为空"; } else {error.error_start_time =""; params.start_time = $.trim(startDate);}
+	if($.trim(endDate) =="") {error.error_end_time = "结束时间不能为空"; } else { error.error_end_time=""; params.end_time = $.trim(endDate);}
+	if($.trim(cashbackLimit) =="") {error.error_cashback_limit = "返现限制不能为空"; } else {error.error_cashback_limit=""; params.cashback_limit = $.trim(cashbackLimit);}
+	if($.trim(cashbackStart) =="") {error.error_cashback_start = "返现区间不能为空"; } else {error.error_cashback_start=""; params.cashback_start = $.trim(cashbackStart);}
+    if(cashbackMethod=="0"){
+    	if($.trim(cashbackEnd) =="") {error.error_cashback_end = "返现区间不能为空"; } else {error.error_cashback_end=""; params.cashback_end = $.trim(cashbackEnd);}
+    	
+    }
+    params.cashback_method=cashbackMethod;
+	var hasError = false;
+	for(var key in error){
+		if(error[key]!=""){
+			if(!hasError) hasError = true;
+			$("#"+key).addClass("has-error");
+			$("#"+key).find("label").text(error[key]);
+		}else{
+			$("#"+key).removeClass("has-error");
+			$("#"+key).find("label").empty();
+		}
+	}
+	//主表信息不完整，返回
+	if(hasError) return false;
+/* 	if(TBatch.getCheckedCount() <=0){
+		obz.showMessage("请选择商品!");
+		return false;
+	}else{
+		var product_ids=TBatch.getChecked();
+		params.product_ids=product_ids;
+	} */
+	if($(".seletctProductLotGrid").find("tr").length<=0){
+		obz.showMessage("请选择商品!");
+		return false;
+	}else{
+		var productIds="";
+		$(".seletctProductLotGrid").find("tr").each(function(){
+			productIds=productIds+$(this).attr("id")+"-";
+		});
+		params.product_ids=productIds;
+	}
+	$(".main").mask();
+	$.post(obz.ctx+"/cashback/save", params, function(resp) {
+		$(".main").unmask();
+		if(resp.code != 200){
+			obz.showMessage(resp.msg);
+			return;
+		}
+		
+		obz.showMessage("保存成功", function(){
+			location.href = obz.ctx + "/cashback";
+		});
+	});
+}
+//返现方式切换
+function changeType(){
+	var type = $("input[name='cashback_method']:checked").val();
+	if(type=="0"){
+		$(".js-random-back").removeClass("hide");
+	}else{
+		$(".js-random-back").addClass("hide");
+	}	
+}
+//列出商品
+function selectProduct(){
+	 $("#selectProduct").modal("show");
+}
+
+function bindSetTableAEvent(){
+	//注册取消返现商品事件
+	$(".seletctProductLotGrid").find("tr a").each(function(){
+		$(this).unbind("click");
+		$(this).click(function(){
+			var me = $(this);
+			//取消设置不能直接删除该行，需要隐藏
+			//me.parent().parent().attr("opt", "del");
+			me.parent().parent().remove();
+			$("#checkbox_"+me.attr("id")).attr("checked", false);
+			//$("#_sel_total_item").html(parseInt(TBatch.getCheckedCount()) + parseInt($("#_sel_total_item").text()));
+			//添加到可选商品列表
+			return false;
+		});
+	});
+}
+
+$(document).ready(function(){
+	bindSetTableAEvent();
+	changeType();
+	var productIds="${cashback.product_ids}"
+	if(productIds!=null&&productIds!=""){
+		getProducts(productIds);
+	}
+	$("#selectAllProduct").click(function(){
+		if(TBatch.getCheckedCount() <=0){
+			obz.showMessage("请选择商品!");
+			return false;
+		}else{
+			 $("#selectProduct").modal("hide");	
+			var product_ids=TBatch.getChecked();
+			getProducts(product_ids);
+		}
+		
+	});
+});
+
+ var getProducts = function(productIds){
+	var params = {};
+	params.productIds=productIds;
+	$("#mainTable").mask("加载中...");
+	var url = obz.ctx + "/cashback/listSelectProduct";
+	obz.ajaxJson(url, params, function(resp){
+		$("#mainTable").unmask();
+		$(".seletctProductLotGrid").empty();
+		var dataList = resp.data;
+		if(dataList.length>0){
+			for(var i=0;i<dataList.length;i++){
+				var _row = dataList[i];
+				var trHtml = obz.dataTemplate4obj($("#select_product_table_tr_tpl").html(), _row);
+				$(".seletctProductLotGrid").append(trHtml);
+				bindSetTableAEvent();
+			}
+			
+		}
+	});
+	
+} 
+
+var pageClick = function(pageNo) {
+	searchProducts(pageNo);
+}
+var searchProducts = function(currPage){
+	var params = {};
+	//其他查询条件
+	if(currPage){
+		params.page = currPage;
+	}
+	//params.qname = qname;
+	//params.type = $("#a_type_sel").val();
+	//params.status = $("#a_status_sel").val();
+	
+	$("#mainTable").mask("加载中...");
+	var url = obz.ctx + "/cashback/listProducts";
+	obz.ajaxJson(url, params, function(resp){
+		$("#mainTable").unmask();
+		var result = resp.data;
+		$(".productLotGrid").empty();
+		if(currPage){
+			$("#pager").pager({ pagenumber:currPage, recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });
+		}else{
+			$("#pager").pager({ recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });	
+		}
+		var dataList = result.list;
+		if(dataList.length>0){
+			for(var i=0;i<dataList.length;i++){
+				var _row = dataList[i];
+				var trHtml = obz.dataTemplate4obj($("#product_table_tr_tpl").html(), _row);
+				$(".productLotGrid").append(trHtml);
+			}
+			TBatch.checkCheckbox(function (chkAll){
+				//$("#_sel_total_item").html(parseInt(TBatch.getCheckedCount()) + parseInt($("#_sel_total_item").text()));
+				$("#mainTable input:checkbox.commchk").each(function(){
+					if($(this).is(":checked") == true){
+						//selectItem($(this));
+					}else{
+						//unSelectItem($(this));
+					}
+				});
+			});
+			TBatch.initCheckboxClick(function(resp){
+				//selectItem($(resp));
+			}, function(resp){
+				//unSelectItem($(resp));
+			});
+		}else{
+			$(".productLotGrid").append($("#table_noresult_tr_tpl").html());
+		}
+	});
+}
+searchProducts();
+</script>
+<!-- 选择的商品列表模板 -->
+<script type="text/template" id="product_table_tr_tpl">
+		<tr class="package">
+			<td><input type="checkbox" class="commchk" id="checkbox_{id}" product_id="{id}" product_name="{name}" product_price="{price}" product_img="{img}" style="margin-right: 4px; vertical-align: middle;"/></td>
+			<td>
+			<ul class="js-picture-lists app-image-list"><li><img src="{img}" width="40px" height="40px"></li></ul>
+            <p class="goods-title"><a class="new-window" href="javascript:void(0)" title="{name}">{name}</a></p>
+			</td>
+			<td><span class="label label-success">￥{price}</span></td>
+            <td>{stock}</td>
+		</tr>
+</script>
+
+<script type="text/template" id="select_product_table_tr_tpl">
+		<tr id="{id}" style="height: 50px; background-color: #D3E8FE;" class="package">
+			<td>
+			<ul class="js-picture-lists app-image-list"><li><img src="{img}" width="40px" height="40px"></li></ul>
+            <p class="goods-title"><a class="new-window" href="javascript:void(0)" title="{name}">{name}</a></p>
+			</td>
+			<td><span class="label label-success">￥{price}</span></td>
+            <td>{stock}</td>
+            <td><a id="{id}" class="btn btn-success" href="javascript:void(0)">取消</a></td>
+		</tr>
+</script>
+[#include "/includes/footer.html" /]
+<script>
+Template.init("#menu-discount");
+</script>
+</body>
+</html>

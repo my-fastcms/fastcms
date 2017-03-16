@@ -1,0 +1,170 @@
+[#include "/mall/common/default.html" /]
+<style>
+#nav-btn{
+	width: 10%;
+	float: left;
+	height: 42px;
+	background-color: #EFEFF4;
+}
+#search_bar{
+	border: 0;
+}
+#nav-btn > img{
+	position: absolute;
+	top: 12px;
+	width: 22px;
+	height: auto;
+	margin-left: 12px;
+}
+.sclassify{
+	position: absolute;
+	top: 37px;
+	font-size: 12px;
+}
+.sclassify::before{
+	content: "";
+	display: block;
+	width: 0;
+	height: 0;
+	border-left: 8px solid transparent;
+	border-right: 8px solid transparent;
+	border-bottom: 8px solid #fff;
+	margin-left: 15px;
+}
+.sclassify li{
+	width: 120px;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	background-color: rgba(255,255,255,1);
+	border-bottom: 1px solid #EFEFF4;
+}
+.sclassify li img{
+	position: relative;
+	top: 3px;
+	left: 25px;
+	right: 5px;
+	display: inline;
+	width: 18px;
+	margin-right: 30px;
+}
+.weui_tab_bd{
+	position: relative;
+}
+.curtain{
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	display: none;
+	background-color: rgba(0,0,0,0.4);
+	z-index: 10;
+}
+.goods-item-info > .add-shopping{
+	font-size: 12px;
+	line-height: 12px;
+	text-align: right;
+	color: red;
+}
+.search-wrap{
+	padding: 10px;
+	min-height: 100px;
+	border-top: 1px solid #EAEAEA;
+	border-bottom: 1px solid #EAEAEA;
+	background-color: #fff;
+}
+.weui_search_inner{
+	padding-right: 0;
+}
+#search_btn{
+	width: 40px;
+	margin-left: 5px;
+	text-align: center;
+	color: #fff;
+	background-color: #007AFF;
+	border-radius: 5px;
+}
+.lately-text{
+	font-size: 12px;
+}
+.hint{
+	font-size: 14px;
+	color: #A4A4A4;
+	text-align: center;
+	margin-top: 50px;
+}
+body{
+	background-color: #EEEEEE;
+}
+a.replace{
+	float: right;
+	color: #3985FF;
+}
+.hot-search-wrap{
+	padding: 10px;
+	background-color: #fff;
+	font-size: 12px;
+}
+.keyword-wrap{
+	margin-top: 10px;
+}
+.keyword{
+	float: left;
+	padding: 5px 10px;
+	margin-right: 10px;
+	margin-top: 10px;
+	border: 1px solid #E4E4E4;
+	font-size: 14px;
+	color: #5B5B5B;
+	background-color: #EEEEEE;
+}
+</style>
+<div class="content">
+
+<!-- 搜索框  -->
+<div id="nav-btn" class="weui_grid_icon">
+	<img src="${ctxPath}/resources/weixin/images/nav-ionic.png"/>
+	<div class="curtain">
+		<!-- 	<ul class="sclassify">
+			[#list productCategory as productCategorys]
+			<li class="swiper-slide" data-id="${productCategorys.id}" data-name="${productCategorys.name}"><a href="javascript:void(0)"  target="classify-win">${productCategorys.name}</a></li>
+			[/#list]
+			</ul> -->
+		</div>
+</div>
+<div class="weui_search_bar" id="search_bar">
+	<form id="J_form" action="${ctxPath}/weixin/product/productList" method="post" class="weui_search_outer custom">
+		<div class="weui_search_inner">
+			<i class="weui_icon_search"></i>
+			<input type="text" id="search_input_ky" autocomplete="off" class="weui_search_input custom-input" name="keyword" placeholder="搜索" required/>
+			<!-- <a href="javascript:;" class="weui_icon_clear" id="search_clear" style="display: none;"></a> -->
+		</div>
+	</form>
+	<a href="javascript:document.forms[0].submit()" class="weui_search_btn" id="search_btn">搜索</a>
+</div> 
+
+<!-- /搜索框  -->
+<!-- 搜索框 -->
+<div class="search-wrap" style="display: none;">
+	<p class="lately-text">最近搜索</p>
+	<p class="hint">暂无搜索历史</p>
+</div>
+<!-- 搜索框 -->
+<!-- 热门搜索 -->
+<div class="hot-search-wrap">
+
+
+	<p>热门搜索</p>  
+	<div class="keyword-wrap f-cb">
+	[#list productCategory as productCategorys]
+	<div class="keyword"><a href="${ctxPath}/weixin/product/categoryList?categId=${productCategorys.id}">${productCategorys.name}</a></div>
+	[/#list]
+	</div>
+</div>
+<!-- /热门搜索 -->
+</div>
+[#include "/mall/common/script.html"/]
+<script type="text/javascript">
+
+</script>

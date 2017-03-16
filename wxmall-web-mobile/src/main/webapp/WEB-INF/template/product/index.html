@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+<head>
+[#include "/includes/header.html" /]
+<link rel="stylesheet" href="${webctx}/resources/css/product.css"/>
+</head>
+<body>
+<div class="content goods-list">
+<div class="weui_tab_bd">
+	<div id="nav-btn" class="weui_grid_icon">
+		<img src="${webctx}/resources/images/nav-ionic.png"/>
+		<div class="curtain">
+			<ul class="sclassify">
+			[#list productCategory as productCategorys]
+			<li class="swiper-slide" data-id="${productCategorys.id}" data-name="${productCategorys.name}"><a href="${webctx}/product?categId=${productCategorys.id}">${productCategorys.name}</a></li>
+			[/#list]
+			</ul>
+		</div>
+	</div>
+	<!-- 搜索框  -->
+	<div class="weui-search-bar" id="search_bar">
+		<form id="J_form" action="" method="post" class="weui-search-bar__form">
+			<div class="weui-search-bar__box">
+				<i class="weui_icon_search"></i>
+				<input type="search" id="search_input" class="weui-search-bar__input" name="filter" placeholder="搜索" required/>
+				<a href="javascript:" class="weui-icon-clear" id="search_clear"></a>
+			</div>
+			<label for="search_input" class="weui-search-bar__label" id="search_text">
+		        <i class="weui-icon-search"></i>
+		        <span>搜索喜欢的商品</span>
+		    </label>
+		    <input type="hidden" name="keyword" value="${keyword}"/>
+		</form>
+	<!-- <a href="javascript:void(0)" class="weui_search_btn">
+		<div id="weui_tab" class="weui_grid_icon" style="display: none;">
+	      <img src="${webctx}/resources/images/icon_nav_tab.png" alt="">
+	    </div>
+	     <div id="weui_cell" class="weui_grid_icon">
+      <img src="${webctx}/resources/images/icon_nav_cell.png" alt="">
+      </div>
+    </a> -->
+
+	</div>
+	<!-- /搜索框  -->
+	<!-- 筛选条件 -->
+	<div id="J_filtrate" class="weui-row weui-no-gutter" style="display: none;">
+	    <input type="hidden"  id="categId" value=""/>
+	  	<div class="weui-col-25" id="weui-col" data-val="0">默认</div>
+	  	<div class="weui-col-25" id="prices">价格<span class="down-ionic pricesUp" data-val="priceAsc"></span></div>
+	  	<div class="weui-col-25" id="prices1" style="display: none">价格<span class="down-ionic pricesDown" data-val="priceDesc"></span></div>
+	  	<div class="weui-col-25" id="sales">销量<span class="down-ionic salesUp" data-val="salesAsc"></span></div>
+	  	<div class="weui-col-25" id="sales1" style="display: none">销量<span class="down-ionic salesDown" data-val="salesDesc"></span></div>
+	  	<div class="weui-col-25" id="date">日期<span class="down-ionic dateUp" data-val="dateAsc"></span></div>
+	  	<div class="weui-col-25" id="date1" style="display: none">日期<span class="down-ionic dateDown" data-val="dateDesc" ></span></div>
+	</div>
+	<!-- /筛选条件 -->
+	<!-- 商品列表 -->
+	<ul id="newgoods-list" class="ex_160426_4" data-source="sku" style="padding-top: 1.2rem"></ul>
+	<div id="goods-list" class="goods-wrap"></div>
+	<div class="weui-loadmore" style="display: none;">
+        <i class="weui-loading"></i>
+        <span class="weui-loadmore__tips">正在加载</span>
+    </div>
+    <div class="weui-loadmore weui-loadmore_line" style="display: none;">
+        <span class="weui-loadmore__tips"></span>
+    </div>
+    <!-- <div class="weui-loadmore weui-loadmore_line weui-loadmore_dot">
+        <span class="weui-loadmore__tips"></span>
+    </div> -->
+	<!-- /商品列表 -->
+</div>
+</div>
+<!-- orderType = $();
+param.orderType = orderType; -->
+<!--手机端script需要加载后方-->
+[#include "includes/footer.html"/]
+<script id="newtmp" type="text/html">
+<li>
+    <a href="${webctx}/product/detail?id={id}"><img class="o2_gl_img" src="{mainPic}"> 
+        <div class="o2_gl_info">
+            <div class="o2_gl_t4">{name}</div>
+            <div class="o2_gl_t2"><span class="o2_gl_price red">￥<b>{price}</b></span></div>
+            <div class="o2_gl_t3 red"></div>
+            <div class="o2_gl_button red">立即购买</div>
+         </div>
+    </a>
+</li>
+</script>
+<script id="newtmpOld" type="text/html">
+<li>
+	<div class="item">
+		<div class="jpic">
+			 <a href="${webctx}/product/detail?id={id}" class="floor-pd-img"><img src="{mainPic}"  width="100%"></a>
+		</div>
+		<div class="jTitle">
+             <a href="${webctx}/product/detail?id={id}">{name}</a>
+        </div>
+       <div class="buy">
+		  <div class="jprice">&yen;<span class="jdNum">{price}</span></div>
+          <div class="button"><a href="${webctx}/product/detail?id={id}">购 买 &gt;</a></div>
+      </div>
+	</div>
+</li>
+</script>
+<script id="tmp" type="text/html">
+	<div class="goods-item f-cb">
+				<a href="${webctx}/product/detail?id={id}"><img class="picture" src="{mainPic}" width="120" height="120"/></a>
+				<div class="goods-item-info">
+					<div class="title">{name}</div>
+					<div class="price">{price}</div>
+					<!-- <div class="appraise">
+						库存{store}件
+					</div> 
+					<div class="appraise">
+<a class="weui_btn weui_btn_mini weui_btn_primary add-shopping" href="javascript:add2Cart('{id}');">加入购物车</a>
+					</div>
+					-->
+[#if setting.isShowMarketPrice]
+					<div class="price" style="color: #787878; font-size: 12px;text-decoration:line-through;">
+						{marketPrice}
+					</div> 
+[/#if]
+
+				</div>
+			</div>
+</script>
+<script type="text/javascript">
+var tab_cell=0;
+var page = 1;
+var params = {};
+params.page = page;
+params.keyword = '${keyword}';
+params.categId = '${categId}';
+$(function(){
+	//点击筛选
+	$("#J_filtrate > div").click(function(){
+		var $this = $(this);
+		$this.siblings().removeClass("active");
+		$this.addClass("active");
+		//未完成
+	});
+	//滚动加载
+	var loading = false;  //状态标记
+	var complate = false; //数据是否加载完毕
+	$(document.body).infinite().on("infinite",function(){
+		if(loading) return;
+		if(complate) return;
+		loading = true;
+		page ++;
+		//params.formData = $("#J_form").serialize();
+		params.page = page;
+		//params.keyword='${keyword}';
+		submit(params);
+		
+	});
+	//阻止表单提交
+	/* $("#J_form").submit(function(){
+		$("#goods-list").html("");
+		params.formData = $("#J_form").serialize();
+		page = 1;
+		submit(params);
+		return false;
+	}); */
+	//点击筛选
+	/* $("#search_btn").click(function(){
+		page = 1;
+		$("#J_form").submit(params);
+	}); */
+	//分类菜单
+	$("#nav-btn > img").click(function(){
+		$(".curtain").css("display","block");
+	});
+	$("#nav-btn .curtain").click(function(){
+		this.style.display = "none";
+	});
+	
+   $("#weui_cell img").click(function(){
+	   tab_cell=1;
+	   $("#weui_cell").hide();
+	   $("#weui_tab").show();
+	   $("#goods-list").empty();
+	   $("#newgoods-list").empty();
+	   page = 1;
+	   params.page = page;
+	   submit (params);
+	   $("#goods-list").show();
+	   $("#newgoods-list").hide();
+   });
+   
+   $("#weui_tab img").click(function(){
+	   tab_cell=0;
+	   $("#weui_tab").hide();
+	   $("#weui_cell").show();
+	   $("#goods-list").empty();
+	   $("#newgoods-list").empty();
+	   page = 1;
+	   params.page = page;
+	   submit (params);
+	   $("#goods-list").hide();
+	   $("#newgoods-list").show();
+   });
+	
+	 $("#prices").click(function(){
+		 $(this).addClass("active");
+		 $(this).hide();
+		 $("#prices1").show();
+		 $("#goods-list").empty();
+		 $("#newgoods-list").empty();
+			page = 1;
+		 params.page = page;
+		  params.orderType =$(".pricesUp").attr("data-val");
+		  submit (params);
+	 }); 
+	 
+	 $("#prices1").click(function(){
+		 $(this).hide();
+		 $("#prices").show();
+		 $("#goods-list").empty();
+		 $("#newgoods-list").empty();
+			page = 1;
+		 params.page = page;
+		 
+		  params.orderType =$(".pricesDown").attr("data-val");
+		  submit (params);
+	 }); 
+	/*  $(".weui-col-25 .pricesUp").click(function(){
+		 $(".pricesDown").show();
+		 $(".pricesUp").hide();
+		 $("#goods-list").empty();
+			page = 1;
+		 params.page = page;
+		  params.orderType =$(this).attr("data-val");
+		  submit (params);
+	 });  */
+	 $("#sales").click(function(){
+		 $(this).hide();
+		 $("#sales1").show();
+		 $("#goods-list").empty();
+		 $("#newgoods-list").empty();
+			page = 1;
+		 params.page = page;
+		  params.orderType =$(".salesUp").attr("data-val");
+		  submit (params);
+	 }); 
+	 $("#sales1").click(function(){
+		 $(this).hide();
+		 $("#sales").show();
+		 $("#goods-list").empty();
+		 $("#newgoods-list").empty();
+			page = 1;
+		 params.page = page;
+		  params.orderType =$(".salesDown").attr("data-val");
+		  submit (params);
+	 }); 
+	 
+	 $("#date").click(function(){
+		 $(this).hide();
+		 $("#date1").show();
+		 $("#goods-list").empty();
+		 $("#newgoods-list").empty();
+			page = 1;
+		 params.page = page;
+		  params.orderType =$(".dateUp").attr("data-val");
+		  submit (params);
+	 }); 
+	 $("#date1").click(function(){
+		 $(this).hide();
+		 $("#date").show();
+		 $("#goods-list").empty();
+		 $("#newgoods-list").empty();
+			page = 1;
+		 params.page = page;
+		  params.orderType =$(".dateDown").attr("data-val");
+		  submit (params);
+	 }); 
+	
+	 $("li.swiper-slide").click(function(){
+		 $("#weui-col").empty();
+		 $("#weui-col").html($(this).attr("data-name"));
+		 $("#goods-list").empty();
+		 $("#newgoods-list").empty();
+			page = 1;
+		 params.page = page;
+		  params.categId =$(this).attr("data-id");
+		  submit (params);
+	  });
+
+	function submit (arr){
+		$("div.weui-loadmore").show();
+		$.ajax({
+			type: "post",
+			url: "${webctx}/product/list",
+			data: arr,
+			async: true,
+			success: function(data){
+				loading = false;
+				$("div.weui-loadmore").hide();
+				if(data.code != 200){
+					$.toast("加载数据失败，请重新拉取");
+					return;
+				}
+				
+				if(data.data.length<=0){
+					complate = true;
+					$(".weui-loadmore_line").show();
+					$(".weui-loadmore__tips").html("已经到底了");
+					//$(".weui-infinite-scroll").show();
+				}else{
+					for( var i = 0 ; i < data.data.length ; i ++ ){
+						var html = formatTemplate(data.data[i], $("#newtmp").html());
+						$("#newgoods-list").append(html);
+					}					
+				}
+			},
+			error: function(){
+				$("div.weui-loadmore").hide();
+				alert("网络异常,请联系管理员!");
+			}
+		});
+	}
+	submit(params);
+});
+
+
+function add2Cart(productId){
+	$.post("${webctx}/cart/add", {productId: productId}, function(resp){
+		if(resp.code != 200){
+			$.toast(resp.msg);
+		}else{
+			$.toast("加入购物车成功");
+		}
+	});
+}
+</script>
+</body>
+</html>

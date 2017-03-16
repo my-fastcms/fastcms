@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>分销商等级设置</title>
+[#include "/includes/header.html" /]
+<style type="text/css">
+</style>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+[#include "/includes/menus.html" /]
+<div class="wrapper wrapper-content">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	           <a href="${webctx}/agent/aduit" class="J_menuTab">分销商审核</a>
+		       <a href="${webctx}/agent" class="J_menuTab">分销商</a>
+		       <a href="${webctx}/agent/rank" class="J_menuTab active">分销商等级</a>
+	       </div>
+	   	</nav>
+	</div>
+	
+	<div class="ibox float-e-margins">
+		<div class="ibox-title row">
+			<h5><small><a href="${webctx}/agent/rank">《返回列表</a></small></h5>
+		</div>
+		<div class="row ibox-content active_statistics col-sm-9">
+			<div class="title_query padtop">
+				<form id="rankForm" action="" method="post" class="form-horizontal">
+					<input type="hidden" name="id" id="rand_id" value="${rand.id}"/>
+					<div class="form-group">
+			            <label class="col-md-2 control-label">等级名称<span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-3" id="error_rank_name">
+			                <input id="rank_name" name= "rank_name" value="${rand.rank_name}" maxlength="20" type="text" class="form-control" >
+			                <label class="control-label" for="rank_name"></label>
+			            </div>
+			        </div>
+			        
+			        <div class="form-group">
+			            <label class="col-md-2 control-label">等级权重
+			            <i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('等级权重，值越大权重越大。', this, {tips: [1, '#3595CC'],time: 0});"></i>
+			            <span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-2" id="error_rank_weight">
+			                <input id="rank_weight" name= "rank_weight" value="${rand.rank_weight}" maxlength="20" type="text" class="form-control" onkeyup="this.value=this.value.replace(/[^\d]/g,'')">
+			                <label class="control-label" for="rank_weight"></label>
+			            </div>
+			        </div>
+			        
+			        <div class="form-group">
+			            <label class="col-md-2 control-label">一级佣金占比
+			            <span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-2 " id="error_first_rate">
+			            <div class="input-group m-b">
+			                <input id="first_rate" name= "first_rate" value="${rand.first_rate}" maxlength="20" type="text" class="form-control" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')">
+			                <span class="input-group-addon">%</span> 
+			                </div>
+			                <label class="control-label" for="first_rate"></label>
+			            </div>
+			             <label class="col-md-2 control-label">二级佣金占比
+			            <span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-2" id="error_second_rate">
+			             <div class="input-group m-b">
+			                <input id="second_rate" name="second_rate" value="${rand.second_rate}" maxlength="20" type="text" class="form-control" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')">
+			                 <span class="input-group-addon">%</span> 
+			               </div>
+			                <label class="control-label" for="second_rate"></label>
+			            </div>
+			            
+			            <label class="col-md-2 control-label">三级佣金占比
+			            <span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-2" id="error_third_rate">
+			            <div class="input-group m-b">
+			                <input id="third_rate" name="third_rate" value="${rand.third_rate}" maxlength="20" type="text" class="form-control" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')">
+			                <span class="input-group-addon">%</span> 
+			              </div>
+			                <label class="control-label" for="third_rate"></label>
+			            </div>
+			        </div>
+			        
+			        
+
+			        <div class="form-group">
+			            <label class="col-md-2 control-label">等级奖励金额
+			            <i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('升到此等级奖励金额。', this, {tips: [1, '#3595CC'],time: 0});"></i>
+			            <span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-2" id="error_reward_value">
+			                <input id="reward_value" name="reward_value" value="${rand.reward_value}" maxlength="20" type="text" class="form-control" onkeyup="this.value=this.value.replace(/[^\d]/g,'')">
+			                <label class="control-label" for="reward_value"></label>
+			            </div>
+			        </div>
+			        
+			        <div class="form-group">
+			            <label class="col-md-2 control-label">提现次数
+			            <i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('每月提现次数。', this, {tips: [1, '#3595CC'],time: 0});"></i>
+			            <span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-2" id="error_get_cash_time">
+			                <input id="get_cash_time" name="get_cash_time" value="${rand.get_cash_time}" maxlength="20" type="text" class="form-control" onkeyup="this.value=this.value.replace(/[^\d]/g,'')">
+			                <label class="control-label" for="get_cash_time"></label>
+			            </div>
+			            
+			             <label class="col-md-2 control-label">提现上限
+			            <i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('每月提现上限。', this, {tips: [1, '#3595CC'],time: 0});"></i>
+			            <span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-2" id="error_get_cash_limit">
+			                <input id="get_cash_limit" name="get_cash_limit" value="${rand.get_cash_limit}" maxlength="20" type="text" class="form-control" onkeyup="this.value=this.value.replace(/[^\d]/g,'')">
+			                <label class="control-label" for="get_cash_limit"></label>
+			            </div>
+			            
+			           
+			        </div>
+			        
+			        <div class="form-group">
+			            <label class="col-md-2 control-label">用户数量
+			            <i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('满足下级用户数量（自动升级条件）。', this, {tips: [1, '#3595CC'],time: 0});"></i>
+			            <span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-2" id="error_children_count">
+			                <input id="children_count" name="children_count" value="${rand.children_count}" maxlength="20" type="text" class="form-control" onkeyup="this.value=this.value.replace(/[^\d]/g,'')">
+			                <label class="control-label" for="children_count"></label>
+			            </div>
+			        </div>
+
+			        <div class="form-group">
+			            <label class="col-md-2 control-label">获取佣金
+			            <i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('累计获取佣金（自动升级条件。', this, {tips: [1, '#3595CC'],time: 0});"></i>
+			            <span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-2" id="error_total_commission">
+			                <input id="total_commission" name="total_commission" value="${rand.total_commission}" maxlength="20" type="text" class="form-control" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')">
+			                <label class="control-label" for="total_commission"></label>
+			            </div>
+			        </div>
+			     <div class="panel-default">   
+			    <div class="panel-footer" align="center">
+			   	 	<button type="button" onclick="saveRank();" class="btn btn-success btn-sm">保存</button>
+				</div>
+				</div>
+			     </form>
+			 </div>
+	   </div>  
+	 </div>  
+	     
+</div>
+[#include "/includes/footer.html" /]
+<script type="text/javascript">
+function saveRank(){
+	var params={}, error = {};
+	var rank_name = $("#rank_name").val(), rank_weight = $("#rank_weight").val(),first_rate=$("#first_rate").val()
+	, second_rate = $("#second_rate").val(), third_rate = $("#third_rate").val(),reward_value = $("#reward_value").val()
+	, get_cash_time = $("#get_cash_time").val(), get_cash_limit = $("#get_cash_limit").val(),children_count = $("#children_count").val()
+	,total_commission = $("#total_commission").val(),rand_id = $("#rand_id").val();
+	if($.trim(rank_name) =="") {error.error_rank_name = "等级不能为空"; } else {error.error_rank_name=""; params.rank_name = $.trim(rank_name);}
+	if($.trim(rank_weight) =="") {error.error_rank_weight = "等级权重不能为空"; } else {error.error_rank_weight=""; params.rank_weight= $.trim(rank_weight);}
+	if($.trim(first_rate) =="") {error.error_first_rate = "一级佣金占比不能为空"; } else {error.error_first_rate=""; params.first_rate = $.trim(first_rate);}
+	if($.trim(second_rate) =="") {error.error_second_rate = "二级佣金占比不能为空"; } else {error.error_second_rate=""; params.second_rate = $.trim(second_rate);}
+	if($.trim(third_rate) =="") {error.error_third_rate = "三级佣金占比不能为空"; } else {error.error_third_rate=""; params.third_rate = $.trim(third_rate);}
+	if($.trim(reward_value) =="") {error.error_reward_value = "等级奖励金额不能为空"; } else {error.error_reward_value=""; params.reward_value = $.trim(reward_value);}
+	if($.trim(get_cash_time) =="") {error.error_get_cash_time = "提现次数不能为空"; } else {error.error_get_cash_time=""; params.get_cash_time= $.trim(get_cash_time);}
+	if($.trim(get_cash_limit) =="") {error.error_get_cash_limit = "提现上限不能为空"; } else {error.error_get_cash_limit=""; params.get_cash_limit = $.trim(get_cash_limit);}
+	if($.trim(children_count) =="") {error.error_children_count = "用户数量不能为空"; } else {error.error_children_count=""; params.children_count = $.trim(children_count);}
+	if($.trim(total_commission) =="") {error.error_total_commission = "获取佣金 不能为空"; } else {error.error_total_commission=""; params.total_commission = $.trim(total_commission);}
+	params.id=rand_id;
+	var hasError = false;
+	for(var key in error){
+		if(error[key]!=""){
+			if(!hasError) hasError = true;
+			$("#"+key).addClass("has-error");
+			$("#"+key).find("label").text(error[key]);
+		}else{
+			$("#"+key).removeClass("has-error");
+			$("#"+key).find("label").empty();
+		}
+	}
+	//主表信息不完整，返回
+	if(hasError) return false;
+	$("#rankForm").mask("正在保存...");
+	$.post(obz.ctx+"/agent/rank/saveRank", params, function(json) {
+		if(json.code!=200){
+			obz.error(json.msg, function(){
+				$("#rankForm").unmask();
+			});				
+		}else{
+			obz.msg('保存成功', function(){
+				$("#rankForm").unmask();
+				location.reload();
+			});					
+		}
+	},"json");
+}
+</script>
+<script>
+Template.init("#menu-agent");
+</script>
+</body>
+</html>

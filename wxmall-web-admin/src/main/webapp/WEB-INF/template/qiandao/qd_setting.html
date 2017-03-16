@@ -1,0 +1,678 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>添加签到</title>
+[#include "/includes/header.html" /]
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+[#include "/includes/menus.html" /]
+<div class="wrapper wrapper-content">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	           <a href="${webctx}/qiandao" class="J_menuTab active">签到</a>
+		       <a href="${webctx}/lottery" class="J_menuTab">抽奖</a>
+		       <a href="${webctx}/prize" class="J_menuTab">奖品 </a>
+	       </div>
+	   	</nav>
+	</div>
+	<div class="tabs-container row" style="padding-top: 12px;">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="${webctx}/qiandao/add">签到设置</a></li>
+			<li><a href="${webctx}/qiandao">签到管理</a></li>
+			<li><a href="${webctx}/qiandao/stat">数据统计</a></li>
+        </ul>
+    </div>
+    
+    <div class="row col-sm-9">
+	<div class="row ibox-content active_statistics">
+		<div class="alert alert-success">
+			<i class="fa fa-info-circle"></i><strong>提示:</strong>一个时间段有且只有一个签到活动，活动的开始时间必须在上一个签到活动的结束时间之后。
+		</div>
+		<div class="title_query padtop"> 
+			<form id="qiandaoForm" class="form-horizontal">
+				<input type="hidden" name="active" id="active" value="${qiandao.active }"/><!-- 默认为1，值为0的时候表示删除，删除后用户不可见 -->
+				<input type="hidden" name="id" id="id" value="${qiandao.id }"/>
+				<div class="form-group">
+		            <label class="col-md-2 control-label">签到名称</label>
+		            <div class="col-md-8" id="error_qiandao_name">
+		                <input id="qiandao_name" name= "qiandao_name" value="${qiandao.qiandaoName }" maxlength="20" type="text" class="form-control" style="width: 400px" >
+		                <label class="control-label" for="qiandao_name"></label>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		            <label class="col-md-2 control-label">起止时间</label>
+		            <div class="col-sm-9">
+	                   	<div class="row">
+	                   		[#if qiandao??]
+		                   		<div class="col-lg-2 col-md-2" id="error_start_date">
+			                        <input type="text" id="start_date" name="start_date" class="form-control" readonly="readonly" style="width: 100px;" value="${qiandao.startDate}" />
+									<label class="control-label" for="start_date"></label>
+			                    </div>
+			                    <div class="col-lg-2 col-md-2" id="error_end_date">
+			                        <input type="text" id="end_date" name="end_date" class="form-control" readonly="readonly" style="width: 100px;" value="${qiandao.endDate}" />	
+									<label class="control-label" for="end_date"></label>
+			                    </div>
+	                   		[#else]
+								<div class="col-lg-2 col-md-2" id="error_start_date">
+			                        <input type="text" id="start_date" name="start_date" readonly="readonly" style="width: 100px;"
+									onfocus="WdatePicker({skin:'twoer', isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd',minDate:'%y-%M-%d',maxDate:'#F{$dp.$D(\'end_date\')}'})"
+									class="Wdate" value="${lastDate }" />
+									<label class="control-label" for="start_date"></label>
+			                    </div>
+			                    <div class="col-lg-2 col-md-2" id="error_end_date">
+			                        <input type="text" id="end_date" name="end_date" readonly="readonly" style="width: 100px;"
+									onfocus="WdatePicker({skin:'twoer', isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd',minDate:'#F{$dp.$D(\'start_date\',{d:7});}'})"
+									class="Wdate" value="" />	
+									<label class="control-label" for="end_date"></label>
+			                    </div>	
+			                    <div class="col-md-4">
+			                    	<a class="label label-default" href="javascript:dateTag(7);">一周</a>
+			                    	<a class="label label-default" href="javascript:dateTag(30);">一个月</a>
+			                    	<a class="label label-default" href="javascript:dateTag(90);">三个月</a>
+			                    </div>                   		
+	                   		[/#if]
+		                </div>
+		                [#if lastDate??]
+	                   		<span>上一次签到活动结束时间 <font color="blue">${lastDate }</font></span><p>
+	                   	[/#if]
+		                <span class="alert-success">
+                      		<i class="fa fa-info-circle"></i>
+                        	起止时间一旦设定不可更改，建议设置时间周期为1个月，不能少于7天；
+                        	签到结束时间不能超过软件订购时间
+                        </span>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		            <label class="col-md-2 control-label">签到奖励</label>
+		            <div class="col-md-8">
+		                <div class="sign_list">
+                         	<label class="radio-inline" for="inline-radio1">
+	                         	[#if qiandao.qiandaoType ==1 || !qiandao??]
+	                         		<input name="sign_type" id="inline-radio1" checked="checked" value="join" onclick="changeQiandaoType();" type="radio">
+	                         	[/#if]
+	                         	[#if qiandao.qiandaoType !=1 && qiandao??]
+	                         		<input name="sign_type" id="inline-radio1" value="join" onclick="changeQiandaoType();" type="radio">
+	                         	[/#if]		
+	                            <span>连续签到送</span>
+                         	</label>
+                           	<label class="radio-inline" for="inline-radio2">
+                           		[#if qiandao.qiandaoType ==2]
+                               		<input name="sign_type" id="inline-radio2" value="add" checked="checked" onclick="changeQiandaoType();" type="radio">
+                               	[/#if]
+                               	[#if qiandao.qiandaoType !=2]
+                               		<input name="sign_type" id="inline-radio2" value="add" onclick="changeQiandaoType();" type="radio">
+                               	[/#if]
+                               	<span>累计签到送</span>
+                           	</label>
+                         </div>
+                         <div class="sign_activity sign_activity_tabin" id="sign_type_set_join">
+                        	<!-- <p class="sign_title">连续签到x天奖励x</p> -->
+	                        <ul class="sign_activity_list" id="prize_list_join">
+	                        	[#list joinItems as titem]
+	                        		<li>
+		                              	<p class="fl">
+		                                  	连续签到 <input placeholder="" class="input-xfat" name="join_sin_day" value="${titem.signDay }" onfocus="updateState(this)" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" type="text">
+		                                  	 天，送　
+		                                 	<label class="control-label">
+		                                    	<a name="select_prize" href="javascript:void(0);" onclick="selectPrize(this);" item-id="${titem.id }" prize-id="${titem.prizeId }" prize-name="${titem.prizeName }" update-or-del="">${titem.prizeName }</a>
+		                                  	</label>
+		                              	</p>
+		                              	<a class="but_remove" href="javascript:void(0);" onclick="deletePrize(this);">×</a>
+		                            </li>
+	                        	[/#list]
+	                        </ul>
+	                    	 <textarea style="display:none;" id="html_model_join">                            
+	                     	  <li>
+	                          <p class="fl">
+	                              	连续签到 <input type="text" placeholder="" class="input-xfat" value="" name="join_sin_day" 
+	                              	onfocus="updateState(this)" 
+	                                    onkeyup="this.value=this.value.replace(/\D/g,'')" 
+	                                    onafterpaste="this.value=this.value.replace(/\D/g,'')"> 天，送　
+	                              <label class="control-label">
+	                                  <a name="select_prize" href="javascript:void(0);" onclick="selectPrize(this);" item-id="" prize-id="" prize-name="" update-or-del="">选择奖品</a>
+	                              </label>
+	                          </p>
+	                          <a class="but_remove" href="javascript:void(0);" onclick="deletePrize(this);">×</a>
+	                     	  </li>
+		                      </textarea>
+	                         <p>
+	                             <a href="javascript:void(0);" onclick="addPrize('join');" class="btn-bordered btn-xlarge btn-primary">添加奖项</a>
+	                             <label id="join_error_msg" style="color:red;"></label>
+	                         </p>
+	                         <div class="alert-success">
+                            	<i class="fa fa-info-circle"></i>
+                              	例如：连续签到3天送1M流量，用户签到3天后领取了奖励，第4天未签到，然后再次连续签到3天，可再次领取奖励
+                             </div> 
+		               </div>
+	                   <div style="display: none;" class="sign_activity" id="sign_type_set_add">
+	                         <!-- <p class="sign_title">累计签到x天奖励x</p> -->
+	                         <ul class="sign_activity_list" id="prize_list_add">
+	                         	[#list addItems as titem]
+	                         		<li>
+	                                   <p class="fl">
+	                                       	累计签到
+	                                       	 <input type="text" placeholder="" class="input-xfat" name="add_sin_day" value="${titem.signDay }" onfocus="updateState(this)" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
+	                                       	 天，送　
+	                                       <label class="control-label">
+	                                           <a name="select_prize" href="javascript:void(0);" onclick="selectPrize(this);" item-id="${titem.id }" prize-id="${titem.prizeId }" prize-name="${titem.prizeName }" update-or-del="">${titem.prizeName }</a>
+	                                       </label>
+	                                   </p>
+	                                   <a class="but_remove" href="javascript:void(0);" onclick="deletePrize(this);">×</a>
+	                               </li>
+	                         	[/#list]
+	                         </ul>
+	                         <textarea style="display:none;" id="html_model_add">                          
+	                              <li>
+	                                   <p class="fl">
+	                                       	累计签到
+	                                       	 <input type="text" placeholder="" class="input-xfat" name="add_sin_day" onfocus="updateState(this)" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
+	                                       	 天，送　
+	                                       <label class="control-label">
+	                                           <a name="select_prize" href="javascript:void(0);" onclick="selectPrize(this);" item-id="" prize-id="" prize-name="" update-or-del="">选择奖品</a>
+	                                       </label>
+	                                   </p>
+	                                   <a class="but_remove" href="javascript:void(0);" onclick="deletePrize(this);">×</a>
+	                               </li>
+	                         </textarea>
+	                         <p class="sign_but">
+	                             <a href="javascript:void(0);" onclick="addPrize('add');" class=" btn-bordered btn-xlarge btn-primary">添加奖项</a>
+	                             <label id="add_error_msg" style="color:red;"></label>
+	                         </p>
+	                    </div>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		            <label class="col-md-2 control-label">指定日签到奖励</label>
+		            <div class="col-md-8">
+		                <div class="sign_list">
+	                        <label class="checkbox-pretty inline checkbox-inline" onclick="changeAsqiandao();">
+	                            [#if qiandao.asSignPrize ==1]
+	                            	<input id="sign_assign_prize" type="checkbox" checked="checked">
+	                            [/#if]
+	                            [#if qiandao.asSignPrize !=1 ]
+	                            	<input id="sign_assign_prize" type="checkbox">
+	                            [/#if]
+	                            <span>指定日期签到有礼</span>
+	                            <!-- <span class="alert-success">
+									<i class="fa fa-info-circle"></i>指定日期签到提高店铺会员积极性，再好不过啦
+								</span> -->
+	                        </label>
+	                    </div>
+                        <div style="display: none;" class="sign_activity sign_activity_tabin" id="assign_day_prize">
+                             <!-- <p class="sign_title">指定 2015-x1-x2 日 签到即送 x</p> -->
+                             <ul class="sign_activity_list" id="prize_list_assign">
+                           		[#list assignItems as titem]
+                           		<li>
+                                    <p class="fl">
+                                      	 指定 <input type="text" id="assign_day_sign" name="assign_day_sign" readonly="readonly" style="width: 100px;"
+									onfocus="WdatePicker({skin:'twoer', isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd',minDate:'#F{$dp.$D(\'start_date\',{d:1});}'})"
+									onblur="updateState(this)" class="Wdate" value="${titem.signDay }" />
+                                        	日签到即送　
+                                        <label class="control-label">
+                                            <a name="select_prize" href="javascript:void(0);" onclick="selectPrize(this);" item-id="${titem.id }" prize-id="${titem.prizeId }" prize-name="${titem.prizeName }" update-or-del="">${titem.prizeName }</a>
+                                        </label>
+                                    </p>
+                                    <a class="but_remove" href="javascript:void(0);" onclick="deletePrize(this);">×</a>
+                                	</li>
+                           		[/#list]
+                           		[#if !qiandao??]
+                           		<li>
+                                    <p class="fl">
+                                       	 指定 <input type="text" id="assign_day_sign" name="assign_day_sign" readonly="readonly" style="width: 100px;"
+									onfocus="WdatePicker({skin:'twoer', isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd',minDate:'#F{$dp.$D(\'start_date\',{d:1});}'})"
+									onblur="updateState(this)" class="Wdate" value="" />
+                                        	日签到即送　
+                                        <label class="control-label">
+                                            <a name="select_prize" href="javascript:void(0);" onclick="selectPrize(this);" item-id="" prize-id="" prize-name="" update-or-del="">选择奖品</a>
+                                        </label>
+                                    </p>
+                                    <a class="but_remove" href="javascript:void(0);" onclick="deletePrize(this);">×</a>
+                                	</li>
+                           		[/#if]
+                             </ul>
+                             <textarea style="display:none;" id="html_model_assign">              
+                                  <li>
+                                      <p class="fl">
+                                         	指定  <input type="text" id="assign_day_sign" name="assign_day_sign" readonly="readonly" style="width: 100px;"
+									onfocus="WdatePicker({skin:'twoer', isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd',minDate:'#F{$dp.$D(\'start_date\',{d:1});}'})"
+									onblur="updateState(this)" class="Wdate" value="" />
+											日签到即送　
+                                          <label class="control-label">
+                                              <a name="select_prize" href="javascript:void(0);" onclick="selectPrize(this);" item-id="" prize-id="" prize-name="" update-or-del="">选择奖品</a>
+                                          </label>
+                                      </p>
+                                      <a class="but_remove" href="javascript:void(0);" onclick="deletePrize(this);">×</a>
+                                  </li>
+                             </textarea>
+                             <p class="sign_but">
+                                 <a href="javascript:void(0);" onclick="addPrize('assign');" class="btn-bordered btn-xlarge btn-primary">添加奖项</a>
+                                 <label id="assign_error_msg" style="color:red;"></label>
+                             </p>
+                        </div>
+		            </div>
+		        </div>
+		        <!-- <div class="form-group">
+		            <label class="col-md-2 control-label">添加曝光宝贝</label>
+		            <div class="col-md-8">
+		            	<div class="sign_list">
+		                	<button type="button" id="add_exposed_item" class="btn btn-success btn-xs">添加曝光宝贝</button>
+		                </div>
+		            </div>
+		        </div> -->
+		        <div class="form-group">
+		            <label class="col-md-2 control-label">强制关注公众号</label>
+		            <div class="col-md-8">
+		                <div class="sign_list">
+                            <label class="checkbox-pretty inline checkbox-inline">
+                            	[#if qiandao.needCollectShop ==1 ]
+                            		<input id="sign_need_collect" type="checkbox" checked="checked">
+                            	[/#if]
+                             	[#if qiandao.needCollectShop !=1 ]
+                            		<input id="sign_need_collect" type="checkbox">
+                            	[/#if]
+                             	<span class="alert-success">
+									<i class="fa fa-info-circle"></i>必须关注公众号才可参与签到！
+								</span>
+                         	</label>
+                         </div>
+		            </div>
+		        </div>
+		        <!-- <div class="form-group">
+		        	<label class="col-md-2 control-label">背景图</label>
+		        	<div class="col-md-5">
+		                 <input class="form-control" id="back_img" name="back_img" type="text" value="${qiandao.backImg }">
+                         <div class="alert-success">
+                           <span><i class="fa fa-info-circle"></i>可不填写，会有默认背景图</span>
+                           <p>需先将图片上传到<a class="blue" href="http://tadget.taobao.com/redaction/manager.htm" target="_blank">图片空间</a>，再复制链接到此处。（请一定要压缩图片哦，不然背景图显示会比较慢）</p>
+                         </div>
+		            </div>
+		        </div> -->
+		        <div class="form-group">
+                    <label class="col-md-2 control-label">签到描述</label>
+                    <div class="col-md-8">
+                        <textarea onkeyup="reshowdesc();" id="qiandao_memo" name="qiandao_memo" class="form-control" rows="5">${qiandao.qiandaoMemo }</textarea>
+						<span class="alert-success">
+	                    	<p>规则最多<font id="ruletipscount" style="color:red;">50</font><font style="color:red;">/100字</font></p>
+	                    </span>
+                    </div>
+                </div>
+	        </form>  
+	    </div>
+		<div class="panel-footer" align="center">
+	   	 	<button id="saveTask" onclick="saveTask();" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>提交</button>
+		</div>
+	</div>
+</div>
+</div>
+<div class="col-sm-3">
+  	<div class="wrapper wrapper-content project-manager">
+        <h4>帮助说明</h4>
+        <ol>
+            <li>直属上级佣金比例：分销商推荐买家购买后能拿到的佣金比例。</li>
+            <li>二级上级佣金比例：分销商推荐买家购买后，分销商的上级分销商能拿到的佣金比例</li>
+            <li>三级上级佣金比例：分销商推荐买家购买后，分销商上级的上级能拿到的佣金比例</li>
+            <li>启用分销内购后，分销商购买商品自己可以拿一级佣金，自己的上级拿二级佣金；
+				未启用时，分销商购买商品时自己是拿不到佣金的，自己的上级可以拿一级佣金。</li>
+        </ol>
+    </div>
+</div>
+<!-- 保存成功弹窗 -->
+<div class="modal fade" id="sava_suc_dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">提醒</h4>
+			</div>
+			<div class="modal-body install_cont" style="padding-left: 5px;">
+				<p class="fonts" style="color:red;fon">签到设置成功！</p>
+				<p class="fonts">设置完成后，可以添加到公众号菜单哦！</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(function (){
+		changeQiandaoType();
+		changeAsqiandao();
+		reshowdesc();
+	});
+	function reshowdesc(){
+		if($("#qiandao_memo").val().length>100){
+			$("#qiandao_memo").val($("#qiandao_memo").val().substr(0,100));
+			$("#ruletipscount").html(100);
+		}else{
+			$("#ruletipscount").html($("#qiandao_memo").val().length);
+		}
+	}
+	function updateState(obj){
+		var a = $(obj).next().find("a");
+		if(a.attr("item-id") != ""){
+			a.attr("update-or-del", "update");			
+		}
+	}
+	
+	function changeQiandaoType(){
+		var type = $("input[name='sign_type']:checked").val();
+		if($('#prize_list_'+type+" li").length<=0 && type!="cycle"){
+			$("#prize_list_"+type).append($("#html_model_"+type).val());
+		}
+		if(type=="join"){
+			$('#sign_type_set_join').show();
+			$('#sign_type_set_add,#sign_type_set_cycle').hide();
+		}
+		/* else if(type=="cycle"){
+			$('#sign_type_set_cycle').show();
+			$('#sign_type_set_join,#sign_type_set_add').hide();
+		} */
+		else{
+			$('#sign_type_set_cycle, #sign_type_set_join').hide();
+			$('#sign_type_set_add').show();
+		}
+	}
+	function addPrize(type){
+		$("#prize_list_"+type).append($("#html_model_"+type).val());
+	}
+	function deletePrize(obj){
+		var itemId = $(obj).prev().find("a").attr("item-id");
+		if(itemId != ""){
+			$(obj).parent().hide();
+			$(obj).prev().find("a").attr("update-or-del","del");
+		}else{
+			$(obj).parent().remove();			
+		}
+	}
+	var sprize = null;
+	var selectDialog = null;
+	function selectPrize(obj){
+		sprize=obj;
+		/* selectDialog = BootstrapDialog.show({
+			size: BootstrapDialog.SIZE_WIDE,
+			title: "选择奖品",
+            message: $('<div></div>').load('${webctx}/prize/selectPrize')
+        }); */
+        obz.selectPrize({}, function (id, prizeName) {
+    		$(sprize).attr("prize-id",id);
+    		$(sprize).attr("prize-name",prizeName);
+    		$(sprize).html(prizeName);
+    		var itemId = $(sprize).attr("item-id");
+    		if(itemId != ""){
+    			$(sprize).attr("update-or-del","update");
+    		}
+    	});
+	}
+	/* function selectedPond(id, prizeName) {
+		$(sprize).attr("prize-id",id);
+		$(sprize).attr("prize-name",prizeName);
+		$(sprize).html(prizeName);
+		var itemId = $(sprize).attr("item-id");
+		if(itemId != ""){
+			$(sprize).attr("update-or-del","update");
+		}
+	} */
+	
+	//指定日期签到复选框
+	function changeAsqiandao() {
+		if($('#sign_assign_prize').is(':checked')){
+			$("#assign_day_prize").show();
+		}else{
+			$("#assign_day_prize").hide();
+		}
+	}
+	function convertObj(type){
+		var joinnews=[];
+		var joincount = $("#prize_list_"+type+" li").length;
+		for(var i=0;i<joincount;i++){
+			var joinmin=0;
+			var html ="";
+			var obj;
+			$("#prize_list_"+type+" li").each(function(j,o){
+				var v;
+				if(type=='assign'){
+					v=new Date($(o).find("input[name='"+type+"_day_sign']").val().replace(/\-/g, "\/"));
+				}else{
+					v=Number($(o).find("input[name='"+type+"_sin_day']").val());
+				}
+				if(v<joinmin || joinmin==0){
+					html = $(o).clone();
+					joinmin=v;
+					obj=$(o);
+				}
+			});
+			joinnews[i]=html;
+			$(obj).remove();
+		}
+		$("#prize_list_"+type).html("");
+		for(var i=0;i<joinnews.length;i++){
+			$("#prize_list_"+type).append(joinnews[i]);
+		}
+	}
+	function clearError(){
+		$("#join_error_msg,#add_error_msg,#cycle_error_msg,#assign_error_msg").empty();
+		$("#sign_type_set_join li").each(function(i,obj){
+			$(obj).find("input[name='join_sin_day']").css("border-color", "");
+		});
+		$("#sign_type_set_add li").each(function(i,obj){
+			$(obj).find("input[name='add_sin_day']").css("border-color", "");
+		});
+		$("#assign_day_prize li").each(function(i,obj){
+			$(obj).find("input[name='assign_day_sign']").css("border-color", "");
+		});
+		$('#cycle_sign_day').css("border-color", "");
+	}
+	function saveTask(){
+		var params = {}, error = {};	
+		var qiandaoId = $("#id").val(), qiandao_type = $("#qiandao_type").val(), 
+		qiandaoName = $("#qiandao_name").val(), backimg = $("#back_img").val(), qiandao_memo = $("#qiandao_memo").val(),
+			startDate = $("#start_date").val(), endDate = $("#end_date").val();
+		if(qiandaoId!=null && qiandaoId!="") params.id = qiandaoId;
+		if(qiandao_memo!=null && qiandao_memo!="") params.qiandao_memo = qiandao_memo;
+		if(backimg !=null && backimg !="") params.back_img=backimg;
+		params.qiandao_type = qiandao_type;
+		if($.trim(qiandaoName) =="") {error.error_qiandao_name = "签到名称不能为空"; } else {error.error_qiandao_name=""; params.qiandao_name = $.trim(qiandaoName);}
+		if($.trim(startDate) =="") {error.error_start_date = "有效开始时间不能为空"; } else {error.error_start_date =""; params.start_date = $.trim(startDate);}
+		if($.trim(endDate) =="") {error.error_end_date = "有效结束时间不能为空"; } else { error.error_end_date=""; params.end_date = $.trim(endDate);}
+		
+		var hasError = false;
+		for(var key in error){
+			if(error[key]!=""){
+				if(!hasError) hasError = true;
+				$("#"+key).addClass("has-error");
+    			$("#"+key).find("label").text(error[key]);
+			}else{
+				$("#"+key).removeClass("has-error");
+				$("#"+key).find("label").empty();
+			}
+		}
+		//主表信息不完整，返回
+		if(hasError) return false;
+		//clear error
+		clearError();
+		//检查签到活动是否有时间冲突
+		//$(".main").mask("正在检查签到时间是否有冲突...");
+		$.post(obz.ctx+"/qiandao/checktime", params, function(json) {
+			//$(".main").unmask();
+			if(json.code==-200){
+				BootstrapDialog.alert({title:"警告", message:json.msg});
+				return false;
+			}
+			convertObj('join');
+			convertObj('add');
+			convertObj('assign');
+			var signtype = $("input[name='sign_type']:checked").val();
+			
+			var items = new Array();
+			//连续签到奖项数据
+			//var joinsignreplacprize = $('#sign_repeat_prize').is(':checked');//是否断签重复领取
+			$("#sign_type_set_join li").each(function(i, obj){
+				var join_day = $(obj).find("input[name='join_sin_day']").val();
+				var join_prize = $(this).find("a[name='select_prize']").attr("prize-id");
+				var join_prizeName = $(this).find("a[name='select_prize']").attr("prize-name");
+				var item_id = $(obj).find("a[name='select_prize']").attr("item-id");
+				var update_or_del = $(obj).find("a[name='select_prize']").attr("update-or-del");
+				if(join_day!="" && join_prize!="" && join_prizeName!=""){
+					var entity = new Object();
+					entity.signType = 1;
+					entity.signDay = join_day;
+					entity.payPrize = join_prize;
+					entity.prizeName = join_prizeName;
+					//entity.repPrize = joinsignreplacprize;//是否断签重复领取
+					if(item_id != ""){
+						entity.itemId = item_id;
+					}
+					if(update_or_del != ""){
+						entity.updateDel = update_or_del; 
+					}
+					items.push(entity);
+				}
+			});
+			
+			//累计签到奖项数据
+			$("#sign_type_set_add li").each(function(i, obj){
+				var add_day = $(obj).find("input[name='add_sin_day']").val();
+				var add_prize = $(obj).find("a[name='select_prize']").attr("prize-id");
+				var add_prizeName = $(obj).find("a[name='select_prize']").attr("prize-name");
+				var item_id = $(obj).find("a[name='select_prize']").attr("item-id");
+				var update_or_del = $(obj).find("a[name='select_prize']").attr("update-or-del");
+				if(add_day!="" && add_prize!="" && add_prizeName!=""){
+					var entity = new Object();
+					entity.signType = 2;
+					entity.signDay = add_day;
+					entity.payPrize = add_prize;
+					entity.prizeName = add_prizeName;
+					if(item_id != ""){
+						entity.itemId = item_id;
+					}
+					if(update_or_del != ""){
+						entity.updateDel = update_or_del; 
+					}
+					items.push(entity);
+				}
+			});
+			
+			//指定日期签到奖励
+			var assignprize= $('#sign_assign_prize').is(':checked');
+			$("#assign_day_prize li").each(function(i, obj){
+				var ass_day = $(obj).find("input[name='assign_day_sign']").val();
+				var ass_prize = $(obj).find("a[name='select_prize']").attr("prize-id");
+				var ass_prizeName = $(obj).find("a[name='select_prize']").attr("prize-name");
+				var item_id = $(obj).find("a[name='select_prize']").attr("item-id");
+				var update_or_del = $(obj).find("a[name='select_prize']").attr("update-or-del");
+				if(ass_day != "" && ass_prize != "" && ass_prizeName !=""){
+					var entity = new Object();
+					entity.signType = 3;
+					entity.signDay = ass_day;
+					entity.payPrize = ass_prize;
+					entity.prizeName = ass_prizeName;
+					if(item_id != ""){
+						entity.itemId = item_id;
+					}
+					if(update_or_del != ""){
+						entity.updateDel = update_or_del; 
+					}
+					items.push(entity);
+				}
+			});
+			
+			var hasErr = false;
+			if(signtype=="join"){
+				if($("#sign_type_set_join li").length<=0){
+					$("#join_error_msg").html("连续签到最少设置一个奖励");
+					return false;
+				}
+				$("#sign_type_set_join li").each(function(i,obj){
+					var joinday_input = $(obj).find("input[name='join_sin_day']");
+					if(joinday_input.val()==""){
+						if(!hasErr) hasErr=true;
+						$("#join_error_msg").html("连续签到天数不能为空");
+						joinday_input.css("border-color", "#ff5454");
+						return ;
+					}
+					var prize_a = $(obj).find("a[name='select_prize']");
+					if(prize_a.attr("prize-id")==""){
+						if(!hasErr) hasErr=true;
+						$("#join_error_msg").html("请选择连续签到对应的奖品");
+						return ;
+					}
+				});
+			}else if(signtype=="add"){
+				if($("#sign_type_set_add li").length<=0){
+					$("#add_error_msg").html("累计签到最少设置一个奖励");
+					return false;
+				}
+				$("#sign_type_set_add li").each(function(i,obj){
+					var add_input = $(obj).find("input[name='add_sin_day']");
+					if(add_input.val()==""){
+						if(!hasErr) hasErr=true;
+						add_input.css("border-color", "#ff5454");
+						$("#add_error_msg").html("累计签到天数不能为空");
+						return ;
+					}
+					var add_a = $(obj).find("a[name='select_prize']");
+					if(add_a.attr("prize-id")==""){
+						if(!hasErr) hasErr=true;
+						$("#add_error_msg").html("请选择累计签到对应的奖品");
+						return ;
+					}
+				});
+			}
+			if(hasErr){
+				return false;
+			}
+			//如果选择了指定日期签到的情况
+			if(assignprize){
+				if($("#assign_day_prize li").length<=0){
+					$("#assign_error_msg").html("指定日期签到奖励最少设置一个奖励，或者关闭指定日期签到。");
+					return false;
+				}
+				$("#assign_day_prize li").each(function(i,obj){
+					var day_input = $(obj).find("input[name='assign_day_sign']");
+					if(day_input.val()==""){
+						if(!hasErr) hasErr=true;
+						day_input.css("border-color", "#ff5454");
+						$("#assign_error_msg").html("指定日期签到日期必须设置");
+						return ;
+					}
+					var day_a = $(obj).find("a[name='select_prize']");
+					if(day_a.attr("prize-id")==""){
+						if(!hasErr) hasErr=true;
+						$("#assign_error_msg").html("请选择指定日期签到对应的奖品");
+						return ;
+					}
+				});
+			}
+			if(hasErr){
+				return false;
+			}
+			
+			var needcollect= $('#sign_need_collect').is(':checked');
+			params.need_collect_shop = needcollect == true ? 1 : 0;
+			params.qiandao_type = signtype == 'join' ? 1 : 2;
+			params.as_sign_prize = assignprize == true ? 1 : 0;//是否开启指定日期签到
+			params.items =  JSON.stringify(items);
+			
+			$(".main").mask("正在保存...");
+			$.post(obz.ctx+"/qiandao/save", params, function(json) {
+					$(".main").unmask();
+					if(json.code!=200){
+						BootstrapDialog.alert({title:'提示', message:json.msg});
+					}else{
+						$("#sava_suc_dialog").modal('show');
+						$('#sava_suc_dialog').on('hidden.bs.modal', function () {
+							location.href=obz.ctx + "/qiandao?module_id=1";
+						});						
+					}
+			},"json");
+		})
+	}
+</script>
+[#include "/includes/footer.html" /]
+<script>
+Template.init("#menu-qiandao");
+</script>
+</body>
+</html>

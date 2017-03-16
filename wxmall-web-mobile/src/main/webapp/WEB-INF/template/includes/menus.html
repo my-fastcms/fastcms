@@ -1,0 +1,54 @@
+<style>
+<!--
+.tab_10_icon {
+    background: transparent url("${ctxPath}/resources/images/mail/sq_tab_icons.png") no-repeat scroll -120px 0 / 160px 60px;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+}
+
+.tab_9_icon{
+    background: url("${ctxPath}/resources/images/mail/sq_tab_icons.png") no-repeat scroll  -100px 0 / 160px 60px;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+}
+
+.tab_8_icon{
+    background: url("${ctxPath}/resources/images/mail/sq_tab_icons.png") no-repeat scroll -80px 0 / 160px 60px;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+}
+}
+-->
+</style>
+<div id="menu-items" class="weui-tabbar toolbar-bottom">
+	<a id="nav-page-index" href="${webctx }/" class="weui-tabbar__item">
+		<div class="weui-tabbar__icon">
+			<img src="${ctxPath}/resources/images/mail/mail.png" alt="商城">
+		</div>
+		<p class="weui-tabbar__label">首页</p>
+	</a>
+	<a id="nav-page-index" href="${webctx }/product" class="weui-tabbar__item">
+		<div class="weui-tabbar__icon">
+		 <i class="tab_8_icon"></i>
+			<!-- <img src="${ctxPath}/resources/images/icon_nav_cell.png" alt="签到"> -->
+		</div>
+		<p class="weui-tabbar__label">商品分类</p>
+	</a>
+	<a id="nav-page-categ" href="${webctx}/cart" class="weui-tabbar__item">
+		<div class="weui-tabbar__icon">
+<!-- 			<img src="${ctxPath}/resources/images/icon_nav_article.png" alt="抽奖">-->
+          <i class="tab_9_icon"></i>
+		</div>
+		<p class="weui-tabbar__label">购物车</p>
+	</a>
+	<a id="nav-page-categ" href="${webctx }/user" class="weui-tabbar__item">
+		<div class="weui-tabbar__icon">
+			<!-- <img src="${ctxPath}/resources/images/icon_nav_article.png" alt="个人中心"> -->
+			<i class="tab_10_icon"></i>
+		</div>
+		<p class="weui-tabbar__label">个人中心</p>
+	</a>
+</div>

@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+[#include "/includes/header.html" /]
+<title>添加话费兑换</title>
+<script type="text/javascript">
+$(document).ready(function() {
+	//保存奖品
+	$("#savePrize").click(function(){
+		$("#container").mask("正在保存...");
+		obz.ajaxJson (obz.ctx+"/prize/save", $("#f1").serialize(), function(data){
+			$("#container").unmask();
+			var response = data;
+			if(data.code!=200){
+				obz.showMessage(response.msg);
+			}else{
+				searchPrizes();
+			}
+		},function(){
+			$("#container").unmask();
+			$("[id^='error_']").each(function(){
+				$(this).removeClass("has-error");
+				$(this).find("label").empty();
+			}); 
+		});
+	});	
+});
+</script>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+[#include "/includes/menus.html" /]
+<div id="nav">
+    <div id="nav-body">
+        <ul id="nav-list">
+        	<li class="nav-selected" id="nav-activity-showmobile"><a class="nav-link" href="${webctx}/prize/showmobile">手机端显示效果</a></li>
+            <li class="nav-selected" id="nav-prize-list"><a class="nav-link" href="${webctx}/prize">奖品列表</a></li>
+			<li id="nav-prize-add"><a class="nav-link" href="${webctx}/prize/showPrizeTypes">新增奖品</a></li>
+			<%-- <li id="nav-prizepond-list"><a class="nav-link" href="${webctx}/prizepond">奖池列表</a></li>
+			<li id="nav-prizepond-add"><a class="nav-link" href="${webctx}/prizepond/add">新增奖池</a></li> --%>
+        </ul>
+    </div>
+</div>
+
+<div id="main">
+	<div id="main-body">
+		<div id="container" style="height: 100%;padding-top: 15px;padding-left: 15px;" class="content-container">
+		<div>
+			<a href="${webctx}/prize/showPrizeTypes">返回</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<button id="savePrize">保存话费</button>
+			<hr>
+			<div class="box infomation">
+			注：系统不会为您自动充值。粉丝兑换成功会留下手机号码，您需要手工在系统外为其充值，然后在系统中登记发放状态。
+			</div>
+		</div>
+		<div class="bulk-edit-area">
+			<form name="f1" id="f1" action="" method="post">
+				<input type="hidden" name="prize_type" id="prize_type" value="2"/><!-- 2代表兑换话费 -->
+				<input type="hidden" name="status" id="status" value="1"/><!-- 默认刚创建的奖品为1，代表可以进行兑换中 -->
+				<input type="hidden" name="active" id="active" value="1"/><!-- 默认为1，值为0的时候表示删除，删除后用户不可见 -->
+				<input type="hidden" name="id" id="id" value="${prize.id }"/>
+				<input type="hidden" name="status" id="status" value="${prize.status }"/>
+				<ul class="bulk-edit-ul">
+		
+					<li><label class="label-title">兑换名称：</label> <span><em>*</em></span>
+						<span>
+							<input class="input-text" style="width: 300px;" type="text" id="exchange_title" name="exchange_title" value="${prize.exchange_title}">
+							<span class="grey-memo">显示在兑换列表中，例如：限时1000积分兑换5元话费哦</span>
+						</span>
+						<div id="error_title"  class="error hidden" style="padding-left: 120px;"></div> 
+					</li>
+		
+					<li><label class="label-title">有效兑换时间：</label> <span><em>*</em></span>
+						<input type="text" id="start_date" name="start_date" style="width: 190px; cursor: pointer;"
+							onfocus="WdatePicker({isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'%y-%M-%d %H:%m:%s',maxDate:'#F{$dp.$D(\'end_date\')}'})"
+							class="Wdate" value="${prize.start_date }" />
+						
+						&nbsp;&nbsp;至&nbsp;&nbsp; 
+						
+						<input type="text" id="end_date" name="end_date" style="width: 190px; cursor: pointer;"
+							onfocus="WdatePicker({isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'#F{$dp.$D(\'start_date\')}'})"
+							class="Wdate" value="${prize.end_date }" />	 
+						 
+						<span class="grey-memo">兑换话费活动什么时间开始，什么时间结束</span>
+						<div style="padding-left: 120px;">
+						<label id="error_start_date" class="error hidden"></label>
+						<label id="error_end_date" class="error hidden"></label>
+						</div>
+						
+					</li>
+		
+					<li>
+						<span class="label-title register_label">需要的积分：</span> <span><em>*</em></span>
+						<input class="input-text" style="width: 100px;" type="text" id="need_points" name="need_points" value="${prize.need_points}" onkeyup="value=value.replace(/[^\d]/g,'')">
+						<span class="grey-memo">需要粉丝多少积分才能兑换一次</span>
+						<div id="error_need_points" class="error hidden" style="padding-left: 120px;"></div>
+					</li>
+					
+					<li>
+						<span class="label-title register_label">兑换总数:&nbsp;</span> <span><em>*</em></span>
+						<input class="input-text" style="width: 100px;" type="text" id="publish_count" name="publish_count" value="${prize.publish_count}" onkeyup="value=value.replace(/[^\d]/g,'')">
+						<span class="grey-memo">本次有效时间内，总共发布多少个话费让粉丝去兑换</span>
+						<div id="error_publish_count" class="error hidden" style="padding-left: 120px;"></div> 
+					</li>
+		
+					<li><span class="label-title register_label">兑换次数：</span> <span><em>*</em></span>
+						<input type="text" class="input-text" style="width: 100px;" name="exchange_count" id="exchange_count" value="${prize.exchange_count}" onkeyup="value=value.replace(/[^\d]/g,'')">
+						<span class="grey-memo">每个粉丝允许兑换的次数</span>
+						<div id="error_exchange_count" class="error hidden" style="padding-left: 120px;"></div>
+					</li>
+					
+					<li>
+						<span class="label-title register_label">手机话费面值：</span> <span><em>*</em></span>
+						<input type="text" class="input-text" style="width: 100px;" name="phone_cash" id="phone_cash" value="${prize.phone_cash}" onkeyup="value=value.replace(/[^\d]/g,'')">
+						<span class="grey-memo">你需要为粉丝手机充值的话费面额</span>
+						<div id="error_phone_cash" class="error hidden" style="padding-left: 120px;"></div>
+					</li>
+					
+				</ul>
+			</form>
+		</div>
+		</div>
+	</div>	
+</div>		
+[#include "/includes/footer.html" /]
+<script>
+	Template.init("#menu-prize", "#nav-prize-add");
+</script>
+</body>
+</html>

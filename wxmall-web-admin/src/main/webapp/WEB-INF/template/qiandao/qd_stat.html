@@ -1,0 +1,187 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+[#include "/includes/header.html" /]
+<script type="text/javascript">
+	var qname = "";
+	$(document).ready(function() {
+	    $("#myqueryBtn").click(function(){
+	    	qname = $("#q_pond_txt").val() == "输入签到名称" ? "" : $("#q_pond_txt").val();
+	    	searchactivitys();
+	    });
+        searchactivitys();
+	});
+	var pageClick = function(pageNo) {
+		searchactivitys(pageNo);
+	}
+	var searchactivitys = function(currPage){
+		var params = {};
+		//其他查询条件
+		if(currPage){
+			params.page = currPage;
+		}
+		params.qname = qname;
+		params.type = $("#a_qiandao_sel").val();
+		
+		$("#mainTable").mask("加载中...");
+		var url = obz.ctx + "/qiandao/statlist";
+		obz.ajaxJson(url, params, function(resp){
+			var result = resp.data;
+			$(".qdstatLotGrid").empty();
+			
+			if(currPage){
+				$("#pager").pager({ pagenumber:currPage, recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });
+			}else{
+				$("#pager").pager({ recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });	
+			}
+			
+			var dataList = result.list;
+			if(dataList.length>0){
+				for(var i=0;i<dataList.length;i++){
+					var _row = dataList[i];
+					var trTpl = $("#activity_table_tr_tpl").find("tbody").clone(true);
+					var trHtml = obz.dataTemplate4obj(trTpl.html(), _row);
+					$(".qdstatLotGrid").append(trHtml);
+				}
+				TBatch.checkCheckbox();
+				TBatch.initCheckboxClick();
+				TBatch.initOptEvent(ActivityTableOpt.init());
+			}else{
+				var trTpl = $("#table_noresult_tr_tpl").find("tbody").clone(true);
+				$(".qdstatLotGrid").append(trTpl.html());
+			}
+			$("#mainTable").unmask();
+		});
+	}
+	
+	//=============================表格操作事件开始=============================================
+	var ActivityTableOpt = {
+		showdetail : function(param){
+			var id = param[1];
+			/* var edit_dialog = new obz.PopupDialog(obz.ctx + "/activity/"+action+"?id="+id, "addactivityUIDailogDiv", function(response, status, xhr){
+				$("#addactivityUIDailogDiv").unmask();
+			});
+			edit_dialog.init(); */
+			location.href = obz.ctx + "/activitystat/detail?taskId="+id;
+		}, 
+		
+		init : function(){
+			var optArray = new Array();
+			optArray.push(this.showdetail);
+			return optArray;
+		}
+	}	
+	//=============================表格操作事件结束=============================================
+</script>
+</head>
+
+<body class="fixed-sidebar full-height-layout gray-bg">
+[#include "/includes/menus.html" /]
+<div class="wrapper wrapper-content">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	           <a href="${webctx}/qiandao" class="J_menuTab active">签到</a>
+		       <a href="${webctx}/lottery" class="J_menuTab">抽奖</a>
+		       <a href="${webctx}/prize" class="J_menuTab">奖品 </a>
+	       </div>
+	   	</nav>
+	</div>
+	<div class="tabs-container row" style="padding-top: 12px;">
+        <ul class="nav nav-tabs">
+            <li><a href="${webctx}/qiandao/add">签到设置</a></li>
+			<li><a href="${webctx}/qiandao">签到管理</a></li>
+			<li class="active"><a href="${webctx}/qiandao/stat">数据统计</a></li>
+        </ul>
+    </div>
+  	<!-- <div class="box infomation">
+	统计活动参与情况，只统计有用户参与的活动，没有用户参与的活动不会显示
+	</div> -->
+	<div id="tableList" class="row ibox-content" style="padding-top: 10px;">
+		<!-- <table width="100%" border="0" cellspacing="1" cellpadding="0">
+			<tr>
+				<td colspan="3" style="text-align: left;">&nbsp;&nbsp;
+					<select id="a_qiandao_sel" style="width: 102px">
+						<option value="-1" selected="selected">全部</option>
+						<option value="1">签到</option>
+					</select>
+					<button id="myqueryBtn" class="btn btn-success">查询</button>
+				</td>
+			</tr>
+		</table> -->
+	
+		<div id="activityToolsbar" class="panel-body">
+			<div id="pager" class="jqpager" style="margin-bottom: 1px;"></div>		
+		</div>
+		
+		<table class="table table-striped table-bordered bootstrap-datatable datatable" id="mainTable" border="0">
+			<thead>
+				<tr>
+					<th>
+						<input type="checkbox" id="all" title="全选/反选" style="margin-right: 4px; vertical-align: middle;"/>
+					</th>
+					<th>签到名称</th>
+					<th>参与者</th>
+					<th>累计签到次数</th>
+					<th>连续签到次数</th>
+					<th>最近签到时间</th>
+					<!-- <th>操作</th> -->
+				</tr>
+			</thead>
+			<tbody class="qdstatLotGrid">
+			</tbody>
+		</table>
+	</div>     
+</div>	
+
+<!-- 模板开始 -->
+<table id="activity_table_tr_tpl" style="display: none;">
+	<tbody>
+		<tr class="package">
+			<td>
+				<input type="checkbox" class="commchk" id="checkbox_{id}" style="margin-right: 4px; vertical-align: middle;"/>
+			</td>
+			<td>
+				<span style="margin-right: 5px; margin-left: 2px; vertical-align: middle;">{qiandao_name}</span>
+			</td>
+			<td>
+				<span id="_span_{id}" style="margin-right: 5px; margin-left: 2px; vertical-align: middle;">
+				{nickname}
+				</span>
+			</td>
+			<td>
+				<span>
+					{qiandao_count}
+				</span>
+			</td>
+			<td>
+				<span>
+					{c_qiandao_count}
+				</span>
+			</td>
+			<td>
+				<span>
+					{sign_date}
+				</span>
+			</td>
+			<!-- <td>
+				&nbsp;<a id="showdetail_{id}_{task_type}" href="javascript:void(0)" style="text-decoration: underline;">参与情况明细</a>
+			</td> -->
+		</tr>
+	</tbody>
+</table>
+<table id="table_noresult_tr_tpl" style="display: none;">
+	<tbody>
+		<tr class="package">
+			<td nowrap="nowrap" class="center" colspan="6">
+				没有结果集
+			</td>
+		</tr>
+	</tbody>
+</table>
+[#include "/includes/footer.html" /]
+<script>
+Template.init("#menu-qiandao");
+</script>
+</body>
+</html>	

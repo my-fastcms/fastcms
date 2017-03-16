@@ -1,0 +1,188 @@
+[#include "/mall/common/default.html" /]
+<div class="content">
+	<!-- 主体内容 -->
+	<div class="weui_tab_bd">
+		<!-- 搜索框  -->
+		[#include "/mall/common/head.html"/]
+		<!-- /搜索框  -->
+		<!-- 分类 -->
+		<div id="classify-container" class="weui-row weui-no-gutter">
+			<div class="weui-col-20 swiper-container">
+				<ul class="swiper-wrapper classify">
+					<!-- <li class="active swiper-slide"><a href="javascript:void(0)" target="classify-win">时令果蔬</a></li>
+					<li class="swiper-slide"><a href="javascript:void(0)" target="classify-win">海鲜干货</a></li>
+					<li class="swiper-slide"><a href="javascript:void(0)" target="classify-win">日用品</a></li>
+					<li class="swiper-slide"><a href="javascript:void(0)" target="classify-win">榨汁机</a></li>
+					<li class="swiper-slide"><a href="javascript:void(0)" target="classify-win">工艺品</a></li>
+					<li class="swiper-slide"><a href="javascript:void(0)" target="classify-win">电烤盘</a></li>
+					<li class="swiper-slide"><a href="javascript:void(0)" target="classify-win">特色商品</a></li>
+					<li class="swiper-slide"><a href="javascript:void(0)" target="classify-win">酒水饮品</a></li> -->
+					
+					<%for(list in productCategoryTreeList){%>
+						<li class="swiper-slide" id="${list.id}"><a href="javascript:void(0)" target="classify-win">${list.name}</a></li>
+					<%}%>
+				</ul>
+			</div>
+			<div class="weui-col-80 child-window">
+				<div class="content">
+					<img class="cover" src="${ctxPath}/resources/weixin/images/ding.jpg" height="120px" alt="封面" />
+					<h3>&nbsp;&nbsp;&nbsp;&nbsp;热门分类</h3>
+					<div id="list" class="weui_grids classify-info">
+						<a href="${ctxPath}/weixin/product/productList" class="weui_grid js_grid" data-id="button">
+							<div class="weui_grid_icon">
+								<img src="${ctxPath}/resources/weixin/images/swiper-2.jpg" alt="">
+							</div>
+							<p class="weui_grid_label">
+								手机
+							</p>
+						</a>
+						<a href="${ctxPath}/weixin/product/productList" class="weui_grid js_grid" data-id="cell">
+							<div class="weui_grid_icon">
+								<img src="${ctxPath}/resources/weixin/images/swiper-2.jpg" alt="">
+							</div>
+							<p class="weui_grid_label">
+								笔记本
+							</p>
+						</a>
+						<a href="${ctxPath}/weixin/product/productList" class="weui_grid js_grid" data-id="toast">
+							<div class="weui_grid_icon">
+								<img src="${ctxPath}/resources/weixin/images/swiper-2.jpg" alt="">
+							</div>
+							<p class="weui_grid_label">
+								坚果炒货
+							</p>
+						</a>
+						<a href="${ctxPath}/weixin/product/productList" class="weui_grid js_grid" data-id="button">
+							<div class="weui_grid_icon">
+								<img src="${ctxPath}/resources/weixin/images/swiper-2.jpg" alt="">
+							</div>
+							<p class="weui_grid_label">
+								手机
+							</p>
+						</a>
+						<a href="${ctxPath}/weixin/product/productList" class="weui_grid js_grid" data-id="cell">
+							<div class="weui_grid_icon">
+								<img src="${ctxPath}/resources/weixin/images/swiper-2.jpg" alt="">
+							</div>
+							<p class="weui_grid_label">
+								笔记本
+							</p>
+						</a>
+						<a href="${ctxPath}/weixin/product/productList" class="weui_grid js_grid" data-id="toast">
+							<div class="weui_grid_icon">
+								<img src="${ctxPath}/resources/weixin/images/swiper-2.jpg" alt="">
+							</div>
+							<p class="weui_grid_label">
+								坚果炒货
+							</p>
+						</a>
+						<a href="${ctxPath}/weixin/product/productList" class="weui_grid js_grid" data-id="button">
+							<div class="weui_grid_icon">
+								<img src="${ctxPath}/resources/weixin/images/swiper-2.jpg" alt="">
+							</div>
+							<p class="weui_grid_label">
+								手机
+							</p>
+						</a>
+						<a href="${ctxPath}/weixin/product/productList" class="weui_grid js_grid" data-id="cell">
+							<div class="weui_grid_icon">
+								<img src="${ctxPath}/resources/weixin/images/swiper-2.jpg" alt="">
+							</div>
+							<p class="weui_grid_label">
+								笔记本
+							</p>
+						</a>
+						<a href="${ctxPath}/weixin/product/productList" class="weui_grid js_grid" data-id="toast">
+							<div class="weui_grid_icon">
+								<img src="${ctxPath}/resources/weixin/images/swiper-2.jpg" alt="">
+							</div>
+							<p class="weui_grid_label">
+								坚果炒货
+							</p>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /分类 -->
+	</div>
+	<!-- /主体内容 -->
+	
+	<!-- 底部导航 -->
+	[#include "/mall/common/navigator.html"/]
+	<!-- /底部导航 -->
+</div>
+<!--手机端script需要加载后方-->
+[#include "/mall/common/script.html"/]
+<script type="text/javascript">
+Template.init("#nav-page-categ");
+</script>
+<script type="text/javascript">
+$(function() {
+	var parentId = '${defaultParentId}';
+	var initY,moveY,top;
+	var fps = $("#fps");
+	//分类点击事件
+	$("#classify-container ul li").click(function(){
+		$(this).parent().find("li").removeClass("active");
+		$(this).addClass("active");
+		parentId = $(this).attr("id");
+		loadData(parentId);
+	});
+	//商城计算高度
+	function initClassifyHeight(){
+		var bodyH = window.innerHeight;
+		var headerH = $("#search_bar").innerHeight();
+		var footer = $(".weui_tabbar").innerHeight();
+		$("#classify-container").height( bodyH - headerH - footer );
+	};
+	$(window).load(function(){
+		initClassifyHeight();
+		$("#classify-container > .swiper-container").height($("#classify-container").height());
+		$("#classify-container > .child-window").height($("#classify-container").height());
+			Swiper('.swiper-container', {
+	        slidesPerView: 'auto',
+	        paginationClickable: true,
+			freeModeSticky : true,
+			direction: 'vertical'
+	    });
+			
+		loadData(parentId);	
+	});
+	
+	function loadData(parentId){
+		$.post("${ctxPath}/weixin/category/getChildrenCateg", {parentId:parentId}, function(resp){
+			if(resp.code != 200){
+				$.toast("加载商品数据失败", "cancel");
+			 	return;
+			}
+			$("#list").empty();
+			var data = resp.data;
+			if(data.length <=0){
+				$("#list").html("没有子分类数据");
+				return;
+			}
+			
+			for(var i=0;i<data.length;i++){
+				var content = data[i];
+				var	contentDiv = formatTemplate(content, $("#list_item").html());
+				$("#list").append(contentDiv);
+			}
+		});
+	}
+	
+	$(window).resize(function(){
+		initClassifyHeight();
+	});
+});
+</script>
+<script id="list_item" type="text/html">
+<a href="${ctxPath}/weixin/product/productList?categId={id}" class="weui_grid js_grid" data-id="button">
+	<div class="weui_grid_icon">
+		<img src="${imgPath}/{categ_img}" alt="">
+			</div>
+			<p class="weui_grid_label">
+			{name}
+			</p>
+		</a>
+</script>

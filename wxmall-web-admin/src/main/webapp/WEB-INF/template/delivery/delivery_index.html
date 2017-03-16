@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>运费模板</title>
+[#include "/includes/header.html" /]
+<link href="${webctx}/resources/css/delivery.css" rel="stylesheet"/>
+<style type="text/css">.nav-tabs li{width:100px;}.nav-tabs li a{text-align: center;}</style>	
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+[#include "/includes/menus.html" /]
+<div class="wrapper wrapper-content">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	           <a href="${webctx}/product" class="J_menuTab">商品</a>
+		       <a href="${webctx}/category" class="J_menuTab">分类 </a>
+		       <a href="${webctx}/specification" class="J_menuTab">规格 </a>
+		       <a href="${webctx}/delivery" class="J_menuTab active">运费模板</a>
+	       </div>
+	   	</nav>
+	</div>
+
+ <div id="page-trade-delivery" class="row ibox-content app__content page-trade-delivery">
+ <div class="freight-list">
+	<div class="freight-head">
+	 <button id="myqueryBtn" onclick="addMemo();" class="btn btn-success">新建运费模版</button>
+	</div>
+	<div class="freight-content" style="display: block;">
+    <div class="freight-template-list-wrap js-freight-template-list-wrap">
+    	<ul class="deliveryLotGrid"></ul>
+    </div>
+</div>
+ </div>
+ </div>
+ <div id="deliveryToolsbar" class="panel-body">
+			<div id="pager" class="jqpager" style="margin-bottom: 1px;float: right;"></div>
+</div>
+</div>
+<script type="text/javascript">
+function addMemo(){
+	location.href=obz.ctx + "/delivery/add";
+}
+$(function (){
+	
+	var s=$("#page-trade-delivery"),i=s.find(".deliveryLotGrid");
+	 i.on("click",".js-freight-extend-toggle",function(s){
+		 var i=$(this);
+		e(i);
+	});
+});
+function e(t){
+	"1"==t.data("expend")?(t.find(".freight-extend-toggle").addClass("freight-extend-toggle-extend"),t.data("expend","0"),
+			t.siblings().hide()):(t.find(".freight-extend-toggle").removeClass("freight-extend-toggle-extend"),t.data("expend","1"),
+			t.siblings().show());
+}
+$(document).ready(function() {
+	searchDelivery();
+});
+var pageClick = function(pageNo) {
+	searchDelivery(pageNo);
+}
+
+var searchDelivery = function(currPage){
+	var params = {};
+	//其他查询条件
+	if(currPage){
+		params.page = currPage;
+	}
+	//params.qname = qname;
+	//params.type = $("#a_type_sel").val();
+	//params.status = $("#a_status_sel").val();
+	
+	$("#main").mask("加载中...");
+	var url = obz.ctx + "/delivery/list";
+	obz.ajaxJson(url, params, function(resp){
+		$("#main").unmask();
+		var result = resp.data;
+		$(".deliveryLotGrid").empty();
+		if(currPage){
+			$("#pager").pager({ pagenumber:currPage, recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });
+		}else{
+			$("#pager").pager({ recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });	
+		}
+		var dataList = result.list;
+		if(dataList.length>0){
+			for(var i=0;i<dataList.length;i++){
+				var _row = dataList[i];
+				if(_row.valuationType=="2"){
+				var liHtml = obz.dataTemplate4obj($("#freight-template-weight").html(), _row);	
+				}else{
+				var liHtml = obz.dataTemplate4obj($("#freight-template").html(), _row);
+				}
+				$(".deliveryLotGrid").append(liHtml);
+				 for(var j=0;j<_row.deliverySetList.length;j++){
+						var s_row=_row.deliverySetList[j];	 
+						var trHtml = obz.dataTemplate4obj($("#freight-template_table").html(),s_row);	
+						$("#js-freight-cost_"+_row.id).append(trHtml);
+				}
+			}
+			TBatch.initOptEvent(ActivityTableOpt.init());
+		}else{
+			$(".deliveryLotGrid").append($("#table_noresult_tr_tpl").html());
+		}
+	});
+}
+var ActivityTableOpt = {
+		edit : function(param){
+			var id = param[1];
+			location.href = obz.ctx + "/delivery/edit/"+id;
+		}, 
+		
+		del : function(param){
+			obz.showMessage("确定删除吗？删除后不可恢复，请谨慎操作！", function(){
+    			var ids = param[1];
+	    		obz.ajaxJson(obz.ctx + "/delivery/del", {ids: ids}, function(resp){
+	    			if(resp.code==200){
+	    				searchDelivery();	
+	    			}
+	    		});
+    		});
+			return false;
+		},	
+		init : function(){
+			var optArray = new Array();
+			//optArray.push(this.showActivityById);//此处必须按照table里面的操作列顺序加
+			optArray.push(this.edit);
+			optArray.push(this.del);
+			return optArray;
+		}
+	}	
+</script>
+
+<script type="text/template" id="freight-template">
+ <li class="freight-template-item">
+     <h4 class="freight-template-title js-freight-extend-toggle">
+    <b>{name}</b> 
+    <div class="pull-right">
+    <span class="c-gray">最  后  编  辑  时  间  {startTime}  </span>--
+        <a id="edit_{id}" href="${webctx}/delivery/edit?id={id}" class="js-freight-edit">修   改</a>-
+        <a id="del_{id}" href="javascript:void(0)" class="js-freight-delete">删   除</a>
+        <a href="javascript:;" class="freight-extend-toggle  freight-extend-toggle-extend"></a>
+    </div>    
+    </h4>
+		<table class="freight-template-table" style="display:none">
+		    <thead class="js-freight-cost-list-header">
+		            <tr>
+		                <td>可配送区域</td>
+		                <td>首件（个）</td>
+		                <td>运费（元）</td>
+		                <td>续件（个）</td>
+		                <td>续费（元）</td>
+		            </tr>
+		    </thead>
+		    <tbody id="js-freight-cost_{id}">
+            </tbody>
+		</table>
+        </li>
+</script>
+<script type="text/template" id="freight-template-weight">
+ <li class="freight-template-item">
+     <h4 class="freight-template-title js-freight-extend-toggle">
+    <b>{name}</b> 
+    <div class="pull-right">
+    <span class="c-gray">最  后  编  辑  时  间  {startTime}  </span>--
+        <a id="edit_{id}" href="${webctx}/delivery/edit?id={id}" class="js-freight-edit">修   改</a>-
+        <a id="del_{id}" href="javascript:void(0)" class="js-freight-delete">删   除</a>
+        <a href="javascript:;" class="freight-extend-toggle  freight-extend-toggle-extend"></a>
+    </div>    
+    </h4>
+		<table class="freight-template-table" style="display:none">
+		    <thead class="js-freight-cost-list-header">
+		            <tr>
+		                <td>可配送区域</td>
+		                <td>首重（Kg）</td>
+		                <td>运费（元）</td>
+		                <td>续重（Kg）</td>
+		                <td>续费（元）</td>
+		            </tr>
+		    </thead>
+		    <tbody id="js-freight-cost_{id}">
+            </tbody>
+		</table>
+        </li>
+</script>
+<script type="text/template" id="freight-template_table">
+<tr>
+<td><span class="text-depth1">{area_id}</span></td>
+<td>{start_standards}</td>
+<td>{start_fees}</td>
+<td>{add_standards}</td>
+<td>{add_fees}</td>
+</tr>
+</script>
+
+<script type="text/template" id="table_noresult_tr_tpl">
+<p class="c-gray" style="margin: 10px 0 20px 12px">还没有运费模版</p>
+</script>
+<script>
+Template.init("#menu-goods");
+</script>
+</body>
+</html>

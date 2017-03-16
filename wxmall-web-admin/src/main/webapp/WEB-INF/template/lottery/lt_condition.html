@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>抽奖条件</title>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+<div class="form-group">
+    <label class="col-md-2 control-label">抽奖条件</label>
+    <div class="col-md-8">
+    <select id="condition_type" onchange="changeConditionType()" class="form-control" style="width: 150px;">
+		<option value="1">不限条件</option>
+		<!-- <option value="2">下单抽奖</option> -->
+		<option value="3">积分抽奖</option>
+		<!-- <option value="4">淘金币抽奖</option> -->
+    </select> 
+                  
+    <div style="display: none; border:none;" class="sign_activity sign_activity_tabin" id="lott_condtions">
+      	<input type="hidden" id="condTradeId" value="${condTrade.id}">
+    	    <ul class="sign_activity_list">
+                 <li>
+                 	 <p>
+                		[#if condTrade.tradeType != 1 && condTrade.tradeType??]
+                			<input type="radio" name="con_trade" value="1">
+                		[#else]
+							<input type="radio" name="con_trade" value="1" checked="checked">                			
+                		[/#if]
+                       	最近 <input placeholder="" class="input-xfat" id="condition_day" name="condition_day" value="${condTrade.conditionDay}" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" type="text"> 天下过订单　
+                   		<label id="condition_day_error" style="color:red;"></label>
+                      </p>
+                  </li>
+                  <li>
+                      <p>
+                       			[#if condTrade.tradeType == 2 ]
+                       				<input type="radio" name="con_trade" value="2" checked="checked">
+                       			[#else]
+                       				<input type="radio" name="con_trade" value="2">
+                       			[/#if]
+                             	指定时间段 
+                             	<input type="text" id="condition_trade_startdate" name="condition_trade_startdate" readonly="readonly" style="width: 100px;"
+									onfocus="WdatePicker({skin:'twoer', isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd',minDate:'%y-%M-%d %H:%m:%s',maxDate:'#F{$dp.$D(\'condition_trade_startdate\')}'})"
+									class="Wdate" value="${condTrade.conditionTradeStartdate}" />
+									到
+										<input type="text" id="condition_trade_enddate" name="condition_trade_enddate" readonly="readonly" style="width: 100px;"
+										onfocus="WdatePicker({skin:'twoer', isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd',minDate:'%y-%M-%d %H:%m:%s',maxDate:'#F{$dp.$D(\'condition_trade_enddate\')}'})"
+										class="Wdate" value="${condTrade.conditionTradeEnddate}" />
+							        下过订单　
+                         </p>
+                         <label id="trade_day_error" style="color:red;"></label>
+                    </li>
+                 <li>
+                 	<p class="f1">
+                 		订单状态为
+                       	 <select id="trade_status_sel" style="width: 110px; height: 34px;">
+                   	 			<option value="1">确认收货</option>
+                   	 			<option value="2">已付款</option>
+                    	 	 </select>
+                   	</p>
+                   	<p class="f1">
+                       	 订单金额满 <input type="text" class="input-xfat" name="trade_money" id="trade_money" value="${condTrade.tradeMoney }" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"> 元
+                       	 <label id="trade_money_error" style="color:red;"></label>　
+                   	</p>                       
+                 </li>
+        	</ul>
+        </div>
+        <div style="display: none; border:none;" class="sign_activity sign_activity_tabin" id="lott_condtions_jifen">
+        	<p class="f1">
+        		<div id="error_cond_jifen">
+                 扣除积分 <input type="text" class="input-xfat" name="cond_jifen" id="cond_jifen" value="${lottery.needPay }" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"> 个
+            	 <label class="control-label" for="cond_jifen"></label>　
+            </p>
+            <span class="alert-success">
+				<i class="fa fa-info-circle"></i>
+			买家每次抽奖消耗积分数
+			</span>
+            	</div>
+            
+        </div>
+        <div style="display: none; border:none;" class="sign_activity sign_activity_tabin" id="lott_condtions_taojinbi">
+        	<p class="f1">
+        	<div id="error_cond_taojinbi">
+                 扣除淘金币 <input type="text" class="input-xfat" name="cond_taojinbi" id="cond_taojinbi" value="${lottery.needPay }" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"> 个
+            	 <label class="control-label" for="cond_taojinbi"></label>
+            </div>	 
+            <span class="alert-success">
+				<i class="fa fa-info-circle"></i>
+			买家每次抽奖消耗淘金币数
+			</span>　
+            </p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

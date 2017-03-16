@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>申请加盟</title>
+[#include "/includes/header.html" /]
+<style type="text/css">
+.weui-select{
+	width: 40%;
+}
+</style>
+</head>
+<body>
+<div class="weui-cells__tips">[#if parentAgent??] 邀请加盟 [#else] 申请加盟[/#if]</div>
+[#if parentAgent??]
+<div class="weui-cells">
+	<div class="weui-cell">
+		<input type="hidden" id="parentId" value="${parentAgent.id}">
+	  	<div class="weui-cell__hd"><img src="${session._buyerUser.headimgurl}" alt="${session._buyerUser.nickname}" style="width:40px;margin-right:5px;display:block"></div>
+	  	<div class="weui-cell__bd">
+	    <p>${parentAgent.agent_name}</p>
+	    <p style="font-size: 12px;">
+	    	<!-- 有<font color="red"><span id="user_left_count">${session._buyerUser.score}</span></font>个朋友加入 -->
+	    	<font color="red"><span id="user_left_count">推荐人</span></font>
+	    </p>
+	  	</div>
+	  	<div class="weui-cell__ft">一级分销商</div>
+	</div>
+</div>
+[/#if]
+<div class="weui-cells weui-cells_form" style="font-size: 14px;">
+	<div class="weui-cell">
+		<div class="weui-cell__hd"><label class="weui-label" for="name">姓名</label></div>
+		<div class="weui-cell__bd">
+			<input id="agentName" name="name" value="" class="weui-input" placeholder="真实姓名" type="text">
+		</div>
+	</div>
+	<div class="weui-cell">
+		<div class="weui-cell__hd"><label class="weui-label" for="name">手机号</label></div>
+		<div class="weui-cell__bd">
+			<input id="phone" name="mobile" value="" class="weui-input" placeholder="手机号码" type="tel" onkeyup="this.value=this.value.replace(/\D/g,'')">
+		</div>
+	</div>
+	<div class="weui-cell weui-cell_vcode">
+        <div class="weui-cell__hd">
+          <label class="weui-label">验证码</label>
+        </div>
+        <div class="weui-cell__bd">
+          <input id="phoneCode" class="weui-input" type="tel" placeholder="短信验证码">
+        </div>
+        <div class="weui-cell__ft">
+          <a id="sendCodeBtn" class="weui-vcode-btn" href="javascript:void(0)" style="font-size: 14px;">获取验证码</a>
+        </div>
+    </div>
+    <div class="weui-cell weui-cell_vcode">
+        <div class="weui-cell__hd"><label class="weui-label">验证码</label></div>
+        <div class="weui-cell__bd">
+          <input id="code" class="weui-input" type="tel" placeholder="请输入验证码">
+        </div>
+        <div class="weui-cell__ft" id="image_div">
+          <img id="captchaImage" class="weui-vcode-img" style="width: 80px;padding-right: 5px;" src="${webctx}/captcha?width=100&height=35&fontsize=20" alt="换一张" />
+        </div>
+    </div>
+	<div class="weui-cell">
+		<div class="weui-cell__hd"><label class="weui-label" for="name">省市区县</label></div>
+		<div class="weui-cell__bd">
+		<input type="hidden" id="areaId"  name="areaId"/>
+		</div>
+	</div>
+	<div class="weui-cell">
+		<div class="weui-cell__hd"><label class="weui-label" for="name">详细地址</label></div>
+		<div class="weui-cell__bd">
+			<input id="address" name="address" value="" class="weui-input" placeholder="街道地址" type="text">
+		</div>
+	</div>
+	<div class="content-padded">
+	    <a id="apply_btn" href="javascript:void(0);" class="weui-btn weui-btn_primary">提交申请</a>
+	</div>
+</div>
+[#include "includes/footer.html"/]
+<script type="text/javascript">
+//地区选择
+$("#areaId").lSelect({
+	url: "${webctx}/receiver/area"
+});
+var $captchaImage = $("#captchaImage");
+var change_captcha = function() {
+	var timestamp = (new Date()).valueOf();
+	var imageSrc = $captchaImage.attr("src");
+	if(imageSrc.indexOf("?") >= 0) {
+		imageSrc = imageSrc.substring(0, imageSrc.indexOf("?"));
+	}
+	imageSrc = imageSrc + "?timestamp=" + timestamp + "&width=100&height=35&fontsize=30";
+	$captchaImage.attr("src", imageSrc);
+};
+$captchaImage.click(change_captcha);
+$("#sendCodeBtn").click(function(){
+	if($("#phone").val() == null || $("#phone").val() == ""){
+		showMsg("请输入手机号码");
+		return;
+	}
+	$.showLoading("正在发送验证码...");
+	$.post("${webctx}/sendCode", {phone:$("#phone").val()}, function(resp){
+		$.hideLoading();
+		if(resp.code != 200){
+			showMsg(resp.msg);
+		}else{
+			showMsg("短信验证码已发送");
+		}
+	});
+});
+$("#apply_btn").click(function(){
+	var params = {};
+	var agentName = $("#agentName").val(); if(agentName==""){showMsg("请输入姓名");return}
+	var agentPhone = $("#phone").val(); if(agentPhone==""){showMsg("请输入手机号码");return}
+	var phoneCode = $("#phoneCode").val(); if(phoneCode==""){showMsg("请短信验证码");return}
+	var code = $("#code").val(); if(code==""){showMsg("请输入验证码");return}
+	var areaId = $("#areaId").val(); if(areaId==""){showMsg("请选择地址");return}
+	var addr = $("#address").val(); if(addr==""){showMsg("请填写详细地址");return}
+	var ssx = "";//详细地址补全省市县区
+	$("select[name='areaId_select']").each(function(){
+		ssx += $(this).find("option:selected").text();
+	});
+	addr = ssx + addr;
+	params.agentName=agentName;
+	params.agentPhone=agentPhone;
+	params.phoneCode=phoneCode;
+	params.areaId=areaId;
+	params.code=code;
+	params.addr=addr;
+	if($("#parentId").val() !=null && $("#parentId").val() !=""){
+		params.parentId = $("#parentId").val();
+	}
+	$.showLoading("正在提交...");
+	$.post("${webctx}/agent/save", params, function(resp){
+		$.hideLoading();
+		if(resp.code != 200){
+			showMsg(resp.msg==null ? "系统错误" : resp.msg);
+			return;
+		}
+		$.alert("提交成功，请等待审核", function(){
+			location.reload();
+		});
+	});
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,347 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>我的图片</title>
+[#include "/includes/header.html" /]
+<script type="text/javascript">
+</script>
+<style type="text/css">
+.page-showcase-attachment {
+    position: relative;
+    width: 80%;
+}
+.page-showcase-attachment::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+.page-showcase-attachment .media-container {
+    margin-right: 150px;
+    overflow: hidden;
+}
+.page-showcase-attachment .category-container {
+    background: #f8f8f8 none repeat scroll 0 0;
+    box-sizing: border-box;
+    float: right;
+    min-height: 400px;
+    padding: 10px 0;
+    width: 200px;
+}
+.page-showcase-attachment .category-list {
+    margin-bottom: 15px;
+    max-height: 996px;
+    overflow-y: auto;
+}
+.page-showcase-attachment .category-list li {
+    cursor: pointer;
+    height: 40px;
+    line-height: 40px;
+    margin-right: 1px;
+    padding: 0 31px 0 8px;
+    position: relative;
+}
+.page-showcase-attachment .category-list li:hover {
+    background: #fafafa none repeat scroll 0 0;
+}
+.page-showcase-attachment .category-list li.active {
+    background: #fff none repeat scroll 0 0;
+}
+.page-showcase-attachment .category-list .category-name {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 80px;
+}
+.page-showcase-attachment .category-list .category-num {
+    color: #999;
+    position: absolute;
+    right: 8px;
+    top: 0;
+}
+.ui-box {
+    margin-bottom: 15px;
+}
+
+.ui-btn-success {
+    background: #4b0 none repeat scroll 0 0;
+    border-color: #3da900;
+    color: #fff;
+}
+.ui-btn {
+    background: #f8f8f8 none repeat scroll 0 0;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    box-sizing: content-box;
+    color: #333;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 12px;
+    height: 26px;
+    line-height: 26px;
+    padding: 0 12px;
+    text-align: center;
+}
+
+.page-showcase-attachment .media-title {
+    height: 28px;
+}
+.page-showcase-attachment .media-title-wrap h1 {
+    display: inline;
+    font-size: 16px;
+    line-height: 28px;
+}
+.page-showcase-attachment .media-title-wrap h1, .page-showcase-attachment .media-title-wrap a {
+    margin-right: 10px;
+}
+
+.page-showcase-attachment .action-bar {
+    background: #f8f8f8 none repeat scroll 0 0;
+    line-height: 28px;
+    margin-bottom: 20px;
+    min-height: 28px;
+    padding: 6px;
+}
+.page-showcase-attachment .action-bar label {
+    display: inline-block;
+}
+.page-showcase-attachment .action-bar label input[type="checkbox"] {
+    margin: 0 6px 0 0;
+    vertical-align: baseline;
+}
+.page-showcase-attachment .action-bar .batch-opt {
+    margin-left: 20px;
+}
+
+.page-showcase-attachment .image-list {
+    margin: 0 0 0 -20px;
+}
+.page-showcase-attachment .image-list::after {
+    clear: both;
+    content: "";
+    display: table;
+}
+.page-showcase-attachment .image-item {
+    float: left;
+    margin: 0 0 20px 20px;
+    width: 100px;
+}
+.page-showcase-attachment .image-item .image-box {
+    background: #ddd none no-repeat scroll 50% 50% / cover ;
+    height: 100px;
+    width: 100px;
+}
+.page-showcase-attachment .image-item .image-title {
+    padding: 8px 0 0;
+}
+.page-showcase-attachment .image-item .image-title label {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 160px;
+}
+.page-showcase-attachment .image-item .image-title label input[type="checkbox"] {
+    margin: 0 6px 0 0;
+    vertical-align: baseline;
+}
+.page-showcase-attachment .image-item .image-opt a {
+    margin-right: 8px;
+}
+.page-showcase-attachment .action-bar {
+    background: #f8f8f8 none repeat scroll 0 0;
+    line-height: 28px;
+    margin-bottom: 20px;
+    min-height: 28px;
+    padding: 6px;
+}
+</style>
+<body class="fixed-sidebar full-height-layout gray-bg">
+[#include "/includes/menus.html" /]
+<div class="wrapper wrapper-content">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	           <a href="${webctx}/shop" class="J_menuTab">基本信息</a>
+		       <a href="${webctx}/shop/sendaddr" class="J_menuTab">发货地址</a>
+		       <a href="${webctx}/attachment" class="J_menuTab active">我的文件</a>
+	       </div>
+	   	</nav>
+	</div>
+<div class="row ibox-content">
+
+<div class="page-showcase-attachment" id="mainTable">
+   <div class="category-container">
+	   <div>
+		   <ul class="category-list">
+		   [#if imageGroups??]
+		   [#list imageGroups as list]
+			   <li class="ui-tooltip" data-id="${list.id}" data-name="${list.groupName}">
+			      <span class="category-name">${list.groupName}</span>
+			      <span class="category-num">${list.imageNum}</span>
+			   </li>
+           [/#list]
+           [/#if]
+			   </ul>
+		   <div class="text-center">
+		   <a id="addGroup" href="javascript:;" class="ui-btn text-center">+ 添加分组</a>
+		   </div>
+	   </div>
+   </div>
+   
+   <div class="media-container">
+     <div class="media-title ui-box">
+		<span class="media-title-wrap">
+		<h1>全部</h1>
+		</span>
+		<a id="uploadImage" class="ui-btn ui-btn-success pull-right" href="javascript:;">上传图片</a>
+	</div>
+	
+	<div class="action-bar clearfix">
+		<label class="inline">
+		<input type="checkbox" id="all" title="全选/反选">
+		全选
+		</label>
+		<a class="batch-opt c-gray" href="javascript:;" style="cursor: not-allowed;">修改分组</a>
+		<a class="batch-opt c-gray" href="javascript:;" style="cursor: not-allowed;">删除</a>
+    </div>
+   
+    <div class="image-list">
+<!-- 		<div class="image-item">
+		<div class="image-box" style="background-image: url('http://120.76.79.206/group1/M00/00/25/eExPzlhpsaKAXX8hAAAaGSlN8-0291.jpg');"></div>
+		<div class="image-title">
+			<label><input type="checkbox">57d8cb71N9a3470e2.jpg</label>
+			</div>
+			<div class="image-opt">
+			 <a href="javascript:;">分组</a>
+			 <a href="javascript:;">删除</a>
+			</div>
+		</div>
+		<div class="image-item">
+		<div class="image-box" style="background-image: url('http://120.76.79.206/group1/M00/00/25/eExPzlhpsaKAXX8hAAAaGSlN8-0291.jpg');"></div>
+		<div class="image-title">
+			<label><input type="checkbox">57d8cb71N9a3470e2.jpg</label>
+			</div>
+			<div class="image-opt">
+			 <a href="javascript:;">分组</a>
+			 <a href="javascript:;">删除</a>
+			</div>
+		</div> -->
+   </div>
+   
+   
+   <div class="action-bar clearfix">
+       			<div id="pager" class="jqpager" style="margin-bottom: 1px;float: right;"></div>
+   </div>
+   
+   </div>
+</div>
+</div>
+</div>
+[#include "/includes/footer.html" /]
+<script type="text/javascript">
+var addGroupDialog;
+$(document).ready(function() {
+	searchImg();
+	 $("ul.category-list li").click(function() {
+		 $("ul.category-list li").each(function(){	
+			 $(this).removeClass("active");
+		}); 
+		 $(this).addClass("active");
+		$("h1").html($(this).attr("data-name"));
+		searchImg(null,$(this).attr("data-id"));
+	 });
+	 
+	 $("#uploadImage").click(function() {
+		 var id=$("ul.category-list li.active").attr("data-id");
+		 var params={};
+         if(id){
+        	 params.groupId=id; 
+		  }
+		 obz.uploadImage(params,function (){
+			 location.href=obz.ctx+"/attachment"; 
+		 });
+	 });
+
+	 $("#addGroup").click(function() {
+		 addGroupDialog = BootstrapDialog.show({
+				size: BootstrapDialog.SIZE_LARGE,
+				title: "添加分组",
+		        message: $('<div></div>').load(obz.ctx+'/attachment/addGroup')
+		    });
+	 });
+
+});
+var pageClick = function(pageNo) {
+	var id=$("ul.category-list li.active").attr("data-id");
+	if(id){
+		searchImg(pageNo,id);
+	}else{
+		searchImg(pageNo);
+	}
+	
+}
+var searchImg = function(currPage,id){
+	var params = {};
+	//其他查询条件
+	if(currPage){
+		params.page = currPage;
+	}
+	if(id){
+		params.id = id;
+	}
+	$("#mainTable").mask("加载中...");
+	var url = obz.ctx + "/attachment/getImageList";
+	obz.ajaxJson(url, params, function(resp){
+		$("#mainTable").unmask();
+		var result = resp.data;
+		$(".image-list").empty();
+		if(currPage){
+			$("#pager").pager({ pagenumber:currPage, recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });
+		}else{
+			$("#pager").pager({ recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });	
+		}
+		
+		var dataList = result.list;
+		if(dataList.length>0){
+			for(var i=0;i<dataList.length;i++){
+				var _row = dataList[i];
+				var trHtml = obz.dataTemplate4obj($("#image_item_tpl").html(), _row);
+				$(".image-list").append(trHtml);
+			}
+		}
+		
+	});
+	
+}
+searchImg();
+
+function del(obj){
+	var ids=$(obj).attr("id");
+	obz.showMessage("确定删除该图片？", function(){
+		obz.ajaxJson(obz.ctx + "/attachment/del", {ids: ids}, function(resp){
+			if(resp.code==200){
+				searchImg();	
+			}
+		});
+	});
+	return false;
+}
+</script>
+<script type="text/template" id="image_item_tpl">
+<div class="image-item">
+		<div class="image-box" style="background-image: url('{imgPath}');"></div>
+		<div class="image-title">
+			<label><input type="checkbox" class="commchk"  id="checkbox_{id}">{imgUrl}</label>
+			</div>
+			<div class="image-opt">
+			 <a href="javascript:;" id="{id}" onclick="del(this)">删除</a>
+			</div>
+		</div>
+</script>
+<script type="text/javascript">
+	Template.init("#menu-shop");
+</script>
+</body>
+</head>
+</html>

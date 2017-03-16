@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+[#include "/includes/header.html" /]
+<style type="text/css">
+.Item li{
+	 display: block;
+	  float: left;
+	  margin: 0 10px 0 10px;
+    position: relative;
+}
+.Item li lable{
+	 display: block;
+    height: 100%;
+}
+.nav-tabs li{width:100px;}
+.nav-tabs li a{text-align: center;}
+</style>
+<script type="text/javascript">
+function addSpecification(){
+	location.href=obz.ctx + "/specification/add";
+}
+$(document).ready(function() {
+	searchProducts();
+});
+var pageClick = function(pageNo) {
+	searchProducts(pageNo);
+}
+
+var searchProducts = function(currPage){
+	var params = {};
+	//其他查询条件
+	if(currPage){
+		params.page = currPage;
+	}
+	//params.qname = qname;
+	//params.type = $("#a_type_sel").val();
+	//params.status = $("#a_status_sel").val();
+	
+	$("#mainTable").mask("加载中...");
+	var url = obz.ctx + "/specification/list";
+	obz.ajaxJson(url, params, function(resp){
+		$("#mainTable").unmask();
+		var result = resp.data;
+		$(".specificationLotGrid").empty();
+		if(currPage){
+			$("#pager").pager({ pagenumber:currPage, recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });
+		}else{
+			$("#pager").pager({ recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });	
+		}
+		var dataList = result.list;
+		if(dataList.length>0){
+			for(var i=0;i<dataList.length;i++){
+				var _row = dataList[i];
+				
+				var trHtml = obz.dataTemplate4obj($("#specification_table_tr_tpl").html(), _row);
+				$(".specificationLotGrid").append(trHtml);
+				 for(var j=0;j<_row.specificationValues.length;j++){
+						var s_row=_row.specificationValues[j];	 
+						var liHtml = obz.dataTemplate4obj($("#specificationValues").html(),s_row);	
+						$(".specificationValueSelect_"+_row.id).append(liHtml);
+				}
+			}
+			TBatch.checkCheckbox();
+			TBatch.initCheckboxClick();
+			TBatch.initOptEvent(ActivityTableOpt.init());
+		}else{
+			$(".specificationLotGrid").append($("#table_noresult_tr_tpl").html());
+		}
+	});
+}
+
+var ActivityTableOpt = {
+		edit : function(param){
+			var id = param[1];
+			location.href = obz.ctx + "/specification/edit/"+id;
+		}, 
+		
+		del : function(param){
+			obz.showMessage("确定删除吗？删除后不可恢复，请谨慎操作！", function(){
+    			var ids = param[1];
+	    		obz.ajaxJson(obz.ctx + "/qiandao/del", {ids: ids}, function(resp){
+	    			if(resp.code==200){
+	    				searchQiandaos();	
+	    			}
+	    		});
+    		});
+			return false;
+		},	
+		init : function(){
+			var optArray = new Array();
+			//optArray.push(this.showActivityById);//此处必须按照table里面的操作列顺序加
+			optArray.push(this.edit);
+			//optArray.push(this.del);
+			return optArray;
+		}
+	}		
+//=============================表格操作事件结束=============================================
+</script>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+[#include "/includes/menus.html" /]
+<div class="wrapper wrapper-content">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	           <a href="${webctx}/product" class="J_menuTab">商品</a>
+		       <a href="${webctx}/category" class="J_menuTab">分类 </a>
+		       <a href="${webctx}/specification" class="J_menuTab active">规格 </a>
+		       <a href="${webctx}/delivery" class="J_menuTab">运费模板</a>
+	       </div>
+	   	</nav>
+	</div>
+	
+	<div class="panel-body">
+		<button onclick="addSpecification();" class="btn btn-success">添加规格</button>
+	</div>
+	
+	 <div id="tableList" class="row ibox-content">
+		
+		<table class="table table-striped table-bordered bootstrap-datatable datatable" id="mainTable" border="0">
+			<thead>
+				<tr>
+					<th>
+						<input type="checkbox" id="all" title="全选/反选" style="margin-right: 4px; vertical-align: middle;"/>
+					</th>
+					<th>
+						<span style="vertical-align: middle;">&nbsp;&nbsp;规格</span>
+					</th>
+					<th>规格值</th>
+					<th>创建时间</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody class="specificationLotGrid">
+			</tbody>
+		</table>
+		<div id="specificationToolsbar" class="panel-body">
+			<div id="pager" class="jqpager" style="margin-bottom: 1px;float: right;"></div>
+		</div>
+		</div>
+</div>
+<!-- 模板开始 -->
+<script type="text/template" id="specification_table_tr_tpl">
+		<tr class="package">
+			<td>
+				<input type="checkbox" class="commchk" id="checkbox_{id}" style="margin-right: 4px; vertical-align: middle;"/>
+			</td>
+			
+		    <td>
+		    {name}
+		    </td>
+		    
+		    <td>
+           <ul class="Item specificationValueSelect_{id}">
+           </ul>
+		    </td>
+			<td>
+			 {created}
+			</td>
+			<td>
+				&nbsp;<a id="edit_{id}" href="javascript:void(0)">编辑</a>
+			</td>
+		</tr>
+</script>
+
+<script type="text/template" id="specificationValues">
+	<li class="li_width">
+		<label>{name}</label>
+    </li>
+</script>
+
+<script type="text/template" id="table_noresult_tr_tpl">
+	<tr class="package">
+			<td class="center" colspan="6">
+				没有结果集，现在去创建吧，
+				<a href="${webctx}/qiandao/add" style="text-decoration: underline;">去创建</a>
+			</td>
+		</tr>
+</script>
+[#include "/includes/footer.html" /]
+<script>
+Template.init("#menu-goods");
+</script>
+</body>
+</html>

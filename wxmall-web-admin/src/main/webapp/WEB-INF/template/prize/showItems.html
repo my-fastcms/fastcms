@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>选择商品</title>
+<script type="text/javascript">
+var item_pageClick = function(pageNo) {
+	searchitem(pageNo);
+}
+var searchitem = function(currPage){
+	var params = {};
+	//其他查询条件
+	if(currPage){
+		params.page = currPage;
+	}
+	params.type = $("#item_flag_type").val();
+	$("#item_mainTable").mask("加载中...");
+	var url = obz.ctx + "/items/list";
+	obz.ajaxJson(url, params, function(resp){
+		$("#item_mainTable").unmask();
+		if(!resp.data){
+			$(".taobaoItemGrid").find("tr").append("<p>"+resp.msg+"</p>");
+			return;
+		}
+		
+		var result = resp.data;
+		$(".taobaoItemGrid").empty();
+		
+		if(currPage){
+			$("#item_pager").pager({ pagenumber:currPage, recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: item_pageClick });
+		}else{
+			$("#item_pager").pager({ recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: item_pageClick });	
+		}
+		
+		var dataList = result.list;
+		var trTpl = null;
+		for(var i=0;i<dataList.length;i++){
+			var _row = dataList[i];
+			var tdTpl = $("#item_table_td_tpl").find("tr").clone(true);//列tmp
+			var tdHtml = obz.dataTemplate4obj($("#item_table_td_tpl").html(), _row);
+			if(i%5==0){//按5列输出
+				trTpl = $("#item_table_tr_tpl").find("tr").clone(true);//行 tmp
+				//trTpl = $("#item_table_tr_tpl");//.html();
+				$(".taobaoItemGrid").append(trTpl);
+			}
+			$(trTpl).append(tdHtml);
+		}
+		
+		//注册表格中的图片点击事件
+		$("#item_mainTable tbody tr td img").each(function(){
+			$(this).click(function(){
+				//$("#out_id").val($(this).attr("id"));
+				$("#prize_img").val($(this).attr("src"));
+				$("#prize_name").val($(this).attr("data-name"));
+				$("#prize_price").val($(this).attr("data-price"));
+				$("#myselectItemImg").attr("src", $(this).attr("src"));
+				$("#myselectItemImg").show();
+				if(selectItemDialog != null) selectItemDialog.close();
+			});
+		});
+	});
+}
+searchitem();
+$("#item_flag_type").change(function(){
+	searchitem();
+});
+</script>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+
+<table class="table table-striped">
+	<tr>
+		<td colspan="3" style="text-align: left;">
+		<select id="item_flag_type" style="width: 102px">
+			<option value="1" selected="selected">出售中</option>
+			<option value="2">仓库中</option>
+		</select> 
+		<input type="text" value="" id="item_title_q" name="item_title_q"/>
+		<button id="myitemQueryBtn">查询</button>
+		</td>
+	</tr>
+</table>
+<div id="itemToolsbar" class="panel-body">
+	<div id="item_pager" class="jqpager" style="margin-bottom: 1px;"></div>		
+</div>
+<table class="table table-striped" id="item_mainTable" border="0" cellspacing="5" cellpadding="2">
+	<tbody class="taobaoItemGrid">
+		<tr style="background-color: #E6FAB6; text-align: center;"></tr>
+	</tbody>
+</table>
+<!-- html 模板文件 -->
+<table id="item_table_tr_tpl" style="display: none;">
+	<tbody>
+		<tr style="background-color: #E6FAB6;">
+		</tr>
+	</tbody>
+</table>
+<table id="item_table_td_tpl" style="display: none;">
+	<tr style="background-color: #E6FAB6;">
+		<td nowrap="nowrap" class="center" style="cursor: pointer;">
+			<img id="{numIid}" src="{picUrl}" data-name="{title}" data-price="{price}" width="100px" height="100px" />
+		</td>
+	</tr>
+</table>
+</body>
+</html>

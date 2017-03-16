@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>店铺基本信息</title>
+[#include "/includes/header.html" /]
+<script type="text/javascript" src="${webctx}/resources/js/jquery.lSelect.js"></script>
+<link rel="stylesheet" type="text/css" href="${webctx}/resources/css/product.css"/>
+<script type="text/javascript">
+function addPictureLogo(obj){
+	var params={};
+	params.model=obj;
+	obz.selectImage(params, function (ImgPath, ImgUrl) {
+		 var newlistImg=ImgPath.split(",");
+		 var newlistImgUrl=ImgUrl.split(",");
+		 for (var i = 0; i < newlistImg.length; i++) {
+			 if(obj){
+				 var reValue=$(".js-picture-logo li").find("input[name='shop_logo']").val();
+				  if (typeof(reValue)== "undefined"){
+					  $(".js-picture-logo").append('<li class="sort"><img src="'+newlistImg[i]+'" id="shop_logo"  class="js-img-preview">'
+								 +'<input name="shop_logo" id="shopLogo" value="'+newlistImgUrl[i]+'" type="hidden"  class="js-img-preview">'
+								 +'<a class="js-delete-picture close-modal small hide" onclick="deleteImg(this);">×</a></li>');
+				 }else{
+					  $("#shop_logo").attr('src',newlistImg[i]);
+					  $(".js-picture-logo li").find("input[name='shop_logo']").val(newlistImgUrl[i]);
+				  } 				 
+			  } 
+		 }
+		 $(".col-md-5 ul>li").hover(function(){
+				$(this).find("a").removeClass("hide");
+			   $(this).find("a").addClass("hover");
+			},function(){
+				 $(this).find("a").addClass("hide");  
+				 $(this).find("a").removeClass("hover");
+			});
+	});
+}
+
+function addPictureSign(obj){
+	var params={};
+	params.model=obj;
+	obz.selectImage(params, function (ImgPath, ImgUrl) {
+		 var newlistImg=ImgPath.split(",");
+		 var newlistImgUrl=ImgUrl.split(",");
+		 for (var i = 0; i < newlistImg.length; i++) {
+			 if(obj){
+				 var reValue=$(".js-picture-sign li").find("input[name='shop_sign']").val();
+				  if (typeof(reValue)== "undefined"){
+					  $(".js-picture-sign").append('<li class="sort"><img src="'+newlistImg[i]+'" id="shop_sign"  class="js-img-preview">'
+								 +'<input name="shop_sign" id="shopSign" value="'+newlistImgUrl[i]+'" type="hidden"  class="js-img-preview">'
+								 +'<a class="js-delete-picture close-modal small hide" onclick="deleteImg(this);">×</a></li>');
+				 }else{
+					  $("#shop_sign").attr('src',newlistImg[i]);
+					  $(".js-picture-sign li").find("input[name='shop_sign']").val(newlistImgUrl[i]);
+				  } 				 
+			  } 
+		 }
+		 $(".col-md-5 ul>li").hover(function(){
+				$(this).find("a").removeClass("hide");
+			   $(this).find("a").addClass("hover");
+			},function(){
+				 $(this).find("a").addClass("hide");  
+				 $(this).find("a").removeClass("hover");
+			});
+	});
+}
+function deleteImg(obj){
+	$(obj).parent().remove();
+}
+</script>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+[#include "/includes/menus.html" /]
+<div class="wrapper wrapper-content">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	           <a href="${webctx}/shop" class="J_menuTab active">基本信息</a>
+		       <a href="${webctx}/shop/sendaddr" class="J_menuTab">发货地址</a>
+		       <a href="${webctx}/attachment" class="J_menuTab">我的文件</a>
+	       </div>
+	   	</nav>
+	</div>
+
+	<div class="row ibox-content">
+		<div class="form-horizontal" style="padding-top: 10px;">
+			<div>
+				<input type="hidden" id="shop_id" name="shopId" value="${shop.id}"/>
+				<div class="form-group">
+		            <label class="col-md-2 control-label">店铺名称<span style="color: red;"><em>*</em></span></label>
+		            <div class="col-md-5" id="error_shop_name">
+		                <input type="text" id="shop_name" name="shop_name" class="form-control" style="width: 400px" value="${shop.shop_name}"/>
+		                <label class="control-label" for="shop_name"></label>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		            <label class="col-md-2 control-label">店铺logo<span style="color: red;"><em>*</em></span></label>
+		            <div class="col-md-5">
+		               <ul class="js-picture-logo app-image-list">
+						   <li><a href="javascript:;" onclick="addPictureLogo(true);" class="add-goods js-add-picture show">+加图</a></li>
+						   [#if shop ??]
+						   <li class="sort">
+	                                    <img src="${LogoUrl}" id="shop_logo"  class="js-img-preview"/>
+	                                    <input id="shopLogo" name="shop_logo" value="${shop.shop_logo}" type="hidden"  class="js-img-preview"/>
+	                                    <a class="js-delete-picture close-modal small hide" onclick="deleteImg(this);">×</a>
+	                        </li>
+						   [/#if]
+					  </ul>
+					   <label id="logo_error_msg" style="color:red;"></label>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		            <label class="col-md-2 control-label">店招<span style="color: red;"><em>*</em></span></label>
+		            <div class="col-md-5" id="error_addr">
+		               <ul class="js-picture-sign app-image-list">
+						   <li><a href="javascript:;" onclick="addPictureSign(true);" class="add-goods js-add-picture show">+加图</a></li>
+						   [#if shop ??]
+						   <li class="sort">
+	                                    <img src="${SignUrl}" id="shop_sign"  class="js-img-preview"/>
+	                                    <input id="shopSign" name="shop_sign" value="${shop.shop_sign}" type="hidden"  class="js-img-preview"/>
+	                                    <a class="js-delete-picture close-modal small hide" onclick="deleteImg(this);">×</a>
+	                        </li>
+						   [/#if]
+					  </ul>
+					   <label id="sign_error_msg" style="color:red;"></label>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		            <label class="col-md-2 control-label">联系人<span style="color: red;"><em>*</em></span></label>
+		            <div class="col-md-5" id="error_shop_contact">
+		                <input type="text" id="contact_name" name="shop_contact" class="form-control" style="width: 400px" value="${shop.shop_contact}"/>
+		                <label class="control-label" for="shop_contact"></label>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		            <label class="col-md-2 control-label">联系人手机<span style="color: red;"><em>*</em></span></label>
+		            <div class="col-md-5" id="error_phone">
+		                <input type="text" id="phone" name="shop_contact_phone" class="form-control"  style="width: 400px" value="${shop.shop_contact_phone}"/>
+		                <label class="control-label" for="phone"></label>
+		            </div>
+		        </div>
+			</div>
+			<div class="panel-default">
+			  	<div class="panel-body" align="center">
+					<button type="button" onclick="saveShop();" class="btn btn-success btn-sm">保存</button>
+			  	</div>
+		  	</div>
+	  	</div>
+  	</div>
+</div>
+[#include "/includes/footer.html" /]
+<script type="text/javascript">
+$().ready(function() {
+	$(".col-md-5 ul>li").hover(function(){
+		$(this).find("a").removeClass("hide");
+	   $(this).find("a").addClass("hover");
+	},function(){
+		 $(this).find("a").addClass("hide");  
+		 $(this).find("a").removeClass("hover");
+	});
+});
+function saveShop(){
+	var params={}, error = {};
+	var contact_name = $("#contact_name").val(), phone = $("#phone").val(),shop_name=$("#shop_name").val()
+	, shop_logo = $("#shopLogo").val(), shop_sign = $("#shopSign").val(),shop_id = $("#shop_id").val();
+	params.shopId=shop_id;
+	params.shopLogo=shop_logo;
+	params.shopSign=shop_sign;
+	if($.trim(shop_name) =="") {error.error_shop_name = "店铺名称不能为空"; } else {error.error_shop_name=""; params.shopName = $.trim(shop_name);}
+	if($.trim(contact_name) =="") {error.error_shop_contact = "联系人不能为空"; } else {error.error_shop_contact=""; params.shopContact = $.trim(contact_name);}
+	if($.trim(phone) =="") {error.error_phone = "联系人手机不能为空"; } else {error.error_phone=""; params.phone = $.trim(phone);}
+	var hasError = false;
+	for(var key in error){
+		if(error[key]!=""){
+			if(!hasError) hasError = true;
+			$("#"+key).addClass("has-error");
+			$("#"+key).find("label").text(error[key]);
+		}else{
+			$("#"+key).removeClass("has-error");
+			$("#"+key).find("label").empty();
+		}
+	}
+	
+	if($(".js-picture-logo li").length<=1){
+		if(!hasError) hasError=true;
+		$("#logo_error_msg").html("店铺Logo不能为空。");
+	}
+	if($(".js-picture-sign li").length<=1){
+		if(!hasError) hasError=true;
+		$("#sign_error_msg").html("店招不能为空。");
+	}
+	//主表信息不完整，返回
+	if(hasError) return false;
+	$(".main").mask("正在保存...");
+	$.post(obz.ctx+"/shop/saveShop", params, function(json) {
+			$(".main").unmask();
+			if(json.code!=200){
+				obz.error(json.msg);
+			}else{
+				obz.msg('保存成功', function(){
+					location.reload();
+				});					
+			}
+	},"json");
+}
+</script>
+<script type="text/javascript">
+	Template.init("#menu-shop");
+</script>
+</body>
+</html>

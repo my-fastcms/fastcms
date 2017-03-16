@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=640,target-densitydpi=320, user-scalable=no"/> 
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<title>${_sellerUser.title }</title>
+[#include "/includes/header.html" /]
+</head>
+<body>
+<div class="register_msgcont">
+	 <h1 class="enshrine_msgtitle">此功能已停止（软件服务已过期）</h1>
+	  <div class="enshrine_cont">
+     	 <p>还有<font>${buyerUsers }</font>个人正在与您一起等待参与活动，去提醒老板吧！</p>
+     </div>
+     <a class="enshrine_but"  href="javascript:void(0);" onclick="OpenWW('${_sellerUser.sid }','${_sellerUser.sellerNick }');">告诉掌柜</a>
+</div>
+[#include "/includes/footer.html" /]
+<input type="hidden" id="db_seller_nick" value="${_sellerUser.encodSellerNick }" />
+</body>
+</html>

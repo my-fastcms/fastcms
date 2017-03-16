@@ -1,0 +1,113 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<title>广东XXX微商平台</title>
+[#include "/includes/scripts.html" /]
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#header-bg").css({opacity:4});
+		/* if (jQuery.browser.msie) {
+			if (parseFloat(jQuery.browser.version) < 8) {
+				jQuery(document).ready(function() {
+					jQuery(document.body).addClass("ie-compat");
+				});
+			}
+		} */
+		$(".NumDecText").keyup(function(){    
+            $(this).val($(this).val().replace(/[^0-9.]/g,''));    
+        }).bind("paste",function(){
+            $(this).val($(this).val().replace(/[^0-9.]/g,''));     
+        }).css("ime-mode", "disabled");
+		
+		$(".NumText").keyup(function(){
+            $(this).val($(this).val().replace(/D|^0/g,''));  
+        }).bind("paste",function(){
+            $(this).val($(this).val().replace(/D|^0/g,''));     
+        }).css("ime-mode", "disabled");
+		
+		//help click
+		$("#menu_help").click(function(){
+			BootstrapDialog.show({
+				size: BootstrapDialog.SIZE_WIDE,
+				title: "在线帮助",
+	            message: $('<div></div>').load("${webctx}/help")
+	        });
+		});
+		
+		$("#auth_user_select").change(function(){
+			var me = $(this);
+			obz.showMessage("确认切换公众号吗？", function(){
+				obz.ajaxJson(obz.ctx +"/setting/setUsed", {authId : me.val()}, function(){
+					location.reload();
+				});
+			}, function(){
+				location.reload();
+			});
+			return false;
+		});
+		
+	});
+		obz.ctx = '${webctx}';
+		obz.imgDomain = '${imgDomain}';
+     var Template = {
+         debug: function() {
+             $("div").prepend(function(index, html) {
+                 $(this).attr("style", "border: dotted 1px #dedede");
+                 return "<span class='debug'>" + $(this).attr("id") + "</span>";
+             });
+         },
+         selectMenu: function(menu) {
+             if (menu) {
+                 $("#menu-items").children("li").removeClass("active").removeClass("opened");
+                 if(!$(menu).hasClass(".nav-header")){
+                     $(menu).addClass("active opened");
+                     $(menu).parent().show(); 
+                 }
+             }
+         },
+         init: function(menu) {
+             Template.selectMenu(menu);
+         }
+     }
+     //toast 配置
+     toastr.options = {
+		  "closeButton": true,
+		  "progressBar": true,
+		  "positionClass": "toast-top-center",
+		  "showDuration": "400",
+		  "hideDuration": "1000",
+		  "timeOut": "3000",
+		  "extendedTimeOut": "1000",
+		  "showEasing": "swing",
+		  "hideEasing": "linear",
+		  "showMethod": "fadeIn",
+		  "hideMethod": "fadeOut"
+	};
+     /* var _hmt = _hmt || [];
+     (function() {
+       var hm = document.createElement("script");
+       hm.src = "//hm.baidu.com/hm.js?3b0bc58fce4289e4526391baf8a50774";
+       var s = document.getElementsByTagName("script")[0]; 
+       s.parentNode.insertBefore(hm, s);
+     })(); */
+ </script>
+[#include "/includes/css.html" /]
+<style>
+.modal-body{
+	padding: 0px; 
+}
+.bootstrap-dialog-message{
+	padding-left: 12px;
+	padding-top: 5px;
+}
+.nav-tabs li{min-width:100px;}
+.nav-tabs li a{text-align: center;}
+.table {
+	width: 100%;
+    max-width: 100%;
+    margin-bottom: 2px !important;
+}
+.center{
+text-align: center;
+}
+</style>
+            

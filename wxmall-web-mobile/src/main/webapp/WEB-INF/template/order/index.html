@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>我的订单</title>
+[#include "/includes/header.html" /]
+<style>
+.weui-tab__bd {
+    box-sizing: border-box;
+    height: auto !important;
+}
+.goods-information{
+	float: left;
+	font-size: 14px;
+	color: #444;
+}
+.goods-portrait{
+	position: relative;
+	top: 20px;
+	width: 60px;
+	height: 60px;
+}
+.goods-ms{
+	display: inline-block;
+/* 	width: 50%; */
+}
+.goods-ms .name{
+	width: 100%;
+	overflow: hidden;
+ 			text-overflow: ellipsis;
+ 			white-space: nowrap;
+}
+.goods-xq{
+	position: relative;
+	height: 80px;
+}
+.goods-xq:before{
+    /* content: " "; */
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 1px;
+    border-top: 1px solid #E5E5E5;
+    color: #E5E5E5;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
+    -webkit-transform: scaleY(0.5);
+    transform: scaleY(0.5);
+}
+.count{
+	position: relative;
+	top: 10px;
+	font-size: 12px;
+	color: #6E6E6E;
+}
+.proceed{
+	color: #D84C29;
+}
+.over{
+	color: #297BFF;
+}
+.weui_media_box{
+	padding-top: 5px;
+}
+.queren{
+	background-color: #3884FF;
+}
+.zaimai{
+	background-color: #F19325;
+}
+</style>
+</head>
+<body>
+<div class="weui-tab">
+	<div class="weui-navbar">
+	    <a href="${webctx}/order" class="weui-navbar__item [#if !order_status?? && !payment_status?? && !shipping_status??]weui-bar__item--on[/#if]">全部订单</a>
+	    <a href="${webctx}/order/unpay" class="weui-navbar__item [#if !order_status?? && payment_status?? && !shipping_status??]weui-bar__item--on[/#if]">待付款</a>
+	    <a href="${webctx}/order/payed" class="weui-navbar__item [#if order_status=='unconfirmed' && payment_status?? && shipping_status??]weui-bar__item--on[/#if]">待收货</a>
+	    <a href="${webctx}/order/completed" class="weui-navbar__item [#if order_status=='completed' && payment_status?? && shipping_status??]weui-bar__item--on[/#if]">交易成功</a>
+    </div>
+	<div class="weui-tab__bd">
+	<div class="weui-tab__bd-item weui-tab__bd-item--active" id="order_list"></div>
+	<div class="weui-loadmore" style="display: none;">
+        <i class="weui-loading"></i>
+        <span class="weui-loadmore__tips">正在加载</span>
+    </div>
+    <div class="weui-loadmore weui-loadmore_line" style="display: none;">
+        <span class="weui-loadmore__tips"></span>
+    </div>
+	</div>
+</div>
+	
+<script id="tmp_order" type="text/template">
+<div class="weui-panel weui-panel_access">
+	<div class="weui-panel__hd">
+	    <div class="goods-information">
+			<div><span>状&nbsp;态:&nbsp;</span><span class="over">{status}</span></div>
+		</div>
+		<div class="content-padded f-cb weui-cell__ft">
+       [#if order_status=='unconfirmed' && payment_status?? && shipping_status??]
+       <a href="javascript:void(0);" id="{orderId}" class="weui-btn weui-btn_primary queren" style="width:90px;height:35px;font-size: 14px;">确认收货</a>
+       [/#if]
+        </div>
+	</div>
+	<div class="weui-panel__ft">
+    	<a href="${webctx}/order/detail/?orderId={orderId}" class="weui-cell weui-cell_access weui-cell_link">
+      		<div class="weui-cell__bd"><span>总&nbsp;价:&nbsp;</span><span class="price">{totalPrice}</span></div>
+      		<span class="weui-cell__ft">订单详情</span>
+    	</a>    
+  	</div>
+	<div class="weui-panel__bd" id="order_items_{orderId}"></div>
+</div>
+</script>
+<script id="tmp_order_item" type="text/template">
+	<div class="weui-media-box weui-media-box_appmsg">
+	    <div class="weui-media-box__hd"><a href="${webctx}/product/detail/?id={productId}"><img class="weui-media-box__thumb" src="{productImg}" alt=""></a></div>
+	    <div class="weui-media-box__bd">
+	       	<h4 class="weui-media-box__title" style="font-size:12px;">{productName}</h4>
+	    	<p class="weui-media-box__desc">{quantity}件</p>
+	    </div>
+		[#if order_status=='completed' && payment_status?? && shipping_status??]
+       	<a href="${webctx}/order/toReview/?orderId={orderId}" id="order_review_{orderId}" class="weui-btn weui-btn_primary review" style="width:90px;height:35px;font-size: 14px;">去评价</a>
+       	[/#if]
+	</div>
+</script>
+<!--手机端script需要加载后方-->
+[#include "/includes/footer.html" /]
+<script type="text/javascript">
+var orderStatus = '${order_status}';
+var paymentStatus = '${payment_status}';
+var shippingStatus = '${shipping_status}';
+var page = 1;
+var params = {};
+params.page = page;
+params.order_status = orderStatus;
+params.payment_status = paymentStatus;
+params.shipping_status = shippingStatus;
+//滚动加载
+var loading = false;  //状态标记
+var complate = false; //数据是否加载完毕
+$(document.body).infinite().on("infinite",function(){
+	if(loading) return;
+	if(complate) return;
+	loading = true;
+	page ++;
+	params.page = page;
+	getOrders(params);
+});
+//获取订单函数
+function getOrders (arr){
+	$("div.weui-loadmore").show();
+	$.ajax({
+		type: "post",
+		url: "${webctx}/order/list",
+		data: arr,
+		async: true,
+		success: function(resp){
+			loading = false;
+			$("div.weui-loadmore").hide();
+			if(resp.code != 200){
+				$.toast("加载数据失败，请重新拉取");
+				return;
+			}
+			if(resp.data.length<=0){
+				complate = true;
+				$(".weui-loadmore_line").show();
+				$(".weui-loadmore__tips").html("已经到底了");
+			}else{
+				for( var i = 0 ; i < resp.data.length ; i ++ ){
+					var order = resp.data[i];
+					var html = formatTemplate(order, $("#tmp_order").html());
+					$("#order_list").append(html);
+					var orderItems = order.orderItems;
+					for(var k=0; k<orderItems.length; k++){
+						var orderItem = orderItems[k];
+						orderItem.orderId = order.orderId;
+						var orderItemHtml = formatTemplate(orderItem, $("#tmp_order_item").html());
+						$("#order_items_"+order.orderId).append(orderItemHtml);
+						if(orderItem.isReview ==1){
+							$("#order_review_"+orderItem.orderId).removeAttr("href");
+							$("#order_review_"+orderItem.orderId).addClass("weui-btn_disabled");
+							$("#order_review_"+orderItem.orderId).html("已评价");
+						}
+						
+					}
+				}
+				$("a.queren").click(function(){
+					var orderId=$(this).attr("id");
+					$.confirm("是否确定收货？", function() {
+				        $.ajax({
+							type: "post",
+							url: "${webctx}/order/queren",
+							data: {orderId:orderId},
+							async: true,
+							success: function(data){	
+								$.toast(data.content, "text");
+								location.href="${webctx}/order/completed";
+							}
+						});
+					}, function() {
+						  $.toast("您已取消收货", "text");
+					});
+				});
+			}
+		},
+		error: function(){
+			$("div.weui-loadmore").hide();
+			$.alert("网络异常,请联系管理员!");
+		}
+	});
+}
+getOrders(params);
+$(document).ready(function(){
+});
+</script>
+</body>
+</html>

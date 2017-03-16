@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>设置奖品</title>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+<div class="modal fade" id="setting_prize_dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">设置奖品</h4>
+			</div>
+			<div class="modal-body install_cont" style="padding-left: 5px;">
+				<form name="prizeDialogForm" id="prizeDialogForm" action="" method="post" class="form-horizontal" style="padding-top: 5px;">
+					<input type="hidden" name="id" id="id" value=""/>
+					<input type="hidden" name="prize_id" id="prize_id" value=""/>
+					<input type="hidden" name="award_pos" id="award_pos" value=""/>
+			        <div class="form-group">
+			            <label class="col-md-2 control-label"></label>
+			            <div class="col-md-5" id="error_prize_id">
+			                <a id="selectPrize" class="btn btn-success" href="javascript:void(0)">选择奖品</a>
+			                <label class="control-label" for="selectPrize"></label>
+			            </div>
+			        </div>
+			        <div class="form-group">
+			            <label class="col-md-2 control-label">奖品名称<span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-5" id="error_award_name">
+			                <input type="text" id="award_name" name="award_name" readonly="readonly" value="" class="form-control" placeholder="">
+			                <label class="control-label" for="award_name"></label>
+			            </div>
+			        </div>
+			        <div class="form-group">
+			            <label class="col-md-2 control-label">奖品数量<span style="color: red"><em>*</em></span></label>
+			            <div class="col-md-5" id="error_award_count">
+			                <input type="text" id="award_count" name="award_count" value="" style="width: 80px;" class="form-control" placeholder="" onkeyup="value=value.replace(/[^\d]/g,'')">
+			                <label class="control-label" for="award_count"></label>
+			            </div>
+			        </div>
+			        <div class="form-group">
+			            <label class="col-md-2 control-label">中奖率<span style="color: red"><em>*</em></span></label>
+			            <div class="col-md-5" id="error_award_rate">
+			                <div class="input-group" style="width: 110px;">
+				                <input type="text" id="award_rate" name="award_rate" value="" style="width: 80px;" class="form-control" placeholder="0.00" onblur="this.value=Number(this.value).toFixed(2);" onkeyup="this.value=this.value.replace(/[^0-9|.]/g,'');">
+				                <span class="input-group-addon">%</span>
+			                </div>
+			                设置 为0永远不会被抽中
+			                <label class="control-label" for="award_rate"></label>
+			            </div>
+			        </div>
+			    </form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">
+               		关闭
+            	</button>
+				<button id="setBut" type="button" class="btn btn-success">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

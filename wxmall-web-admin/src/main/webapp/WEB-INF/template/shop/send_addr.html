@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>发货信息设置</title>
+[#include "/includes/header.html" /]
+<script type="text/javascript" src="${webctx}/resources/js/jquery.lSelect.js"></script>
+<style type="text/css">
+.col-md-5 select{
+ width: 30%;
+ float: left;
+}
+</style>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+[#include "/includes/menus.html" /]
+<div class="wrapper wrapper-content">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	           <a href="${webctx}/shop" class="J_menuTab">基本信息</a>
+		       <a href="${webctx}/order/sendaddr" class="J_menuTab active">发货信息</a>
+		       <a href="${webctx}/attachment" class="J_menuTab">我的文件</a>
+	       </div>
+	   	</nav>
+	</div>
+
+	<div class="row ibox-content">
+	<div class="form-horizontal" style="padding-top: 10px;">
+		<div>
+			<input type="hidden" id="addr_id" name="addrId" value="${sendAddr.id}"/>
+			<div class="form-group">
+	            <label class="col-md-2 control-label">联系人<span style="color: red;"><em>*</em></span></label>
+	            <div class="col-md-5" id="error_contact_name">
+	                <input type="text" id="contact_name" name="contact_name" class="form-control" value="${sendAddr.contact_name}"/>
+	                <label class="control-label" for="contact_name"></label>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label class="col-md-2 control-label">联系人手机<span style="color: red;"><em>*</em></span></label>
+	            <div class="col-md-5" id="error_phone">
+	                <input type="text" id="phone" name="phone" class="form-control" value="${sendAddr.phone}"/>
+	                <label class="control-label" for="phone"></label>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label class="col-md-2 control-label">省市区<span style="color: red;"><em>*</em></span></label>
+	            <div class="col-md-5" id="error_areaId">
+	                <input type="hidden" id="areaId" value="${sendAddr.area_id}"  name="areaId" treePath="${areaPath}"/>
+	                <label class="control-label" for="areaId"></label>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label class="col-md-2 control-label">详细地址<span style="color: red;"><em>*</em></span></label>
+	            <div class="col-md-5" id="error_addr">
+	                <input type="text" id="addr" name="addr" class="form-control" value="${sendAddr.addr}"/>
+	                <label class="control-label" for="addr"></label>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label class="col-md-2 control-label">公司名称</label>
+	            <div class="col-md-5" id="error_seller_company">
+	                <input type="text" id="seller_company" name="seller_company" class="form-control" value="${sendAddr.seller_company}"/>
+	                <label class="control-label" for="seller_company"></label>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label class="col-md-2 control-label">邮编</label>
+	            <div class="col-md-5" id="error_zip_code">
+	                <input type="text" id="zip_code" name="zip_code" class="form-control" value="${sendAddr.zip_code}"/>
+	                <label class="control-label" for="zip_code"></label>
+	            </div>
+	        </div>
+	        <div class="form-group">
+	            <label class="col-md-2 control-label">备注</label>
+	            <div class="col-md-5" id="error_memo">
+	                <input type="text" id="memo" name="memo" class="form-control" value="${sendAddr.memo}"/>
+	                <label class="control-label" for="zip_memo"></label>
+	            </div>
+	        </div>
+		</div>
+		<div class="panel-default">
+		  	<div class="panel-body" align="center">
+				<button type="button" onclick="saveAddr();" class="btn btn-success btn-sm">保存</button>
+		  	</div>
+	  	</div>
+  	</div>
+</div>
+</div>
+
+[#include "/includes/footer.html" /]
+<script type="text/javascript">
+$().ready(function() {
+	var $areaId = $("#areaId");
+	// 地区选择
+	$areaId.lSelect({
+		url:"${webctx}/order/area"
+	});
+});
+function saveAddr(){
+	var params={}, error = {};
+	var contact_name = $("#contact_name").val(), addr = $("#addr").val(), phone = $("#phone").val()
+	, memo = $("#memo").val(), seller_company = $("#seller_company").val(), zipCode = $("#zip_code").val()
+	, addrId = $("#addr_id").val(),areaId = $("#areaId").val();
+	params.addrId=addrId;
+	params.memo=memo;
+	params.sellerCompany=seller_company;
+	params.zipCode=zipCode;
+	if($.trim(contact_name) =="") {error.error_contact_name = "联系人不能为空"; } else {error.error_contact_name=""; params.contactName = $.trim(contact_name);}
+	if($.trim(addr) =="") {error.error_addr = "详细地址不能为空"; } else {error.error_addr=""; params.addr = $.trim(addr);}
+	if($.trim(phone) =="") {error.error_phone = "联系人手机不能为空"; } else {error.error_phone=""; params.phone = $.trim(phone);}
+	if($.trim(areaId) =="") {error.error_areaId = "省市区不能为空"; } else {error.error_areaId=""; params.areaId = $.trim(areaId);}
+	var hasError = false;
+	for(var key in error){
+		if(error[key]!=""){
+			if(!hasError) hasError = true;
+			$("#"+key).addClass("has-error");
+			$("#"+key).find("label").text(error[key]);
+		}else{
+			$("#"+key).removeClass("has-error");
+			$("#"+key).find("label").empty();
+		}
+	}
+	//主表信息不完整，返回
+	if(hasError) return false;
+	var country=""
+	$(".col-md-5 select").each(function(i, obj){
+		var options=$(obj).find("option:selected");
+			if(i==1){
+				params.city=options.text();	
+				}
+			if(i==2){
+			
+				country=options.text();	
+			}
+			if(i==0){
+				params.province=options.text();	
+			}	
+	});
+	params.country=country;
+	$(".main").mask("正在保存...");
+	$.post(obz.ctx+"/shop/saveaddr", params, function(json) {
+			$(".main").unmask();
+			if(json.code!=200){
+				BootstrapDialog.alert({title:'提示', message:json.msg});
+			}else{
+				  BootstrapDialog.alert('保存成功');					
+			}
+	},"json");
+}
+</script>
+<script type="text/javascript">
+	Template.init("#menu-shop");
+</script>
+</body>
+</html>

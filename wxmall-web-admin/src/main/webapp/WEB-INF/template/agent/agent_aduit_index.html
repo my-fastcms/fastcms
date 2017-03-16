@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+[#include "/includes/header.html" /]
+<script type="text/javascript">
+	var agentName = "", agentPhone = "", wxNick="";
+	$(document).ready(function() {
+	    $("#myqueryBtn").click(function(){
+	    	wxNick = $("#p_nick_name").val();
+	    	agentPhone = $("#p_agent_phone").val();
+	    	agentName = $("#p_agent_name").val();
+	    	searchAgentAduits();
+	    });
+        searchAgentAduits();
+	});
+	var pageClick = function(pageNo) {
+		searchAgentAduits(pageNo);
+	}
+	var searchAgentAduits = function(currPage){
+		var params = {};
+		//其他查询条件
+		if(currPage){
+			params.page = currPage;
+		}
+		params.wxNick = wxNick;
+		params.agentPhone = agentPhone;
+		params.agentName = agentName;
+		params.status = $("#agent_status_sel").val();
+		
+		$("#mainTable").mask("加载中...");
+		var url = obz.ctx + "/agent/aduitList";
+		obz.ajaxJson(url, params, function(resp){
+			$("#mainTable").unmask();
+			var result = resp.data;
+			$(".agentAduitLotGrid").empty();
+			if(currPage){
+				$("#pager").pager({ pagenumber:currPage, recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });
+			}else{
+				$("#pager").pager({ recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });	
+			}
+			var dataList = result.list;
+			if(dataList.length>0){
+				for(var i=0;i<dataList.length;i++){
+					var _row = dataList[i];
+					var trHtml = obz.dataTemplate4obj($("#agentAduit_table_tr_tpl").html(), _row);
+					$(".agentAduitLotGrid").append(trHtml);
+					for(var j=0;j<_row.aduitLogs.length;j++){
+						var logHtml = obz.dataTemplate4obj($("#log-template_table").html(), _row.aduitLogs[j]);
+						$("#js-log_"+_row.agentId).append(logHtml);	
+					}
+					
+					if(_row.status !=2){
+						$("#pass_"+_row.agentId).hide();
+						$("#nopass_"+_row.agentId).hide();
+					}
+				}
+				TBatch.checkCheckbox();
+				TBatch.initCheckboxClick();
+				TBatch.initOptEvent(ActivityTableOpt.init());
+			}else{
+				$(".agentAduitLotGrid").append($("#table_noresult_tr_tpl").html());
+			}
+		});
+	}
+	//=============================表格操作事件开始=============================================
+	var ActivityTableOpt = {
+		pass : function(param){
+			var id = param[1];
+			obz.showMessage("确认通过审核吗？", function(){
+				obz.ajaxJson(obz.ctx + "/agent/pass", {ids: param[1]}, function(resp){
+					if(resp.code != 200){
+	    				layer.msg(resp.msg);
+	    				return;
+	    			}
+					layer.msg("审核成功", function(){
+    					searchAgentAduits();
+        		    });
+				});
+				return false;
+			});
+		}, 
+		nopass : function(param){
+    		parent.layer.prompt({
+    		    title: '请输入不通过原因',
+    		    formType: 2 //prompt风格，支持0-2
+    		}, function(pass){
+    		    obz.ajaxJson(obz.ctx + "/agent/nopass", {ids: param[1], content: pass}, function(resp){
+	    			if(resp.code != 200){
+	    				layer.msg(resp.msg);
+	    				return;
+	    			}
+	    			layer.msg("审核成功", function(){
+    					searchAgentAduits();
+        		    });
+	    		});
+    		});
+			return false;
+		},
+		log : function(param){
+			//alert($(this));
+			hideorshow($(this),param[1])
+		},
+		init : function(){
+			var optArray = new Array();
+			optArray.push(this.pass);
+			optArray.push(this.nopass);
+			optArray.push(this.log);
+			return optArray;
+		}
+	}	
+	//=============================表格操作事件结束=============================================
+	
+function hideorshow(t,i){
+		"1"==t.data("expend")?(t.data("expend","0"),$("#package_"+i).hide()):(t.data("expend","1"),$("#package_"+i).show());
+}
+</script>
+<style type="text/css">
+.freight-template-table {
+    border-top: 1px solid #e5e5e5;
+    text-align: right;
+    width: 100%;
+}
+.freight-template-table td:first-child {
+    border-right: medium none;
+}
+.freight-template-table tbody tr:last-child {
+    border-bottom: medium none;
+}
+.freight-template-table thead{
+    background-color: #e5e5e5;
+}
+.freight-template-table thead tr > th:first-child {
+    text-align: left;
+}
+.freight-template-table td, .page-trade-delivery .freight-template-table th {
+    padding: 10px 15px;
+}
+.freight-template-table tr {
+    border-bottom: 1px solid #e5e5e5;
+}
+.freight-template-table td:first-child {
+    text-align: left;
+    width: 300px;
+}
+</style>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+[#include "/includes/menus.html" /]
+<div class="wrapper wrapper-content">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	           <a href="${webctx}/agent/aduit" class="J_menuTab active">分销商审核</a>
+		       <a href="${webctx}/agent" class="J_menuTab">分销商</a>
+		       <a href="${webctx}/agent/rank" class="J_menuTab">分销商等级</a>
+	       </div>
+	   	</nav>
+	</div>
+	<!-- <div class="panel-body"><a href="${webctx}/agentAduit/set" class="btn btn-success">批量审核</a></div> -->
+    <div id="tableList" class="content row ibox-content" style="padding-top: 10px;">
+		<table width="100%" border="0" cellspacing="1" cellpadding="0" class="table table-striped table-bordered">
+			<tr>
+				<th>微信昵称</th>
+				<td><input id="p_nick_name" type="text" /></td>
+				<th>申请人</th>
+				<td><input id="p_agent_name" type="text" /></td>
+				<th>申请人手机</th>
+				<td><input id="p_agent_phone" type="text" /></td>
+				<td style="text-align: left;">
+					<select id="agent_status_sel">
+						<option value="2" selected="selected">待审核</option>
+						<option value="0">审核不通过</option>
+					</select>
+					<button id="myqueryBtn" class="btn btn-success">查询</button>
+				</td>
+			</tr>
+		</table>
+		<div id="agentAduitToolsbar" class="panel-body">
+			<div id="pager" class="jqpager" style="margin-bottom: 1px;"></div>
+		</div>
+		<table class="table table-striped table-bordered bootstrap-datatable datatable" id="mainTable" border="0">
+			<thead>
+				<tr>
+					<th><input type="checkbox" id="all" title="全选/反选" style="margin-right: 4px; vertical-align: middle;"/></th>
+					<th><span style="vertical-align: middle;">微信</span></th>
+					<th><span style="vertical-align: middle;">申请人</span></th>
+					<th>详细地址</th>
+					<th>总消费金额(元)</th>
+					<th>申请时间</th>
+					<th>状态</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody class="agentAduitLotGrid"></tbody>
+		</table>
+	</div>        	
+</div>
+
+<!-- 模板开始 -->
+<script type="text/template" id="agentAduit_table_tr_tpl">
+<tr class="package">
+	<td><input type="checkbox" class="commchk" id="checkbox_{agentId}" style="margin-right: 4px; vertical-align: middle;"/></td>
+	<td><img width="40px" height="40px" src="{wxHeadimg}"/>&nbsp;{wxNick}</td>
+	<td><span style="margin-right: 5px; margin-left: 2px; vertical-align: middle;">{agentName}<br>{agentPhone}</span></td>
+	<td><span>{agentAddr}</span></td>
+	<td><span>{totalMoney}</span></td>
+	<td><span>{applyDate}</span></td>
+	<td><span>{statusCn}</span></td>
+	<td>
+	&nbsp;<a id="pass_{agentId}" href="javascript:void(0)" style="text-decoration: underline;">通过</a>
+	&nbsp;<a id="nopass_{agentId}" href="javascript:void(0)" style="text-decoration: underline;">不通过</a>
+	&nbsp;<a id="log_{agentId}" href="javascript:void(0)" style="text-decoration: underline;">审核日志</a>
+	</td>
+</tr>
+<tr id="package_{agentId}" style="display:none">
+<td colspan="8">
+<table class="freight-template-table">
+		    <thead class="js-freight-cost-list-header">
+		            <tr>
+		                <td>审核日志内容</td>
+		                <td>状态</td>
+		                <td>审核时间</td>
+		            </tr>
+		    </thead>
+		    <tbody id="js-log_{agentId}">
+            </tbody>
+</table>
+</td>
+</tr>
+</script>
+<script type="text/template" id="table_noresult_tr_tpl">
+	<tr class="package"><td style="text-align: center;" class="center" colspan="8">没有数据</td></tr>
+</script>
+<script type="text/template" id="log-template_table">
+<tr>
+<td>{content}</td>
+<td>{status}</td>
+<td>{created}</td>
+</tr>
+</script>
+[#include "/includes/footer.html" /]
+<script>
+Template.init("#menu-agent");
+</script>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+[#include "/includes/header.html" /]
+<style type="text/css">
+.nav-tabs li{width:150px;}
+</style>
+<script type="text/javascript">
+	var qname = "";
+	var addPrizeDailog = null;
+	$(document).ready(function() {
+	    $("#myqueryBtn").click(function(){
+	    	qname = $("#q_pond_txt").val() == "输入奖品名称" ? "" : $("#q_pond_txt").val();
+	    	searchSendRecords();
+	    });
+	    $("#myPrizeDelBtn").click(function(){
+	    	var count = TBatch.getCheckedCount();
+	    	if(count ==0){
+	    		obz.showMessage("请选择一个奖品");
+	    	}else{
+	    		obz.showMessage("确定删除吗？删除后不可恢复，请谨慎操作！", function(){
+	    			var ids = TBatch.getChecked();
+		    		obz.ajaxJson(obz.ctx + "/prize/del", {ids: ids}, function(resp){
+		    			if(resp.code==200){
+		    				searchSendRecords();
+		    			}
+		    		});
+	    		});
+	    	}
+	    });
+	  	//初始化table
+        searchSendRecords();
+	});
+	
+	var pageClick = function(pageNo) {
+		searchSendRecords(pageNo);
+	}
+	
+	var searchSendRecords = function(currPage){
+		var params = {};
+		//其他查询条件
+		if(currPage){
+			params.page = currPage;
+		}
+		params.qname = qname;
+		params.type = $("#p_status_sel").val();
+		$("#mainTable").mask("加载中...");
+		var url = obz.ctx + "/prize/sendrcd/list";
+		obz.ajaxJson(url, params, function(resp){
+			var result = resp.data;
+			$(".prizeSendRcdLotGrid").empty();
+			if(currPage){
+				$("#pager").pager({ pagenumber:currPage, recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });
+			}else{
+				$("#pager").pager({ recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });	
+			}
+			var dataList = result.list;
+			if(dataList.length>0){
+				for(var i=0;i<dataList.length;i++){
+					var _row = dataList[i];
+					var trHtml = obz.dataTemplate4obj($("#prize_table_tr_tpl").html(), _row);
+					$(".prizeSendRcdLotGrid").append(trHtml);
+				}
+				//初始化checkbox点击事件
+				TBatch.checkCheckbox();
+				TBatch.initCheckboxClick();
+				TBatch.initOptEvent(PrizeOpt.init());
+			}else {
+				$(".prizeSendRcdLotGrid").append($("#prize_table_noresult_tr_tpl").html());
+			}
+			
+			$("#mainTable").unmask();
+		});
+	}
+	
+	//=============================表格操作事件开始=============================================
+	var PrizeOpt = {
+		
+		edit : function(param){
+			
+		}, 
+		
+		init : function(){
+			var optArray = new Array();
+			optArray.push(this.edit);
+			return optArray;
+		}
+	}	
+	//=============================表格操作事件结束=============================================
+</script>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+[#include "/includes/menus.html" /]
+
+<div id="main-body-content" class="main">
+	<div class="panel-heading">
+		<ul class="nav tab-menu nav-tabs">
+			<li><a href="${webctx}/prize">奖品列表</a></li>
+			<li class="active"><a href="${webctx}/prize/sendrcd">发放记录查询</a></li>
+		</ul>
+	</div>
+	
+   	<div id="tableList">
+		<table class="table-striped">
+			<tr>
+				<td colspan="3" style="text-align: left;">
+					<input type="text" name="q_pond_txt" id="q_pond_txt" class="input-text"
+					style="width:190px; color:#DFDFDF" value="输入奖品名称" 
+					onfocus="if(this.value=='输入奖品名称'){this.value=''};this.style.color='black';" 
+					onblur="if(this.value==''||this.value=='输入奖品名称'){this.value='输入奖品名称';this.style.color='#DFDFDF';}"/>
+					<select id="p_status_sel" style="width: 102px">
+						<option value="" selected="selected">全部</option>
+						[#list prizeTypes as type]
+							<option value="${type.id }">${type.typeName }</option>
+						[/#list]
+					</select> 
+					<button id="myqueryBtn" class="btn btn-success">查询</button>
+				</td>
+			</tr>
+		</table>
+	
+		<div id="prizeToolsbar" class="panel-body">
+			<div id="pager" class="jqpager" style="margin-bottom: 1px;"></div>		
+		</div>
+		<table class="table table-striped table-bordered bootstrap-datatable datatable" id="mainTable" border="0">
+			<thead>
+				<tr>
+					<th>
+						<input type="checkbox" id="all" title="全选/反选" style="margin-right: 4px; vertical-align: middle;"/>
+					</th>
+					<th>
+						<span style="vertical-align: middle;">中奖用户</span>
+					</th>
+					<th>获得奖品</th>
+					<th>奖品类型</th>
+					<th>参与活动</th>
+					<th>活动类型</th>
+					<th>发放状态</th>
+					<th>发放时间</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody class="prizeSendRcdLotGrid"></tbody>
+		</table>
+	</div>
+</div>
+
+<!-- html 模板文件 -->
+<script type="text/template" id="prize_table_tr_tpl">
+<tr class="package">
+			<td valign="middle">
+				<input type="checkbox" class="commchk" id="checkbox_{id}" style="margin-right: 4px; vertical-align: middle;"/>
+			</td>
+			<td>
+				<span style="margin-right: 5px; margin-left: 2px; vertical-align: middle;">{nickname}</span>
+			</td>
+			<td>
+				{prize_name}
+			</td>
+			<td>
+				{type_name}
+			</td>
+			<td>
+				{activity_name}
+			</td>
+			<td>{activity_type_name}</td>
+			<td>
+				<span>
+					{send_status}
+				</span>
+			</td>
+			<td>
+				<span>
+					{updated}
+				</span>
+			</td>
+			<td>
+				&nbsp;<a id="send_{id}" href="javascript:void(0)" style="text-decoration: underline;">人工发放</a>
+			</td>
+		</tr>		
+</script>
+
+<script type="text/template" id="prize_table_noresult_tr_tpl">
+<tr class="package">
+	<td nowrap="nowrap" class="center" colspan="9">
+		还没有奖品
+	</td>
+</tr>
+</script>
+[#include "/includes/footer.html" /]
+<script>
+	Template.init("#menu-prize");
+</script>
+</body>
+</html>	
+	

@@ -1,0 +1,136 @@
+<style>
+.content{
+	color: #909090;
+}
+input.weui-input{
+	color: #0D0D0D;
+}
+.weui_cell::before{
+	border-top: 1px solid #D9D9D9;
+}
+.weui-label{
+	width: 4em;
+}
+.lab{
+	font-size: 12px;
+}
+.lab span{
+	color: #0D0D0D;
+}
+.weui_btn.weui_btn_plain_default{
+	margin-top: 20px;
+	margin-left: 10px;
+	margin-right: 10px;
+	margin-bottom: 20px;
+	border: 0;
+	color: #fff;
+	background-color: #3985FF;
+}
+.weui-select{
+ width: 30%;
+}
+</style>
+<input type="hidden" name="receiver.id" value="${receiver.id}">
+<div class="weui-cells weui-cells_form" style="font-size: 14px;">
+	<div class="weui-cell">
+		<div class="weui-cell__hd"><label class="weui-label" for="name">收货人</label></div>
+		<div class="weui-cell__bd">
+			<input name="receiver.name" value="${receiver.receiver_name}" class="weui-input" placeholder="姓名" type="text">
+		</div>
+	</div>
+	<div class="weui-cell">
+		<div class="weui-cell__hd"><label class="weui-label" for="name">联系方式</label></div>
+		<div class="weui-cell__bd">
+			<input name="receiver.mobile" value="${receiver.phone}" class="weui-input" placeholder="手机号码" type="tel">
+		</div>
+	</div>
+	<div class="weui-cell">
+		<div class="weui-cell__hd"><label class="weui-label" for="name">省市区县</label></div>
+		<div class="weui-cell__bd">
+		[#if receiver?? && receiver.area_id??]
+		<input type="hidden" id="areaId" value="${receiver.area_id}" name="areaId" treePath="${receiver.area_tree_path}"/>
+		[#else]
+		<input type="hidden" id="areaId"  name="areaId"/>
+		[/#if]
+		</div>
+	</div>
+	
+	<div class="weui-cell">
+		<div class="weui-cell__hd"><label class="weui-label" for="name">详细地址</label></div>
+		<div class="weui-cell__bd">
+			<input name="receiver.address" value="${receiver.address}" class="weui-input" placeholder="街道地址" type="text">
+		</div>
+	</div>
+	<div class="weui-cell">
+		<div class="weui-cell__bd">
+			<label class="lab" for="lab1">
+				<input id="lab1" type="radio" name="r_defaut" [#if receiver.is_default]checked="checked"[/#if]/>
+				<span>设为默认地址</span>(每次购买时会默认使用该地址)
+			</label>
+		</div>
+	</div>
+	<div class="content-padded">
+	    <a id="receiver_btn" href="javascript:void(0);" class="weui-btn weui-btn_primary">确认</a>
+	</div>
+</div>
+
+<!--手机端script需要加载后方-->
+<script type="text/javascript">
+// 地区选择
+$("#areaId").lSelect({
+	url: "${webctx}/receiver/area"
+});
+$("#receiver_btn").click(function(){
+	var id = $("input[name='receiver.id']").val();
+	var address = $("input[name='receiver.address']").val();
+	var name = $("input[name='receiver.name']").val();
+	var mobile = $("input[name='receiver.mobile']").val();
+	//var areaPath = $("input[name='receiver.areaName']").val();
+	var areaPath = $("input[name='areaId']").val();
+	if(address ==null || address==""){ $.toast("请填写收货地址", "text"); return;}
+	if(name ==null || name==""){ $.toast("请填写收货人", "text"); return;}
+	if(mobile ==null || mobile==""){ $.toast("请填写收货人手机号", "text"); return;}
+	if(areaPath ==null || areaPath==""){ $.toast("请选择省市县区", "text"); return;}
+	var params = {};
+	params['id'] = id;
+	params['address'] = address;
+	params['name'] = name;
+	params['phone'] = mobile;
+	params['area_id'] = areaPath;
+	
+	var district=""
+	$(".weui-cell__bd select").each(function(i, obj){
+		var options=$(obj).find("option:selected");
+		if(i==1){
+			params['city']=options.text();	
+		}
+		if(i==2){
+			district=options.text();	
+		}
+		if(i==0){
+			params['province']=options.text();	
+		}	
+	});
+	params['district']=district;
+	var reValue=$('input:radio[name="r_defaut"]:checked').val();
+	if (typeof(reValue) != "undefined") { 
+		params['is_default'] = 1;
+	}else{
+		params['is_default'] = 0;
+	}
+	
+	$.showLoading("正在保存...");
+	$.post("${webctx}/receiver/save", params, function(resp){
+		$.hideLoading();
+		if(resp.code != 200){
+			$.alert(resp.msg);
+			return;
+		}
+		var _receiver = resp.data;
+		var address = _receiver.province + _receiver.city + _receiver.district + _receiver.address;
+		/* setReceiver(_receiver.id, address, _receiver.receiver_name, _receiver.phone);
+		$.closePopup(); */
+		location.reload();
+	});
+}); 
+</script>

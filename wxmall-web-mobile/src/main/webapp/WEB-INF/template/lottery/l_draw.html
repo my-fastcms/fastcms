@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>${lottery.lotteryName}</title>
+[#include "/includes/header.html" /]
+<link rel="stylesheet" type="text/css" href="${webctx}/resources/css/detail.css"/>
+<link rel="stylesheet" type="text/css" href="${webctx}/resources/css/lotteryAll.css">
+<style type="text/css">
+.lott_active{background："";background-color:#ea0000;}
+</style>
+</head>
+<body>
+  	<div class="content">
+  		<div class="weui-cells">
+		  	<div class="weui-cell weui-cell_access">
+		    <div class="weui-cell__hd"><img src="${session._buyerUser.headimgurl}" alt="${session._buyerUser.nickname}" style="width:40px;margin-right:5px;display:block"></div>
+		    <div class="weui-cell__bd">
+		      <p>${session._buyerUser.nickname}</p>
+		      <p style="font-size: 12px;">还有<font color="red"><span id="user_left_count">${session._buyerUser.score}</span></font>个积分</p>
+		    </div>
+		    <div id="chongzhi" class="weui-cell__ft">我要积分</div>
+		 	</div>
+  		</div>
+  		<div id="lottery" class="lottery_prize_box">
+	  		<ul class="clear">
+	  			<li id="award_1" class="prize_item lottery-unit-0">
+	  				<h2></h2>
+	  				<div class="prize_type_name">
+  						<p class="score">谢谢参与</p>
+  					</div>
+  					<div class="prize_item_icon"></div>
+	  			</li>
+	  			<li id="award_2" class="prize_item lottery-unit-1">
+	  				<h2></h2>
+	  				<div class="prize_type_name">
+  						<p class="score">谢谢参与</p>
+  					</div>
+  					<div class="prize_item_icon"></div>
+	  			</li>
+	  			<li id="award_3" class="prize_item lottery-unit-2">
+	  				<h2></h2>
+	  				<div class="prize_type_name">
+  						<p class="score">谢谢参与</p>
+  					</div>
+  					<div class="prize_item_icon"></div>
+	  			</li>
+	  			<li id="award_8" class="prize_item lottery-unit-7">
+	  				<h2></h2>
+	  				<div class="prize_type_name">
+  						<p class="score">谢谢参与</p>
+  					</div>
+  					<div class="prize_item_icon"></div>
+	  			</li>
+	  			<li class="lottery_btn prize_item"></li>
+	  			<li id="award_4" class="prize_item lottery-unit-3">
+	  				<h2></h2>
+	  				<div class="prize_type_name">
+  						<p class="score">谢谢参与</p>
+  					</div>
+  					<div class="prize_item_icon"></div>
+	  			</li>
+	  			<li id="award_5" class="prize_item lottery-unit-6">
+	  				<h2></h2>
+	  				<div class="prize_type_name">
+  						<p class="score">谢谢参与</p>
+  					</div>
+  					<div class="prize_item_icon"></div>
+	  			</li>
+	  			<li id="award_6" class="prize_item lottery-unit-5">
+	  				<h2></h2>
+	  				<div class="prize_type_name">
+  						<p class="score">谢谢参与</p>
+  					</div>
+  					<div class="prize_item_icon"></div>
+	  			</li>
+	  			<li id="award_7" class="prize_item lottery-unit-4">
+	  				<h2></h2>
+	  				<div class="prize_type_name">
+  						<p class="score">谢谢参与</p>
+  					</div>
+  					<div class="prize_item_icon"></div>
+	  			</li>
+	  		</ul>
+  		</div>
+  		
+  		<div class="content-padded">
+			<div class="weui_cells">
+				<div class="weui_cell">
+					[#if lottery.conditionType == 2 ]
+						[#if test="${lottcond.tradeType ==1 }"]
+							<p>最近<span id="user_total_used_count" style="color: #f60">${lottcond.conditionDay }内下单</span></p>
+						[#elseif lottcond.tradeType ==2 ]
+							<p>自<span id="user_total_used_count" style="color: #f60">
+							${lottcond.conditionTradeStartdate }到${lottcond.conditionTradeEnddate }下单</span></p>
+						[/#if]
+						且订单状态为
+						[#if lottcond.tradeStatus==1 ]确认收货[/#if]
+						[#if lottcond.tradeStatus==2 ]订单付款[/#if]
+						且订单金额满${lottcond.tradeMoney }元
+						<p>可抽奖</p>
+					[#elseif lottery.conditionType == 3 ]
+						<p>每次抽奖需要扣除:<span id="user_total_used_count" style="color: #f60">${lottery.needPay }</span>个积分</p>
+					[#elseif lottery.conditionType == 4 ]
+						<p>每次抽奖需要扣除:<span id="user_total_used_count" style="color: #f60">${lottery.needPay }</span>个淘金币</p>
+					[/#if]
+					[#if lottery.conditionType == 1 ]
+						<p>本次抽奖活动不限条件</p>
+					[/#if]
+				</div>
+				
+				<div class="weui_cell">
+					[#if lottery.dayCount !=0 ]
+						<p>每人每天只能参与<span id="today_used_count" style="color: #f60">${lottery.dayCount }</span>次抽奖;</p>	
+					[/#if]
+					<p>你今天已抽奖<span id="user_today_used_count" style="color: #f60">${usetodaycount }</span>次;</p>
+					[#if lottery.allCount !=0 ]
+						<p>每人总共只能参与<span id="total_used_count" style="color: #f60">${lottery.allCount }</span>次抽奖;</p>
+					[/#if]
+					<p>总共抽奖<span id="user_total_used_count" style="color: #f60">${usetotalRecord }</span>次</p>
+				</div>
+			</div>
+		</div>
+		
+		<div id="lottery-tip" class="weui-popup__container popup-bottom">
+		  	<div class="weui-popup__overlay"></div>
+		  	<div class="weui-popup__modal">
+		    	<header class='demos-header'>
+		          <h3>本抽奖公平公正，随机中奖，绝不欺骗</h3>
+		          <h3>首次抽奖系统免费送5次抽奖机会</h3>
+		          <h3>中奖后请注意查收微信红包</h3>
+		          <h3>纯属娱乐，谢谢参与</h3>
+		        </header>
+		        <div class="content-padded">
+					<a href="javascript:void(0);" class="weui-btn weui-btn_primary close-popup">关闭</a>		        
+		        </div>
+		  	</div>
+		</div>
+  	</div>
+<input type="hidden" id="lottery_id" value="${lottery.id }"/>
+
+[#include "/includes/footer.html" /]
+<script type="text/javascript" src="${webctx}/resources/js/lotteryAll.js?v=${timestamp}"></script>
+<script type="text/javascript" src="${webctx}/resources/js/menu_choujiang.js"></script>
+</body>
+</html>

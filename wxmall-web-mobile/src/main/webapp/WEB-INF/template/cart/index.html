@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>购物车</title>
+[#include "/includes/header.html" /]
+<style type="text/css">
+.goods-details .count input[type="tel"] {
+    width: 30px !important;
+    height: 20px;
+}
+.goods-details .count * {
+    display: block;
+    float: left;
+    height: 20px;
+    /* width: 30px;*/
+    line-height: 20px !important; 
+    text-align: center;
+    vertical-align: middle;
+    border: 1px solid #ccc;
+}
+.goods-details .count a{
+    font-size: 20px;
+	background-color: #F2F2F2;
+	margin-top: 0px;
+}
+</style>
+</head>
+<body>
+<div class="content" style="font-size: 14px;">
+	[#if items?size >0]
+	<!-- 主体内容 -->
+	<div class="weui-tab-bd">
+		<div class="weui-media-title shopping-title">
+			<span>我的购物车</span>
+			<a class="edit" href="javascript:void(0);">删除</a>
+		</div>
+		<!-- 商品列表 -->
+		<div class="weui-cells  weui-cells_checkbox">
+			[#list items as item]
+			　　<div class="weui-cell weui-check__label goods-container goods_items_label" for="${item.id}">
+			    	<label class="weui-cell__hd">
+			        	<input type="checkbox" class="weui-check" name="checkbox1" data-item-id="${item.goodId}" id="${item.id}" checked="checked">
+			        	<i class="weui-icon-checked"></i>
+			    	</label>
+			    	<div class="weui-cell__bd weui-cell-primary">
+				        <a href="${webctx}/product/detail?id=${item.goodId}"><img class="goods-img" src="${img_domain}${item.goodImg}"/></a>
+				        <div class="goods-info">
+				        	<div class="goods-name" style="font-size: 12px;color: gray;">${item.goodName}</div>
+				        	<div>
+				        	[#if item.specificationValues?? && item.specificationValues?size>0]
+								<ul class="weui-media-info" style="font-size: 12px;color: gray;">
+					        		[#list item.specificationValues as spv]
+					        		<li style="float: left;padding-right: 5px;" class="weui_media_info_meta" data-spv-id="${spv.id}">${spv.name}</li>
+					        		[/#list]
+					        		[#if item.fullCutResultDtos?? && item.fullCutResultDtos?size>0]
+						        	[#list item.fullCutResultDtos as fullCut]
+						        		[#if fullCut_index == 0]
+						        		<li style="float: left;padding-right: 5px;color: red;" class="weui_media_info_meta">${fullCut.fullCutInfo}</li>
+						        		[/#if]
+						        	[/#list]
+						        	[/#if]
+					        	</ul>					        	
+					        [/#if]
+				        	</div>
+				        	<div class="goods-CP f-cb"  style="clear: both;">
+				        		<div class="price" style="font-size: 12px;">${item.goodPrice}</div>
+				        		<div class="weui_panel_bd goods-details" id="counts_${item.id}">
+						          	<div class="weui_media_bd count"> 
+										<a class="minus-count" data-id="${item.id}" href="javascript:void(0);">-</a>
+										<input id="number_${item.id}" class="pcount" type="tel" maxlength="6" value="${item.quantity}"/>
+										<a class="add-count" data-id="${item.id}" href="javascript:void(0);">+</a>
+									</div>
+						        </div>
+				        	</div>
+				        </div>
+			    	</div>
+				</div>
+			[/#list]
+			
+			<!-- 全选按钮 -->
+			<div class="weui-tabbar weui-cell goods-container" style="position: fixed;bottom: 0;">
+				<label id="checkbox-all" class="weui-cells_checkbox weui-check__label" for="all">
+				    <div class="weui-cell__hd">
+				        <input id="all" type="checkbox" class="weui-check" name="select-all" checked="checked">
+				        <i class="weui-icon-checked"></i>
+				    </div>
+				</label>
+				<div class="select-all-btn" style="font-size: 14px;">全选</div>
+				<div class="weui-cell-bd weui-cell-primary" style="padding-left: 10px;">
+					<div class="total">
+		        		<div id="price_div"> <span id="totalPrice" class="total-price" style="font-size: 14px;">0</span> 
+		        		<s><span id="orgPrice" style="font-size: 10px;color: gray;"></span></s></div>
+		        		<div id="meet_div" class="addition" style="font-size: 10px;color: gray;">满￥<span id="meet_span">0</span> 减<span id="cash_span">0</span></div>
+		        		<div id="post_div" class="addition" style="font-size: 10px;color: gray;">满<span id="post_meet_span">0</span>包邮</div>
+		        	</div>	
+			        <div class="goods-info">
+			        	<input class="total-btn" id="jiesuan" type="button" value="结算" />
+			        </div>
+			    </div>
+			</div>
+			<!-- /全选按钮 -->
+		</div>
+		<!-- 商品列表 -->
+	</div>
+	<!-- /主体内容 -->
+	[#else]
+	<div class="content-padded weui-msg">
+	  <div class="weui-msg__icon-area"><i class="weui-icon_msg weui-icon-info"></i></div>
+	  <div class="weui-text-area">
+	    <!-- <h2 class="weui_msg_title">操作成功</h2> -->
+	    <p class="weui-msg-desc">购物车快饿瘪了，主人快去商城逛逛吧</p>
+	  </div>
+	  <div class="weui-opr-area">
+	    <p class="weui-btn-area">
+	      <a href="${webctx}/index" class="weui-btn weui-btn_primary">确定</a>
+	    </p>
+	  </div>
+	  <!-- <div class="weui_extra_area">
+	    <a href="">查看详情</a>
+	  </div> -->
+	</div>
+	[/#if]
+	<!-- 满减数据 -->
+	[#list fullCuts as fullCut]
+	<input class="full_cut" type="hidden" meet="${fullCut.meet}" cash="${fullCut.cash}" postage="${fullCut.postage}"/>
+	[/#list]
+</div>
+<!--手机端script需要加载后方-->
+[#include "includes/footer.html"/]
+<script type="text/javascript">
+//计算总价
+function calculation(){
+	var totalPrice = 0;
+	$("input[type=checkbox][name=checkbox1]").each(function(){
+		if(this.checked){
+			var priceObj = $(this).parent().parent().find(".price");
+			totalPrice += parseFloat(priceObj.html()) * parseInt(priceObj.next().find("input").val()) ;			
+		}
+	});
+	$("#totalPrice").html(totalPrice.toFixed(2));
+	var hasMj = false;
+	//计算有满减活动的情况
+	$("input.full_cut").each(function(){
+		var postage = $(this).attr("postage");
+		var meet = $(this).attr("meet");
+		var cash = $(this).attr("cash");
+		if(totalPrice>=meet){
+			hasMj = true;
+			if(cash !=null && cash!=""){
+				$("#meet_span").html(meet);
+				$("#cash_span").html(cash);
+				$("#meet_div").show();
+				$("#orgPrice").html(totalPrice.toFixed(2));
+				$("#totalPrice").html((totalPrice - cash).toFixed(2));
+				$("div.total").css("top", "5px")
+			}else{
+				$("#totalPrice").html(totalPrice);
+				$("#meet_div").hide();
+			}
+			if(postage == 1){
+				$("#post_div").show();
+				$("#post_meet_span").html(meet);
+				$("div.total").css("top", "5px")
+			}else{
+				$("#post_div").hide();
+			}
+		}
+	});
+	
+	if(!hasMj){
+		$("#orgPrice").html("");
+		$("#meet_div").hide();
+		$("#post_div").hide();
+		$("div.total").css("top", "18px");
+	}
+}
+
+function getChecked(){
+	var ids = "";
+	$("input[type=checkbox][name=checkbox1]:checked").each(function(){
+		ids +=$(this).attr("id") + "#";
+	});
+	return ids;
+}
+
+$(function() {
+	$(".add-count").click(function(){
+		var id=$(this).attr("data-id");
+		var number1 = $("#number_"+id);
+		number1.val(parseInt(number1.val())+1);
+		calculation();
+	});
+	//数量减一
+	$(".minus-count").click(function(){
+		var id=$(this).attr("data-id");
+		var number2 = $("#number_"+id);
+		number2.val(parseInt(number2.val()) > 1 ? parseInt(number2.val())-1 : 1);
+		calculation();
+	});
+	
+	//全选
+	$("#checkbox-all").click(function(){
+		var b = this.querySelector("input[name='select-all']").checked;
+		$("input[type='checkbox']").each(function(i){
+			this.checked = b;
+		});
+		calculation();
+	});
+	calculation();
+	$("#jiesuan").click(function(){
+		if($("input[type=checkbox][name=checkbox1]:checked").length<=0){
+			$.toast("请选择要结算的商品", "text");
+			return;
+		}
+		var itemsArray = new Array();
+		$("input[type=checkbox][name=checkbox1]:checked").each(function(){
+			var entity = new Object();
+			var productId = $(this).attr("data-item-id");
+			var productName = $(this).parent().parent().find(".goods-name").html();
+			var pcount = $(this).parent().parent().find(".pcount").val();
+			var speciArray = new Array();
+			$(this).parent().parent().find(".weui_media_info_meta").each(function(){
+				if($(this).attr("data-spv-id") != "" && $(this).attr("data-spv-id") != undefined){
+					var speciEntity = new Object();
+					speciEntity.spvId = $(this).attr("data-spv-id");
+					speciArray.push(speciEntity);					
+				}
+			});
+			entity.productId = productId;
+			entity.pcount = pcount;
+			if(speciArray.length>0){
+				entity.speci = JSON.stringify(speciArray);				
+			}
+			itemsArray.push(entity);
+		});
+		if(itemsArray.length == 0){
+			$.toast("请选择商品", "text");
+			return;
+		}
+		location.href = "${webctx}/pay/balance?items="+JSON.stringify(itemsArray);
+	});
+	$("input[type=checkbox][name=checkbox1]").each(function(){
+		$(this).click(function(){
+			$("#all").attr("checked",false);
+			calculation();
+		});
+	}); 
+	$(".edit").click(function(){
+		if($("input[type=checkbox][name=checkbox1]:checked").length<=0){
+			$.toast("请选择要删除的项", "text");
+		}else{
+			$.modal({
+				  title: "提示",
+				  text: "确定要删除吗?",
+				  buttons: [
+				    { text: "确定", 
+				    	onClick: function(){
+				    		var ids = getChecked();
+				    		$.post("${webctx}/cart/delete", {ids:ids}, function(resp){
+				    			if(resp.code != 200){
+				    				$.toast(resp.msg, "text");
+				    			}else{
+				    				//根据id移除行
+				    				var idsArr = ids.split("#");
+				    				for(var i=0;i<idsArr.length;i++){
+				    					var id = idsArr[i];
+				    					$("#"+id).parent().parent().remove();
+				    				}
+				    				calculation();
+				    			}
+				    		});
+				    	}
+				    },
+				    {text : "取消" }
+				  ]
+			})
+		}
+	});
+	
+});
+</script>
+</body>
+</html>

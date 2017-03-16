@@ -1,0 +1,170 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+[#include "/includes/header.html" /]
+<link href="${webctx}/resources/css/menu-config.css" rel="stylesheet"/>
+<link href="${webctx}/resources/css/component.css" rel="stylesheet"/>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+[#include "/includes/menus.html" /]
+<div class="wrapper wrapper-content">
+	<div class="content row ibox-content">
+	
+
+  <div class="menu_setting_area js_editBox"> 
+   <div class="menu_preview_area"> 
+    <div class="mobile_menu_preview"> 
+     <div class="mobile_hd tc"></div> 
+     <div class="mobile_bd app-design"> 
+<!--       <ul class="pre_menu_list grid_line ui-sortable ui-sortable-disabled" id="menuList"> 
+       <li class="js_addMenuBox pre_menu_item grid_item size1of1"> no_extra
+	       <a href="javascript:void(0);" class="pre_menu_link js_addL1Btn" title="最多添加3个一级菜单"> 
+	       <i class="icon14_menu_add"></i>添加菜单 
+	       </a>
+       </li> 
+      </ul> -->
+      
+      <div class="app-preview">
+			<div class="app-header"></div>
+			<div class="app-entry">
+			<div class="app-fields js-fields-region">
+			 <div class="app-fields ui-sortable">
+			 <!-- 通用部分 填充 -->
+				<div class="app-field clearfix editing">
+				  <div class="control-group">
+				    <ul class="sc-goods-list clearfix size-2 card pic">
+				        <!-- 大图  -->
+				            <!-- 一大两小 -->
+				                    <!-- 大图 -->
+				                    <li class="goods-card big-pic card">
+				                        <a href="javascript: void(0);" class="link js-goods clearfix">
+				                            <div class="photo-block">
+				                                <img class="goods-photo js-goods-lazy" src="https://img.yzcdn.cn/public_files/2015/10/28/69b0970572eb1ff21f919d265f4d1312.jpg">
+				                            </div>
+				                                <div class="info clearfix info-no-title info-price">
+				                                        <p class="goods-title">此处显示商品名称</p>
+				                                        <p class="goods-price"><em>￥9999.00</em></p>
+				                                        <p class="goods-price-taobao"></p>
+				                                </div>
+				                                <div class="goods-buy btn1 "></div>
+				                        </a>
+				                    </li>
+				                <!-- 小图 -->
+				                    <li class="goods-card small-pic card">
+				                        <a href="javascript: void(0);" class="link js-goods clearfix">
+				                            <div class="photo-block">
+				                                <img class="goods-photo js-goods-lazy" src="https://img.yzcdn.cn/public_files/2015/10/28/86551866bfc73cd54d4036f2248d3b06.jpg">
+				                            </div>
+				                                <div class="info clearfix info-no-title">
+				                                        <p class="goods-title">此处显示商品名称</p>
+				                                        <p class="goods-price"><em>￥9999.00</em></p>
+				                                        <p class="goods-price-taobao"></p>
+				                                </div>
+				                                <div class="goods-buy btn1"></div>
+				                        </a>
+				                    </li>
+				                <!-- 小图 -->
+				                    <li class="goods-card small-pic card">
+				                        <a href="javascript: void(0);" class="link js-goods clearfix">
+				                            <div class="photo-block">
+				                                <img class="goods-photo js-goods-lazy" src="https://img.yzcdn.cn/public_files/2015/10/28/2811e55fde033b2f87294b2b9f92080c.jpg">
+				                            </div>
+				                                <div class="info clearfix info-no-title">
+				                                        <p class="goods-title">此处显示商品名称</p>
+				                                        <p class="goods-price"><em>￥9999.00</em></p>
+				                                        <p class="goods-price-taobao"></p>  
+				                                </div>
+				                                <div class="goods-buy btn1"></div>
+				                        </a>
+				                    </li>
+				    </ul>
+				    <div class="component-border"></div>
+	         </div>
+				<div class="actions">
+					<div class="actions-wrap">
+					<span class="action edit">编辑</span>
+					<span class="action add">加内容</span>
+					<span class="action delete">删除</span>
+					</div>
+				</div>	
+	       </div>
+	       <!-- 填充到此处结束 -->
+	      </div>
+	    </div>
+		</div>
+		
+	  </div>
+      <div class="app-add-field">
+          <h4>添加内容</h4>
+          <ul>
+	        <li><a class="js-new-field" data-field-type="goods">商品</a></li>
+	        <li><a class="js-new-field" data-field-type="goods_list">商品<br>列表</a></li>
+	        <li><a class="js-new-field" data-field-type="image_ad">图片<br>广告</a> </li>
+	        <li><a class="js-new-field" data-field-type="nav">图片<br>导航</a></li>
+	        <li><a class="js-new-field" data-field-type="line">辅助线</a></li>
+          </ul>
+       </div>
+	      
+	      
+	      
+     </div> 
+    </div> 
+   </div>
+   
+       <!--内容填充编辑 -->
+    <div class="menu_form_area">
+       <div class="app-sidebar" style="display: block; margin-top: 64px;">
+			<div class="arrow"></div>
+			<div class="app-sidebar-inner js-sidebar-region">
+			 <div>
+			 <form class="form-horizontal" novalidate="">
+			    <div class="form-group">
+			        <label class="col-md-2 control-label">选择商品：</label>
+                    <div class="col-lg-10">
+                    </div>
+			    </div>
+            </form>
+              </div>
+              
+              <div class="js-goods-style-region" style="margin-top: 10px;">
+				<div>
+					<form class="form-horizontal" novalidate="">
+					<div class="form-group">
+					 <label class="col-md-2 control-label">列表样式：</label>
+					<div class="col-lg-10">
+						<label class="radio_inline">
+						<input name="size" value="0" type="radio">
+						大图
+						</label>
+						<label class="radio_inline">
+						<input name="size" value="1" type="radio">
+						小图
+						</label>
+						<label class="radio_inline">
+						<input name="size" value="2"  type="radio">
+						一大两小
+						</label>
+						<label class="radio_inline">
+						<input name="size" value="3" type="radio">
+						详细列表
+						</label>
+						</div>
+					</div>
+					</form>
+				</div>
+				</div>
+			</div>
+        </div> 
+      </div> 
+   </div>
+  
+      
+      
+</div>
+</div>
+[#include "/includes/footer.html" /]
+<script type="text/javascript">
+	Template.init("#menu-component");
+</script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title>商品批量发货</title>
+<link href="${webctx}/resources/css/delivery.css" rel="stylesheet"/>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+<input type="hidden" id="orderIds" value="${orderIds}"/>     
+ <div id="page-trade-delivery" class="app__content page-trade-delivery" style="margin-right: 20px;">
+	 <div class="freight-list">
+		<div class="freight-content" style="display: block;">
+		    <div class="freight-template-list-wrap js-freight-template-list-wrap">
+			    <ul class="deliveryLotGrid">
+			     </ul>
+		    </div>
+	    </div>
+	 </div>
+ </div>
+             
+<div class="panel-default">
+		  	<div class="panel-body" align="right">
+				<button type="button" onclick="sendGoods();" class="btn btn-primary btn-sm">保存</button>
+		  	</div>
+	  	</div>
+<script type="text/template" id="freight-template">
+ <li class="freight-template-item">
+     <h4 class="freight-template-title js-freight-extend-toggle">
+    <b>订单号：{orderSn}</b> 
+    <div class="pull-right">
+    <span class="c-gray">下   单 时  间    {orderCreated}  </span>
+    <a href="javascript:;" class="freight-extend-toggle  freight-extend-toggle-extend"></a>
+    </div>    
+    </h4>
+   <table class="freight-template-table">
+   <tbody id="body_{orderId}">
+   <tr>
+         <td>
+         <label class="col-md-3 control-label">物流公司:</label>
+                       <div>
+	                       <select id="exp_key_{orderId}"  name="exp_key" class="form-control" style="width:200px;">
+							<option value="">请选择快递公司</option>
+							[#list expresscomps as company]
+								<option value="${company.expKey }" expcode = "${company.expCode }" expName="${company.expName }">
+									${company.expName }
+								</option>
+							[/#list]
+		                   </select>
+		                   <label class="error_exp_key" style="color:red;" for="exp_key"></label>
+	     </div> 
+         </td>
+           <td>
+           <label class="col-md-3 control-label">快递单号:</label>
+                   <div>
+	                <input type="text" id="bill_number_{orderId}" name="bill_number" class="form-control" value="" style="width:180px;"/>
+	                <label class="error_bill_number" style="color:red;" for="bill_number"></label>
+                   </div>
+          </td>
+        <tr >
+             <td colspan="2">
+                                   收货地址: <span>{receiverProvince} {receiverCity} {receiverCountry}  {receiverAddr},{receiverName},{receiverPhone}</span>
+                 <td/>
+       </tbody>   
+        </table>
+		<table class="freight-template-table goods" style="display:none">
+		    <thead class="js-freight-cost-list-header">
+                </tr>
+		            <tr>
+		                <td>商品</td>
+		                <td>数量</td>
+		                <td>金额（元）</td>
+		            </tr>
+		    </thead>
+		    <tbody id="js-freight-cost_{orderId}">
+            </tbody>
+		</table>
+        </li>
+</script>
+
+<script type="text/template" id="freight-template_table">
+<tr>
+<td><img src="{productImg}" style="margin: 2px" width="30" height="30" number="1"><br/>{productName}</td>
+<td>{quantity}</td>
+<td>{totalPrice}</td>
+</tr>
+</script>	  	
+<script type="text/javascript">
+
+$(function (){
+	var s=$("#page-trade-delivery"),i=s.find(".deliveryLotGrid");
+	 i.on("click",".js-freight-extend-toggle",function(s){
+		 var i=$(this);
+		e(i);
+	});
+});
+function e(t){
+	"1"==t.data("expend")?(t.find(".freight-extend-toggle").addClass("freight-extend-toggle-extend"),t.data("expend","0"),
+			t.siblings(".goods").hide()):(t.find(".freight-extend-toggle").removeClass("freight-extend-toggle-extend"),t.data("expend","1"),
+			t.siblings(".goods").show());
+}
+$(document).ready(function() {
+	
+	var searchItems_send = function(){
+		var params = {};
+		params.orderIds="${orderIds}";
+		$(".deliveryLotGrid").mask("加载中...");
+		var url = obz.ctx + "/order/sendMoregoods";
+		obz.ajaxJson(url, params, function(resp){
+			$(".deliveryLotGrid").unmask();
+			var result = resp.data;
+			$(".deliveryLotGrid").empty();
+			for(var i=0;i<result.length;i++){
+				var order = result[i];
+				var trTradeHtml = obz.dataTemplate4obj($("#freight-template").html(), order);
+				$(".deliveryLotGrid").append(trTradeHtml);
+				for(var k=0;k<order.orderItems.length;k++){
+					var orderItem = order.orderItems[k];
+					var trOrderHtml = obz.dataTemplate4obj($("#freight-template_table").html(), orderItem);
+					$("#js-freight-cost_" + order.orderId).append(trOrderHtml);
+				}
+			}
+		});
+	}
+	
+	searchItems_send();	
+});
+
+function sendGoods(){
+	clearError();
+	var params={};
+	var itemsAll = new Array();
+	var hasErr = false;
+	var orderIds = $("#orderIds").val();
+	orderIds=orderIds.substring(0,orderIds.length-1);
+	var orderid=orderIds.split("-");
+	for(var i=0;i<orderid.length;i++){
+		 $("#body_"+orderid[i]+" tr").each(function(i,obj){
+		 		var exp_key = $(obj).find("select[name='exp_key']");
+		 		if(exp_key.children('option:selected').val()==""){	
+		 			if(!hasErr) hasErr=true;
+		 			exp_key.css("border-color", "#ff5454");
+		 			$(obj).find(".error_exp_key").html("物流公司不能为空");
+				}
+		 		var bill_number = $(obj).find("input[name='bill_number']");		
+		 		if(bill_number.val()==""){
+		 			if(!hasErr) hasErr=true;
+		 			bill_number.css("border-color", "#ff5454");
+		 			$(obj).find(".error_bill_number").html("快递单号不能为空");
+				}
+		 				
+			}); 
+	}
+	if(hasErr){
+		return false;
+	}
+	
+	for(var i=0;i<orderid.length;i++){
+		 var entity = new Object();
+		 entity.orderId=orderid[i];
+		 var exp_key = $("#exp_key_"+orderid[i]).children('option:selected').val(), bill_number = $("#bill_number_"+orderid[i]).val();
+		 entity.exp_key=exp_key;
+		 entity.bill_number=bill_number;
+		 itemsAll.push(entity);
+	}
+	params.items =JSON.stringify(itemsAll);
+	$("#main").mask("正在保存...");
+	$.post(obz.ctx+"/order/saveSendMoreGoods", params, function(json) {
+		$("#main").unmask();
+		 if(json.code!=200){
+			BootstrapDialog.alert({title:'提示', message:json.msg});
+		}else{
+			obz.msg('发货成功', function(){
+				location.reload();
+			});						
+		}
+},"json");
+}
+function clearError(){
+	$(".error_bill_number,.error_exp_key").empty();
+	var exp_key=$("select[name='exp_key']");
+	exp_key.css("border-color", "");
+	var bill_number=$("input[name='bill_number']");
+	bill_number.css("border-color", "");
+}
+</script>
+</body>
+</html>        

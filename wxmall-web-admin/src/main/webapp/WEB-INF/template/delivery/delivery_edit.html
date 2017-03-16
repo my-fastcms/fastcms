@@ -1,0 +1,799 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>修改运费模板</title>
+[#include "/includes/header.html" /]
+<link href="${webctx}/resources/css/areaselector.css" rel="stylesheet"/>	
+<style type="text/css">
+.none {display: none;}
+.dn{display:none}
+ul, ol {list-style-type: none;padding-left: 0;}
+.col-md-8 .frm_control_group .table_list{margin:0 0;margin-bottom: 30px;}
+.col-md-8 .frm_control_group .table_list .table_cell.method .td_panel{padding-left:0}
+.col-md-8 .frm_control_group .table_list .table_cell.l_price .td_panel{padding-right:0;padding-left:0;text-align:right}
+.col-md-8 .frm_control_group .table_list li{display:block;}
+.col-md-8 .frm_control_group .table_list li:last-child{border-bottom:0;}
+.col-md-8 .frm_control_group .table_list .thead{background:0;zoom:0;color:#222}
+.col-md-8 .frm_control_group .table_list .thead .table_cell .td_panel{border-right:0;color:#222;}
+.col-md-8 .frm_control_group .table_list .tbody_panel .tbody{color:#949494}
+.col-md-8 .frm_control_group .table_list .tbody_panel .tbody .empty_cell{padding:20px 0}
+.col-md-8 .frm_control_group .table_list .edit_range{width:40%}
+.col-md-8 .frm_control_group .table_list .edit_range .td_panel{line-height:30px}
+.col-md-8 .frm_control_group .table_list .edit_range .td_panel a{margin-left:6px}
+.col-md-8 .frm_control_group .table_list .edit_range .td_panel .text{line-height:1.5em}
+.col-md-8 .frm_control_group .table_list .edit_range .td_panel .text .area{color:#a3a3a3;}
+.col-md-8 .frm_control_group .table_list .edit_f_num{width:15%}
+.col-md-8 .frm_control_group .table_list .edit_f_price{width:15%}
+.col-md-8 .frm_control_group .table_list .edit_l_num{width:15%}
+.col-md-8 .frm_control_group .table_list .edit_l_price{width:15%}
+.col-md-8 .frm_control_group .table_list .frm_input_box{width:auto}
+.col-md-8 .table_list{margin-bottom:20px}
+.col-md-8 .table_list .method{width:12%}
+.col-md-8 .table_list .range{width:48%}
+.col-md-8 .table_list .range .td_panel{padding:0.5em 39px 0.5em 10px}
+.col-md-8 .table_list .f_num{width:10%}
+.col-md-8 .table_list .f_price{width:10%}
+.col-md-8 .table_list .l_num{width:10%}
+.col-md-8 .table_list .l_price{width:10%}
+.col-md-8 .table_list .table_cell .td_panel{padding:10px;}
+.col-md-8 .table_list .table_cell .td_panel.br_none{border-right:0}
+.col-md-8 .table_list .tbody:first-child{border-top-width:0}
+.col-md-8 .table_list .tbody.head .edit_f_num .td_panel{height:30px;line-height:30px}
+.col-md-8 .table_list .tbody.head .edit_f_price .td_panel{height:30px;line-height:30px}
+.col-md-8 .table_list .tbody.head .edit_l_num .td_panel{height:30px;line-height:30px}
+.col-md-8 .table_list .tbody.head .edit_l_price .td_panel{height:30px;line-height:30px}
+.col-md-8 .table_list .tbody .table_cell{border-top:0}
+.col-md-8 .table_list .tbody .input_group{margin-left:52%}
+.col-md-8 .table_list .tbody .input_group .table_cell{width:25%}
+.delivery_edit .table_list {
+        -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #E5E6E7 #E5E6E7;
+    border-image: none;
+    border-style: solid solid solid;
+    border-width: 1px 1px 1px;
+   /*  margin: 9px 0 0 84px; */
+}
+.delivery_edit .table_list .tbody .input_group {
+    margin-left: 40%;
+}
+.delivery_edit .table_list .tbody .input_group .table_cell {
+    width: 25%;
+}
+.delivery_edit .table_list .tbody .input_group .frm_tips.fail {
+    clear: both;
+    color: #e15f63;
+    position: relative;
+    top: -5px;
+}
+.delivery_edit .table_list .tbody .table_cell.edit_f_num .td_panel, .delivery_edit .table_list .tbody .table_cell.edit_f_price .td_panel, .delivery_edit .table_list .tbody .table_cell.edit_l_num .td_panel {
+    margin-right: -1px;
+    padding-left: 0;
+    padding-right: 0;
+}
+.delivery_edit .table_list .tbody .table_cell.edit_l_price .td_panel {padding-left: 0;}
+.l{float:left}.r{float:right}.fn{float:none}.cl{clear:both}.tc{text-align:center}.tr{text-align:right}.tl{text-align:left}
+.group{*zoom:1}.group:after{content:"\200B";display:block;height:0;clear:both}
+.table_list .table_cell{border-left:none;line-height:1.5em;padding:0}
+.table_list .table_cell .td_panel{padding:7px 10px;}
+.table_list .thead{font-size:14px}
+.table_list .thead .table_cell .td_panel{border-right:1px solid #e7e7eb}
+.table_list .tbody{border-bottom:1px solid #e7e7eb}
+.thead {background-color: #f4f5f9;}
+.thead .table_cell {border-bottom: 1px solid #e7e7eb;border-left: 1px solid #e7e7eb;line-height: 32px;}
+.thead .table_cell:first-child {border-left-width: 0;}
+</style>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+[#include "/includes/menus.html" /]
+<div class="wrapper wrapper-content">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	           <a href="${webctx}/product" class="J_menuTab">商品</a>
+		       <a href="${webctx}/category" class="J_menuTab">分类 </a>
+		       <a href="${webctx}/specification" class="J_menuTab">规格 </a>
+		       <a href="${webctx}/delivery" class="J_menuTab active">运费模板</a>
+	       </div>
+	   	</nav>
+	</div>
+	<div class="ibox float-e-margins">
+		<div class="ibox-title row">
+			<h2><small><a href="${webctx}/delivery"><i class="glyphicon glyphicon-fast-backward"></i>  返回列表</a></small></h2>
+		</div>
+		<div class="row ibox-content active_statistics">
+		<div class="title_query padtop"> 
+			<form id="qiandaoForm" class="form-horizontal">
+			  <div class="form-group">
+		            <label class="col-md-2 control-label">模板名称</label>
+		            <div class="col-md-3" id="error_specification_name">
+		                <input id="deliver_id" name="name" value="${dtResultDto.id}" maxlength="20" type="hidden" class="form-control" >
+		                <input id="deliver_name" name="name" value="${dtResultDto.name}" maxlength="20" type="text" class="form-control" >
+		                <label class="control-label" for="deliver_name"></label>
+		            </div>
+		        </div>
+		        
+		        <div class="form-group">
+		            <label class="col-md-2 control-label">计费方式</label>
+		            <div class="col-md-2" id="deliverySelect">
+<!-- 		              <label  class="checkbox-pretty inline checkbox-inline hidden">
+						<input name="valuation_type" [#if dtResultDto.valuationType == 1]checked[/#if] value="1" type="radio">
+						<span>按件数</span>
+						</label>
+						
+						<label  class="checkbox-pretty inline checkbox-inline hidden">
+						<input name="valuation_type" [#if dtResultDto.valuationType == 2]checked[/#if] value="2" type="radio">
+						<span>按重量</span>
+						</label>  -->
+						
+						[#if dtResultDto.valuationType == 1]
+						<label  class="checkbox-pretty inline checkbox-inline">
+						<span>按件数</span>
+						</label>
+						[#else]
+						<label  class="checkbox-pretty inline checkbox-inline">
+						<span>按重量</span>
+						</label>
+						[/#if]
+		            </div>
+		        </div>
+		        
+		        <div class="form-group ">
+		            <label class="col-md-2 control-label">运费设置</label>
+		            <div class="col-md-8" id="error_specification_name">
+
+		                 <div class="delivery_edit" id="delivery_type_set_postage">
+		                 <div id="js_delivery_setting" class="frm_control_group">
+		                 
+		                 	
+			                 <ul class="table_list [#if dtResultDto.valuationType == 1][#else]none[/#if]" id="js_delivery_item_1">
+									<li class="tbody head group">
+									<div class="table_cell edit_range l"><div class="td_panel">配送区域</div></div>
+									<div class="table_cell edit_f_num l tl"><div class="td_panel">首N件</div></div>
+									<div class="table_cell edit_f_price l tl"><div class="td_panel">首费(￥)</div></div>
+									<div class="table_cell edit_l_num l tl"><div class="td_panel">续M件</div></div>
+									<div class="table_cell edit_l_price l tl"><div class="td_panel">续费(￥)</div></div>
+									</li>
+									[#list dtResultDto.numList as numList]
+									<li class="tbody  group js_custom_area">
+										<div class="table_cell edit_range l">
+										<div class="td_panel group">
+										<div class="group">
+										<div class="text">
+										<p class="">指定地区<a class="js_edit_area" href="javascript:;">编辑</a><a class="js_delete_area"  href="javascript:;">删除</a>
+										</p>
+										<p class="area">
+										<span class="js_area">
+										[#list numList.areaResultDto as areaResult]
+										<span class="js_area_item" data-destcountry="中国" data-id="${areaResult.id}"  data-destcity="${areaResult.name}">${areaResult.name}</span>,
+										[/#list]
+										<span class="js_no_area none">未选择任何区域</span>
+										</span>
+										</p>
+										</div>
+										</div>
+										</div>
+										</div>
+										<input name="set_id" value="${numList.id}" class="frm_input form-control" placeholder="" type="hidden">
+										<div class="group input_group">
+											<div class="table_cell edit_f_num l tl">
+											<div class="td_panel">
+											<span class="frm_input_box">
+											<input name="startstandards" value="${numList.startStandards}" class="startstandards frm_input form-control" placeholder="" type="text" onkeyup="value=value.replace(/[^\d]/g,'')">
+											</span>
+											</div>
+											</div>
+										<div class="table_cell edit_f_price l tr">
+											<div class="td_panel">
+											<span class="frm_input_box">
+											<input name="startfees" value="${numList.startFees}" class="startfees frm_input form-control" placeholder="" type="text" onkeyup="value=value.replace(/[^\d.]/g,'')">
+											</span>
+											</div>
+										</div>
+										<div class="table_cell edit_l_num l tl">
+											<div class="td_panel">
+											<span class="frm_input_box">
+											<input name="addstandards" value="${numList.addStandards}" class="addstandards frm_input form-control" placeholder="" type="text" onkeyup="value=value.replace(/[^\d]/g,'')">
+											</span>
+											</div>
+										</div>
+										<div class="table_cell edit_l_price l tr">
+											<div class="td_panel">
+											<span class="frm_input_box">
+											<input name="addfees" value="${numList.addFees}" class="addfees frm_input form-control" placeholder="" type="text" onkeyup="value=value.replace(/[^\d.]/g,'')">
+											</span>
+											</div>
+										</div>
+										<p class="frm_tips fail dn">件数需为0至99的整数，费用应为0.00至999.99的数字</p>
+										</div>
+									
+									</li>
+							      [/#list]
+									<li class="tbody group">
+									<div class="table_cell">
+									  <div class="td_panel">
+									  <a class="js_add_area" href="javascript:;">为指定地区设置运费</a>
+									  </div>
+									</div>
+									</li>
+								</ul>
+								
+								<ul class="table_list [#if dtResultDto.valuationType == 2][#else]none[/#if]" id="js_delivery_item_2">
+									<li class="tbody head group">
+									<div class="table_cell edit_range l"><div class="td_panel">配送区域</div></div>
+									<div class="table_cell edit_f_num l tl"><div class="td_panel">首重（Kg）</div></div>
+									<div class="table_cell edit_f_price l tl"><div class="td_panel">首费(￥)</div></div>
+									<div class="table_cell edit_l_num l tl"><div class="td_panel">续重（Kg）</div></div>
+									<div class="table_cell edit_l_price l tl"><div class="td_panel">续费(￥)</div></div>
+									</li>
+									[#list dtResultDto.weightList as weightList]
+									<li class="tbody  group js_custom_area">
+										<div class="table_cell edit_range l">
+										<div class="td_panel group">
+										<div class="group">
+										<div class="text">
+										<p class="">指定地区<a class="js_edit_area" href="javascript:;">编辑</a><a class="js_delete_area"  href="javascript:;">删除</a>
+										</p>
+										<p class="area">
+										<span class="js_area">
+										[#list weightList.areaResultDto as areaResult]
+										<span class="js_area_item" data-destcountry="中国" data-id="${areaResult.id}"  data-destcity="${areaResult.name}">${areaResult.name}</span>,
+										[/#list]
+										<span class="js_no_area none">未选择任何区域</span>
+										</span>
+										</p>
+										</div>
+										</div>
+										</div>
+										</div>
+										<input name="set_id" value="${weightList.id}" class="frm_input form-control" placeholder="" type="hidden">
+										<div class="group input_group">
+											<div class="table_cell edit_f_num l tl">
+											<div class="td_panel">
+											<span class="frm_input_box">
+											<input name="startstandards" value="${weightList.startStandards}" class="startstandards frm_input form-control" placeholder="" type="text" onkeyup="value=value.replace(/[^\d]/g,'')">
+											</span>
+											</div>
+											</div>
+										<div class="table_cell edit_f_price l tr">
+											<div class="td_panel">
+											<span class="frm_input_box">
+											<input name="startfees" value="${weightList.startFees}" class="startfees frm_input form-control" placeholder="" type="text" onkeyup="value=value.replace(/[^\d.]/g,'')">
+											</span>
+											</div>
+										</div>
+										<div class="table_cell edit_l_num l tl">
+											<div class="td_panel">
+											<span class="frm_input_box">
+											<input name="addstandards" value="${weightList.addStandards}" class="addstandards frm_input form-control" placeholder="" type="text" onkeyup="value=value.replace(/[^\d]/g,'')">
+											</span>
+											</div>
+										</div>
+										<div class="table_cell edit_l_price l tr">
+											<div class="td_panel">
+											<span class="frm_input_box">
+											<input name="addfees" value="${weightList.addFees}" class="addfees frm_input form-control" placeholder="" type="text" onkeyup="value=value.replace(/[^\d.]/g,'')">
+											</span>
+											</div>
+										</div>
+										<p class="frm_tips fail dn">件数需为0至99的整数，费用应为0.00至999.99的数字</p>
+										</div>
+									
+									</li>
+							      [/#list]
+									<li class="tbody group">
+									<div class="table_cell">
+									  <div class="td_panel">
+									  <a class="js_add_area" href="javascript:;">为指定地区设置运费</a>
+									  </div>
+									</div>
+									</li>
+								</ul>
+							</div>
+							
+		                 </div>
+		            </div>
+		        </div>
+		        </form>
+		   </div>
+		<div class="form-group">
+		 <label class="col-md-2 control-label"></label>
+		 <div class="col-md-8">
+			    <button type="button"  onclick="saveTask();" class="btn btn-primary">保   存</button>
+		        <a type="button" href="javascript:history.go(-1);" class="btn btn-default">取   消</a>
+		 </div>
+       </div>   
+</div>
+</div>
+</div>
+
+<div class="modal fade" id="area_select_dialog">
+	<div class="modal-dialog" style="width: 730px;height: 602px;">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">选择地区</h4>
+			</div>
+			<div class="modal-body" style="padding: 80px 45px 50px;max-height: 485px;overflow-y: auto;">    
+		        <div id="js_area_select">
+					<div class="scope_area">
+						<div class="unchoose_scope">
+							<div class="scope_hd">
+							<label>省、直辖市、市</label>
+							</div>
+							<dl class="scope_list jsFromList">
+							<dd>
+							<p class="frm_msg fail jsFail" style="display:none">
+							<span class="frm_msg_content alert alert-warning" style="display: none;">至少选择1个地区</span>
+							</p>
+							</dd>
+							<div class="jsEmptyTip empty_tips dn" style="display: none;"></div>
+							<div class="js_dd_list">					
+							</div>
+							</dl>
+							
+						</div>
+						
+						<div class="opr_btn">
+						<a class="btn btn-default jsAdd" href="javascript:;">添加</a>
+						</div>	
+				
+						<div class="choosed_scope">
+				          <div class="scope_hd">
+					          <label>已选择<!-- <span class="txt_hint js_hasSelect">0</span>
+					                          个，还剩<span class="txt_hint js_leaveSelect">372</span>个可选 -->
+					          </label>
+				           </div>
+				          <dl class="scope_list">			
+					      <dd>
+						   <ul class="selected_scope_list jsToList">
+							
+		                   </ul>
+							</dd>
+						</dl>
+					</div>
+						
+					</div>
+				 </div>
+				
+			
+			
+			</div>
+			<div class="modal-footer" >
+			<div  style="display: block;" align="center">
+				<button  type="button" class="btn  btn-primary js_btn" data-index="0">确      定</button>
+				<button  type="button" class="btn btn-default js_btn" data-dismiss="modal" aria-hidden="true" data-index="1">取    消</button>	
+			</div>	
+        	</div>
+		</div>
+	</div>
+</div>
+
+<!-- 保存成功弹窗 -->
+<div class="modal fade" id="sava_suc_dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">提醒</h4>
+			</div>
+			<div class="modal-body install_cont" style="padding-left: 5px;">
+				<p class="fonts" style="color:red;fon">保存成功！</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+function clearError(t){
+	//$("#error_deliver_name").empty();
+	$("#deliver_name").css("border-color", "");
+	$("#js_delivery_item_"+t+" li.js_custom_area").each(function(i, obj){
+		$(".frm_tips").addClass("dn");
+		$(obj).find("input[name='startstandards']").css("border-color", "");
+		$(obj).find("input[name='startfees']").css("border-color", "");
+		$(obj).find("input[name='addstandards']").css("border-color", "");
+		$(obj).find("input[name='addfees']").css("border-color", "");
+		var y=$(this),i=y.find(".js_area"),l=i.find(".js_area_item");	
+		 $(this).find(".js_no_area").css("color", "");
+	});
+	
+}
+//js获取数据
+
+var postDataArray = new Array();
+function saveTask(){
+	var params = {},error = {};
+	var id=$("#deliver_id").val();
+	var dType=$("input[name='valuation_type']:checked").val();
+	clearError(dType);
+	var name=$("#deliver_name").val();
+	if($.trim(name) =="") {error.error_deliver_name = "模板名称不能为空"; }
+	else {error.error_deliver_name=""; params.name = $.trim(name);}
+	var hasError = false;
+	for(var key in error){
+		if(error[key]!=""){
+			if(!hasError) hasError = true;
+			$("#"+key).addClass("has-error");
+			$("#"+key).find("label").text(error[key]);
+		}else{
+			$("#"+key).removeClass("has-error");
+			$("#"+key).find("label").empty();
+		}
+	}
+	if(hasError) return false;
+	var hasErr = false;
+	
+	if($("#js_delivery_item_"+dType+" li.js_custom_area").length<=0){
+		 BootstrapDialog.show({
+	            title: '提示',
+	            message: '至少要有一个配送区域!'
+	        });
+		return false;
+	}
+	
+	$("#js_delivery_item_"+dType+" li.js_custom_area").each(function(i, obj){
+		var start_standards = $(obj).find("input[name='startstandards']");
+		if(start_standards.val()==""){
+			if(!hasErr) hasErr=true;
+			$(".frm_tips").removeClass("dn");
+			start_standards.css("border-color", "#ff5454");
+			return ;
+		}
+		
+		var start_fees = $(obj).find("input[name='startfees']");
+		if(start_fees.val()==""){
+			if(!hasErr) hasErr=true;
+			$(".frm_tips").removeClass("dn");;
+			start_fees.css("border-color", "#ff5454");
+			return ;
+		}
+		var add_standards = $(obj).find("input[name='addstandards']");
+		if(add_standards.val()==""){
+			if(!hasErr) hasErr=true;
+			$(obj).find(".frm_tips").removeClass("dn");;
+			add_standards.css("border-color", "#ff5454");
+			return ;
+		}
+		var add_fees = $(obj).find("input[name='addfees']");
+		if(add_fees.val()==""){
+			if(!hasErr) hasErr=true;
+			$(".frm_tips").removeClass("dn");;
+			add_fees.css("border-color", "#ff5454");
+			return ;
+		}
+		var y=$(this),i=y.find(".js_area"),l=i.find(".js_area_item");	
+		if(l.length<=0){
+			/* BootstrapDialog.show({
+	            title: '提示',
+	            message: '未指定区域!'
+	        }); */
+	        if(!hasErr) hasErr=true;
+	        $(this).find(".js_no_area").css("color", "#ff5454");
+		}
+	});
+	if(hasErr){
+		return false;
+	}
+		var deliveryType=dType;
+		var obj = new Object();
+		obj.type = deliveryType;
+		obj.data = getPostage(deliveryType);
+		postDataArray.push(obj);
+	var data = JSON.stringify(postDataArray);
+	params.id=id;
+	params.valuation_type=dType;
+	params.items=data;
+	$(".col-md-8").mask("正在保存...");
+	$.post(obz.ctx+"/delivery/save", params, function(json) {
+			$(".col-md-8").unmask();
+			if(json.code!=200){
+				BootstrapDialog.alert({title:'提示', message:json.msg});
+			}else{
+				$("#sava_suc_dialog").modal('show');
+				$('#sava_suc_dialog').on('hidden.bs.modal', function () {
+					location.href=obz.ctx + "/delivery";
+				});						
+			}
+	},"json");
+}
+
+//运费数据
+
+function getPostage(t){
+	var items = new Array();
+
+	$("#js_delivery_item_"+t+" li.js_custom_area").each(function(i, obj){
+		var set_id=$(obj).find("input[name='set_id']").val();
+		var start_standards = $(obj).find("input[name='startstandards']").val();
+		var start_fees = $(obj).find("input[name='startfees']").val();
+		var add_standards = $(obj).find("input[name='addstandards']").val();
+		var add_fees = $(obj).find("input[name='addfees']").val();
+		var placeId="";
+		var y=$(this),i=y.find(".js_area"),l=i.find(".js_area_item");
+		l.each(function(i, obj){
+			placeId=placeId+$(obj).attr("data-id")+",";
+		});
+		placeId=placeId.substring(0,placeId.length-1);
+		if(start_standards!="" && start_fees!="" && add_standards!="" && add_fees!=""&& placeId!=""){
+			var entity = new Object();
+			if(set_id != ""){
+				entity.id=set_id;
+			}
+			entity.deliveryType=t;
+			entity.areaId=placeId;
+			entity.startStandards=start_standards;
+			entity.startFees=start_fees;
+			entity.addStandards=add_standards;
+			entity.addFees=add_fees;
+			items.push(entity);
+		}	
+	});
+	return items;
+}
+
+$(function (){
+	$('#area_select_dialog').on('hidden.bs.modal', function () {
+		$("#js_delivery_setting").find(".js_area").removeClass("isArea");
+	});
+	var params = {};
+	var url = obz.ctx + "/delivery/area";
+	$.post(url, params, function(resp){
+		var dataList = resp;
+		if(dataList.length>0){
+			for(var i=0;i<dataList.length;i++){
+				var _row = dataList[i];
+				var trHtml = obz.dataTemplate4obj($("#delivery_area_list").html(), _row);
+				$(".js_dd_list").append(trHtml);
+				
+				var subData = _row.sub;
+				for(var k=0;k<subData.length;k++){
+					var sub_trHtml = obz.dataTemplate4obj($("#delivery_area_list_ul").html(), subData[k]);
+					$("#p_"+_row.id).append(sub_trHtml);
+				}
+			}
+		}
+	});
+	
+	var t=this, s=$("#js_area_select"),i=s.find(".jsFromList"),a=(s.find(".jsToList"),s.find(".jsFail"));
+	 i.on("click",".jsLevel1",function(s){
+		 var i=$(this);
+		 return $(s.target).is("i")?(e(i),!1):void(0);
+	});
+	 i.on("click",".jsLevel2",function(){
+		 var t=$(this);
+		 t.hasClass("disabled")||t.toggleClass("selected");
+		 });
+    function e(t){
+    	"1"==t.data("expend")?(t.find("i").text("+").removeClass("hide_sub_icon"),t.data("expend","0"),
+    			t.siblings().hide()):(t.find("i").text("-").addClass("hide_sub_icon"),t.data("expend","1"),
+    			t.siblings().show());
+	}
+    s.on("click",".jsAdd",function(){
+
+    	var e=i.find(".selected"),l=[];
+    	
+    	if(e.length>0&&a.hide()){
+    		$.each(e,function(){
+        		var t=$(this);
+        		l.push({
+        		id:t.data("id"),
+        		name:t.data("name")
+        		});
+    		});
+    		
+    		addSelectedItems(l);
+    		e.addClass("disabled").removeClass("selected");	
+    	}
+    	
+		
+    });
+    
+    s.on("click",".jsClose",function(e){
+    	var e=$(this);
+    	e.parent().remove();
+    	$(".disabled[data-id="+e.data("id")+"]",i).removeClass("disabled");
+    	t.opt.onchanged&&t.opt.onchanged.call(t),t.opt.onDeleted&&t.opt.onDeleted.call(t,{
+    		id:e.data("id"),
+    		name:e.data("name")
+    		});
+	});
+    
+    $(".js_btn").click(function(){
+    	var t=$(this);
+    	var index=t.attr("data-index");
+    	if(index=="0"){
+    		if(getValue().length>0){
+    			$("#js_delivery_setting").find(".js_no_area").addClass("none");
+    			$(".isArea").html("");
+    			var value=getValue();
+    			var json=JSON.stringify(value);
+    			var objJson=eval(json);
+    			for(var k=0;k<objJson.length;k++){
+    				var jsToList = obz.dataTemplate4obj($("#delivery_js_area_item").html(), objJson[k]);
+    		    	$(".isArea").append(jsToList);
+    			}
+    			
+    			$("#area_select_dialog").modal("hide");
+    		}
+    	}
+    });
+    //为指定地区设置运费
+	$(".js_add_area").click(function(){
+	var e=$("#delivery_area_tpl").html();
+	var t=$(this).closest(".tbody");
+	var i=$(e).insertBefore(t);
+    });
+	$("#js_delivery_setting").on("click",".js_delete_area",function(e){
+		deleteObj(this);
+	});
+	
+	$("#js_delivery_setting").on("click",".js_edit_area",function(e){
+		var y=$(this).closest(".text").find(".js_area");
+		y.addClass("isArea");
+		var t=[],i=y.find(".js_area_item"),n={},s=y.closest(".table_list").find(".js_area_item"),a=[];
+		if (typeof(s.attr("data-id")) == "undefined") { 
+			setItemsEmpty();
+		}else{
+		   i.each(function(){
+				var e=$(this).data();
+				t.push(e.id),n[e.id]=!0;
+			});
+		   
+		   setItemsByKey(t,"id");
+		}
+		/*  */
+		$("#area_select_dialog").modal("show");
+		
+	});
+	$("#deliverySelect :radio").click(function(){	
+		  var code_Values =$("#deliverySelect input[name='valuation_type']:checked").val(); 
+			if (code_Values=="1") {
+				$("#js_delivery_setting").find("#js_delivery_item_1").removeClass("none");
+				$("#js_delivery_setting").find("#js_delivery_item_2").addClass("none");
+			}else{
+				$("#js_delivery_setting").find("#js_delivery_item_2").removeClass("none");
+				$("#js_delivery_setting").find("#js_delivery_item_1").addClass("none");
+	
+			}
+	 });
+});
+function deleteObj(e){
+	e=$(e);
+	var i=e.closest(".tbody");
+	var s=i.remove();
+}
+
+
+function  getSelectedCount(t){
+	return this.container.find(".jsToList .jsItem").length;
+}
+
+function addSelectedItems(t){
+	var json=JSON.stringify(t);
+	var objJson=eval(json);
+	for(var k=0;k<objJson.length;k++){
+		var jsToList = obz.dataTemplate4obj($("#delivery_area_jsToList").html(), objJson[k]);
+    	$(".jsToList").append(jsToList);
+	}
+}
+
+function getValue(){
+	var  t=$("#js_area_select"),e=t.find(".jsToList .jsItem"),s=[];
+	$.each(e,function(){
+	var t=$(this);
+	s.push({
+	id:t.data("id"),
+	name:t.data("name")
+	});
+	});
+	var i=s.length<=0?"show":"hide";
+	return t.find(".jsFail")[i]().find(".frm_msg_content")[i](),s;
+}
+function  setDisabledItemsByKey(t,e){
+	for(var s=$("#js_area_select"),i=s.find(".jsFromList"),a=0;a<t.length;a++)
+		$("a[data-"+e+"="+t[a]+"]",i).addClass("disabled");
+    
+	}
+function  setItemsByKey(t,e){
+	 var s=$("#js_area_select"),i=s.find(".jsFromList"),a=s.find(".jsToList");
+	i.find(".selected").removeClass("selected"),i.find(".disabled").removeClass("disabled");
+	for(var n=0;n<t.length;n++)$("a[data-"+e+"="+t[n]+"]",i).addClass("selected");
+	a.html(""),$(".js_leaveSelect",s).html("372"),s.find(".jsAdd").click();
+	}
+function setItemsEmpty(){
+	var s=$("#js_area_select"),i=s.find(".jsFromList"),a=s.find(".jsToList");
+	i.find(".selected").removeClass("selected"),i.find(".disabled").removeClass("disabled");
+	a.html(""),$(".js_leaveSelect",s).html("372");
+}
+</script>
+
+[#include "/includes/footer.html" /]
+
+<script type="text/html" id="delivery_area_list">
+<dd class="first_dd_list" >
+	<a href="javascript:;" class="jsLevel father_menu  jsLevel1" data-id="{id}" data-name="{name}" data-desc="" data-expand="0"> 
+	<i class="jsToggle sub_icon show_sub_icon">+</i>
+		<span class="item_name">{name}</span>
+	</a>
+<ul class="sub_scope_list" id="p_{id}" style="display:none">
+</ul>
+</dd>
+</script>
+<script type="text/html" id="delivery_area_list_ul">
+        <li>
+          <a data-id="{id}" data-name="{name}" href="javascript:;" class="jsLevel jsLevel2">{name}</a>
+		</li>
+</script>
+
+<script type="text/html" id="delivery_area_jsToList">
+<li class="selected_scope_item jsItem " data-name="{name}" data-id="{id}" data-desc="">
+	<span class="item_name">{name}</span>
+	<a href="javascript:;" class="as_scope_del jsClose" data-id="{id}" data-name="{name}">×</a>
+</li>
+</script>
+
+<script type="text/html" id="delivery_js_area_item">
+<span class="js_area_item" data-destcountry="中国" data-id="{id}"  data-destcity="{name}">{name}</span>
+，
+</script>
+<script type="text/html" id="delivery_area_tpl">
+<li class="tbody group js_custom_area">
+<div class="table_cell edit_range l">
+<div class="td_panel group">
+<div class="group">
+<div class="text">
+<p class="">指定地区<a class="js_edit_area" href="javascript:;">编辑</a><a class="js_delete_area"  href="javascript:;">删除</a>
+</p>
+<p class="area">
+<span class="js_area">
+<span class="js_no_area">未选择任何区域</span>
+</span>
+</p>
+</div>
+</div>
+</div>
+</div>
+<input name="set_id" value="" class="frm_input form-control" placeholder="" type="hidden">
+<div class="group input_group">
+<div class="table_cell edit_f_num l tl">
+<div class="td_panel">
+<span class="frm_input_box">
+<input value="" name="startstandards" class="startstandards frm_input form-control" name="" type="text" placeholder="" onkeyup="value=value.replace(/[^\d]/g,'')">
+</span>
+</div>
+</div>
+<div class="table_cell edit_f_price l tr">
+<div class="td_panel">
+<span class="frm_input_box">
+<input value="" name="startfees" class="startfees frm_input form-control" type="text" placeholder="" onkeyup="value=value.replace(/[^\d.]/g,'')">
+</span>
+</div>
+</div>
+<div class="table_cell edit_l_num l tl">
+<div class="td_panel">
+<span class="frm_input_box">
+<input value="" name="addstandards" class="addstandards frm_input form-control" name="" type="text" placeholder="" onkeyup="value=value.replace(/[^\d]/g,'')">
+</span>
+</div>
+</div>
+<div class="table_cell edit_l_price l tr">
+<div class="td_panel">
+<span class="frm_input_box">
+<input value="" name="addfees" class="addfees frm_input form-control" name="" type="text" placeholder="" onkeyup="value=value.replace(/[^\d.]/g,'')">
+</span>
+</div>
+</div>
+<p class="frm_tips fail dn">件数需为0至99的整数，费用应为0.00至999.99的数字</p>
+</div>
+</li>
+</script>
+<script>
+Template.init("#menu-goods");
+</script>
+</body>
+</html>

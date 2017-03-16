@@ -1,0 +1,95 @@
+.qiandao_calendar{
+	margin:0 auto;
+	margin-top:10px;
+	/* width:288px; */
+	/* border:1px solid #D4D4D4; */
+	background-color:#fff;
+}
+.qiandao_calendar .header_info{
+	text-align:center;
+	font-size:14px;
+	border-bottom:1px solid #eee;
+	padding-bottom:10px;
+	font-weight:bold;
+	padding-top:10px;
+	position:relative;
+}
+.qiandao_calendar .header_info .pre_month{
+	position:absolute;
+	left:2px;
+	top:5px;
+	width:100px;
+	height:28px;
+	line-height:28px;
+	font-size: 18px;
+	display:block;
+}
+.qiandao_calendar .header_info .next_month{
+	position:absolute;
+	right:2px;
+	top:5px;
+	/* width:30px; */
+	height:28px;
+	line-height:28px;
+	font-size: 18px;
+	display:block;
+}
+.qiandao_calendar  table td{
+	width:40px;
+	height:40px;
+	background-color:#fcfcfc;
+	text-align:center;
+}
+ul.qiandao_desc{
+	width:260px;
+	margin:0 auto;
+	margin-top:20px;
+	overflow:hidden;
+}
+ul.qiandao_desc li{
+	list-style:none;
+	margin:10px 0;
+}
+
+@media screen and (min-width:360px) and (max-width:374px) {
+	.qiandao_calendar{
+		width:337px;
+	}
+	.qiandao_calendar  table td{
+		width:47px;
+		height:47px;
+	}
+}
+@media screen and (min-width:375px) and (max-width:399px) {
+	.qiandao_calendar{
+		width:351px;
+	}
+	.qiandao_calendar  table td{
+		width:49px;
+		height:49px;
+	}
+}
+@media screen and (min-width:400px) and (max-width:413px) {
+	.qiandao_calendar{
+		width:379px;
+	}
+	.qiandao_calendar  table td{
+		width:53px;
+		height:53px;
+	}
+}
+@media screen and (min-width:414px) and (max-width:10000px) {
+	.qiandao_calendar{
+		width:393px;
+	}
+	.qiandao_calendar  table td{
+		width:55px;
+		height:55px;
+	}
+}
+
+/** template **/
+.qiandao_calendar  table td.checked{
+	background-color:#f60;
+	color:#fff;
+}

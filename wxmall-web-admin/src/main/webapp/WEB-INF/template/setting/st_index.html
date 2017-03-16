@@ -1,0 +1,160 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+[#include "/includes/header.html" /]
+<script type="text/javascript">
+$(document).ready(function() {
+	searchItems();
+	$('#conf_pay_dialog').on('hidden.bs.modal', function () {
+		$("#sel_app_id").val("");
+		 $("#pay_mch_id").val("");
+		 $("#pay_secret_key").val("");
+		return false;
+	});
+	$("#savePayConfigBtn").click(function(){
+    	var pay_mch_id = $("#pay_mch_id").val();
+    	var pay_secret_key = $("#pay_secret_key").val();
+    	if(pay_mch_id == ""){
+    		BootstrapDialog.alert({title:'提示', message:'请填写支付商户号！'});
+    		return false;
+    	}
+    	if(pay_secret_key == ""){
+    		BootstrapDialog.alert({title:'提示', message:'请填写支付商户密钥！'});
+    		return false;
+    	}
+    	
+    	/* var params = {};
+    	params.pay_mch_id = pay_mch_id;
+    	params.pay_secret_key = pay_secret_key;
+    	params.auth_user_id = $("#sel_app_id").val();
+    	obz.ajaxJson(obz.ctx + "/setting/update", params, function(resp){
+    		if(resp.code != 200){
+    			BootstrapDialog.alert({title:'提示', message:resp.msg});
+    			return;
+    		}
+    		$("#conf_pay_dialog").modal("hide");
+    		searchItems();
+    	}); */
+    	
+    	$(".modal-body").mask("保存中...");
+ 	   	$("#configPayForm")[0].submit();
+    });
+});
+
+var pageClick = function(pageNo) {
+	searchItems(pageNo);
+}
+
+var searchItems = function(currPage){
+	var params = {};
+	//其他查询条件
+	if(currPage){
+		params.page = currPage;
+	}
+	
+	params.active = $("#a_status_sel").val();
+	$("#mainTable").mask("加载中...");
+	var url = obz.ctx + "/setting/list";
+	obz.ajaxJson(url, params, function(resp){
+		var result = resp.data;
+		$(".itemsLotGrid").empty();
+		
+		if(currPage){
+			$("#pager").pager({ pagenumber:currPage, recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });
+		}else{
+			$("#pager").pager({ recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });	
+		}
+		
+		var dataList = result.list;
+		if(dataList.length>0){
+			for(var i=0;i<dataList.length;i++){
+				var _row = dataList[i];
+				var trHtml = obz.dataTemplate4obj($("#item_table_tr_tpl").html(), _row);
+				$(".itemsLotGrid").append(trHtml);
+			}
+			//初始化checkbox点击事件
+			TBatch.checkCheckbox();
+			TBatch.initCheckboxClick();
+			TBatch.initOptEvent(TableOpt.init());
+		}else{
+			$(".itemsLotGrid").append($("#table_noresult_tr_tpl").html());
+		}
+		
+		$("#mainTable").unmask();
+	});
+}
+
+var TableOpt = {
+	configPay : function(param){
+		var id = param[1], payMchId = param[2], paySecretKey = param[3];
+		/* $("#sel_app_id").val(id);
+ 		if(payMchId && payMchId != null && payMchId != "") $("#pay_mch_id").val(payMchId);
+		if(paySecretKey && paySecretKey != null && paySecretKey != "") $("#pay_secret_key").val(paySecretKey);
+		$("#conf_pay_dialog").modal("show"); */
+		location.href = obz.ctx + "/setting/payconfig/"+id;
+	}, 
+	
+	init : function(){
+		var optArray = new Array();
+		optArray.push(this.configPay);
+		return optArray;
+	}
+} 
+</script>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+[#include "/includes/menus.html" /]
+<div class="wrapper wrapper-content">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	           <a href="${webctx}/setting" class="J_menuTab active">公众号</a>
+		       <a href="${webctx}/menu" class="J_menuTab">微信菜单</a>
+	       </div>
+	   	</nav>
+	</div>
+	<div id="tableList" class="content row ibox-content">
+		<!-- <div class="panel-body">
+			<a href="${webctx}/weixin/auth2" class="btn btn-info">绑定公众号</a>
+		</div> -->	
+		<div id="prizeToolsbar" class="panel-body">
+			<div id="pager" class="jqpager" style="margin-bottom: 1px;"></div>	
+		</div>
+		<table id="mainTable" class="table table-striped table-bordered bootstrap-datatable datatable" border="0">
+		  <thead>
+			  <tr>
+				<th><input type="checkbox" id="all" title="全选/反选" style="margin-right: 4px; vertical-align: middle;"/></th>
+				<th>公众号</th>
+				<th>主体名称</th>
+				<th>原始Id</th>
+				<th><span style="vertical-align: middle;">&nbsp;&nbsp;appId</span></th>
+				<th>首次绑定时间</th>
+				<th>操作</th>
+			  </tr>
+		  </thead>   
+		  <tbody class="itemsLotGrid">								
+		  </tbody>
+	  	</table>
+	</div>    
+</div>
+<!-- html 模板文件 -->
+<script type="text/template" id="item_table_tr_tpl">
+		<tr class="package">
+			<td><input type="checkbox" class="commchk" id="checkbox_{app_id}" style="margin-right: 4px; vertical-align: middle;"/></td>
+			<td><span style="margin-right: 5px; margin-left: 2px; vertical-align: middle;"><img src="{head_img}" width="40" height="40">&nbsp;{nick_name}</img></span></td>
+			<td>{principal_name}</td>
+			<td><span>{user_name}</span></td>
+			<td><span style="margin-right: 5px; margin-left: 2px; vertical-align: middle;">{app_id}</span></td>
+			<td><span class="fans_status">{created}</span></td>
+			<td>&nbsp;<a id="payconfig_{id}_{pay_mch_id}_{pay_secret_key}" href="javascript:void(0)">配置支付</a></td>
+		</tr>
+</script>
+<script type="text/template" id="table_noresult_tr_tpl">
+	<tr class="package"><td colspan="7" class="center">没有结果集</td></tr>
+</script>
+[#include "/includes/footer.html" /]
+<script type="text/javascript">
+	Template.init("#menu-setting");
+</script>
+</body>
+</html>	

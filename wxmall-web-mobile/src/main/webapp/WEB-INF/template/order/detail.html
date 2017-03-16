@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>订单详情</title>
+[#include "/includes/header.html" /]
+</head>
+
+<body>
+    <div class="weui-form-preview">
+      <div class="weui-form-preview__hd">
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">订单状态</label>
+          <em class="weui-form-preview__value">${orderDetail.orderStatus}</em>
+        </div>
+      </div>
+      <div class="weui-form-preview__bd">
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">收货人</label>
+          <span class="weui-form-preview__value">${orderDetail.receiverName}</span>
+        </div>
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">电话/手机</label>
+          <span class="weui-form-preview__value">${orderDetail.receiverPhone}</span>
+        </div>
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">收货地址</label>
+          <span class="weui-form-preview__value">
+          ${orderDetail.receiverProvince}${orderDetail.receiverCity}${orderDetail.receiverCountry}
+          <br>${orderDetail.receiverAddr}</span>
+        </div>
+      </div>
+      
+      <!-- 商品项 -->
+       <div class="weui-form-preview__bd">
+       <div class="weui-panel weui-panel_access">
+		  <!-- <div class="weui-panel__hd">订单项</div> -->
+		  <div class="weui-panel__bd">
+		  	[#list orderDetail.orderItems as orderItem]
+		    <a href="${webctx}/product/detail/?id=${orderItem.productId}" class="weui-media-box weui-media-box_appmsg">
+		      <div class="weui-media-box__hd">
+		        <img class="weui-media-box__thumb" src="${orderItem.productImg}">
+		      </div>
+		      <div class="weui-media-box__bd">
+		        <h4 class="weui-media-box__title" style="font-size: 14px;">${orderItem.productName}</h4>
+		        <p class="weui-media-box__desc">${orderItem.quantity}件</p>
+		      </div>
+		    </a>
+		    [/#list]
+		  </div>
+		</div>
+       </div>
+      
+      <div class="weui-form-preview__bd">
+        <!-- <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">配送方式</label>
+          <span class="weui-form-preview__value">免运费（快递发货）</span>
+        </div> -->
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">买家留言</label>
+          <span class="weui-form-preview__value">无</span>
+        </div>
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">合计</label>
+          <span class="weui-form-preview__value">￥${orderDetail.totalPrice}</span>
+        </div>
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">运费</label>
+          <span class="weui-form-preview__value">￥${orderDetail.postFee}</span>
+        </div>
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">应付金额</label>
+          <span class="weui-form-preview__value">￥${orderDetail.payFee}</span>
+        </div>
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">订单编号</label>
+          <span class="weui-form-preview__value">${orderDetail.orderSn}</span>
+        </div>
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">创建日期</label>
+          <span class="weui-form-preview__value">${orderDetail.orderCreated}</span>
+        </div>
+      </div>
+      
+      [#if orderDetail.orderStatus == "待支付"]
+      <div class="weui-form-preview__ft">
+        <a id="zhifu" class="weui-form-preview__btn weui-form-preview__btn_primary" href="javascript:void(0)">立即支付</a>
+      </div>
+      [/#if]
+      
+    </div>
+[#include "/includes/footer.html" /]
+<script type="text/javascript">
+//订单支付
+$("#zhifu").click(function(){
+	//发起支付
+	$.showLoading("正在连接微信支付...");
+	$.post("${webctx}/pay", {orderId:${orderDetail.orderId}}, function(data){
+		$.hideLoading();
+  		var resp = data;
+		if(resp.code != 200){
+			$.alert(resp.msg==null ? "系统错误" : resp.msg);
+			return;
+		}
+	});
+});
+</script>
+</body>
+</html>

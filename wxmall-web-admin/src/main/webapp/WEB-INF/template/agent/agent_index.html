@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+[#include "/includes/header.html" /]
+<script type="text/javascript">
+var agentName = "", agentPhone = "", wxNick="";
+	$(document).ready(function() {
+	    $("#myqueryBtn").click(function(){
+	    	wxNick = $("#p_nick_name").val();
+	    	agentPhone = $("#p_agent_phone").val();
+	    	agentName = $("#p_agent_name").val();
+	    	searchagents();
+	    });
+        searchagents();
+	});
+	var pageClick = function(pageNo) {
+		searchagents(pageNo);
+	}
+	var searchagents = function(currPage){
+		var params = {};
+		//其他查询条件
+		if(currPage){
+			params.page = currPage;
+		}
+		params.wxNick = wxNick;
+		params.agentPhone = agentPhone;
+		params.agentName = agentName;
+		params.parentId = '${parentAgentId}';
+		$("#mainTable").mask("加载中...");
+		var url = obz.ctx + "/agent/list";
+		obz.ajaxJson(url, params, function(resp){
+			$("#mainTable").unmask();
+			var result = resp.data;
+			$(".agentLotGrid").empty();
+			if(currPage){
+				$("#pager").pager({ pagenumber:currPage, recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });
+			}else{
+				$("#pager").pager({ recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });	
+			}
+			var dataList = result.list;
+			if(dataList.length>0){
+				for(var i=0;i<dataList.length;i++){
+					var _row = dataList[i];
+					var trHtml = obz.dataTemplate4obj($("#agent_table_tr_tpl").html(), _row);
+					$(".agentLotGrid").append(trHtml);
+				}
+				TBatch.checkCheckbox();
+				TBatch.initCheckboxClick();
+				TBatch.initOptEvent(ActivityTableOpt.init());
+			}else{
+				$(".agentLotGrid").append($("#table_noresult_tr_tpl").html());
+			}
+		});
+	}
+	
+	//=============================表格操作事件开始=============================================
+	var ActivityTableOpt = {
+		edit : function(param){
+			var id = param[1];
+			//location.href = obz.ctx + "/agent/set/?pid="+id;
+		}, 
+		del : function(param){
+			obz.showMessage("确定删除吗？删除后不可恢复，请谨慎操作！", function(){
+    			var ids = param[1];
+	    		obz.ajaxJson(obz.ctx + "/agent/del", {ids: ids}, function(resp){
+	    			if(resp.code==200){
+	    				searchagents();	
+	    			}
+	    		});
+    		});
+			return false;
+		},
+		init : function(){
+			var optArray = new Array();
+			optArray.push(this.edit);
+			optArray.push(this.del);
+			return optArray;
+		}
+	}	
+	//=============================表格操作事件结束=============================================
+</script>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+[#include "/includes/menus.html" /]
+<div class="wrapper wrapper-content">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	           <a href="${webctx}/agent/aduit" class="J_menuTab">分销商审核</a>
+		       <a href="${webctx}/agent" class="J_menuTab active">分销商</a>
+		       <a href="${webctx}/agent/rank" class="J_menuTab">分销商等级</a>
+	       </div>
+	   	</nav>
+	</div>
+    <div id="tableList" class="content row ibox-content" style="padding-top: 10px;">
+		<table width="100%" border="0" cellspacing="1" cellpadding="0" class="table table-striped table-bordered">
+			<tr>
+				<th>微信昵称</th>
+				<td><input id="p_nick_name" type="text" /></td>
+				<th>申请人</th>
+				<td><input id="p_agent_name" type="text" /></td>
+				<th>申请人手机</th>
+				<td><input id="p_agent_phone" type="text" /></td>
+				<td style="text-align: left;">
+					<button id="myqueryBtn" class="btn btn-success">查询</button>
+				</td>
+			</tr>
+		</table>
+		<div id="agentToolsbar" class="panel-body">
+			<div style="float: left; margin-right: 20px; margin-top: 20px;">
+				<a href="${webctx}/agent">一级分销商列表<i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('点击下面表格中分销商名称查看下级。', this, {tips: [1, '#3595CC'],time: 0});"></i></a>
+				[#list agents as ag]
+					 / <a href="${webctx}/agent?agentId=${ag.id}">${ag.agent_name}</a>
+				[/#list]
+				[#if agents?? && (agents?size>0)]（下级分销商）[/#if]
+			</div>
+			<div id="pager" class="jqpager" style="margin-bottom: 1px; float: right;"></div>
+		</div>
+		
+		<table class="table table-striped table-bordered bootstrap-datatable datatable" id="mainTable" border="0">
+			<thead>
+				<tr>
+					<th><input type="checkbox" id="all" title="全选/反选" style="margin-right: 4px; vertical-align: middle;"/></th>
+					<th><span style="vertical-align: middle;">微信</span></th>
+					<th><span style="vertical-align: middle;">分销商 <i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('点击分销商名称查看下级。', this, {tips: [1, '#3595CC'],time: 0});"></i></span></th>
+					<th>总消费金额</th>
+					<th>下级会员数</th>
+					<th>注册时间</th>
+					<!-- <th>到期时间</th> -->
+					<th>成为分销商时间</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody class="agentLotGrid">
+			</tbody>
+		</table>
+	</div>        	
+</div>
+
+<!-- 模板开始 -->
+<script type="text/template" id="agent_table_tr_tpl">
+		<tr class="package">
+			<td>
+				<input type="checkbox" class="commchk" id="checkbox_{agentId}" style="margin-right: 4px; vertical-align: middle;"/>
+			</td>
+			<td><img width="40px" height="40px" src="{wxHeadimg}"/>&nbsp;{wxNick}</td>
+			<td><span style="margin-right: 5px; margin-left: 2px; vertical-align: middle;"><a style="text-decoration: underline;" href="${webctx}/agent/?agentId={agentId}">{agentName}<br>{agentPhone}</span></a></td>
+			<td><span>{totalMoney}</span></td>
+			<td><span>{memberCount}</span></td>
+			<td><span>{created}</span></td>
+			<td><span>{aduitDate}</span></td>
+			<td>
+				&nbsp;<a id="edit_{agentId}" href="javascript:void(0)" style="text-decoration: underline;">编辑</a>
+				&nbsp;<a id="del_{agentId}" href="javascript:void(0)" style="text-decoration: underline;">删除</a>
+			</td>
+		</tr>
+</script>
+<script type="text/template" id="table_noresult_tr_tpl">
+<tr class="package"><td class="center" colspan="8">没有结果集</td></tr>
+</script>
+[#include "/includes/footer.html" /]
+<script>
+Template.init("#menu-agent");
+</script>
+</body>
+</html>

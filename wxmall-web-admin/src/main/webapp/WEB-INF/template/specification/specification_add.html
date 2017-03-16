@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>添加规格</title>
+[#include "/includes/header.html" /]
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+[#include "/includes/menus.html" /]
+<div class="wrapper wrapper-content">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	           <a href="${webctx}/product" class="J_menuTab">商品</a>
+		       <a href="${webctx}/category" class="J_menuTab">分类 </a>
+		       <a href="${webctx}/specification" class="J_menuTab active">规格 </a>
+		       <a href="${webctx}/delivery" class="J_menuTab">运费模板</a>
+	       </div>
+	   	</nav>
+	</div>
+	
+	<div class="ibox float-e-margins">
+		<div class="ibox-title row">
+			<h2><small><a href="${webctx}/specification"><i class="glyphicon glyphicon-fast-backward"></i>  返回列表</a></small></h2>
+		</div>
+		<div class="row ibox-content active_statistics">
+			<div class="title_query padtop"> 
+				<form id="qiandaoForm" class="form-horizontal">
+				  <div class="form-group">
+			            <label class="col-md-2 control-label">规格名称<span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-8" id="error_specification_name">
+			            	<input type="hidden" id="specification_id" value="${specification.id}" class="input-xfat"  name="id"  >
+			                <input id="specification_name" name="name" value="${specification.name }" maxlength="20" type="text" class="form-control" style="width: 200px" >
+			                <label class="control-label" for="specification_name"></label>
+			            </div>
+			        </div>
+			        
+			        <div class="form-group">
+			            <label class="col-md-2 control-label">备注</label>
+			            <div class="col-md-8" id="error_specification_memo">
+			                <input id="specification_memo" name="memo" value="${specification.memo }" maxlength="20" type="text" class="form-control" style="width: 200px">
+			                <label class="control-label" for="specification_memo"></label>
+			            </div>
+			        </div>
+			        
+			        <div class="form-group">
+			            <label class="col-md-2 control-label">排序<span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-2" id="error_specification_orders">
+			                <input id="specification_orders" name="orders" value="${specification.orders }" maxlength="20" type="text" class="input-xfat"  onkeyup="this.value=this.value.replace(/\D/g,'')">
+			                <label class="control-label" for="specification_orders"></label>
+			            </div>
+			        </div>
+			        
+			        
+			         <div class="form-group">
+			            <label class="col-md-2 control-label">添加规格值 <span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-8" id="error_specification_value">
+			                
+			                 <div class="sign_activity sign_activity_tabin" id="sign_type_set_join">
+		                        <ul class="sign_activity_list" id="prize_list_join">
+		                        [#list specifitionValue as value]
+		                        		<li [#if value.seller_id??] class="self" [#else] class="system" [/#if]>
+			                              	<p class="fl">
+			                                  	规格值： <input placeholder="" value="${value.name}" class="input-xfat" style="width: 100px;" name="specificationValue_name"  type="text">
+			                                  	 排序：<input placeholder="" value="${value.orders}" class="input-xfat" name="specificationValue_orders"  type="text" onkeyup="this.value=this.value.replace(/\D/g,'')"> 　
+			                              	</p>
+			                              [#if value.seller_id??]
+			                              <a class="but_remove" href="javascript:void(0);" onclick="deletePrize(this);">×</a>
+			                              [#else]
+			                              [/#if]
+			                              	 <input type="hidden" value="${value.id}" class="input-xfat"  name="specificationValue_id"  >
+			                            </li>
+			                      [/#list]
+		                        </ul>
+		                        
+		                        <textarea style="display:none;" id="html_model_join">                            
+		                     	  <li class="self">
+			                         <p class="fl">
+		                               	规格值： <input placeholder="" class="input-xfat" style="width: 100px;" name="specificationValue_name"  type="text">
+		                               	 排序：<input placeholder="" class="input-xfat" name="specificationValue_orders"  type="text" onkeyup="this.value=this.value.replace(/\D/g,'')">　
+				                     </p>
+				                    <input type="hidden" value="" class="input-xfat"  name="specificationValue_id"  >
+				                      <a class="but_remove" href="javascript:void(0);" onclick="deletePrize(this);">×</a>
+			                       </li>
+			                      </textarea>
+		                         <p>
+		                             <a  href="javascript:void(0);" onclick="addPrize('join');" class="btn-bordered btn-xlarge btn-primary">添加规格值</a>
+		                             <label id="join_error_msg" style="color:red;"></label>
+		                         </p>
+			            </div>
+			        </div>
+			        </div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="panel-footer" align="center">
+	   	 <button id="saveTask" onclick="saveTask();" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>提交</button>
+	</div>
+</div>
+
+<!-- 保存成功弹窗 -->
+<div class="modal fade" id="sava_suc_dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">提醒</h4>
+			</div>
+			<div class="modal-body install_cont" style="padding-left: 5px;">
+				<p class="fonts" style="color:red;fon">规格保存成功！</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+function addPrize(type){
+	$("#prize_list_"+type).append($("#html_model_"+type).val());
+}
+function deletePrize(obj){
+	var itemId = $(obj).prev().find("a").attr("item-id");
+	if(itemId != ""){
+		$(obj).parent().hide();
+		$(obj).prev().find("a").attr("update-or-del","del");
+	}else{
+		$(obj).parent().remove();			
+	}
+}
+
+function saveTask(){
+	var params = {},error = {};
+	var specificationName = $("#specification_name").val(), specificationMemo= $("#specification_memo").val(), 
+	specificationOrders = $("#specification_orders").val(),specificationId= $("#specification_id").val();
+	if(specificationId!=null && specificationId!="") params.id = specificationId;
+	if(specificationName!=null && specificationName!="") params.name = specificationName;
+	params.memo = specificationMemo;
+	params.orders=specificationOrders;
+	if($.trim(specificationName) =="") {error.error_specification_name = "规格名称不能为空"; } else {error.error_specification_name=""; params.name = $.trim(specificationName);}
+	var hasError = false;
+	  for(var key in error){
+		if(error[key]!=""){
+			if(!hasError) hasError = true;
+			$("#"+key).addClass("has-error");
+			$("#"+key).find("label").text(error[key]);
+		}else{
+			$("#"+key).removeClass("has-error");
+			$("#"+key).find("label").empty();
+		}
+	}
+	if(hasError) return false;
+	
+	var hasErr = false;
+		$("#sign_type_set_join li.self").each(function(i,obj){
+			var specificationValue_name = $(obj).find("input[name='specificationValue_name']");
+			if(specificationValue_name.val()==""){
+				if(!hasErr) hasErr=true;
+				$("#join_error_msg").html("规格值不能为空");
+				specificationValue_name.css("border-color", "#ff5454");
+				return ;
+			}
+			var specificationValue_orders = $(obj).find("input[name='specificationValue_orders']");
+			if(specificationValue_orders.val()==""){
+				if(!hasErr) hasErr=true;
+				$("#join_error_msg").html("排序不能为空");
+				specificationValue_orders.css("border-color", "#ff5454");
+				return ;
+			}
+		});
+		if(hasErr){
+			return false;
+		}
+	var items = new Array();
+	$("#sign_type_set_join li.self").each(function(i, obj){
+		var specificationValue_name= $(obj).find("input[name='specificationValue_name']").val();
+		var specificationValue_orders= $(obj).find("input[name='specificationValue_orders']").val();
+		var specificationValue_id= $(obj).find("input[name='specificationValue_id']").val();
+		if(specificationValue_name!="" && specificationValue_orders!=""){
+			var entity = new Object();
+			entity.type = 1;
+			entity.name = specificationValue_name;
+			entity.orders=specificationValue_orders;
+			if(specificationValue_id != ""){
+				entity.itemId = specificationValue_id;
+			}
+			items.push(entity);
+		}
+	});
+	
+	params.items =  JSON.stringify(items);
+	$(".main").mask("正在保存...");
+	$.post(obz.ctx+"/specification/save", params, function(json) {
+			$(".main").unmask();
+			if(json.code!=200){
+				BootstrapDialog.alert({title:'提示', message:json.msg});
+			}else{
+				
+				$("#sava_suc_dialog").modal('show');
+				$('#sava_suc_dialog').on('hidden.bs.modal', function () {
+					location.href=obz.ctx + "/specification/index";
+					//alert(obz.ctx + "/specification/index");
+					
+				});						
+			}
+	},"json");
+	
+
+}
+</script>
+[#include "/includes/footer.html" /]
+<script>
+Template.init("#menu-goods");
+</script>
+</body>
+</html>

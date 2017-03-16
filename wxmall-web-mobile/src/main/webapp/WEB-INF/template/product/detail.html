@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>${product.name}</title>
+[#include "/includes/header.html" /]
+<link rel="stylesheet" href="${webctx}/resources/css/product-detail.css"/>
+<style>
+.placeholder {
+  /* margin: 5px;*/
+  padding: 0 10px; 
+  background-color: #cecece;
+  height: 2em;
+  line-height: 2em;
+  /* text-align: center; */
+  color: white;
+}
+</style>
+</head>
+<body>
+<div class="content">
+<!-- 主体内容 -->
+<div class="weui_tab_bd">
+	<!-- <img width="100px" height="100px" src="${webctx}/qrcode/genio?url=${wirlessUrl}"/> -->
+	<div class="weui-flex" style="display: none;">
+      <div class="weui-flex__item"><div class="placeholder" style="cursor: pointer;"><span id="gzAuthUser">关注公众号</span> | <span id="tgProduct">商品二维码</span> </div></div>
+    </div>
+	<!-- 此次轮播窗口大小是根据图片大小控制的,可以根据需求上传图片控制大小 -->
+	<!-- 轮播图片 -->
+	<div class="swiper-container custom-swiper-wrap" data-space-between='10' data-pagination='.swiper-pagination' data-autoplay="1000">
+		<div class="swiper-wrapper">
+			[#list images as image]
+				<div class="swiper-slide"><img src="${image}" height="300px"></div>
+			[/#list]
+		</div>
+		<div class="swiper-pagination"></div>
+	</div>
+	<!-- /轮播图片 -->
+	<!-- 商品信息 -->
+	<div class="weui-panel">
+        <div class="weui-panel__bd">
+          <div class="weui-media-box weui-media-box_text">
+            <h4 class="weui-media-box__title">${product.name}</h4>
+            [#if promotion??]
+            <p class="weui-media-box__desc"><font style="font-weight:bold;font-size: 18px;color: red;">￥${promotion.promotionPrice}</font> &nbsp;&nbsp;<s>￥${product.price}</s></p>
+            [#else]
+            <p class="weui-media-box__desc" style="font-weight:bold;font-size: 18px;color: red;">￥${product.price}</p>
+            [/#if]
+            [#if promotion??]
+            <div class="weui-media-box__info">
+            	<span class="weui-media-box__desc"><font style="font-weight:bold;font-size: 14px;color: red;">${promotion.promotionTag} ${promotion.promotionInfo}</font>&nbsp;&nbsp;${promotion.promotionTime}</span>
+            </div>
+            [/#if]
+            
+            [#if fullCut??]
+            [#list fullCut as fullCut]
+            	[#if fullCut_index==0]
+            <div class="weui-media-box__info">
+            	<span class="weui-media-box__desc"><font style="font-weight:bold;font-size: 14px;color: red;">${fullCut.fullCutInfo}</font>&nbsp;&nbsp;${fullCut.fullCutTime}</span>
+            </div>
+            	[/#if]
+            [/#list]
+            <ul class="weui-media-box__info">
+            [#list fullCut as fullCut]
+            	[#if fullCut_index!=0]
+            	<li class="weui-media-box__info__meta" style="padding-top: 5px;"><span>${fullCut.fullCutInfo}</span></li>
+            	[/#if]
+            [/#list]
+            </ul>
+            [/#if]
+            <ul class="weui-media-box__info">
+              <li class="weui-media-box__info__meta">剩余:<span>${product.stock}</span></li>
+              <li class="weui-media-box__info__meta">销量:<span>${product.sales}</span></li>
+              <!-- <li class="weui-media-box__info__meta weui-media-box__info__meta_extra">其它信息</li> -->
+            </ul>
+          </div>
+        </div>
+    </div>
+	<div class="weui-cells">
+        <div class="weui-cell weui-cell_access" style="font-size: 14px;">
+          <div class="weui-cell__bd">
+            <p>${session.appUser.nick_name}</p>
+          </div>
+          <div class="weui-cell__ft">
+          	<a href="${webctx}/">进入店铺</a>
+          </div>
+        </div>
+	</div>          
+	<div class="weui-panel weui-panel_access goods-details">
+		<div class="weui-tab">
+		  	<div class="weui-navbar">
+			    <a id="a_detail" href="#div_detail" class="weui-navbar__item weui-bar__item--on">
+			     	商品详情
+			    </a>
+			    <a id="a_reviews" href="#div_review" class="weui-navbar__item">
+			      	累计评价([#if reviews??] ${reviews?size} [#else] 0 [/#if])
+			    </a>
+		  	</div>
+		  	<div class="weui-tab__bd">
+				<div id="div_detail" class="weui-media-box weui-media-text">
+					<p class="weui_media_desc">[#if product.introduction?has_content]${product.introduction}[/#if]</p>
+				</div>
+				
+				<div id="div_review" class="weui-tab__bd-item">
+					[#if reviews?? && reviews?size>0]
+						[#list reviews as rv]
+						<div class="mmq-list">
+				          <div class="header-pic"><img class="lazy"  src="${rv.headimgurl}" style="display: inline;"></div>
+				          <div class="mmq-info">
+				            <div class="tit tab">
+				              <span class="name">${rv.nickname}</span>  
+				            </div>
+				            <div class="txt">${rv.content}</div>
+				            <div class="mmq-pri-day"><span class="day"><em class="txt-yel">${rv.created}</em></span></div>
+				          </div>
+				        </div>    
+						[/#list]
+					[#else]
+					<div id="div_review" class="weui-media-text" style="text-align: center;">
+						没有评价
+					</div>	
+					[/#if]
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- /商品信息 -->
+</div>
+<!-- /主体内容 -->
+<!-- 底部导航 -->
+<div class="weui-tabbar toolbar-bottom">
+	 <div class="mini-btn-2-1">
+        <a href="${webctx}/cart" class="weui-tabbar__item weui-col-10">
+		<span id="item_cart_count" class="weui-badge" style="position: absolute;top: .4em;right: 2em;">${cartCount}</span>
+		<div class="weui-tabbar__icon">
+			<img src="${webctx}/resources/images/btn_chart.png" alt="购物车">
+		</div>
+		<p class="weui-tabbar__label">购物车</p>
+		</a>
+    </div>
+    <div class="big-btn-2-1">
+       <a href="javascript:void(0);" class="big-btn orange-btn add-shopping-cart" style="color: white;">加入购物车</a>
+       <a href="javascript:void(0);" class="big-btn red-btn purchase" style="color: white;">立即购买</a>
+    </div>
+</div>
+<!-- 底部导航 -->
+</div>
+
+<!-- 弹出浮层 -->
+<div id="half" class="weui-popup__container weui-popup-overlay popup-bottom" style="z-index: 1000">
+      <div class="weui-popup__overlay"></div>
+      <div class="weui-popup__modal">
+        <div class="content">
+	        <div class="weui-panel weui-panel_access">
+	        <!-- 新样式-->	
+			 <div class="sku-layout-title name-card sku-name-card">
+			        <div class="thumb">
+			        <img class="js-goods-thumb goods-thumb" src="${product.image}" alt="">
+			        </div>
+					<div class="detail goods-base-info clearfix">
+					    <p class="title c-black ellipsis">${product.name}</p>
+					      <div class="goods-price clearfix">
+					         <div class="current-price pull-left c-black">
+					            <i class="js-goods-price price font-size-16 vertical-middle c-orange">
+					            [#if promotion??]
+					            <b class="sys_item_promprice">${promotion.promotionPrice}</b>
+					            <s class="sys_item_price" style="font-size: 9px;color: gray;">${product.price}</s>
+					            [#else]
+					            <b class="sys_item_price">${product.price}</b>
+					            [/#if]
+					            </i>
+					         <span class="price-name pull-left font-size-16 c-orange" style="font-size: 12px;">[#if product.stock??]剩余:<b class="sys_item_stock">${product.stock}</b>[/#if]</span>
+					        </div>
+					    </div>
+					</div>
+					<div class="js-cancel sku-cancel">
+					    <a href="javascript:void(0);" class="close-popup"><i class="weui-icon-cancel"></i></a>
+					</div>
+			  </div>
+			</div>
+        </div>
+        <div class="content-padded weui-panel__bd goods-details items">
+				[#if specifications?has_content]
+					[#list specifications as sf]
+					<div class="weui-form-preview__item">
+						<div class="weui-form-preview__label weui-media-box__hd" data-id="${sf.specification.id}">
+							<font size="2">${sf.specification.name}：</font>
+						</div>
+						<br/>
+						<ul class="weui-form-preview__value app-image-list">
+							[#list sf.specificationValues as sfv]
+								<li class="goods-style gs_${sf.specification.id}" data-sf-id="${sf.specification.id}" data-id="${sfv.id}"><span>${sfv.name}</span></li>
+							[/#list]					
+						</ul>
+					</div>	
+					[/#list]
+				[/#if]
+				[#if !product.stock?? || product.stock?size<=0]
+				<div class="weui-media-box weui-media-box_appmsg">
+					<div class="weui-panel__bd">
+						<font size="2">已售罄</font>
+					</div>
+				</div>
+				[#else]
+					<div class="weui-form-preview__item">
+						<div class="weui-form-preview__label weui-media-box__hd">
+							<font size="2">购买数量:</font>
+						</div>
+						<div class="weui-form-preview__value  count">
+							<a id="minus-count" href="javascript:void(0);">-</a>
+							<input id="number" type="tel" maxlength="6" value="1"/>
+							<a id="add-count" href="javascript:void(0);">+</a>
+						</div>
+					</div>
+				[/#if]
+		</div>
+	    <div class="content-padded" style="padding-bottom: 10px;">
+	    	<p class="weui_btn_area">
+	      		<a href="javascript:void(0)" class="weui-btn weui-btn_primary d_confirm_btn">确定</a>
+	    	</p>
+	  	</div>
+	</div>
+</div>
+
+<div id="full_gongzhonghao" class="weui-popup__container weui-popup-overlay popup-bottom" style="z-index: 1000">
+      <div class="weui-popup__overlay">
+	  </div>
+      <div class="weui-popup__modal">
+        <div class="weui-msg">
+	      <div class="weui-msg__icon-area">
+		      <img alt="" width="200" height="200" src="${session.appUser.qrcode_url}">
+	      </div>
+	      <div class="weui-msg__text-area">
+	        <h2 class="weui-msg__title">${session.appUser.nick_name}</h2>
+	        <p class="weui-msg__desc" style="color: red;"><strong>长按二维码关注公众号</strong></p>
+	      </div>
+	    </div>
+        <a href="javascript:void(0);" class="weui-btn weui-btn_primary close-popup" style="margin-bottom: 5px;margin-left: 5px;margin-right: 5px;">关闭</a>
+      </div>
+</div>
+<div id="full_product" class="weui-popup__container weui-popup-overlay popup-bottom" style="z-index: 1000">
+      <div class="weui-popup__overlay">
+	  </div>
+      <div class="weui-popup__modal">
+        <div class="weui-msg">
+	      <div class="weui-msg__icon-area">
+		      <img alt="" width="200" height="200" src="${webctx}/qrcode/genio?url=${wirlessUrl}">
+	      </div>
+	      <div class="weui-msg__text-area">
+	        <h2 class="weui-msg__title">
+	        	${product.name}
+	        </h2>
+	        <p class="weui-msg__desc" style="color: red;"><strong>分享二维码，推广商品</strong></p>
+	      </div>
+	    </div>
+        <a href="javascript:void(0);" class="weui-btn weui-btn_primary close-popup" style="margin-bottom: 5px;margin-left: 5px;margin-right: 5px;">关闭</a>
+      </div>
+</div>
+<!--手机端script需要加载后方-->
+[#include "includes/footer.html"/]
+<script type="text/javascript">
+var sys_item;
+var productPrice="${product.price}";
+var productStock="${product.stock}";
+var price='';
+var promPrice="";//折扣价
+var stock='';
+//ajax请求价格、库存
+function getPrice(){
+	 $.ajax({
+			type: "post",
+			url: "${webctx}/product/stocks",
+			data: {productId:${product.id}},
+			async: true,
+			success: function(resp){
+				if(resp.code!=200){
+					$.alert(resp.msg);
+					return;
+				}
+				sys_item=resp.data;
+			}
+		});
+}
+function getAttrPrice(){
+	var defaultstats=true;
+	 var _val='';
+	$("ul.app-image-list .goods-style").each(function(){
+		 var i=$(this);
+         var v=i.attr("data-attrval");
+         if(!v){
+             defaultstats=false;
+         }else{
+             _val+=_val!=""?",":"";
+             _val+=v;
+         }
+	});
+	if($("ul.app-image-list .goods-style").length==1){
+		 defaultstats=false;
+	}
+	price=productPrice;
+	stock=productStock;
+	if(!defaultstats){
+		$.each(sys_item, function(key,item){
+			if(key == _val){
+				price=item.price;
+				stock=item.stock;
+				if(item.promPrice !=null && item.promPrice !="")
+					promPrice = item.promPrice;
+				return;
+			}
+		});
+	}
+	$(".sys_item_price").text(price);
+	$(".sys_item_stock").text(stock);
+	if(promPrice != null  && promPrice !=""){
+		$(".sys_item_promprice").text(promPrice);
+	}
+}
+$().ready(function() {
+	getPrice();
+});
+var flag = 1;//加入购物车
+
+$(function() {
+	$(".weui-navbar__item").click(function(){
+		$(".weui-navbar__item").each(function(){
+			$(this).removeClass("weui_bar__item_on");
+		});
+		var me = $(this);
+		me.addClass("weui_bar__item_on");
+		if(me.attr("id") == "a_detail"){
+			$("#div_detail").show();
+			$("#div_review").hide();
+		}else {
+			$("#div_detail").hide();
+			$("#div_review").show();
+		}
+	});
+	
+	//全选
+	$(".swiper-container").swiper({
+		speed: 300,
+		loop: true,
+		autoplay: 3000
+	});
+	//计算数量
+	var number = $("#number");
+	//数量加一
+	$("#add-count").click(function(){
+		number.val(parseInt(number.val())+1);
+	});
+	//数量减一
+	$("#minus-count").click(function(){
+		number.val(parseInt(number.val()) > 1 ? parseInt(number.val())-1 : 1);
+	});
+	//判断手机输入是否为数字
+	number.bind("input propertychange",function(){
+		if(isNaN($(this).val())){
+			$(this).val(1);
+		}
+	});
+	//款式选择效果
+	$("ul.app-image-list .goods-style").click(function(){
+		var sfid = $(this).attr("data-sf-id");
+		$("ul.app-image-list .goods-style").each(function(){
+			if(sfid == $(this).attr("data-sf-id")){
+				$(this).removeClass("active");	
+				$(this).removeAttr("data-attrval");
+			}
+		});
+		if($(this).hasClass("active")){
+			$(this).removeClass("active");
+			$(this).removeAttr("data-attrval");
+		}else{
+			$(this).addClass("active");
+			$(this).attr("data-attrval",$(this).attr("data-id"));
+		}
+		
+		getAttrPrice();
+	});
+	//加入购物车
+	$(".add-shopping-cart").click(function(){
+		flag=1;
+		//弹出款式选择框
+		$("#half").popup();
+	});
+	//立即购买
+	$(".purchase").click(function(){
+		flag=0;
+		$("#half").popup();
+	});
+	$(".d_confirm_btn").click(function(){
+		[#if specifications??]
+		var speciLen = ${specifications?size};
+		[#else]
+		var speciLen = 0;
+		[/#if]
+		var speciStr = "";
+		if(speciLen > 0){
+			var specificationArray = new Array();
+			//获取规格数据
+			$(".items .goods-style").each(function(){
+				if($(this).hasClass("active")){
+					var entity = new Object();
+					entity.sfId = $(this).attr("data-sf-id");
+					entity.spvId = $(this).attr("data-id");
+					specificationArray.push(entity);
+				}
+			});
+			if(specificationArray.length <=0){
+				$.toast("请选择商品规格", "text");
+				return;
+			}
+			speciStr = JSON.stringify(specificationArray);
+		}
+		//获取商品数量
+		var quantity = $("#number").val();
+		if(quantity == null || quantity<=0){
+			$.toast("商品数量必须大于0", "text");
+			return;
+		}
+		if(flag == 1){
+			//加入购物车
+			$.post("${webctx}/cart/add", {productId: '${product.id}', quantity:quantity, speci:speciStr}, function(resp){
+				if(resp.code != 200){
+					$.toast(resp.msg);
+				}else{
+					showMsg("加入购物车成功", function(){
+						$.closePopup();
+						return false;
+					});
+				}
+			});
+		}else{
+			//立即购买
+			var itemsArray = new Array();
+			var entity = new Object();
+			entity.productId = ${product.id};
+			entity.pcount = $("#number").val();
+			entity.speci = speciStr;				
+			itemsArray.push(entity);
+			location.href = "${webctx}/pay/balance?items="+JSON.stringify(itemsArray);
+		}
+	});
+});
+
+$("#gzAuthUser").click(function(){
+	$("#full_gongzhonghao").popup();
+});
+$("#tgProduct").click(function(){
+	$("#full_product").popup();
+});
+function getAllImg() {
+    var aa = [];
+    var i = 0;
+    var src = [];
+    aa = $("img");
+    for (i = 0; i < aa.length; i++) {
+        var imgsrc = aa[i].src;
+        //确保图片链接是加了http的链接，不能是相对路径
+        //if(imgsrc.indexOf('http://')==-1) imgsrc = 'http://你的网址'+imgsrc;               
+        src[i] = imgsrc;  //把所有的src存到数组里
+    }
+    return src;
+}
+$("img").click(function(){
+    var imgsrc = $(this).attr('src');
+    //if(imgsrc.indexOf('http://')==-1) imgsrc = 'http://你的网址'+imgsrc;
+    wx.previewImage({
+        current: imgsrc, // 当前显示图片的http链接
+        urls: getAllImg() // 需要预览的图片http链接列表
+    });
+});
+</script>
+</body>
+</html>

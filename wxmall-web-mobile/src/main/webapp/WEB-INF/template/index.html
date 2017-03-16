@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>商城首页</title>
+[#include "/includes/header.html" /]
+</head>
+<body>
+	<div class="content home">
+		<div class="weui_tab_bd">
+			<div class="swiper-container" data-space-between='10' data-pagination='.swiper-pagination' data-autoplay="1000">
+				<div class="swiper-wrapper">
+					[#if shop?? && shop.shop_sign??]
+					<div class="swiper-slide"><a href="${webctx}/product"><img style="height: 150px;" src="${img_domain}${shop.shop_sign}" alt=""></a></div>
+					[/#if]
+				</div>
+			</div>
+			
+			[#if productCategory?? && productCategory?size>0]
+			<div class="weui-cells__title">商品分类</div>
+			<div class="weui-cells" style="font-size: 14px;">
+				[#list productCategory as cate]
+				<div class="weui-cell weui-cell_access">
+		            <div class="weui-cell__hd"><a href="${webctx}/product?categId=${cate.id}"><img src="${img_domain}${cate.img_path}" alt="" style="height:20px;width:20px;margin-right:5px;display:block"></a></div>
+		            <div class="weui-cell__bd">
+		              <p></p>
+		            </div>
+		            <div class="weui-cell__ft"><a href="${webctx}/product?categId=${cate.id}">${cate.name}</a></div>
+		          </div>			
+				[/#list]
+	        </div>
+	        [/#if]
+			
+			<div class="sales-title" style="margin-top: 0.7rem;">
+				<!-- <div class="weui-panel">
+        			<div class="weui-panel__hd">文字组合列表</div>
+        		</div> -->
+				<!-- <div class="title">今天最给力的促销我们帮你挑好了</div> -->
+				<div class="weui-row">
+					<!-- <div class="weui-col-50 sales-cover">
+						<img src="http://120.76.79.206/group1/M00/00/25/eExPzlhpxS-AR9uvAAAV5TNZMTE966.jpg"/>
+					</div> -->
+					<div class="weui-col-100 sales-info">
+						<span class="theme">促销专区</span>
+						<div class="f-cb privilege-wrap">
+							<div class="privilege">随机返现</div>
+							<div class="privilege">1件8折2件7折</div>
+							<div class="privilege">满199减100</div>
+						</div>
+						<a href="${webctx}/product/getPromotionProduct" style="color: white;">立即抢购  GO</a>
+					</div>
+				</div>
+			</div>
+			<div class="weui-tab" style="margin-top: 0.7rem;">
+				<div class="weui-navbar">
+					<a class="weui-navbar__item weui-bar__item--on" href="#item-1"><span class="item-title">热卖商品</span></a>
+					<a class="weui-navbar__item" href="#item-2"><span class="item-title">最新上架</span></a>
+					<a class="weui-navbar__item" href="#item-3"><span class="item-title">店家推荐</span></a>
+				</div>
+				<div class="weui-tab__bd">
+					<div id="item-1" class="weui-row weui-no-gutter custom weui-tab__bd-item weui-tab__bd-item--active">
+						[#list hotProducts as product]
+						<a class="weui-col-33 custom-padding" href="${ctxPath}/product/detail?id=${product.id}">
+							<img src="${product.mainPic}"/>
+							<div class="describe">${product.name}</div>
+							<div class="price">${product.price}</div>
+						</a>
+						[/#list]
+					</div>
+					<div id="item-2" class="weui-row weui-no-gutter custom weui-tab__bd-item">
+						[#list newProducts as product]
+						<a class="weui-col-33 custom-padding" href="${ctxPath}/product/detail?id=${product.id}">
+							<img src="${product.mainPic}"/>
+							<div class="describe">${product.name}</div>
+							<div class="price">${product.price}</div>
+						</a>						
+						[/#list]
+					</div>
+					<div id="item-3" class="weui-row weui-no-gutter custom weui-tab__bd-item">
+						[#list commondProducts as product]
+						<a class="weui-col-33 custom-padding" href="${ctxPath}/product/detail?id=${product.id}">
+							<img src="${product.mainPic}"/>
+							<div class="describe">${product.name}</div>
+							<div class="price">${product.price}</div>
+						</a>
+						[/#list]
+					</div>
+				</div>
+			</div>
+			<!-- /热卖产品 -->
+			
+			[#if indexProducts?? && indexProducts?size>0]
+			<div class="main-goods">
+				[#list indexProducts as product]
+				<div class="item">
+					<a href="${ctxPath}/product/detail?id=${product.id}">
+					<img src="${product.mainPic}" style="width: 100%"/>
+					<div class="goods-particulars">
+						<!-- <img class="logo" src="${ctxPath}/jqweui/images/logo-3.jpg"/> -->
+						<div class="goods-describe f-toe">${product.name}</div>
+						<div class="goods-privilege f-toe">￥${product.price}</div>
+					</div>
+					</a>
+				</div>				
+				[/#list]
+			</div>
+			[/#if]
+		</div>	
+	</div>
+	[#include "/includes/menus.html" /]
+	[#include "/includes/footer.html" /]
+	<script type="text/javascript">
+	  $(".swiper-container").swiper({
+	    loop: true,
+	    autoplay: 2000
+	  });
+	</script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>我的佣金</title>
+[#include "/includes/header.html" /]
+<style type="text/css">
+.weui-select{
+	width: 40%;
+}
+</style>
+</head>
+<body>
+<div class="weui-cells">
+	<div class="weui-cell">
+	  	<div class="weui-cell__hd"><img src="${session._buyerUser.headimgurl}" alt="${session._buyerUser.nickname}" style="width:40px;margin-right:5px;display:block"></div>
+	  	<div class="weui-cell__bd">
+	    <p>${session._buyerUser.nickname}</p>
+	    <p style="font-size: 12px;">
+	    	<!-- 有<font color="red"><span id="user_left_count">${session._buyerUser.score}</span></font>个朋友加入 -->
+	    	<font color="red"><span id="user_left_count">一级分销商</span></font>
+	    </p>
+	  	</div>
+	  	<!-- <div class="weui-cell__ft">一级分销商</div> -->
+	</div>
+</div>
+<div class="weui-msg">
+      <div class="weui-msg__icon-area">
+      		佣金总额 ： ${totalCommission}
+      </div>
+      <div class="weui-msg__text-area">
+        <h2 class="weui-msg__title">
+        	提现说明
+        </h2>
+        <p class="weui-msg__desc">满一百元可以提现，提现金额1分钟内到达您的微信红包，请注意查收公众号红包...<!-- <a href="javascript:void(0);">点击联系客服</a> --></p>
+      </div>
+      <div class="weui-msg__opr-area">
+        <p class="weui-btn-area">
+          <a id="tixian" href="javascript:void(0);" class="weui-btn weui-btn_primary">立即提现</a>
+        </p>
+      </div>
+    </div>
+[#include "includes/footer.html"/]
+<script type="text/javascript">
+$("#tixian").click(function(){
+	showMsg("提现功能请升级到企业版");
+});
+</script>
+</body>
+</html>

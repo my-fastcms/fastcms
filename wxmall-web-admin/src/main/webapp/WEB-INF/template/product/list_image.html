@@ -1,0 +1,233 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>我的图片</title>
+<script type="text/javascript">
+var selectNewImg = new Array();
+var listNewImg="";
+var listNewImgUrl="";
+var searchImages = function(single,currPage,groupId){
+	var params = {};
+	//其他查询条件
+	if(currPage){
+		params.page = currPage;
+	}
+	var groupId=$("ul.category-list li.active").attr("data-id");
+	if(groupId){
+		params.id = groupId;
+	}
+	var url=obz.ctx + "/attachment/getImageList";
+	$("#image-list").mask("加载中...");
+	obz.ajaxJson(url, params, function(resp){
+		var result =resp.data;
+		$("#image-list").empty();
+		if(currPage){
+			$("#pagerImage").pager({ pagenumber:currPage, recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });
+		}else{
+			$("#pagerImage").pager({ recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });	
+		}
+		var dataList = result.list;
+		if(dataList.length>0){
+			$(".add-local-image-button").addClass("hidden");
+			for(var i=0;i<dataList.length;i++){
+				var _li = dataList[i];
+				 $("#image-list").append('<li data-file="'+_li.imgPath+'" data-fileUrl="'+_li.imgUrl+'">'
+          				 +' <img alt="" src="'+_li.imgPath+'">'
+      					 +' <div class="image-title">'+_li.imgUrl+'</div></li>');
+				//var liHtml = obz.dataTemplate4obj($("#ul_li_tpl").html(), _li);
+				//$("#mainUl").append(liHtml);
+		        }	
+		}else{
+			$(".add-local-image-button").removeClass("hidden");
+		}
+		var i=0;
+		 $("ul.selectMonth li").click(function() {
+
+			 if(!$(this).hasClass("active")){
+			 		i = 0;
+			 	}
+					 if(i==0){
+						 i=1;
+						 if(single){
+								$("ul.selectMonth li").each(function(){	
+									 $(this).removeClass("active");
+								});
+							}
+						    $(this).addClass("active");
+						    selectNewImg.length=0;
+						    listNewImg="";
+						    listNewImgUrl="";
+							    $("ul.selectMonth li.active").each(function(){
+							    	listNewImg+=$(this).attr("data-file")+",";
+							    	listNewImgUrl+=$(this).attr("data-fileUrl")+",";
+							    	selectNewImg.push($(this).attr("data-file"));
+							    });
+						    listNewImg=listNewImg.substring(0,listNewImg.length-1);
+						    if(selectNewImg.length>0){
+						    	$(".selected-count-region").removeClass("hidden");
+						    	$(".js-selected-count").html(selectNewImg.length);
+						    	$("#saveImages").removeAttr("disabled");
+						    }else{
+						    	$(".selected-count-region").addClass("hidden");
+						    	$("#saveImages").attr("disabled","disabled");
+						    }
+						    
+					    }else{
+					     i=0;
+						 $(this).removeClass("active");
+						 selectNewImg.length=0;
+						 listNewImg="";
+						 listNewImgUrl="";
+						 $("ul.selectMonth li.active").each(function(){
+							 listNewImg+=$(this).attr("data-file")+",";
+							 listNewImgUrl+=$(this).attr("data-fileUrl")+",";
+							 selectNewImg.push($(this).attr("data-file"));
+						    });
+						 listNewImg=listNewImg.substring(0,listNewImg.length-1);
+						 if(selectNewImg.length>0){
+						    	$(".selected-count-region").removeClass("hidden");
+						    	$(".js-selected-count").html(selectNewImg.length);
+						    	$("#saveImages").removeAttr("disabled");
+						    }else{
+						    	$(".selected-count-region").addClass("hidden");
+						    	$("#saveImages").attr("disabled","disabled");
+						    }
+						 }
+		 });
+	});	
+}
+var pageClick = function(pageNo) {
+	var id=$("ul.category-list li.active").attr("data-id");
+	if(id){
+		searchImages(${model},pageNo,id);
+	}else{
+		searchImages(${model},pageNo);
+	}
+}
+searchImages();
+$(document).ready(function() {
+	//productAddImg.getImageToHtml(true);
+	searchImages(${model});
+	 $("#saveImages").click(function() {
+		 obz.doSelectImage(listNewImg, listNewImgUrl);
+	     if(selectImageDialog != null) selectImageDialog.close();
+	 });
+	 $("#uploadImagess").click(function() {
+		 //if(selectImageDialog != null) selectImageDialog.close();
+		 var id=$("ul.category-list li.active").attr("data-id");
+		 var params={};
+         if(id){
+        	 params.groupId=id; 
+		  }
+		 obz.uploadImage(params);
+	 });
+	 
+	 $("ul.category-list li").click(function() {
+		 $("ul.category-list li").each(function(){	
+			 $(this).removeClass("active");
+		}); 
+		 $(this).addClass("active");
+		 searchImages(${model});
+	 });
+	 
+	 $(".add-local-image-button").click(function() {
+		 var id=$("ul.category-list li.active").attr("data-id");
+		 var params={};
+         if(id){
+        	 params.groupId=id; 
+		  }
+		 obz.uploadImage(params);
+	 });
+});
+</script>
+<style type="text/css">
+.panel-body {
+    padding: 0;
+}
+.panel-body .category-list-region {
+    background: #f2f2f2 none repeat scroll 0 0;
+    box-sizing: border-box;
+    float: left;
+    height: 400px;
+    overflow: hidden;
+    padding: 9px 0;
+    width: 160px;
+}
+.panel-body .category-list-region li {
+    cursor: pointer;
+    height: 40px;
+    width:140px;
+    line-height: 40px;
+    overflow: hidden;
+    padding: 0 40px 0 15px;
+    position: relative;
+    text-overflow: ellipsis;
+}
+.panel-body .category-list-region li:hover {
+    background: #fafafa none repeat scroll 0 0;
+}
+.panel-body .category-list-region li.active {
+    background: #fff none repeat scroll 0 0;
+}
+.panel-body .category-list-region li span {
+    color: #999;
+    position: absolute;
+    right: 30px;
+    top: 0;
+}
+.category-list li {
+    display: block;
+}
+ul {
+    list-style: outside none none;
+}
+</style>
+</head>
+<body>
+<div class="panel-body">
+	[#if imageGroups?? && (imageGroups?size>0)]
+    <div class="category-list-region js-category-list-region">
+        <ul class="category-list">
+        	[#list imageGroups as igroup]
+               	<li class="js-category-item" data-id="${igroup.id}">${igroup.groupName}
+                    <span>(${igroup.imageNum})</span>
+                </li>
+             [/#list]   
+        </ul>
+    </div>
+    [/#if]
+    <div class="panel-footer" style="height: 50px;">
+	<button id="uploadImagess" type="button" class="btn btn-sm btn-success" style="margin-left:20px;;margin-bottom: 1px;float: left;">上 传 图 片</button>
+		 <div id="pagerImage" class="jqpager" style="margin-bottom: 1px;float: right;"></div>
+	</div>
+     <div class="form-group" id="listNewImg">
+         <ul class="selectMonth app-image select-month-off" id="image-list"></ul>
+     </div>
+     
+      <div class="add-local-image-button">
+                +
+      </div>
+</div>
+<div class="panel-footer">
+	<div class="selected-count-region hidden" style="display: block;float: left;">
+	                                       已选择<span class="js-selected-count">0</span>张图片
+	</div>
+	<div  style="display: block;" align="center">
+		<button id="saveImages" type="button" class="btn btn-sm btn-success" disabled="disabled"><i class="fa fa-dot-circle-o"></i>确      定</button>
+	</div>
+</div>
+<script type="text/template" id="ul_li_tpl">
+    <li>
+       <img alt="" src="${webctx}/upload/{filePath}">
+       <div class="image-title">{fileName}</div>
+    </li>
+</script>
+
+<script type="text/template" id="group_ul_li_tpl">
+    <li class="js-category-item" data-id="{id}">
+         {groupName}
+        <span>({imageNum})</span>
+    </li>
+</script>
+</body>
+</html>

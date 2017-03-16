@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Pragma" content="no-cache"/>    
+<meta http-equiv="Cache-Control" content="no-cache"/>    
+<meta http-equiv="Expires" content="0"/>
+<title>订单结算</title>
+[#include "includes/header.html"/]
+<link href="${webctx}/resources/css/jiesuan.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="content">
+<!-- 收货地址 begin -->
+<div id="topFixedDiv" style="height: 7rem;"> 
+	<input type="hidden" value="${receiver.id}" id="select_receiverId">
+	<div id="addressDefault" class="weui-cells address_defalut address_border" style="height: 5rem;font-size: 12px;border: none;">
+	    [#if receiver??]
+	    	<div id="select_addr" class="weui-cell weui-cell_access" style="padding: 0px 15px !important;">
+		    	<div class="weui-cell__bd">
+	              	<div>收件人:</div>
+	              	<strong><span id="sel_name">${receiver.receiverName}</span></strong> 
+	              	<span id="sel_phone">${receiver.phone}</span> 
+	            </div>
+	    		<div class="weui-cell__ft" style="text-align: left;"><span id="sel_address">${fullName}${receiver.address}</span></div>
+	    	</div>
+		[#else]
+			<div id="select_addr" class="weui-cell weui-cell_access" style="border: none;padding: 0px 15px !important;">
+	            <div class="weui-cell__ft">
+	            	请填写收货地址
+	            </div>
+	        </div>
+		[/#if]
+     </div>
+</div>
+<!-- 收货地址 end-->
+<!-- 商品列表begin -->
+<div class="order_info">
+<ul>
+[#list order.orderItems as item]
+<a class="weui-cell goods-list" href="${webctx}/product/detail?id=${item.productId}">
+<li class="hproduct">
+<img class="photo" src="${img_domain}${item.productImg}">
+<div class="fn"> ${item.productName}</div>
+<!-- <p class="sku_coll">编号：${item.sn} </p> -->
+[#if item.specificationValues?? && item.specificationValues?size>0]
+<p class="sku_coll">规格： [#list item.specificationValues as spv]${spv.name}/[/#list]</p>
+[/#if]
+<p class="sku_price">¥${currency(item.price, true)}</p>
+<p class="sku_count">×${item.quantity}</p>
+</li>
+</a>
+[/#list]
+</ul>
+</div>
+<!-- 商品列表end -->
+<div class="weui-cells" style="font-size: 14px;">
+  	<div class="weui-cell">
+	  	<div class="weui-cell__bd"><p>商品金额</p></div>
+	    <div class="weui-cell__ft"><span style="color: red;">￥${currency(order.totalPrice, true)}</span> [#if order.oldPrice??] <s><span style="font-size: 10px;">${currency(order.oldPrice, true)}</span></s>[/#if]</div>
+    </div>
+    <div class="weui-cell">
+	  	<div class="weui-cell__bd"><p>邮费</p></div>
+	    <div class="weui-cell__ft">+ ￥<span id="order_postFee">${currency(order.postFee, true)}</span>[#if order.oldPostFee??] <s><span style="font-size: 10px;">${currency(order.oldPostFee, true)}</span></s>[/#if]</div>
+    </div>
+    <!-- <div class="weui-cell weui-cell_access">
+      	<div class="weui-cell__bd"><p>优惠</p></div>
+      	<div class="weui-cell__ft">使用优惠码</div>
+    </div> -->
+    <div class="weui-cells__title">买家留言</div>
+  	<div class="weui-cell">
+	    <div class="weui-cell__bd weui-cell-primary">
+	      <textarea id="order_memo" class="weui-textarea" placeholder="请输入留言" rows="2"></textarea>
+	    </div>
+  	</div>
+</div>
+
+<div class="weui-cells weui-cells_form" style="font-size: 14px;">
+    <div class="weui-cell weui-cell_switch">
+        <div class="weui-cell__bd">是否需要发票</div>
+        <div class="weui-cell__ft">
+          <label for="isInvoice" class="weui-switch-cp">
+            <input id="isInvoice" name="need_invoice" class="weui-switch-cp__input" type="checkbox">
+            <div class="weui-switch-cp__box"></div>
+          </label>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="weui-cells__title">发票抬头</div> -->
+    <div class="weui-cells weui-cells_form" style="display: none;" id="invoice_head">
+      <div class="weui-cell">
+        <div class="weui-cell__bd">
+          <textarea id="invoice_title" class="weui-textarea" placeholder="请输入发票抬头" rows="2"></textarea>
+          <div class="weui-textarea-counter"><span>0</span>/100</div>
+        </div>
+    </div>
+</div>
+
+<div class="weui-tabbar toolbar-bottom">
+	<div class="mini-btn-2-1">
+		<div style="padding-left: 1rem;padding-top: 1.5rem;"><span>合计:</span><span class="price" id="total_price">${currency(order.payFee, true)}</span></div>
+	</div>
+	<div class="big-btn-2-1">
+		<a id="create_order_btn" href="javascript:void(0);" class="big-btn red-btn" style="height: 5rem;color: white;">提交订单</a>
+	</div>
+</div>
+<!-- 支付 -->
+</div>
+<div id="half" class="weui-popup__container popup-bottom" style="z-index: 1000;">
+      <div class="weui-popup__overlay"></div>
+      <div class="weui-popup__modal">
+        <div class="toolbar">
+          <div class="toolbar-inner">
+            <a href="javascript:void(0);" class="picker-button close-popup">关闭</a>
+          </div>
+        </div>
+        <div id="address_div" class="modal-content" style="height: 420px;"></div>
+      </div>
+</div>
+<div id="add_half_dialog" class="weui-popup__container popup-bottom" style="z-index: 1000;">
+      <div class="weui-popup__overlay"></div>
+      <div class="weui-popup__modal">
+        <div class="toolbar">
+          <div class="toolbar-inner">
+            <a href="javascript:void(0);" class="picker-button close-popup">关闭</a>
+          </div>
+        </div>
+        <div id="address_add_div" class="modal-content"></div>
+      </div>
+</div>
+<!--手机端script需要加载后方-->
+[#include "includes/footer.html"/]
+<script type="text/javascript">
+var items = ${items};
+$(document).ready(function(){
+	$("[name = need_invoice]:checkbox").click(function(){
+		if($(this).is(":checked") == true){
+			$("#invoice_head").show();
+		}else{
+			$("#invoice_head").hide();
+		}
+	});
+	
+	var allowSubmit = true;
+	var orderId = null;
+	
+	$("#select_addr").click(function(){
+		$.showLoading("正在加载...");
+		$("#address_div").load("${webctx}/receiver", function(){
+			$.hideLoading();
+			$("#half").popup();
+		});
+	});
+	
+	$("#create_order_btn").click(function(){
+		if(items == null || items == ""){
+			showMsg("没有订单可以提交");
+			return;
+		}
+		if($("#select_receiverId").val()==null || ""==$("#select_receiverId").val()){
+			$.toast("请选择收货地址", "text");
+			return;
+		}
+		var totalPrice = $("#total_price").text();
+		if(totalPrice<=0){
+			$.toast("订单金额必须大于0", "text");
+			return;
+		}
+		if($("[name = need_invoice]:checkbox").is(':checked')) {
+			if($("#invoice_title").val() == null || $("#invoice_title").val()==""){
+				$.toast("请填写发票抬头", "text");
+				return;
+			}
+		}
+		if(allowSubmit == false) {
+			showPay(orderId);
+			return;
+		}
+		$.showLoading("提交中...");
+		$.post("${webctx}/order/create", {receiverId:$("#select_receiverId").val(), 
+			invoiceTitle:$("#invoice_title").val(),
+			memo : $("#order_memo").val(), items : JSON.stringify(items)}, function(data){
+			$.hideLoading();
+			allowSubmit = false;
+			var resp = data;
+			if(resp.code != 200){
+				$.alert(resp.msg==null ? "系统错误" : resp.msg);
+				return;
+			}
+			//显示选择支付方式弹出框
+			orderId = resp.data;
+			showPay(resp.data);
+		}); 
+	});
+	
+	function showPay(orderid){
+		$.actions({
+			actions: [{
+			    text: "微信安全支付",
+			    className: "color-primary",
+			    onClick: function() {
+			    	//do something
+			      	$.post("${webctx}/pay", {orderId:orderid}, function(data){
+			      		var resp = data;
+						if(resp.code != 200){
+							$.alert(resp.msg==null ? "系统错误" : resp.msg);
+							return;
+						}
+					});
+			    }
+			}]
+		});
+	}
+	
+});
+</script>
+</body>
+</html>

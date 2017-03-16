@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>代理信息</title>
+[#include "/includes/header.html" /]
+<style type="text/css">
+.weui-select{
+	width: 40%;
+}
+</style>
+</head>
+<body>
+<div class="weui-cells">
+	<div class="weui-cell">
+	  	<div class="weui-cell__hd"><img src="${session._buyerUser.headimgurl}" alt="${session._buyerUser.nickname}" style="width:40px;margin-right:5px;display:block"></div>
+	  	<div class="weui-cell__bd">
+	    <p>${session._buyerUser.nickname}</p>
+	    <p style="font-size: 12px;">
+	    	<!-- 有<font color="red"><span id="user_left_count">${session._buyerUser.score}</span></font>个朋友加入 -->
+	    	<font color="red"><span id="user_left_count">一级分销商</span></font>
+	    </p>
+	  	</div>
+	  	<!-- <div class="weui-cell__ft">一级分销商</div> -->
+	</div>
+</div>
+<div class="weui-msg">
+      <div class="weui-msg__icon-area">
+	      <img alt="" width="200" height="200" src="${webctx}/qrcode/genio?url=http://${session.appUser.app_id}.dbumama.com/agent/apply?parentId=${agent.id}">
+      </div>
+      <div class="weui-msg__text-area">
+        <h2 class="weui-msg__title">
+        </h2>
+        <p class="weui-msg__desc" style="color: red;"><strong>分享二维码，把好货推荐给朋友...</strong></p>
+      </div>
+      <!-- <div class="weui-msg__opr-area">
+        <p class="weui-btn-area">
+          <a href="javascript:;" class="weui-btn weui-btn_primary">推荐操作</a>
+        </p>
+      </div> -->
+</div>
+<div class="weui-cells__tips">我的代理</div>
+<div class="weui-cells weui-cells_form" style="font-size: 14px;">
+	<div class="weui-cell">
+		<div class="weui-cell__hd"><label class="weui-label" for="name">姓名</label></div>
+		<div class="weui-cell__bd">
+			<input id="agentName" name="name" value="${agent.agent_name}" class="weui-input" placeholder="真实姓名" type="text">
+		</div>
+	</div>
+	<div class="weui-cell">
+		<div class="weui-cell__hd"><label class="weui-label" for="name">手机号</label></div>
+		<div class="weui-cell__bd">
+			<input id="phone" name="mobile" value="${agent.agent_phone}" class="weui-input" placeholder="手机号码" type="tel" onkeyup="this.value=this.value.replace(/\D/g,'')">
+		</div>
+	</div>
+</div>
+[#include "includes/footer.html"/]
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+[#include "/includes/header.html" /]
+<title>设置奖品跟概率</title>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+[#include "/includes/menus.html" /]
+<div class="wrapper wrapper-content">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	           <a href="${webctx}/qiandao" class="J_menuTab">签到</a>
+		       <a href="${webctx}/lottery" class="J_menuTab active">抽奖</a>
+		       <a href="${webctx}/prize" class="J_menuTab">奖品 </a>
+	       </div>
+	   	</nav>
+	</div>
+	<div class="ibox-title row">
+		<h5><small><a href="${webctx}/lottery">《返回列表</a> /创建九宫格抽奖</small></h5>
+	</div>
+<div class="tabs-container row" style="padding-top: 12px;">
+    <ul class="nav nav-tabs">
+		<li><a href="${webctx}/lottery/show/jiugongge/${lottery.id}">编辑抽奖信息</a></li>
+		<li class="active"><a href="${webctx}/lottery/set/jiugongge/${lottery.id}">设置奖品跟概率</a></li>
+		<li><a href="${webctx}/lottery/test/${lottery.id}">模拟抽奖结果</a></li>
+	</ul>
+</div>
+<div id="tableList" class="row ibox-content">
+[#if lottery?? ]
+<table style="margin:auto;width:70%;height: 90%;" class="atable">
+	<tbody> 
+		<tr>
+			<td id="td_1"><div style="background: scroll right bottom rgba(0, 0, 0, 0);" aid="" apos="1" class="ga" name="setAward">谢谢参与</div></td>
+			<td id="td_2"><div style="background: scroll right bottom rgba(0, 0, 0, 0);" aid="" apos="2" class="ga" name="setAward">谢谢参与</div></td>
+			<td id="td_3"><div style="background: scroll right bottom rgba(0, 0, 0, 0);" aid="" apos="3" class="ga" name="setAward">谢谢参与</div></td>
+		</tr>
+		<tr>
+			<td id="td_8"><div style="background: scroll right bottom rgba(0, 0, 0, 0);" aid="" apos="8" class="ga" name="setAward">谢谢参与</div></td>
+			<td style="text-align: center; height: 92px; vertical-align: middle;">
+			<div style="color:#28A3EF; font-size:16px;">点击奖品，修改奖品内容</div>
+			<div id="pointsNotes">
+                <div style="color: #aaa; font-size:14px;" id="spanend" class="msg-con">最多设置<span id="selAwd" style="color:green; font-weight:bold;font-size:22px">7</span>个奖品，已经设置<span id="selNoAwd" style="color:red;font-weight:bold;font-size:22px">0</span>个奖品</div>
+           	</div>
+			<!-- <a href="javascript:void(0)">效果预览</a> --> 
+			<!-- <a href="javascript:void(0)" id="testLottBtn">模拟抽奖结果</a>
+			<input type="hidden" id="lotteryId" value="${lottery.id }"/> -->
+			</td>
+			<td id="td_4" style="text-align:right;"><div style="background: scroll right bottom rgba(0, 0, 0, 0);" aid="" apos="4" class="ga" name="setAward">谢谢参与</div></td>
+		</tr>
+		<tr>
+			<td id="td_7"><div style="background: scroll right bottom rgba(0, 0, 0, 0);" aid="" apos="7" class="ga" name="setAward">谢谢参与</div></td>
+			<td id="td_6"><div style="background: scroll right bottom rgba(0, 0, 0, 0);" aid="" apos="6" class="ga" name="setAward">谢谢参与</div></td>
+			<td id="td_5"><div style="background: scroll right bottom rgba(0, 0, 0, 0);" aid="" apos="5" class="ga" name="setAward">谢谢参与</div></td>
+		</tr>
+	</tbody>
+</table>
+[#else]
+	<div class="alert alert-danger">
+		<i class="fa fa-info-circle"></i><strong>警告:</strong>请先设置抽奖信息。
+		<a href="${webctx}/lottery/show/jiugongge">设置奖品</a>
+	</div>
+[/#if]
+</div>
+</div>
+[#include "/lottery/prize_setting_dialog.html" /]
+<script type="text/javascript">
+function initAward(callback){
+	obz.ajaxJson(obz.ctx + "/lottery/award/list", {lotteryId : '${lottery.id}'}, function(resp){
+		if(resp.code == 200){
+			var result = resp.data;
+			for(var i=0;i<result.length;i++){
+				var award = result[i];
+				$("#td_" + award.award_pos).empty();
+				$("#td_" + award.award_pos).html(obz.dataTemplate4obj($("#had-prize-setting").html(), award));
+			}
+			if(callback) callback();
+			$("#selNoAwd").html($(".ganew").length);
+		}
+	});
+}
+function awardBindClk(){
+	$('div[name="setAward"]').on('click',function(){
+		var me = $(this);
+		if(me.html()=="谢谢参与" 
+				&& $(".ganew").length>=$("#selAwd").text()){
+			BootstrapDialog.alert({title:"温馨提示",message:"亲，您设置奖品达到上限啦！删除部分奖品后再添加奖品吧。"});
+			return false;
+		}
+		$("#award_pos").val(me.attr("apos"));
+		$("#id").val(me.attr("aid"));
+		$("#prize_id").val(me.attr("pid"));
+		$("#award_name").val(me.attr("aname"));
+		$("#award_count").val(me.attr("acount"));
+		$("#award_rate").val(me.attr("rate"));
+		$("#setting_prize_dialog").modal('show');
+	});
+}
+function cancelset(obj){
+	obz.showMessage("确定删除奖品吗？", function(){
+		obz.ajaxJson(obz.ctx+"/lottery/award/del", {id:$(obj).attr("aindex")}, function(resp){
+			if(resp.code != 200){
+				BootstrapDialog.alert({title:"提示",message:"亲，删除失败，请联系管理员。"});
+				return;
+			}
+			location.reload();
+		});
+	});
+}
+$(function(){
+	initAward(awardBindClk);
+	$("#selectPrize").click(function(){
+		obz.selectPrize({}, function (id, prizeName) {
+			$("#id").val("");
+			$("#prize_id").val(id);
+			$("#award_name").val(prizeName);
+			$("#error_prize_id").find("label").empty();
+		});
+	});
+	$('#setting_prize_dialog').on('hidden.bs.modal', function () {
+		$("#id,#prize_id,#award_name,#award_rate,#award_count").val("");
+	});
+	$("#setBut").click(function(){
+		var params = {}, error = {};
+		var id = $("#id").val(), prize_id = $("#prize_id").val(),
+		award_name = $("#award_name").val(), award_count = $("#award_count").val(), award_rate = $("#award_rate").val();
+		if($.trim(prize_id) =="") {error.error_prize_id = "请选择奖品"; } else {error.error_prize_id=""; params.prize_id = $.trim(prize_id);}
+		if($.trim(award_name) =="") {error.error_award_name = "请填写奖品名称"; } else {error.error_award_name =""; params.award_name = $.trim(award_name);}
+		if($.trim(award_rate) =="") {error.error_award_rate = "请填写中奖概率"; } else { error.error_award_rate=""; params.award_rate = $.trim(award_rate);}
+		if($.trim(award_count) =="") {error.error_award_count = "请填写奖品数量"; } else { error.error_award_count=""; params.award_count = $.trim(award_count);}
+		if($.trim(id) != "") params.id = id;
+		params.lottery_id = '${lottery.id}';
+		params.award_pos = $("#award_pos").val();
+		var hasError = false;
+		for(var key in error){
+			if(error[key]!=""){
+				if(!hasError) hasError = true;
+				$("#"+key).addClass("has-error");
+    			$("#"+key).find("label").text(error[key]);
+			}else{
+				$("#"+key).removeClass("has-error");
+				$("#"+key).find("label").empty();
+			}
+		}
+		if(hasError) return false;
+		obz.ajaxJson(obz.ctx+"/lottery/award/save", params, function(data){
+			if(data.code != 200){
+				BootstrapDialog.alert({title:"提示",message: data.msg});
+				return;
+			}
+			$("#setting_prize_dialog").modal('hide');
+			//设置奖品信息
+			/* initAward(awardBindClk); */
+			location.reload();
+		});
+	});
+	
+	//对已设置的概率进行模拟抽奖，可以预先预测抽奖情况以及结果
+	/* $("#testLottBtn").click(function(){
+		testLottDialog = BootstrapDialog.show({
+			size: BootstrapDialog.SIZE_WIDE,
+			title: "模拟抽奖赔率中奖情况",
+	        message: $('<div></div>').load(obz.ctx+'/lottery/test')
+	    });
+	}); */
+});
+</script>
+<script type="text/template" id="had-prize-setting">
+<div style="background: scroll right bottom rgba(0, 0, 0, 0);" aid="{id}" pid="{prize_id}" aname="{award_name}" acount="{award_count}" apos="{award_pos}" class="ganew" name="setAward" rate="{award_rate}">
+	<p>{award_name}</p>
+	<p>{award_count}份</p>
+</div>
+<div style="margin-left:47px;margin-top:65px;width:60px;position:absolute;" class="cancel" id="btns_1">
+	<a style="color:#aaa; width:150px;cursor: pointer;" onclick="cancelset(this)" href="javascript:void(0);" aindex="{id}" atitle="{award_name}">取消设置</a>
+</div>
+</script>
+<script type="text/template" id="no-prize-setting">
+<div style="background: scroll right bottom rgba(0, 0, 0, 0);" aid="" apos="" class="ga" name="setAward">谢谢参与</div>
+</script>
+[#include "/includes/footer.html" /]
+<script>
+Template.init("#menu-qiandao");
+</script>
+</body>
+</html>

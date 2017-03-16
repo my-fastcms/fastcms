@@ -1,0 +1,43 @@
+body, html {
+  height: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+.demos-title {
+  text-align: center;
+  font-size: 34px;
+  color: #3cc51f;
+  font-weight: 400;
+  margin: 0 15%;
+}
+
+.demos-sub-title {
+  text-align: center;
+  color: #888;
+  font-size: 14px;
+}
+
+.demos-header {
+  padding-top: 30px;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-bottom: 10px;
+}
+
+.demos-content-padded {
+  padding: 15px;
+}
+
+.demos-second-title {
+  text-align: center;
+  font-size: 24px;
+  color: #3cc51f;
+  font-weight: 400;
+  margin: 0 15%;
+}
+
+.toolbar-bottom {
+    position: fixed;
+    /* bottom: .52em; */
+    left: 0;
+    right: 0;
+}

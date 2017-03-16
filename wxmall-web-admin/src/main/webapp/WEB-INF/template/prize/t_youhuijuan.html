@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>添加优惠卷兑换</title>
+<script type="text/javascript">
+	var prizeId = '${prize.id }';
+	//保存奖品
+	$("#savePrize").click(function(){
+		$("#addPrizeUIDailogDiv").mask("正在保存...");
+		obz.ajaxJson (obz.ctx+"/prize/save", $("#f1").serialize(), function(data){
+			$("#addPrizeUIDailogDiv").unmask();
+			var response = data;
+			obz.showMessage(response.data, function(){
+				$("#addPrizeUIDailogDiv").dialog("close");
+			}); 
+			if(prizeId!=null && prizeId!=""){
+				searchPrizes();
+			}
+		},function(){
+			$("#addPrizeUIDailogDiv").unmask();
+			$("[id^='error_']").each(function(){
+				$(this).empty();
+			}); 
+		});
+	});
+	
+	//选择优惠卷
+	$("#selectYHJ").click(function(){
+		var yhjdialog = new obz.PopupDialog(obz.ctx+"/prize/selectyhj", "selectYhjDialog", function(response, status, xhr){
+			$("#selectYhjDialog").unmask();
+		});
+		yhjdialog.init();
+	});
+</script>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+<div>
+	<button id="savePrize">保存</button>
+	<span>优惠卷</span>
+	<hr>
+	<div class="box infomation">
+	用户兑换后系统自动发放优惠券；如果用户领取失败自动返还积分，例如领取的优惠券张数超限，不能兑换。
+	</div>
+</div>
+<div class="bulk-edit-area">
+	<form name="f1" id="f1" action="" method="post">
+		<input type="hidden" name="prize_type_id" id="prize_type_id" value="${prizeTypeId }"/><!-- 1代表优惠卷 -->
+		<input type="hidden" name="status" id="status" value="1"/><!-- 默认刚创建的奖品为1，代表可以进行兑换中 -->
+		<input type="hidden" name="active" id="active" value="1"/><!-- 默认为1，值为0的时候表示删除，删除后用户不可见 -->
+		<input type="hidden" name="id" id="id" value="${prize.id }"/>
+		<input type="hidden" name="status" id="status" value="${prize.status }"/>
+		<ul class="bulk-edit-ul">
+
+			<li><label class="label-title">兑换名称：</label> <span><em>*</em></span>
+				<span>
+					<input class="input-text" style="width: 300px;" type="text" id="exchange_title" name="exchange_title" value="${prize.exchange_title}">
+					<span class="grey-memo">显示在兑换列表中，例如：限时1000积分兑换5元优惠券</span>
+				</span>
+				<div id="error_title"  class="error hidden" style="padding-left: 120px;"></div> 
+			</li>
+
+			<li><label class="label-title">有效兑换时间：</label> <span><em>*</em></span>
+				<input type="text" id="start_date" name="start_date" style="width: 160px; cursor: pointer;"
+					onfocus="WdatePicker({isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'#F{$dp.$D(\'end_date\',{d:-1});}'})"
+					class="Wdate" value="${prize.start_date }" />
+				
+				&nbsp;&nbsp;至&nbsp;&nbsp; 
+				
+				<input type="text" id="end_date" name="end_date" style="width: 160px; cursor: pointer;"
+					onfocus="WdatePicker({isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'#F{$dp.$D(\'start_date\',{d:28, H:23, m:59, s:59});}'})"
+					class="Wdate" value="${prize.end_date }" />	 
+				 
+				<span class="grey-memo">兑换优惠券活动什么时间开始，什么时间结束</span>
+				
+				<div style="padding-left: 120px;">
+				<label id="error_start_date" class="error hidden"></label>
+				<label id="error_end_date" class="error hidden"></label>
+				</div>
+				
+			</li>
+
+			<li>
+				<span class="label-title register_label">需要的积分：</span> <span><em>*</em></span>
+				<input class="input-text" style="width: 100px;" type="text" id="need_points" name="need_points" value="${prize.need_points}">
+				<span class="grey-memo">需要粉丝多少积分才能兑换一个奖品</span>
+				<div id="error_need_points" class="error hidden" style="padding-left: 120px;"></div>
+			</li>
+			
+			<li>
+				<span class="label-title register_label">优惠卷总数:&nbsp;</span> <span><em>*</em></span>
+				<input class="input-text" style="width: 100px;" type="text" id="publish_count" name="publish_count" value="${prize.publish_count}">
+				<span class="grey-memo">本次有效时间内，总共发布多少个优惠卷让粉丝去兑换，不能超过500张</span>
+				<div id="error_publish_count"  class="error hidden" style="padding-left: 120px;"></div> 
+			</li>
+
+			<li><span class="label-title register_label">兑换次数：</span> <span><em>*</em></span>
+				<input type="text" class="input-text" style="width: 100px;" name="exchange_count" id="exchange_count" value="${prize.exchange_count}">
+				<span class="grey-memo">每个粉丝允许兑换的次数</span>
+				<div id="error_exchange_count"  class="error hidden" style="padding-left: 120px;"></div>
+			</li>
+			
+			<li>
+				<span class="label-title register_label">优惠卷：</span> <span><em>*</em></span>
+				<input type="hidden" id="out_id" name="out_id" value=""/>
+				<a id="selectYHJ" href="javascript:void(0)">选择优惠卷</a>
+				<div id="error_out_id"  class="error hidden" style="padding-left: 120px;"></div>
+			</li>
+			
+		</ul>
+	</form>
+</div>
+</body>
+</html>

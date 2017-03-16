@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>抽奖</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+   	[#include "/includes/header.html" /]
+    <link rel="stylesheet" type="text/css" href="${webctx}/resources/css/detail.css">
+    <link rel="stylesheet" type="text/css" href="${webctx}/resources/css/lotteryAll.css">
+</head>
+<body>
+  
+  	<div id="wrap">
+  		<a class="home_direct_link" style="margin-bottom:10px" href="/index?snick=${_sellerUser.encodSellerNick }">&lt;&lt;&nbsp;去做活动</a>
+  	
+  		<div class="between_header_content"></div>
+  		
+  		<div class="lottery_info">
+  			<div class="lottery_count">
+  				您总共还有<span id="today_used_count" class="font_hl_def font_18 font_bold font_right_blank">${_buyerUser.lotCount }</span>次抽奖机会
+  			</div>
+  		</div>
+		
+		<div class="lottery_prize_box">
+	  		<ul class="clear">
+	  			[#list lotteryAwards as award ]
+	  				
+	  				[#if award_index ==4]
+	  					<li class="lottery_btn">/li>
+	  				[/#if]
+	  				
+	  				[#if award_index !=4]
+	  					
+	  					[#if award.awardName == 'no_item']
+	  						<li class="prize_item prize_item_no" data-index="${ status.index}"></li>
+	  					[/#if]
+	  					
+	  					[#if award.awardName != 'no_item']
+	  						<li class="prize_item " data-index="${ status.index}">
+			  					<h2>${award.awardName }</h2>
+									[#if award.awardType == 'INTERACT_ITEM_COUPON']
+										<div class="prize_type_name">
+					  						<p class="score">商品优惠卷</p>
+					  					</div>
+					  					<div class="prize_item_icon prize_item_9"></div>	
+									[#elseif award.awardType == 'INTERACT_COUPON']
+										<div class="prize_type_name">
+					  						<p class="score">店铺优惠卷</p>
+					  					</div>
+					  					<div class="prize_item_icon prize_item_9"></div>
+									[#elseif award.awardType == 'INTERACT_FLOW_PACKAGE']
+										<div class="prize_type_name">
+					  						<p class="score">手机流量包</p>
+					  					</div>
+					  					<div class="prize_item_icon prize_item_13"></div>	
+									[#elseif award.awardType == 'INTERACT_TAO_GOLD']
+										<div class="prize_type_name">
+					  						<p class="score">淘金币</p>
+					  					</div>
+					  					<div class="prize_item_icon prize_item_11"></div>
+									[#elseif award.awardType == 'INTERACT_TB_FILM_COUPON' ]
+										<div class="prize_type_name">
+					  						<p class="score">淘宝电影代金券</p>
+					  					</div>
+					  					<div class="prize_item_icon prize_item_5"></div>
+									[/#if]
+			  				</li>
+	  					[/#if]
+	  				[/#if]
+	  			[/#list]
+ 				<li class="floater"></li>
+	  		</ul>
+  		</div>
+  			
+  	</div>
+  	
+  	<input type="hidden" id="db_seller_nick" value="${_sellerUser.encodSellerNick }"/>
+  	<input type="hidden" id="dp_interact_id" value="${activity.interact_id }"/>
+  	<input type="hidden" id="db_real_buyer_nick" value="${_buyerUser.realNick }" />
+<script type="text/javascript" src="${webctx}/resources/js/lottery.js"></script>
+</body>
+</html>

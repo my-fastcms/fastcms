@@ -1,0 +1,223 @@
+[#include "/mall/common/default.html" /]
+<style>
+#search_bar{
+	border: 0;
+}
+.goods-list .weui-col-25{
+	position: relative;
+	font-size: 1.2rem;
+	color: #999999;
+}
+.active{
+	color: #09BB07 !important;
+}
+.active span{
+	border-top-color: #09BB07;
+	border-bottom-color: #09BB07;
+}
+.triangle-up{
+	width: 0px;
+	height: 0px;
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-bottom: 6px solid;
+	float: right;
+	margin-top: 11px;
+	margin-right: 15px;
+	margin-left: -20px;
+}
+.triangle-down{
+	position: absolute;
+	top: 20px;
+	right: 15px;
+	width: 0;   
+	height: 0;   
+	border-left: 5px solid transparent;   
+	border-right: 5px solid transparent;   
+	border-top: 6px solid; 
+}
+#search_bar{
+	width: 90%;
+	float: right;
+}
+#J_filtrate{
+	width: 100%;
+	margin-bottom: 20px;
+}
+.goods-list .goods-wrap .goods-item{
+	padding: 1rem;
+}
+.goods-list .goods-wrap .goods-item::after{
+	visibility:visible;
+	padding-top: 1rem;
+	border-bottom: 1px solid #DEDEDE;
+}
+.goods-list .goods-item .picture{
+	float: left;
+	width: 35%;
+	margin-right: 1rem;
+}
+.goods-item .goods-item-info{
+	float: left;
+	width: 60%;
+	text-align: right;
+	padding-right: 0.1rem;
+}
+.goods-item .goods-item-info .title{
+	/* height: 44px; */
+	margin-bottom: 1rem;
+	overflow: hidden;
+	font-size: 18px;
+	font-weight:bold;
+}
+.goods-item .goods-item-info .appraise{
+	color: #9A9A9A;
+	font-size: 12px;
+}
+.active span.down-ionic{
+	background-image: url(${ctxPath}/resources/weixin/images/arrow-down-active.png);
+}
+.down-ionic{
+	padding-left: 8px;
+	padding-right: 8px;
+	margin-left: 2px;
+	background-image: url(${ctxPath}/resources/weixin/images/arrow-down.png);
+	background-position: 100% 100%;
+	background-size: 100% 100%;
+}
+#J_form > .weui_search_inner{
+	padding-right: 0;
+}
+#nav-btn{
+	width: 10%;
+	float: left;
+	height: 44px;
+	background-color: #EFEFF4;
+}
+#nav-btn > img{
+	position: absolute;
+	top: 12px;
+	width: 22px;
+	height: auto;
+	margin-left: 12px;
+}
+.sclassify{
+	position: absolute;
+	top: 37px;
+	font-size: 12px;
+}
+.sclassify::before{
+	content: "";
+	display: block;
+	width: 0;
+	height: 0;
+	border-left: 8px solid transparent;
+	border-right: 8px solid transparent;
+	border-bottom: 8px solid #fff;
+	margin-left: 15px;
+}
+.sclassify li{
+	width: 120px;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	background-color: rgba(255,255,255,1);
+	border-bottom: 1px solid #EFEFF4;
+}
+.sclassify li img{
+	position: relative;
+	top: 3px;
+	left: 25px;
+	right: 5px;
+	display: inline;
+	width: 18px;
+	margin-right: 30px;
+}
+.weui_tab_bd{
+	position: absolute;
+}
+.curtain{
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	display: none;
+	background-color: rgba(0,0,0,0.4);
+	z-index: 10;
+}
+.goods-item-info > .add-shopping{
+	font-size: 9px;
+	line-height: 12px;
+	text-align: right;
+}
+.weui_tab_bd{
+	position: relative;
+}
+.weui_btn.weui_btn_mini {
+    line-height: 1.6;
+    font-size: 12px;
+    padding: 0 .75em;
+    display: inline-block;
+}
+</style>
+<div class="content goods-list">
+<!-- 搜索框  -->
+<div id="nav-btn" class="weui_grid_icon">
+	<img src="${ctxPath}/resources/weixin/images/nav-ionic.png"/>
+	<div class="curtain">
+			<!-- <ul class="sclassify">
+			[#list productCategory as productCategorys]
+			<li class="swiper-slide" data-id="${productCategorys.id}" data-name="${productCategorys.name}"><a href="javascript:void(0)"  target="classify-win">${productCategorys.name}</a></li>
+			[/#list]
+			</ul> -->
+		</div>
+</div>
+<div class="weui_search_bar" id="search_bar">
+	<form id="J_form" action="${ctxPath}/weixin/product/productList" method="post" class="weui_search_outer custom">
+		<div class="weui_search_inner">
+			<i class="weui_icon_search"></i>
+			<input type="text" id="search_input" value="" class="weui_search_input custom-input" name="keyword" placeholder="搜索" required/>
+			<a href="javascript:" class="weui_icon_clear" id="search_clear"></a>
+		</div>
+	</form>
+	<a href="javascript:document.forms[0].submit()" class="weui_search_btn" id="search_btn">搜索</a>
+</div>
+<div id="goods-list" class="goods-wrap">
+[#if product?? && product?size>0]
+[#list product as products]
+	<div class="goods-item f-cb">
+				<a href="${ctxPath}/weixin/product/detail?id=${products.id}"><img class="picture" src="${products.mainPic}" width="120" height="120"/></a>
+				<div class="goods-item-info">
+					<div class="title">${products.name}</div>
+					<div class="price">${products.price}</div>
+                   [#if setting.isShowMarketPrice]
+					<div class="price" style="color: #787878; font-size: 12px;text-decoration:line-through;">
+						${products.marketPrice}
+					</div> 
+                   [/#if]
+
+				</div>
+			</div>
+[/#list]
+			[#else]
+			<div class="goods-item f-cb">
+			<h4 style="text-align: center;">没有商品</h4>
+			</div>
+				
+			[/#if]
+</div>
+<!-- /热门搜索 -->
+</div>
+[#include "/mall/common/script.html"/]
+<script type="text/javascript">
+/* $(function(){
+	$("#nav-btn > img").click(function(){
+		$(".curtain").css("display","block");
+	});
+	$("#nav-btn .curtain").click(function(){
+		this.style.display = "none";
+	});
+}); */
+
+</script>

@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+[#include "/includes/header.html" /]
+<title>添加抽奖</title>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+[#include "/includes/menus.html" /]
+<div class="wrapper wrapper-content">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	           <a href="${webctx}/qiandao" class="J_menuTab">签到</a>
+		       <a href="${webctx}/lottery" class="J_menuTab active">抽奖</a>
+		       <a href="${webctx}/prize" class="J_menuTab">奖品 </a>
+	       </div>
+	   	</nav>
+	</div>
+	<div class="tabs-container row" style="padding-top: 12px;">
+        <ul class="nav nav-tabs">
+			<li class="active"><a href="${webctx}/lottery/type">创建抽奖</a></li>
+			<li><a href="${webctx}/lottery">管理抽奖</a></li>
+			<!-- <li><a href="${webctx}/lottery/joins">参与记录</a></li> -->
+			<li><a href="${webctx}/lottery/wins">中奖情况</a></li>
+		</ul>
+	</div>
+	<div class="row ibox-content">
+	<ul id="activity_types_ul">
+		<li>
+			<h2>九宫格抽奖</h2>
+			<p>给店铺添加抽奖活动，九宫格可设置奖品，买家参与随机中奖。</p>
+			<div>
+			<a class="btn btn-success" href="${webctx}/lottery/show/jiugongge">立即创建</a></div>
+		</li>
+		<li>
+			<h2>刮刮乐</h2>
+			<p>刮一刮，刮出大彩，买家惊喜不断，其乐无穷。</p>
+			<div><a class="btn btn-success" href="${webctx}/lottery/show/guaguale">立即创建</a></div>
+		</li>
+		<li>
+			<h2>大转盘</h2>
+			<p>转一转，转出好彩头</p>
+			<div><a class="btn btn-success" href="${webctx}/lottery/show/zhuanzhuan">立即创建</a></div>
+		</li>
+	</ul>
+	</div>			
+</div>	
+[#include "/includes/footer.html" /]
+<script>
+Template.init("#menu-qiandao");
+</script>
+</body>
+</html>

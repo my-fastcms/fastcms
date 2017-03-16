@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>添加分组</title>
+<script type="text/javascript">
+$(document).ready(function() {
+$(".js-save").click(function() {
+	var hasError = false;
+	var params = {}, error = {};
+	var group_name = $("#group_name").val();
+	if($.trim(group_name) =="") {error.error_group_name = "分组名不能为空"; } else {error.error_group_name=""; params.group_name = $.trim(group_name);}
+	for(var key in error){
+		if(error[key]!=""){
+			//alert(key);
+			if(!hasError) hasError = true;
+			$("#"+key).addClass("has-error");
+			$("#"+key).find("label").text(error[key]);
+		}else{
+			$("#"+key).removeClass("has-error");
+			$("#"+key).find("label").empty();
+		}
+	}
+	if(hasError){
+		return false;
+	}
+	$.post(obz.ctx+"/attachment/save", params, function(json) {
+
+		if(json.code!=200){
+			BootstrapDialog.alert({title:'提示', message:json.msg});
+		}else{
+			location.href=obz.ctx+"/attachment";			
+		}
+          },"json");
+	if(addGroupDialog != null) addGroupDialog.close();
+	
+	//location.href=obz.ctx+"/attachment"
+});
+
+$(".js-cancel").click(function() {
+	if(addGroupDialog != null) addGroupDialog.close();
+});
+});
+</script>
+<style type="text/css">
+</style>
+<body>
+<div class="panel-body">
+<div class="ui-popover-inner" style="min-width: auto; width: 180px;">
+    <div style="margin-bottom: 6px;">添加分组</div>
+    <div style="margin-bottom: 6px;" id="error_group_name">
+        <input class="form-control" id="group_name" value="" placeholder="不超过6个字" maxlength="6" style=" width: 166px;" type="text">
+        <label class="control-label" for="group_name"></label>
+    </div>
+    <div class="panel-footer">
+    <div  align="center">
+        <a href="javascript:;" class="btn btn-sm btn-success js-save" style="width: 48px;">确定</a>
+        <a href="javascript:;" class="ui-btn js-cancel pull-right" style="width: 48px;">取消</a>
+    </div>
+    </div>
+</div>
+</div>
+</body>
+</head>
+</html>

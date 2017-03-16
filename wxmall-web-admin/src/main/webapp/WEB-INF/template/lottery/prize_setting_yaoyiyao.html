@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+[#include "/includes/header.html" /]
+<title>设置奖品跟概率</title>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+[#include "/includes/menus.html" /]
+<div id="container" class="main">
+<ol class="breadcrumb">
+	<li><i class="fa fa-home"></i><a href="${webctx}/lottery/type">抽奖</a></li>
+	<li><i class="fa fa-laptop"></i>创建摇一摇抽奖</li>						  	
+</ol>
+<div class="panel-heading">
+	<ul class="nav tab-menu nav-tabs">
+		<li><a href="${webctx}/lottery/show/yaoyiyao/${lottery.id}">编辑抽奖信息</a></li>
+		<li class="active"><a href="${webctx}/lottery/set/yaoyiyao/${lottery.id}">设置奖品跟概率</a></li>
+	</ul>
+</div>
+[#if lottery??]
+<div style="height: 10px;"></div>
+<div style="margin-top: 20px;margin-left: 260px;">
+    <a class="btn btn-large btn-success" id="btnAddAward" href="javascript:void(0);">+ 添加活动奖品</a>
+	<div style="color: #aaa;font-size:14px;padding:4px 10px;" id="spanend">
+		最多设置<span id="selAwd" style="color:green; font-weight:bold;font-size:22px">10</span>个奖品，
+		已经设置<span id="selNoAwd" style="color:red;font-weight:bold;font-size:22px">0</span>个奖品
+	</div>
+</div>
+
+<table id="sel_prize_table" class="table table-striped table-bordered bootstrap-datatable datatable" style="width: 60%;" align="center">
+	<th>奖品名称</th>
+	<th>中奖率</th>
+	<th>剩余数量</th>
+	<th>奖品类型</th>
+	<th>操作</th>
+    <tbody id="awardList"><tr><td style="text-align:center;" colspan="6">亲，您还没有设置奖品哦！</td></tr></tbody>
+</table>
+
+<div style="height: 30px;"></div>
+[#else]
+<div class="alert alert-danger">
+	<i class="fa fa-info-circle"></i><strong>警告:</strong>请先设置抽奖信息。
+</div>
+[#/if]
+</div>
+[#include "/lottery/prize_setting_dialog.html" /]
+
+<script type="text/javascript">
+function initAward(){
+	obz.ajaxJson(obz.ctx + "/lottery/award/list", {lotteryId : '${lottery.id}'}, function(resp){
+		if(resp.code == 200){
+			var result = resp.data;
+			if(result.length >0){
+				$("#awardList").empty();
+				for(var i=0;i<result.length;i++){
+					var award = result[i];
+					if(award.prize_type == 1) award.prize_type = "优惠券";
+					else if(award.prize_type == 2) award.prize_type = "淘话费";
+					else if(award.prize_type == 3) award.prize_type = "实物&自定义奖品";
+					else if(award.prize_type == 4) award.prize_type = "集分宝";
+					else if(award.prize_type == 5) award.prize_type = "流量包";
+					else if(award.prize_type == 6) award.prize_type = "淘金币";
+					else if(award.prize_type == 7) award.prize_type = "软件内积分";
+					else award.prize_type = "未知奖品类型";
+					award.left_count = parseInt(award.publish_count) - parseInt(award.had_out_count);
+					var trHtml = obz.dataTemplate4obj($("#had-prize-tr").html(), award);
+					$("#awardList").append(trHtml);
+				}
+				$("#selNoAwd").html($("#sel_prize_table tr").length - 1);
+			}
+		}
+	});
+}
+function cancelset(obj){
+	obz.showMessage("确定删除奖品吗？", function(){
+		obz.ajaxJson(obz.ctx+"/lottery/award/del", {id:$(obj).attr("aindex")}, function(resp){
+			if(resp.code != 200){
+				BootstrapDialog.alert({title:"提示",message:"亲，删除失败，请联系管理员。"});
+				return;
+			}
+			location.reload();
+		});
+	});
+}
+function editAward(obj){
+	obz.ajaxJson(obz.ctx+ "/lottery/award/show", {awardId:$(obj).attr("aid")}, function(resp){
+		if(resp.code == 200){
+			var aresult = resp.data;
+			if(aresult != null){
+				$("#id").val(aresult.id);
+				$("#prize_id").val(aresult.prize_id);
+				$("#award_name").val(aresult.award_name);
+				$("#award_count").val(aresult.award_count);
+				$("#award_rate").val(aresult.award_rate);
+				$("#award_pos").val($("#sel_prize_table tr").length - 1);
+				$("#setting_prize_dialog").modal('show');
+			}
+		}
+	});
+}
+
+$(function(){
+	initAward();
+	$("#selectPrize").click(function(){
+		obz.selectPrize({}, function (id, prizeName) {
+			$("#id").val("");
+			$("#prize_id").val(id);
+			$("#award_name").val(prizeName);
+			$("#error_prize_id").find("label").empty();
+		});
+	});	
+	$('#btnAddAward').on('click',function(){
+		var me = $(this);
+		if(($("#sel_prize_table tr").length - 1)>=10){
+			BootstrapDialog.alert({title:"温馨提示",message:"亲，您设置奖品达到上限啦！删除部分奖品后再添加奖品吧。"});
+			return false;
+		}
+		$("#award_pos").val($("#sel_prize_table tr").length - 1);
+		$("#setting_prize_dialog").modal('show');
+	});
+	$('#setting_prize_dialog').on('hidden.bs.modal', function () {
+		$("#id,#prize_id,#award_name,#award_rate,#award_count").val("");
+	});
+	$("#setBut").click(function(){
+		var params = {}, error = {};
+		var id = $("#id").val(), prize_id = $("#prize_id").val(),
+		award_name = $("#award_name").val(), award_count = $("#award_count").val(), award_rate = $("#award_rate").val();
+		if($.trim(prize_id) =="") {error.error_prize_id = "请选择奖品"; } else {error.error_prize_id=""; params.prize_id = $.trim(prize_id);}
+		if($.trim(award_name) =="") {error.error_award_name = "请填写奖品名称"; } else {error.error_award_name =""; params.award_name = $.trim(award_name);}
+		if($.trim(award_rate) =="") {error.error_award_rate = "请填写中奖概率"; } else { error.error_award_rate=""; params.award_rate = $.trim(award_rate);}
+		if($.trim(award_count) =="") {error.error_award_count = "请填写奖品数量"; } else { error.error_award_count=""; params.award_count = $.trim(award_count);}
+		if($.trim(id) != "") params.id = id;
+		params.lottery_id = '${lottery.id}';
+		params.award_pos = $("#award_pos").val();
+		var hasError = false;
+		for(var key in error){
+			if(error[key]!=""){
+				if(!hasError) hasError = true;
+				$("#"+key).addClass("has-error");
+    			$("#"+key).find("label").text(error[key]);
+			}else{
+				$("#"+key).removeClass("has-error");
+				$("#"+key).find("label").empty();
+			}
+		}
+		if(hasError) return false;
+		obz.ajaxJson(obz.ctx+"/lottery/award/save", params, function(data){
+			if(data.code != 200){
+				BootstrapDialog.alert({title:"提示",message: data.msg});
+				return;
+			}
+			$("#setting_prize_dialog").modal('hide');
+			//设置奖品信息
+			initAward();
+		});
+	});
+});
+
+</script>
+<script type="text/template" id="had-prize-tr">
+<tr id="trDraw_1" rate="2" adindex="1"><td>{award_name}</td><td>{award_rate}%</td><td>{left_count}</td><td>{prize_type}</td><td><a class="btn-small" aid="{id}" onclick="editAward(this)" href="javascript:void(0);">修改</a>&nbsp;<a class="btn-small" onclick="cancelset(this)" aindex="{id}" href="javascript:void(0);">删除</a></td></tr>
+</script>
+[#include "/includes/footer.html" /]
+<script>
+Template.init("#menu-lottery");
+</script>
+</body>
+</html>	
+	

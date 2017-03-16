@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>个人中心</title>
+[#include "/includes/header.html" /]
+<link rel="stylesheet" href="${webctx}/resources/css/my.css"/>
+</head>
+<body>
+<div class="content">
+	<!-- 用户信息 -->
+		<div class="user-info">
+			<a class="user-portrait" href="javascript:;">
+				<img src="${session._buyerUser.headimgurl}" alt="${session._buyerUser.nickname}" />
+			</a>
+			<div class="user-name f-toe">
+			 ${session._buyerUser.nickname}
+			</div>
+			<!-- <div class="user-name user-grade gold"><img src="${webctx}/resources/images/grade-gold.png" alt="等级"/><span>金牌会员</span></div>
+			<div class="user-name user-grade silver"><img src="${webctx}/resources/images/grade-silver.png" alt="等级" /><span>普通会员</span></div> -->
+			<a class="user-info-manage" href="javascript:void(0);">${session._buyerUser.province} ${session._buyerUser.city}</a>
+		</div>
+		<!-- 用户信息 -->
+		<!-- 子菜单 -->
+		<div class="weui-panel weui-panel_access">
+			<div class="weui-panel__hd" style="display: none;" >
+				<div class="weui-row weui-no-gutter t-ac">
+					<a class="weui-col-33" href="javascript:void(0);">
+						<div class="count">[#if childrenAgents?? && childrenAgents?size>0] ${childrenAgents?size} [#else] 0 [/#if]</div>
+						<div class="name">我推广的人数</div>
+					</a>
+					<a class="weui-col-33" href="javascript:javascript:void(0);">
+						<div class="count">0</div>
+						<div class="name">积分</div>
+					</a>
+					<a class="weui-col-33" href="javascript:javascript:void(0);">
+						<div class="count">0</div>
+						<div class="name">我的足迹</div>
+					</a>
+				</div>
+			</div>
+			<div class="weui-cells" style="font-size: 14px;">
+	          <div class="weui-cell weui-cell_access">
+	            <div class="weui-cell__bd">
+	              <p>我的订单</p>
+	            </div>
+	            <div class="weui-cell__ft">
+	            	<a href="${webctx}/order">全部订单</a>
+	            </div>
+	          </div>
+	         </div>
+			<div class="weui-panel__bd" style="font-size: 14px;">
+				<div class="weui-media-box weui-media-box_text">
+					<div class="weui-media-box__desc">
+						<div class="weui-row weui-no-gutter c">
+							<div class="weui-col-30">
+								<a class="weui-tabbar__icon" href="${webctx}/order/unpay">
+									<img src="${webctx}/resources/images/bankcard.png" alt="待付款">
+								</a>
+								<p>待付款</p>
+							</div>
+							<div class="weui-col-30">
+								<a class="weui-tabbar__icon" href="${webctx}/order/payed">
+									<img src="${webctx}/resources/images/delivery.png" alt="待收货">
+								</a>
+								<p>待收货</p>
+							</div>
+							<div class="weui-col-30">
+								<a class="weui-tabbar__icon" href="${webctx}/order/completed">
+									<img src="${webctx}/resources/images/comment1.png" alt="已完成">
+								</a>
+								<p>已完成</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<!-- <div class="weui-cells__title">带跳转的列表项</div> -->
+	        <div class="weui-cells" style="font-size: 14px;">
+	          <div class="weui-cell weui-cell_access">
+	            <div class="weui-cell__bd">
+	              <p>我的购物车</p>
+	            </div>
+	            <div class="weui-cell__ft">
+	            	<a href="${webctx}/cart">查看</a>
+	            </div>
+	          </div>
+	          <div class="weui-cell weui-cell_access">
+	            <div class="weui-cell__bd">
+	              <p>收货地址</p>
+	            </div>
+	            <div class="weui-cell__ft">
+	            	<a href="${webctx}/receiver">查看</a>
+	            </div>
+	          </div>
+	          <div class="weui-cell weui-cell_access">
+	            <div class="weui-cell__bd">
+	              <p>代理加盟</p>
+	            </div>
+	            <div class="weui-cell__ft">
+	            	<a href="${webctx}/agent/apply">去申请</a>
+	            </div>
+	          </div>
+	          [#if agent??]
+	          <div class="weui-cell weui-cell_access">
+	            <div class="weui-cell__bd">
+	              <p>邀请好友</p>
+	            </div>
+	            <div class="weui-cell__ft">
+	            	<a href="${webctx}/agent/card?agentId=${agent.id}">马上邀请</a>
+	            </div>
+	          </div>
+	          [/#if]
+	          <div class="weui-cell weui-cell_access">
+	            <div class="weui-cell__bd">
+	              <p>我的佣金</p>
+	            </div>
+	            <div class="weui-cell__ft">
+	            	<a href="${webctx}/agent/commission">马上提现</a>
+	            </div>
+	          </div>
+	        </div>
+		</div>
+		<!-- 子菜单 -->
+</div>
+[#include "/includes/menus.html" /]
+<!--手机端script需要加载后方-->
+[#include "/includes/footer.html" /]
+<script type="text/javascript">
+Template.init("#nav-page-user");
+</script>
+</body>
+</html>
+

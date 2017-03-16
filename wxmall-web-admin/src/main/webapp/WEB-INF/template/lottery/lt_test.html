@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+[#include "/includes/header.html" /]
+<title>模拟抽奖结果</title>
+<script type="text/javascript">
+	var testCount = null;
+	$(document).ready(function() {
+	    $("#myTestBtn").click(function(){
+	    	testCount = $("#q_pond_txt").val() == "输入模拟抽奖次数" ? "" : $("#q_pond_txt").val();
+	    	testLottery();
+	    });
+	    $("#count_sel").change(function(){
+	    	testCount = $("#count_sel").val();
+	    	if(testCount>1){
+	    		testLottery();	    		
+	    	}else{
+	    		$(".prizeLotGrid").empty();
+	    	}
+	    });
+	});
+	var testLottery = function(){
+		var params = {};
+		params.testCount = testCount;
+		params.lotteryId = '${lottery.id}';
+		$("#mainTable").mask("加载中...");
+		var url = obz.ctx + "/lottery/testdata";
+		obz.ajaxJson(url, params, function(resp){
+			$("#mainTable").unmask();
+			if(resp.code != 200){
+				BootstrapDialog.alert({title:'提示', message:resp.msg});
+				return;
+			}
+			var result = resp.data;
+			$(".prizeLotGrid").empty();
+			if(result.length>0){
+				for(var i=0;i<result.length;i++){
+					var _row = result[i];
+					var trHtml = obz.dataTemplate4obj($("#prize_table_tr_tpl").html(), _row);
+					$(".prizeLotGrid").append(trHtml);
+				}
+			}else {
+				$(".prizeLotGrid").append($("#prize_table_noresult_tr_tpl").html());
+			}
+		});
+	}
+</script>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+[#include "/includes/menus.html" /]
+
+<div class="wrapper wrapper-content">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	           <a href="${webctx}/qiandao" class="J_menuTab">签到</a>
+		       <a href="${webctx}/lottery" class="J_menuTab active">抽奖</a>
+		       <a href="${webctx}/prize" class="J_menuTab">奖品 </a>
+	       </div>
+	   	</nav>
+	</div>
+	<div class="ibox-title row">
+		<h5><small><a href="${webctx}/lottery">《返回列表</a></small></h5>
+	</div>
+<div class="tabs-container row" style="padding-top: 12px;">
+        <ul class="nav nav-tabs">
+		<li><a href="${webctx}/lottery/show/${action }/${lottery.id}">编辑抽奖信息</a></li>
+		<li><a href="${webctx}/lottery/set/${action }/${lottery.id}">设置奖品跟概率</a></li>
+		<li class="active"><a href="${webctx}/lottery/test/${lottery.id}">模拟抽奖结果</a></li>
+	</ul>
+</div>
+<div id="tableList" class="row ibox-content">
+	
+[#if !lottery??]
+	<div class="alert alert-danger">
+		<i class="fa fa-info-circle"></i><strong>警告:</strong>请先设置抽奖信息。
+		<a href="${webctx}/lottery/show/jiugongge">设置奖品</a>
+	</div>
+[/#if]
+	
+	<table class="table-striped">
+		<tr>
+			<td colspan="3" style="text-align: left;">&nbsp;&nbsp;
+				<select id="count_sel">
+					<option value="-1">请选择次数</option>
+					<option value="1000">一千次</option>
+					<option value="5000">五千次</option>
+					<option value="10000">一万次</option>
+					<option value="30000">三万次</option>
+				</select>
+				
+				<input type="text" name="q_pond_txt" id="q_pond_txt" class="input-text"
+				style="width:190px; color:#DFDFDF" value="输入模拟抽奖次数" 
+				onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')"
+				onfocus="if(this.value=='输入模拟抽奖次数'){this.value=''};this.style.color='black';" 
+				onblur="if(this.value==''||this.value=='输入模拟抽奖次数'){this.value='输入模拟抽奖次数';this.style.color='#DFDFDF';}"/>
+				
+				<button id="myTestBtn" class="btn btn-success">开始模拟</button>
+			</td>
+		</tr>
+	</table>
+
+	<table class="table table-striped table-bordered bootstrap-datatable datatable" id="mainTable" border="0">
+		<thead>
+			<tr>
+				<th>
+					<input type="checkbox" id="all" title="全选/反选" style="margin-right: 4px; vertical-align: middle;"/>
+				</th>
+				<th>
+					<span style="vertical-align: middle;">奖品名称</span>
+				</th>
+				<th>奖品类型</th>
+				<th>奖品总数量</th>
+				<th>中奖概率</th>
+				<th>中奖次数</th>
+			</tr>
+		</thead>
+		<tbody class="prizeLotGrid">
+		</tbody>
+	</table>
+</div>
+
+</div>
+
+<!-- html 模板文件 -->
+<script type="text/template" id="prize_table_tr_tpl">
+<tr class="package">
+			<td valign="middle">
+				<input type="checkbox" class="commchk" style="margin-right: 4px; vertical-align: middle;"/>
+			</td>
+			<td>
+				<span>{awardName}</span>
+			</td>
+			<td>
+				{awardType}
+			</td>
+			<td>{prizeCount}</td>
+			<td>
+				{awardRate}%
+			</td>
+			<td>
+				<span>
+				{luckCount}
+				</span>
+			</td>
+		</tr>		
+</script>
+<script type="text/template" id="prize_table_noresult_tr_tpl">
+<tr class="package">
+			<td nowrap="nowrap" class="center" colspan="9">
+				模拟出错
+			</td>
+		</tr>
+</script>
+[#include "/includes/footer.html" /]
+<script>
+Template.init("#menu-qiandao");
+</script>
+</body>
+</html>	
+	

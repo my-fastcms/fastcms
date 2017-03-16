@@ -1,0 +1,129 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>添加送淘金币奖品</title>
+<script type="text/javascript">
+var prizeId = '${prize.id }';
+$(document).ready(function() {
+	//保存奖品
+	$("#savePrize").click(function(){
+		$("#container").mask("正在保存...");
+		obz.ajaxJson (obz.ctx+"/prize/save", $("#prizeForm").serialize(), function(data){
+			$("#container").unmask();
+			var response = data;
+			if(data.code!=200){
+				obz.showMessage(response.msg);
+			}else{
+				if(addPrizeDailog != null) addPrizeDailog.close();
+				//保存成功,跳转到列表页
+				obz.showMessage(response.data, function(){
+					searchPrizes();
+				}, function(){}); 
+			}
+		},function(){
+			$("#container").unmask();
+			$("[id^='error_']").each(function(){
+				$(this).removeClass("has-error");
+				$(this).find("label").empty();
+			}); 
+		});
+	});
+	
+	$("#selectItems").click(function(){
+		BootstrapDialog.show({
+			size: BootstrapDialog.SIZE_WIDE,
+			title: "商品列表",
+            message: $('<div></div>').load('${webctx}/prize/showItems')
+        });
+	});
+	
+	if($("#myselectItemImg").attr("src")!=null && $("#myselectItemImg").attr("src")!=""){
+		$("#myselectItemImg").show();
+	}
+});
+</script>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+<div class="panel-body">
+	<div class="alert alert-success">
+		<strong>提示:</strong>淘金币由软件自动发放，无需人工操作 
+	</div>
+	
+	<form name="prizeForm" id="prizeForm" action="" method="post" class="form-horizontal ">
+		<input type="hidden" name="prize_type_id" id="prize_type_id" value="${prizeTypeId }"/>
+		<input type="hidden" name="active" id="active" value="${prize.active }"/><!-- 默认为1，值为0的时候表示删除，删除后用户不可见 -->
+		<input type="hidden" name="id" id="id" value="${prize.id }"/>
+        <div class="form-group">
+            <label class="col-md-2 control-label">奖品名称<span style="color: red;"><em>*</em></span></label>
+            <div class="col-md-5" id="error_prize_name">
+                <input type="text" id="prize_name" name="prize_name" value="${prize.prizeName }" class="form-control" placeholder="比如填写奖励一个iphone6手机">
+                <label class="control-label" for="prize_name"></label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">单份奖品淘金币数量<span style="color: red;"><em>*</em></span></label>
+            <div class="col-md-5" id="error_prize_single_cash">
+                <input type="text" id="prize_single_cash" name="prize_single_cash" value="${prize.prizeSingleCash }" class="form-control" placeholder="比如填写10">
+                <label class="control-label" for="prize_single_cash"></label>
+            </div>
+            <span class="alert-success">
+            	<i class="fa fa-info-circle"></i>比如填10的话，获得一份奖品，就是获得10个淘金币
+            </span>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">奖品总数量<span style="color: red"><em>*</em></span></label>
+            <div class="col-md-5" id="error_publish_count">
+                <input type="text" id="publish_count" name="publish_count" value="${prize.publishCount }" class="form-control" placeholder="比如填写100" onkeyup="value=value.replace(/[^\d]/g,'')">
+                <label class="control-label" for="publish_count"></label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">奖品价值（元）<span style="color: red"><em>*</em></span></label>
+            <div class="col-md-5" id="error_prize_price">
+                <input type="text" id="prize_price" name="prize_price" value="${prize.prizePrice }" class="form-control" placeholder="比如填写100" onkeyup="value=value.replace(/[^\d]/g,'')">
+                <label class="control-label" for="prize_price"></label>
+            </div>
+            <span class="alert-success">
+            	<i class="fa fa-info-circle"></i>比如10个店铺积分相当于人民币1元
+            </span>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">图片</label>
+            <div class="col-md-5" id="error_prize_img">
+                <input type="text" id="prize_img" name="prize_img" value="${prize.prizeImg }" class="form-control" placeholder="请复制淘宝图片空间图片链接地址">
+                <label class="control-label" for="prize_img"></label>
+            </div>
+            <span class="alert-success">
+              <span><i class="fa fa-info-circle"></i>请到淘宝<a class="blue" href="http://tadget.taobao.com/redaction/manager.htm" target="_blank">图片空间</a>选择图片，再复制链接到此处。</span>
+            </span>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 col-md-2 col-sm-12 control-label">有效时间</label>
+            <div class="col-lg-10 col-md-10">
+                <div class="row">
+                    <div class="col-lg-3 col-md-3">
+                        <input type="text" id="start_date" name="start_date" style="width: 160px; cursor: pointer;" readonly="readonly"
+						onfocus="WdatePicker({isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'%y-%M-%d %H:%m:%s',maxDate:'#F{$dp.$D(\'end_date\')}'})"
+						class="Wdate" value="${prize.startDate }" />
+                    </div>
+                    <div class="col-lg-3 col-md-3">
+                        <input type="text" id="end_date" name="end_date" style="width: 160px; cursor: pointer;" readonly="readonly"
+						onfocus="WdatePicker({isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'#F{$dp.$D(\'start_date\',{d:28, H:23, m:59, s:59});}'})"
+						class="Wdate" value="${prize.endDate }" />	
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label">领取说明</label>
+            <div class="col-md-5">
+                <textarea id="prize_memo" name="prize_memo" rows="3" class="form-control" placeholder="">${prize.prizeMemo }</textarea>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="panel-footer" align="center">
+    <button id="savePrize" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>提交</button>
+</div>
+</body>
+</html>

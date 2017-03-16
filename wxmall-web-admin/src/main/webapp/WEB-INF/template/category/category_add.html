@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>添加分类</title>
+[#include "/includes/header.html" /]
+<link rel="stylesheet" type="text/css" href="${webctx}/resources/css/product.css"/>
+<script type="text/javascript">
+$(document).ready(function(){
+	 $(".col-md-8 ul>li").hover(function(){
+			$(this).find("a").removeClass("hide");
+		   $(this).find("a").addClass("hover");
+		},function(){
+			 $(this).find("a").addClass("hide");  
+			 $(this).find("a").removeClass("hover");
+		});
+});
+function addPictureLogo(obj){
+	var params={};
+	params.model=obj;
+	obz.selectImage(params, function (ImgPath, ImgUrl) {
+		 var newlistImg=ImgPath.split(",");
+		 var newlistImgUrl=ImgUrl.split(",");
+		 for (var i = 0; i < newlistImg.length; i++) {
+			 if(obj){
+				 var reValue=$(".js-picture-logo li").find("input[name='img_path']").val();
+				  if (typeof(reValue)== "undefined"){
+					  $(".js-picture-logo").append('<li class="sort"><img src="'+newlistImg[i]+'" id="img_path"  class="js-img-preview">'
+								 +'<input name="img_path" id="imgPath" value="'+newlistImgUrl[i]+'" type="hidden"  class="js-img-preview">'
+								 +'<a class="js-delete-picture close-modal small hide" onclick="deleteImg(this);">×</a></li>');
+				 }else{
+					  $("#img_path").attr('src',newlistImg[i]);
+					  $(".js-picture-logo li").find("input[name='img_path']").val(newlistImgUrl[i]);
+				  } 				 
+			  } 
+		 }
+		 $(".col-md-8 ul>li").hover(function(){
+				$(this).find("a").removeClass("hide");
+			   $(this).find("a").addClass("hover");
+			},function(){
+				 $(this).find("a").addClass("hide");  
+				 $(this).find("a").removeClass("hover");
+			});
+	});
+}
+function deleteImg(obj){
+	$(obj).parent().remove();
+}
+</script>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+[#include "/includes/menus.html" /]
+<div class="wrapper wrapper-content">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	           <a href="${webctx}/product" class="J_menuTab">商品</a>
+		       <a href="${webctx}/category" class="J_menuTab active">分类 </a>
+		       <a href="${webctx}/specification" class="J_menuTab">规格 </a>
+		       <a href="${webctx}/delivery" class="J_menuTab">运费模板</a>
+	       </div>
+	   	</nav>
+	</div>
+	<div class="ibox float-e-margins">
+		<div class="ibox-title row">
+			<h5><small><a href="${webctx}/category">《返回列表</a></small></h5>
+		</div>
+		<div class="row ibox-content active_statistics">
+			<div class="title_query padtop"> 
+			<form id="qiandaoForm" class="form-horizontal">
+				  <div class="form-group">
+			            <label class="col-md-2 control-label">分类名称<span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-8" id="error_name">
+			            	<input type="hidden" id="id" value="${productCategory.id}" class="input-xfat"  name="id"  >
+			                <input id="name" name="name" value="${productCategory.name }" maxlength="20" type="text" class="form-control" style="width: 200px" >
+			                <label class="control-label" for="name"></label>
+			            </div>
+			        </div>
+			        <div class="form-group">
+			            <label class="col-md-2 control-label">分类图标</label>
+			            <div class="col-md-8">
+			               	<ul class="js-picture-logo app-image-list">
+							   <li><a href="javascript:;" onclick="addPictureLogo(true);" class="add-goods js-add-picture show">+加图</a></li>
+							   [#if productCategory ??]
+							   <li class="sort">
+                                   <img src="${imgDomain}${productCategory.img_path}" id="img_path" class="js-img-preview"/>
+                                   <input id="imgPath" name="img_path" value="${productCategory.img_path}" type="hidden"  class="js-img-preview"/>
+                                   <a class="js-delete-picture close-modal small hide" onclick="deleteImg(this);">×</a>
+		                       </li>
+							   [/#if]
+						  	</ul>
+						   <label id="logo_error_msg" style="color:red;"></label>
+			            </div>
+			        </div>
+			        <div class="form-group">
+			            <label class="col-md-2 control-label">描述</label>
+			            <div class="col-md-8" id="error_seo_description">
+			                <input id="seo_description" name="seo_description" value="${productCategory.seo_description}" maxlength="20" type="text" class="form-control" style="width: 200px">
+			                <label class="control-label" for="seo_description"></label>
+			            </div>
+			        </div>
+			        <div class="form-group">
+			            <label class="col-md-2 control-label">排序<span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-2" id="error_orders">
+			                <input id="orders" name="orders" value="${productCategory.orders }" maxlength="20" type="text" class="form-control"  onkeyup="this.value=this.value.replace(/\D/g,'')">
+			                <label class="control-label" for="error_orders"></label>
+			            </div>
+			        </div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	<div class="panel-footer" align="center">
+   	 	<button onclick="saveCategory();" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>提交</button>
+	</div>
+</div>
+
+<script type="text/javascript">
+function saveCategory(){
+	var params = {},error = {};	
+	var categoryId = $("#id").val(), seoDescription = $("#seo_description").val(), 
+	categName = $("#name").val(), categOrder = $("#orders").val(), categImg = $("#imgPath").val();
+	if(categoryId!=null && categoryId!="") params.id = categoryId;
+	if(categImg!=null && categImg!="") params.img_path = categImg;
+	if($.trim(categName) =="") {error.error_name = "分类名称不能为空"; } else {error.error_name=""; params.name = $.trim(categName);}
+	if($.trim(categOrder) =="") {error.error_orders = "分类排序不能为空"; } else {error.error_orders =""; params.orders = $.trim(categOrder);}
+	
+	var hasError = false;
+	for(var key in error){
+		if(error[key]!=""){
+			if(!hasError) hasError = true;
+			$("#"+key).addClass("has-error");
+			$("#"+key).find("label").text(error[key]);
+		}else{
+			$("#"+key).removeClass("has-error");
+			$("#"+key).find("label").empty();
+		}
+	}
+	//主表信息不完整，返回
+	if(hasError) return false;
+	
+	$.post(obz.ctx+"/category/save", params, function(resp) {
+		if(resp.code == 200){
+			location.href = "${webctx}/category";
+		}
+	});
+}
+</script>
+<script>
+Template.init("#menu-goods");
+</script>
+</body>
+</html>

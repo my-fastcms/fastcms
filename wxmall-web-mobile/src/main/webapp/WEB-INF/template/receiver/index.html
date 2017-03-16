@@ -1,0 +1,137 @@
+<style>
+.weui_cell_hd{
+	margin-right: 10px;
+}
+.edit{
+	display: block;
+	width: 15px;
+	height: 15px;
+	background-image: url(${webctx}/resources/images/rename.png);
+	background-repeat: no-repeat;
+	background-size: 100%;
+}
+.weui_cell_bd.weui_cell_primary{
+	font-size: 14px;
+	line-height: 18px;
+}
+.site-default{
+	color: #3482FF;
+}
+.weui_panel a.weui_panel_ft{
+	color: #404040;
+}
+.weui_panel a.add-site:after{
+	top: 30%;
+	right: 9px;
+	border: 0;
+	width: 25px;
+	height: 25px;
+	background: url("${webctx}/resources/images/add-collaborators.png") no-repeat;
+	background-size: 100%;
+	transform: initial;
+}
+.weui_panel a.select:after{
+	top: 40%;
+	right: 20px;
+	height: 13px;
+	width: 13px;
+}
+</style>
+<div class="weui-cells weui-cells_checkbox" style="font-size: 12px;">
+	[#if receiverList?? && receiverList?size>0]
+		[#list receiverList as item]
+			[#if item.isDefault == true ]
+			<div class="weui-cell">
+				<div class="weui-cell__hd">
+				    <label class="weui-check__label" for="${item.id}">
+				        <input type="radio" class="weui-check" name="r_checkbox1" id="${item.id}" checked="checked">
+				        <i class="weui-icon-checked"></i>
+				    </label>    
+			    </div>
+			    <a class="weui-cell__bd weui-cell-primary abd" data-abd-id="${item.id}">
+			        <p class="address_input"><span class="site-default">【默认】</span>${item.address}</p>
+			        <p class="areaName_input">${item.areaName}</p>
+			        <p><span class="cons_input">${item.receiverName}</span>&nbsp;<span class="phone_input">${item.phone}</span></p>
+			    </a>
+			    <a class="edit" data-r-id="${item.id}" href="javascript:void(0)"></a>
+			</div>
+			[#else]
+			<div class="weui-cell">
+			    <div class="weui-cell__hd">
+			    	<label class="weui-check__label" for="${item.id}">
+			        	<input type="radio" class="weui-check" name="r_checkbox1" id="${item.id}">
+			        	<i class="weui-icon-checked"></i>
+			        </label>
+			    </div>
+			    <a class="weui-cell__bd weui-cell-primary abd" data-abd-id="${item.id}">
+			        <p class="address_input">${item.address}</p>
+			        <p class="areaName_input">${item.areaName}</p>
+			        <p><span class="cons_input">${item.receiverName}</span>&nbsp;<span class="phone_input">${item.phone}</span></p>
+			    </a>
+			    <a class="edit" data-r-id="${item.id}" href="javascript:void(0)"></a>
+			</div>
+			[/#if]
+		[/#list]
+	[/#if]
+	<div class="content-padded" style="padding-bottom: 10px;">
+		<a id="add_receiver" href="javascript:void(0)" class="weui-btn weui-btn_primary d_confirm_btn">新增收货地址</a>
+	</div>
+	<!-- <div class="weui_panel weui_panel_access">
+		<a href="javascript:void(0);" class="weui_panel_ft select">从微信选择地址</a>
+	</div> -->
+</div>
+
+<!--手机端script需要加载后方-->
+<script type="text/javascript">
+	function setReceiver(id, address, receiverName, phone){
+		$("#select_receiverId").val(id);
+		$("#sel_address").html(address);
+		$("#sel_name").html(receiverName);
+		$("#sel_phone").html(phone);
+		//重新计算邮费
+		mask();
+		obz.ajaxJson("${webctx}/order/getPostFee", {receiverId:$("#select_receiverId").val(), items : JSON.stringify(items)}, function(resp){
+			unmask();
+			if(resp.code == 200){
+				var result = resp.data;
+				$("#order_postFee").html(result.postFee);
+				$("#total_price").html(result.payFee);
+			}
+		});
+	}
+
+	$(function(){
+		$("#add_receiver").click(function(){
+			$.closePopup();
+			$.showLoading("正在加载...");
+			$("#address_add_div").load("${webctx}/receiver/add", function(){
+				$.hideLoading();
+				$("#add_half_dialog").popup();
+			});
+		});
+		
+		$(".edit").click(function(){
+			$.closePopup();
+			$.showLoading("正在加载...");
+			$("#address_add_div").load("${webctx}/receiver/edit?id="+$(this).attr("data-r-id"), function(){
+				$.hideLoading();
+				$("#add_half_dialog").popup();
+			});
+		});
+		
+		$(".abd").click(function(){
+			setReceiver($(this).attr("data-abd-id"), $(this).find(".address_input").html(),
+					$(this).find(".cons_input").html(), $(this).find(".phone_input").html());
+					
+			$.closePopup();
+		});
+		
+		$("input:radio[name='r_checkbox1']").each(function() {
+			  if($("#select_receiverId").val() == $(this).attr("id")){
+				  $(this).attr("checked", true);
+				  return;
+			  }
+		});
+	})
+	
+</script>

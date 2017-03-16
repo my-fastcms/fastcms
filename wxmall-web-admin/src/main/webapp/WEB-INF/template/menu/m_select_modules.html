@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<script type="text/javascript">
+var qname = "";
+	$(document).ready(function() {
+	    $("#p_status_sel").change(function(){
+	    	searchModuls();
+	    });
+	});
+	var pageClick = function(pageNo) {
+		searchModuls(pageNo);
+	}
+	var searchModuls = function(currPage){
+		var params = {};
+		//其他查询条件
+		if(currPage){
+			params.page = currPage;
+		}
+		params.qname = qname;
+		params.type = $("#p_status_sel").val();
+		$("#mainTable").mask("加载中...");
+		var url = obz.ctx + "/prize/list";
+		obz.ajaxJson(url, params, function(resp){
+			var result = resp.data;
+			$(".modulLotGrid").empty();
+			if(currPage){
+				$("#pager").pager({ pagenumber:currPage, recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });
+			}else{
+				$("#pager").pager({ recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });	
+			}
+			var dataList = result.list;
+			if(dataList.length>0){
+				for(var i=0;i<dataList.length;i++){
+					var _row = dataList[i];
+					var trHtml = obz.dataTemplate4obj($("#modul_table_tr_tpl").html(), _row);
+					$(".modulLotGrid").append(trHtml);
+				}
+				//初始化checkbox点击事件
+				TBatch.checkCheckbox();
+				TBatch.initCheckboxClick();
+				TBatch.initOptEvent(ModualOpt.init());
+			}else {
+				$(".modulLotGrid").append($("#modul_table_noresult_tr_tpl").html());
+			}
+			$("#mainTable").unmask();
+		});
+	}
+	//初始化table
+    searchModuls();
+	//=============================表格操作事件开始=============================================
+	var ModualOpt = {
+		sel : function(param){
+			var id = param[1];
+			//selectedPond(id, $("#modulName_"+id).text());
+			obz.doSelectPrzie(id, $("#modulName_"+id).text());
+			if(selectDialog != null) selectDialog.close();
+		},
+		init : function(){
+			var optArray = new Array();
+			optArray.push(this.sel);
+			return optArray;
+		}
+	}	
+	//=============================表格操作事件结束=============================================
+		
+	function closeSelectDialog(){
+		if(selectModulelDialog != null) selectModulelDialog.close();
+	}
+</script>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+<div id="tableList">
+	<table class="table-striped">
+		<tr>
+			<td colspan="3" style="text-align: left;">&nbsp;&nbsp;
+				<select id="p_status_sel" style="width: 102px;height: 30px;">
+					<option value="1">签到</option>
+					<option value="2">抽奖</option>
+				</select> 
+			</td>
+		</tr>
+	</table>
+
+	<div id="modulToolsbar" class="panel-body">
+		<div id="pager" class="jqpager" style="margin-bottom: 1px;"></div>		
+	</div>
+	<table class="table table-striped table-bordered bootstrap-datatable datatable" id="mainTable" border="0">
+		<thead>
+			<tr>
+				<th>
+					<input type="checkbox" id="all" title="全选/反选" style="margin-right: 4px; vertical-align: middle;"/>
+				</th>
+				<th>
+					<span style="vertical-align: middle;">奖品名称</span>
+				</th>
+				<th>奖品类型</th>
+				<th>状态</th>
+				<th>奖品总数</th>
+				<th>已兑换数量</th>
+				<th>开始时间</th>
+				<th>结束时间</th>
+				<th>操作</th>
+			</tr>
+		</thead>
+		<tbody class="modulLotGrid">
+		</tbody>
+	</table>
+</div>
+
+<div class="panel-footer" align="center">
+ 	 <button onclick="closeSelectDialog()" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>关闭</button>
+</div>
+
+<!-- html 模板文件 -->
+<script type="text/template" id="modul_table_tr_tpl">
+<tr class="package">
+			<td valign="middle">
+				<input type="checkbox" class="commchk" id="checkbox_{id}" style="margin-right: 4px; vertical-align: middle;"/>
+			</td>
+			<td>
+				<span id="modulName_{id}">{modulName}</span>
+			</td>
+			<td>
+				{modulType}
+			</td>
+			<td>
+				{status}
+			</td>
+			<td>
+				<span class="isArrive">
+				{publishCount}
+				</span>
+			</td>
+			<td>{hadOutCount}</td>
+			<td style="white-space: normal">
+				<span>
+					{startDate}
+				</span>
+			</td>
+			<td>
+				<span>
+					{endDate}
+				</span>
+			</td>
+			<td>
+				&nbsp;<a id="select_{id}" href="javascript:void(0)" class="btn btn-success">选择</a>
+			</td>
+		</tr>		
+</script>
+
+<script type="text/template" id="modul_table_noresult_tr_tpl">
+<tr class="package">
+			<td nowrap="nowrap" class="center" colspan="9">
+				还没有奖品
+			</td>
+		</tr>
+</script>
+</body>
+</html>	
+	

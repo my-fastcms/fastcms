@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>代理信息</title>
+[#include "/includes/header.html" /]
+<style type="text/css">
+.weui-select{
+	width: 40%;
+}
+</style>
+</head>
+<body>
+<div class="weui-msg">
+      <div class="weui-msg__icon-area">
+      [#if agent.status==0]<i class="weui-icon-warn weui-icon_msg"></i>[/#if]
+      [#if agent.status==1]<i class="weui-icon-success weui-icon_msg"></i>[/#if]
+      [#if agent.status==2]<i class="weui-icon-info weui-icon_msg"></i>[/#if] 
+      </div>
+      <div class="weui-msg__text-area">
+        <h2 class="weui-msg__title">
+        [#if agent.status==0]审核不通过[/#if]
+        [#if agent.status==1]审核通过[/#if]
+        [#if agent.status==2]正在审核中...[/#if]
+        </h2>
+        [#if agent.status==0]
+	        [#list aduitLogs as log]
+	        	<p class="weui-msg__desc">原因：${log.content}, 审核日期：${log.created}</p>
+	        [/#list]
+        [/#if]
+        [#if agent.status==1]<p class="weui-msg__desc"><a href="${webctx}/agent/card?agentId=${agent.id}">点击查看我的名片</a></p>[/#if]
+        [#if agent.status==2]
+        <p class="weui-msg__desc">三个工作日内审核，请耐心等待...<!-- <a href="javascript:void(0);">点击联系客服</a> --></p>
+        [/#if]
+      </div>
+      <!-- <div class="weui-msg__opr-area">
+        <p class="weui-btn-area">
+          <a href="javascript:;" class="weui-btn weui-btn_primary">推荐操作</a>
+        </p>
+      </div> -->
+    </div>
+<div class="weui-cells__tips">我的代理</div>
+<div class="weui-cells weui-cells_form" style="font-size: 14px;">
+	<div class="weui-cell">
+		<div class="weui-cell__hd"><label class="weui-label" for="name">姓名</label></div>
+		<div class="weui-cell__bd">
+			<input id="agentName" name="name" value="${agent.agent_name}" class="weui-input" placeholder="真实姓名" type="text">
+		</div>
+	</div>
+	<div class="weui-cell">
+		<div class="weui-cell__hd"><label class="weui-label" for="name">手机号</label></div>
+		<div class="weui-cell__bd">
+			<input id="phone" name="mobile" value="${agent.agent_phone}" class="weui-input" placeholder="手机号码" type="tel" onkeyup="this.value=this.value.replace(/\D/g,'')">
+		</div>
+	</div>
+	<div class="weui-cell">
+		<div class="weui-cell__hd"><label class="weui-label" for="name">省市区县</label></div>
+		<div class="weui-cell__bd">
+		[#if agent?? && agent.area_id??]
+		<input type="hidden" id="areaId" value="${agent.area_id}" name="areaId" treePath="${agent.area_tree_path}"/>
+		[#else]
+		<input type="hidden" id="areaId"  name="areaId"/>
+		[/#if]
+		</div>
+	</div>
+	<div class="weui-cell">
+		<div class="weui-cell__hd"><label class="weui-label" for="name">详细地址</label></div>
+		<div class="weui-cell__bd">
+			<input id="address" name="address" value="${agent.agent_addr}" class="weui-input" placeholder="街道地址" type="text">
+		</div>
+	</div>
+</div>
+[#include "includes/footer.html"/]
+<script type="text/javascript">
+//地区选择
+$("#areaId").lSelect({
+	url: "${webctx}/receiver/area"
+});
+</script>
+</body>
+</html>

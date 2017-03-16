@@ -1,0 +1,245 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+[#include "/includes/header.html" /]
+<style type="text/css">
+.nav-tabs li{width:150px;}
+</style>
+<script type="text/javascript">
+	var qname = "";
+	var addPrizeDailog = null;
+	$(document).ready(function() {
+	    $("#myqueryBtn").click(function(){
+	    	qname = $("#q_pond_txt").val() == "输入奖品名称" ? "" : $("#q_pond_txt").val();
+	    	searchPrizes();
+	    });
+	    $("#myPrizeDelBtn").click(function(){
+	    	var count = TBatch.getCheckedCount();
+	    	if(count ==0){
+	    		obz.showMessage("请选择一个奖品");
+	    	}else{
+	    		obz.showMessage("确定删除吗？删除后不可恢复，请谨慎操作！", function(){
+	    			var ids = TBatch.getChecked();
+		    		obz.ajaxJson(obz.ctx + "/prize/del", {ids: ids}, function(resp){
+		    			if(resp.code==200){
+		    				searchPrizes();
+		    			}
+		    		});
+	    		});
+	    	}
+	    });
+	  	//初始化table
+        searchPrizes();
+        $('button[id^=type_]').click(function(){
+        	var me = $(this);
+        	addPrizeDailog = BootstrapDialog.show({
+				size: BootstrapDialog.SIZE_WIDE,
+				title: me.text(),
+	            message: $('<div></div>').load('${webctx}/prize/type/'+me.attr("code")+"/?typeId="+me.attr("typeid"))
+	        });
+        });
+	});
+	
+	var pageClick = function(pageNo) {
+		searchPrizes(pageNo);
+	}
+	
+	var searchPrizes = function(currPage){
+		var params = {};
+		//其他查询条件
+		if(currPage){
+			params.page = currPage;
+		}
+		params.qname = qname;
+		params.type = $("#p_status_sel").val();
+		$("#mainTable").mask("加载中...");
+		var url = obz.ctx + "/prize/list";
+		obz.ajaxJson(url, params, function(resp){
+			var result = resp.data;
+			$(".prizeLotGrid").empty();
+			if(currPage){
+				$("#pager").pager({ pagenumber:currPage, recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });
+			}else{
+				$("#pager").pager({ recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });	
+			}
+			var dataList = result.list;
+			if(dataList.length>0){
+				for(var i=0;i<dataList.length;i++){
+					var _row = dataList[i];
+					var trHtml = obz.dataTemplate4obj($("#prize_table_tr_tpl").html(), _row);
+					$(".prizeLotGrid").append(trHtml);
+				}
+				//初始化checkbox点击事件
+				TBatch.checkCheckbox();
+				TBatch.initCheckboxClick();
+				TBatch.initOptEvent(PrizeOpt.init());
+			}else {
+				$(".prizeLotGrid").append($("#prize_table_noresult_tr_tpl").html());
+			}
+			
+			$("#mainTable").unmask();
+		});
+	}
+	
+	//=============================表格操作事件开始=============================================
+	var PrizeOpt = {
+		
+		edit : function(param){
+			addPrizeDailog = BootstrapDialog.show({
+				size: BootstrapDialog.SIZE_WIDE,
+				title: "编辑奖品",
+	            message: $('<div></div>').load('${webctx}/prize/type/'+param[2]+'?id='+param[1]+"&typeId="+param[3])
+	        });
+		}, 
+		
+		del : function(param){
+			obz.showMessage("确定删除吗？删除后不可恢复，请谨慎操作！", function(){
+    			var ids = param[1];
+	    		obz.ajaxJson(obz.ctx + "/prize/del", {ids: ids}, function(resp){
+	    			if(resp.code==200){
+	    				searchPrizes();
+	    			}else {
+	    				var html = "";
+						for(var i=0;i<resp.data.length;i++){
+							html +="奖品" + resp.data[i] + "，在发布中，不可以删除<br/>";
+						}		    				
+						obz.showMessage(html, function(){
+							searchPrizes();
+						});
+	    			}
+	    		});
+    		});
+			return false;
+		},
+		
+		init : function(){
+			var optArray = new Array();
+			optArray.push(this.edit);
+			optArray.push(this.del);
+			return optArray;
+		}
+	}	
+	//=============================表格操作事件结束=============================================
+</script>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+[#include "/includes/menus.html" /]
+
+<div class="wrapper wrapper-content">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	           <a href="${webctx}/qiandao" class="J_menuTab">签到</a>
+		       <a href="${webctx}/lottery" class="J_menuTab">抽奖</a>
+		       <a href="${webctx}/prize" class="J_menuTab active">奖品 </a>
+	       </div>
+	   	</nav>
+	</div>
+   
+   	<div id="tableList" class="row ibox-content">
+   		<div class="panel-body">
+			[#list prizeTypes as type]
+				<button id="type_${type.id}" type="button" class="btn btn-info" typeid="${type.id }" code="${type.typeCode }">${type.typeName }</button>
+			[/#list]
+		</div>
+   		
+   		<div class="alert alert-success">
+			<strong>提示:</strong> 在奖品有效时间范围内，本系统任何活动都可以使用已创建的奖品.
+		</div>
+   		
+		<table class="table-striped">
+			<tr>
+				<td colspan="3" style="text-align: left;">
+					<input type="text" name="q_pond_txt" id="q_pond_txt" class="input-text"
+					style="width:190px; color:#DFDFDF" value="输入奖品名称" 
+					onfocus="if(this.value=='输入奖品名称'){this.value=''};this.style.color='black';" 
+					onblur="if(this.value==''||this.value=='输入奖品名称'){this.value='输入奖品名称';this.style.color='#DFDFDF';}"/>
+					<select id="p_status_sel" style="width: 102px">
+						<option value="" selected="selected">全部</option>
+						[#list prizeTypes as type]
+							<option value="${type.id }">${type.typeName }</option>
+						[/#list]
+					</select> 
+					<button id="myqueryBtn" class="btn btn-success">查询</button>
+				</td>
+			</tr>
+		</table>
+		<div id="prizeToolsbar" class="panel-body">
+			<div id="pager" class="jqpager" style="margin-bottom: 1px;"></div>		
+		</div>
+		<table class="table table-striped table-bordered bootstrap-datatable datatable" id="mainTable" border="0">
+			<thead>
+				<tr>
+					<th>
+						<input type="checkbox" id="all" title="全选/反选" style="margin-right: 4px; vertical-align: middle;"/>
+					</th>
+					<th>
+						<span style="vertical-align: middle;">奖品名称</span>
+					</th>
+					<th>奖品类型</th>
+					<th>状态</th>
+					<th>奖品总数</th>
+					<th>已发放数量</th>
+					<th>开始时间</th>
+					<th>结束时间</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody class="prizeLotGrid">
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<!-- html 模板文件 -->
+<script type="text/template" id="prize_table_tr_tpl">
+<tr class="package">
+	<td valign="middle">
+		<input type="checkbox" class="commchk" id="checkbox_{id}" style="margin-right: 4px; vertical-align: middle;"/>
+	</td>
+	<td>
+		<span style="margin-right: 5px; margin-left: 2px; vertical-align: middle;">{prizeName}</span>
+	</td>
+	<td>
+		{prizeType}
+	</td>
+	<td>
+		{status}
+	</td>
+	<td>
+		<span class="isArrive">
+		{publishCount}
+		</span>
+	</td>
+	<td>{hadOutCount}</td>
+	<td style="white-space: normal">
+		<span>
+			{startDate}
+		</span>
+	</td>
+	<td>
+		<span>
+			{endDate}
+		</span>
+	</td>
+	<td>
+		&nbsp;<a id="edit_{id}_{typeCode}_{prizeTypeId}" href="javascript:void(0)" style="text-decoration: underline;">编辑</a>
+		&nbsp;<a id="del_{id}" href="javascript:void(0)" style="text-decoration: underline;">删除</a>
+	</td>
+</tr>		
+</script>
+
+<script type="text/template" id="prize_table_noresult_tr_tpl">
+<tr class="package">
+	<td nowrap="nowrap" class="center" colspan="9">
+		还没有奖品
+	</td>
+</tr>
+</script>
+[#include "/includes/footer.html" /]
+<script>
+	Template.init("#menu-qiandao");
+</script>
+</body>
+</html>	
+	

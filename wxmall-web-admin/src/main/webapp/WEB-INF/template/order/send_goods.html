@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title>商品发货</title>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+<div id="main_send_good">
+<input type="hidden" id="orderIds" value="${orderIds}"/>
+<table class="table table-striped table-bordered" style="margin-right: 20px;">
+		    <thead class="js-freight-cost-list-header">
+		            <tr>
+		                <td>商品</td>
+		                <td>数量</td>
+		                <td>金额（元）</td>
+		            </tr>
+		    </thead>
+		    <tbody>
+		     [#list orderDetailResultDto as ResultDto]
+                  [#list ResultDto.orderItems as items]
+				    <tr>
+						<td><img src="${items.productImg}" style="margin: 2px" width="30" height="30" number="1"><br/>${items.productName}</td>
+						<td>${items.quantity}</td>
+						<td>${items.totalPrice}</td>
+					</tr>
+			     [/#list]
+			[/#list]
+            </tbody>
+		</table>
+		
+		 <div>
+                   <label class="col-md-2 control-label">物流公司:</label>
+                       <div>
+                       <div  id="error_exp_key">
+	                       <select id="exp_key"  name="exp_key" class="form-control" style="width:200px;">
+							<option value="">请选择快递公司</option>
+							[#list expresscomps as company]
+								<option value="${company.expKey }" expcode = "${company.expCode }" expName="${company.expName }">
+									${company.expName }
+								</option>
+							[/#list]
+		                   </select>
+		                   <label class="error_exp_key" style="color:red;" for="exp_key"></label>
+		                   </div>
+	                   </div>     
+         </div>
+         <br/>
+         <div>
+                   <label class="col-md-2 control-label">快递单号:</label>
+                   <div>
+                   <div  id="error_bill_number">
+	                <input type="text" id="bill_number" name="bill_number" class="form-control" value="" style="width:180px;"/>
+	                <label class="error_bill_number" style="color:red;" for="bill_number"></label>
+	            </div>
+                   </div>
+         </div>
+         <br/>
+         <div>
+                   <label class="col-md-2 control-label">收货地址:</label>
+                       <div>
+	                     [#list orderDetailResultDto as ResultDto]
+		               <span>${ResultDto.receiverProvince} ${ResultDto.receiverCity} ${ResultDto.receiverCountry}  ${ResultDto.receiverAddr},${ResultDto.receiverName},${ResultDto.receiverPhone}</span>
+		               [/#list]  
+	                   </div>     
+         </div>
+         
+         
+<div class="panel-default">
+		  	<div class="panel-body" align="right">
+				<button type="button" onclick="sendGood();" class="btn btn-primary btn-sm">确认发货</button>
+		  	</div>
+	  	</div>
+	  	</div>
+	  	
+<script type="text/javascript">
+function sendGood(){
+	clearError()
+	var params={}, error = {};
+	var orderIds = $("#orderIds").val(), exp_key = $("#exp_key").children('option:selected').val(), bill_number = $("#bill_number").val();
+	params.orderIds = $.trim(orderIds);
+	if($.trim(exp_key) =="") {error.error_exp_key = "物流公司不能为空"; } else {error.exp_key=""; params.exp_key = $.trim(exp_key);}
+	if($.trim(bill_number) =="") {error.error_bill_number = "快递单号不能为空"; } else {error.bill_number=""; params.bill_number = $.trim(bill_number);}
+	var hasError = false;
+	for(var key in error){
+		if(error[key]!=""){
+			if(!hasError) hasError = true;
+			$("#"+key).addClass("has-error");
+			$("#"+key).find("label").text(error[key]);
+		}else{
+			$("#"+key).removeClass("has-error");
+			$("#"+key).find("label").empty();
+		}
+	}
+	if(hasError) return false;
+	$("#main_send_good").mask("正在发货...");
+	$.post(obz.ctx+"/order/saveSendGoods", params, function(json) {
+		$("#main_send_good").unmask();
+		 if(json.code!=200){
+			BootstrapDialog.alert({title:'提示', message:json.msg});
+		}else{
+			obz.msg('发货成功', function(){
+				location.reload();
+			});						
+		}
+},"json");
+}
+
+function clearError(){
+	$(".error_bill_number,.error_exp_key").empty();
+	var exp_key=$("select[name='exp_key']");
+	exp_key.css("border-color", "");
+	var bill_number=$("input[name='bill_number']");
+	bill_number.css("border-color", "");
+}
+</script>
+</body>
+</html>        

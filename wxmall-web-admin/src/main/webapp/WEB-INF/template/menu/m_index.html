@@ -1,0 +1,447 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+[#include "/includes/header.html" /]
+<link href="${webctx}/resources/css/menu-config.css" rel="stylesheet"/>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+[#include "/includes/menus.html" /]
+<div class="wrapper wrapper-content">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	           <a href="${webctx}/setting" class="J_menuTab">公众号</a>
+		       <a href="${webctx}/menu" class="J_menuTab active">微信菜单</a>
+	       </div>
+	   	</nav>
+	</div>
+	<div class="content row ibox-content">
+  <div class="menu_setting_area js_editBox"> 
+   <div class="menu_preview_area"> 
+    <div class="mobile_menu_preview"> 
+     <div class="mobile_hd tc">没有公众号</div> 
+     <div class="mobile_bd"> 
+      <ul class="pre_menu_list grid_line ui-sortable ui-sortable-disabled" id="menuList"> 
+       <li class="js_addMenuBox pre_menu_item grid_item size1of1"> <!-- no_extra -->
+	       <a href="javascript:void(0);" class="pre_menu_link js_addL1Btn" title="最多添加3个一级菜单"> 
+	       <i class="icon14_menu_add"></i>添加菜单 
+	       </a>
+       </li> 
+      </ul> 
+     </div> 
+    </div> 
+    <!-- <div class="sort_btn_wrp"> 
+     <a id="orderBt" class="btn btn_default" href="javascript:void(0);" style="display: inline-block;">菜单排序</a> 
+     <span id="orderDis" class="dn btn btn_disabled" style="display: none;">菜单排序</span> 
+     <a id="finishBt" href="javascript:void(0);" class="dn btn btn_default" style="display: none;">完成</a> 
+    </div> --> 
+    <div class="panel-footer" align="center">
+   	 	<button id="saveMenu" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>提交</button>
+	</div>
+   </div> 
+   
+    <!-- 菜单编辑区域 -->
+    <div class="menu_form_area"> 
+     
+    <div id="js_rightBox" class="portable_editor to_left" style="display: block;">
+    	<div class="alert alert-success" style="padding-top: 10px;">
+			<strong>提示:</strong>
+			<p>创建自定义菜单后，由于微信客户端缓存，需要24小时微信客户端才会展现出来。测试时可以尝试取消关注公众账号后再次关注，则可以看到创建后的效果。</p>
+		</div>
+	    <div id="js_none" class="menu_initial_tips tips_global">
+	     	点击左侧菜单进行编辑操作
+	    </div>
+     <div class="editor_inner" style="display: none;"> 
+      <div class="global_mod float_layout menu_form_hd js_second_title_bar"> 
+       <h4 class="global_info"> 菜单名称 </h4> 
+       <div class="global_extra"> 
+        <a href="javascript:void(0);" id="jsDelBt">删除菜单</a> 
+       </div> 
+      </div> 
+      <div class="menu_form_bd" id="view"> 
+       <div id="js_innerNone" style="display:none;" class="msg_sender_tips tips_global">
+        	<font color="blue">已添加子菜单，仅可设置菜单名称。</font>
+       </div> 
+       <div class="frm_control_group js_setNameBox" style="display: none;"> 
+        <label for="" class="frm_label"> <strong class="title js_menuTitle">菜单名称</strong> </label> 
+        <div class="frm_controls"> 
+         <span class="frm_input_box with_counter counter_in append"> 
+         	<input type="text" maxlength="4" class="frm_input js_menu_name" /> 
+         </span> 
+         <p class="frm_msg fail js_titleEorTips dn" style="display: none;">字数超过上限</p> 
+         <p class="frm_msg fail js_titlenoTips dn" style="display: none;">请输入菜单名称</p> 
+         <p class="frm_tips js_titleNolTips">字数不超过4个汉字或8个字母</p> 
+        </div> 
+       </div> 
+       <div class="frm_control_group js_setConent" style="display: none;"> 
+        <label for="" class="frm_label"> <strong class="title js_menuContent">菜单内容</strong> </label> 
+       </div> 
+       <div class="menu_content_container" style="display: none;"> 
+        <div class="menu_content url jsMain" id="url" style="display: none;"> 
+         <form action="" id="urlForm" onsubmit="return false;"> 
+          <p class="menu_content_tips tips_global">订阅者点击该子菜单会跳到以下链接</p> 
+          <div class="frm_control_group"> 
+           <label for="" class="frm_label">页面地址</label> 
+           <div class="frm_controls"> 
+            <span class="frm_input_box"> 
+            	<input type="text" class="frm_input" id="urlText" name="urlText" style="width: 80%"/> 
+            	<!-- <a id="sel_model" href="javascript:void(0)">选择模块</a> -->
+            </span> 
+            <p class="profile_link_msg_global menu_url mini_tips warn dn js_warn" style="display: none;"> 请勿添加其他公众号的主页链接 </p> 
+            <p class="frm_tips" id="js_urlTitle" style="display: none;"> 来自<span class="js_name"></span><span style="display:none;"> -《<span class="js_title"></span>》</span> </p> 
+           </div> 
+          </div> 
+         </form> 
+        </div> 
+        <div class="menu_content sended" style="display:none;"> 
+         <p class="menu_content_tips tips_global">订阅者点击该子菜单会跳到以下链接</p> 
+         <div class="msg_wrp" id="viewDiv"></div> 
+         <p class="frm_tips">来自<span class="js_name">素材库</span><span style="display:none;"> -《<span class="js_title"></span>》</span></p> 
+        </div> 
+        <div id="js_errTips" style="display:none;" class="msg_sender_msg mini_tips warn"></div> 
+       </div> 
+      </div> 
+     </div> 
+     <!-- <span class="editor_arrow_wrp"> <i class="editor_arrow editor_arrow_out"></i> <i class="editor_arrow editor_arrow_in"></i> </span> --> 
+    </div>
+   </div> 
+  </div>
+	</div>
+</div>
+<script type="text/javascript">
+var params = {}; var selectModulelDialog = null;
+$(document).ready(function(){
+	function resetMenuForm(){
+		//清空右边菜单编辑区域数据
+		$(".global_info").html("菜单名称");
+		$(".js_menu_name").val("");
+		$("#urlText").val("");
+		$(".editor_inner").hide();
+		$("#js_none").show();
+	}
+	
+	$("#jsDelBt").click(function(){
+		if($("li.selected").hasClass("jslevel1")){
+			//删除一级菜单
+			obz.showMessage("删除一级菜单会连子菜单一起删除，确定删除吗！", function(){
+				$("#menuList li.js_addMenuBox").eq(0).show();
+				$("#menuList li.js_addMenuBox").eq(0).removeClass("size1of1").removeClass("size1of2").removeClass("size1of3").addClass("size1of"+$("#menuList li.jslevel1").length);
+				$("#menuList li.jslevel1").each(function(){
+					$(this).removeClass("size1of1").removeClass("size1of2").removeClass("size1of3").addClass("size1of"+$("#menuList li.jslevel1").length);
+				});
+				$("li.selected").find("ul li").each(function(){
+					$(this).remove();
+				});
+				$("li.selected").remove();
+				resetMenuForm();
+				return false;
+    		});
+		}else{
+			//alert($("li.selected").siblings(".jslevel2").length);
+			//重新设置该父菜单下所有子菜单元素的id值
+			$("li.selected").siblings(".jslevel2").each(function(i){
+				$(this).attr("id", "subMenu_menu_" + $(this).parent().parent().parent().attr("id") + "_" + i);
+			});
+			$("li.selected").remove();
+			resetMenuForm();
+		}
+		//unBindLiClick();
+		//bindLiClick();		
+		return false;
+	});
+	
+	//清除菜单数据
+	function clearMenus(){
+		$("#menuList li.jsMenu").remove();
+		$("#menuList li.js_addMenuBox").eq(0).show();
+	}
+	
+	//加载菜单数据
+	function getMenus(){
+		$(".menu_preview_area").mask("正在读取菜单数据...");
+		obz.ajaxJson(obz.ctx+"/menu/list", params, function(resp){
+			$(".menu_preview_area").unmask();
+			if(resp.code!=200){
+				BootstrapDialog.alert({title:'提示', message:resp.msg});
+			}else{
+				clearMenus();
+				var data = resp.data;
+				var menus = data.attrs.menu.button;
+				if(menus.length<=0){
+					//没有菜单
+					$("#menuList li.js_addMenuBox").eq(0).show();
+					return;
+				}
+				
+				if(menus.length == 3){
+					$("#menuList li.js_addMenuBox").eq(0).hide();
+				}else{
+					$("#menuList li.js_addMenuBox").eq(0).show();
+				}
+				
+				var classIndex = -1;
+				if(menus.length == 3 || menus.length==2) classIndex = 3;
+				if(menus.length == 1) classIndex = 2;
+				$("#menuList li.js_addMenuBox").eq(0).addClass("size1of"+classIndex+"");
+				for(var i=0;i<menus.length;i++){
+					var menu = menus[i];
+					menu.index = i;
+					//直接显示菜单
+					var itemHtml = obz.dataTemplate4obj($("#menu_item_tpl").html(), menu);
+					$("#menuList").append(itemHtml);
+					$("#menu_"+i).addClass("size1of"+classIndex+"");
+					if(menu.sub_button.length>0){
+						//有子菜单
+						for(var k=0;k<menu.sub_button.length;k++){
+							var submenu = menu.sub_button [k];
+							submenu.index = k;
+							submenu.parentId = "menu_"+i;
+							var subItemHtml = obz.dataTemplate4obj($("#sub_menu_item_tpl").html(), submenu);
+							$("#menu_"+i).find("ul li.js_addMenuBox").before(subItemHtml);
+						}
+					}
+				}
+				unBindLiClick();
+				bindLiClick();
+			}
+		});
+	}
+	
+	//绑定菜单点击事件
+	function bindLiClick() {
+		//菜单点击
+		$("#menuList li").click(function(){
+			$("#js_none").hide();
+			$(".js_menu_name").val("");
+			$("#urlText").val("");
+			if($(this).hasClass("jslevel1")){
+				clearLicss();
+				$(this).addClass("current selected");
+				//点击的是一级菜单
+				hideJsTitleBox();
+				$(this).find("div.js_l2TitleBox").show();
+				$(".global_info").html($(this).find("span.js_l1Title").text());
+				//判断一级菜单下面是否已经存在子菜单
+				if($(this).find("ul li").length > 1){
+					$(".editor_inner").show();$(".menu_content_container").show();
+					$(".js_setNameBox").show();$("#js_innerNone").show();
+					$(".js_setConent").hide();
+					$("#url").hide();					
+				}else{
+					$(".editor_inner").show();$(".menu_content_container").show();
+					$(".js_setNameBox").show();$(".js_setConent").show();
+					$("#url").show();$("#js_innerNone").hide();
+					if($(this).attr("menu-url")!=null && $(this).attr("menu-url") !=""
+							&& $(this).attr("menu-url") 
+							&& typeof($(this).attr("menu-url")) != "undefined"){
+						$("#urlText").val($(this).attr("menu-url"));			
+					}
+				}
+			}else if($(this).hasClass("jslevel2")){
+				//点击的是二级菜单
+				//alert($(this).attr("id"));
+				clearLicss();
+				$(this).addClass("current selected");
+				$(".global_info").html($(this).find("span.js_l2Title").text());
+				$(".editor_inner").show();$(".menu_content_container").show();
+				$(".js_setNameBox").show();$(".js_setConent").show();$("#js_innerNone").hide();
+				$("#url").show();
+				if($(this).attr("menu-url")!=null && $(this).attr("menu-url") !=""
+						&& typeof($(this).attr("menu-url")) != "undefined"){
+					$("#urlText").val($(this).attr("menu-url"));					
+				}
+			}else {
+				//点击新增菜单
+				if($(this).parent().attr("id") == "menuList"){
+					//点击增加一级菜单
+					var menu = new Object();
+					menu.index = $("#menuList li").length+1;
+					menu.name = "菜单名称";
+					menu.type = "view";
+					var itemHtml = obz.dataTemplate4obj($("#menu_item_tpl").html(), menu);
+					$("#menuList").append(itemHtml);
+					var classIndex = $("#menuList li.jslevel1").length+1 > 3 ? 3 : $("#menuList li.jslevel1").length+1;
+					//alert("classIndex:" + classIndex);
+					$("#menu_"+menu.index).addClass("size1of"+classIndex+"");
+					$("#menuList li.jslevel1").each(function(){
+						$(this).removeClass("size1of1").removeClass("size1of2").removeClass("size1of3").addClass("size1of"+classIndex+"");
+					});
+					
+					if($("#menuList li.jslevel1").length == 3){
+						$(this).hide();
+					}else{
+						$(this).removeClass("size1of1").removeClass("size1of2").removeClass("size1of3").addClass("size1of"+classIndex+"");	
+					}
+				}else{
+					//点击增加二级菜单
+					if($(this).parent().find("li").length >=6){
+						alert("最多添加五个子菜单");
+						return false;
+					}
+					var submenu = new Object();
+					submenu.name = "菜单名称";
+					submenu.type="view";
+					submenu.url = "";
+					submenu.parentId=$(this).parent().parent().parent().attr("id");
+					submenu.index = $(this).siblings(".jslevel2").length;
+					var subItemHtml = obz.dataTemplate4obj($("#sub_menu_item_tpl").html(), submenu);
+					if($(this).parent().find("li").length ==1) {
+						$(this).before(subItemHtml);	
+					} else{
+						$("#subMenu_menu_"+submenu.parentId+"_"+parseInt(submenu.index-1)).before(subItemHtml);
+					}
+					$(".global_info").html(submenu.name);
+					clearLicss();
+					$("#subMenu_menu_"+submenu.parentId+"_"+submenu.index).addClass("current selected");
+				}
+				unBindLiClick();
+				bindLiClick();
+			}
+			return false;
+		});
+	}
+	
+	function unBindLiClick (){
+		$("#menuList li").unbind("click");
+	}
+	
+	//清除li元素 css
+	function clearLicss(){
+		$("#menuList li").each(function(){
+			if($(this).hasClass("current selected")){
+				$(this).removeClass("current selected");				
+			}
+		});
+	}
+	
+	//隐藏所有的添加菜单按钮项
+	function hideJsTitleBox(){
+		$("div.js_l2TitleBox").hide();
+	}
+	//菜单名称文本框失去焦点事件
+	$(".js_menu_name").blur(function(){
+		//查找当前选中的li。设置菜单名称
+		if($("li.selected").hasClass("jslevel1")){
+			if($(this).val() != ""){
+				$("li.selected").find("span.js_l1Title").text($(this).val());
+			}
+		}else{
+			if($(this).val() != ""){
+				$("li.selected").find("span.js_l2Title").text($(this).val());
+			}
+		}
+		return false;
+	});
+	$("#urlText").blur(function(){
+		if($(this).val() != ""){
+			$("li.selected").attr("menu-url", $(this).val());				
+		}
+	});
+	function init(){
+		getMenus();
+	}
+	init();
+	$("#saveMenu").click(function(){
+		var menuArray = new Array();
+		var errorArray = new Array();
+		//1.获取一级菜单
+		$("#menuList li.jslevel1").each(function(){
+			if($(this).find("ul li.jslevel2").length > 0){
+				var menu = new Object();
+				menu.name = $(this).find("span.js_l1Title").text();
+				var submenuArray = new Array();
+				//有子菜单
+				$(this).find("ul li.jslevel2").each(function(){
+					var submenu = new Object();
+					submenu.type=$(this).attr("type");
+					submenu.name=$(this).find("span.js_l2Title").text();
+					submenu.url=$(this).attr("menu-url");
+					submenuArray.push(submenu);
+					if($(this).attr("menu-url") == null || $(this).attr("menu-url")==""){
+						var errorObj = new Object();
+						errorObj.msg="子菜单" + submenu.name + "没有设置页面链接地址;<br>";
+						errorArray.push(errorObj);
+					}
+				});
+				menu.sub_button=submenuArray;
+				menuArray.push(menu);
+			}else{
+				//无子菜单
+				var menu = new Object();
+				menu.type=$(this).attr("type");
+				menu.name=$(this).find("span.js_l1Title").text();
+				menu.url=$(this).attr("menu-url");
+				menuArray.push(menu);
+				if($(this).attr("menu-url") == null || $(this).attr("menu-url")==""){
+					var errorObj = new Object();
+					errorObj.msg="菜单" + menu.name + "没有设置页面链接地址;<br>";
+					errorArray.push(errorObj);
+				}
+			}
+		});
+		
+		if(errorArray.length>0){
+			var errmsg = "";
+			for(var i=0;i<errorArray.length;i++){
+				var eobj = errorArray[i];
+				errmsg += eobj.msg;
+			}
+			obz.showMessage(errmsg);
+			return false;
+		}
+		
+		if(menuArray.length<=0){
+			obz.showMessage("没有菜单数据可以提交");
+			return false;
+		}
+		
+		obz.showMessage("确定发布菜单吗？", function(){
+			$(".menu_preview_area").mask("正在保存...");
+			$.post(obz.ctx+"/menu/save", {menus : JSON.stringify(menuArray)}, function(json) {
+				$(".menu_preview_area").unmask();
+				if(json.code!=200){
+					BootstrapDialog.alert({title:'提示', message:json.msg});
+				}else{
+					BootstrapDialog.alert({title:'提示', message:"提交成功"});
+				}
+			},"json");
+		});
+	});
+});
+</script>
+<!-- html 模板文件 -->
+<script type="text/template" id="menu_item_tpl">
+		<li class="jsMenu pre_menu_item grid_item jslevel1 ui-sortable ui-sortable-disabled" type="{type}" menu-url="{url}" key="{key}" id="menu_{index}"> 
+       	<a href="javascript:void(0);" class="pre_menu_link"> 
+       		<i class="icon_menu_dot js_icon_menu_dot dn" style="display: none;"></i> 
+       		<i class="icon20_common sort_gray"></i> 
+       		<span class="js_l1Title">{name}</span> 
+       	</a> 
+        <div class="sub_pre_menu_box js_l2TitleBox" style="display:none;"> 
+         <ul class="sub_pre_menu_list"> 
+          	<li class="js_addMenuBox">
+	          	<a href="javascript:void(0);" class="jsSubView js_addL2Btn" title="最多添加5个子菜单" >
+	          	<span class="sub_pre_menu_inner js_sub_pre_menu_inner"><i class="icon14_menu_add"></i>添加菜单</span>
+	          	</a>
+          	</li> 
+         </ul> 
+         <i class="arrow arrow_out"></i> 
+         <i class="arrow arrow_in"></i> 
+        </div> 
+       </li>
+</script>
+<script type="text/template" id="sub_menu_item_tpl">
+		<li id="subMenu_menu_{parentId}_{index}" type="{type}" menu-url="{url}" class="jslevel2">
+          	<a href="javascript:void(0);" class="jsSubView" >
+          		<span class="sub_pre_menu_inner js_sub_pre_menu_inner"><i class="icon20_common sort_gray"></i>
+          		<span class="js_l2Title">{name}</span>
+          		</span>
+          	</a>
+          </li>
+</script>
+[#include "/includes/footer.html" /]
+<script type="text/javascript">
+	Template.init("#menu-setting");
+</script>
+</body>
+</html>	

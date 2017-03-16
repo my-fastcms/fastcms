@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>添加兑换集分宝</title>
+<script type="text/javascript">
+	var prizeId = '${prize.id }';
+	//保存奖品
+	$("#savePrize").click(function(){
+		$("#addPrizeUIDailogDiv").mask("正在保存...");
+		obz.ajaxJson (obz.ctx+"/prize/save", $("#f1").serialize(), function(data){
+			$("#addPrizeUIDailogDiv").unmask();
+			var response = data;
+			obz.showMessage(response.data, function(){
+				$("#addPrizeUIDailogDiv").dialog("close");
+			}); 
+			if(prizeId!=null && prizeId!=""){
+				searchPrizes();
+			}
+		},function(){
+			$("#addPrizeUIDailogDiv").unmask();
+			$("[id^='error_']").each(function(){
+				$(this).empty();
+			}); 
+		});
+	});
+</script>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+<div>
+	<button id="savePrize">保存</button>
+	<span>集分宝</span>
+	<hr>
+	<div class="box infomation">
+	非系统自动发放。用户兑换后会留下支付宝帐号，您需要手工在系统外为其发放集分宝，然后在系统中登记发放状态。
+	</div>
+</div>
+<div class="bulk-edit-area">
+	<form name="f1" id="f1" action="" method="post">
+		<input type="hidden" name="prize_type_id" id="prize_type_id" value="${prizeTypeId }"/><!-- 4代表兑换集分宝 -->
+		<input type="hidden" name="status" id="status" value="1"/><!-- 默认刚创建的奖品为1，代表可以进行兑换中 -->
+		<input type="hidden" name="active" id="active" value="1"/><!-- 默认为1，值为0的时候表示删除，删除后用户不可见 -->
+		<input type="hidden" name="id" id="id" value="${prize.id }"/>
+		<ul class="bulk-edit-ul">
+
+			<li><label class="label-title">兑换名称：</label> <span><em>*</em></span>
+				<span>
+					<input class="input-text" style="width: 300px;" type="text" id="exchange_title" name="exchange_title" value="${prize.exchange_title}">
+					<span class="grey-memo">显示在兑换列表中，例如：限时1000积分兑换10个集分宝哦</span>
+				</span>
+				<div id="error_title" style="padding-left: 120px;" class="error hidden"></div>
+			</li>
+
+			<li><label class="label-title">有效兑换时间：</label> <span><em>*</em></span>
+				<input type="text" id="start_date" name="start_date" style="width: 160px; cursor: pointer;"
+					onfocus="WdatePicker({isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'#F{$dp.$D(\'end_date\',{d:-1});}'})"
+					class="Wdate" value="${prize.start_date }" />
+				
+				&nbsp;&nbsp;至&nbsp;&nbsp; 
+				
+				<input type="text" id="end_date" name="end_date" style="width: 160px; cursor: pointer;"
+					onfocus="WdatePicker({isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'#F{$dp.$D(\'start_date\',{d:28, H:23, m:59, s:59});}'})"
+					class="Wdate" value="${prize.end_date }" />	 
+				 
+				<span class="grey-memo">兑换话费活动什么时间开始，什么时间结束</span>
+				<div style="padding-left: 120px;">
+				<label id="error_start_date" class="error hidden"></label>
+				<label id="error_end_date" class="error hidden"></label>
+				</div>
+				
+			</li>
+
+			<li>
+				<span class="label-title register_label">需要的积分：</span> <span><em>*</em></span>
+				<input class="input-text" style="width: 100px;" type="text" id="need_points" name="need_points" value="${prize.need_points}">
+				<span class="grey-memo">需要粉丝多少积分才能兑换一次</span>
+				<div id="error_need_points" class="error hidden" style="padding-left: 120px;"></div>
+			</li>
+			
+			<li>
+				<span class="label-title register_label">发行集分宝总数:&nbsp;</span> <span><em>*</em></span>
+				<input class="input-text" style="width: 100px;" type="text" id="publish_count" name="publish_count" value="${prize.publish_count}">
+				<span class="grey-memo">本次有效时间内，所有粉丝可以兑换的集分宝发行总数</span>
+				<div id="error_publish_count" class="error hidden" style="padding-left: 120px;"></div> 
+			</li>
+
+			<li>
+				<span class="label-title register_label">兑换集分宝个数:&nbsp;</span> <span><em>*</em></span>
+				<input class="input-text" style="width: 100px;" type="text" id="jfb_count" name="jfb_count" value="${prize.jfb_count}">
+				<span class="grey-memo">本次有效时间内，一个粉丝一次用积分兑换多少个集分宝</span>
+				<div id="error_jfb_count" class="error hidden" style="padding-left: 120px;"></div> 
+			</li>			
+
+			<li><span class="label-title register_label">兑换次数：</span> <span><em>*</em></span>
+				<input type="text" class="input-text" style="width: 100px;" name="exchange_count" id="exchange_count" value="${prize.exchange_count}">
+				<span class="grey-memo">每个粉丝允许兑换的次数</span>
+				<div id="error_exchange_count" class="error hidden" style="padding-left: 120px;"></div>
+			</li>
+			
+		</ul>
+	</form>
+</div>
+</body>
+</html>

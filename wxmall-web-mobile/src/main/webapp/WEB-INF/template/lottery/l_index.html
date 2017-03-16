@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>${_sellerUser.title }</title>
+[#include "/includes/header.html" /]
+</head>
+<body>
+<div class="content">
+	[#if lotterys?? && lotterys?size>0]
+		<div class="bd" style="font-size: 14px;">
+			[#list lotterys as lottery]
+				<div class="weui-cells">
+					<div class="weui-cell weui-cell_access" style="font-size: 14px;">
+			            <div class="weui-cell__hd">
+			            	<a href="${webctx}/lottery/draw/?lotteryId=${lottery.id}">
+			            	[#if lottery.lotteryType == 1]
+			            	<img style="width:40px;margin-right:5px;display:block" src="${webctx}/resources/images/jjg-4040.png"/>
+			            	[/#if]
+					    	[#if lottery.lotteryType == 2]
+					    	<img style="width:40px;margin-right:5px;display:block" src="${webctx}/resources/images/ggk-4040.png" />
+					    	[/#if]
+					    	[#if lottery.lotteryType == 3]<span>摇一摇</span>[/#if]
+					    	[#if lottery.lotteryType == 4]<span>翻翻乐</span>[/#if]
+					    	[#if lottery.lotteryType == 5]
+					    	<img style="width:40px;margin-right:5px;display:block" src="${webctx}/resources/images/dazp-4040.png" />
+					    	[/#if]
+					    	</a>
+			            </div>
+			            <div class="weui-cell__bd">
+			              <p>${lottery.lotteryName} </p>
+			              <p style="color: gray;font-size: 12px;">${lottery.endDate}</p>
+			            </div>
+			            <div class="weui-cell__ft">
+			            	<a href="${webctx}/lottery/draw/?lotteryId=${lottery.id}">
+			            	[#if lottery.lotteryType == 1]<span>九宫格</span>[/#if]
+					    	[#if lottery.lotteryType == 2]<span>刮刮乐</span>[/#if]
+					    	[#if lottery.lotteryType == 3]<span>摇一摇</span>[/#if]
+					    	[#if lottery.lotteryType == 4]<span>翻翻乐</span>[/#if]
+					    	[#if lottery.lotteryType == 5]<span>大转盘</span>[/#if]
+			            	</a>
+			            </div>
+			        </div>
+				</div>
+			[/#list]
+		</div>
+	[#else]
+		<div class="content-padded">
+	        <p><font color="red">没有抽奖活动</font></p>
+	    </div>
+	    <!-- <div class="content-padded">
+        	<a class="button button-big button-fill button-success" href="javascript:void(0);">联系老板</a>
+        </div> -->    
+	[/#if]
+	<br><br>
+</div>
+[#include "/includes/menus.html" /]
+[#include "/includes/footer.html" /]
+<script type="text/javascript" src="${webctx}/resources/js/menu_choujiang.js"></script>
+</body>
+</html>

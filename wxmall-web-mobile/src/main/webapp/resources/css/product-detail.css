@@ -1,0 +1,240 @@
+.weui-media-box.weui-media-text img{
+max-width: 100%;
+}
+.weui_panel a {
+    display: inline;
+}
+.weui-popup-container, .weui-popup-overlay {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+}
+.weui_tabbar {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    position: absolute;
+    z-index: 50;
+    bottom: 0;
+    width: 100%;
+    background-color: #f7f7fa;
+}
+
+.weui-popup-modal .modal-content {
+    height: 20%;
+    padding-top: 2.2rem;
+    overflow: auto;
+    box-sizing: border-box;
+}
+.weui_media_appmsg{
+  height:5%;
+}
+
+.goods-style{
+  height: 10px;float: left; vertical-align: middle;
+}
+.weui_media_bd .count{
+  float: left;
+}
+
+.name-card {
+   height:50px;
+    margin-left: 0;
+    padding: 5px 0;
+    width: auto;
+}
+.name-card .thumb {
+    background-size: cover;
+    float: left;
+    height: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50px;
+}
+.name-card .thumb img {
+    bottom: 0;
+    height: auto;
+    left: 0;
+    margin: auto;
+    max-height: 100%;
+    max-width: 100%;
+    position: relative;
+    right: 0;
+    top: 0;
+    width: auto;
+}
+.name-card .detail {
+	margin-left:68px;
+	width:auto;
+	position:relative
+}
+.name-card .detail {
+	margin-left:68px;
+	width:auto;
+	position:relative
+}
+.name-card .detail p {
+	position:relative;
+	font-size:12px;
+	line-height:16px;
+	white-space:nowrap;
+	margin:0 0 2px;
+}
+.sku-layout-title {
+	border-bottom:2px solid #e5e5e5;
+	border-top-width:0;
+	position:relative;
+	padding:10px 0;
+	margin-left:0px
+}
+.sku-layout-title {
+		border-bottom-width:1px
+}
+.sku-layout-title .thumb {
+	width:50px;
+	height:50px;
+	border:1px solid #eee;
+	border-radius:2px
+}
+.sku-layout-title .goods-base-info {
+	margin-left:60px
+}
+.sku-layout-title .goods-base-info .title {
+	padding-right:52px;
+	margin-bottom:5px;
+	font-size:14px;
+	line-height:22px
+}
+.sku-layout-title .goods-base-info .goods-price {
+	padding:0 5px 0 0
+}
+.sku-layout-title .sku-cancel {
+    float:right;
+	position:absolute;
+	right:0;
+	top:0;
+	padding:0px
+}
+.mini-btn-2-1{
+	float:left;
+	width:30%;
+}
+.mini-btn-2-1 .new-btn{
+    width:50%
+    }
+.orange-btn::after, .red-btn::after {
+    box-sizing: border-box;
+    content: "";
+    left: 0;
+    top: 0;
+    transform: scale(0.5);
+}
+.orange-btn {
+    background: #f85 none repeat scroll 0 0;
+    color: #fff;
+    position: relative;
+}
+.orange-btn::after {
+    border-top: 1px solid #e57a4c;
+    box-sizing: border-box;
+    height: 200%;
+    pointer-events: none;
+    position: absolute;
+    transform: scale(0.5);
+    transform-origin: left top 0;
+    width: 200%;
+}
+
+.orange-btn:active {
+    background: #dd6f44 none repeat scroll 0 0;
+}
+.red-btn {
+    background: #f44 none repeat scroll 0 0;
+    color: #fff;
+    position: relative;
+}
+.red-btn::after {
+    border-top: 1px solid #e53d3d;
+    box-sizing: border-box;
+    position: absolute;
+    transform: scale(0.5);
+    transform-origin: left top 0;
+}
+.red-btn:active {
+    background: #d43333 none repeat scroll 0 0;
+}
+.big-btn, .new-btn {
+    float: left;
+    height: 50px;
+}
+.new-btn {
+    background-color: #fff;
+    line-height: 50px;
+}
+.new-btn:active {
+    background-color: #f8f8f8;
+}
+.new-btn .desc {
+    bottom: 5px;
+    color: #666;
+    left: 0;
+    line-height: normal;
+    position: absolute;
+    width: 100%;
+}
+.big-btn {
+    border: medium none;
+    font-size: 16px;
+    line-height: 50px;
+    padding: 0;
+    vertical-align: top;
+}
+.big-btn-2-1{
+    font-size:0;
+    overflow:hidden;
+    text-align:center;
+    width: 70%;
+    }
+.big-btn-2-1 .big-btn{width:50%}
+ .app-image-list li {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    display: block;
+    float: left;
+    margin: 0 5px 5px 0;
+    position: relative;
+}
+ .app-image-list li span{
+    display: block;
+    height: 100%;
+    text-align: center;
+    vertical-align: middle;
+ }
+ 
+ .mmq-list{border-bottom:1px solid #e3e3e3; position:relative; padding:0 1rem 0.5rem 6.5rem;  background-color:#f8f8f8; margin-bottom:1rem;}
+.mmq-list .header-pic{position:absolute; width:4.5rem; height:4.5rem; left:1rem; top:0;}
+.mmq-list .header-pic img{width:4.5rem; height:4.5rem;}
+.mmq-list .mmq-info{margin:0; width:100%;}
+.mmq-list .mmq-info .tit {height:2.4rem; line-height:2.4rem; overflow:hidden;}
+.mmq-list .mmq-info .name{font-size:1.6rem; color:#576b95;}
+.mmq-list .mmq-info .mmq-label{height:2.4rem; width:3rem; padding-left:0.6rem; text-align:center; line-height:2.5rem; color:#fff; float:right; font-size:1.2rem; background:url(../images/xuqiu-icon.png) top center no-repeat; background-size:auto 2.4rem;}
+.mmq-xuqiu-icon{height:1.8rem; line-height:1.8rem; color:#fff; background:#8593b0; padding:0 0.4rem; font-size:1.2rem; position:relative; float:right; margin-top:0.3rem;}
+.mmq-xuqiu-icon:before{content:""; display:block; border:4px solid transparent; border-right:4px solid #8593b0; position:absolute; left:-8px; top:50%; margin-top:-4px;}
+.mmq-list .mmq-info .mmq-label.dele{background:url(../images/dele-icon.png) top center no-repeat; background-size:auto 2.4rem;}
+.mmq-list .mmq-info .txt{color:#333; font-size:1.6rem; margin-bottom:0.5rem;}
+.mmq-pic-gallery{width:100%;}
+.mmq-pic-gallery a{display:block; width:33.33%; float:left; position:relative; overflow:hidden;}
+.mmq-pic-gallery a:before{padding-bottom:100%; width:0; content:""; display:block;}
+.mmq-pic-gallery a span{position:absolute; left:0; top:0.25rem; right:0.5rem; bottom:0.25rem; display:block; background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;}
+.mmq-pic-gallery a span img{width:100%; height:100%;}
+.mmq-pic-gallery.only a{width:50%; float:none; min-height:50vw; overflow:hidden; background-size: cover; background-position: 50% 50%; background-repeat: no-repeat;}
+.mmq-pic-gallery.only a:before{padding-bottom:0;}
+.mmq-send-time{color:#999; margin:0.5rem 0; font-size:1.2rem;}
+.mmq-pri-day{margin:0.5rem 0;}
+.mmq-pri-day .pri{color:#ee7800; margin-right:2rem; font-size:1.6rem;}
+.mmq-pri-day .day{color:#999;}
+.mmq-pri-day .pri me{font-weight:700;}

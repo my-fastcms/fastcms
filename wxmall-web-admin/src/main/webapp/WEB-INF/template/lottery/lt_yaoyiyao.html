@@ -1,0 +1,362 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+[#include "/includes/header.html" /]
+<title>添加摇一摇抽奖</title>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+[#include "/includes/menus.html" /]
+<div id="container" class="main">
+	<ol class="breadcrumb">
+		<li><i class="fa fa-home"></i><a href="${webctx}/lottery/type">抽奖</a></li>
+		<li><i class="fa fa-laptop"></i>创建摇一摇抽奖</li>						  	
+	</ol>
+	
+	<div class="panel-heading">
+		<ul class="nav tab-menu nav-tabs">
+			[#if lottery?? ]
+			<li class="active"><a href="${webctx}/lottery/show/yaoyiyao/${lottery.id}">编辑抽奖信息</a></li>
+			<li><a href="${webctx}/lottery/set/yaoyiyao/${lottery.id}">设置奖品跟概率</a></li>
+			[#else]
+			<li class="active"><a href="${webctx}/lottery/show/yaoyiyao">填写抽奖信息</a></li>
+			<li><a href="javascript:void(0)" onclick="BootstrapDialog.alert({title:'提示', message:'请先填写抽奖信息！'});">设置奖品跟概率</a></li>
+			[/#if]
+		</ul>
+	</div>
+	
+	<div class="active_statistics">
+		<div class="title_query padtop"> 
+			<form id="qiandaoForm" class="form-horizontal">
+				<input type="hidden" name="lottery_type" id="lottery_type" value="3"/><!-- 3代表摇一摇-->
+				<input type="hidden" name="active" id="active" value="${lottery.active }"/><!-- 默认为1，值为0的时候表示删除，删除后用户不可见 -->
+				<input type="hidden" name="id" id="id" value="${lottery.id }"/>
+				<input type="hidden" name="qr_code" id="qr_code" value="${lottery.qrCode }"/>
+				<input type="hidden" name="wirless_url" id="wirless_url" value="${lottery.wirlessUrl }"/>
+				<div class="form-group">
+		            <label class="col-md-2 control-label">抽奖名称</label>
+		            <div class="col-md-8" id="error_lottery_name">
+		                <input id="lottery_name" name= "lottery_name" value="${lottery.lotteryName }" maxlength="20" type="text" class="form-control" style="width: 400px" >
+		                <label class="control-label" for="lottery_name"></label>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		            <label class="col-md-2 control-label">起止时间</label>
+		            <div class="col-sm-9">
+	                   	<div class="row">
+	                   		[#if lottery??]
+		                   		<div class="col-lg-3 col-md-3" id="error_start_date">
+			                        <input type="text" id="start_date" name="start_date" class="form-control" readonly="readonly" style="width: 150px;" value="${lottery.startDate}" />
+									<label class="control-label" for="start_date"></label>
+			                    </div>
+			                    <div class="col-lg-3 col-md-3" id="error_end_date">
+			                        <input type="text" id="end_date" name="end_date" class="form-control" readonly="readonly" style="width: 150px;" value="${lottery.endDate}" />	
+									<label class="control-label" for="end_date"></label>
+			                    </div>
+	                   		[#else]
+								<div class="col-lg-3 col-md-3" id="error_start_date">
+			                        <input type="text" id="start_date" name="start_date" readonly="readonly" style="width: 150px;"
+									onfocus="WdatePicker({skin:'twoer', isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss',minDate:'%y-%M-%d %H:%m:%s',maxDate:'#F{$dp.$D(\'end_date\')}'})"
+									class="Wdate" value="${lottery.startDate}" />
+									<label class="control-label" for="start_date"></label>
+			                    </div>
+			                    <div class="col-lg-3 col-md-3" id="error_end_date">
+			                        <input type="text" id="end_date" name="end_date" readonly="readonly" style="width: 150px;"
+									onfocus="WdatePicker({skin:'twoer', isShowClear:false,readOnly:true,dateFmt:'yyyy-MM-dd HH:mm:ss',maxDate:'#F{$dp.$D(\'end_date\',{d:28, H:23, m:59, s:59});}'})"
+									class="Wdate" value="${lottery.endDate}" />	
+									<label class="control-label" for="end_date"></label>
+			                    </div>	                   		
+	                   		[/#if]
+		                </div>
+		                <span class="alert-success">
+                      		<i class="fa fa-info-circle"></i>
+                        	起止时间一旦设定不可更改，建议设置时间周期为1个月，不能少于7天
+                        </span>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		            <label class="col-md-2 control-label">抽奖规则</label>
+		            <div class="col-md-8">
+                         <div class="sign_activity sign_activity_tabin" id="sign_type_set_join">
+                        	<!-- <p class="sign_title">连续签到x天奖励x</p> -->
+	                        <ul class="sign_activity_list" id="prize_list_join">
+                        		<li>
+	                              	<p>
+	                                  	每人每天可抽奖 <input placeholder="" class="input-xfat" id="day_count" name="day_count" value="${lottery.dayCount }" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" type="text"> 次　
+	                                  	<span class="alert-success">
+				                      		<i class="fa fa-info-circle"></i>
+				                        	不填不做限制
+				                        </span>
+	                              	</p>
+	                            </li>
+	                            <li>
+	                            	<p>
+	                                  	活动期间每人累计抽奖不超过 <input placeholder="" class="input-xfat" id="all_count" name="all_count" value="${lottery.allCount }" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" type="text"> 次
+	                                  	<span class="alert-success">
+				                      		<i class="fa fa-info-circle"></i>
+				                        	不填不做限制
+				                        </span>　
+	                              	</p>
+	                            </li>
+	                            <li>
+	                            	<p>
+	                                  	 活动期间每人累计中奖不超过  <input placeholder="" class="input-xfat" id="luck_count" name="luck_count" value="${lottery.luckCount }" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')" type="text"> 次
+	                                  	 <span class="alert-success">
+				                      		<i class="fa fa-info-circle"></i>
+				                        	不填不做限制
+				                        </span>　
+	                              	</p>	                            
+	                            </li>
+	                        </ul>
+		               </div>
+		            </div>
+		        </div>
+		        <!-- <div class="form-group">
+		            <label class="col-md-2 control-label">抽奖对象</label>
+		            <div class="col-md-8">
+	                    <select id="lott_user_sel" onchange="changeQiandaoType(this)" class="form-control" style="width: 110px;">
+	                    	<option value="1">全网用户</option>
+							<option value="2">店铺会员</option>
+							<option value="3">标签客户</option>
+							<option value="4">指定人群</option>
+	                    </select>
+	                    
+                        <div style="display: none; border: none;" class="sign_activity sign_activity_tabin" id="allow_members">默认sign_activity为隐藏-显示的类名为：sign_activity_tabin
+                             <ul class="sign_activity_list">
+                             	<li>
+                             		<label class="checkbox-pretty inline checkbox-inline">
+                             			<input type="checkbox" checked="checked"><span>普通会员</span>
+                             		</label>
+                             		<label class="checkbox-pretty inline checkbox-inline">
+                             			<input type="checkbox" checked="checked"><span>高级会员</span>
+                             		</label>
+                             		<label class="checkbox-pretty inline checkbox-inline">
+                             			<input type="checkbox" checked="checked"><span>VIP会员</span>
+                             		</label>
+                             		<label class="checkbox-pretty inline checkbox-inline">
+                             			<input type="checkbox" checked="checked"><span>至尊VIP</span>
+                             		</label>
+                             	</li>
+                             </ul>
+                        </div>
+                        <div style="display: none; border: none;" class="sign_activity sign_activity_tabin" id="allow_tag_members">默认sign_activity为隐藏-显示的类名为：sign_activity_tabin
+                             <ul class="sign_activity_list">
+                             	<li>
+                             		<label class="checkbox-pretty inline checkbox-inline">
+                             			<input type="checkbox" checked="checked"><span>标签会员1</span>
+                             		</label>
+                             	</li>
+                             </ul>
+                        </div>
+		            </div>
+		        </div> -->
+		        
+		        [#include "/lottery/lt_condition.jsp"]
+		        
+		        <div class="form-group">
+                    <label class="col-md-2 control-label">规则描述</label>
+                    <div class="col-md-8">
+                        <textarea onkeyup="reshowdesc();" id="lottery_memo" name="lottery_memo" class="form-control" rows="5">${lottery.lotteryMemo }</textarea>
+						<span class="alert-success">
+	                    	<a onclick="generateRule();" class="btn-bordered btn-xlarge btn-primary" href="javascript:void(0);">生成规则</a>
+	                    	<p>规则最多<font id="ruletipscount" style="color:red;">50</font><font style="color:red;">/500字</font></p>
+	                    </span>
+                    </div>
+                </div>
+		        
+		        <div class="form-group">
+		            <label class="col-md-2 control-label">强制关注公众号</label>
+		            <div class="col-md-8">
+		                <div class="sign_list">
+                            <label class="checkbox-pretty inline checkbox-inline">
+                            	[#if lottery.needCollectShop ==1 ]
+                            		<input id="need_collect_shop" type="checkbox" checked="checked">
+                            	[/#if]
+                             	[#if lottery.needCollectShop !=1 ]
+                            		<input id="need_collect_shop" type="checkbox">
+                            	[/#if]
+                             	<span class="alert-success">
+									<i class="fa fa-info-circle"></i>必须强制关注公众号才可参与抽奖！
+								</span>
+                         	</label>
+                         </div>
+		            </div>
+		        </div>
+		        <!-- <div class="form-group">
+		        	<label class="col-md-2 control-label">背景图</label>
+		        	<div class="col-md-8">
+		                 <input class="form-control" id="back_img" name="back_img" type="text" value="${lottery.backImg }">
+                         <div class="alert-success">
+                           <span><i class="fa fa-info-circle"></i>可不填写，会有默认背景图</span>
+                           <p>需先将图片上传到<a class="blue" href="http://tadget.taobao.com/redaction/manager.htm" target="_blank">图片空间</a>，再复制链接到此处。（请一定要压缩图片哦，不然背景图显示会比较慢）</p>
+                         </div>
+		            </div>
+		        </div> -->
+	        </form>  
+	    </div>
+		<div class="panel-footer" align="center">
+	   	 	<button id="saveTask" onclick="saveTask();" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>提交</button>
+		</div>
+	</div>
+</div>
+<!-- 保存成功弹窗 -->
+<div class="modal fade" id="sava_suc_dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">提醒</h4>
+			</div>
+			<div class="modal-body install_cont" style="padding-left: 5px;">
+				<p class="fonts" style="color:red;fon">抽奖设置成功！</p>
+	     		<p class="fonts">快扫码看效果吧！(请用手淘客户端)</p>
+	     		<div class="fonts" id="sign_coder1">
+				<canvas height="120" width="120"></canvas></div>
+				<p class="fonts">设置完成后，记得将活动装修到店铺哦！</p>
+				<p><a style="color: #3366ff;" href="https://fuwu.bbs.taobao.com/detail.html?spm=a210m.7789807.0.0.Ki99jE&amp;postId=1772645" target="_blank">活动如何装修到无线店铺？</a>
+				<a style="color: #3366ff; margin-left:20px;" href="https://luckadmin.ews.m.jaeapp.com/setting/SendWeiTao.h4?type=yx-sign">一键发布微淘</a></p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	$(function (){
+		reshowdesc();
+		var ctype = '${lottery.conditionType}';
+		ctype = ctype == null || ctype=="" ? 1 : ctype; 
+		$("#condition_type").val(ctype);
+		var tradeStatus = '${condTrade.tradeStatus}';
+		tradeStatus = tradeStatus == null || tradeStatus == "" ? 1 : tradeStatus;
+		$("#trade_status_sel").val(tradeStatus);
+		changeConditionType();
+	});
+	function reshowdesc(){
+		if($("#lottery_memo").val().length>500){
+			$("#lottery_memo").val($("#lottery_memo").val().substr(0,500));
+			$("#ruletipscount").html(500);
+		}else{
+			$("#ruletipscount").html($("#lottery_memo").val().length);
+		}
+	}
+	function changeConditionType(){
+		if($("#condition_type").val()==1){
+			$("#lott_condtions").hide();
+		}else {
+			$("#lott_condtions").show();
+		}
+	}
+	function generateRule() {
+		var rule="";
+		rule+="所有奖品数量有限，领完就没了哦！\r";
+		$("#lottery_memo").val(rule);
+		reshowdesc();
+	}
+	function clearError(){
+		$("#condition_day_error,#trade_day_error,#trade_money_error").empty();
+		$("#condition_day,#trade_money").css("border-color", "");
+	}
+	function saveTask(){
+		var params = {}, error = {};	
+		var id = $("#id").val(), lottery_type = $("#lottery_type").val(), 
+		lotteryName = $("#lottery_name").val(), backimg = $("#back_img").val(), lottery_memo = $("#lottery_memo").val(),
+			startDate = $("#start_date").val(), endDate = $("#end_date").val(),
+			allCount = $("#all_count").val(), dayCount = $("#day_count").val(), luckCount = $("#luck_count").val();
+		if(id!=null && id!="") params.id = id;
+		if(lottery_memo!=null && lottery_memo!="") params.lottery_memo = lottery_memo;
+		if(backimg !=null && backimg !="") params.back_img = backimg;
+		if(qr_code !=null && qr_code !="") params.qr_code = qr_code;
+		if(wirless_url !=null && wirless_url !="") params.wirless_url = wirless_url;
+		params.lottery_type = lottery_type;
+		if($.trim(lotteryName) =="") {error.error_lottery_name = "抽奖名称不能为空"; } else {error.error_lottery_name=""; params.lottery_name = $.trim(lotteryName);}
+		if($.trim(startDate) =="") {error.error_start_date = "有效开始时间不能为空"; } else {error.error_start_date =""; params.start_date = $.trim(startDate);}
+		if($.trim(endDate) =="") {error.error_end_date = "有效结束时间不能为空"; } else { error.error_end_date=""; params.end_date = $.trim(endDate);}
+		if($.trim(allCount) =="") allCount = 0;//默认为0，不做限制
+		if($.trim(dayCount) =="") dayCount = 0;//默认为0，不做限制
+		if($.trim(luckCount) =="") luckCount = 0;//默认为0，不做限制
+		params.all_count = allCount;
+		params.day_count = dayCount;
+		params.luck_count = luckCount;
+		params.condition_type = $("#condition_type").val();
+		//clear error
+		clearError();
+		var hasError = false;
+		//#抽奖条件
+		if($("#condition_type").val()==2){//下单抽奖
+			var tradeCondEntity = new Object();
+			var trade_type = $("input[name='con_trade']:checked").val();
+			tradeCondEntity.trade_type = trade_type;
+			if(trade_type == 1) {
+				//最近天数
+				if($("#condition_day").val()==""){
+					$("#condition_day_error").html("最近天数不能为空");
+					if(!hasError) hasError = true;
+					$("#condition_day").css("border-color", "#ff5454");
+				}else{
+					tradeCondEntity.condition_day = $("#condition_day").val();	
+				}
+			}else if(trade_type ==2) {
+				if($("#condition_trade_startdate").val() == "" 
+						|| $("#condition_trade_enddate").val() == ""){
+					if(!hasError) hasError = true;
+					$("#trade_day_error").html("下单时间段不能为空");
+				}else {
+					//指定时间段
+					tradeCondEntity.condition_trade_startdate = $("#condition_trade_startdate").val();
+					tradeCondEntity.condition_trade_enddate = $("#condition_trade_enddate").val();					
+				}
+			}
+			
+			tradeCondEntity.trade_status = $("#trade_status_sel").val();
+			tradeCondEntity.id = $("#condTradeId").val();
+			if( $("#trade_money").val() == ""){
+				if(!hasError) hasError = true;
+				$("#trade_money_error").html("订单金额不能为空");
+				$("#trade_money").css("border-color", "#ff5454");
+			}else{
+				tradeCondEntity.trade_money = $("#trade_money").val();				
+			}
+			
+			if(!hasError){
+				var tcEntity = JSON.stringify(tradeCondEntity);
+				params.condition = tcEntity;
+			}
+		}
+		
+		for(var key in error){
+			if(error[key]!=""){
+				if(!hasError) hasError = true;
+				$("#"+key).addClass("has-error");
+    			$("#"+key).find("label").text(error[key]);
+			}else{
+				$("#"+key).removeClass("has-error");
+				$("#"+key).find("label").empty();
+			}
+		}
+		//主表信息不完整，返回
+		if(hasError) return false;
+		
+		var needcollect= $('#need_collect_shop').is(':checked');
+		params.need_collect_shop = needcollect == true ? 1 : 0;
+		
+		$(".main").mask("正在保存...");
+		$.post(obz.ctx+"/lottery/save", params, function(json) {
+				$(".main").unmask();
+				if(json.code!=200){
+					BootstrapDialog.alert({title:'提示', message:json.msg});
+				}else{
+					$("#sava_suc_dialog").modal('show');
+					$('#sava_suc_dialog').on('hidden.bs.modal', function () {
+						location.reload();
+					});						
+				}
+		},"json");
+	}
+</script>
+[#include "/includes/footer.html" /]
+<script>
+Template.init("#menu-lottery");
+</script>
+</body>
+</html>

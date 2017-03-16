@@ -1,0 +1,41 @@
+
+.t-ac > a {
+	height: 30px;
+	text-align: center;
+	border-right: 1px solid #F0F0F0;
+}
+
+.t-ac > a:last-child {
+	border-right: 0;
+}
+
+.count {
+	margin-top: -8px;
+	color: #000;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.name {
+	color: #999;
+	font-size: 12px;
+}
+.c{
+	text-align: center;
+}
+.c > .weui-col-20{
+	display: block;
+	text-align: center;
+	border-right: 1px solid #F0F0F0;
+}
+.c .count{
+	margin-top: 0;
+	color: #E33A3D;
+}
+.c .name{
+	color: #646464;
+}
+.c p {
+	margin-top: 5px;
+	color: #444;
+}

@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>会员详情</title>
+<script type="text/javascript">
+$(document).ready(function() {
+	//保存抽奖活动
+	$("#saveFans").click(function(){
+		$("#container").mask("正在保存...");
+		obz.ajaxJson (obz.ctx+"/fans/save", $("#f1").serialize(), function(data){
+			$("#container").unmask();
+			var response = data;
+			if(data.code!=200){
+				obz.showMessage(response.msg);
+			}else{
+				//保存成功,跳转到列表页
+				var go2List = function(){location.href="${webctx}/fans";};
+				obz.showMessage(response.data, function(){go2List();});  
+			}
+			
+		},function(){
+			$("#container").unmask();
+			$("[id^='error_']").each(function(){
+				$(this).empty();
+			});
+		});
+	});
+	
+	var f = '${fans.id}';
+	if(f==null || f==""){
+		//
+		$("#real_nick, #scroe, #prize_count, #saveFans").attr("disabled",true);
+		$("#infobox").show();
+	}else {
+		$("#infobox").hide();
+		$("#real_nick, #scroe, #prize_count, #saveFans").attr("disabled",false);
+	}
+});
+
+</script>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+<div id="container" style="height: 100%;padding-top: 15px;padding-left: 15px;" class="content-container">
+	<div class="box infomation" id="infobox" style="display: none;">
+		请在会员列表选择一个会员进行编辑
+	</div>
+	<div class="bulk-edit-area">
+		<form name="f1" id="f1" action="" method="post">
+			<input type="hidden" name="active" id="active" value="${fans.active }"/><!-- 默认为1，值为0的时候表示删除，删除后用户不可见 -->
+			<input type="hidden" name="id" id="id" value="${fans.id }"/>
+			<ul class="bulk-edit-ul">
+	
+				<li><label class="label-title">混淆昵称：</label> <span><em>*</em></span>
+					<span>
+						<input class="input-text" style="width: 420px;" type="text" id="nick" name="nick" value="${fans.nick}" readonly="readonly">
+						<span class="grey-memo">不可编辑</span>
+					</span>
+					<div id="error_nick" style="padding-left: 120px;" class="error hidden"></div>
+				</li>
+				<li><label class="label-title">真实昵称：</label> <span><em>*</em></span>
+					<span>
+						<input class="input-text" style="width: 300px;" type="text" id="real_nick" name="real_nick" value="${fans.real_nick}">
+					</span>
+					<div id="error_real_nick" style="padding-left: 120px;" class="error hidden"></div>
+				</li>
+				<li>
+					<span class="label-title register_label">积分数：&nbsp;</span> <span><em>*</em></span>
+					<input class="input-text" style="width: 200px;" type="text" id="scroe" name="scroe" value="${fans.scroe}" onkeyup="value=value.replace(/[^\d]/g,'')">
+					<div id="error_scroe" style="padding-left: 120px;" class="error hidden"></div>
+				</li>
+				<li>
+					<span class="label-title register_label">抽奖机会数：&nbsp;</span> <span><em>*</em></span>
+					<input class="input-text" style="width: 200px;" type="text" id="prize_count" name="prize_count" value="${fans.prize_count}" onkeyup="value=value.replace(/[^\d]/g,'')">
+					<div id="error_prize_count" style="padding-left: 120px;" class="error hidden"></div>
+				</li>
+					
+			</ul>
+		</form>
+	</div>
+	<div class="panel-default">
+	  	<div class="panel-body" align="center">
+			<button id="saveFans" class="btn btn-success btn-sm">保存</button>
+	  	</div>
+  	</div>
+</div>
+</body>
+</html>

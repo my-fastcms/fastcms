@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+[#include "/includes/header.html" /]
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+<div class="middle-box text-center loginscreen   animated fadeInDown">
+    <div>
+        <div>
+            <h1 class="logo-name">D++</h1>
+        </div>
+        <h3>欢迎注册 点步微助手</h3>
+        <p>创建一个新账户</p>
+        <form class="m-t" role="form" action="login.html">
+            <div class="form-group">
+                <input id="phone" type="text" class="form-control" placeholder="请输入手机号" required=""/>
+            </div>
+            <div class="form-group">
+            	<div class="input-group">
+				<input type="text" class="form-control" placeholder="短信验证码" id="phone_code"/>
+				<span class="input-group-btn"><a id="sendCodeBtn" href="javascript:void(0)" class="btn btn-primary">发送验证码</a></span>
+				</div>
+			</div>
+            <div class="form-group">
+                <input id="password" type="password" class="form-control" placeholder="请输入密码" required=""/>
+            </div>
+            <div class="form-group">
+                <input id="confirmpassword" type="password" class="form-control" placeholder="请再次输入密码" required=""/>
+            </div>
+            <div class="form-group">
+				<div class="controls">
+					<label class="input-group col-sm-5">
+						<input type="text" id="captcha" class="form-control" name="captchaToken" placeholder="验证码"/>
+					</label>
+					<label class="input-group col-sm-5">
+						<img id="captchaImage" src="${webctx}/captcha?width=100&height=35&fontsize=30" alt="换一张" />
+					</label>
+				</div>
+			</div>
+            <div class="form-group text-left">
+                <div class="checkbox i-checks">
+                    <label class="no-padding">
+                        <input type="checkbox" name="agree"/><i></i>
+                        	 我同意<a href="http://www.dbumama.com/html/yhxy.html" target="blank">《点步科技用户协议》</a></label>
+                </div>
+            </div>
+            <button id="regBtn" type="button" class="btn btn-primary block full-width m-b">注 册</button>
+
+            <p class="text-muted text-center"><small>已经有账户了？</small><a href="${webctx}">点此登录</a></p>
+
+        </form>
+    </div>
+</div>
+	
+<script type="text/javascript">
+$(function(){
+	var UA = navigator.userAgent.toLowerCase();
+	var browerKernel = {
+		isWebkit: function() {
+			if (/webkit/i.test(UA)) return true;
+			else return false;
+		},
+		isFirefox: function() {
+			if (/firefox/i.test(UA)) return true;
+			else return false;
+		}
+	}
+
+	if(!browerKernel.isWebkit()){
+		alert("您当前浏览器无法兼容本系统！\n推荐使用Google Chrome 浏览器！\n\n其它兼容浏览器：\n360浏览器极速模式\n搜狗高速浏览器3\n世界之窗极速版\n猎豹浏览器\nQQ浏览器\n其它浏览器请自测");
+	}
+	
+	var $captcha = $("#captcha");
+	var $captchaImage = $("#captchaImage");
+	var change_captcha = function() {
+		var timestamp = (new Date()).valueOf();
+		var imageSrc = $captchaImage.attr("src");
+		if(imageSrc.indexOf("?") >= 0) {
+			imageSrc = imageSrc.substring(0, imageSrc.indexOf("?"));
+		}
+		imageSrc = imageSrc + "?timestamp=" + timestamp + "&width=100&height=35&fontsize=30";
+		$captchaImage.attr("src", imageSrc);
+	};
+
+	$captchaImage.click(change_captcha);
+	
+	function register(){
+		var phone = $("#phone").val();
+		var password = $("#password").val();
+		var confirmPwd = $("#confirmpassword").val();
+		var phoneCode = $("#phone_code").val();
+		
+		if(phone == "" || password == "" || confirmPwd == "" || phoneCode == ""){
+			alert("请填写完整的注册信息！");
+			return;
+		}
+		
+		if(password != confirmPwd){
+			alert("两次密码输入不一致");
+			return;
+		}
+		
+		var captcha = $("#captcha").val();
+		
+		if(captcha == null || captcha ==""){
+			alert("请输入验证码");
+			return;
+		}
+		
+		if(!$("input[name='agree']").is(':checked')){
+			alert("请同意用户协议");
+			return;			
+		}
+		
+		var params = {};
+		params.phone = phone;
+		params.password = password;
+		params.confirmPwd = confirmPwd;
+		params.phoneCode = phoneCode;
+		params.captchaToken = captcha;
+		$(".content").mask("正在提交数据...");
+		obz.ajaxJson(obz.ctx+"/doRegister", params, function(resp){
+			$(".content").unmask();
+			if(resp.code != 200){
+				alert(resp.msg);
+				change_captcha();
+				$("#captcha").val("");
+				return;
+			}
+			$(".text-with-hr").show();
+			setTimeout(function(){
+				location.href = "${webctx}/";
+			}, 2000);
+		});
+	}
+	
+	$("#regBtn").click(function(){
+		register();
+	});
+	
+	$("#sendCodeBtn").click(function(){
+		if($("#phone").val() == null || $("#phone").val() == ""){
+			alert("请输入手机号码");
+			return;
+		}
+		$(".content").mask("正在发送验证码...");
+		obz.ajaxJson(obz.ctx+"/sendCode", {phone:$("#phone").val()}, function(resp){
+			$(".content").unmask();
+			if(resp.code != 200){
+				alert(resp.msg);
+			}else{
+				alert("短信验证码已发送");
+			}
+		});
+	});
+	
+	$(document).keyup(function(event){
+		if(event.keyCode ==13){
+			register();
+		}
+	});
+	
+});
+
+</script>	
+[#include "/includes/header.html" /]
+</body>
+</html>	
