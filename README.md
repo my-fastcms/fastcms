@@ -44,11 +44,3 @@ JS框架：jquery-2.1.4，Bootstrap 3.6，jquery weui微信移动框架（微信
 运行项目配置说明
 1、具备运行环境：JDK 1.7+、Maven 3.0+、MySQL 5.6+、Eclipse mars 
 2、git下载项目后，在Eclipse 左侧空白处右击->import-import-> Existing Maven Projects
-
-JFinalMall 1.0 特别说明
-捐赠下载JFinalMall 1.0二次开发
-捐赠后进群获取最新源码 QQ群：376490170
-
-微信捐赠：
-![微信](http://git.oschina.net/uploads/images/2017/0316/100838_de7033b2_471938.png "在这里输入图片标题")![支付宝](http://git.oschina.net/uploads/images/2017/0316/100857_9acfcd71_471938.jpeg "在这里输入图片标题")
-
