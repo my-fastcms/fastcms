@@ -1,8 +1,6 @@
 package com.dbumama.market.service.provider;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -19,7 +17,6 @@ import com.dbumama.market.model.SpecificationValue;
 import com.dbumama.market.service.api.cart.CartItemResultDto;
 import com.dbumama.market.service.api.cart.CartService;
 import com.dbumama.market.service.api.exception.MarketBaseException;
-import com.dbumama.market.service.api.product.ProductFullCutResultDto;
 import com.dbumama.market.service.api.ump.PromotionService;
 import com.jfinal.kit.StrKit;
 import com.jfinal.plugin.activerecord.Db;
@@ -134,29 +131,6 @@ public class CartServiceImpl implements CartService{
 	@Override
 	public Long getCartItemCountByBuyer(Long buyerId) throws MarketBaseException {
 		return Db.queryLong("select count(id) from " + Cart.table + " t where t.buyer_id=?", buyerId);
-	}
-
-	@Override
-	public List<ProductFullCutResultDto> getCartFullCat(List<CartItemResultDto> cartItemParamDtos) {
-		List<ProductFullCutResultDto> resultDtos = new ArrayList<ProductFullCutResultDto>();
-		for(CartItemResultDto cartItemParamDto : cartItemParamDtos){
-			if(cartItemParamDto.getFullCutResultDtos() != null && cartItemParamDto.getFullCutResultDtos().size()>0){
-				resultDtos.addAll(cartItemParamDto.getFullCutResultDtos());
-			}
-		}
-
-		/**
-		 * 按满减的金额进行升序排列
-		 */
-		Collections.sort(resultDtos, new Comparator<ProductFullCutResultDto>(){
-
-			@Override
-			public int compare(ProductFullCutResultDto o1, ProductFullCutResultDto o2) {
-				return o1.getMeet().subtract(o2.getMeet()).intValue();
-			}
-			
-		});
-		return resultDtos;
 	}
 
 }

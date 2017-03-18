@@ -6,7 +6,6 @@ import com.dbumama.market.model.Cart;
 import com.dbumama.market.service.api.cart.CartItemResultDto;
 import com.dbumama.market.service.api.cart.CartService;
 import com.dbumama.market.service.api.exception.MarketBaseException;
-import com.dbumama.market.service.api.product.ProductFullCutResultDto;
 import com.dbumama.market.web.core.annotation.RouteBind;
 import com.dbumama.market.web.core.controller.BaseMobileController;
 import com.dbumama.market.web.core.plugin.spring.Inject.BY_NAME;
@@ -20,9 +19,7 @@ public class CartController extends BaseMobileController{
 	
 	public void index() {
 		List<CartItemResultDto> cartItems = cartService.getCartsByBuyer(getBuyerId());
-		List<ProductFullCutResultDto> fullCutDtos = cartService.getCartFullCat(cartItems);
     	setAttr("items", cartItems);
-    	setAttr("fullCuts", fullCutDtos);
         render("/cart/index.html");
     }
 	
