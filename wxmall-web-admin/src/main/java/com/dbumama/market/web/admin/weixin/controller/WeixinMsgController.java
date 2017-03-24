@@ -102,7 +102,7 @@ public class WeixinMsgController extends MsgController {
     	}
     	else{
 	    	OutNewsMsg outMsg = new OutNewsMsg(inTextMsg);
-			outMsg.addNews("XXX商城欢迎您!", "欢迎你来购物^_^，有问题请咨询客服，回复“1”将转接到人工客服", "https://mmbiz.qlogo.cn/mmbiz/kKwBZXB5j6wFsKHO3R13nLByEdCXYr4MY4ogbOQWN7tWzGBtY9hBRxPoWSWz7bYZzanSbw37UqlLbVcj4Fa4NA/0?wx_fmt=jpeg", "http://mz.dbumama.com/");
+			outMsg.addNews("XXX商城欢迎您!", "欢迎你来购物^_^，有问题请咨询客服，回复“1”将转接到人工客服", "", "");
 			render(outMsg);
     	}
     }
@@ -110,7 +110,7 @@ public class WeixinMsgController extends MsgController {
     @Override
     protected void processInVoiceMsg(InVoiceMsg inVoiceMsg) {
     	OutNewsMsg outMsg = new OutNewsMsg(inVoiceMsg);
-		outMsg.addNews("XXX商城欢迎您!", "欢迎你来购物^_^", "https://mmbiz.qlogo.cn/mmbiz/kKwBZXB5j6wFsKHO3R13nLByEdCXYr4MY4ogbOQWN7tWzGBtY9hBRxPoWSWz7bYZzanSbw37UqlLbVcj4Fa4NA/0?wx_fmt=jpeg", "http://mz.dbumama.com/");
+		outMsg.addNews("XXX商城欢迎您!", "欢迎你来购物^_^", "", "");
 		render(outMsg);
         //转发给多客服PC客户端
         OutCustomMsg outCustomMsg = new OutCustomMsg(inVoiceMsg);
@@ -166,7 +166,7 @@ public class WeixinMsgController extends MsgController {
         	logger.debug("关注：" + inFollowEvent.getFromUserName());
         	saveOrUpdateMember(inFollowEvent.getFromUserName(), true);
     		OutNewsMsg outMsg = new OutNewsMsg(inFollowEvent);
-    		outMsg.addNews("XXX商城欢迎您!", "欢迎您来购物^_^", "https://mmbiz.qlogo.cn/mmbiz/kKwBZXB5j6wFsKHO3R13nLByEdCXYr4MY4ogbOQWN7tWzGBtY9hBRxPoWSWz7bYZzanSbw37UqlLbVcj4Fa4NA/0?wx_fmt=jpeg", "http://mz.dbumama.com/");
+    		outMsg.addNews("XXX商城欢迎您!", "欢迎您来购物^_^", "", "");
     		render(outMsg);
         }else if (InFollowEvent.EVENT_INFOLLOW_UNSUBSCRIBE.equals(inFollowEvent.getEvent())) {
             logger.debug("取消关注：" + inFollowEvent.getFromUserName());
@@ -235,7 +235,7 @@ public class WeixinMsgController extends MsgController {
     protected void processInQrCodeEvent(InQrCodeEvent inQrCodeEvent) {
     	saveOrUpdateMember(inQrCodeEvent.getFromUserName(), true);
     	OutNewsMsg outMsg = new OutNewsMsg(inQrCodeEvent);
-		outMsg.addNews("XXX商城欢迎您!", "欢迎您来购物^_^", "https://mmbiz.qlogo.cn/mmbiz/kKwBZXB5j6wFsKHO3R13nLByEdCXYr4MY4ogbOQWN7tWzGBtY9hBRxPoWSWz7bYZzanSbw37UqlLbVcj4Fa4NA/0?wx_fmt=jpeg", "http://mz.dbumama.com/");
+		outMsg.addNews("XXX商城欢迎您!", "欢迎您来购物^_^", "", "");
 		render(outMsg);
     }
 
@@ -270,8 +270,8 @@ public class WeixinMsgController extends MsgController {
         } else if("MENU_COMP_INFO".equals(menuKey)){
         	OutNewsMsg outNewMsg = new OutNewsMsg(inMenuEvent);
         	outNewMsg.addNews("XXX商城欢迎您!", "欢迎您来购物^_^", 
-        			"https://mmbiz.qlogo.cn/mmbiz/kKwBZXB5j6wFsKHO3R13nLByEdCXYr4MY4ogbOQWN7tWzGBtY9hBRxPoWSWz7bYZzanSbw37UqlLbVcj4Fa4NA/0?wx_fmt=jpeg", 
-        			"https://mp.weixin.qq.com/s?__biz=MzA5NDM2NzEzNQ==&tempkey=01t9uT5u%2B4Q9qKtGYCfnnjPl7kO1JsVIlfViRJFwsEOm1cmST%2FIPyu%2FPHtA8o5cHiDhGoGZ2MOyiM255FQ3k7Ep%2FyQ5oCgnClsQHxTYLwuWKa2XeFdRAqDXdl6Sto5aQwCxhOYXCJfKZyNKyHLsvwA%3D%3D&#rd");
+        			"", 
+        			"");
     		render(outNewMsg);
         }
         else if("MENU_SHARE_FREND".equals(menuKey)){  //如果点击呼唤好友菜单 
