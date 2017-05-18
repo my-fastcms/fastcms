@@ -11,7 +11,7 @@ http://admin.dbumama.com/admin
 体验账号：13533109940
 密码：123456
 
-微信商城请扫二维码查看演示
+微信商城请扫二维码查看演示（注：演示为企业版）
 ![微商城](http://git.oschina.net/uploads/images/2017/0316/100537_42e4b940_471938.jpeg "在这里输入图片标题")
 
 客户案例查看请上官方网站：http://www.dbumama.com
