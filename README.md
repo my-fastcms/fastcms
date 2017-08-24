@@ -2,21 +2,24 @@
 
   _
 
-**_JFinalMall 1.0 系统简介_** 
+**_WxMall 1.0 系统简介_** 
 
 JFinalMall商城系统专门针对微信服务号开发的一套微信商城，微信分销商城，支持商品多规格，支持按地区设置邮费，支持限时打折，订单返现，满减送，满包邮，支持订单打印，订单打印模板自定义，发货单打印，发货单打印模板自定义，支持抽奖，签到等互动功能。是在JFinal web框架上搭建的一个Java项目。代码规范遵循淘宝分布式框架dubbox协议规范，方便分布式部署，数据库采用mysql，管理端跟微信端前后端分离
 
-  _**JFinalMall 1.0演示地址：**_  
+  _**WxMall 1.0演示地址：**_  
 http://admin.dbumama.com/admin
-体验账号：13533109940
+体验账号：wxmall
 密码：123456
 
 微信商城请扫二维码查看演示（注：演示为企业版）
-![微商城](http://git.oschina.net/uploads/images/2017/0316/100537_42e4b940_471938.jpeg "在这里输入图片标题")
+![wxmall微商城](http://git.oschina.net/uploads/images/2017/0316/100537_42e4b940_471938.jpeg "在这里输入图片标题")
 
-客户案例查看请上官方网站：http://www.dbumama.com
+微信小程序商城请扫二维码
+![wxmall小程序](https://git.oschina.net/uploads/images/2017/0824/102442_8a96a2b3_471938.jpeg "wxmall-weapp.jpg")
 
- **_JFinalMall 1.0 功能简介_** 
+官方网站：[http://www.dbumama.com](http://)
+
+ **_WxMall 1.0 功能简介_** 
 
 功能列表
 【商品】：店铺基本资料，店铺发货地址，我的文件管理
@@ -36,8 +39,8 @@ wxmall-model ：数据模型，与数据库表字段对应的实体类。
 wxmall-web-admin ：PC后台管理端。
 wxmall-web-mobile ：公众号微信端。
 
-JFinalMall 1.0 技术选型
-核心框架：JFinal 2.2，spring 3.0+
+WxMall 1.0 技术选型
+核心框架：JFinal 3.1，spring 4.0+
 数据库：mysql 5.6 + 
 JS框架：jquery-2.1.4，Bootstrap 3.6，jquery weui微信移动框架（微信前端开发的瑞士军刀）
 
