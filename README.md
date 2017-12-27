@@ -12,7 +12,6 @@ http://admin.dbumama.com/admin
 密码：123456
 
 微信商城请扫二维码查看演示（注：演示为企业版）
-![wxmall微商城](http://git.oschina.net/uploads/images/2017/0316/100537_42e4b940_471938.jpeg "在这里输入图片标题")
 
 微信小程序商城请扫二维码
 ![wxmall小程序](https://git.oschina.net/uploads/images/2017/0824/102442_8a96a2b3_471938.jpeg "wxmall-weapp.jpg")
@@ -34,34 +33,50 @@ http://admin.dbumama.com/admin
 
 1. 功能列表
  【店铺】：店铺基本资料，店铺发货地址，我的文件管理
+
  【商品】：商品发布、分类、规格、运费。
+
  【订单】：订单查询、批量打印、批量发货、退款、快递单模板、发货单模板。
+
  【分销】：分销商、佣金、分销商等级。
+
  【营销】：限时打折，订单返现，满减送，满包邮。
+
  【互动】：签到，抽奖，奖品，红包。
+
  【会员】：微信公众号粉丝管理。
+
  【设置】：公众号信息设置，支付配置。
 
 
 
 2. JFinalMall 1.0 项目结构
  商城系统采用Maven管理，包括以下6大模块：
+
  wxmall-service-api ：dubbox的接口规范，支持rpc远程调用。
+
  wxmall-service-common ：工具类，所有工具类都提取出来写在这个项目中。
+
  wxmall-service-provider ：核心业务项目。主要是Service处理业务逻辑。
+
  wxmall-model ：数据模型，与数据库表字段对应的实体类。
+
  wxmall-web-admin ：PC后台管理端。
+
  wxmall-web-mobile ：公众号微信端。
 
 
 
 3. - WxMall 1.0 技术选型
  核心框架：JFinal 3.1，spring 4.0+
+
  数据库：mysql 5.6 + 
+
  JS框架：jquery-2.1.4，Bootstrap 3.6，jquery weui微信移动框架（微信前端开发的瑞士军刀）
 
 
 
 4. 运行项目配置说明
  1、具备运行环境：JDK 1.7+、Maven 3.0+、MySQL 5.6+、Eclipse mars 
+
  2、git下载项目后，在Eclipse 左侧空白处右击->import-import-> Existing Maven Projects
