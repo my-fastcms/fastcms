@@ -32,6 +32,7 @@ http://admin.dbumama.com/admin
 
 
 1. 功能列表
+
  【店铺】：店铺基本资料，店铺发货地址，我的文件管理
 
  【商品】：商品发布、分类、规格、运费。
@@ -51,6 +52,7 @@ http://admin.dbumama.com/admin
 
 
 2. JFinalMall 1.0 项目结构
+
  商城系统采用Maven管理，包括以下6大模块：
 
  wxmall-service-api ：dubbox的接口规范，支持rpc远程调用。
@@ -68,6 +70,7 @@ http://admin.dbumama.com/admin
 
 
 3. - WxMall 1.0 技术选型
+
  核心框架：JFinal 3.1，spring 4.0+
 
  数据库：mysql 5.6 + 
@@ -77,6 +80,7 @@ http://admin.dbumama.com/admin
 
 
 4. 运行项目配置说明
+
  1、具备运行环境：JDK 1.7+、Maven 3.0+、MySQL 5.6+、Eclipse mars 
 
  2、git下载项目后，在Eclipse 左侧空白处右击->import-import-> Existing Maven Projects
