@@ -20,6 +20,15 @@ http://admin.dbumama.com/admin
 官方网站：[http://www.dbumama.com](http://)
 
  **_WxMall 1.0 功能简介_** 
+![输入图片说明](https://gitee.com/uploads/images/2017/1227/120552_035cd6ad_471938.png "QQ图片20171215172721.png")
+![输入图片说明](https://gitee.com/uploads/images/2017/1227/120608_2cbbf67e_471938.png "QQ图片20171215172758.png")
+![输入图片说明](https://gitee.com/uploads/images/2017/1227/120620_c704c1f4_471938.png "QQ图片20171215172825.png")
+![输入图片说明](https://gitee.com/uploads/images/2017/1227/120632_aeda507c_471938.png "QQ图片20171215172847.png")
+![输入图片说明](https://gitee.com/uploads/images/2017/1227/120643_4f401b2c_471938.png "QQ图片20171215172904.png")
+![输入图片说明](https://gitee.com/uploads/images/2017/1227/120701_102016dd_471938.png "QQ图片20171215172930.png")
+![输入图片说明](https://gitee.com/uploads/images/2017/1227/120716_8d8c17f2_471938.png "QQ图片20171215172944.png")
+![输入图片说明](https://gitee.com/uploads/images/2017/1227/120725_e509ccec_471938.png "QQ图片20171215172959.png")
+![输入图片说明](https://gitee.com/uploads/images/2017/1227/120736_4e64e721_471938.png "QQ图片20171215173020.png")
 
 功能列表
 【商品】：店铺基本资料，店铺发货地址，我的文件管理
@@ -30,6 +39,7 @@ http://admin.dbumama.com/admin
 【互动】：签到，抽奖，奖品，红包。
 【会员】：微信公众号粉丝管理。
 【设置】：公众号信息设置，支付配置。
+
 JFinalMall 1.0 项目结构
 商城系统采用Maven管理，包括以下6大模块：
 wxmall-service-api ：dubbox的接口规范，支持rpc远程调用。
