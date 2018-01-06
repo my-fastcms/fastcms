@@ -503,7 +503,124 @@ public class OrderServiceImpl extends AbstractServiceImpl implements OrderServic
 	
 	@Override
 	public OrderResultDto balance(Long buyerId, Long receiverId, String items) throws OrderException {
-		return null;
+		if(StrKit.isBlank(items)) throw new OrderException("调用结算接口缺少必要参数");
+
+		JSONArray jsonArray = null;
+		try {
+			 jsonArray = JSONArray.parseArray(items);
+		} catch (Exception e) {
+			throw new OrderException(e.getMessage());
+		}
+		
+		if(jsonArray==null || jsonArray.size()<=0) throw new OrderException("请选择要结算的项");
+		
+		BuyerReceiver receiver = receiverDao.findById(receiverId);
+		if(receiverId == null){
+			receiver = receiverDao.findFirst(" select * from " + BuyerReceiver.table + " where buyer_id=? and is_default=1", buyerId);
+		}
+		
+		OrderResultDto orderDto = new OrderResultDto();
+		List<OrderItemResultDto> orderItemDtos = new ArrayList<OrderItemResultDto>();
+		orderDto.setOrderItems(orderItemDtos);
+		for(int i=0; i<jsonArray.size(); i++){
+			JSONObject jsonObj = jsonArray.getJSONObject(i);
+			final String prodId = jsonObj.getString("productId");
+			final String specivalues = jsonObj.getString("speci");
+			Product product = productDao.findById(prodId);
+			if(product.getIsMarketable() == true 
+					&& product.getStock()!=null && product.getStock()>0){
+				OrderItemResultDto orderItem = new OrderItemResultDto();
+				orderItem.setProductName(product.getName());
+				orderItem.setQuantity(
+						product.getStock()!=null && jsonObj.getInteger("pcount")>product.getStock()
+						? product.getStock()
+						: jsonObj.getInteger("pcount"));
+				orderItem.setPrice(product.getPrice());
+				orderItem.setProductId(product.getId());
+				orderItem.setSn(product.getSn());
+				orderItem.setProductImg(product.getImage());
+				
+				if(StrKit.isBlank(specivalues)){
+					//没有传规格值，视统一规格
+					String promoPrice = promotionService.getProductPromotionPrice(product);
+	    			if(StrKit.notBlank(promoPrice)) orderItem.setPrice(promoPrice);
+				}else{
+					JSONArray jsonArr = JSON.parseArray(specivalues);
+	        		if(jsonArr==null || jsonArr.size()<=0){
+	        			//没有传规格值，视统一规格
+						String promoPrice = promotionService.getProductPromotionPrice(product);
+		    			if(StrKit.notBlank(promoPrice)) orderItem.setPrice(promoPrice);
+	        		}else{
+	        			//多规格
+						final StringBuffer sfvalueBuff = new StringBuffer();
+						List<SpecificationValue> specificationValues = new ArrayList<SpecificationValue>();
+		        		for(int k=0;k<jsonArr.size();k++){
+		        			JSONObject json = jsonArr.getJSONObject(k);
+		        			Long spvid = json.getLong("spvId");
+		        			sfvalueBuff.append(spvid).append(",");
+		        			specificationValues.add(specValueDao.findById(spvid));
+		        		}
+		        		orderItem.setSpecificationValues(specificationValues);
+		        		ProductSpecItem stock=prodSpecItemdao.findFirst(
+		        				"select * FROM "+ProductSpecItem.table+" WHERE product_id = ? and specification_value = ?", 
+		        				product.getId(), sfvalueBuff.deleteCharAt(sfvalueBuff.length()-1).toString());
+		        		if(stock == null || stock.getPrice() == null){
+		        			throw new OrderException("请选择完整的规格值");
+		        		}
+		        		orderItem.setPrice(stock.getPrice().toString());
+		        		//限时折扣价
+		        		String promoPrice = promotionService.getProductPromotionPrice(product, stock);
+		        		if(StrKit.notBlank(promoPrice)) orderItem.setPrice(promoPrice);
+	        		}
+				}
+				//订单项商品小计金额
+				orderItem.setTotalPrice(new BigDecimal(orderItem.getQuantity())
+						.multiply(new BigDecimal(orderItem.getPrice())).setScale(2, BigDecimal.ROUND_HALF_UP));
+				orderItemDtos.add(orderItem);
+				
+				//计算商品满减数据
+				List<ProdFullCutResultDto> fullCuts = fullCutService.getProductFullCut(product);
+				if(fullCuts != null && fullCuts.size()>0){
+					orderItem.setFullCutDtos(fullCuts);
+				}
+			}
+		}
+		
+		//商品总数量
+		Integer num = 0;
+		for(OrderItemResultDto orderItemDto : orderDto.getOrderItems()){
+			num += orderItemDto.getQuantity();
+		}
+		orderDto.setNum(num);
+		//订单总金额，不包含邮费
+		BigDecimal totalPrice = new BigDecimal(0);
+		for(OrderItemResultDto orderItemDto : orderDto.getOrderItems()){
+			totalPrice = totalPrice.add(orderItemDto.getTotalPrice());
+		}
+		orderDto.setTotalPrice(totalPrice);
+		
+		//计算邮费
+		BigDecimal orderPostFee = new BigDecimal(0);
+		if(receiver != null){
+			for(OrderItemResultDto orderItemDto : orderDto.getOrderItems()){
+				Product product = productDao.findById(orderItemDto.getProductId());
+				BigDecimal postFees = getDeliveryFees(product, orderDto, receiver, orderDto.getNum());
+				orderPostFee = orderPostFee.add(postFees);	
+			}
+		}
+		orderDto.setPostFee(orderPostFee);
+		//计算满减
+		setFullCut(orderDto);
+		//计算会员价
+		if(buyerId !=null){
+			BuyerUser buyer = buyerUserdao.findById(buyerId);
+			if(buyer !=null){
+				setMemberDiscount(buyer, orderDto);
+			}
+		}
+		//最终得出订单应支付金额
+		orderDto.setPayFee(orderDto.getTotalPrice().add(orderDto.getPostFee()).setScale(2, BigDecimal.ROUND_HALF_UP));
+		return orderDto;
 	}
 	
 	public Boolean isReviewed(Long buyerId, Long orderId, Long productId) throws OrderException {
