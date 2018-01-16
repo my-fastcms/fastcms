@@ -1,0 +1,346 @@
+@charset "utf-8";
+/* CSS Document */
+#mainTable{
+	/*width:1050px;*/
+	border:0px solid #DDEBF9;
+	border-collapse:collapse;
+	margin:0 auto;
+}
+#mainTable thead{
+	
+}
+#mainTable thead tr{
+	text-align:center;
+}
+#mainTable thead tr td{
+	vertical-align:middle;
+	border-top:1px solid #DDEBF9;
+	border-bottom:1px solid #DDEBF9;
+	border-collapse:collapse;
+	font-size:14px;
+	color:white;
+	height:28px;
+	
+	/*background-image: url("../images/thbg.gif");
+	background-position:0 -256px;
+	background-repeat:repeat-x;*/
+	background-color:#499241;
+    border-collapse: collapse;
+}
+#mainTable thead tr td.left1{
+	border-top:1px solid #DDEBF9;
+	border-left:1px solid #DDEBF9;
+	border-bottom:1px solid #DDEBF9
+}
+#mainTable thead tr td.right{
+	border-top:1px solid #DDEBF9;
+	border-right:1px solid #DDEBF9;
+	border-bottom:1px solid #DDEBF9;
+}
+#mainTable thead tr td input{
+	vertical-align:text-bottom;
+	margin:0;
+}
+#mainTable thead tr td.center{
+	text-align:center;
+	vertical-align:middle;
+}
+#mainTable thead tr td.center input{
+	width:177px;
+	margin:0;
+}
+#mainTable thead tr td.left{
+	text-align:left;
+	padding:0;
+	vertical-align:middle;
+}
+#mainTable thead tr td a.red{
+	text-decoration:none;
+}
+#mainTable tbody{}
+#mainTable tbody tr{}
+#mainTable tbody tr td{
+	border-bottom:1px solid #499241;
+	padding:2px 0;
+	border-collapse:collapse;
+	margin:0px;
+	height:20px;
+	font-size:13px;
+}
+#mainTable tbody tr td.left1{
+	border-left:1px solid #DDEBF9;
+	border-bottom:1px solid #499241;
+}
+#mainTable tbody tr td.right{
+	border-right:1px solid #DDEBF9;
+	border-bottom:1px solid #499241;
+}
+#mainTable tbody tr td.center{
+	text-align:center;
+}
+#mainTable tbody tr td.left{
+	text-align:left;
+}
+#mainTable tbody tr td.left1 .img3{
+	width:14px;
+	height:14px;
+	display:inline-block;
+	vertical-align: middle;
+	border:0px solid #333;
+}
+#mainTable tbody tr td.left1 .he
+{
+	width:13px;
+	height:14px;
+	/*background-image:url(../images/btn_bg.png);*/
+	background-repeat:no-repeat;
+	background-position:0 -135px;
+	display:inline-block;
+	vertical-align: middle;
+	cursor: default;
+}
+#mainTable tbody tr td.left1 .img1{
+	width:14px;
+	height:14px;
+	display:inline-block;
+	vertical-align: middle;
+	border:0px solid #000;
+	margin:0 2px 0 0;
+}
+#mainTable tbody tr td.left1 .img2{
+	width:14px;
+	height:14px;
+	display:inline-block;
+	vertical-align: middle;
+	border:0px solid #000;
+	margin:0 2px 0 0;
+}
+#mainTable tbody tr td a{
+	text-decoration:none;
+	color:#333;
+}
+#mainTable tbody tr td.inner{
+	padding:0;
+	margin:0;
+	vertical-align:top;
+	text-align:center;
+}
+#mainTable tbody tr td.baobei{
+	padding:0 0 15px 0;
+	margin:0;
+	width:100%;
+}
+#mainTable tbody tr td.baobei div{
+	width:100%;
+	margin:0 auto;
+	padding:0;
+}
+#mainTable tbody tr td.baobei div ul{
+	list-style:none;
+	width:100%;
+	margin: 0 0 0 0;
+	padding: 0;
+}
+#mainTable tbody tr td.baobei div ul li.line{
+	height:23px;
+	line-height:23px;
+}
+#mainTable tbody tr td.baobei div ul li.left{
+	border-left:1px solid #E5EFF9;
+}
+#mainTable tbody tr td.baobei div ul li.right{
+	border-right:1px solid #E5EFF9;
+}
+
+#mainTable tbody tr td.baobei div ul li input.long{
+	border:0;
+	border-bottom:0px inset #efefef;
+	width:80%;
+}
+#mainTable tbody tr td.baobei div ul li.table{
+	vertical-align:top;
+	width:100%;
+	margin: 0;
+	padding: 0;
+}
+#mainTable tbody tr td.baobei div ul li.table table.baobeiTable{
+	border:1px solid #E5EFF9;
+	border-collapse:collapse;
+	display:inline-table;
+	margin: 0px 0 15px 0;
+	padding: 0;
+	width: 100%;
+}
+#mainTable tbody tr td.baobei div ul li.table table.baobeiTable tr{}
+#mainTable tbody tr td.baobei div ul li.table table.baobeiTable tr td{
+	border-top:1px solid #E5EFF9;
+	border-collapse:collapse;
+	padding:0;
+}
+span.bg{
+	color:#666;
+}
+span.bg1{
+	background-color: red;
+	color:#fff;
+	padding:0 5px;
+}
+span.f1{
+	color:#111;
+}
+#mainTable tbody tr td.baobei div ul li.table table.baobeiTable tr td.img{
+	text-align:left;
+	border-top:1px solid #E5EFF9;
+	padding:0;
+}
+#mainTable tbody tr td.baobei div ul li.table table.baobeiTable tr td.txt{
+	line-height:22px;
+	padding:0;
+	border-top:1px solid #E5EFF9;
+}
+#mainTable tbody tr td.baobei div ul li.table table.baobeiTable tr td.number{
+	line-height:22px;
+	padding:0;
+	border-top:1px solid #E5EFF9;
+	vertical-align: middle;
+	text-align:center;
+}
+#mainTable tbody tr td.baobei div ul li.table table.baobeiTable tr td.rightBorder{
+	border-right:1px solid #E5EFF9;
+}
+#mainTable tbody tr td.baobei div ul li.table table.baobeiTable tr td.title{
+	/*
+	background-image: url(../images/itemlist_bg.gif); 
+	background-repeat: repeat-x; 
+	background-position: 0px 0px;
+	*/ 
+	text-align:center;
+	width:60px;
+	height:26px;
+	color:#ACACAC;
+}
+#mainTable tbody tr td.inner table.innerTable{
+	width:93%;
+	padding:0;
+	margin:0 auto;
+	border:0px solid red;
+	border-collapse:collapse;
+}
+#mainTable tbody tr td.inner table.innerTable tr{}
+#mainTable tbody tr td.inner table.innerTable tr td{
+	border:0px solid #333;
+	height:19px;
+	padding:0;
+	margin:0;
+	border-collapse:collapse;
+	height:24px;
+	text-align:left;
+}
+#mainTable tbody tr td.inner table.innerTable tr.mergeAble td{
+	border: 0px solid #ccc;
+}
+#mainTable tbody tr td.inner table.innerTable tr.mergeAble td.title{
+	height:26px;
+	border-top:1px solid #E5EFF9;
+}
+#mainTable tbody tr td.inner table.innerTable tr.mergeAble td.title_left{
+	border-left:1px solid #E5EFF9;
+}
+#mainTable tbody tr td.inner table.innerTable tr.mergeAble td.title_right{
+	border-right:1px solid #E5EFF9;
+}
+#mainTable tbody tr td.inner table.innerTable tr.mergeAble td.titleTd{
+	height:26px;
+/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2Q3ZTdmNyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjclIiBzdG9wLWNvbG9yPSIjZmZmZmZmIiBzdG9wLW9wYWNpdHk9IjAuMjEiLz4KICAgIDxzdG9wIG9mZnNldD0iOCUiIHN0b3AtY29sb3I9IiNmY2ZkZmUiIHN0b3Atb3BhY2l0eT0iMC4xIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjIyJSIgc3RvcC1jb2xvcj0iI2Q3ZTdmNyIgc3RvcC1vcGFjaXR5PSIwLjUiLz4KICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2Q3ZTdmNyIgc3RvcC1vcGFjaXR5PSIwIi8+CiAgPC9saW5lYXJHcmFkaWVudD4KICA8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2dyYWQtdWNnZy1nZW5lcmF0ZWQpIiAvPgo8L3N2Zz4=);
+background: -moz-linear-gradient(top,  rgba(215,231,247,1) 0%, rgba(255,255,255,0.21) 7%, rgba(252,253,254,0.1) 8%, rgba(215,231,247,0.5) 22%, rgba(215,231,247,0) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(215,231,247,1)), color-stop(7%,rgba(255,255,255,0.21)), color-stop(8%,rgba(252,253,254,0.1)), color-stop(22%,rgba(215,231,247,0.5)), color-stop(100%,rgba(215,231,247,0))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  rgba(215,231,247,1) 0%,rgba(255,255,255,0.21) 7%,rgba(252,253,254,0.1) 8%,rgba(215,231,247,0.5) 22%,rgba(215,231,247,0) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  rgba(215,231,247,1) 0%,rgba(255,255,255,0.21) 7%,rgba(252,253,254,0.1) 8%,rgba(215,231,247,0.5) 22%,rgba(215,231,247,0) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  rgba(215,231,247,1) 0%,rgba(255,255,255,0.21) 7%,rgba(252,253,254,0.1) 8%,rgba(215,231,247,0.5) 22%,rgba(215,231,247,0) 100%); /* IE10+ */
+background: linear-gradient(to bottom,  rgba(215,231,247,1) 0%,rgba(255,255,255,0.21) 7%,rgba(252,253,254,0.1) 8%,rgba(215,231,247,0.5) 22%,rgba(215,231,247,0) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d7e7f7', endColorstr='#00d7e7f7',GradientType=0 ); /* IE6-8 */
+
+padding:0;
+margin:0;
+}
+#mainTable tbody tr td.inner table.innerTable tr.mergeAble td.titleTd label.tradeStatus{
+	display: inline-block;
+	height:26px;
+	line-height:26px;
+	margin:0 2px 0 2px;
+	vertical-align: bottom;
+	border:0px solid #333;
+	text-indent:15px;
+	text-align:center;
+	padding-right:2px;
+}
+#mainTable tbody tr td.inner table.innerTable tr.mergeAble td label.fhImg,#mainTable tbody tr td.inner table.innerTable tr.mergeAble td label.kdImg{
+	display: inline-block;
+	width:15px;
+	height:15px;
+	line-height:15px;
+	margin:0 2px 0 2px;
+	vertical-align: bottom;
+	border:0px solid #333;
+}
+#mainTable tbody tr td.inner table.innerTable tr.mergeAble td label.fhImg img,#mainTable tbody tr td.inner table.innerTable tr.mergeAble td label.kdImg img{
+	vertical-align: bottom;
+	cursor: pointer;
+}
+#mainTable tbody tr td.inner table.innerTable tr td span.title{
+	display:inline-block;
+	text-align:left;
+	margin:0 2px 0 10px;
+	border:0px dashed #333;
+	color:#666;
+}
+#mainTable tbody tr td.inner table.innerTable tr td.bg{
+	background-color: #F8F176;
+}
+#mainTable tbody tr td.inner table.innerTable tr td input{
+	margin:0 3px;
+}
+#mainTable tbody tr td.inner table.innerTable tr td  a{
+	text-decoration:none;
+	color:#DDEBF9;
+}
+
+#mainTable tbody tr td.inner table.innerTable tr td input.underline{
+	border:0;
+	border-bottom:0px inset #fafafa;
+	width:150px;
+	margin:2px 3px;
+}
+#mainTable tbody tr td.inner table.innerTable tr td input.shortUnderline{
+	border:0;
+	border-bottom:0px inset #fafafa;
+	width:80px;
+	margin:2px 3px;
+}
+#mainTable tbody tr td > input[type='text']{
+	/*background-image: url("../images/textfield.gif");
+	background-repeat: repeat-x;
+	*/
+	border:1px solid #666;
+	height:21px;
+	line-height: 21px;
+}
+#mainTable tbody tr td.inner table.innerTable tr td input.underlineLong{
+	border:0;
+	border-bottom:0px inset #fafafa;
+	width:600px;
+	margin:2px 3px;
+	vertical-align: bottom;
+	padding:0 5px;
+}
+#mainTable tbody tr td.inner table.innerTable tr td.topline{
+	border:0;
+	border-top:1px solid #ccc;
+}
+span.failure{
+	font-size:16px;color:#f00;font-weight:bold;padding:0 5px;
+}
+span.success{
+	font-size:16px;color:green;font-weight:bold;padding:0 5px;
+}

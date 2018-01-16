@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.dbumama.wxmall</groupId>
+		<artifactId>wxmall</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>wxmall-web</artifactId>
+	<packaging>war</packaging>
+	<name>${project.artifactId} Maven Webapp</name>
+	<description>the web of weixin market project</description>
+	<url>http://www.dbumama.com</url>
+	
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<package.environment>prod</package.environment>
+	</properties>
+	
+	<dependencies>
+
+		<dependency>
+			<groupId>com.dbumama.wxmall</groupId>
+			<artifactId>wxmall-web-core</artifactId>
+			<version>${project.version}</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.dbumama.wxmall</groupId>
+			<artifactId>wxmall-web-admin</artifactId>
+			<version>${project.version}</version>
+			<type>war</type>
+			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.dbumama.wxmall</groupId>
+			<artifactId>wxmall-web-mobile</artifactId>
+			<version>${project.version}</version>
+			<type>war</type>
+			<scope>compile</scope>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<finalName>${project.artifactId}-${project.version}</finalName>
+
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<port>8080</port>
+					<path>/wxmall</path>
+					<uriEncoding>UTF-8</uriEncoding>
+					<server>tomcat7</server>
+					<contextReloadable>true</contextReloadable>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>maven-jetty-plugin</artifactId>
+				<version>6.1.10</version>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<configuration>
+					<encoding>utf-8</encoding>
+					<packagingExcludes>WEB-INF/web.xml</packagingExcludes>
+					<overlays>
+						<overlay>
+							<groupId>com.dbumama.wxmall</groupId>
+							<artifactId>wxmall-web-admin</artifactId>
+						</overlay>
+						<overlay>
+							<groupId>com.dbumama.wxmall</groupId>
+							<artifactId>wxmall-web-mobile</artifactId>
+						</overlay>
+					</overlays>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

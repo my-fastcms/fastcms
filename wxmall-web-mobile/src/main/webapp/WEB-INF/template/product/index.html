@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+[#include "/includes/header.html" /]
+</head>
+<body>
+<!--顶部搜索-->
+<header class='weui-header fixed-top'>
+  <div class="weui-search-bar" id="searchBar">
+    <form class="weui-search-bar__form">
+      <div class="weui-search-bar__box">
+        <i class="weui-icon-search"></i>
+        <input type="search" class="weui-search-bar__input" id="search_input" placeholder="搜索您想要的商品" required>
+        <a href="javascript:void(0)" class="weui-icon-clear" id="searchClear"></a>
+      </div>
+      <label class="weui-search-bar__label" id="searchText" style="transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);">
+        <i class="weui-icon-search"></i>
+        <span>搜索您想要的商品</span>
+      </label>
+    </form>
+    <a href="javascript:void(0)" class="weui-search-bar__cancel-btn" id="searchCancel">取消</a>
+  </div>
+  <div class="pro-sort">
+    <div class="weui-flex">
+      <div class="weui-flex__item"><div class="placeholder NormalCss">综合</div></div>
+      <div class="weui-flex__item"><div id="salediv" class="placeholder SortAscCss">按销量</div></div>
+      <div class="weui-flex__item"><div id="pricediv" class="placeholder SortDescCss"><i>按价格</i></div></div>
+    </div>
+  </div>
+</header>
+
+<div class="weui-content" style="padding-top:85px;">
+  <!--产品列表--滑动加载-->
+  <!-- <div class="weui-pull-to-refresh__layer">
+    <div class='weui-pull-to-refresh__arrow'></div>
+    <div class='weui-pull-to-refresh__preloader'></div>
+    <div class="down">下拉刷新</div>
+    <div class="up">释放刷新</div>
+    <div class="refresh">正在刷新</div>
+  </div> -->
+  <div id="list" class='proListWrap'>
+    <!-- <div class="pro-items">
+      <a href="pro_info.html" class="weui-media-box weui-media-box_appmsg">
+        <div class="weui-media-box__hd"><img class="weui-media-box__thumb" src="upload/pro3.jpg" alt=""></div>
+        <div class="weui-media-box__bd">
+          <h1 class="weui-media-box__desc">【顺丰】新鲜采摘 大樱桃 正宗山东烟台车厘子红灯水果3斤包邮</h1>
+          <div class="wy-pro-pri">¥<em class="num font-15">296.00</em></div>
+          <ul class="weui-media-box__info prolist-ul">
+            <li class="weui-media-box__info__meta"><em class="num">0</em>条评价</li>
+            <li class="weui-media-box__info__meta"><em class="num">100%</em>好评</li>
+          </ul>
+        </div>
+      </a>
+    </div> -->
+  </div>
+  <div class="weui-loadmore">
+    <i class="weui-loading"></i>
+    <span class="weui-loadmore__tips">正在加载</span>
+  </div>
+</div>
+<!--手机端script需要加载后方-->
+[#include "includes/footer.html"/]
+<script id="tmp" type="text/html">
+	<div class="pro-items"><a href="${webctx}/product/detail?id={id}" class="weui-media-box weui-media-box_appmsg"><div class="weui-media-box__hd"><img class="weui-media-box__thumb" src="{mainPic}" alt=""></div><div class="weui-media-box__bd"><h1 class="weui-media-box__desc">{name}</h1><div class="wy-pro-pri">¥<em class="num font-15">{price}</em></div><ul class="weui-media-box__info prolist-ul"><li class="weui-media-box__info__meta"><em class="num">0</em>条评价</li><li class="weui-media-box__info__meta"><em class="num">100%</em>好评</li></ul></div></a></div>
+</script>
+<script type="text/javascript">
+var page = 1;
+var params = {};
+params.page = page;
+params.keyword = '${keyword}';
+params.categId = '${categId}';
+$(function(){
+	//滚动加载
+	var loading = false;  //状态标记
+	var complate = false; //数据是否加载完毕
+	$(document.body).infinite().on("infinite",function(){
+		if(loading) return;
+		if(complate) return;
+		loading = true;
+		page ++;
+		params.page = page;
+		submit(params);
+	});
+	//阻止表单提交
+	$("#nav-btn > img").click(function(){
+		$(".curtain").css("display","block");
+	});
+	$("#nav-btn .curtain").click(function(){
+		this.style.display = "none";
+	});
+	
+	 $("#salediv").click(function(){
+		var sortAsc = $(this).hasClass("SortAscCss");
+		if(sortAsc && sortAsc==true){
+			$(this).removeClass("SortAscCss");
+			$(this).addClass("SortDescCss");
+			params.orderType = "asc";
+		}else{
+			$(this).removeClass("SortDescCss");
+			$(this).addClass("SortAscCss");
+			params.orderType = "desc";
+		}
+		$("#list").empty();
+		page = 1;
+	 	params.page = page;
+	  	submit (params);
+	 }); 
+	 $("#pricediv").click(function(){
+		 var sortAsc = $(this).hasClass("SortAscCss");
+		 if(sortAsc && sortAsc==true){
+			$(this).removeClass("SortAscCss");
+			$(this).addClass("SortDescCss");
+			params.orderType = "asc";
+		 }else{
+			$(this).removeClass("SortDescCss");
+			$(this).addClass("SortAscCss");
+			params.orderType = "desc";
+		 }
+		$("#list").empty();
+		page = 1;
+		params.page = page;
+		submit (params);
+	 }); 
+
+	function submit (arr){
+		$("div.weui-loadmore").show();
+		$.ajax({
+			type: "post",
+			url: "${webctx}/product/list",
+			data: arr,
+			async: true,
+			success: function(data){
+				loading = false;
+				$("div.weui-loadmore").hide();
+				if(data.code != 200){
+					$.toast("加载数据失败，请重新拉取");
+					return;
+				}
+				
+				if(data.data.length<=0){
+					complate = true;
+					$(".weui-loadmore_line").show();
+					$(".weui-loadmore__tips").html("已经到底了");
+					//$(".weui-infinite-scroll").show();
+				}else{
+					for( var i = 0 ; i < data.data.length ; i ++ ){
+						var html = formatTemplate(data.data[i], $("#tmp").html());
+						$("#list").append(html);
+					}					
+				}
+			},
+			error: function(){
+				$("div.weui-loadmore").hide();
+				alert("网络异常,请联系管理员!");
+			}
+		});
+	}
+	submit(params);
+});
+</script>
+
+<script>Template.init("#nav-page-categ");</script>
+</body>
+</html>

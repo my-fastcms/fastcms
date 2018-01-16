@@ -1,0 +1,235 @@
+[#include "/includes/_layout.html"/]
+[#macro css_import]
+<link href="${webctx}/resources/assets/css/plugins/steps/jquery.steps.css" rel="stylesheet"/>
+[/#macro]
+[#macro script_import]
+<script src="${webctx}/resources/assets/js/plugins/staps/jquery.steps.min.js"></script>
+[/#macro]
+[#macro css]
+<style type="text/css">
+.wizard-big.wizard > .content{
+    min-height: 450px;
+}
+</style>
+[/#macro]
+[@layout]
+<div class="wrapper wrapper-content">
+	<div class="row animated fadeInLeft">
+	[#include "/includes/menus-setting.html" /]
+	<div class="col-sm-11">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	           <a href="${webctx}/setting" class="J_menuTab active">公众号</a>
+	           <a href="${webctx}/menu" class="J_menuTab">公众号菜单</a>
+	           <a href="${webctx}/matter" class="J_menuTab">图文消息</a>
+	       </div>
+	   	</nav>
+	</div>
+	<div class="ibox float-e-margins col-sm-9">
+		[#if error??]
+		<div class="alert alert-danger">
+			<button type="button" class="close" data-dismiss="alert">×</button>
+			<strong>错误!</strong> ${error}.
+		</div>
+		[/#if]
+		<div>
+		<form id="setting_form" action="${webctx}/setting/save" method="post" class="form-horizontal wizard-big" enctype="multipart/form-data" style="padding-top: 10px;">
+            <input id="id" name="id" type="hidden" value="${authConfig.id}">
+            <h1>基本信息</h1>
+            <fieldset>
+                <div class="row">
+                    <div class="col-sm-8">
+                    	<div class="form-group">
+                            <label class="col-sm-3 control-label">公众号名称<span style="color: red;"><em>*</em></span></label>
+                            <div class="col-sm-9"><input id="app_name" name="app_name" type="text" value="${authConfig.app_name}" class="form-control required"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">appId<span style="color: red;"><em>*</em></span></label>
+                            <div class="col-sm-9"><input id="app_id" name="app_id" type="text" value="${authConfig.app_id}" class="form-control required"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">appSecret<span style="color: red;"><em>*</em></span></label>
+                            <div class="col-sm-9"><input id="app_secret" name="app_secret" type="text" value="${authConfig.app_secret}" class="form-control required"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">管理端域名 <span style="color: red;"><em>*</em></span></label>
+                            <div class="col-sm-9"><input id="admin_domain" name="admin_domain" type="text" value="${authConfig.admin_domain}" class="form-control required"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">微信端域名 <span style="color: red;"><em>*</em></span></label>
+                            <div class="col-sm-9"><input id="wx_domain" name="wx_domain" type="text" value="${authConfig.wx_domain}" class="form-control required" onblur="setPayUrl()"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">图片域名 <span style="color: red;"><em>*</em></span></label>
+                            <div class="col-sm-9"><input id="img_domain" name="img_domain" type="text" value="${authConfig.img_domain}" class="form-control required"></div>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+            <h1>消息配置</h1>
+            <fieldset>
+                <div class="row">
+                	<div class="col-sm-10">
+                	<div class="form-group">
+                        <label class="col-sm-3 control-label">服务器地址 <span style="color: red;"><em>*</em></span></label>
+                        <div class="col-sm-9"><input id="msg_server_url" name="msg_server_url" type="text" value="${authConfig.msg_server_url}" class="form-control required"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">令牌token<span style="color: red;"><em>*</em></span></label>
+                        <div class="col-sm-9"><input id="msg_token" name="msg_token" type="text" value="${authConfig.msg_token}" class="form-control required"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">密钥（encodingAesKey）<span style="color: red;"><em>*</em></span></label>
+                        <div class="col-sm-9"><input id="msg_aes_key" name="msg_aes_key" type="text" value="${authConfig.msg_aes_key}" class="form-control required"></div>
+                    </div>
+                	</div>
+                </div>
+            </fieldset>
+
+            <h1>支付配置</h1>
+            <fieldset>
+                <div class="row">
+                	<div class="col-sm-10">
+                	<div class="form-group">
+			            <label class="col-md-3 control-label">支付商户号<span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-9">
+			                <input type="text" id="pay_mch_id" name="pay_mch_id" class="form-control required" value="${authConfig.pay_mch_id}"/>
+			            </div>
+			        </div>
+			        <div class="form-group">
+			            <label class="col-md-3 control-label">支付密钥<span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-9">
+			                <input type="password" id="pay_secret_key" name="pay_secret_key" class="form-control required" value="${authConfig.pay_secret_key}"/>
+			            </div>
+			        </div>
+			        <div class="form-group">
+			            <label class="col-md-3 control-label">支付回调URL<span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-9">
+			                <input type="text" id="pay_result_url" name="pay_result_url" class="form-control required" value="${authConfig.pay_result_url}"/>
+			            </div>
+			        </div>
+			        <div class="form-group">
+			            <label class="col-md-3 control-label">支付证书文件</label>
+			            <div class="col-md-9">
+			                <input type="file" id="pay_cert_file" name="pay_cert_file"/>
+			            </div>
+			        </div>
+					<div class="form-group">
+			            <label class="col-md-3 control-label">订单支付授权目录</label>
+			            <div class="col-md-9">
+			                <input type="text" class="form-control" value="http://www.youdomain.com/pay" readonly="readonly"/>
+			            </div>
+			        </div>
+			        <div class="form-group">
+			            <label class="col-md-3 control-label">订单明细支付授权目录</label>
+			            <div class="col-md-9">
+			                <input type="text" class="form-control" value="http://www.youdomain.com/order/detail" readonly="readonly"/>
+			            </div>
+			        </div>
+			        <div class="form-group">
+			            <label class="col-md-3 control-label">会员卡充值授权目录</label>
+			            <div class="col-md-9">
+			                <input type="text" class="form-control" value="http://www.youdomain.com/user/recharge" readonly="readonly"/>
+			            </div>
+			        </div>
+                	</div>
+                </div>
+            </fieldset>
+
+            <!-- <h1>完成</h1>
+            <fieldset>
+                <label for="acceptTerms">请核实相关信息</label>
+            </fieldset> -->
+        </form>
+	  	</div>
+	</div>
+	<div class="col-sm-3">
+         <div class="wrapper wrapper-content project-manager">
+             <h4>帮助说明</h4>
+             <ol>
+                 <li>假如您的微信商户登陆账户是123456789@123456789，那么此处的支付商户号请填写123456789</li>
+                 <li>支付密钥是指微信商户后台32位长度的密钥，而不是商户登陆账户密码</li>
+                 <li>从微信商户后台下载的cert.zip包，解压后，此处上传apiclient_cert.p12文件</li>
+                 <li>复制左侧三个授权目录地址，到微信公众号后台配置支付目录</li>
+             </ol>
+         </div>
+     </div>	
+</div>
+</div>
+</div>
+[/@layout]
+<script type="text/javascript">
+function setPayUrl(){
+	
+}
+
+$(document).ready(function () {
+    $("#setting_form").steps({
+        bodyTag: "fieldset",
+        onStepChanging: function (event, currentIndex, newIndex) {
+            // Always allow going backward even if the current step contains invalid fields!
+            if (currentIndex > newIndex) {
+                return true;
+            }
+
+            // Forbid suppressing "Warning" step if the user is to young
+            if (newIndex === 3) {
+                return false;
+            }
+
+            var form = $(this);
+
+            // Clean up if user went backward before
+            if (currentIndex < newIndex) {
+                // To remove error styles
+                $(".body:eq(" + newIndex + ") label.error", form).remove();
+                $(".body:eq(" + newIndex + ") .error", form).removeClass("error");
+            }
+
+            // Disable validation on fields that are disabled or hidden.
+            form.validate().settings.ignore = ":disabled,:hidden";
+
+            // Start validation; Prevent going forward if false
+            return form.valid();
+        },
+        onStepChanged: function (event, currentIndex, priorIndex) {
+            // Suppress (skip) "Warning" step if the user is old enough.
+            if (currentIndex === 2) {
+                $(this).steps("next");
+            }
+
+            // Suppress (skip) "Warning" step if the user is old enough and wants to the previous step.
+            if (currentIndex === 2 && priorIndex === 3) {
+                $(this).steps("previous");
+            }
+        },
+        onFinishing: function (event, currentIndex) {
+            var form = $(this);
+
+            // Disable validation on fields that are disabled.
+            // At this point it's recommended to do an overall check (mean ignoring only disabled fields)
+            form.validate().settings.ignore = ":disabled";
+
+            // Start validation; Prevent form submission if false
+            return form.valid();
+        },
+        onFinished: function (event, currentIndex) {
+            var form = $(this);
+
+            form.mask("正在保存...");
+            // Submit form input
+            form.submit();
+        }
+    }).validate({
+        errorPlacement: function (error, element) {
+            element.before(error);
+        },
+        rules: {
+        }
+    });
+});
+
+	Template.init("#menu-setting");
+	Template.initSecond("#menu-public");
+</script>

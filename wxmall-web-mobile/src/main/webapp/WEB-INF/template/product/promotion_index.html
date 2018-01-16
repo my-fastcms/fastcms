@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>促销打折</title>
+[#include "/includes/header.html" /]
+<link rel="stylesheet" href="${webctx}/resources/css/product.css"/>
+</head>
+<body>
+<div class="content goods-list">
+<div>
+	<!-- 搜索框  -->
+	<div class="weui-search-bar" id="searchBar">
+      <form class="weui-search-bar__form">
+        <div class="weui-search-bar__box">
+          <i class="weui-icon-search"></i>
+          <input type="search" class="weui-search-bar__input" id="searchInput" placeholder="搜索" required="">
+          <a href="javascript:" class="weui-icon-clear" id="searchClear"></a>
+        </div>
+        <label class="weui-search-bar__label" id="searchText" style="transform-origin: 0px 0px 0px; opacity: 1; transform: scale(1, 1);">
+          <i class="weui-icon-search"></i>
+          <span>搜索</span>
+        </label>
+      </form>
+      <a href="javascript:" class="weui-search-bar__cancel-btn" id="searchCancel">取消</a>
+    </div>
+	<!-- 商品列表 -->
+	<div id="goods-list" class="goods-wrap"></div>
+	<div class="weui-loadmore" style="display: none;">
+        <i class="weui-loading"></i>
+        <span class="weui-loadmore__tips">正在加载</span>
+    </div>
+    <div class="weui-loadmore weui-loadmore_line" style="display: none;">
+        <span class="weui-loadmore__tips"></span>
+    </div>
+    <!-- <div class="weui-loadmore weui-loadmore_line weui-loadmore_dot">
+        <span class="weui-loadmore__tips"></span>
+    </div> -->
+	<!-- /商品列表 -->
+	
+</div>
+</div>
+<!-- orderType = $();
+param.orderType = orderType; -->
+<!--手机端script需要加载后方-->
+[#include "includes/footer.html"/]
+<script id="newtmp" type="text/html">
+<li>
+    <a href="${webctx}/product/detail?id={id}"><img class="o2_gl_img" src="{mainPic}"> 
+        <div class="o2_gl_info">
+            <div class="o2_gl_t4">{name}</div>
+            <div class="o2_gl_t2"><span class="o2_gl_price red">￥<b>{price}</b></span></div>
+            <div class="o2_gl_t3 red"></div>
+            <div class="o2_gl_button red">立即购买</div>
+         </div>
+    </a>
+</li>
+</script>
+<script id="newtmpOld" type="text/html">
+<li>
+	<div class="item">
+		<div class="jpic">
+			 <a href="${webctx}/product/detail?id={id}" class="floor-pd-img"><img src="{mainPic}"  width="100%"></a>
+		</div>
+		<div class="jTitle">
+             <a href="${webctx}/product/detail?id={id}">{name}</a>
+        </div>
+       <div class="buy">
+		  <div class="jprice">&yen;<span class="jdNum">{price}</span></div>
+          <div class="button"><a href="${webctx}/product/detail?id={id}">购 买 &gt;</a></div>
+      </div>
+	</div>
+</li>
+</script>
+<script id="tmp" type="text/html">
+	<div class="goods-item f-cb">
+				<a href="${webctx}/product/detail?id={id}"><img class="picture" src="{mainPic}" width="120" height="120"/></a>
+				<div class="goods-item-info">
+					<div class="title">{name}</div>
+					<div class="price">{price}</div>
+					<!-- <div class="appraise">
+						库存{store}件
+					</div> 
+					<div class="appraise">
+<a class="weui_btn weui_btn_mini weui_btn_primary add-shopping" href="javascript:add2Cart('{id}');">加入购物车</a>
+					</div>
+					-->
+[#if setting.isShowMarketPrice]
+					<div class="price" style="color: #787878; font-size: 12px;text-decoration:line-through;">
+						{marketPrice}
+					</div> 
+[/#if]
+
+				</div>
+			</div>
+</script>
+<script type="text/javascript">
+var page = 1;
+var params = {};
+params.page = page;
+$(function(){
+	//滚动加载
+	var loading = false;  //状态标记
+	var complate = false; //数据是否加载完毕
+	$(document.body).infinite().on("infinite",function(){
+		if(loading) return;
+		if(complate) return;
+		loading = true;
+		page ++;
+		//params.formData = $("#J_form").serialize();
+		params.page = page;
+		//params.keyword='${keyword}';
+		submit(params);
+	});
+
+	function submit (arr){
+		$("div.weui-loadmore").show();
+		$.ajax({
+			type: "post",
+			url: "${webctx}/product/getPromotionProductList",
+			data: arr,
+			async: true,
+			success: function(data){
+				loading = false;
+				$("div.weui-loadmore").hide();
+				if(data.code != 200){
+					$.toast("加载数据失败，请重新拉取");
+					return;
+				}
+				if(data.data.length<=0){
+					complate = true;
+					$(".weui-loadmore_line").show();
+					$(".weui-loadmore__tips").html("已经到底了");
+					//$(".weui-infinite-scroll").show();
+				}else{
+					for( var i = 0 ; i < data.data.length ; i ++ ){
+						var html = formatTemplate(data.data[i], $("#tmp").html());
+						$("#goods-list").append(html);
+					}	
+				}
+			},
+			error: function(){
+				$("div.weui-loadmore").hide();
+				alert("网络异常,请联系管理员!");
+			}
+		});
+	}
+	submit(params);
+});
+</script>
+</body>
+</html>

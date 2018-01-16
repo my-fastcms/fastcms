@@ -1,0 +1,614 @@
+[#include "/includes/_layout.html"/]
+<link rel="stylesheet" type="text/css" href="${webctx}/resources/css/jquery.matter.css"/>
+<script type="text/javascript" charset="utf-8" src="${webctx}/resources/ueditor/ueditor.configMatter.js"></script>
+<script type="text/javascript" charset="utf-8" src="${webctx}/resources/ueditor/ueditor.all.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="${webctx}/resources/js/fileupload/jquery.ui.widget.js"></script>
+<script type="text/javascript" charset="utf-8" src="${webctx}/resources/js/fileupload/jquery.iframe-transport.js"></script>
+<script type="text/javascript" charset="utf-8" src="${webctx}/resources/js/fileupload/jquery.fileupload.js"></script>
+<style type="text/css">
+</style>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+[@layout]
+<div class="wrapper wrapper-content">
+<div class="row animated fadeInLeft">
+	
+	[#include "/includes/menus-setting.html" /]
+	
+	<div class="col-sm-11">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+		       <a href="${webctx}/setting" class="J_menuTab">公众号</a>
+		       <a href="${webctx}/menu" class="J_menuTab">公众号菜单</a>
+		       <a href="${webctx}/matter" class="J_menuTab active">图文消息</a>
+	       </div>
+	   	</nav>
+	</div>
+<div class="main_bd">
+
+<div class="ibox-title row">
+	<h5><small><a href="${webctx}/matter">《返回列表</a></small></h5>
+</div>
+
+	<input type="hidden" value="[#if media_id??]${media_id}[/#if]" name="materialId"/>
+<div class="wrapper wrapper-no-gap my-material editor-wrapper" style="">
+<div class="editor-view mCustomScrollbar _mCS_3 mCS-autoHide mCS_no_scrollbar" style="overflow: visible;">
+<div id="mCSB_3" class="mCustomScrollBox mCS-minimal-dark mCSB_vertical mCSB_outside" style="max-height: auto;" tabindex="0">
+<div id="mCSB_3_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y" style="position:relative; top:0; left:0;" dir="ltr">
+	<div class="editorView">
+		<div class="graphic-title">
+			<span>图文</span>
+			<div class="fold-button" style="display: none;">
+			<a id="btnFold" href="javascript:void(0);">
+			<em id="txtFold">收起</em>
+			<i class="fa fa-chevron-circle-left" aria-hidden="true"></i>
+			</a>
+			</div>
+		</div>
+		<div id="previewItem" class="ui-sortable">
+		  
+	    </div>      
+        <div class="editorViewAdd">
+                  <i class="fa editorViewAddPrev">+</i>
+            <span class="editorViewAddBtns">
+                <a id="editorViewAdd"><i class="fa fa-plus"></i> 新建</a>
+            </span>
+        </div>    
+	</div>
+</div>
+</div>
+</div>
+</div>
+<div class="editor-style" style="">
+	<div class="editor-area-box" style="">
+		<div class="editor-area" style="">
+			<div class="area660 edit-content-area" style="">
+			   <div id="editor" class="edit-body edui-default" style="">
+			    <script type="text/plain" id="editor"  name="introduction"></script>
+			   </div>
+			   <div class="enter-footer">
+			   <div class="icheckbox_square-green" style="position: relative;">
+				<input id="chkOriginalUrl" class="control-checkbox" data-checkbox="" style="position: absolute; top: -20%; left: -20%; display: block; width: 140%; height: 140%; margin: 0px; padding: 0px; background: rgb(255, 255, 255) none repeat scroll 0% 0%; border: 0px none; opacity: 0;" type="checkbox">
+				</div>
+				原文链接
+				<div class="link-box">
+				<input class="control-checkbox-label link-input" name="originalUrl" for="chkOriginalUrl" placeholder="请输入原文链接" type="text">
+				</div>
+			   </div>
+			</div>
+		</div>
+		<div class="editor-area editor-area-padding">
+		<div class="area660">
+		  <div class="editorGroup">
+			<label class="editorLabel">
+			封面：
+			<span class="note">(大图片建议尺寸：900像素 * 500像素)</span>
+			</label>
+			<div class="editorInput">
+			<div class="uploadCoverBtn">
+			<a class="btn btn-default">本地上传</a>
+			<input id="fileTopicImageUrl" class="uploadFile" name="files[]" type="file"/>
+			</div>
+			<div class="uploadCover">
+               <div class="uploadCoverImg">
+                   <img src="" id="imageUrl">
+               </div>
+               <div class="uploadCoverProcess">
+                   <span style="height:30%;">
+                       <a id="btnDeleteImage" href="javascript:void(0);" style="display: none;">
+                           <i class="fa fa-trash" aria-hidden="true"></i>
+                       </a>
+                   </span>
+               </div>
+           </div>
+			</div>
+			</div>
+		  <div class="editorGroup">
+				<label class="editorLabel">
+				摘要：
+				<span class="note">(选填，如果不填写会默认抓取正文前54个字)</span>
+				</label>
+				<div class="editorInput">
+				<textarea name="digest"></textarea>
+				</div>
+		</div>
+		</div>
+	    </div>
+	</div>
+	<div class="editor-area-footer">
+	<a id="saveToServer" class="save" href="javascript:void(0);">保存</a>
+<!-- 	<a class="" href="/Material/SendToWX/?bizId=1628933" data-id="1628933" data-cansend="0" data-toggle="modal" data-target="#remoteModal">同步到公众号后台</a>
+ -->	<a class="" name="btnCannotMass" href="javascript:void(0);">定时群发</a>
+	<a href="javascript:history.back(-1)">返回</a>
+	</div>	
+</div>
+</div>
+
+
+
+<div class="appmsg_edit_box" style="display: none">
+
+		<div class="appmsg_edit_mod default appmsg_preview_area">
+		  <div class="appmsg_edit_container appmsg_preview_container js_aside" style="height: 500px;">
+			<div class="scroll-wrapper js_scrollbar scrollbar-macosx" style="position: relative; max-height: auto;">
+			<div class="js_scrollbar scrollbar-macosx scroll-content scroll-scrolly_visible" style="height: auto; margin-bottom: -17px; margin-right: -17px; max-height: auto;">
+				<div class="appmsg_container_hd">
+				 <h4 class="appmsg_container_title">图文列表</h4>
+				</div>
+			</div>
+		 </div>
+		</div>
+	</div>
+</div>
+</div>
+</div>
+</div>
+[/@layout]
+<script type="text/javascript">
+Template.init("#menu-setting");
+Template.initSecond("#menu-public");
+</script>
+<script type="text/javascript">
+var ue = {}, materialData = [];
+var variables = {
+		index:$('#previewItem section.itemSelected').attr('data-id'),
+	  //  bizId: $('input[name=bizId]').val(),
+	   // bizName: $('input[name=bizName]').val(),
+	    materialId: $('input[name=materialId]').val(),
+	    foldContent: false,
+	    draftId: 'material_' + $('input[name=materialId]').val()
+	   // saveInterval: 10000
+	};
+var e = {
+	    __init: function () {
+	        //e.__registerUI();
+	        ue = UE.getEditor('editor',{
+	toolbars: [
+				["bold", "italic", "underline", "strikethrough", "forecolor", "backcolor", "justifyleft", "justifycenter", "justifyright", "|", "insertunorderedlist", "insertorderedlist", "blockquote",
+				"simpleupload", "insertimage", "insertvideo", "link", "removeformat", "|", "rowspacingtop", "rowspacingbottom", "lineheight", "paragraph", "fontsize",
+				"inserttable", "deletetable", "insertparagraphbeforetable", "insertrow", "deleterow", "insertcol", "deletecol", "mergecells", "mergeright", "mergedown", "splittocells", "splittorows", "splittocols"]
+			],
+			autoClearinitialContent: false,
+			enableAutoSave: false,
+			autoFloatEnabled: !0,
+			wordCount: !1,
+			elementPathEnabled: !1,
+			//initialContent:'${product.introduction}',
+  		 	//initialFrameWidth: 396, 
+			initialFrameHeight: 300, 
+			focus: !1,
+			pasteplain: !1
+           });
+	        this.__createEditor(), this.__addListener();
+	    },
+	    __createEditor: function () {
+	        ue.ready(function () {
+	            e.__registerPlugins();
+	            e.__initPulginEvent(),
+	            e.__initToolbarTips(),
+	            e.__loadData(),
+	            ue.setDisabled();
+	        });
+	    },
+	    __initToolbarTips: function () {
+	        var a = $(ue.container.firstChild).find('.edui-toolbar').children();
+	        var b = ue.getOpt('toolbars')[0].concat(ue.getOpt('toolbars')[1]);
+	        $.each(b, function (index, val) {
+	            var c = $(a[index]).find('.edui-button-body').attr('title') || $(a[index]).children().attr('title');
+	            $(a[index]).find('.edui-button-body').attr('title', null);
+	            $(a[index]).children().attr('title', null);
+	            $(a[index]).attr({
+	                'data-toggle': 'tooltip',
+	                'data-placement': 'bottom',
+	                'title': c
+	            }).tooltip();
+	        });
+	    },
+	    __initPulginEvent: function () {
+
+	        function setCounter(t, useGBKLength) {
+	            var count = getLen(t.val(), useGBKLength);
+	            var maxLength = t.attr('max-length');
+	            var $counter = t.parent().children('em');
+	            $counter.html(count + '&#47;' + maxLength),
+	            count > maxLength ? t.parent().addClass('warn') : t.parent().removeClass('warn'),
+	            $counter.show();
+	        }
+	        
+	        //标题
+	        $('#title').on('keydown keyup', function () {
+	            setCounter($(this), false);
+	            var dataId = $('#previewItem section.itemSelected').attr('data-id');
+	            $('h4.appmsgTitle', $('#previewItem section.itemSelected')).html($(this).val());
+	            materialData[dataId].title = $(this).val();
+	        })
+
+	        //作者
+	        $('#author').on('keydown keyup', function () {
+	            setCounter($(this), true);
+	            var dataId = $('#previewItem section.itemSelected').attr('data-id');
+	            materialData[dataId].author = $(this).val();
+	        })
+
+	        //原文链接
+	        $('input[name=originalUrl]').keyup(function () {
+	            var dataId = $('#previewItem section.itemSelected').attr('data-id');
+	            materialData[dataId].content_source_url = $(this).val();
+	        });
+	        //摘要
+	        $('textarea[name=digest]').keyup(function () {
+	            var dataId = $('#previewItem section.itemSelected').attr('data-id');
+	            materialData[dataId].digest = $(this).val();
+	        });
+	      //删除图文
+	        $('#btnDeleteImage').click(function () {
+	            var dataId = $('#previewItem section.itemSelected').attr('data-id');
+	            materialData[dataId].thumb_media_id = '';
+	            $('#imageUrl').attr('src', '');
+	            $('#preImg', $('#previewItem section.itemSelected')).attr('src', '');
+	            $(this).hide();
+	        });
+	        //添加新图文
+	        $('#editorViewAdd').click(function () {
+	            if ($('#previewItem section').length >= 8) {
+	               // $.growl.warning({ title: "提示", message: "最多只能添加8条图文", duration: 3000 });
+	                return;
+	            }
+	            $('#previewItem section:last').after(PreViewItem('', '', materialData.length));
+	            pageLoad();
+	            materialData.push({ title: '', content: '', thumb_media_id: '', author: '', digest: '',content_source_url:'' });
+	            $('a.previewItemEdit', $('#previewItem section:last')).click();
+	        });
+	        
+	      //绑定图片上传事件
+	        $('#fileTopicImageUrl').fileupload({
+	            url: obz.ctx + "/matter/uploadFile",
+	            dataType: 'json',
+	            limitMultiFileUploads: 1,
+	            done: function (e, data) {
+	                    if (data.result.media_id) {
+	                        var dataId = $('#previewItem section.itemSelected').attr('data-id');
+	                        $('#imageUrl').attr('src', data.result.baseurl);
+	                        $('.WechatImage', $('#previewItem section.itemSelected')).attr('src', data.result.baseurl);
+	                        materialData[dataId].thumb_media_id = data.result.media_id;
+	                        $('a.btnDeleteImage').show();
+	                        obz.msg("图片上传成功");
+	                       // $.growl.notice({ title: "提示", message: "图片上传成功", duration: 3000 });
+	                    } else{
+	                    	obz.msg("图片上传失败");
+	                    }
+	               // });
+	            }
+	        });
+	        
+	      //保存图文
+	        $('#saveToServer').click(function () {
+	        	  saveMaterialData();
+	             if (!validateForm()) {
+	                return;
+	            } 
+	            var postData;
+	            if(variables.materialId==''){
+	             postData = {MaterialDetailList: JSON.stringify(materialData)};
+	            }else{
+	              postData = { media_id: variables.materialId, MaterialDetailList: JSON.stringify(materialData)};	
+	            }
+	            $(".main_bd").mask("正在提交数据...");
+	           // alert(JSON.stringify(postData));
+	              $.post(obz.ctx+"/matter/save", postData, function(resp) {
+	        		$(".main_bd").unmask();
+	        		if(resp.code != 200){
+	        			obz.error(resp.msg);
+	        			return;
+	        		}
+	        		obz.msg("保存成功", function(){
+	        			location.href = obz.ctx + "/matter";
+	        		});
+	        	});    
+	        });
+	      
+	        //滚动事件
+	        $(window).scroll(function () {
+	            var height = variables.foldContent ? 60 : reinitIframe($(ue.container).find(".edui-editor-iframeholder").find("iframe").get(0), 500);
+	            if (document.body.scrollTop < height) {
+	                $('.appmsg-tag-box').css('top', (92 + document.body.scrollTop) + 'px');
+	                if (variables.foldContent) {
+	                    $('.appmsg-tag-box').show();
+	                }
+	            }
+	            else {
+	                $('.appmsg-tag-box').css('top', '92px');
+	                if (variables.foldContent) {
+	                    $('.appmsg-tag-box').hide();
+	                }
+	            }
+	        });
+	    },
+	    
+	    __registerPlugins: function () {
+	        var plugins = {
+
+	            draft_tips: "<!--载入草稿提示--><div id=\"js_draft_tips\" class=\"alert alert-info alert-editor\" style=\"display:block;\">"
+	                    + "   <i class=\"fa fa-exclamation-circle\"><\/i>以下内容是<span id=\"js_draft_tips_time\">2016-12-07 12:15:16</span>的草稿。"
+	                    + "     <a id=\"js_undo_draft\" href=\"javascript:void(0);\" class=\"withdraw-bluecolor\">撤销草稿<\/a><a id=\"js_close_draft_tips\" href=\"javascript:void(0);\" class=\"close pull-right\"><i class=\"fa fa-times \" aria-hidden=\"true\"><\/i><\/a>"
+	                    + "   <\/div>",
+
+	            title: "<!-- 标题 --><div class=\"appmsg_edit_item title frm_input_box edui-default with_counter counter_in append count\">"
+	                    + "<label for=\"title\" class=\"tips_global placeholder_tips edui-default\" style=\"display:none\">请在这里输入标题<\/label>"
+	                    + "<input id=\"title\" type=\"text\" placeholder=\"请在这里输入标题\" class=\"frm_input js_title js_counter js_field edui-default\" name=\"title\" max-length=\"64\">"
+	                    + "<em class=\"frm_input_append frm_counter\" style=\"display: none;\">0\/64<\/em><\/div>",
+
+	            title_error: "<!-- 标题报错 --><div class=\"page_msg mini with_closed js_title_error js_error_msg edui-default\" style=\"display:none;\">"
+	                        + "<div class=\"inner edui-default\">"
+	                        + "<span class=\"msg_icon_wrp edui-default\"><i class=\"icon_msg_mini info edui-default\"><\/i><\/span>"
+	                        + "<div class=\"msg_content edui-default\">"
+	                        + "<p class=\"js_msg_content edui-default\">标题不能为空且长度不能超过64字<\/p><\/div><\/div>"
+	                        + "<span class=\"msg_closed js_msg_close edui-default\">关闭<\/span><\/div>",
+
+	            author: "<!-- 作者 --><div class=\"appmsg_edit_item author frm_input_box edui-default with_counter counter_in append count\">"
+	                    + "<label for=\"author\" class=\"tips_global placeholder_tips edui-default\" style=\"display:none\">请输入作者<\/label>"
+	                    + "<input id=\"author\" type=\"text\" placeholder=\"请输入作者\" class=\"frm_input js_author js_counter js_field edui-default\" name=\"author\" max-length=\"8\">"
+	                    + "<em class=\"frm_input_append frm_counter\" style=\"display: none;\">0\/8<\/em><\/div>",
+
+	            author_error: "<!-- 作者报错 --><div class=\"page_msg mini with_closed js_author_error edui-default\" style=\"display:none;\">"
+	                    + "<div class=\"inner edui-default\">"
+	                    + "<span class=\"msg_icon_wrp edui-default\"><i class=\"icon_msg_mini info edui-default\"><\/i><\/span>"
+	                    + "<div class=\"msg_content edui-default\"><p class=\"js_msg_content edui-default\">作者不能超过8个字<\/p>"
+	                    + "<\/div><\/div><span class=\"msg_closed js_msg_close edui-default\">关闭<\/span><\/div>",
+
+
+	            content_placeholder: "<!-- 从这里开始写正文 --><div id=\"edui1_contentplaceholder\" class=\"editor_content_placeholder edui-default\" style=\"display: block;\">从这里开始写正文<\/div>",
+
+	            content_folder: "<!-- 展开所有内容 --><div id=\"js_unfold_editor\" class=\"edui_iframe_switch_tips edui-default\" style=\"display: none;\"><i class=\"fa fa-plus-circle\" aria-hidden=\"true\" style=\"color:#d8d8d8;font-size:16px\"></i> 展开正文<\/div>"
+
+	        };
+	        $(ue.container.firstChild).after( plugins.title_error, plugins.author_error, plugins.title, plugins.author),
+	        $(ue.container).find('.edui-editor-iframeholder').prepend(plugins.content_placeholder);
+	        $(ue.container).find('.edui-editor-iframeholder').addClass('appmsg_edit_item');
+	        $(ue.container).find(".edui-editor-iframeholder").find("iframe").attr("scrolling", "no");
+	        $(ue.container).find(".edui-editor-iframeholder").after(plugins.content_folder);
+
+	    },
+	    __addListener: function () {
+	        ue.addListener("focus keyup aftersetcontent", function () {
+	            ue.setEnabled(), $('#edui1_contentplaceholder').hide()
+	        }),
+	        ue.addListener("blur", function () {
+	            "" == ue.getContent().trim() && (ue.setDisabled(), $('#edui1_contentplaceholder').show());
+	        }),
+	        ue.addListener('selectionchange', function () {
+	             (function () {
+	                var height = reinitIframe($(ue.container).find(".edui-editor-iframeholder").find("iframe").get(0), 500);
+	                $(ue.container).find(".edui-editor-iframeholder").find("iframe").css("height", "100%");
+	                $(ue.container).find(".edui-editor-iframeholder").animate({ "height": height }, 150, "swing");
+	            })()
+	        })
+
+	    },
+	    __loadData: function () {
+	    	[#if media_id??]
+	    	 loadServerData();
+	    	[#else]
+	    	 loadLocalData();
+            [/#if]
+	    }
+	    
+	    
+};
+function validateForm() {
+    var validate = true;
+    var validateIndex = 0;
+    var errorMessage = '';
+    $.each(materialData, function (index, val) {
+        if (materialData[index].content.length >= 524288) {
+            errorMessage = '内容长度超过微信限制';
+            validate = false;
+            validateIndex = index;
+            return;
+        }
+        if (materialData[index].title == '') {
+            $('input[name=Title]').focus();
+            //  $("html,body").animate({ scrollTop: $('input[name=Title]').offset().top }, 1000);
+            errorMessage = '标题不能为空';
+            validate = false;
+            validateIndex = index;
+            return;
+        }
+        if (materialData[index].thumb_media_id == '') {
+            errorMessage = '封面图片不能为空';
+            validate = false;
+            validateIndex = index;
+            return;
+        }
+        if (materialData[index].content == '') {
+            errorMessage = '内容不能为空';
+            validate = false;
+            validateIndex = index;
+            return;
+        }
+    });
+    if (!validate) {
+        $('a.previewItemEdit', $('#previewItem section').eq(validateIndex)).click();
+        obz.error(errorMessage);
+       // $.growl.warning({ title: "提示", message: errorMessage, duration: 3000 });
+    }
+    return validate;
+}
+function PreViewItem(title, imageUrl, articleIndex) {
+	pageLoad();
+    var self = this;
+    var content = '<section class="editorViewItem ' + (articleIndex == 0 ? 'topItem itemSelected' : '') + '" data-id=' + articleIndex + '><i class="arrow"></i><div class="appmsgWrap"><h4 class="appmsgTitle">' + title + '</h4><div class="appmsgCover"><img class="WechatImage" src="' + imageUrl + '"><i class="defaultCover">封面图片</i></div>'
+        + '</div><div class="appmsgMark"><p class="appmsgTips"><a class="appmsgBtn previewItemEdit appmsgEditor"><i class="fa fa-pencil "></i></a><a class="appmsgBtn previewDelete appmsgDelete"><i class="fa fa-trash-o"></i></a></p></div></section>';
+    return content;
+}
+
+function saveMaterialData() {
+    var dataId = $('#previewItem section.itemSelected').attr('data-id');
+    if (dataId != undefined) {
+        materialData[dataId].content = ue.getContent();
+        //摘要默认值为正文前54个字
+        if (materialData[dataId].digest == '') {
+            materialData[dataId].digest = ue.getContentTxt().substr(0, 54);
+            $('textarea[name=digest]').val(materialData[dataId].digest);
+        }
+    }
+}
+function getLen(t, useGBKLength) {
+    var n = 0;
+    return t = t || "",
+         n = useGBKLength ? t.replace(/[^\x00-\xff]/g, "**").length : t.length,
+         useGBKLength && (n = Math.ceil(n / 2)),
+         n;
+}
+function setNextData(materialDetail) {
+    $('input[name=title]').val(materialDetail.title);
+    $('input[name=author]').val(materialDetail.author);
+    $('textarea[name=digest]').val(materialDetail.digest);
+
+   // document.getElementById("chkAllTags").checked = materialDetail.IsContainImage == 1;
+    $('#imageUrl').attr('src', materialDetail.imgUrl);
+    //BindLazyImage($('div.uploadCoverImg'));
+    $('input[name=originalUrl]').val(materialDetail.content_source_url);
+    ue.setContent(materialDetail.content, false);
+}
+function pageLoad() {
+    //编辑
+    $('a.previewItemEdit').unbind("click");
+    $('a.previewItemEdit').click(function () {
+        saveMaterialData();
+        var self = $(this);
+        $('div.editorView section').removeClass('itemSelected');
+        self.parent().parent().parent().addClass('itemSelected');
+        console.log(1)
+        var articleIdex = self.parent().parent().parent().attr('data-id');
+        if (articleIdex == 0) {
+            $('span.picturenote').html("(大图片建议尺寸：900像素 * 500像素)");
+        }
+        else {
+            $('span.picturenote').html("(小图片建议尺寸：200像素 * 200像素)");
+        }
+        $.each(materialData, function (index, val) {
+            if (index == articleIdex) {
+                setNextData(materialData[index]);
+            }
+        });
+    });
+    $('a.previewDelete').unbind("click");
+    //删除
+    $('a.previewDelete').click(function () {
+        var leftCount = materialData.length;
+        if (leftCount == 1) {
+            //$.growl.warning({ title: "提示", message: "至少保留一条图文", duration: 3000 });
+            obz.error("至少保留一条图文");
+            return;
+        }
+        var self = $(this);
+        var articleIndex = self.parent().parent().parent().attr('data-id');
+       // alert(articleIndex);
+        self.parent().parent().parent().remove();
+        $('#previewItem section:first').addClass('topItem');
+
+        $.each(materialData, function (index, val) {
+            if (index == articleIndex) {
+                materialData.remove(articleIndex);
+            }
+        });
+        $.each($('div.editorView section'), function (index, val) {
+            $(this).attr('data-id', index);
+        });
+        if (self.parent().parent().hasClass('itemSelected')) {
+            var changeIndex = articleIndex == materialData.length ? articleIndex - 1 : articleIndex
+            $('a.previewItemEdit', $('#previewItem section').eq(changeIndex)).click();
+        }
+
+    });
+
+
+}
+
+function loadData(MaterialDetailList) {
+    [#if media_id??]
+    for (var i = 0; i < MaterialDetailList.length; i++) {
+        materialData.push(MaterialDetailList[i]);
+    }
+    setNextData(materialData[0]);
+    $.each(materialData, function (index, materialDetail) {
+        $('#previewItem').append(PreViewItem(materialDetail.title, materialDetail.imgUrl, index));
+    });
+    $('#previewItem section:first').addClass('itemSelected');
+	[#else]
+	$('#previewItem').append(PreViewItem('', '', materialData.length));
+    materialData.push({ title: '', content: '', thumb_media_id: '', author: '', digest: '',content_source_url:'' });
+     [/#if]
+    //BindLazyImage($('#previewItem'));
+    pageLoad();
+}
+function loadLocalData() {
+    var materialDetailList = "";
+    loadData(materialDetailList);
+
+}
+
+function loadServerData() {
+	var params = {};
+	params.media_id=variables.materialId;
+	var url= obz.ctx + "/matter/getMattterDetailList";
+	obz.ajaxJson(url, params, function(resp){
+		var MaterialDetailList = resp.data;
+		loadData(MaterialDetailList)
+    });
+}
+Array.prototype.remove = function (dx) {
+    if (isNaN(dx) || dx > this.length) { return false; }
+    for (var i = 0, n = 0; i < this.length; i++) {
+        if (this[i] != this[dx]) {
+            this[n++] = this[i]
+        }
+    }
+    this.length -= 1
+}
+function reinitIframe(iframe, minHeight) {
+    try {
+        var browserVersion = window.navigator.userAgent.toUpperCase();
+        var isOpera = browserVersion.indexOf("OPERA") > -1 ? true : false;
+        var isFireFox = browserVersion.indexOf("FIREFOX") > -1 ? true : false;
+        var isChrome = browserVersion.indexOf("CHROME") > -1 ? true : false;
+        var isSafari = browserVersion.indexOf("SAFARI") > -1 ? true : false;
+        var isIE = (!!window.ActiveXObject || "ActiveXObject" in window);
+        var isIE9More = (! -[1, ] == false);
+
+        var bHeight = 0;
+        if (isChrome == false && isSafari == false)
+            bHeight = iframe.contentWindow.document.body.scrollHeight;
+
+        var dHeight = 0;
+        if (isFireFox == true)
+            dHeight = iframe.contentWindow.document.documentElement.offsetHeight + 2;
+        else if (isIE == false && isOpera == false)
+            dHeight = iframe.contentWindow.document.documentElement.scrollHeight;
+        else if (isIE == true && isIE9More) {//ie9+
+            var heightDeviation = bHeight - eval("window.IE9MoreRealHeight" + iframeId);
+            if (heightDeviation == 0) {
+                bHeight += 3;
+            } else if (heightDeviation != 3) {
+                eval("window.IE9MoreRealHeight" + iframeId + "=" + bHeight);
+                bHeight += 3;
+            }
+        }
+        else//ie[6-8]、OPERA
+            bHeight += 3;
+
+        var height = Math.max(bHeight, dHeight);
+        if (height < minHeight) height = minHeight;
+        //iframe.style.height = height + "px";
+
+        return height;
+    } catch (ex) { }
+}
+$(document).ready(function(){
+	e.__init();
+});
+</script>
+</body>
+</html>

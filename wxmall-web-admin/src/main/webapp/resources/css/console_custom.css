@@ -1,0 +1,54 @@
+.active_statistics .sign_list{ height: 35px; padding-top: 0px;}
+.active_statistics .sign_activity{ width: 420px; border:solid 1px #ccc; border-radius: 3px; padding: 10px; display: none;}
+.active_statistics .sign_activity_tabin{ display: block;}
+.active_statistics .sign_activity .sign_title{ height: 35px; line-height: 35px;}
+.active_statistics .sign_activity_list{ width: 420px; overflow: hidden; padding: 0 0 10px 0; }
+.active_statistics .sign_activity_list li{ width: 400px; padding: 5px 10px; overflow: hidden; border-bottom: dashed 1px #ccc;}
+.active_statistics .sign_activity_list .but_remove{ width: 30px; height: 30px; border:solid 1px #FC7700; color: #FC7700; float: right; line-height: 30px; text-align: center; }
+.active_statistics .sign_activity_list .product_name{ width: 225px; height: 30px; display: inline-block; overflow: hidden; vertical-align: -8px;}
+.active_statistics .sign_activity_list .product_name1,.active_statistics .sign_activity_list1 .product_name1{ width: 190px; height: 30px; display: inline-block; overflow: hidden; vertical-align: -8px;}
+.active_statistics .sign_activity_list span{ line-height: 32px;}
+.active_statistics .sign_activity_list .select{ margin: 0 3px;}
+.active_statistics .sign_activity_list1{ width: 470px; padding: 0 0 10px 0; }
+.active_statistics .sign_activity_list1 .fl{ line-height: 32px; padding: 0 3px;}
+
+.ga {
+    border: 2px solid #d8d8d8;
+    color: #878787;
+    cursor: pointer;
+    display: block;
+    float: left;
+    font-size: 14px;
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+    white-space: nowrap;
+    width: 140px;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+.ga:hover {
+    border: 2px solid #28a3ef;
+}
+.ganew {
+    border: 2px solid #ff9700;
+    color: #ff9700;
+    cursor: pointer;
+    display: block;
+    float: left;
+    font-size: 14px;
+    font-weight: bold;
+    height: 80px;
+    /* line-height: 70px; */
+    margin: 5px 16px 5px 5px;
+    padding: 6px 4px 2px 6px;
+    text-align: center;
+    white-space: nowrap;
+    width: 140px;
+    word-break: break-all;
+    word-wrap: break-word;
+    overflow: hidden;
+}
+.ganew:hover {
+    border: 2px solid #28a3ef;
+}

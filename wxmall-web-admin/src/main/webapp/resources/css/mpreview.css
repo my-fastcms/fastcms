@@ -1,0 +1,292 @@
+.view-box {
+    padding:10px 30px;
+    text-align:center;
+}
+
+.device {
+    border:solid 1px #000000;
+    width: 320px;
+    height:540px;
+    display:inline-block;
+}
+
+.status-bar {
+    height: 20px;
+    width: 320px;
+    background: url(../css/images/status-bar.png);
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+
+.device {
+    width: 320px;
+    height:520px;
+    overflow:auto;
+    background: #fbfbfb;
+}
+
+.clearfix::after, .clearfix::before {
+    content: "";
+    display: table;
+    line-height: 0;
+}
+.clearfix::after, .clearfix::before {
+    content: "";
+    display: table;
+    line-height: 0;
+     clear: both;
+}
+.component .custom-nav-4 {
+    padding: 5px;
+    text-align: center;
+}
+.component .custom-nav-4 li {
+    float: left;
+    overflow: hidden;
+    text-align: center;
+    width: 25%;
+}
+.component .custom-nav-4 li a {
+    display: block;
+    padding: 0 2px;
+}
+.component .custom-nav-4 li .nav-img-wap {
+    display: block;
+    overflow: hidden;
+}
+.component .custom-nav-4 li img {
+    max-width: 100%;
+    vertical-align: middle;
+}
+.component .custom-nav-4 li span.title {
+    color: #333;
+    font-size: 12px;
+    height: 24px;
+    line-height: 24px;
+}
+.mobile-design{
+	position: relative;
+}
+.mobile-design .ump-limitdiscount {
+    background-color: #f8f8f8;
+}
+.mobile-design .ump-limitdiscount-good {
+    background: #fff none repeat scroll 0 0;
+    display: block;
+    margin-bottom: 40px;
+    padding: 10px 10px 14px;
+    position: relative;
+}
+.mobile-design .ump-limitdiscount-good::after {
+    backface-visibility: hidden;
+    border-top: 1px solid #e5e5e5;
+    box-sizing: border-box;
+    content: "";
+    height: 200%;
+    left: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    transform: scale(0.5);
+    transform-origin: left top 0;
+    width: 200%;
+}
+.mobile-design .ump-limitdiscount-good .overflow-to-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.mobile-design .ump-limitdiscount-good .good-time-info {
+    position: relative;
+}
+.mobile-design .ump-limitdiscount-good .good-image {
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding-top: 100%;
+}
+.mobile-design .ump-limitdiscount-good .good-image-mask {
+    display: none;
+}
+.mobile-design .ump-limitdiscount-good .good-image-mask::after {
+    content: "";
+    display: block;
+    padding-top: 100%;
+    position: absolute;
+}
+.mobile-design .ump-limitdiscount-good .good-image-mask.soldout, .device .ump-limitdiscount-good .good-image-mask.expired {
+    background: rgba(0, 0, 0, 0.3) none repeat scroll 0 0;
+    bottom: 0;
+    display: block;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.mobile-design .ump-limitdiscount-good .good-image-mask.soldout .mask-icon, .device .ump-limitdiscount-good .good-image-mask.expired .mask-icon {
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 50% auto;
+    height: 100%;
+}
+
+.mobile-design .ump-limitdiscount-good .discount-countdown {
+    bottom: 0;
+    color: #fff;
+    left: 0;
+    position: absolute;
+    right: 0;
+}
+.mobile-design .ump-limitdiscount-good .discount-countdown .ump-type-text {
+    background-color: #ff423d;
+    border-top-right-radius: 4px;
+    display: inline-block;
+    font-size: 12px;
+    letter-spacing: -0.3px;
+    line-height: 14px;
+    padding: 5px 5px 3px;
+    float: left;
+}
+.mobile-design .ump-limitdiscount-good .discount-countdown .js-countdown {
+    background-color: #ff423d;
+    box-sizing: border-box;
+    display: inline-block;
+    padding: 10px 5px;
+    width: 100%;
+}
+.mobile-design .ump-limitdiscount-good .discount-countdown .js-countdown .countdown-title {
+    display: inline-block;
+    font-size: 18px;
+    line-height: 22px;
+    vertical-align: middle;
+}
+.mobile-design .ump-limitdiscount-good .discount-countdown .js-countdown .countdown-time {
+    float: right;
+    vertical-align: middle;
+}
+.mobile-design .ump-limitdiscount-good .discount-countdown .js-countdown .countdown-colon {
+    color: #fff;
+    margin: 0 2px;
+}
+.mobile-design .ump-limitdiscount-good .discount-countdown .js-countdown .countdown-number {
+    background-color: #fff;
+    border-radius: 2px;
+    box-sizing: border-box;
+    color: #ff423d;
+    display: inline-block;
+    font-size: 16px;
+    height: 22px;
+    line-height: 22px;
+    min-width: 22px;
+    padding: 0 2px;
+    text-align: center;
+    vertical-align: middle;
+}
+.mobile-design .ump-limitdiscount-good .good-detail {
+    margin-top: 10px;
+    padding: 0 5px;
+    position: relative;
+}
+.mobile-design .ump-limitdiscount-good .good-detail .good-title {
+    margin-bottom: 0px;
+    margin-right: 20px;
+}
+.mobile-design .ump-limitdiscount-good .good-detail .discount-type {
+    background-color: #ff423d;
+    border-radius: 4px;
+    color: #fff;
+    display: inline-block;
+    font-size: 14px;
+    padding: 2px 5px;
+    vertical-align: middle;
+}
+.mobile-design .ump-limitdiscount-good .good-detail .title-text {
+    color: #353535;
+    font-size: 16px;
+    margin-left: 3px;
+    vertical-align: bottom;
+}
+.mobile-design .ump-limitdiscount-good .good-detail .price {
+    float: left;
+    margin-left: -3px;
+    margin-top: 4px;
+}
+.mobile-design .ump-limitdiscount-good .good-detail .price .discount-price {
+    color: #ff423d;
+    font-size: 30px;
+}
+.mobile-design .ump-limitdiscount-good .good-detail .price .discount-price .yen {
+    font-size: 18px;
+}
+.mobile-design .ump-limitdiscount-good .good-detail .price .original-price {
+    color: #787878;
+    font-size: 14px;
+    margin-left: 5px;
+    text-decoration: line-through;
+}
+.mobile-design .ump-limitdiscount-good .good-detail .price .original-price .yen {
+    font-size: 12px;
+}
+.mobile-design .ump-limitdiscount-good .good-detail .price.line-wrap .original-price {
+    display: block;
+    margin-left: 3px;
+    margin-top: 5px;
+}
+.mobile-design .ump-limitdiscount-good .good-detail .good-detail-right {
+    float: right;
+    text-align: right;
+}
+.mobile-design .ump-limitdiscount-good .good-detail .js-btn-good-link {
+    border: 1px solid #ff423d;
+    border-radius: 4px;
+    box-sizing: border-box;
+    color: #ff423d;
+    display: inline-block;
+    font-size: 16px;
+    height: 30px;
+    line-height: 28px;
+    text-align: center;
+    vertical-align: middle;
+    margin-top:20px;
+    width: 86px;
+}
+.mobile-design .ump-limitdiscount-good .good-detail .stock {
+    color: #666;
+    font-size: 12px;
+    margin-top: 10px;
+}
+.component .custom-line-wrap {
+    height: 30px;
+    position: relative;
+}
+
+.component .custom-line {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #bbb currentcolor currentcolor;
+    border-image: none;
+    border-style: dashed none none;
+    border-width: 1px 0 0;
+    bottom: 0;
+    height: 0;
+    left: 0;
+    margin: auto;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+}
+.window .custom-richtext {
+    box-sizing: border-box;
+    color: #333;
+    font-size: 16px;
+    line-height: 1.5;
+    overflow: hidden;
+    overflow-wrap: break-word;
+    padding: 10px 10px 0;
+    position: relative;
+    text-align: left;
+}

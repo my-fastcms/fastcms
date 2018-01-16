@@ -1,0 +1,64 @@
+[#include "/includes/_layout.html"/]
+<script type="text/javascript">
+$(document).ready(function() {
+$(".js-save").click(function() {
+	var hasError = false;
+	var params = {}, error = {};
+	var imageId= $("#imageId").val();
+	params.imageId=imageId;
+	var group_name = $("#groupId").val();
+	if($.trim(group_name) =="") {error.error_groupId = "分组名不能为空"; } else {error.error_groupId=""; params.groupId = $.trim(group_name);}
+	for(var key in error){
+		if(error[key]!=""){
+			//alert(key);
+			if(!hasError) hasError = true;
+			$("#"+key).addClass("has-error");
+			$("#"+key).find("label").text(error[key]);
+		}else{
+			$("#"+key).removeClass("has-error");
+			$("#"+key).find("label").empty();
+		}
+	}
+	if(hasError){
+		return false;
+	}
+	$.post(obz.ctx+"/attachment/saveEditGroup", params, function(json) {
+
+		if(json.code!=200){
+			BootstrapDialog.alert({title:'提示', message:json.msg});
+		}else{
+			location.href=obz.ctx+"/attachment";			
+		}
+          },"json");
+	if(editGroupDialog != null) editGroupDialog.close();
+	
+	//location.href=obz.ctx+"/attachment"
+});
+
+$(".js-cancel").click(function() {
+	if(editGroupDialog != null) editGroupDialog.close();
+});
+});
+</script>
+<style type="text/css">
+</style>
+<div class="panel-body">
+<div class="ui-popover-inner" style="min-width: auto; width: 180px;">
+    <div style="margin-bottom: 6px;">修改分组</div>
+     <input class="form-control" id="imageId" value="${imageId}" type="hidden">
+    <div style="margin-bottom: 6px;" id="error_groupId">
+        <select class="form-control" id="groupId">
+        [#if imageGroups??]
+		   [#list imageGroups as list]
+		    <option value="${list.id}" [#if list.id==groupId]selected="selected"[/#if]>${list.groupName}</option>
+           [/#list]
+           [/#if]
+        </select>
+        <label class="control-label" for="groupId"></label>
+    </div>
+</div>
+<div class="panel-footer">
+  	<a href="javascript:;" class="btn btn-sm btn-success js-save" style="width: 48px;">确定</a>
+    <a href="javascript:;" class="ui-btn js-cancel" style="width: 48px;">取消</a>
+</div>
+</div>

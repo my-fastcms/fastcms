@@ -1,0 +1,132 @@
+[#include "/includes/_layout.html"/]
+<link rel="stylesheet" type="text/css" href="${webctx}/resources/css/product.css"/>
+<script type="text/javascript">
+function addPicture(obj){
+	var params={};
+	params.model=obj;
+	obz.selectImage(params, function (ImgPath, ImgUrl) {
+		 var newlistImg=ImgPath.split(",");
+		 var newlistImgUrl=ImgUrl.split(",");
+		 for (var i = 0; i < newlistImg.length; i++) {
+			 if(obj){
+				 var reValue=$(".js-picture-sign li").find("input[name='img_path_input']").val();
+				  if (typeof(reValue)== "undefined"){
+					  $(".js-picture-sign").append('<li class="sort"><img src="'+newlistImg[i]+'" id="img_path" class="js-img-preview">'
+								 +'<input name="img_path_input" id="img_path_input" value="'+newlistImgUrl[i]+'" type="hidden"  class="js-img-preview">'
+								 +'<a class="js-delete-picture close-modal small hide" onclick="deleteImg(this);">×</a></li>');
+				 }else{
+					  $("#img_path").attr('src',newlistImg[i]);
+					  $(".js-picture-sign li").find("input[name='img_path_input']").val(newlistImgUrl[i]);
+				 } 				 
+			  } 
+		 }
+		 $(".col-md-5 ul>li").hover(function(){
+				$(this).find("a").removeClass("hide");
+			   $(this).find("a").addClass("hover");
+			},function(){
+				 $(this).find("a").addClass("hide");  
+				 $(this).find("a").removeClass("hover");
+			});
+	});
+}
+function deleteImg(obj){
+	$(obj).parent().remove();
+}
+</script>
+[@layout]
+<div class="wrapper wrapper-content">
+	<div class="row animated fadeInLeft">
+	[#include "/includes/menu-product.html" /]
+	<div class="col-sm-11">
+	<div class="ibox float-e-margins">
+		<div class="ibox-title row">
+			<h5><small><a href="${webctx}/category">《返回列表</a></small></h5>
+		</div>
+		<div class="row ibox-content active_statistics">
+			<div class="title_query padtop"> 
+			<form id="qiandaoForm" class="form-horizontal">
+				  <div class="form-group">
+			            <label class="col-md-2 control-label">分类名称<span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-8" id="error_name">
+			            	<input type="hidden" id="id" value="${productCategory.id}" class="input-xfat"  name="id"  >
+			                <input id="name" name="name" value="${productCategory.name }" maxlength="20" type="text" class="form-control" style="width: 200px" >
+			                <label class="control-label" for="name"></label>
+			            </div>
+			        </div>
+			        <div class="form-group">
+		            <label class="col-md-2 control-label">图标<span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-5" id="error_img_path">
+			               <ul class="js-picture-sign app-image-list">
+							   <li><a href="javascript:;" onclick="addPicture(true);" class="add-goods js-add-picture show">+加图</a></li>
+							   [#if productCategory.img_path ??]
+							   <li class="sort">
+	                               <img src="${img_domain}${productCategory.img_path}" id="img_path"  class="js-img-preview"/>
+	                               <input id="img_path_input" name="img_path_input" value="${productCategory.img_path}" type="hidden"  class="js-img-preview"/>
+	                               <a class="js-delete-picture close-modal small hide" onclick="deleteImg(this);">×</a>
+		                       </li>
+							   [/#if]
+						  </ul>
+						  <label class="control-label" for="error_img_path"></label>
+			            </div>
+			        </div>
+			        <!-- <div class="form-group">
+			            <label class="col-md-2 control-label">描述</label>
+			            <div class="col-md-8" id="error_seo_description">
+			                <input id="seo_description" name="seo_description" value="${productCategory.seo_description}" maxlength="20" type="text" class="form-control" style="width: 200px">
+			                <label class="control-label" for="seo_description"></label>
+			            </div>
+			        </div> -->
+			        <div class="form-group">
+			            <label class="col-md-2 control-label">排序<span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-2" id="error_orders">
+			                <input id="orders" name="orders" value="${productCategory.orders }" maxlength="20" type="text" class="form-control"  onkeyup="this.value=this.value.replace(/\D/g,'')">
+			                <label class="control-label" for="error_orders"></label>
+			            </div>
+			        </div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div class="panel-footer" align="center">
+   	 	<button onclick="saveCategory();" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>提交</button>
+	</div>
+	</div>
+	</div>
+</div>
+[/@layout]
+<script type="text/javascript">
+function saveCategory(){
+	var params = {},error = {};	
+	var categoryId = $("#id").val(), seoDescription = $("#seo_description").val(), 
+	img_path = $("#img_path_input").val(),
+	categName = $("#name").val(), categOrder = $("#orders").val();
+	if(categoryId!=null && categoryId!="") params.id = categoryId;
+	if(seoDescription!=null && seoDescription!="") params.seo_title = seoDescription;
+	if($.trim(categName) =="") {error.error_name = "分类名称不能为空"; } else {error.error_name=""; params.name = $.trim(categName);}
+	if($.trim(categOrder) =="") {error.error_orders = "分类排序不能为空"; } else {error.error_orders =""; params.orders = $.trim(categOrder);}
+	if($.trim(img_path) =="") {error.error_img_path = "请上传分类图标"; } else {error.error_img_path =""; params.img_path = $.trim(img_path);}
+	var hasError = false;
+	for(var key in error){
+		if(error[key]!=""){
+			if(!hasError) hasError = true;
+			$("#"+key).addClass("has-error");
+			$("#"+key).find("label").text(error[key]);
+		}else{
+			$("#"+key).removeClass("has-error");
+			$("#"+key).find("label").empty();
+		}
+	}
+	//主表信息不完整，返回
+	if(hasError) return false;
+	
+	$.post(obz.ctx+"/category/save", params, function(resp) {
+		if(resp.code == 200){
+			location.href = "${webctx}/category";
+		}
+	});
+}
+</script>
+<script>
+Template.init("#menu-goods");
+Template.initSecond("#menu-categ-secd");
+</script>

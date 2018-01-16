@@ -1,0 +1,61 @@
+[#include "/includes/_layout.html"/]
+<title>微页面-预览-${entity.title}</title>
+<link rel="stylesheet" href="${webctx}/resources/css/jquery.loadmask.css">
+<link rel="stylesheet" href="${webctx}/resources/css/productList.css">
+<link rel="stylesheet" href="${webctx}/resources/css/mpreview.css">
+<link rel="stylesheet" href="${webctx}/resources/assets/css/weui.min.css">
+<link rel="stylesheet" href="${webctx}/resources/assets/css/jquery-weui.css">
+<script src="${webctx}/resources/assets/js/jquery.min.js?v=2.1.4"></script>
+<script type="text/javascript" src="${webctx}/resources/assets/js/jquery-weui.js"></script>
+<script type="text/javascript" src="${webctx}/resources/assets/js/swiper.js"></script> 
+<script src="${webctx}/resources/js/jquery/jquery.loadmask.js"></script>
+   
+      <div id="main-container"  class="main-container view-box">
+         <p>${entity.title}</p>
+	      <div class="device">
+	        <div class="status-bar"></div>
+	        <div class="window" id="window">
+	         </div>
+	        
+	      </div>
+    </div>
+  
+<script src="${webctx}/resources/assets/js/jquery-weui.js"></script>
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+
+	 $("#main-container").mask("正在读取数据...");
+	 param={};
+	 param.id=${entity.id};
+	 url="${webctx}/weipage/getPreviewHtml";
+	 $.ajax({
+	        url: url,
+	        data: param,
+	        type: "POST",
+	        success: function (data) {
+	        	 $("#main-container").unmask();
+	            if (data.Success) {
+	            	if(data.code && data.code == 200){
+	            		$('#window').html(data.data)
+	            		$(".swiper-container").swiper({
+	            			speed: 300,
+	            			loop: true,
+	            			autoplay: 3000
+	            		});		
+	            	}else {
+	            		alert(data.msg);
+	            	}
+	               
+	            } else {
+	            	alert("预览失败！");
+	           }
+	        },
+	        error: function (request) {
+	        	alert("服务端没有响应,请联系客服......");
+	        }
+	    });
+ 
+});
+</script>

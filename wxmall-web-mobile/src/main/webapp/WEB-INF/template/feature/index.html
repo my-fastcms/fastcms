@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>商城首页</title>
+[#include "/includes/header.html" /]
+<link rel="stylesheet" href="${webctx}/resources/css/mpreview.css"/>
+<link rel="stylesheet" href="${webctx}/resources/css/productList.css"/>
+</head>
+<body>
+	<div class="content home">
+		<div class="weui_tab_bd main-container" id="window">
+              
+		</div>	
+	</div>
+	
+	[#include "/includes/footer.html" /]
+	
+	<script type="text/javascript">
+
+$(document).ready(function() {
+
+	$.showLoading("正在加载...");
+	 param={};
+	 param.id=${entity.id};
+	 url="${webctx}/feature/getPreviewHtml";
+	 $.ajax({
+	        url: url,
+	        data: param,
+	        type: "POST",
+	        success: function (data) {
+	        	$.hideLoading();
+	            if (data.Success) {
+	            	if(data.code && data.code == 200){
+	            		$('#window').html(data.data)
+	            		$(".swiper-container").swiper({
+	            			speed: 300,
+	            			loop: true,
+	            			autoplay: 3000
+	            		});		
+	            	}else {
+	            		alert(data.msg);
+	            	}
+	               
+	            } else {
+	            	showMsg("服务端没有响应,请联系客服......");
+	           }
+	        },
+	        error: function (request) {
+	        	showMsg("服务端没有响应,请联系客服......");
+	        }
+	    });
+ 
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>激活会员卡</title>
+[#include "/includes/header.html" /]
+<style type="text/css">
+.weui-select{
+	width: 40%;
+}
+</style>
+</head>
+<body>
+<div class="weui-cells">
+	<div class="weui-cell">
+	  	<div class="weui-cell__hd"><img src="${session._buyerUser.headimgurl}" alt="${session._buyerUser.nickname}" style="width:40px;margin-right:5px;display:block"></div>
+	  	<div class="weui-cell__bd">
+	    <p>${session._buyerUser.nickname}</p>
+	    <p style="font-size: 12px;">
+	    	<!-- 有<font color="red"><span id="user_left_count">${session._buyerUser.score}</span></font>个朋友加入 -->
+	    	<font color="red"><span id="user_left_count">
+	    	</span></font>
+	    </p>
+	  	</div>
+	  	<!-- <div class="weui-cell__ft">一级分销商</div> -->
+	</div>
+</div>
+<div class="weui-cells__tips">激活会员卡</div>
+<div class="weui-cells weui-cells_form" style="font-size: 14px;">
+	<div class="weui-cell">
+		<div class="weui-cell__hd"><label class="weui-label" for="name">姓名</label></div>
+		<div class="weui-cell__bd">
+			<input id="userName" name="name" value="" class="weui-input" placeholder="真实姓名" type="text">
+		</div>
+	</div>
+	<div class="weui-cell">
+		<div class="weui-cell__hd"><label class="weui-label" for="name">手机号</label></div>
+		<div class="weui-cell__bd">
+			<input id="phone" name="mobile" value="" class="weui-input" placeholder="手机号码" type="tel" onkeyup="this.value=this.value.replace(/\D/g,'')">
+		</div>
+	</div>
+	<div class="weui-cell weui-cell_vcode">
+        <div class="weui-cell__hd">
+          <label class="weui-label">短信验证码</label>
+        </div>
+        <div class="weui-cell__bd">
+          <input id="phoneCode" class="weui-input" type="tel" placeholder="短信验证码">
+        </div>
+        <div class="weui-cell__ft">
+          <a id="sendCodeBtn" class="weui-vcode-btn" href="javascript:void(0)" style="font-size: 14px;">获取验证码</a>
+        </div>
+    </div>
+    <div class="weui-cell weui-cell_vcode">
+        <div class="weui-cell__hd"><label class="weui-label">验证码</label></div>
+        <div class="weui-cell__bd">
+          <input id="code" class="weui-input" type="tel" placeholder="请输入验证码">
+        </div>
+        <div class="weui-cell__ft" id="image_div">
+          <img id="captchaImage" class="weui-vcode-img" style="width: 80px;padding-right: 5px;" src="${webctx}/captcha?width=100&height=35&fontsize=30" alt="换一张" />
+        </div>
+    </div>
+    <div class="content-padded">
+	    <a id="active_btn" href="javascript:void(0);" class="weui-btn weui-btn_primary">立即激活</a>
+	</div>
+</div>
+[#include "includes/footer.html"/]
+<script type="text/javascript">
+var $captchaImage = $("#captchaImage");
+var change_captcha = function() {
+	var timestamp = (new Date()).valueOf();
+	var imageSrc = $captchaImage.attr("src");
+	if(imageSrc.indexOf("?") >= 0) {
+		imageSrc = imageSrc.substring(0, imageSrc.indexOf("?"));
+	}
+	imageSrc = imageSrc + "?timestamp=" + timestamp + "&width=100&height=35&fontsize=30";
+	$captchaImage.attr("src", imageSrc);
+};
+$captchaImage.click(change_captcha);
+$("#sendCodeBtn").click(function(){
+	if($("#phone").val() == null || $("#phone").val() == ""){
+		showMsg("请输入手机号码");
+		return;
+	}
+	$.showLoading("正在发送验证码...");
+	$.post("${webctx}/sendCode", {phone:$("#phone").val()}, function(resp){
+		$.hideLoading();
+		if(resp.code != 200){
+			showMsg(resp.msg);
+		}else{
+			showMsg("短信验证码已发送");
+		}
+	});
+});
+$("#active_btn").click(function(){
+	var params = {};
+	var userName = $("#userName").val(); if(userName==""){showMsg("请输入姓名");return}
+	var phone = $("#phone").val(); if(phone==""){showMsg("请输入手机号码");return}
+	var phoneCode = $("#phoneCode").val(); if(phoneCode==""){showMsg("请短信验证码");return}
+	var code = $("#code").val(); if(code==""){showMsg("请输入验证码");return}
+	params.userName=userName;
+	params.phone=phone;
+	params.phoneCode=phoneCode;
+	params.code=code;
+	params.cardId = '${cardId}';
+	$.showLoading("正在提交...");
+	$.post("${webctx}/user/activecard", params, function(resp){
+		$.hideLoading();
+		if(resp.code != 200){
+			showMsg(resp.msg==null ? "系统错误" : resp.msg);
+			return;
+		}
+		$.alert("已激活会员卡,可在微信卡包中找到", function(){
+			location.href = "${webctx}/user";
+		});
+	});
+});
+</script>
+</body>
+</html>

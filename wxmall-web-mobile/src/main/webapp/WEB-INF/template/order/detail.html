@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>订单详情</title>
+[#include "/includes/header.html" /]
+</head>
+<body>
+    <div class="weui-content weui-form-preview">
+      <!-- <div class="weui-form-preview__hd">
+      	[#if orderDetail.orderType == 2]
+      	<div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">拼团订单</label>
+          <em class="weui-form-preview__value">${orderDetail.groupStatus}</em>
+        </div>
+      	[/#if]
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">订单状态</label>
+          <em class="weui-form-preview__value">${orderDetail.orderStatus}</em>
+        </div>
+      </div> -->
+      <!-- <div class="weui-form-preview__bd">
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">收货人</label>
+          <span class="weui-form-preview__value">${orderDetail.receiverName}</span>
+        </div>
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">电话/手机</label>
+          <span class="weui-form-preview__value">${orderDetail.receiverPhone}</span>
+        </div>
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">收货地址</label>
+          <span class="weui-form-preview__value">
+          ${orderDetail.receiverProvince}${orderDetail.receiverCity}${orderDetail.receiverCountry}
+          <br>${orderDetail.receiverAddr}</span>
+        </div>
+      </div> -->
+      
+      <div class="wy-media-box weui-media-box_text address-select">
+	    <div class="weui-media-box_appmsg">
+	      <div class="weui-media-box__hd proinfo-txt-l" style="width:20px;"><span class="promotion-label-tit"><img src="${webctx}/resources/images/icon_nav_city.png" /></span></div>
+	      <div class="weui-media-box__bd">
+	        <a href="address_list.html" class="weui-cell_access">
+	          <h4 class="address-name"><span>${orderDetail.receiverName}</span><span>${orderDetail.receiverPhone}</span></h4>
+	          <div class="address-txt">${orderDetail.receiverProvince}${orderDetail.receiverCity}${orderDetail.receiverCountry}
+	          <br>${orderDetail.receiverAddr}</div>
+	        </a>
+	      </div>
+	    </div>
+	  </div>
+      
+      <!-- 商品项 -->
+       <div class="weui-form-preview__bd">
+       <div class="weui-panel weui-panel_access">
+		  <!-- <div class="weui-panel__hd">订单项</div> -->
+		  <div class="weui-panel__bd">
+		  	[#list orderDetail.orderItems as orderItem]
+		    <a href="${webctx}/product/detail/?id=${orderItem.productId}" class="weui-media-box weui-media-box_appmsg">
+		      <div class="weui-media-box__hd">
+		        <img class="weui-media-box__thumb" src="${orderItem.productImg}">
+		      </div>
+		      <div class="weui-media-box__bd">
+		        <h4 class="weui-media-box__title" style="font-size: 14px;">${orderItem.productName}</h4>
+		        <p class="weui-media-box__desc">${orderItem.quantity}件</p>
+		      </div>
+		    </a>
+		    [/#list]
+		  </div>
+		</div>
+       </div>
+      
+      <!-- <div class="weui-form-preview__bd">
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">配送方式</label>
+          <span class="weui-form-preview__value">免运费（快递发货）</span>
+        </div>
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">买家留言</label>
+          <span class="weui-form-preview__value">${orderDetail.buyerMemo}</span>
+        </div>
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">合计</label>
+          <span class="weui-form-preview__value">￥${orderDetail.totalPrice}</span>
+        </div>
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">运费</label>
+          <span class="weui-form-preview__value">￥${orderDetail.postFee}</span>
+        </div>
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">应付金额</label>
+          <span class="weui-form-preview__value">￥${orderDetail.payFee}</span>
+        </div>
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">订单编号</label>
+          <span class="weui-form-preview__value">${orderDetail.orderSn}</span>
+        </div>
+        <div class="weui-form-preview__item">
+          <label class="weui-form-preview__label">创建日期</label>
+          <span class="weui-form-preview__value">${orderDetail.orderCreated}</span>
+        </div>
+      </div> -->
+      
+      <div class="weui-panel">
+	    <div class="weui-panel__bd">
+	      <div class="weui-media-box weui-media-box_small-appmsg">
+	        <div class="weui-cells">
+	          <div class="weui-cell weui-cell_access">
+	            <div class="weui-cell__bd weui-cell_primary">
+	              <p class="font-14"><span class="mg-r-10">订单状态</span><span class="fr">
+	              [#if orderDetail.orderType == 2] ${orderDetail.groupStatus} [#else] ${orderDetail.orderStatus} [/#if]
+	              </span></p>
+	            </div>
+	          </div>
+	          <div class="weui-cell weui-cell_access">
+	            <div class="weui-cell__bd weui-cell_primary">
+	              <p class="font-14"><span class="mg-r-10">订单编号</span><span class="fr">${orderDetail.orderSn}</span></p>
+	            </div>
+	          </div>
+	          <div class="weui-cell weui-cell_access">
+	            <div class="weui-cell__bd weui-cell_primary">
+	              <p class="font-14"><span class="mg-r-10">创建日期</span><span class="fr">${orderDetail.orderCreated}</span></p>
+	            </div>
+	          </div>
+	          <div class="weui-cell weui-cell_access">
+	            <div class="weui-cell__bd weui-cell_primary">
+	              <p class="font-14"><span class="mg-r-10">配送方式</span><span class="fr">快递</span></p>
+	            </div>
+	          </div>
+	          <div class="weui-cell weui-cell_access">
+	            <div class="weui-cell__bd weui-cell_primary">
+	              <p class="font-14"><span class="mg-r-10">买家留言</span><span class="fr">${orderDetail.buyerMemo}</span></p>
+	            </div>
+	          </div>
+	          <div class="weui-cell weui-cell_access" href="javascript:;">
+	            <div class="weui-cell__bd weui-cell_primary">
+	              <p class="font-14"><span class="mg-r-10">运费</span><span class="fr txt-color-red">￥<em class="num">${orderDetail.postFee}</em></span></p>
+	            </div>
+	          </div>
+	          <!--  
+	          <a class="weui-cell weui-cell_access" href="money.html">
+	            <div class="weui-cell__bd weui-cell_primary">
+	              <p class="font-14"><span class="mg-r-10">可用蓝豆</span><span class="sitem-tip"><em class="num">1235</em>个</span></p>
+	            </div>
+	            <span class="weui-cell__ft"></span>
+	          </a>
+	          <a class="weui-cell weui-cell_access" href="coupon.html">
+	            <div class="weui-cell__bd weui-cell_primary">
+	              <p class="font-14"><span class="mg-r-10">优惠券</span><span class="sitem-tip"><em class="num">0</em>张可用</span></p>
+	            </div>
+	            <span class="weui-cell__ft"></span>
+	          </a>
+	          -->
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+      
+      <div class="wy-media-box weui-media-box_text">
+	    <div class="mg10-0 t-c">应付金额：<span class="wy-pro-pri mg-tb-5">¥<em class="num font-20">${orderDetail.payFee}</em></span></div>
+	    [#if orderDetail.orderStatus == "待支付"]
+	    <div class="mg10-0"><a id="zhifu" href="javascript:void(0)" class="weui-btn weui-btn_primary">微信付款</a></div>
+	    <div class="mg10-0"><a id="quxiao"  href="javascript:void(0)" class="weui-btn weui-btn_warn">取消订单</a></div>
+	    [/#if]
+	    [#if orderDetail.orderStatus == "已取消"]
+	    <div class="mg10-0"><a id="goumai" href="javascript:void(0)" class="weui-btn weui-btn_primary">再次购买</a></div>
+	    <div class="mg10-0"><a id="shanchu"  href="javascript:void(0)" class="weui-btn weui-btn_warn">删除订单</a></div>
+	    [/#if]
+	  </div>
+      
+    </div>
+[#include "/includes/footer.html" /]
+<script type="text/javascript">
+$("#quxiao").click(function(){
+	$.confirm("确认取消吗？", "确认", function() {
+		$.showLoading("正在提交...");
+		$.post("${webctx}/order/cancel", {orderId:${orderDetail.orderId}}, function(resp){
+			$.hideLoading();
+			if(resp.code != 200){
+				$.alert(resp.msg==null ? "系统错误" : resp.msg);
+				return;
+			}
+			showMsg("订单已取消", function(){
+	    		location.href = "${webctx}/order/";		            		
+	    	});
+		});
+	});
+});
+
+//订单支付
+$("#zhifu").click(function(){
+	//发起支付
+	$.showLoading("正在连接微信支付...");
+	$.post("${webctx}/pay", {orderId:${orderDetail.orderId}}, function(data){
+		$.hideLoading();
+  		var resp = data;
+		if(resp.code != 200){
+			$.alert(resp.msg==null ? "系统错误" : resp.msg);
+			return;
+		}
+		var json = resp.data;
+		if(json.returnMsg=='OK'){
+			WeixinJSBridge.invoke(
+		       'getBrandWCPayRequest', {
+		            "appId":json.appId,     		//公众号名称，由商户传入     
+		            "nonceStr":json.nonceStr, 		//随机串     
+		            "package":json.packageValue,
+		            "paySign":json.paySign, 		//微信签名 
+		            "signType":"MD5",         		//微信签名方式：     
+		            "timeStamp":json.timeStamp      //时间戳，自1970年以来的秒数     
+		     	},
+		       	function(res){     
+		            if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+		            	//使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+		            	//location.href="${webctx}/pay/success";
+		            	showMsg("支付成功", function(){
+		            		location.href = "${webctx}/user"		            		
+		            	});
+		            }else if(res.err_msg == "get_brand_wcpay_request:cancel"){
+		            }else {
+		            	$.alert("支付失败" + res.err_msg);
+		            }     
+		       	}
+		    );
+		}
+	});
+});
+</script>
+</body>
+</html>

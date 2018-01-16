@@ -1,0 +1,223 @@
+ul li{
+	display: block;
+}
+.page-trade-delivery {
+    position: relative;
+}
+.page-trade-delivery input[type="number"] {
+    text-align: center;
+}
+.page-trade-delivery .btn-wide {
+    box-sizing: border-box;
+    min-width: 90px;
+}
+.page-trade-delivery .freight-list {
+    min-height: 200px;
+}
+.page-trade-delivery .text-depth2 {
+    color: #777;
+}
+.page-trade-delivery .text-depth3 {
+    color: #aaa;
+}
+.page-trade-delivery .cost-input {
+    width: 60px;
+}
+.page-trade-delivery .freight-template-list-wrap {
+    margin-top: 15px;
+}
+.page-trade-delivery .freight-template-list-wrap .freight-template-table td:first-child {
+    border-right: medium none;
+}
+.page-trade-delivery .freight-template-list-wrap .freight-template-table tbody tr:last-child {
+    border-bottom: medium none;
+}
+.page-trade-delivery .freight-template-item {
+    border: 1px solid #e5e5e5;
+    margin-bottom: 10px;
+}
+.page-trade-delivery .freight-template-title {
+    background: #f6f6f6 none repeat scroll 0 0;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 12px;
+    margin: 0;
+    padding: 15px;
+}
+.page-trade-delivery .freight-template-title .freight-extend-toggle {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: transparent transparent #07d;
+    border-image: none;
+    border-style: solid;
+    border-width: 6px;
+    display: inline-block;
+    position: relative;
+    top: 0;
+}
+.page-trade-delivery .freight-template-title .freight-extend-toggle.freight-extend-toggle-extend {
+    border-bottom-color: transparent;
+    border-top-color: #07d;
+    top: 5px;
+}
+.page-trade-delivery .freight-template-table {
+    border-top: 1px solid #e5e5e5;
+    text-align: right;
+    width: 100%;
+}
+.page-trade-delivery .freight-template-table thead tr > th:first-child {
+    text-align: left;
+}
+.page-trade-delivery .freight-template-table td, .page-trade-delivery .freight-template-table th {
+    padding: 10px 15px;
+}
+.page-trade-delivery .freight-template-table td input[type="text"], .page-trade-delivery .freight-template-table th input[type="text"] {
+    text-align: center;
+}
+.page-trade-delivery .freight-template-table tr {
+    border-bottom: 1px solid #e5e5e5;
+}
+.page-trade-delivery .freight-template-table td:first-child {
+    border-right: 1px solid #e5e5e5;
+    text-align: left;
+    width: 300px;
+}
+.page-trade-delivery .freight-template-table tfoot {
+    text-align: left;
+}
+.page-trade-delivery .freight-template-table tfoot td:first-child {
+    border-right: medium none;
+}
+.page-trade-delivery .freight-add-form {
+    margin-left: -35px;
+    margin-top: 30px;
+}
+.area-modal-wrap .modal-mask {
+    background-color: rgba(0, 0, 0, 0.6);
+    bottom: 0;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+    z-index: 1000;
+}
+.area-modal-wrap .area-modal {
+    background: #fff none repeat scroll 0 0;
+    border: 1px solid #e5e5e5;
+    left: 50%;
+    margin-left: -345px;
+    position: absolute;
+    top: 0;
+    width: 690px;
+    z-index: 1001;
+}
+.area-modal-wrap .area-modal-head {
+    background: #f6f6f6 none repeat scroll 0 0;
+    border-bottom: 1px solid #e5e5e5;
+    font-size: 14px;
+    line-height: 14px;
+    padding: 15px 10px;
+}
+.area-modal-wrap .area-modal-content {
+    min-height: 200px;
+}
+.area-modal-wrap .area-modal-foot {
+    background: #f6f6f6 none repeat scroll 0 0;
+    border-top: 1px solid #e5e5e5;
+    padding: 15px 10px;
+    text-align: center;
+}
+.area-modal-wrap .area-editor-head {
+    background: #f6f6f6 none repeat scroll 0 0;
+    border-bottom: 1px solid #e5e5e5;
+    font-size: 14px;
+    font-weight: normal;
+    margin: 0;
+    padding: 10px 0;
+    text-align: center;
+}
+.area-modal-wrap .area-editor-list {
+    overflow: auto;
+    padding: 0;
+}
+.area-modal-wrap .area-editor > .area-editor-list {
+    height: 314px;
+    margin: 10px 0;
+}
+.area-modal-wrap .area-editor-list-title {
+    font-size: 12px;
+    font-weight: normal;
+    height: 40px;
+    line-height: 40px;
+    margin: 0;
+    padding: 0 10px;
+}
+.area-modal-wrap .area-editor-list-title.area-editor-list-select {
+    background: #d7d7d7 none repeat scroll 0 0;
+}
+.area-modal-wrap .area-editor-list-title .area-editor-list-title-content {
+    cursor: pointer;
+    line-height: 30px;
+    padding-left: 20px;
+    position: relative;
+    top: 5px;
+}
+.area-modal-wrap .area-editor-depth1 {
+    text-indent: 1em;
+}
+.area-modal-wrap .area-editor-depth1 .area-editor-ladder-toggle {
+    left: 12px;
+    text-indent: 0;
+}
+.area-modal-wrap .area-editor-remove-btn {
+    background-color: #d7d7d7;
+    border-radius: 50%;
+    color: #fff;
+    cursor: pointer;
+    float: right;
+    height: 15px;
+    line-height: 15px;
+    margin-top: 7px;
+    text-align: center;
+    text-indent: 0;
+    width: 15px;
+}
+.area-modal-wrap .area-editor-ladder-toggle {
+    background-color: #d7d7d7;
+    border-radius: 50%;
+    color: #fff;
+    cursor: pointer;
+    height: 15px;
+    left: 0;
+    line-height: 15px;
+    position: absolute;
+    text-align: center;
+    top: 7px;
+    width: 15px;
+}
+.area-modal-wrap .area-editor-list-select .area-editor-ladder-toggle {
+    background-color: #fff;
+    color: #d7d7d7;
+}
+.area-modal-wrap .area-editor-wrap {
+    margin: 0 auto;
+    padding: 30px 0;
+    width: 560px;
+}
+.area-modal-wrap .area-editor-wrap .area-editor-column {
+    border: 1px solid #e5e5e5;
+    float: left;
+    height: 375px;
+    width: 200px;
+}
+.area-modal-wrap .area-editor-wrap .area-editor-column.area-editor-column-used {
+    float: right;
+}
+.area-modal-wrap .area-editor-wrap .area-editor-column.area-editor-column-used .area-editor-list-title-content {
+    cursor: initial;
+}
+.area-modal-wrap .area-editor-wrap .area-editor-add-btn {
+    margin: 150px 0 0 35px;
+}

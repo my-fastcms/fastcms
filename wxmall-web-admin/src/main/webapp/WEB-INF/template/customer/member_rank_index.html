@@ -1,0 +1,122 @@
+[#include "/includes/_layout.html"/]
+[@layout]
+<div class="wrapper wrapper-content">
+	<div class="row animated fadeInLeft">
+	[#include "/includes/menu-member.html" /]
+	<div class="col-sm-11">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+		       <a href="${webctx}/customer/members" class="J_menuTab">会员</a>
+		       <a href="${webctx}/memberRank" class="J_menuTab active">会员等级</a>
+		       <a href="${webctx}/card" class="J_menuTab">会员卡</a>
+	       </div>
+	   	</nav>
+	</div>
+	<div id="tableList" class="content row ibox-content">
+		<div id="prizeToolsbar" class="panel-body">
+			<a href="${webctx}/memberRank/add" class="btn btn-success">新建会员等级</a>
+		</div>
+		<table id="mainTable" class="table table-striped table-bordered bootstrap-datatable datatable" border="0">
+		  <thead>
+			  <tr>
+				<th><input type="checkbox" id="all" title="全选/反选" style="margin-right: 4px; vertical-align: middle;"/></th>
+				<th><span style="vertical-align: middle;">&nbsp;&nbsp;等级名称</span></th>
+				<th><span style="vertical-align: middle;">&nbsp;&nbsp;等级购买金额</span></th>
+				<th><span style="vertical-align: middle;">&nbsp;&nbsp;等级享受折扣</span></th>
+				<th><span style="vertical-align: middle;">&nbsp;&nbsp;等级消费满减</span></th>
+				<th>创建时间</th>
+				<th>操作</th>
+			  </tr>
+		  </thead>   
+		  <tbody class="itemsLotGrid"></tbody>
+	  	</table>
+	</div>   
+	</div>
+	</div>
+</div>
+
+<!-- html 模板文件 -->
+<script type="text/template" id="item_table_tr_tpl">
+		<tr class="package">
+			<td>
+				<input type="checkbox" class="commchk" id="checkbox_{id}" style="margin-right: 4px; vertical-align: middle;"/>
+				<input type="hidden" value="{id}"/>
+			</td>
+			<td><span>{rank_name}</span></td>
+			<td><span>{first_charge}</span></td>
+<td><span>{rank_discount}</span></td>
+<td><span>消费满{rank_cash_full}减去{rank_cash_rward}</span></td>
+			<td>{created}</td>
+			<td>&nbsp;<a id="del_{id}" href="javascript:void(0)">编辑</a></td>
+		</tr>
+</script>
+<script type="text/template" id="table_noresult_tr_tpl">
+	<tr class="package"><td colspan="7" class="center">没有结果集</td></tr>
+</script>
+[/@layout]
+<script type="text/javascript">
+var qname = "";
+$(document).ready(function() {
+	searchItems();
+	$("#myqueryBtn").click(function(){
+		qname = $("#q_pond_txt").val();
+		searchItems();
+	});
+});
+
+var pageClick = function(pageNo) {
+	searchItems(pageNo);
+}
+
+var searchItems = function(currPage){
+	var params = {};
+	//其他查询条件
+	if(currPage){
+		params.page = currPage;
+	}
+	if(qname!=null && ""!=qname){
+		params.qname = qname;
+	}
+	$("#mainTable").mask("加载中...");
+	var url = obz.ctx + "/memberRank/list";
+	obz.ajaxJson(url, params, function(resp){
+		var result = resp.data;
+		$(".itemsLotGrid").empty();
+		
+		var dataList = result;
+		if(dataList.length>0){
+			for(var i=0;i<dataList.length;i++){
+				var _row = dataList[i];
+				var trHtml = obz.dataTemplate4obj($("#item_table_tr_tpl").html(), _row);
+				$(".itemsLotGrid").append(trHtml);
+			}
+			//初始化checkbox点击事件
+			TBatch.checkCheckbox();
+			TBatch.initCheckboxClick();
+			TBatch.initOptEvent(TableOpt.init());
+		}else{
+			$(".itemsLotGrid").append($("#table_noresult_tr_tpl").html());
+		}
+		
+		$("#mainTable").unmask();
+	});
+}
+
+var TableOpt = {
+	edit : function(param){
+		var id = param[1];
+		location.href = obz.ctx + "/memberRank/add/?id="+id;
+		return false;
+	},	
+	init : function(){
+		var optArray = new Array();
+		optArray.push(this.edit);
+		return optArray;
+	}
+} 
+</script>
+<script type="text/javascript">
+	Template.init("#menu-customer");
+	Template.initSecond("#menu-member-secd");
+</script>

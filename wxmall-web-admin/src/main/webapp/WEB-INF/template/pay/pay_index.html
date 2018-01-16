@@ -1,0 +1,178 @@
+[#include "/includes/_layout.html"/]
+<link href="${webctx}/resources/css/pay.css" rel="stylesheet"/>
+<style type="text/css">
+.account-information {
+    font-weight: bold;
+    margin-bottom: 30px;
+    font-size: 16px;
+}
+.transfer-entry {
+    padding-top: 30px;
+}
+</style>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+[@layout]
+<div id="main-body-content" class="main">
+	<div class="purchase-block purchase-box">
+            <!--product-type-->
+            <!--product-type-->
+            <!--product-main-->
+            <div class="product-main">
+                <div class="purchase-info">
+                    <span class="purchase-item item1">购买时长：</span>
+                    <ul class="selectMonth purchase-time select-month-off">
+                    	[#list purchases as p]
+                    		[#if p.isDefault == 1 ] 
+                    		<li data-month="${p.expiresIn }" data-product="Base_24" class="active" data-price="${p.payFee }" data-id="${p.id }">
+                             	<a href="javascript:void(0);"><span>${p.name }</span><br>${p.desc }</a>
+                         	</li>
+                    		[/#if]
+                    		[#if p.isDefault == 0]
+                    		<li data-month="${p.expiresIn }" data-product="Base_24" data-price="${p.payFee }" data-id="${p.id }">
+                             	<a href="javascript:void(0);"><span>${p.name }</span><br>${p.desc }</a>
+                         	</li>
+                    		[/#if]
+                    	[/#list]
+                     </ul>
+                </div>
+                <div class="purchase-info">
+                    <span class="purchase-item item2">应付金额：</span>
+                    <span class="text-red text-b" id="spnTotalFee">0</span> &nbsp;元
+                    <!-- <span class="text-bold">元</span> <span id="savingText">（已节省<span class="text-red" id="savingPrice">125</span>元<span id="savingAdvise">，建议购买24个月可以节省1177元</span>）</span> -->
+                </div>
+                <div class="purchase-info">
+                    <span class="purchase-item">有效期至：</span>
+                    <span class="text-bold" id="ExpirTime">2017年06月10日</span>
+            	</div>
+            <div class="purchase-info pay-way">
+                <span class="purchase-item item3">支付方式：</span>
+                <ul class="purchase-time terms-payment">
+                    <li class="active" data-type="AliPay">
+                    	<a href="javascript:void(0);" style="height: 52px;">
+                    		<img src="${webctx}/resources/css/images/payment_alipay.png" style="vertical-align:middle;padding-top: 10px;"/>
+                    	</a>
+                    </li>
+                    <!-- <li class="" data-type="WxPay">
+                    	<a href="javascript:void(0);" style="height: 52px;">
+                    		<img src="${webctx}/resources/css/images/payment_wxpay.png" style="vertical-align:middle;padding-top: 10px;"/>
+                    	</a>
+                    </li> -->
+                    <li data-type="viewAccount"><a id="viewCorporateAccount" href="javascript:void(0);"><span class="contrary-transfer">对公转帐</span></a></li>
+                </ul>
+            </div>
+            <div class="payment-box">
+                <div class="purchase-info">
+                    <a id="btnPay" href="javascript:void(0);" class="purchas-checkout-btn">立即付款</a>
+                </div>
+                <div class="purchase-note">
+                    <!-- <p>
+                        <a id="btnShowCoupon" href="javascript:void(0);" class="text-green">$ 我有优惠码，使用优惠码享受折扣 <i class="more"></i></a>
+                    </p>
+                    <div class="coupon-code">
+                        <div style="display:none;" class="amity">
+                            <i class="info-circle-1"></i> 该优惠码无效，请重新输入，不同优惠码适用于不同版本，不区分大小写。
+                        </div>
+                        <div style="display:none;" class="coupon-code-tips success">
+                            <i class="check-circle"></i> 恭喜您，该优惠码为您节省了<strong>50</strong>元。
+                        </div>
+                        <div style="display:none;" class="coupon-code-tips absent">
+                            <i class="info-circle"></i> 该优惠券不存在哦
+                        </div>
+                        <div style="display:none;" class="coupon-code-entry">
+                            <input id="txtCouponCode" type="text" class="form-control" placeholder="优惠码"/>
+                            <input id="btnUseCoupon" type="button" class="btn btns-use" value="使用"/>
+                        </div>
+                    </div> -->
+                    <p>• 点击"立即付款"表示您已阅读并接受<a href="javascript:void(0)" target="_blank" class="text-blue">《授权许可协议》</a></p>
+                    <p>• 在线支付成功后重新登录即可自动生效，如遇付款问题请联系客服；如需发票或纸质合同请支付后到<a href="http://www.dbumama.com" target="_blank" class="text-blue">用户中心</a>自助索取。</p>
+                </div>
+            </div>
+        </div>
+        <!--/product-main-->
+    </div>
+</div>
+<div class="modal fade" id="pay_dg_dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title">对公转账</h4>
+			</div>
+			<div class="modal-body" style="padding-left: 5px;">
+				<div class="transfer-entry">
+			        <div class="account-information">
+			            账户名称: <span>广州点步信息科技有限公司</span><br>
+			            账户号码: <span>120909408910101</span><br>
+			            开户银行: <span>招商银行股份有限公司广州体育东路支行</span>
+			        </div>
+			
+			        <p>1、受银行处理时间影响，采用对公转账方式到账会有延误，强烈建议采用在线支付。</p>
+			        <p>2、对公转账到账时间一般为：建行1-2天，跨行3-5天（具体到账时间以银行的实际到账时间为准）。</p>
+			        <p>3、请通过网银转账，或者自行到银行进行转账，转账成功后请将汇款底单拍照或扫描发送给客服。</p>
+			        <p>4、确认汇款到账后为您开通相关帐号功能，<span class="text-red">账号开通后可在后台用户中心索取发票</span>。</p>
+			
+			    </div>
+			</div>
+			<div class="modal-footer">
+				<!-- <button class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>提交</button> -->
+			</div>
+		</div>
+	</div>
+</div> 
+<script type="text/javascript">
+	var memberEndDate = $("#purchase_end_date").html();
+	var begtime_ms = new Date();
+	
+	$("#spnTotalFee").text($("ul.selectMonth").find("li.active").attr("data-price"));
+	$("#ExpirTime").text(begtime_ms.addDay_dbu($("ul.selectMonth").find("li.active").attr("data-month") * 30).format_dbu("yyyy年MM月dd日"));
+	$("ul.selectMonth li").click(function(){
+		$("ul.selectMonth li").each(function(){
+			$(this).removeClass("active");
+		});
+		$(this).addClass("active");
+		$("#spnTotalFee").text($(this).attr("data-price")*$(this).attr("data-month"));
+	    $("#ExpirTime").text(begtime_ms.addDay_dbu($(this).attr("data-month") * 30).format_dbu("yyyy年MM月dd日"));
+	    return false;
+	});
+	$("ul.terms-payment li").click(function(){
+		$("ul.terms-payment li").each(function(){
+			$(this).removeClass("active");
+		});
+		$(this).addClass("active");
+		
+		if($(this).attr("data-type") == "viewAccount"){
+			$("#pay_dg_dialog").modal("show");
+		}
+		return false;
+	});
+	
+	$("#btnPay").click(function(){
+		var payType = $("ul.terms-payment").find("li.active").attr("data-type");
+		if(payType != "viewAccount"){
+			createOrder(payType);
+		}else {
+			alert("请选择支付类型");
+		}
+		return false;
+	});
+	
+	function createOrder(payType){
+		var selPurchase = $("ul.selectMonth").find("li.active").attr("data-id");
+		var params = {};
+		params.purchase = selPurchase;
+		params.payType = payType;
+		$(".main").mask("正在提交...");
+		obz.ajaxJson(obz.ctx + "/pay/create", params, function(resp){
+			$(".main").unmask();
+			if(resp.code != 200){
+				alert(resp.msg);
+			}else{
+				//调到支付界面
+				document.write(resp.data);
+			}
+		});
+	}
+</script>	
+</body>
+</html>	

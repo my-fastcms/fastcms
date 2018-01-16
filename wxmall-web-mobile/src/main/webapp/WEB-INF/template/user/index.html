@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>个人中心</title>
+[#include "/includes/header.html" /]
+</head>
+<body>
+<!--主体-->
+<div class='weui-content'>
+  <div class="wy-center-top">
+    <div class="weui-media-box weui-media-box_appmsg">
+      <div class="weui-media-box__hd"><img class="weui-media-box__thumb radius" src="${session._buyerUser.headimgurl}" alt=""></div>
+      <div class="weui-media-box__bd">
+        <h4 class="weui-media-box__title user-name">${session._buyerUser.nickname}</h4>
+        <p class="user-grade">普通会员</p>
+        <p class="user-grade">[#if agent?? && agent.status==1 && grade?? && grade<4]
+				<span>[#if grade == 1]一级分销商[/#if][#if grade == 2]二级分销商[/#if][#if grade == 3]三级分销商[/#if]</span>
+				[/#if]</p>
+        [#if agent?? && agent.status==1]<p class="user-integral">可提现佣金：<em class="num">0.00</em>元</p>[/#if]
+        <p class="user-integral">${session._buyerUser.province} ${session._buyerUser.city}</p>
+      </div>
+    </div>
+	<div class="xx-menu weui-flex">
+      <div class="weui-flex__item"><div class="xx-menu-list"><em>[#if childrenAgents?? && childrenAgents?size>0] ${childrenAgents?size} [#else] 0 [/#if]</em><p>我的推广</p></div></div>
+      <div class="weui-flex__item"><div class="xx-menu-list"><em>0</em><p>积分</p></div></div>
+      <div class="weui-flex__item"><div class="xx-menu-list"><em>0</em><p>收藏商品</p></div></div>
+    </div> 
+  </div>
+  <div class="weui-panel weui-panel_access">
+    <div class="weui-panel__hd">
+      <a href="${webctx}/order" class="weui-cell weui-cell_access center-alloder">
+        <div class="weui-cell__bd wy-cell">
+          <div class="weui-cell__hd"><img src="resources/images/center-icon-order-all.png" alt="" class="center-list-icon"></div>
+          <div class="weui-cell__bd weui-cell_primary"><p class="center-list-txt">全部订单</p></div>
+        </div>
+        <span class="weui-cell__ft"></span>
+      </a>   
+    </div>
+    <div class="weui-panel__bd">
+      <div class="weui-flex">
+        <div class="weui-flex__item">
+          <a href="${webctx}/order/unpay" class="center-ordersModule">
+            [#if unpayedCount?? && unpayedCount>0]<span class="weui-badge" style="position: absolute;top:5px;right:10px; font-size:10px;">${unpayedCount}</span>[/#if]
+            <div class="imgicon"><img src="resources/images/center-icon-order-dfk.png" /></div>
+            <div class="name">待付款</div>
+          </a>
+        </div>
+        <div class="weui-flex__item">
+          <a href="${webctx}/order/payed" class="center-ordersModule">
+            [#if payedCount?? && payedCount>0]<span class="weui-badge" style="position: absolute;top:5px;right:10px; font-size:10px;">${payedCount}</span>[/#if]
+            <div class="imgicon"><img src="resources/images/center-icon-order-dfh.png" /></div>
+            <div class="name">待发货</div>
+          </a>
+        </div>
+        <div class="weui-flex__item">
+          <a href="${webctx}/order/shipped" class="center-ordersModule">
+            [#if shippedCount?? && shippedCount>0]<span class="weui-badge" style="position: absolute;top:5px;right:10px; font-size:10px;">${shippedCount}</span>[/#if]
+            <div class="imgicon"><img src="resources/images/center-icon-order-dsh.png" /></div>
+            <div class="name">待收货</div>
+          </a>
+        </div>
+        <div class="weui-flex__item">
+          <a href="${webctx}/order/completed" class="center-ordersModule">
+            [#if complateCount?? && complateCount>0]<span class="weui-badge" style="position: absolute;top:5px;right:10px; font-size:10px;">${complateCount}</span>[/#if]
+            <div class="imgicon"><img src="resources/images/center-icon-order-dpj.png" /></div>
+            <div class="name">待评价</div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  [#if agent?? && agent.status==1]
+  <div class="weui-panel weui-panel_access">
+    <div class="weui-panel__hd">
+      <a href="${webctx}/agent/commission" class="weui-cell weui-cell_access center-alloder">
+        <div class="weui-cell__bd wy-cell">
+          <div class="weui-cell__hd"><img src="resources/images/center-icon-jk.png" alt="" class="center-list-icon"></div>
+          <div class="weui-cell__bd weui-cell_primary"><p class="center-list-txt">我的佣金</p></div>
+        </div>
+        <span class="weui-cell__ft"></span>
+      </a>   
+    </div>
+    <div class="weui-panel__bd">
+      <div class="weui-flex">
+        <div class="weui-flex__item">
+          <a href="myburse.html" class="center-ordersModule">
+            <div class="center-money"><em>800.0</em></div>
+            <div class="name">账户总额</div>
+          </a>
+        </div>
+        <div class="weui-flex__item">
+          <a href="myburse.html" class="center-ordersModule">
+            <div class="center-money"><em>50.0</em></div>
+            <div class="name">返现金额</div>
+          </a>
+        </div>
+        <div class="weui-flex__item">
+          <a href="myburse.html" class="center-ordersModule">
+            <div class="center-money"><em>550.0</em></div>
+            <div class="name">待返还</div>
+          </a>
+        </div>
+        <!-- <div class="weui-flex__item">
+          <a href="myburse.html" class="center-ordersModule">
+            <div class="center-money"><em>165</em></div>
+            <div class="name">蓝豆</div>
+          </a>
+        </div> -->
+      </div>
+    </div>
+  </div>
+  [/#if]
+  
+  <div class="weui-panel">
+        <div class="weui-panel__bd">
+          <div class="weui-media-box weui-media-box_small-appmsg">
+            <div class="weui-cells">
+             <a class="weui-cell weui-cell_access" href="${webctx}/cart">
+                <div class="weui-cell__hd"><img src="resources/images/center-icon-dlmm.png" alt="" class="center-list-icon"></div>
+                <div class="weui-cell__bd weui-cell_primary">
+                  <p class="center-list-txt">购物车</p>
+                </div>
+                <span class="weui-cell__ft"></span>
+              </a>
+              <a class="weui-cell weui-cell_access" href="javascript:void(0)">
+                <div class="weui-cell__hd"><img src="resources/images/center-icon-sc.png" alt="" class="center-list-icon"></div>
+                <div class="weui-cell__bd weui-cell_primary">
+                  <p class="center-list-txt">我的收藏</p>
+                </div>
+                <span class="weui-cell__ft"></span>
+              </a>
+              <a class="weui-cell weui-cell_access" href="${webctx}/order/group">
+                <div class="weui-cell__hd"><img src="resources/images/center-icon-jyjl.png" alt="" class="center-list-icon"></div>
+                <div class="weui-cell__bd weui-cell_primary">
+                  <p class="center-list-txt">我的拼团</p>
+                </div>
+                <span class="weui-cell__ft"></span>
+              </a>
+              <a class="weui-cell weui-cell_access" href="${webctx}/agent/apply">
+                <div class="weui-cell__hd"><img src="resources/images/center-icon-out.png" alt="" class="center-list-icon"></div>
+                <div class="weui-cell__bd weui-cell_primary">
+                  <p class="center-list-txt">申请分销</p>
+                </div>
+                <span class="weui-cell__ft"></span>
+              </a>
+              <a class="weui-cell weui-cell_access" href="javascript:void(0)">
+                <div class="weui-cell__hd"><img src="resources/images/center-icon-dz.png" alt="" class="center-list-icon"></div>
+                <div class="weui-cell__bd weui-cell_primary">
+                  <p class="center-list-txt">地址管理</p>
+                </div>
+                <span class="weui-cell__ft"></span>
+              </a>
+              [#if agent?? && agent.status==1 && grade?? && grade<4]
+			  <a class="weui-cell weui-cell_access" href="${webctx}/agent/card?agentId=${agent.id}">
+                <div class="weui-cell__hd"><img src="resources/images/center-icon-yhk.png" alt="" class="center-list-icon"></div>
+                <div class="weui-cell__bd weui-cell_primary">
+                  <p class="center-list-txt">邀请好友</p>
+                </div>
+                <span class="weui-cell__ft"></span>
+              </a>              
+              [/#if]
+            </div>
+          </div>
+        </div>
+      </div>
+</div>
+[#include "/includes/menus.html" /]
+<!--手机端script需要加载后方-->
+[#include "/includes/footer.html" /]
+<script type="text/javascript">
+Template.init("#nav-page-user");
+</script>
+</body>
+</html>
+

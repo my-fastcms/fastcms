@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+[#include "/includes/header.html" /]
+<title>商品分类</title>
+<style type="text/css">
+.weui-grid__icon{
+	width:48px;
+	height: 58px;
+}
+</style>
+</head>
+<body>
+[#include "/includes/search.html" /]
+<div class="content" style="font-size: 14px;">
+<div class="weui-grids">
+<a href="${webctx}/product" class="weui-grid js_grid">
+    <div class="weui-grid__icon"><img src="${webctx}/resources/images/nav-ionic.png" alt="全部分类"></div>
+    <p class="weui-grid__label">全部</p>
+</a>
+	[#list categories as categ]
+<a href="${webctx}/product?categId=${categ.id}" class="weui-grid js_grid">
+    <div class="weui-grid__icon"><img src="${img_domain}${categ.img_path}" alt="${categ.name}"></div>
+    <p class="weui-grid__label">${categ.name}</p>
+</a>	
+	[/#list]
+</div>
+</div>
+[#include "includes/footer.html"/]
+[#include "includes/menus.html"/]
+<script>Template.init("#nav-page-categ");</script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+[#include "/includes/_layout.html"/]
+<style type="text/css">
+</style>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+[@layout]
+<div class="wrapper wrapper-content">
+<div class="row animated fadeInLeft">
+	[#include "/includes/menu-member.html" /]
+	<div class="col-sm-11">
+		<div class="row content-tabs">
+			<nav class="page-tabs J_menuTabs">
+		       <div class="page-tabs-content" style="margin-left: 0px;">
+			       <a href="${webctx}/customer/members" class="J_menuTab">会员</a>
+			       <a href="${webctx}/memberRank" class="J_menuTab active">会员等级</a>
+			       <a href="${webctx}/card" class="J_menuTab">会员卡</a>
+		       </div>
+		   	</nav>
+		</div>
+		
+		<div class="ibox float-e-margins">
+			<div class="ibox-title row">
+				<h5><small><a href="${webctx}/memberRank">《返回列表</a></small></h5>
+			</div>
+			<div class="row ibox-content active_statistics col-sm-9">
+				<div class="title_query padtop">
+					<form id="rankForm" action="" method="post" class="form-horizontal">
+						<input type="hidden" name="rank_id" id="rank_id" value="${rank.id}"/>
+						<div class="form-group">
+				            <label class="col-md-2 control-label">等级名称<span style="color: red;"><em>*</em></span></label>
+				            <div class="col-md-3" id="error_rank_name">
+				                <input id="rank_name" name= "rank_name" value="${rank.rank_name}" maxlength="20" type="text" class="form-control" >
+				                <label class="control-label" for="rank_name"></label>
+				            </div>
+				        </div>
+				        
+				        <div class="form-group">
+				            <label class="col-md-2 control-label">等级购买金额（元）
+				            <i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('购买会员卡金额，首次往会员卡中充值该金额，可获取对应的会员等级，同时享受该等级的优惠策略。', this, {tips: [1, '#3595CC'],time: 0});"></i>
+				            <span style="color: red;"><em>*</em></span></label>
+				            <div class="col-md-2" id="error_first_charge">
+				                <input id="first_charge" name="first_charge" value="${rank.first_charge}" maxlength="20" type="text" class="form-control" onkeyup="this.value=this.value.replace(/[^\d]/g,'')">
+				                <label class="control-label" for="first_charge"></label>
+				            </div>
+				        </div>
+				        <div class="form-group">
+				            <label class="col-md-2 control-label">等级折扣
+				            <i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('该会员等级对应的消费折扣。', this, {tips: [1, '#3595CC'],time: 0});"></i>
+				            <span style="color: red;"><em>*</em></span></label>
+				            <div class="col-md-2" id="error_rank_discount">
+				                <input id="rank_discount" name="rank_discount" value="${rank.rank_discount}" maxlength="20" type="text" class="form-control" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')">
+				                <label class="control-label" for="rank_discount"></label>
+				            </div>
+				        </div>
+				        <div class="form-group">
+				            <label class="col-md-2 control-label">单次消费满减
+				            <i class="fa fa-question-circle" onmouseout="layer.closeAll();" onmouseover="layer.tips('会员单次消费满多少金额，返回多少现金。', this, {tips: [1, '#3595CC'],time: 0});"></i>
+				            <span style="color: red;"><em>*</em></span></label>
+				            <div class="col-md-2" id="error_rank_cash_full">
+				                满<input id="rank_cash_full" name="rank_cash_full" value="${rank.rank_cash_full}" maxlength="20" type="text" class="form-control" onkeyup="this.value=this.value.replace(/[^\d]/g,'')">
+				                <label class="control-label" for="rank_cash_full"></label>
+				            </div>
+				            <div class="col-md-2" id="error_rank_cash_rward">
+				            减<input id="rank_cash_rward" name="rank_cash_rward" value="${rank.rank_cash_rward}" maxlength="20" type="text" class="form-control" onkeyup="this.value=this.value.replace(/[^\d]/g,'')">
+				                <label class="control-label" for="rank_cash_rward"></label> 
+				            </div>
+				        </div>
+				     <div class="panel-default">   
+				    <div class="panel-footer" align="center">
+				   	 	<button type="button" onclick="saveRank();" class="btn btn-success btn-sm">保存</button>
+					</div>
+					</div>
+				     </form>
+				 </div>
+		   </div>  
+		 </div>  
+		   <div class="col-sm-3">
+	    <div class="wrapper wrapper-content project-manager">
+	        <h4>帮助说明</h4>
+	        <ol>
+	            <li>自定义会员等级</li>
+	            <li>购买会员卡金额，首次往会员卡中充值该金额，可获取对应的会员等级，同时享受该等级的优惠策略</li>
+	            <li>所有等级优惠需要该会员持有的会员卡中有余额的情况下才可享受</li>
+	        </ol>
+	    </div>
+	</div>
+	</div>
+</div>
+</div>
+[/@layout]
+<script type="text/javascript">
+function saveRank(){
+	var params={}, error = {};
+	var rank_name = $("#rank_name").val(), first_charge=$("#first_charge").val(),
+	rank_discount = $("#rank_discount").val(), rank_cash_full = $("#rank_cash_full").val(),rank_cash_rward = $("#rank_cash_rward").val();
+	var rank_id = $("#rank_id").val();
+	if($.trim(rank_name) =="") {error.error_rank_name = "等级名称不能为空"; } else {error.error_rank_name=""; params.rank_name = $.trim(rank_name);}
+	if($.trim(first_charge) =="") {error.error_first_charge = "等级购买金额不能为空"; } else {error.error_first_charge=""; params.first_charge = $.trim(first_charge);}
+	if($.trim(rank_discount) =="") {error.error_rank_discount = "等级折扣不能为空"; } else {error.error_rank_discount=""; params.rank_discount = $.trim(rank_discount);}
+	if($.trim(rank_cash_full) =="") {error.error_rank_cash_full = "单次消费满减不能为空"; } else {error.error_rank_cash_full=""; params.rank_cash_full = $.trim(rank_cash_full);}
+	if($.trim(rank_cash_rward) =="") {error.error_rank_cash_rward = "单次消费满减不能为空"; } else {error.error_rank_cash_rward=""; params.rank_cash_rward = $.trim(rank_cash_rward);}
+	params.id=rank_id;
+	var hasError = false;
+	for(var key in error){
+		if(error[key]!=""){
+			if(!hasError) hasError = true;
+			$("#"+key).addClass("has-error");
+			$("#"+key).find("label").text(error[key]);
+		}else{
+			$("#"+key).removeClass("has-error");
+			$("#"+key).find("label").empty();
+		}
+	}
+	//主表信息不完整，返回
+	if(hasError) return false;
+	$("#rankForm").mask("正在保存...");
+	$.post(obz.ctx+"/memberRank/save", params, function(json) {
+		if(json.code!=200){
+			obz.error(json.msg, function(){
+				$("#rankForm").unmask();
+			});				
+		}else{
+			obz.msg('保存成功', function(){
+				$("#rankForm").unmask();
+				location.href="${webctx}/memberRank";
+			});					
+		}
+	},"json");
+}
+</script>
+<script>
+Template.init("#menu-customer");
+Template.initSecond("#menu-member-secd");
+</script>
+</body>
+</html>

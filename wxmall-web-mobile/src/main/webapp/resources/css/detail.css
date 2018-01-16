@@ -1,0 +1,84 @@
+.prize_detail_box{
+	margin:10px;
+	padding:20px;
+	background-color:#fff;
+	border:1px solid #dddddd;
+}
+.prize_detail_box h2{
+	font-size:16px;
+}
+.prize_detail_box ul li{
+	margin:10px 0;
+	line-height:1.5;
+}
+.prize_detail_box ul li span.sep{
+	margin-left:15px;
+}
+.prize_detail_box ul li.width_input{
+	line-height:1.8;
+}
+
+.prize_detail_box ul li.width_input input{
+	width:100px;
+	font-size:14px;
+	padding:0 5px;
+}
+.prize_detail_box ul li.width_input input.long{
+	width:240px;
+}
+.exchange_success_box .tips{
+	line-height:1.8;
+	margin-bottom:10px;
+}
+.coupon_get_tips{
+	color:#f60;
+	line-height:1.5;
+}
+.prize_detail_box ul li.goods_pic img{
+	width:260px
+}
+@media screen and (width:360px){
+	.prize_detail_box ul li.goods_pic img{
+		width:280px;
+	}
+}
+@media screen and (width:400px){
+	.prize_detail_box ul li.goods_pic img{
+		width:320px;
+	}
+}
+.lottery_my_num p{
+	margin:8px 0 6px 0;
+	border-bottom:1px solid #efefef;
+	padding-bottom:7px;
+}
+.lottery_my_num p span{
+	display:block;
+}
+.lottery_my_num p span.num{
+	width:120px;
+	float:left;
+}
+.lottery_my_num p span.time{
+	float:right;
+}
+.caipiao_num{
+	padding-right:10px;
+}
+.prize_hit_tips{
+	font-weight:bold;
+	font-size:14px;
+}
+
+.prize_detail_box .box_top_left{
+	display:none;
+}
+.prize_detail_box .box_top_right{
+	display:none;
+}
+.prize_detail_box .box_bottom_right{
+	display:none;
+}
+.prize_detail_box .box_bottom_left{
+	display:none;
+}

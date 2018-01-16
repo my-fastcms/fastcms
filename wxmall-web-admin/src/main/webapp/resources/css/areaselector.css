@@ -1,0 +1,192 @@
+a:link {
+ text-decoration: none;
+}
+a:visited {
+ text-decoration: none;
+}
+a:hover {
+ text-decoration: none;
+}
+a:active {
+ text-decoration: none;
+}
+.modal-dialog .scope_area {
+    padding-left: 45px;
+}
+.scope_area {
+	margin-top:10px;
+	height:302px;
+	overflow:hidden
+}
+.scope_area .item_name {
+	width:140px;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	white-space:nowrap;
+	word-wrap:normal;
+	display:block
+}
+.scope_area .frm_msg.fail {
+	padding-left:10px
+}
+.unchoose_scope,.choosed_scope {
+	border:1px solid #e7e7eb;
+	float:left;
+	zoom:1;
+	height:300px;
+	width:200px;
+	overflow:visible;
+	background-color:#fff
+}
+.scope_hd {
+	height:27px;
+	line-height:27px;
+	position:relative;
+	background-color:#f4f5f9;
+	text-align:left
+}
+.scope_hd label {
+	display:block;
+	cursor:pointer;
+	margin-left:10px;
+	cursor:default;
+	width:175px;
+	overflow:hidden;
+	text-overflow:ellipsis;
+	white-space:nowrap;
+	word-wrap:normal;
+	font-size:14px
+}
+.scope_hd:hover {
+	background-color:none;
+	box-shadow:none;
+	-moz-box-shadow:none;
+	-webkit-box-shadow:none
+}
+.scope_hd label:hover {
+	cursor:default
+}
+.scope_list {
+	height:275px;
+	overflow-y:scroll;
+	zoom:1;
+	position:relative
+}
+.scope_list dd {
+	margin-top:1px;
+	box-sizing:border-box;
+	overflow:hidden
+}
+.scope_list dd.first_dd_list {
+	margin-top:10px
+}
+.scope_list dd a {
+	display:block;
+	height:24px;
+	line-height:24px;
+	color:#222;
+	overflow:hidden
+}
+.scope_list dd a:hover {
+	background-color:#ccced3;
+	text-decoration:none
+}
+.scope_list dd a.disabled {
+	color:#a3a3a3
+}
+.scope_list dd a.disabled:hover {
+	color:#a3a3a3;
+	background:0;
+	cursor:default
+}
+.scope_list dd a .sub_icon {
+	width:13px;
+	height:13px;
+	vertical-align:middle;
+	display:inline-block;
+	margin-right:5px;
+	text-indent:-999em;
+	margin-top:6px;
+	float:left;
+	margin-left:10px
+}
+.scope_list dd a .sub_icon.show_sub_icon {
+	background:url("../css/images/areaselector_z218878.png") 0 0 no-repeat
+}
+.scope_list dd a .sub_icon.hide_sub_icon {
+	background:url("../css/images/areaselector_z218878.png") 0 -23px no-repeat
+}
+.scope_list dd a:hover .sub_icon.show_sub_icon {
+	background:url("../css/images/areaselector_z218878.png") 0 -46px no-repeat
+}
+.scope_list dd a:hover .sub_icon.hide_sub_icon {
+	background:url("../css/images/areaselector_z218878.png") 0 -69px no-repeat
+}
+.scope_list dd a.selected {
+	background-color:#ccced3;
+	color:#fff;
+	text-decoration:none
+}
+.scope_list dd a.father_menu.no_child {
+	padding-left:30px
+}
+.scope_list .sub_scope_list {
+	zoom:1;
+	width:100%
+}
+.scope_list .sub_scope_list li {
+	margin-top:1px
+}
+.scope_list .sub_scope_list li a {
+	width:100%;
+	padding-left:30px
+}
+.selected_scope_list {
+	float:left;
+	width:100%;
+	box-sizing:border-box;
+	margin-top:10px
+}
+.selected_scope_list .selected_scope_item {
+	padding-left:10px;
+	position:relative;
+	height:24px;
+	line-height:24px
+}
+selected_scope_list .selected_scope_item span {
+	width:152px;
+	height:25px;
+	display:inline-block;
+	*display:inline;
+	*zoom:1;
+	overflow:hidden
+}
+.selected_scope_list .selected_scope_item .as_scope_del {
+	text-indent:-999em;
+	position:absolute;
+	font-size:16px;
+	display:block;
+	color:#000;
+	top:5px;
+	right:10px;
+	height:14px;
+	width:15px;
+	background:transparent url(../css/images/spr_icon_selector218877.png) no-repeat 0 0;
+	background-position:0 -56px
+}
+.selected_scope_list .selected_scope_item .as_scope_del:hover {
+	background-position:0 -70px
+}
+.opr_btn {
+	float:left;
+	margin:140px 20px
+}
+.opr_btn .icon_add {
+	display:block;
+	width:32px;
+	height:32px;
+	overflow:visible;
+	text-indent:-999em;
+	background:transparent url(../css/images/icon32_arrow_right218877.png) no-repeat 0 0;
+	margin-left:30px
+}

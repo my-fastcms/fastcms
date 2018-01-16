@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Pragma" content="no-cache"/>    
+<meta http-equiv="Cache-Control" content="no-cache"/>    
+<meta http-equiv="Expires" content="0"/>
+<title>订单结算</title>
+[#include "includes/header.html"/]
+<link href="${webctx}/resources/css/jiesuan.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="content">
+<!-- 收货地址 begin -->
+<div id="topFixedDiv" style="height: 7rem;"> 
+	<input type="hidden" value="${receiver.id}" id="select_receiverId">
+	<div id="addressDefault" class="weui-cells address_defalut address_border" style="height: 5rem;font-size: 12px;border: none;">
+	    [#if receiver??]
+	    	<div id="select_addr" class="weui-cell weui-cell_access" style="padding: 0px 15px !important;">
+		    	<div class="weui-cell__bd">
+	              	<div>收件人:</div>
+	              	<strong><span id="sel_name">${receiver.receiverName}</span></strong> 
+	              	<span id="sel_phone">${receiver.phone}</span> 
+	            </div>
+	    		<div class="weui-cell__ft" style="text-align: left;"><span id="sel_address">${fullName}${receiver.address}</span></div>
+	    	</div>
+		[#else]
+			<div id="select_addr" class="weui-cell weui-cell_access" style="border: none;padding: 0px 15px !important;">
+	            <div class="weui-cell__ft">
+	            	请填写收货地址
+	            </div>
+	        </div>
+		[/#if]
+     </div>
+</div>
+<!-- 收货地址 end-->
+<!-- 商品列表begin -->
+<div class="order_info">
+<ul>
+[#list order.orderItems as item]
+<a class="weui-cell goods-list" href="${webctx}/product/detail?id=${item.productId}">
+<li class="hproduct">
+<img class="photo" src="${img_domain}${item.productImg}">
+<div class="fn"> ${item.productName}</div>
+<!-- <p class="sku_coll">编号：${item.sn} </p> -->
+[#if item.specificationValues?? && item.specificationValues?size>0]
+<p class="sku_coll">规格： [#list item.specificationValues as spv]${spv.name}/[/#list]</p>
+[/#if]
+<p class="sku_price">￥${currency(item.price, true)}</p>
+<p class="sku_count">×${item.quantity}</p>
+</li>
+</a>
+[/#list]
+</ul>
+</div>
+<!-- 商品列表end -->
+<div class="weui-cells" style="font-size: 14px;">
+  	<div class="weui-cell">
+	  	<div class="weui-cell__bd"><p>商品金额</p></div>
+	    <div class="weui-cell__ft"><span style="color: red;">￥${currency(order.totalPrice, true)}</span> [#if order.oldPrice??] <s><span style="font-size: 10px;">${currency(order.oldPrice, true)}</span></s>[/#if]</div>
+    </div>
+    <div class="weui-cell">
+	  	<div class="weui-cell__bd"><p>邮费</p></div>
+	    <div class="weui-cell__ft">+ ￥<span id="order_postFee">${currency(order.postFee, true)}</span>[#if order.oldPostFee??] <s><span style="font-size: 10px;">${currency(order.oldPostFee, true)}</span></s>[/#if]</div>
+    </div>
+    <!-- <div class="weui-cell weui-cell_access">
+      	<div class="weui-cell__bd"><p>优惠</p></div>
+      	<div class="weui-cell__ft">使用优惠码</div>
+    </div> -->
+    <div class="weui-cells__title">买家留言</div>
+  	<div class="weui-cell">
+	    <div class="weui-cell__bd weui-cell-primary">
+	      <textarea id="order_memo" class="weui-textarea" placeholder="请输入留言" rows="2"></textarea>
+	    </div>
+  	</div>
+  	[#if card??]
+	<div class="weui-cell weui-cell_switch">
+		<input id="card_disc" type="hidden" value="${card.discount}">
+        <div class="weui-cell__bd">使用会员卡</div>
+        <div class="weui-cell__ft">
+          <label for="use_card" class="weui-switch-cp">
+            <input id="use_card" name="use_card" class="weui-switch-cp__input" type="checkbox" checked="checked"/>
+            <span class="weui-switch-cp__box"></span>
+          </label>
+        </div>
+    </div>  	
+  	[/#if]
+</div>
+<div class="weui-tabbar toolbar-bottom">
+	<div class="mini-btn-2-1">
+		<div id="o_div" style="padding-left: 1rem;padding-top: 1.3rem;"><span>合计:</span><span class="price" id="total_price">${currency(order.payFee, true)}</span><span style="font-size: 6px;padding-left: 2px;"><s id="o_price"></s></span></div>
+		<div id="c_div" style="padding-left: 4rem;font-size: 6px;display: none;"><span>会员</span><span id="card_disc_price"></span></div>
+	</div>
+	<div class="big-btn-2-1">
+		<a id="create_order_btn" href="javascript:void(0);" class="big-btn red-btn" style="height: 5rem;color: white;">提交订单</a>
+	</div>
+</div>
+<!-- 支付 -->
+</div>
+<div id="half" class="weui-popup__container popup-bottom" style="z-index: 1000;">
+      <div class="weui-popup__overlay"></div>
+      <div class="weui-popup__modal">
+        <div class="toolbar">
+          <div class="toolbar-inner">
+            <a href="javascript:void(0);" class="picker-button close-popup">关闭</a>
+          </div>
+        </div>
+        <div id="address_div" class="modal-content" style="height: 420px;"></div>
+      </div>
+</div>
+<div id="add_half_dialog" class="weui-popup__container popup-bottom" style="z-index: 1000;">
+      <div class="weui-popup__overlay"></div>
+      <div class="weui-popup__modal">
+        <div class="toolbar">
+          <div class="toolbar-inner">
+            <a href="javascript:void(0);" class="picker-button close-popup">关闭</a>
+          </div>
+        </div>
+        <div id="address_add_div" class="modal-content"></div>
+      </div>
+</div>
+<!--手机端script需要加载后方-->
+[#include "includes/footer.html"/]
+<script type="text/javascript">
+var items = ${items};
+$(document).ready(function(){
+	var payFee = ${order.payFee};
+	payFee = payFee.toFixed(2);
+	var allowSubmit = true;
+	var orderId = null;
+	$("#select_addr").click(function(){
+		$.showLoading("正在加载...");
+		$("#address_div").load("${webctx}/receiver", function(){
+			$.hideLoading();
+			$("#half").popup();
+		});
+	});
+	
+	function calcuCardPrice(){
+		var disc = (100 - parseInt($("#card_disc").val()))/100;//会员折扣
+		$("#c_div").show();
+		$("#card_disc_price").html(disc*10 + "折");
+		$("#total_price").html((parseFloat(payFee) * disc).toFixed(2));
+		$("#o_price").html(payFee);
+	}
+	
+	if($("#card_disc").val() != null && $("#card_disc").val() != "" && $("#use_card").is(':checked') == true){
+		calcuCardPrice();
+	}
+	
+	$("#use_card").click(function(){
+		var me = $(this);
+		if(me.is(':checked') == true){
+			calcuCardPrice();
+		}else{
+			$("#c_div").hide();
+			$("#total_price").html(payFee);
+			$("#o_price").html("");
+		}
+	});
+	
+	$("#create_order_btn").click(function(){
+		if(items == null || items == ""){
+			showMsg("没有订单可以提交");
+			return;
+		}
+		if($("#select_receiverId").val()==null || ""==$("#select_receiverId").val()){
+			$.toast("请选择收货地址", "text");
+			return;
+		}
+		var totalPrice = $("#total_price").text();
+		if(totalPrice<=0){
+			$.toast("订单金额必须大于0", "text");
+			return;
+		}
+		if(allowSubmit == false) {
+			showPay(orderId);
+			return;
+		}
+		
+		[#if groupUserId??]
+		//加入团
+		$.showLoading("提交中...");
+		$.post("${webctx}/order/joinGroup", {receiverId:$("#select_receiverId").val(), 
+			group_user_id : ${groupUserId},
+			memo : $("#order_memo").val(), items : JSON.stringify(items)}, function(data){
+			$.hideLoading();
+			var resp = data;
+			if(resp.code != 200){
+				$.alert(resp.msg==null ? "系统错误" : resp.msg);
+				return;
+			}
+			allowSubmit = false;
+			//显示选择支付方式弹出框
+			orderId = resp.data;
+			showPay(resp.data);
+		});
+		[#else]
+		//开团
+		$.showLoading("提交中...");
+		$.post("${webctx}/order/gcreate", {receiverId:$("#select_receiverId").val(), 
+			memo : $("#order_memo").val(), items : JSON.stringify(items)}, function(data){
+			$.hideLoading();
+			allowSubmit = false;
+			var resp = data;
+			if(resp.code != 200){
+				$.alert(resp.msg==null ? "系统错误" : resp.msg);
+				return;
+			}
+			//显示选择支付方式弹出框
+			orderId = resp.data;
+			showPay(resp.data);
+		});
+		[/#if]
+	});
+	
+	function wxpay(orderid){
+		$.post("${webctx}/pay", {orderId:orderid}, function(data){
+      		var resp = data;
+			if(resp.code != 200){
+				$.alert(resp.msg==null ? "系统错误" : resp.msg);
+				return;
+			}
+			var json = resp.data;
+			if(json.returnMsg=='OK'){
+				WeixinJSBridge.invoke(
+			       'getBrandWCPayRequest', {
+			            "appId":json.appId,     		//公众号名称，由商户传入     
+			            "nonceStr":json.nonceStr, 		//随机串     
+			            "package":json.packageValue,
+			            "paySign":json.paySign, 		//微信签名 
+			            "signType":"MD5",         		//微信签名方式：     
+			            "timeStamp":json.timeStamp      //时间戳，自1970年以来的秒数     
+			     	},
+			       	function(res){     
+			            if(res.err_msg == "get_brand_wcpay_request:ok" ) {
+			            	//使用以上方式判断前端返回,微信团队郑重提示：res.err_msg将在用户支付成功后返回ok，但并不保证它绝对可靠。
+			            	showMsg("支付成功", function(){
+			            		location.href = "${webctx}/user";						            		
+			            	});
+			            }else if(res.err_msg == "get_brand_wcpay_request:cancel"){
+			            }else {
+			            	$.alert("支付失败"+res.err_msg);
+			            }     
+			       	}
+			    );
+			}
+		});
+	}
+	
+	function showPay(orderid){
+		$.actions({
+			actions: [{
+			    text: "微信安全支付",
+			    className: "color-primary",
+			    onClick: function() {
+			    	if($("#card_disc").val() != null && $("#card_disc").val() != "" && $("#use_card").is(':checked') == true){
+			    		$.showLoading("提交中...");
+						$.post("${webctx}/pay/card", {orderId:orderid}, function(resp){
+							$.hideLoading();
+							if(resp.code != 200){
+								$.confirm("会员卡支付失败，"+ resp.msg==null ? "系统错误" : resp.msg+",确认使用微信支付吗？", "提示", function() {
+									wxpay(orderid);
+								})
+								return;
+							}
+							showMsg("支付成功", function(){
+			            		location.href = "${webctx}/user";						            		
+			            	});
+						})
+			    	}else{
+			    		wxpay(orderid);
+			    	}
+			    }
+			}]
+		});
+	}
+});
+</script>
+</body>
+</html>

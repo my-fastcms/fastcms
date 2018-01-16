@@ -1,0 +1,90 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+[#include "/includes/header.html" /]
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+<!-- Main content -->
+<div class="wrapper wrapper-content">
+	<div class="row ibox-content">
+		<div class="col-md-8  col-md-offset-2 ">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<a href="http://www.dbumama.com" target="_blank"><b>点步科技Wxmall微商城产品安装向导</b></a>				
+				</div>
+			</div>
+			<!-- Default box -->
+			<div class="box">
+				<div class="box-header with-border">
+					<h3 class="box-title"></h3>
+				</div>
+				<form id="db_conf_form" action="${webctx}/install/step2" class="form-horizontal" method="post">
+					<div class="box-body">
+						<div class="form-group">
+							<label class="help-block  col-sm-offset-1 col-sm-11">请在下方填写您的数据库连接信息。[#if error??]<font color="red">${error}</font>[/#if]</label>
+						</div>
+						<div class="form-group">
+							<label for="db_name" class="col-sm-2 control-label">数据库名</label>
+							<div class="col-sm-4">
+								<input name="db_name" id="db_name" class="form-control"  placeholder="数据库名称" value="wxmall"/>
+							</div>
+							<label class="help-block">将Wxmall安装到哪个数据库？</label>
+
+						</div>
+						<div class="form-group">
+							<label for="db_user" class="col-sm-2 control-label">用户名</label>
+							<div class="col-sm-4">
+								<input name="db_user" id="db_user" class="form-control"  placeholder="用户名"/>
+							</div>
+							<label class="help-block">您的MySQL用户名</label>
+
+						</div>
+						<div class="form-group">
+							<label for="db_password" class="col-sm-2 control-label">密码</label>
+							<div class="col-sm-4">
+								<input name="db_password" id="db_password" class="form-control"  placeholder="密码"/>
+							</div>
+							<label class="help-block">…及其密码</label>
+
+						</div>
+						<div class="form-group">
+							<label for="db_host" class="col-sm-2 control-label">数据库主机</label>
+							<div class="col-sm-4">
+								<input name="db_host" id="db_host" class="form-control"  placeholder="localhost" value="localhost"/>
+							</div>
+							<label class="help-block" style="padding-right: 5px"></label>
+						</div>
+						<div class="form-group">
+							<label for="db_host_port" class="col-sm-2 control-label">端口号</label>
+							<div class="col-sm-4">
+								<input name="db_host_port" id="db_host_port" class="form-control"   value="3306"/>
+							</div>
+							<label class="help-block" style="padding-right: 5px">Mysql默认是3306</label>
+						</div>
+					</div>
+					<!-- /.box-body -->
+					<div class="box-footer">
+						<div class="col-sm-3 col-sm-offset-8">
+							<a href="${webctx}/install/step1" class="btn btn-default"><b>上一步</b></a>
+							<input id="subbtn" type="button" class="btn btn-primary pull-right" value="下一步" />						
+						</div>
+					</div>
+				</form>
+				<!-- /.box-footer-->
+			</div>
+			<!-- /.box -->
+		</div>
+		<!-- /.content -->
+	</div>
+</div>
+[#include "/includes/footer.html" /]
+<script type="text/javascript">
+$("#subbtn").click(function(){
+	obz.showMessage("请确认数据连接信息无误", function(){
+		$("#db_conf_form").mask("正在安装中，数据初始化需要几分钟，请耐心等待....");
+		$("#db_conf_form").submit();		
+	});
+});
+</script>
+</body>
+</html>

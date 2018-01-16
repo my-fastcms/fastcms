@@ -1,0 +1,1288 @@
+Table: t_agent
+----------------+--------------+------+-----+---------+---------
+ Field          | Type         | Null | Key | Default | Remarks 
+----------------+--------------+------+-----+---------+---------
+ id             | BIGINT(19)   | NO   | PRI |         |         
+ seller_id      | BIGINT(19)   | NO   |     |         |         
+ buyer_id       | BIGINT(19)   | NO   |     |         | 关联的会员Id 
+ parent_id      | BIGINT(19)   | YES  |     |         | 上级Id    
+ agent_name     | VARCHAR(64)  | YES  |     |         | 代理人名称   
+ agent_phone    | VARCHAR(64)  | YES  |     |         |         
+ area_id        | BIGINT(19)   | YES  |     |         | 省市县     
+ area_tree_path | VARCHAR(64)  | YES  |     |         | 省市县     
+ agent_addr     | VARCHAR(255) | YES  |     |         | 详细地址    
+ expire_date    | DATETIME(19) | YES  |     |         | 到期时间    
+ audit_date     | DATETIME(19) | YES  |     |         | 审核时间    
+ status         | INT(10)      | YES  |     |         | 状态0，不通过审核，1通过审核，2待审核，3取消分销商资格
+ active         | BIT(1)       | YES  |     |         |         
+ created        | DATETIME(19) | YES  |     |         |         
+ updated        | DATETIME(19) | YES  |     |         |         
+----------------+--------------+------+-----+---------+---------
+
+Table: t_agent_aduit_log
+-------------+--------------+------+-----+---------+---------
+ Field       | Type         | Null | Key | Default | Remarks 
+-------------+--------------+------+-----+---------+---------
+ id          | BIGINT(19)   | NO   | PRI |         |         
+ agent_id    | BIGINT(19)   | NO   |     |         | 审核对象，审核的分销商
+ aduit_opter | BIGINT(19)   | NO   |     |         | 审核人     
+ content     | VARCHAR(255) | YES  |     |         | 审核内容    
+ status      | VARCHAR(64)  | YES  |     |         | 审核状态，通过，不通过
+ active      | BIT(1)       | YES  |     |         |         
+ created     | DATETIME(19) | YES  |     |         |         
+ updated     | DATETIME(19) | YES  |     |         |         
+-------------+--------------+------+-----+---------+---------
+
+Table: t_agent_cash_rcd
+------------+---------------+------+-----+---------+---------
+ Field      | Type          | Null | Key | Default | Remarks 
+------------+---------------+------+-----+---------+---------
+ id         | BIGINT(19)    | NO   | PRI |         |         
+ agent_id   | BIGINT(19)    | NO   |     |         |         
+ cash_value | DECIMAL(10,2) | YES  |     |         |         
+ active     | BIT(1)        | YES  |     |         |         
+ created    | DATETIME(19)  | YES  |     |         |         
+ updated    | DATETIME(19)  | YES  |     |         |         
+------------+---------------+------+-----+---------+---------
+
+Table: t_agent_comm_rcd
+------------------+---------------+------+-----+---------+---------
+ Field            | Type          | Null | Key | Default | Remarks 
+------------------+---------------+------+-----+---------+---------
+ id               | BIGINT(19)    | NO   | PRI |         |         
+ agent_id         | BIGINT(19)    | YES  |     |         | 分销商     
+ order_id         | BIGINT(19)    | YES  |     |         |         
+ commission_value | DECIMAL(10,2) | YES  |     |         | 每一次获得的佣金值，订单交易成功后结算
+ active           | BIT(1)        | YES  |     |         | 0为未结算状态，1为已结算
+ created          | DATETIME(19)  | YES  |     |         |         
+ updated          | DATETIME(19)  | YES  |     |         |         
+------------------+---------------+------+-----+---------+---------
+
+Table: t_agent_commssion
+-----------------+---------------+------+-----+---------+---------
+ Field           | Type          | Null | Key | Default | Remarks 
+-----------------+---------------+------+-----+---------+---------
+ id              | BIGINT(19)    | NO   | PRI |         |         
+ agent_id        | BIGINT(19)    | NO   |     |         |         
+ commssion_value | DECIMAL(10,2) | YES  |     | 0.00    |         
+ active          | BIT(1)        | YES  |     |         |         
+ created         | DATETIME(19)  | YES  |     |         |         
+ updated         | DATETIME(19)  | YES  |     |         |         
+-----------------+---------------+------+-----+---------+---------
+
+Table: t_agent_rank
+------------------+--------------+------+-----+---------+---------
+ Field            | Type         | Null | Key | Default | Remarks 
+------------------+--------------+------+-----+---------+---------
+ id               | BIGINT(19)   | NO   | PRI |         |         
+ seller_id        | BIGINT(19)   | NO   |     |         |         
+ rank_name        | VARCHAR(255) | YES  |     |         |         
+ first_rate       | DECIMAL(10)  | YES  |     |         | 一级佣金占比  
+ second_rate      | DECIMAL(10)  | YES  |     |         | 二级佣金占比  
+ third_rate       | DECIMAL(10)  | YES  |     |         | 三级佣金占比  
+ reward_value     | INT(10)      | YES  |     |         | 升到此等级奖励金额
+ get_cash_time    | INT(10)      | YES  |     |         | 每月提现次数  
+ get_cash_limit   | INT(10)      | YES  |     |         | 每月提现上限  
+ children_count   | INT(10)      | YES  |     |         | 当月累计直属下级用户数量（自动升级条件）
+ total_commission | DECIMAL(10)  | YES  |     |         | 当月累计获取佣金（自动升级条件）
+ active           | BIT(1)       | YES  |     |         |         
+ created          | DATETIME(19) | YES  |     |         |         
+ updated          | DATETIME(19) | YES  |     |         |         
+------------------+--------------+------+-----+---------+---------
+
+Table: t_area
+-----------+----------------------+------+-----+---------+---------
+ Field     | Type                 | Null | Key | Default | Remarks 
+-----------+----------------------+------+-----+---------+---------
+ id        | BIGINT(19)           | NO   | PRI |         | 主键_id   
+ full_name | LONGTEXT(2147483647) | YES  |     |         | 全称      
+ name      | VARCHAR(100)         | NO   |     |         | 名称      
+ tree_path | VARCHAR(255)         | YES  |     |         | 树路径     
+ parent_id | BIGINT(19)           | YES  |     |         | 上级地区    
+ orders    | INT(10)              | YES  |     |         | 排序      
+ created   | DATETIME(19)         | YES  |     |         | 创建日期    
+ updated   | DATETIME(19)         | YES  |     |         | 最后修改日期  
+ active    | BIT(1)               | NO   |     | b'0'    | 删除标记    
+-----------+----------------------+------+-----+---------+---------
+
+Table: t_auth_user_config
+----------------+--------------+------+-----+---------+---------
+ Field          | Type         | Null | Key | Default | Remarks 
+----------------+--------------+------+-----+---------+---------
+ id             | BIGINT(19)   | NO   | PRI |         |         
+ seller_id      | BIGINT(19)   | NO   |     |         |         
+ app_name       | VARCHAR(128) | NO   |     |         |         
+ app_id         | VARCHAR(64)  | NO   |     |         |         
+ app_secret     | VARCHAR(64)  | NO   |     |         |         
+ admin_domain   | VARCHAR(255) | NO   |     |         |         
+ wx_domain      | VARCHAR(255) | NO   |     |         |         
+ img_domain     | VARCHAR(255) | NO   |     |         |         
+ msg_server_url | VARCHAR(255) | NO   |     |         |         
+ msg_token      | VARCHAR(64)  | NO   |     |         |         
+ msg_aes_key    | VARCHAR(64)  | NO   |     |         |         
+ pay_mch_id     | VARCHAR(64)  | NO   |     |         |         
+ pay_secret_key | VARCHAR(64)  | NO   |     |         |         
+ pay_cert_file  | BLOB(65535)  | YES  |     |         |         
+ pay_result_url | VARCHAR(255) | YES  |     |         |         
+ active         | BIT(1)       | YES  |     |         |         
+ created        | DATETIME(19) | YES  |     |         |         
+ updated        | DATETIME(19) | YES  |     |         |         
+----------------+--------------+------+-----+---------+---------
+
+Table: t_buyer_card
+----------------+--------------+------+-----+---------+---------
+ Field          | Type         | Null | Key | Default | Remarks 
+----------------+--------------+------+-----+---------+---------
+ id             | BIGINT(19)   | NO   | PRI |         |         
+ buyer_id       | BIGINT(19)   | NO   |     |         |         
+ open_id        | VARCHAR(255) | YES  |     |         |         
+ card_id        | VARCHAR(255) | YES  |     |         |         
+ user_card_code | VARCHAR(255) | YES  |     |         |         
+ status         | INT(10)      | YES  |     |         | 0未激活，1已激活
+ active         | BIT(1)       | YES  |     |         |         
+ created        | DATETIME(19) | YES  |     |         |         
+ updated        | DATETIME(19) | YES  |     |         |         
+----------------+--------------+------+-----+---------+---------
+
+Table: t_buyer_prod
+------------+--------------+------+-----+---------+---------
+ Field      | Type         | Null | Key | Default | Remarks 
+------------+--------------+------+-----+---------+---------
+ id         | BIGINT(19)   | NO   | PRI |         |         
+ buyer_id   | BIGINT(19)   | NO   |     |         |         
+ product_id | BIGINT(19)   | NO   |     |         |         
+ active     | BIT(1)       | YES  |     |         |         
+ created    | DATETIME(19) | YES  |     |         |         
+ updated    | DATETIME(19) | YES  |     |         |         
+------------+--------------+------+-----+---------+---------
+
+Table: t_buyer_receiver
+----------------+--------------+------+-----+---------+---------
+ Field          | Type         | Null | Key | Default | Remarks 
+----------------+--------------+------+-----+---------+---------
+ id             | BIGINT(19)   | NO   | PRI |         | id      
+ buyer_id       | BIGINT(19)   | NO   |     |         | 会员      
+ receiver_name  | VARCHAR(255) | NO   |     |         | 收货人     
+ area_id        | BIGINT(19)   | NO   |     |         |         
+ area_tree_path | VARCHAR(255) | NO   |     |         |         
+ province       | VARCHAR(255) | NO   |     |         | 省       
+ city           | VARCHAR(255) | NO   |     |         | 市       
+ district       | VARCHAR(255) | YES  |     |         | 区       
+ phone          | VARCHAR(255) | NO   |     |         | 电话      
+ address        | VARCHAR(255) | NO   |     |         | 地址      
+ zip_code       | VARCHAR(255) | YES  |     |         | 邮编      
+ is_default     | BIT(1)       | NO   |     |         | 是否默认    
+ created        | DATETIME(19) | YES  |     |         | 创建日期    
+ updated        | DATETIME(19) | YES  |     |         | 最后修改日期  
+ active         | BIT(1)       | NO   |     | b'0'    | 删除标记    
+----------------+--------------+------+-----+---------+---------
+
+Table: t_buyer_recharge
+----------------+---------------+------+-----+---------+---------
+ Field          | Type          | Null | Key | Default | Remarks 
+----------------+---------------+------+-----+---------+---------
+ id             | BIGINT(19)    | NO   | PRI |         |         
+ buyer_id       | BIGINT(19)    | NO   |     |         |         
+ member_rank_id | BIGINT(19)    | YES  |     |         |         
+ card_id        | VARCHAR(255)  | YES  |     |         |         
+ recharge       | DECIMAL(10,2) | NO   |     |         |         
+ out_trade_id   | VARCHAR(255)  | YES  |     |         |         
+ transaction_id | VARCHAR(255)  | YES  |     |         | 微信交易ID，用来退款
+ active         | BIT(1)        | YES  |     | b'0'    |         
+ created        | DATETIME(19)  | YES  |     |         |         
+ updated        | DATETIME(19)  | YES  |     |         |         
+----------------+---------------+------+-----+---------+---------
+
+Table: t_buyer_user
+------------------+--------------+------+-----+---------+---------
+ Field            | Type         | Null | Key | Default | Remarks 
+------------------+--------------+------+-----+---------+---------
+ id               | BIGINT(19)   | NO   | PRI |         |         
+ seller_id        | BIGINT(19)   | NO   |     |         | 平台注册账号  
+ member_rank_id   | BIGINT(19)   | YES  |     |         | 会员等级    
+ user_origin      | INT(10)      | YES  |     |         | 来源，1公众号 2小程序
+ nickname         | VARCHAR(128) | YES  |     |         | 微信用户昵称  
+ username         | VARCHAR(32)  | YES  |     |         | 用户真实姓名  
+ phone            | VARCHAR(128) | YES  |     |         | 微信用户手机号 
+ password         | VARCHAR(11)  | YES  |     | 0       |         
+ headimgurl       | VARCHAR(255) | YES  |     | 0       | 微信用户头像  
+ open_id          | VARCHAR(255) | YES  |     |         |         
+ email            | VARCHAR(255) | YES  |     |         |         
+ sex              | INT(10)      | YES  |     |         |         
+ language         | VARCHAR(255) | YES  |     |         |         
+ city             | VARCHAR(255) | YES  |     |         |         
+ province         | VARCHAR(255) | YES  |     |         |         
+ country          | VARCHAR(255) | YES  |     |         |         
+ subscribe        | INT(10)      | YES  |     |         | 是否订阅    
+ subscribe_time   | DATETIME(19) | YES  |     |         |         
+ groupid          | INT(10)      | YES  |     |         |         
+ remark           | VARCHAR(255) | YES  |     |         |         
+ access_ip        | VARCHAR(255) | YES  |     |         |         
+ access_token     | VARCHAR(255) | YES  |     |         |         
+ refresh_token    | VARCHAR(255) | YES  |     |         |         
+ token_expires_in | VARCHAR(255) | YES  |     |         |         
+ last_login_time  | DATETIME(19) | YES  |     |         |         
+ unionid          | VARCHAR(255) | YES  |     |         |         
+ score            | INT(10)      | YES  |     |         |         
+ active           | TINYINT(3)   | YES  |     |         |         
+ created          | DATETIME(19) | YES  |     |         |         
+ updated          | DATETIME(19) | YES  |     |         |         
+------------------+--------------+------+-----+---------+---------
+
+Table: t_card
+--------------------+---------------+------+-----+---------+---------
+ Field              | Type          | Null | Key | Default | Remarks 
+--------------------+---------------+------+-----+---------+---------
+ id                 | BIGINT(19)    | NO   | PRI |         |         
+ seller_id          | BIGINT(19)    | NO   |     |         |         
+ card_id            | VARCHAR(255)  | YES  |     |         |         
+ card_type          | VARCHAR(255)  | YES  |     |         | 团购券：GROUPON， 折扣券：DISCOUNT， 礼品券：GIFT， 代金券：CASH， 通用券：GENERAL_COUPON， 会员卡：MEMBER_CARD， 景点门票：SCENIC_TICKET， 电影票：MOVIE_TICKET， 飞机票：BOARDING_PASS， 会议门票：MEETING_TICKET， 汽车票：BUS_TICKET
+ deal_detail        | VARCHAR(255)  | YES  |     |         | 团购券专用字段，团购详情。
+ discount           | INT(10)       | YES  |     |         | 折扣券专用字段，表示打折额度（百分比），例：填30为七折团购详情。
+ gift               | VARCHAR(255)  | YES  |     |         | 礼品券专用，表示礼品名字。
+ least_cost         | DECIMAL(10,2) | YES  |     |         | least_cost字段为代金券专用，表示起用金额（单位为分）。
+ reduce_cost        | DECIMAL(10,2) | YES  |     |         | 代金券专用，表示减免金额（单位为分）
+ background_pic_url | VARCHAR(255)  | YES  |     |         |         
+ base_info          | TEXT(65535)   | YES  |     |         | json格式  
+ auto_activate      | VARCHAR(16)   | YES  |     |         | 是否自动激活  
+ wx_activate        | VARCHAR(16)   | YES  |     |         |         
+ activate_url       | VARCHAR(255)  | YES  |     |         |         
+ supply_balance     | VARCHAR(32)   | YES  |     |         | 设置一张会员卡支持储值，填写true或false
+ supply_buy         | VARCHAR(255)  | YES  |     |         | 是否支持购买，跟微信会员卡接口无关
+ supply_bonus       | VARCHAR(255)  | YES  |     |         | 表示是否支持积分，填写true或false，如填写true，积分相关字段均为必填。
+ bonus_cleared      | VARCHAR(255)  | YES  |     |         | 积分清零规则。 
+ bonus_rules        | VARCHAR(255)  | YES  |     |         | 积分规则。   
+ balance_rules      | VARCHAR(255)  | YES  |     |         | 储值规则    
+ prerogative        | VARCHAR(255)  | YES  |     |         | 会员卡专属字段，表示特权说明。
+ bind_old_card_url  | VARCHAR(255)  | YES  |     |         | 绑定旧卡的url。
+ need_push_on_view  | VARCHAR(255)  | YES  |     |         | 进入会员卡时是否推送事件，填写true或false。
+ advanced_info      | TEXT(65535)   | YES  |     |         | 高级配置项   
+ from               | VARCHAR(64)   | YES  |     |         | 飞机票的起点，上限为18个汉字
+ to                 | VARCHAR(64)   | YES  |     |         | 飞机票的终点，上限为18个汉字。
+ flight             | VARCHAR(255)  | YES  |     |         | 航班。     
+ departure_time     | DATETIME(19)  | YES  |     |         | 起飞时间    
+ landing_time       | DATETIME(19)  | YES  |     |         | 降落时间    
+ check_in_url       | VARCHAR(255)  | YES  |     |         | 在线值机的链接。
+ gate               | VARCHAR(255)  | YES  |     |         | 登机口。如发生登机口变更，建议商家实时调用该接口变更。
+ boarding_time      | DATETIME(19)  | YES  |     |         | 登机时间，只显示“时分”不显示日期。（Unix时间戳格式）
+ meeting_detail     | VARCHAR(255)  | YES  |     |         | 会议详情。   
+ map_url            | VARCHAR(255)  | YES  |     |         | 会场导览图。  
+ active             | BIT(1)        | YES  |     |         |         
+ created            | DATETIME(19)  | YES  |     |         |         
+ updated            | DATETIME(19)  | YES  |     |         |         
+--------------------+---------------+------+-----+---------+---------
+
+Table: t_cart
+---------------+--------------+------+-----+---------+---------
+ Field         | Type         | Null | Key | Default | Remarks 
+---------------+--------------+------+-----+---------+---------
+ id            | BIGINT(19)   | NO   | PRI |         | 主键_id   
+ buyer_id      | BIGINT(19)   | NO   |     |         |         
+ product_id    | BIGINT(19)   | NO   |     |         | 商品      
+ quantity      | INT(10)      | NO   |     |         | 数量      
+ specification | VARCHAR(255) | YES  |     |         | 商品规格    
+ created       | DATETIME(19) | YES  |     |         | 创建人     
+ updated       | DATETIME(19) | YES  |     |         | 创建日期    
+ active        | INT(10)      | YES  |     | 0       | 删除标记    
+---------------+--------------+------+-----+---------+---------
+
+Table: t_cashback
+-----------------+---------------+------+-----+---------+---------
+ Field           | Type          | Null | Key | Default | Remarks 
+-----------------+---------------+------+-----+---------+---------
+ id              | BIGINT(19)    | NO   | PRI |         |         
+ seller_id       | BIGINT(19)    | NO   |     |         |         
+ name            | VARCHAR(255)  | NO   |     |         | 活动名称    
+ start_time      | DATETIME(19)  | YES  |     |         | 生效开始时间  
+ end_time        | DATETIME(19)  | YES  |     |         | 结束时间    
+ cashback_method | INT(10)       | YES  |     |         | 返现方式    
+ cashback_start  | DECIMAL(20,2) | YES  |     |         | 返现区间    
+ cashback_end    | DECIMAL(20,2) | YES  |     |         | 返现区间    
+ cashback_limit  | INT(10)       | YES  |     |         | 返现限制    
+ active          | BIT(1)        | YES  |     | b'1'    |         
+ created         | DATETIME(19)  | YES  |     |         |         
+ updated         | DATETIME(19)  | YES  |     |         |         
+-----------------+---------------+------+-----+---------+---------
+
+Table: t_cashback_product
+-------------+------------+------+-----+---------+---------
+ Field       | Type       | Null | Key | Default | Remarks 
+-------------+------------+------+-----+---------+---------
+ id          | BIGINT(19) | NO   | PRI |         |         
+ cashback_id | BIGINT(19) | YES  |     |         |         
+ product_id  | BIGINT(19) | YES  |     |         |         
+-------------+------------+------+-----+---------+---------
+
+Table: t_cashback_rcd
+---------------+--------------+------+-----+---------+---------
+ Field         | Type         | Null | Key | Default | Remarks 
+---------------+--------------+------+-----+---------+---------
+ id            | BIGINT(19)   | NO   | PRI |         |         
+ buyer_id      | BIGINT(19)   | NO   |     |         |         
+ order_id      | BIGINT(19)   | NO   |     |         |         
+ product_id    | BIGINT(19)   | NO   |     |         |         
+ cash_back_fee | DECIMAL(10)  | YES  |     |         |         
+ send_log      | VARCHAR(255) | YES  |     |         |         
+ active        | BIT(1)       | YES  |     |         |         
+ created       | DATETIME(19) | YES  |     |         |         
+ updated       | DATETIME(19) | YES  |     |         |         
+---------------+--------------+------+-----+---------+---------
+
+Table: t_commission_rate
+----------------+---------------+------+-----+---------+---------
+ Field          | Type          | Null | Key | Default | Remarks 
+----------------+---------------+------+-----+---------+---------
+ id             | BIGINT(19)    | NO   | PRI |         |         
+ seller_id      | BIGINT(19)    | NO   |     |         |         
+ self_up_rate   | DECIMAL(10,2) | YES  |     |         | 直属上级佣金比例(分销商推荐买家购买后能拿到的佣金比例)
+ second_up_rate | DECIMAL(10,2) | YES  |     |         | 二级上级佣金比例(分销商推荐买家购买后，分销商的上级分销商能拿到的佣金比例)
+ third_up_rate  | DECIMAL(10,2) | YES  |     |         | 三级上级佣金比例(分销商推荐买家购买后，分销商上级的上级能拿到的佣金比例)
+ self_buy_rate  | BIT(1)        | YES  |     |         | 是否允许分销内购获取佣金（启用后，分销商购买商品自己可以拿一级佣金，自己的上级拿二级佣金；）
+ active         | BIT(1)        | YES  |     |         |         
+ created        | DATETIME(19)  | YES  |     |         |         
+ updated        | DATETIME(19)  | YES  |     |         |         
+----------------+---------------+------+-----+---------+---------
+
+Table: t_delivery_set
+-----------------+---------------+------+-----+---------+---------
+ Field           | Type          | Null | Key | Default | Remarks 
+-----------------+---------------+------+-----+---------+---------
+ id              | BIGINT(19)    | NO   | PRI |         |         
+ template_id     | BIGINT(19)    | NO   |     |         | 运费模板id  
+ valuation_type  | BIGINT(19)    | NO   |     |         | 计费方式 1按件，2按重量
+ area_id         | VARCHAR(255)  | YES  |     |         | 地区id    
+ start_standards | INT(10)       | NO   |     |         | 首N件     
+ start_fees      | DECIMAL(20,2) | NO   |     |         | 首费(￥)   
+ add_standards   | INT(10)       | NO   |     |         | 续M件     
+ add_fees        | DECIMAL(20,2) | NO   |     |         | 续费(￥)   
+ created         | DATETIME(19)  | YES  |     |         |         
+ updated         | DATETIME(19)  | YES  |     |         |         
+ active          | INT(10)       | YES  |     | 1       |         
+-----------------+---------------+------+-----+---------+---------
+
+Table: t_delivery_template
+----------------+--------------+------+-----+---------+---------
+ Field          | Type         | Null | Key | Default | Remarks 
+----------------+--------------+------+-----+---------+---------
+ id             | BIGINT(19)   | NO   | PRI |         |         
+ seller_id      | BIGINT(19)   | NO   |     |         |         
+ valuation_type | BIGINT(19)   | NO   |     |         | 计费方式    
+ name           | VARCHAR(255) | NO   |     |         | 模板名称    
+ created        | DATETIME(19) | YES  |     |         |         
+ updated        | DATETIME(19) | YES  |     |         |         
+ active         | INT(10)      | YES  |     | 1       |         
+----------------+--------------+------+-----+---------+---------
+
+Table: t_express_comp
+--------------+--------------+------+-----+---------+---------
+ Field        | Type         | Null | Key | Default | Remarks 
+--------------+--------------+------+-----+---------+---------
+ id           | BIGINT(19)   | NO   | PRI |         |         
+ exp_key      | VARCHAR(255) | YES  |     |         |         
+ company_code | VARCHAR(255) | YES  |     |         |         
+ exp_name     | VARCHAR(255) | YES  |     |         |         
+--------------+--------------+------+-----+---------+---------
+
+Table: t_express_img
+-----------+--------------+------+-----+---------+---------
+ Field     | Type         | Null | Key | Default | Remarks 
+-----------+--------------+------+-----+---------+---------
+ id        | BIGINT(19)   | NO   | PRI |         |         
+ seller_id | BIGINT(19)   | YES  |     |         |         
+ exp_key   | VARCHAR(255) | YES  |     |         |         
+ exp_img   | VARCHAR(255) | YES  |     |         |         
+ active    | INT(10)      | YES  |     |         | 状态 0为系统默认,1为自定义上传
+ created   | DATETIME(19) | YES  |     |         |         
+ updated   | DATETIME(19) | YES  |     |         |         
+-----------+--------------+------+-----+---------+---------
+
+Table: t_express_template
+----------------+--------------+------+-----+---------+---------
+ Field          | Type         | Null | Key | Default | Remarks 
+----------------+--------------+------+-----+---------+---------
+ id             | BIGINT(19)   | NO   | PRI |         |         
+ seller_id      | BIGINT(19)   | YES  |     |         |         
+ exp_name       | VARCHAR(255) | YES  |     |         |         
+ exp_key        | VARCHAR(255) | YES  |     |         |         
+ exp_tplcontent | TEXT(65535)  | YES  |     |         |         
+ exp_designhtml | TEXT(65535)  | YES  |     |         |         
+ exp_bgimg      | VARCHAR(255) | YES  |     |         |         
+ is_default     | INT(10)      | YES  |     | 0       |         
+ pagewidth      | INT(10)      | YES  |     |         |         
+ pageheight     | INT(10)      | YES  |     |         |         
+ offsetx        | INT(10)      | YES  |     |         |         
+ offsety        | INT(10)      | YES  |     |         |         
+ active         | INT(10)      | YES  |     |         |         
+ created        | DATETIME(19) | YES  |     |         |         
+ updated        | DATETIME(19) | YES  |     |         |         
+----------------+--------------+------+-----+---------+---------
+
+Table: t_full_cut
+---------------+--------------+------+-----+---------+---------
+ Field         | Type         | Null | Key | Default | Remarks 
+---------------+--------------+------+-----+---------+---------
+ id            | BIGINT(19)   | NO   | PRI |         |         
+ seller_id     | BIGINT(19)   | YES  |     |         |         
+ full_cut_name | VARCHAR(255) | YES  |     |         | 满减送活动   
+ start_date    | DATETIME(19) | YES  |     |         | 活动开始时间  
+ end_date      | DATETIME(19) | YES  |     |         | 活动结束时间  
+ product_ids   | VARCHAR(255) | YES  |     |         |         
+ active        | BIT(1)       | YES  |     |         |         
+ created       | DATETIME(19) | YES  |     |         |         
+ updated       | DATETIME(19) | YES  |     |         |         
+---------------+--------------+------+-----+---------+---------
+
+Table: t_full_cut_product
+-------------+------------+------+-----+---------+---------
+ Field       | Type       | Null | Key | Default | Remarks 
+-------------+------------+------+-----+---------+---------
+ id          | BIGINT(19) | NO   | PRI |         |         
+ full_cut_id | BIGINT(19) | YES  |     |         |         
+ product_id  | BIGINT(19) | YES  |     |         |         
+-------------+------------+------+-----+---------+---------
+
+Table: t_full_cut_set
+---------------+---------------+------+-----+---------+---------
+ Field         | Type          | Null | Key | Default | Remarks 
+---------------+---------------+------+-----+---------+---------
+ id            | BIGINT(19)    | NO   | PRI |         |         
+ full_cut_id   | BIGINT(19)    | YES  |     |         | 满减送活动id 
+ meet          | DECIMAL(20,2) | YES  |     |         | 满多少元    
+ cash_required | INT(10)       | YES  |     | 0       | 减现金 0 不减 1 减
+ cash          | DECIMAL(20,2) | YES  |     |         | 减多少现金   
+ postage       | INT(10)       | YES  |     | 0       | 包邮 0 不包邮 1 包邮
+ active        | BIT(1)        | YES  |     |         |         
+ created       | DATETIME(19)  | YES  |     |         |         
+ updated       | DATETIME(19)  | YES  |     |         |         
+---------------+---------------+------+-----+---------+---------
+
+Table: t_image_group
+------------+--------------+------+-----+---------+---------
+ Field      | Type         | Null | Key | Default | Remarks 
+------------+--------------+------+-----+---------+---------
+ id         | BIGINT(19)   | NO   | PRI |         |         
+ seller_id  | BIGINT(19)   | YES  |     |         |         
+ group_name | VARCHAR(255) | YES  |     |         | 分组名称    
+ active     | BIT(1)       | YES  |     |         |         
+ created    | DATETIME(19) | YES  |     |         |         
+ updated    | DATETIME(19) | YES  |     |         |         
+------------+--------------+------+-----+---------+---------
+
+Table: t_invoice_template
+--------------------+--------------+------+-----+---------+---------
+ Field              | Type         | Null | Key | Default | Remarks 
+--------------------+--------------+------+-----+---------+---------
+ id                 | BIGINT(19)   | NO   | PRI |         |         
+ seller_id          | BIGINT(19)   | YES  |     |         |         
+ inv_tplcontent     | TEXT(65535)  | YES  |     |         | 设计后的html文本
+ inv_designhtml     | TEXT(65535)  | YES  |     |         | 通过设计后的html生成的模板文本
+ inv_tabelhtml      | TEXT(65535)  | YES  |     |         | 通过设计后的html生成的表格模板文本
+ inv_img_designhtml | TEXT(65535)  | YES  |     |         | 设计后含图片位置信息的html文本
+ pagewidth          | INT(10)      | YES  |     |         |         
+ pageheight         | INT(10)      | YES  |     |         |         
+ offsetx            | INT(10)      | YES  |     |         |         
+ offsety            | INT(10)      | YES  |     |         |         
+ active             | INT(10)      | YES  |     |         |         
+ created            | DATETIME(19) | YES  |     |         |         
+ updated            | DATETIME(19) | YES  |     |         |         
+--------------------+--------------+------+-----+---------+---------
+
+Table: t_lottery
+-------------------+--------------+------+-----+---------+---------
+ Field             | Type         | Null | Key | Default | Remarks 
+-------------------+--------------+------+-----+---------+---------
+ id                | BIGINT(19)   | NO   | PRI |         |         
+ seller_id         | BIGINT(19)   | NO   |     |         |         
+ lottery_name      | VARCHAR(30)  | NO   |     |         |         
+ lottery_type      | INT(10)      | YES  |     | 1       | 抽奖类型1九宫格；2刮刮乐；3代表摇一摇；4代表翻翻乐；5代表大转盘
+ start_date        | DATE(10)     | YES  |     |         |         
+ end_date          | DATE(10)     | YES  |     |         |         
+ activity_type     | INT(10)      | YES  |     | 2       |         
+ all_count         | INT(10)      | YES  |     | 0       | 一个用户总共能中奖多少次
+ day_count         | INT(10)      | YES  |     | 0       | 一个用户一天最多中奖多少次
+ luck_count        | INT(10)      | YES  |     |         | 活动期间用户总中奖次数上限
+ condition_type    | INT(10)      | YES  |     | 1       | 条件类型。1无条件，2下单抽奖，3积分抽奖，4淘金币抽奖
+ lottery_memo      | VARCHAR(500) | YES  |     |         | 规则描述    
+ need_collect_shop | INT(10)      | YES  |     | 0       | 参加活动是否需要强制收藏店铺1，强制，0不强制
+ need_pay          | INT(10)      | YES  |     |         | 用户抽奖需要消耗的金币或积分数，当condition_type为3或4时有效
+ wirless_url       | VARCHAR(255) | YES  |     |         | 无线访问地址  
+ qr_code           | VARCHAR(255) | YES  |     |         |         
+ back_img          | VARCHAR(255) | YES  |     |         | 背景图     
+ active            | INT(10)      | YES  |     | 1       |         
+ created           | DATETIME(19) | YES  |     |         |         
+ updated           | DATETIME(19) | YES  |     |         |         
+-------------------+--------------+------+-----+---------+---------
+
+Table: t_lottery_award
+-------------+--------------+------+-----+---------+---------
+ Field       | Type         | Null | Key | Default | Remarks 
+-------------+--------------+------+-----+---------+---------
+ id          | BIGINT(19)   | NO   | PRI |         |         
+ lottery_id  | BIGINT(19)   | NO   |     |         | 奖品ID    
+ prize_id    | BIGINT(19)   | NO   |     |         |         
+ award_pos   | INT(10)      | YES  |     | 1       | 奖品位置    
+ award_name  | VARCHAR(128) | YES  |     |         | 奖品名称    
+ award_count | INT(10)      | YES  |     | 0       | 发型的总奖品数量
+ award_rate  | DOUBLE(10,2) | YES  |     |         | 中奖几率    
+ active      | INT(10)      | YES  |     | 1       |         
+ created     | DATETIME(19) | YES  |     |         |         
+ updated     | DATETIME(19) | YES  |     |         |         
+-------------+--------------+------+-----+---------+---------
+
+Table: t_lottery_record
+---------------+--------------+------+-----+---------+---------
+ Field         | Type         | Null | Key | Default | Remarks 
+---------------+--------------+------+-----+---------+---------
+ id            | BIGINT(19)   | NO   | PRI |         |         
+ buyer_id      | BIGINT(19)   | NO   |     |         | 买家混淆nick
+ lottery_id    | BIGINT(19)   | NO   |     |         | 抽奖任务    
+ lottery_time  | DATE(10)     | NO   |     |         | 抽奖时间    
+ lottery_month | VARCHAR(20)  | YES  |     |         |         
+ created       | DATETIME(19) | YES  |     |         |         
+ updated       | DATETIME(19) | YES  |     |         |         
+---------------+--------------+------+-----+---------+---------
+
+Table: t_lottery_trade
+---------------------------+--------------+------+-----+---------+---------
+ Field                     | Type         | Null | Key | Default | Remarks 
+---------------------------+--------------+------+-----+---------+---------
+ id                        | BIGINT(19)   | NO   | PRI |         |         
+ lottery_id                | BIGINT(19)   | NO   |     |         |         
+ trade_type                | INT(10)      | NO   |     |         | 1为指定天数，2为指定时间段
+ condition_day             | INT(10)      | YES  |     |         | 距离抽奖活动开始时间最近几天下过订单的用户
+ condition_trade_startdate | DATE(10)     | YES  |     |         |         
+ condition_trade_enddate   | DATE(10)     | YES  |     |         |         
+ trade_status              | INT(10)      | YES  |     |         | 1为确认收货，2为订单付款
+ trade_money               | INT(10)      | YES  |     |         | 订单交易金额，必须达到设置的金额才能抽奖
+ active                    | INT(10)      | YES  |     | 1       |         
+ created                   | DATETIME(19) | YES  |     |         |         
+ updated                   | DATETIME(19) | YES  |     |         |         
+---------------------------+--------------+------+-----+---------+---------
+
+Table: t_member_rank
+-----------------+---------------+------+-----+---------+---------
+ Field           | Type          | Null | Key | Default | Remarks 
+-----------------+---------------+------+-----+---------+---------
+ id              | BIGINT(19)    | NO   | PRI |         |         
+ seller_id       | BIGINT(19)    | NO   |     |         |         
+ rank_name       | VARCHAR(255)  | YES  |     |         |         
+ first_charge    | DECIMAL(10,2) | YES  |     |         | 首次充值金额，比如首次充值1000成为金牌会员
+ rank_discount   | DECIMAL(10,2) | YES  |     |         | 等级折扣    
+ rank_cash_full  | DECIMAL(10,2) | YES  |     |         | 单次消费满多少金额
+ rank_cash_rward | DECIMAL(10,2) | YES  |     |         | 单次消费满多少，奖励金额
+ active          | BIT(1)        | YES  |     |         |         
+ created         | DATETIME(19)  | YES  |     |         |         
+ updated         | DATETIME(19)  | YES  |     |         |         
+-----------------+---------------+------+-----+---------+---------
+
+Table: t_module
+-------------+--------------+------+-----+---------+---------
+ Field       | Type         | Null | Key | Default | Remarks 
+-------------+--------------+------+-----+---------+---------
+ id          | BIGINT(19)   | NO   | PRI |         |         
+ module_name | VARCHAR(255) | YES  |     |         |         
+ class_name  | VARCHAR(64)  | YES  |     |         | 模块对应的数据表名
+ table_name  | VARCHAR(64)  | YES  |     |         |         
+ param_name  | VARCHAR(255) | YES  |     |         | 模块参数名:url + param_name组成访问模块的url
+ module_url  | VARCHAR(255) | YES  |     |         | 模块的总入口url
+ module_code | VARCHAR(255) | YES  |     |         | 二维码地址   
+ active      | INT(10)      | YES  |     |         |         
+ created     | DATETIME(19) | YES  |     |         |         
+ updated     | DATETIME(19) | YES  |     |         |         
+-------------+--------------+------+-----+---------+---------
+
+Table: t_module_fun
+---------------+--------------+------+-----+---------+---------
+ Field         | Type         | Null | Key | Default | Remarks 
+---------------+--------------+------+-----+---------+---------
+ id            | BIGINT(19)   | NO   | PRI |         |         
+ module_id     | BIGINT(19)   | NO   |     |         | 哪个模块的功能 
+ module_fun_id | BIGINT(19)   | NO   |     |         |         
+ fun_name      | VARCHAR(255) | YES  |     |         | 功能名称    
+ fun_url       | VARCHAR(255) | YES  |     |         | 功能链接    
+ active        | INT(10)      | YES  |     |         |         
+ created       | DATETIME(19) | YES  |     |         |         
+ updated       | DATETIME(19) | YES  |     |         |         
+---------------+--------------+------+-----+---------+---------
+
+Table: t_multi_group
+--------------+--------------+------+-----+---------+---------
+ Field        | Type         | Null | Key | Default | Remarks 
+--------------+--------------+------+-----+---------+---------
+ id           | BIGINT(19)   | NO   | PRI |         |         
+ seller_id    | BIGINT(19)   | NO   |     |         |         
+ name         | VARCHAR(255) | NO   |     |         | 活动名称    
+ offer_num    | INT(10)      | NO   |     |         | 参团人数    
+ quota        | INT(10)      | YES  |     |         | 限购 件/人  
+ valid_time   | INT(10)      | YES  |     |         | 团有效时间 小时
+ re_union_num | INT(10)      | YES  |     |         | 重新组团人数  
+ start_date   | DATETIME(19) | YES  |     |         |         
+ end_date     | DATETIME(19) | YES  |     |         |         
+ active       | BIT(1)       | YES  |     |         |         
+ created      | DATETIME(19) | YES  |     |         |         
+ updated      | DATETIME(19) | YES  |     |         |         
+--------------+--------------+------+-----+---------+---------
+
+Table: t_multi_group_set
+---------------------+---------------+------+-----+---------+---------
+ Field               | Type          | Null | Key | Default | Remarks 
+---------------------+---------------+------+-----+---------+---------
+ id                  | BIGINT(19)    | NO   | PRI |         | 主键_id   
+ multi_group_id      | BIGINT(19)    | NO   |     |         |         
+ product_id          | BIGINT(19)    | NO   |     |         |         
+ specification_value | VARCHAR(255)  | NO   |     |         | 规格值     
+ prime_cost          | DECIMAL(21,2) | YES  |     |         | 原价      
+ collage_price       | DECIMAL(21,2) | YES  |     |         | 拼团价     
+ created             | DATETIME(19)  | YES  |     |         |         
+ updated             | DATETIME(19)  | YES  |     |         |         
+ active              | INT(10)       | YES  |     | 1       |         
+---------------------+---------------+------+-----+---------+---------
+
+Table: t_order
+-----------------+---------------+------+-----+---------+---------
+ Field           | Type          | Null | Key | Default | Remarks 
+-----------------+---------------+------+-----+---------+---------
+ id              | BIGINT(19)    | NO   | PRI |         | 主键_id   
+ seller_id       | BIGINT(19)    | NO   |     |         | 操作员     
+ buyer_id        | BIGINT(19)    | NO   |     |         | 会员      
+ order_type      | INT(10)       | YES  |     |         | 订单类型，0普通订单，1分销订单，2拼团订单.。。。
+ order_sn        | VARCHAR(100)  | NO   |     |         | 订单编号    
+ order_status    | INT(10)       | NO   |     |         | 订单状态 0未确认，1已确认， 2已完成，3已取消
+ payment_status  | INT(10)       | NO   |     |         | 支付状态 0 未支付，1部分支付，2已支付，3部分退款，4已退款
+ shipping_status | INT(10)       | NO   |     |         | 配送状态 0未发货，1部分发货，2已发货，3部分退货，4已退货
+ group_status    | INT(10)       | YES  |     |         | 拼团状态 0 组团中，1组团成功，2 组团失败
+ receiver_id     | BIGINT(19)    | YES  |     |         | 收货地址    
+ total_price     | DECIMAL(21,2) | YES  |     | 0.00    | 订单总价（按促销，优惠券，会员价等计算出来的订单金额）
+ post_fee        | DECIMAL(21,2) | YES  |     |         | 运费      
+ pay_fee         | DECIMAL(21,2) | YES  |     |         |         
+ point           | BIGINT(19)    | YES  |     |         | 赠送积分    
+ memo            | VARCHAR(255)  | YES  |     |         | 附言      
+ trade_no        | VARCHAR(255)  | YES  |     |         |         
+ transaction_id  | VARCHAR(255)  | YES  |     |         |         
+ created         | DATETIME(19)  | YES  |     |         | 创建日期    
+ updated         | DATETIME(19)  | YES  |     |         | 最后修改日期  
+ active          | BIT(1)        | NO   |     | b'0'    | 删除标记    
+-----------------+---------------+------+-----+---------+---------
+
+Table: t_order_gheader
+------------+--------------+------+-----+---------+---------
+ Field      | Type         | Null | Key | Default | Remarks 
+------------+--------------+------+-----+---------+---------
+ id         | BIGINT(19)   | NO   | PRI |         |         
+ group_id   | BIGINT(19)   | NO   |     |         |         
+ buyer_id   | BIGINT(19)   | NO   |     |         |         
+ product_id | BIGINT(19)   | NO   |     |         |         
+ order_id   | BIGINT(19)   | NO   |     |         |         
+ active     | BIT(1)       | YES  |     |         |         
+ created    | DATETIME(19) | YES  |     |         |         
+ updated    | DATETIME(19) | YES  |     |         |         
+------------+--------------+------+-----+---------+---------
+
+Table: t_order_guser
+----------------+---------------+------+-----+---------+---------
+ Field          | Type          | Null | Key | Default | Remarks 
+----------------+---------------+------+-----+---------+---------
+ id             | BIGINT(19)    | NO   | PRI |         |         
+ gheader_id     | BIGINT(19)    | NO   |     |         | 团的id号，不是团长的用户id号
+ buyer_id       | BIGINT(19)    | NO   |     |         |         
+ receiver_id    | BIGINT(19)    | NO   |     |         |         
+ price          | DECIMAL(10,2) | YES  |     |         | 商品价格    
+ quantity       | INT(10)       | YES  |     |         | 购买数量    
+ spec_value     | VARCHAR(128)  | YES  |     |         | 拼团选择的商品规格值
+ post_fee       | DECIMAL(10,2) | YES  |     |         | 邮费      
+ pay_fee        | DECIMAL(10,2) | YES  |     |         | 应支付金额   
+ payment_status | INT(10)       | YES  |     |         | 支付状态 0 未支付；1部分支付；2已支付；3部分退款；4已退款
+ memo           | VARCHAR(255)  | YES  |     |         | 买家留言    
+ trade_no       | VARCHAR(255)  | YES  |     |         |         
+ transaction_id | VARCHAR(255)  | YES  |     |         |         
+ active         | BIT(1)        | YES  |     |         |         
+ created        | DATETIME(19)  | YES  |     |         |         
+ updated        | DATETIME(19)  | YES  |     |         |         
+----------------+---------------+------+-----+---------+---------
+
+Table: t_order_item
+---------------------+---------------+------+-----+---------+---------
+ Field               | Type          | Null | Key | Default | Remarks 
+---------------------+---------------+------+-----+---------+---------
+ id                  | BIGINT(19)    | NO   | PRI |         | 主键_id   
+ order_id            | BIGINT(19)    | NO   |     |         | 订单      
+ product_id          | BIGINT(19)    | NO   |     |         | 商品      
+ name                | VARCHAR(255)  | NO   |     |         | 商品名称    
+ price               | DECIMAL(21,2) | NO   |     |         | 商品价格    
+ sn                  | VARCHAR(255)  | NO   |     |         | 商品编号    
+ product_img         | VARCHAR(255)  | NO   |     |         | 商品缩略图   
+ quantity            | INT(10)       | NO   |     |         | 数量      
+ specification_value | VARCHAR(255)  | YES  |     |         |         
+ created             | DATETIME(19)  | YES  |     |         | 创建日期    
+ updated             | DATETIME(19)  | YES  |     |         |         
+ active              | BIT(1)        | NO   |     | b'0'    | 删除标记    
+---------------------+---------------+------+-----+---------+---------
+
+Table: t_order_log
+-----------+--------------+------+-----+---------+---------
+ Field     | Type         | Null | Key | Default | Remarks 
+-----------+--------------+------+-----+---------+---------
+ id        | BIGINT(19)   | NO   | PRI |         | 主键_id   
+ seller_id | VARCHAR(255) | YES  |     |         | 操作员     
+ order_id  | BIGINT(19)   | NO   |     |         | 订单      
+ type      | INT(10)      | NO   |     |         | 类型      
+ content   | VARCHAR(255) | YES  |     |         | 内容      
+ active    | BIT(1)       | NO   |     | b'0'    | 删除标记    
+ created   | DATETIME(19) | YES  |     |         | 创建日期    
+ updated   | DATETIME(19) | YES  |     |         | 最后修改日期  
+-----------+--------------+------+-----+---------+---------
+
+Table: t_order_press_rcd
+------------+--------------+------+-----+---------+---------
+ Field      | Type         | Null | Key | Default | Remarks 
+------------+--------------+------+-----+---------+---------
+ id         | BIGINT(19)   | NO   | PRI |         |         
+ order_id   | BIGINT(19)   | NO   |     |         |         
+ gheader_id | BIGINT(19)   | YES  |     |         |         
+ buyer_id   | BIGINT(19)   | YES  |     |         |         
+ active     | BIT(1)       | YES  |     |         |         
+ created    | DATETIME(19) | YES  |     |         |         
+ updated    | DATETIME(19) | YES  |     |         |         
+------------+--------------+------+-----+---------+---------
+
+Table: t_prize
+-------------------+--------------+------+-----+---------+---------
+ Field             | Type         | Null | Key | Default | Remarks 
+-------------------+--------------+------+-----+---------+---------
+ id                | BIGINT(19)   | NO   | PRI |         |         
+ seller_id         | BIGINT(19)   | NO   |     |         |         
+ prize_type_id     | BIGINT(19)   | NO   |     | 0       | 奖品类型：1优惠卷2话费3实物4集分宝5流量包6淘金币7软件内积分
+ prize_name        | VARCHAR(60)  | NO   |     |         | 奖品名称    
+ prize_img         | VARCHAR(255) | YES  |     |         | 如果是奖励实物的话，该字段存储实物图片地址，比如店铺宝贝主图src
+ prize_price       | VARCHAR(60)  | NO   |     |         | 奖品价值    
+ prize_memo        | VARCHAR(512) | YES  |     |         | 奖品备注    
+ prize_single_cash | INT(10)      | YES  |     | 1       | prize_type为话费的时候填单份奖品值多少话费.type为积分的时候，填单份奖品值多少积分.type为淘金币的时候，填单份奖品值多少淘金币
+ publish_count     | INT(10)      | NO   |     | 0       | 本次发布奖品总数，如果prize_type为优惠卷的话，publish_count最大数为500
+ had_out_count     | INT(10)      | YES  |     | 0       | 奖品被领取的总数量
+ start_date        | DATE(10)     | YES  |     |         | 奖品兑换开始时间
+ end_date          | DATE(10)     | YES  |     |         | 奖品兑换结束时间
+ out_id            | VARCHAR(255) | YES  |     |         | 外部关联ID，prize_type为优惠卷的时候值为优惠卷IDprize_type为实物的时候为商品ID
+ active            | TINYINT(3)   | YES  |     | 0       | 是否可用。删除标记。0，可用。1，表示删除
+ created           | DATETIME(19) | YES  |     |         | 创建时间    
+ updated           | DATETIME(19) | YES  |     |         |         
+-------------------+--------------+------+-----+---------+---------
+
+Table: t_prize_send_record
+---------------+--------------+------+-----+---------+---------
+ Field         | Type         | Null | Key | Default | Remarks 
+---------------+--------------+------+-----+---------+---------
+ id            | BIGINT(19)   | NO   | PRI |         |         
+ prize_id      | BIGINT(19)   | NO   |     |         |         
+ buyer_id      | BIGINT(19)   | NO   |     |         |         
+ activity_id   | BIGINT(19)   | NO   |     |         | 通过哪个活动派的奖
+ activity_type | INT(10)      | NO   |     |         | 活动类型，签到或抽奖
+ status        | INT(10)      | YES  |     |         | 发奖状态，1为自动发奖成功，2为自动发奖失败，3为待人工派奖，4为人工派奖成功
+ active        | INT(10)      | YES  |     | 1       |         
+ created       | DATETIME(19) | YES  |     |         |         
+ updated       | DATETIME(19) | YES  |     |         |         
+---------------+--------------+------+-----+---------+---------
+
+Table: t_prize_type
+--------------+--------------+------+-----+---------+---------
+ Field        | Type         | Null | Key | Default | Remarks 
+--------------+--------------+------+-----+---------+---------
+ id           | BIGINT(19)   | NO   | PRI |         |         
+ type_name    | VARCHAR(255) | YES  |     |         |         
+ type_code    | VARCHAR(10)  | YES  |     |         |         
+ display_name | VARCHAR(255) | YES  |     |         | 显示名称    
+ active       | INT(10)      | YES  |     | 1       |         
+ created      | DATETIME(19) | YES  |     |         |         
+ updated      | DATETIME(19) | YES  |     |         |         
+--------------+--------------+------+-----+---------+---------
+
+Table: t_product
+----------------------+----------------------+------+-----+---------+---------
+ Field                | Type                 | Null | Key | Default | Remarks 
+----------------------+----------------------+------+-----+---------+---------
+ id                   | BIGINT(19)           | NO   | PRI |         |         
+ seller_id            | BIGINT(19)           | NO   |     |         |         
+ sn                   | VARCHAR(255)         | NO   |     |         | 编号      
+ name                 | VARCHAR(255)         | NO   |     |         | 商品名     
+ price                | VARCHAR(255)         | NO   |     |         | 销售价     
+ market_price         | DECIMAL(21,2)        | YES  |     |         | 市场价     
+ image                | VARCHAR(255)         | YES  |     |         | 展示图片    
+ stock                | INT(10)              | YES  |     |         | 库存      
+ delivery_weight      | DECIMAL(10,2)        | YES  |     |         | 统一规格物流重量
+ is_marketable        | BIT(1)               | NO   |     |         | 是否上架    
+ is_unified_spec      | BIT(1)               | YES  |     |         | 是否统一规格  
+ is_list              | BIT(1)               | YES  |     |         | 是否列出    
+ introduction         | LONGTEXT(2147483647) | YES  |     |         | 商品详情    
+ sales                | BIGINT(19)           | YES  |     |         | 销量      
+ product_category_id  | BIGINT(19)           | NO   |     |         | 商品品类    
+ delivery_type        | INT(10)              | YES  |     |         | 是否统一邮费 0 统一，1 按模板
+ delivery_fees        | DECIMAL(21,2)        | YES  |     |         |         
+ delivery_template_id | BIGINT(19)           | YES  |     |         |         
+ created              | DATETIME(19)         | YES  |     |         | 创建日期    
+ updated              | DATETIME(19)         | YES  |     |         | 更新日期    
+ active               | INT(10)              | NO   |     | 1       |         
+----------------------+----------------------+------+-----+---------+---------
+
+Table: t_product_brand
+------------+--------------+------+-----+---------+---------
+ Field      | Type         | Null | Key | Default | Remarks 
+------------+--------------+------+-----+---------+---------
+ id         | BIGINT(19)   | NO   | PRI |         |         
+ seller_id  | BIGINT(19)   | YES  |     |         |         
+ brand_name | VARCHAR(255) | YES  |     |         |         
+ img_icon   | VARCHAR(255) | YES  |     |         | 图标      
+ active     | BIT(1)       | YES  |     |         |         
+ created    | DATETIME(19) | YES  |     |         |         
+ updated    | DATETIME(19) | YES  |     |         |         
+------------+--------------+------+-----+---------+---------
+
+Table: t_product_category
+-----------+--------------+------+-----+---------+---------
+ Field     | Type         | Null | Key | Default | Remarks 
+-----------+--------------+------+-----+---------+---------
+ id        | BIGINT(19)   | NO   | PRI |         | id      
+ seller_id | BIGINT(19)   | YES  |     |         |         
+ name      | VARCHAR(255) | NO   |     |         | 名称      
+ img_path  | VARCHAR(255) | YES  |     |         | 页面图标    
+ parent_id | BIGINT(19)   | YES  |     |         | 上级分类    
+ orders    | INT(10)      | YES  |     |         | 排序      
+ created   | DATETIME(19) | YES  |     |         | 创建日期    
+ updated   | DATETIME(19) | YES  |     |         | 最后修改日期  
+ active    | INT(10)      | NO   |     | 1       | 删除标记    
+-----------+--------------+------+-----+---------+---------
+
+Table: t_product_group
+------------+--------------+------+-----+---------+---------
+ Field      | Type         | Null | Key | Default | Remarks 
+------------+--------------+------+-----+---------+---------
+ id         | BIGINT(19)   | NO   | PRI |         |         
+ group_name | VARCHAR(255) | YES  |     |         | 分组名称    
+ seller_id  | BIGINT(19)   | YES  |     |         |         
+ created    | DATETIME(19) | YES  |     |         |         
+ updated    | DATETIME(19) | YES  |     |         |         
+ active     | BIT(1)       | YES  |     |         |         
+------------+--------------+------+-----+---------+---------
+
+Table: t_product_group_set
+------------+--------------+------+-----+---------+---------
+ Field      | Type         | Null | Key | Default | Remarks 
+------------+--------------+------+-----+---------+---------
+ id         | BIGINT(19)   | NO   | PRI |         |         
+ group_id   | BIGINT(19)   | YES  |     |         |         
+ product_id | BIGINT(19)   | YES  |     |         |         
+ created    | DATETIME(19) | YES  |     |         |         
+ updated    | DATETIME(19) | YES  |     |         |         
+ active     | BIT(1)       | YES  |     |         |         
+------------+--------------+------+-----+---------+---------
+
+Table: t_product_image
+------------+--------------+------+-----+---------+---------
+ Field      | Type         | Null | Key | Default | Remarks 
+------------+--------------+------+-----+---------+---------
+ id         | INT(10)      | NO   | PRI |         |         
+ product_id | BIGINT(19)   | NO   |     |         | 商品id    
+ source     | VARCHAR(255) | YES  |     |         | 原图片     
+ large      | VARCHAR(255) | YES  |     |         | 大图片     
+ medium     | VARCHAR(255) | YES  |     |         | 中图片     
+ thumbnail  | VARCHAR(255) | YES  |     |         | 缩略图     
+ orders     | INT(10)      | YES  |     |         | 排序      
+ created    | DATETIME(19) | YES  |     |         |         
+ updated    | DATETIME(19) | YES  |     |         |         
+ active     | INT(10)      | YES  |     | 1       |         
+------------+--------------+------+-----+---------+---------
+
+Table: t_product_review
+------------+--------------+------+-----+---------+---------
+ Field      | Type         | Null | Key | Default | Remarks 
+------------+--------------+------+-----+---------+---------
+ id         | BIGINT(19)   | NO   | PRI |         | id      
+ buyer_id   | BIGINT(19)   | NO   |     |         | 会员      
+ order_id   | BIGINT(19)   | NO   |     |         |         
+ product_id | BIGINT(19)   | NO   |     |         | 商品      
+ score      | INT(10)      | NO   |     |         | 评分      
+ content    | VARCHAR(255) | NO   |     |         | 内容      
+ is_show    | BIT(1)       | NO   |     |         | 是否显示    
+ created    | DATETIME(19) | YES  |     |         | 创建日期    
+ updated    | DATETIME(19) | YES  |     |         | 修改日期    
+ active     | BIT(1)       | NO   |     | b'0'    | 删除标记    
+------------+--------------+------+-----+---------+---------
+
+Table: t_product_spec_item
+---------------------+---------------+------+-----+---------+---------
+ Field               | Type          | Null | Key | Default | Remarks 
+---------------------+---------------+------+-----+---------+---------
+ id                  | BIGINT(19)    | NO   | PRI |         | 主键_id   
+ product_id          | BIGINT(19)    | NO   |     |         |         
+ specification_value | VARCHAR(255)  | NO   |     |         | 规格值     
+ price               | DECIMAL(21,2) | YES  |     |         | 价格      
+ stock               | INT(10)       | YES  |     |         | 库存      
+ weight              | DECIMAL(10,2) | YES  |     |         |         
+ created             | DATETIME(19)  | YES  |     |         |         
+ updated             | DATETIME(19)  | YES  |     |         |         
+ active              | INT(10)       | YES  |     | 1       |         
+---------------------+---------------+------+-----+---------+---------
+
+Table: t_product_specification
+------------------+--------------+------+-----+---------+---------
+ Field            | Type         | Null | Key | Default | Remarks 
+------------------+--------------+------+-----+---------+---------
+ id               | INT(10)      | NO   | PRI |         |         
+ product_id       | BIGINT(19)   | NO   |     |         |         
+ specification_id | BIGINT(19)   | NO   |     |         |         
+ created          | DATETIME(19) | YES  |     |         |         
+ updated          | DATETIME(19) | YES  |     |         |         
+ active           | INT(10)      | YES  |     | 1       |         
+------------------+--------------+------+-----+---------+---------
+
+Table: t_product_specification_value
+------------------------+--------------+------+-----+---------+---------
+ Field                  | Type         | Null | Key | Default | Remarks 
+------------------------+--------------+------+-----+---------+---------
+ id                     | INT(10)      | NO   | PRI |         |         
+ product_id             | BIGINT(19)   | NO   |     |         |         
+ specification_id       | BIGINT(19)   | YES  |     |         |         
+ specification_value_id | BIGINT(19)   | NO   |     |         |         
+ created                | DATETIME(19) | YES  |     |         |         
+ updated                | DATETIME(19) | YES  |     |         |         
+ active                 | INT(10)      | YES  |     | 1       |         
+------------------------+--------------+------+-----+---------+---------
+
+Table: t_promotion
+----------------+--------------+------+-----+---------+---------
+ Field          | Type         | Null | Key | Default | Remarks 
+----------------+--------------+------+-----+---------+---------
+ id             | BIGINT(19)   | NO   | PRI |         |         
+ seller_id      | BIGINT(19)   | NO   |     |         |         
+ promotion_name | VARCHAR(64)  | NO   |     |         |         
+ promotion_tag  | VARCHAR(255) | NO   |     |         | 活动标签    
+ start_date     | DATETIME(19) | NO   |     |         |         
+ end_date       | DATETIME(19) | NO   |     |         |         
+ active         | BIT(1)       | YES  |     |         |         
+ created        | DATETIME(19) | YES  |     |         |         
+ updated        | DATETIME(19) | YES  |     |         |         
+----------------+--------------+------+-----+---------+---------
+
+Table: t_promotion_set
+-----------------------+--------------+------+-----+---------+---------
+ Field                 | Type         | Null | Key | Default | Remarks 
+-----------------------+--------------+------+-----+---------+---------
+ id                    | BIGINT(19)   | NO   | PRI |         |         
+ promotion_id          | BIGINT(19)   | NO   |     |         |         
+ product_id            | BIGINT(19)   | NO   |     |         |         
+ promotion_type        | INT(10)      | NO   |     |         | 1 打折，2 减价
+ promotion_set_zhekou  | FLOAT(6,2)   | NO   |     |         | 折扣值     
+ promotion_set_jianjia | FLOAT(6,2)   | NO   |     |         | 减价金额    
+ promotion_value       | FLOAT(6,2)   | NO   |     |         | 打折或减价后的商品价格（多规格存最小值）
+ active                | BIT(1)       | YES  |     |         |         
+ created               | DATETIME(19) | YES  |     |         |         
+ updated               | DATETIME(19) | YES  |     |         |         
+-----------------------+--------------+------+-----+---------+---------
+
+Table: t_purchase
+------------+--------------+------+-----+---------+---------
+ Field      | Type         | Null | Key | Default | Remarks 
+------------+--------------+------+-----+---------+---------
+ id         | BIGINT(19)   | NO   | PRI |         |         
+ name       | VARCHAR(255) | YES  |     |         |         
+ desc       | VARCHAR(255) | YES  |     |         |         
+ expires_in | INT(10)      | NO   |     |         | 时长      
+ pay_fee    | DOUBLE(22)   | YES  |     |         | 支付金额    
+ is_default | INT(10)      | YES  |     |         |         
+ status     | INT(10)      | YES  |     |         |         
+ created    | DATETIME(19) | YES  |     |         |         
+ updated    | DATETIME(19) | YES  |     |         |         
+------------+--------------+------+-----+---------+---------
+
+Table: t_purchase_order
+-----------------+---------------+------+-----+---------+---------
+ Field           | Type          | Null | Key | Default | Remarks 
+-----------------+---------------+------+-----+---------+---------
+ id              | BIGINT(19)    | NO   | PRI |         |         
+ user_id         | BIGINT(19)    | NO   |     |         |         
+ purchase_id     | BIGINT(19)    | NO   |     |         |         
+ trade_no        | VARCHAR(255)  | NO   |     |         | 本系统交易单号 
+ alipay_trade_no | VARCHAR(255)  | YES  |     |         | 支付宝交易单号 
+ pay_fee         | DOUBLE(255,2) | NO   |     |         | 订单应付金额  
+ pay_type        | VARCHAR(255)  | YES  |     |         | 支付类型；微信还是支付宝
+ status          | INT(10)       | YES  |     |         |         
+ created         | DATETIME(19)  | YES  |     |         |         
+ updated         | DATETIME(19)  | YES  |     |         |         
+-----------------+---------------+------+-----+---------+---------
+
+Table: t_qiandao
+-------------------+--------------+------+-----+---------+---------
+ Field             | Type         | Null | Key | Default | Remarks 
+-------------------+--------------+------+-----+---------+---------
+ id                | BIGINT(19)   | NO   | PRI |         |         
+ seller_id         | BIGINT(19)   | NO   |     |         | 卖家账号    
+ qiandao_name      | VARCHAR(255) | NO   |     |         | 签到名称    
+ start_date        | DATE(10)     | NO   |     |         | 有效开始时间  
+ end_date          | DATE(10)     | NO   |     |         | 有效结束时间  
+ activity_type     | INT(10)      | YES  |     | 1       |         
+ qiandao_memo      | VARCHAR(255) | YES  |     |         | 备注      
+ wirless_url       | VARCHAR(255) | YES  |     |         | 无线访问地址  
+ qr_code           | VARCHAR(255) | YES  |     |         | 活动二维码   
+ back_img          | VARCHAR(255) | YES  |     |         | 活动背景图   
+ need_collect_shop | INT(10)      | YES  |     | 0       | 参加活动是否需要强制收藏店铺1，强制，0不强制
+ qiandao_type      | INT(10)      | YES  |     |         | 1.连续，2.累计
+ as_sign_prize     | INT(10)      | YES  |     | 0       | 是否需要开启指定日期签到，默认0不开启
+ active            | TINYINT(3)   | NO   |     | 1       | 是否可用。删除标记。0，可用。1，表示删除
+ created           | DATETIME(19) | YES  |     |         |         
+ updated           | DATETIME(19) | YES  |     |         |         
+-------------------+--------------+------+-----+---------+---------
+
+Table: t_qiandao_config
+------------+--------------+------+-----+---------+---------
+ Field      | Type         | Null | Key | Default | Remarks 
+------------+--------------+------+-----+---------+---------
+ id         | BIGINT(19)   | NO   | PRI |         |         
+ qiandao_id | BIGINT(19)   | NO   |     |         |         
+ sign_type  | INT(10)      | NO   |     |         | 签到类型：1连续，2累计，3指定日期签到
+ sign_day   | VARCHAR(255) | YES  |     |         | 签到条件，比如10天填10，指定日期签到的话，填字符串格式的日期
+ prize_id   | BIGINT(19)   | NO   |     |         | 奖品      
+ prize_name | VARCHAR(60)  | YES  |     |         |         
+ active     | INT(10)      | YES  |     | 1       |         
+ created    | DATETIME(19) | YES  |     |         |         
+ updated    | DATETIME(19) | YES  |     |         |         
+------------+--------------+------+-----+---------+---------
+
+Table: t_qiandao_record
+---------------+--------------+------+-----+---------+---------
+ Field         | Type         | Null | Key | Default | Remarks 
+---------------+--------------+------+-----+---------+---------
+ id            | BIGINT(19)   | NO   | PRI |         |         
+ qiandao_id    | BIGINT(19)   | NO   |     |         | 签到任务    
+ buyer_id      | BIGINT(19)   | NO   |     |         | 买家混淆nick
+ qiandao_time  | DATE(10)     | NO   |     |         | 签到时间    
+ qiandao_month | VARCHAR(20)  | YES  |     |         |         
+ created       | DATETIME(19) | YES  |     |         |         
+ updated       | DATETIME(19) | YES  |     |         |         
+---------------+--------------+------+-----+---------+---------
+
+Table: t_qiandao_user
+-----------------+--------------+------+-----+---------+---------
+ Field           | Type         | Null | Key | Default | Remarks 
+-----------------+--------------+------+-----+---------+---------
+ id              | BIGINT(19)   | NO   | PRI |         |         
+ qiandao_id      | BIGINT(19)   | NO   |     |         | 签到ID    
+ buyer_id        | BIGINT(19)   | YES  |     |         | 买家ID    
+ qiandao_count   | INT(10)      | YES  |     |         | 总签到次数   
+ c_qiandao_count | INT(10)      | YES  |     |         | 连续签到天数  
+ sign_date       | DATE(10)     | YES  |     |         | 签到时间    
+ active          | INT(10)      | YES  |     | 1       |         
+ created         | DATETIME(19) | YES  |     |         |         
+ updated         | DATETIME(19) | YES  |     |         | 签到时间，一天更新一次
+-----------------+--------------+------+-----+---------+---------
+
+Table: t_refund
+----------------+---------------+------+-----+---------+---------
+ Field          | Type          | Null | Key | Default | Remarks 
+----------------+---------------+------+-----+---------+---------
+ id             | BIGINT(19)    | NO   | PRI |         |         
+ order_id       | BIGINT(19)    | YES  |     |         |         
+ gheader_id     | BIGINT(19)    | YES  |     |         | 拼团退款有值  
+ buyer_id       | BIGINT(19)    | YES  |     |         | 拼团退款有值  
+ cash           | DECIMAL(20,2) | YES  |     |         | 退款金额    
+ transaction_id | VARCHAR(255)  | YES  |     |         |         
+ created        | DATETIME(19)  | YES  |     |         |         
+ updated        | DATETIME(19)  | YES  |     |         |         
+ active         | BIT(1)        | YES  |     |         |         
+----------------+---------------+------+-----+---------+---------
+
+Table: t_role
+-------------------+--------------+------+-----+---------+---------
+ Field             | Type         | Null | Key | Default | Remarks 
+-------------------+--------------+------+-----+---------+---------
+ id                | INT(10)      | NO   | PRI |         |         
+ name              | VARCHAR(50)  | NO   |     |         | 名称      
+ value             | VARCHAR(50)  | NO   |     |         | 值       
+ description       | VARCHAR(255) | YES  |     |         | 简介      
+ is_system         | BIT(1)       | YES  |     | b'0'    | 是否系统角色  
+ create_by         | VARCHAR(20)  | YES  |     |         | 创建人     
+ creation_date     | DATETIME(19) | YES  |     |         | 创建日期    
+ last_updated_by   | VARCHAR(20)  | YES  |     |         | 最后修改人   
+ last_updated_date | DATETIME(19) | YES  |     |         | 最后修改日期  
+ delete_flag       | BIT(1)       | NO   |     | b'0'    | 删除标记    
+-------------------+--------------+------+-----+---------+---------
+
+Table: t_seller_addr
+----------------+--------------+------+-----+---------+---------
+ Field          | Type         | Null | Key | Default | Remarks 
+----------------+--------------+------+-----+---------+---------
+ id             | BIGINT(19)   | NO   | PRI |         |         
+ seller_id      | BIGINT(19)   | NO   |     |         |         
+ area_id        | BIGINT(19)   | YES  |     |         |         
+ contact_name   | VARCHAR(255) | YES  |     |         |         
+ city           | VARCHAR(255) | YES  |     |         |         
+ country        | VARCHAR(255) | YES  |     |         |         
+ province       | VARCHAR(255) | YES  |     |         |         
+ addr           | VARCHAR(255) | YES  |     |         |         
+ memo           | VARCHAR(255) | YES  |     |         |         
+ phone          | VARCHAR(255) | YES  |     |         |         
+ seller_company | VARCHAR(255) | YES  |     |         |         
+ zip_code       | VARCHAR(30)  | YES  |     |         |         
+ created        | DATETIME(19) | YES  |     |         |         
+ updated        | DATETIME(19) | YES  |     |         |         
+ active         | INT(10)      | YES  |     |         |         
+----------------+--------------+------+-----+---------+---------
+
+Table: t_seller_images
+--------------+--------------+------+-----+---------+---------
+ Field        | Type         | Null | Key | Default | Remarks 
+--------------+--------------+------+-----+---------+---------
+ id           | BIGINT(19)   | NO   | PRI |         |         
+ seller_id    | BIGINT(19)   | NO   |     |         |         
+ img_group_id | BIGINT(19)   | YES  |     |         |         
+ img_path     | VARCHAR(255) | YES  |     |         |         
+ active       | INT(10)      | YES  |     |         |         
+ created      | DATETIME(19) | YES  |     |         |         
+ updated      | DATETIME(19) | YES  |     |         |         
+--------------+--------------+------+-----+---------+---------
+
+Table: t_seller_user
+--------------------------+--------------+------+-----+---------+---------
+ Field                    | Type         | Null | Key | Default | Remarks 
+--------------------------+--------------+------+-----+---------+---------
+ id                       | BIGINT(19)   | NO   | PRI |         |         
+ nick                     | VARCHAR(50)  | YES  |     |         |         
+ phone                    | VARCHAR(255) | NO   |     |         |         
+ password                 | VARCHAR(255) | NO   |     |         |         
+ user_level               | INT(10)      | YES  |     |         |         
+ login_time               | DATETIME(19) | YES  |     |         |         
+ email                    | VARCHAR(50)  | YES  |     |         |         
+ start_date               | DATE(10)     | YES  |     |         |         
+ end_date                 | DATE(10)     | YES  |     |         |         
+ version_no               | INT(10)      | YES  |     |         |         
+ login_ip                 | VARCHAR(20)  | YES  |     |         |         
+ admi_login_failure_count | INT(10)      | YES  |     |         |         
+ active                   | INT(10)      | YES  |     | 1       |         
+ created                  | DATETIME(19) | YES  |     |         |         
+ updated                  | DATETIME(19) | YES  |     |         |         
+--------------------------+--------------+------+-----+---------+---------
+
+Table: t_shipping
+-------------+--------------+------+-----+---------+---------
+ Field       | Type         | Null | Key | Default | Remarks 
+-------------+--------------+------+-----+---------+---------
+ id          | BIGINT(19)   | NO   | PRI |         |         
+ order_id    | BIGINT(19)   | NO   |     |         |         
+ buyer_id    | BIGINT(19)   | YES  |     |         |         
+ exp_key     | VARCHAR(255) | YES  |     |         |         
+ bill_number | VARCHAR(255) | YES  |     |         |         
+ active      | INT(10)      | YES  |     |         |         
+ created     | DATETIME(19) | YES  |     |         |         
+ updated     | DATETIME(19) | YES  |     |         |         
+-------------+--------------+------+-----+---------+---------
+
+Table: t_shop
+--------------------+--------------+------+-----+---------+---------
+ Field              | Type         | Null | Key | Default | Remarks 
+--------------------+--------------+------+-----+---------+---------
+ id                 | BIGINT(19)   | NO   | PRI |         |         
+ seller_id          | BIGINT(19)   | NO   |     |         |         
+ shop_name          | VARCHAR(255) | YES  |     |         |         
+ shop_logo          | VARCHAR(255) | YES  |     |         |         
+ shop_sign          | VARCHAR(255) | YES  |     |         | 店招      
+ shop_contact       | VARCHAR(255) | YES  |     |         | 店铺联系人   
+ shop_contact_phone | VARCHAR(255) | YES  |     |         | 店铺联系人手机 
+ active             | BIT(1)       | YES  |     |         |         
+ created            | DATETIME(19) | YES  |     |         |         
+ updated            | DATETIME(19) | YES  |     |         |         
+--------------------+--------------+------+-----+---------+---------
+
+Table: t_specification
+-----------+--------------+------+-----+---------+---------
+ Field     | Type         | Null | Key | Default | Remarks 
+-----------+--------------+------+-----+---------+---------
+ id        | BIGINT(19)   | NO   | PRI |         | id      
+ seller_id | BIGINT(19)   | YES  |     |         |         
+ name      | VARCHAR(255) | NO   |     |         | 名称      
+ type      | INT(10)      | NO   |     |         | 类型      
+ memo      | VARCHAR(255) | YES  |     |         | 备注      
+ orders    | INT(10)      | YES  |     |         | 排序      
+ created   | DATETIME(19) | YES  |     |         | 创建日期    
+ updated   | DATETIME(19) | YES  |     |         | 最后修改日期  
+ active    | INT(10)      | NO   |     | 1       | 删除标记    
+-----------+--------------+------+-----+---------+---------
+
+Table: t_specification_value
+------------------+--------------+------+-----+---------+---------
+ Field            | Type         | Null | Key | Default | Remarks 
+------------------+--------------+------+-----+---------+---------
+ id               | BIGINT(19)   | NO   | PRI |         | id      
+ specification_id | BIGINT(19)   | NO   |     |         | 规格      
+ seller_id        | BIGINT(19)   | YES  |     |         |         
+ name             | VARCHAR(255) | NO   |     |         | 名称      
+ image            | VARCHAR(255) | YES  |     |         | 图片      
+ orders           | INT(10)      | YES  |     |         | 排序      
+ created          | DATETIME(19) | YES  |     |         | 创建日期    
+ updated          | DATETIME(19) | YES  |     |         | 最后修改日期  
+ active           | INT(10)      | NO   |     | 1       | 删除标记    
+------------------+--------------+------+-----+---------+---------
+
+Table: t_user_code
+-------------+--------------+------+-----+---------+---------
+ Field       | Type         | Null | Key | Default | Remarks 
+-------------+--------------+------+-----+---------+---------
+ id          | INT(10)      | NO   | PRI |         |         
+ vcode_phone | VARCHAR(20)  | YES  |     |         |         
+ vcode_code  | VARCHAR(12)  | YES  |     |         |         
+ ip          | VARCHAR(60)  | YES  |     |         |         
+ updated     | DATETIME(19) | YES  |     |         |         
+ created     | DATETIME(19) | YES  |     |         |         
+ status      | INT(10)      | YES  |     |         |         
+-------------+--------------+------+-----+---------+---------
+
+Table: t_weapp
+--------------+--------------+------+-----+---------+---------
+ Field        | Type         | Null | Key | Default | Remarks 
+--------------+--------------+------+-----+---------+---------
+ id           | BIGINT(19)   | NO   | PRI |         |         
+ seller_id    | BIGINT(19)   | NO   |     |         |         
+ weapp_id     | VARCHAR(255) | NO   |     |         |         
+ weapp_secret | VARCHAR(255) | NO   |     |         |         
+ active       | BIT(1)       | YES  |     |         |         
+ created      | DATETIME(19) | YES  |     |         |         
+ updated      | DATETIME(19) | YES  |     |         |         
+--------------+--------------+------+-----+---------+---------
+
+Table: t_weapp_audit
+---------+--------------+------+-----+---------+---------
+ Field   | Type         | Null | Key | Default | Remarks 
+---------+--------------+------+-----+---------+---------
+ id      | BIGINT(19)   | NO   | PRI |         |         
+ app_id  | VARCHAR(255) | NO   |     |         |         
+ auditid | VARCHAR(255) | NO   |     |         |         
+ status  | INT(10)      | YES  |     |         | 审核状态，其中0为审核成功，1为审核失败，2为审核中
+ reason  | VARCHAR(255) | YES  |     |         | 审核失败原因  
+ created | DATETIME(19) | YES  |     |         |         
+ updated | DATETIME(19) | YES  |     |         |         
+---------+--------------+------+-----+---------+---------
+
+Table: t_wei_page
+-------------+----------------------+------+-----+---------+---------
+ Field       | Type                 | Null | Key | Default | Remarks 
+-------------+----------------------+------+-----+---------+---------
+ id          | BIGINT(19)           | NO   | PRI |         |         
+ seller_id   | BIGINT(19)           | NO   |     |         |         
+ title       | VARCHAR(120)         | NO   |     |         |         
+ content     | LONGTEXT(2147483647) | YES  |     |         |         
+ status      | INT(10)              | NO   |     |         |         
+ published   | DATETIME(19)         | YES  |     |         |         
+ category_id | BIGINT(19)           | YES  |     |         |         
+ products    | VARCHAR(5000)        | YES  |     |         | 商品IDs   
+ created     | DATETIME(19)         | YES  |     |         |         
+ updated     | DATETIME(19)         | YES  |     |         |         
+-------------+----------------------+------+-----+---------+---------
+
+Table: t_weipage_category
+-----------+--------------+------+-----+---------+---------
+ Field     | Type         | Null | Key | Default | Remarks 
+-----------+--------------+------+-----+---------+---------
+ id        | BIGINT(19)   | NO   | PRI |         | id      
+ seller_id | BIGINT(19)   | NO   |     |         |         
+ name      | VARCHAR(255) | NO   |     |         | 名称      
+ created   | DATETIME(19) | YES  |     |         | 创建日期    
+ updated   | DATETIME(19) | YES  |     |         | 最后修改日期  
+ orders    | INT(10)      | YES  |     | 0       |         
+-----------+--------------+------+-----+---------+---------
+

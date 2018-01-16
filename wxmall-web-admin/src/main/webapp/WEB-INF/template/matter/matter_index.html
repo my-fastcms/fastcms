@@ -1,0 +1,328 @@
+[#include "/includes/_layout.html"/]
+<style type="text/css">
+.appmsg_list::after {
+    content: ".";
+    display: inline-block;
+    font-size: 0;
+    height: 0;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    width: 100%;
+}
+.page_media_list .appmsg_list {
+    margin-bottom: 0;
+}
+.appmsg_list {
+    font-size: 0;
+    letter-spacing: -4px;
+    margin: 20px 30px;
+}
+.appmsg_list .tj_item {
+    font-size: 14px;
+    text-align: left;
+    padding-right: 30px;
+}
+.appmsg_col {
+    display: inline-block;
+    font-size: 14px;
+    letter-spacing: normal;
+    text-align: left;
+    vertical-align: top;
+    width: 32%;
+}
+.appmsg {
+    background-color: #fff;
+    border: 1px solid #e7e7eb;
+    color: #666;
+    margin-bottom: 20px;
+    overflow: hidden;
+    position: relative;
+}
+.appmsg_info {
+    border-bottom: 1px solid #e7e7eb;
+    font-size: 13px;
+    line-height: 20px;
+    margin: 0 14px;
+    padding: 12px 0;
+}
+.appmsg_date {
+    font-style: normal;
+    font-weight: 400;
+}
+.appmsg_content {
+    position: relative;
+}
+.appmsg_title {
+    color: #222;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.6;
+    overflow: hidden;
+    overflow-wrap: break-word;
+    word-break: break-all;
+}
+.appmsg_title a {
+    color: #222;
+    display: block;
+}
+.appmsg_title a:hover {
+    text-decoration: none;
+}
+.appmsg_thumb_wrp {
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 160px;
+    overflow: hidden;
+}
+.appmsg_thumb {
+    width: 100%;
+}
+.appmsg_desc {
+    overflow-wrap: break-word;
+    padding: 5px 0 10px;
+    word-break: break-all;
+}
+.appmsg_cover_desc {
+    color: #666;
+    max-height: 45px;
+    overflow: hidden;
+}
+.edit_mask {
+    background: rgba(0, 0, 0, 0.6) none repeat scroll 0 0 !important;
+    bottom: 0;
+    color: #fff;
+    font-size: 0;
+    left: 0;
+    padding: 14px;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    top: 0;
+    z-index: 1;
+}
+.edit_mask .edit_mask_opr {
+    padding-top: 10px;
+}
+.edit_mask.preview_mask {
+    display: none;
+}
+.edit_mask.appmsg_mask {
+    display: none;
+}
+.edit_mask_content {
+    display: inline-block;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+.vm_box {
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.appmsg_opr {
+    background-color: #f4f4f4;
+    border-top: 1px solid #e7e7eb;
+}
+.appmsg_opr ul {
+    overflow: hidden;
+}
+.appmsg_opr_item {
+    float: left;
+    height: 44px;
+    line-height: 44px;
+}
+.appmsg_opr_item a {
+    border-right: 1px solid #e7e7eb;
+    display: block;
+    text-align: center;
+    text-decoration: none;
+}
+.appmsg_opr_item a:hover {
+    text-decoration: none;
+}
+.appmsg_opr_item a.no_extra {
+    border-right-width: 0;
+}
+.appmsg_item {
+    padding: 12px 14px;
+    position: relative;
+}
+.grid_item {
+    float: left;
+}
+.grid_item.no_extra {
+    float: none;
+    overflow: hidden;
+    width: auto;
+}
+.grid_item.no_extra_flex {
+    display: table-cell;
+    float: none;
+    vertical-align: top;
+    width: auto;
+}
+.grid_item.no_extra_flex::after {
+    clear: both;
+    content: " . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . ";
+    display: block;
+    height: 0 !important;
+    line-height: 0;
+    visibility: hidden;
+}
+.size1of2 {
+    width: 50%;
+}
+ul, ol {
+    list-style-type: none;
+    padding-left: 0;
+}
+.icon{
+  line-height: 40px;
+}
+</style>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+[@layout]
+<div class="wrapper wrapper-content">
+<div class="row animated fadeInLeft">
+	
+	[#include "/includes/menus-setting.html" /]
+	
+	<div class="col-sm-11">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	       	   <a href="${webctx}/setting" class="J_menuTab">公众号</a>
+		       <a href="${webctx}/menu" class="J_menuTab">公众号菜单</a>
+		       <a href="${webctx}/matter" class="J_menuTab active">图文消息</a>
+	       </div>
+	   	</nav>
+	</div>
+	<div id="tableList" class="content row ibox-content">
+    <div class="main_bd  page_appmsg_list">
+		<div class="panel-body">
+			<a href="${webctx}/matter/set" class="btn btn-info">新建图文素材
+			</a>
+		</div>
+		<div id="prizeToolsbar" class="panel-body">
+					<div id="pager" class="jqpager" style="margin-bottom: 1px;"></div>	
+		</div>
+		<div id="js_card" class="appmsg_list" style="">
+		</div>
+		</div>
+</div>
+</div>
+</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	searchItems();
+});
+var pageClick = function(pageNo) {
+	searchItems(pageNo);
+}
+var searchItems = function(currPage){
+	var params = {};
+	//其他查询条件
+	if(currPage){
+		params.page = currPage;
+	}
+	$(".main_bd").mask("加载中...");
+	var url = obz.ctx + "/matter/list";
+	obz.ajaxJson(url, params, function(resp){
+		$(".main_bd").unmask();
+		
+		if(resp.code !=200){
+			return;
+		}
+		
+		var result = resp.data;
+		$("#js_card").empty();
+		
+		if(currPage){
+			$("#pager").pager({ pagenumber:currPage, recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });
+		}else{
+			$("#pager").pager({ recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });	
+		}
+		
+		var dataList = result.list;
+		if(dataList.length>0){
+			for(var i=0;i<dataList.length;i++){
+				var _row = dataList[i];
+				var trHtml = obz.dataTemplate4obj($("#tj_item_tpl").html(), _row);
+				$("#js_card").append(trHtml);
+			}
+			
+			$(".js_del").click(function(){
+				var media_id = $(this).attr("data-id");
+				obz.showMessage("确定删除吗？删除后不可恢复，请谨慎操作！", function(){
+					 obz.ajaxJson(obz.ctx + "/matter/del", {media_id: media_id}, function(resp){
+						if(resp.code==200){
+							obz.msg('删除成功', function(){
+								location.reload();
+							});	
+						}
+					});
+			});
+			});	
+		}else{
+			$("#js_card").append($("#table_noresult_tr_tpl").html());
+		}
+	});
+}
+</script>
+<!-- html 模板文件 -->
+<script type="text/template" id="tj_item_tpl">
+<div class="appmsg_col tj_item">
+	<div id="js_col2" class="inner">
+		<div id="appmsg{media_id}" class="js_appmsgitem">
+		 <div class="appmsg single has_first_cover" data-id="{media_id}" data-fileid="401968049" data-completed="1">
+		 <div class="appmsg_content">
+			<div class="appmsg_info">
+			<em class="appmsg_date">更新于{updateTime}</em>
+			</div>
+			<div class="appmsg_item">
+			<h4 class="appmsg_title js_title">
+			<a href="{url}" target="_blank" data-msgid="{media_id}" data-idx="0">{title}</a>
+			</h4>
+			<div class="appmsg_thumb_wrp" style="background-image:url('{imgUrl}')"> </div>
+			<p class="appmsg_desc"></p>
+			<a class="edit_mask preview_mask js_preview" href="{url}" data-msgid="401968056" data-idx="0">
+			<div class="edit_mask_content">
+			<p class=""> 预览文章 </p>
+			</div>
+			<span class="vm_box"></span>
+			</a>
+			</div>
+			</div>
+			<div class="appmsg_opr">
+             <ul>
+             <li class="appmsg_opr_item grid_item size1of2">
+				<a class="js_tooltip"  href="${webctx}/matter/set?media_id={media_id}" data-tooltip="编辑">
+				<i class="glyphicon glyphicon-pencil icon"></i>
+				</a>
+			 </li>
+			 <li class="appmsg_opr_item grid_item size1of2 no_extra">
+				<a class="js_del no_extra js_tooltip" data-id="{media_id}" href="javascript:void(0);" data-tooltip="删除">
+				<i class="glyphicon glyphicon-trash icon"></i>
+				</a>
+			 </li>
+             </ul>
+             </div>
+		 </div>
+		</div>
+	</div>
+</div>
+</script>
+[/@layout]
+<script type="text/javascript">
+	Template.init("#menu-setting");
+	Template.initSecond("#menu-public");
+</script>
+</body>
+</html>

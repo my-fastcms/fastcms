@@ -1,0 +1,86 @@
+[#macro script]
+[/#macro] 
+[#macro script_import]
+[/#macro]
+[#macro css]
+[/#macro]
+[#macro css_import]
+[/#macro]
+[#macro layout]
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+   [#include "/includes/header.html" /]
+   [@css_import /]
+   <style type="text/css">
+   [@css /]
+   </style>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+<!-- Site wrapper -->
+<div id="wrapper">
+	[#include "/includes/menus.html" /]
+	<!--右侧部分开始-->
+    <div id="page-wrapper" class="gray-bg dashbard-1">
+        <div class="row border-bottom">
+        <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+		   <div class="navbar-header"><a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="javascript:void(0)"><i class="fa fa-bars"></i> </a>
+		        <form role="search" class="navbar-form-custom" method="post" action="search_results.html">
+		            <div class="form-group">
+		                <a href="http://www.dbumama.com" class="form-control" style="padding-top:16px" target="_blank">在线帮助</a>
+		            </div>
+		        </form> 
+		    </div>
+		    <ul class="nav navbar-top-links navbar-right">
+		        <li class="dropdown hidden-xs">
+		        [@shiro.authenticated]
+      				[@shiro.authUser]
+      					[#if authUser??]
+	      					<a href="javascript:void(0)" class="dropdown-toggle">${authUser.app_name}</a>
+      					[#else]
+      						<a href="${webctx}/setting" class="dropdown-toggle" style="color: red">未绑定公众账号,去绑定</a>
+      					[/#if]
+      				[/@shiro.authUser]
+      			[/@shiro.authenticated]
+      			</li>
+      			
+      			<li class="dropdown hidden-xs">
+	        		<a href="javascript:void(0)">
+	        		[@shiro.authenticated]
+			 			[@shiro.principal name="phone"/]
+					[/@shiro.authenticated]</a>
+	      		</li>
+      			
+		        <li class="hidden-xs"><a href="${webctx}/logout"><i class="fa fa-power-off"></i>退出</a></li>
+		    </ul>
+		</nav>
+    	</div>
+        <div class="row J_mainContent" id="content-main">
+            [#nested]
+        </div>
+        [#include "/includes/footer.html"/]
+    </div>
+     <!--右侧部分结束-->
+</div>
+<!-- ./wrapper -->
+[@script_import /]
+<script>
+[@script /]
+$(document).ready(function(){
+	fix();
+});
+function fix() {
+    var neg = $('.main-header').outerHeight() + $('.main-footer').outerHeight();
+    var window_height = $(window).height();
+    var sidebar_height = $(".sidebar").height();
+    
+    if (window_height >= sidebar_height + neg) {
+      $(".content-wrapper, .right-side").css('min-height', window_height - neg);
+    } else {
+      $(".content-wrapper, .right-side").css('min-height', sidebar_height );
+    }
+}
+</script>
+</body>
+</html>
+[/#macro]

@@ -1,0 +1,300 @@
+[#include "/mall/common/default.html" /]
+<style>
+#search_bar{
+	border: 0;
+}
+.goods-list .weui-col-25{
+	position: relative;
+	font-size: 1.2rem;
+	color: #999999;
+}
+.active{
+	color: #09BB07 !important;
+}
+.active span{
+	border-top-color: #09BB07;
+	border-bottom-color: #09BB07;
+}
+.triangle-up{
+	width: 0px;
+	height: 0px;
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-bottom: 6px solid;
+	float: right;
+	margin-top: 11px;
+	margin-right: 15px;
+	margin-left: -20px;
+}
+.triangle-down{
+	position: absolute;
+	top: 20px;
+	right: 15px;
+	width: 0;   
+	height: 0;   
+	border-left: 5px solid transparent;   
+	border-right: 5px solid transparent;   
+	border-top: 6px solid; 
+}
+#search_bar{
+	width: 90%;
+	float: right;
+}
+#J_filtrate{
+	width: 100%;
+	margin-bottom: 20px;
+}
+.goods-list .goods-wrap .goods-item{
+	padding: 1rem;
+}
+.goods-list .goods-wrap .goods-item::after{
+	visibility:visible;
+	padding-top: 1rem;
+	border-bottom: 1px solid #DEDEDE;
+}
+.goods-list .goods-item .picture{
+	float: left;
+	width: 35%;
+	margin-right: 1rem;
+}
+.goods-item .goods-item-info{
+	float: left;
+	width: 60%;
+	text-align: right;
+	padding-right: 0.1rem;
+}
+.goods-item .goods-item-info .title{
+	/* height: 44px; */
+	margin-bottom: 1rem;
+	overflow: hidden;
+	font-size: 18px;
+	font-weight:bold;
+}
+.goods-item .goods-item-info .appraise{
+	color: #9A9A9A;
+	font-size: 12px;
+}
+.active span.down-ionic{
+	background-image: url(${ctxPath}/resources/weixin/images/arrow-down-active.png);
+}
+.down-ionic{
+	padding-left: 8px;
+	padding-right: 8px;
+	margin-left: 2px;
+	background-image: url(${ctxPath}/resources/weixin/images/arrow-down.png);
+	background-position: 100% 100%;
+	background-size: 100% 100%;
+}
+#J_form > .weui_search_inner{
+	padding-right: 0;
+}
+#nav-btn{
+	width: 10%;
+	float: left;
+	height: 44px;
+	background-color: #EFEFF4;
+}
+#nav-btn > img{
+	position: absolute;
+	top: 12px;
+	width: 22px;
+	height: auto;
+	margin-left: 12px;
+}
+.sclassify{
+	position: absolute;
+	top: 37px;
+	font-size: 12px;
+}
+.sclassify::before{
+	content: "";
+	display: block;
+	width: 0;
+	height: 0;
+	border-left: 8px solid transparent;
+	border-right: 8px solid transparent;
+	border-bottom: 8px solid #fff;
+	margin-left: 15px;
+}
+.sclassify li{
+	width: 120px;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	background-color: rgba(255,255,255,1);
+	border-bottom: 1px solid #EFEFF4;
+}
+.sclassify li img{
+	position: relative;
+	top: 3px;
+	left: 25px;
+	right: 5px;
+	display: inline;
+	width: 18px;
+	margin-right: 30px;
+}
+.weui_tab_bd{
+	position: absolute;
+}
+.curtain{
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	display: none;
+	background-color: rgba(0,0,0,0.4);
+	z-index: 10;
+}
+.goods-item-info > .add-shopping{
+	font-size: 9px;
+	line-height: 12px;
+	text-align: right;
+}
+.weui_tab_bd{
+	position: relative;
+}
+.weui_btn.weui_btn_mini {
+    line-height: 1.6;
+    font-size: 12px;
+    padding: 0 .75em;
+    display: inline-block;
+}
+.goods-information{
+	float: left;
+	font-size: 14px;
+	color: #444;
+}
+
+.list1{ list-style:none;margin-left: 30%;}
+.list1 li{ float: left; cursor: pointer;}
+textarea{
+margin-left: 15%;
+}
+.weui_btn{
+	margin-top: 10px;margin-left: 30%;
+}
+.weui_btn + .weui_btn{
+	margin-left: 10px;
+	margin-top: 10px;
+}
+.content-padded a{
+	color: #fff;
+}
+</style>
+<div class="content goods-list">
+<div id="goods-list" class="goods-wrap">
+	<div class="goods-item f-cb">
+				<a href="${ctxPath}/weixin/product/detail?id=${products.id}"><img class="picture" src="${image}" width="120" height="120"/></a>
+				<div class="goods-item-info">
+					<div class="title">${products.name}</div>
+					<div class="price">${products.price}</div>
+                   [#if setting.isShowMarketPrice]
+					<div class="price" style="color: #787878; font-size: 12px;text-decoration:line-through;">
+						${products.marketPrice}
+					</div> 
+                   [/#if]
+
+				</div>
+			</div>
+</div>
+</div>
+
+<div class="goods-information">
+	<div>
+		<span>评&nbsp;&nbsp;&nbsp;&nbsp;价:&nbsp;</span>
+		<ul class="list1">
+			<li><img src="${ctxPath}/resources/weixin/images/xx.png" alt=""></li>
+			<li><img src="${ctxPath}/resources/weixin/images/xx.png" alt=""></li>
+			<li><img src="${ctxPath}/resources/weixin/images/xx.png" alt=""></li>
+			<li><img src="${ctxPath}/resources/weixin/images/xx.png" alt=""></li>
+			<li><img src="${ctxPath}/resources/weixin/images/xx.png" alt=""></li>
+       </ul>
+	</div>
+
+</div>
+<br/>
+<br/>
+<input type="hidden" name="score" value="" class="s1"/>
+<input type="hidden" name="productId" value="${id}"/>
+<textarea id="content" name="content" rows="4" cols="30">
+</textarea>
+<div class="content-padded f-cb">
+ <a href="javascript:void(0)" onclick="btnSubmit();" class="weui_btn weui_btn_mini weui_btn_warn">发    表</a>
+</div>
+[#include "/mall/common/script.html"/]
+<script type="text/javascript">
+function btnSubmit(){
+	var score=$(".s1").val();
+	var content=$("#content").val();
+	if(score !='' &&content !='' ){
+		$.ajax({
+			type: "post",
+			url: "${ctxPath}/weixin/review/save",
+			data: {productId:${id},score:score,content:content,orderId:${orderId}},
+			async: true,
+			success: function(data){	
+				$.toast(data.content, "text");
+				location.href="${ctxPath}/weixin/order/list";
+			}
+		});
+	}else{
+		$.toast("请填写评论", "text");
+	}
+	 
+}
+
+$(function(){
+	var aLi = $('.list1 li');
+	var leng = aLi.length;
+	var arr = ['1','2','3','4','5'];
+	var arr2 = ['${ctxPath}/resources/weixin/images/xx.png','${ctxPath}/resources/weixin/images/xx.png','${ctxPath}/resources/weixin/images/xx.png','${ctxPath}/resources/weixin/images/xx.png','${ctxPath}/resources/weixin/images/xx.png'];
+	var s1 = '';
+
+	aLi.click(function(){
+		var i = $(this).index();
+		if(i < 2){
+			for(var j=0; j<=i; j++){
+				aLi.eq(j).find('img').attr('src','${ctxPath}/resources/weixin/images/cha.png');
+				s1 = arr[i];
+				arr2[j] = aLi.eq(j).find('img').attr('src');
+			}
+		}else{
+			for(var j=0; j<=i; j++){
+				aLi.eq(j).find('img').attr('src','${ctxPath}/resources/weixin/images/hao.png');
+				s1 = arr[i];
+				arr2[j] = aLi.eq(j).find('img').attr('src');
+			}
+		};
+
+		for(var k = i+1; k<leng; k++){
+			arr2[k] = '${ctxPath}/resources/weixin/images/xx.png';
+		};
+		$('.s1').val(s1);
+	});
+
+	aLi.hover(function(){
+		for(var j=0; j<leng; j++){
+			aLi.eq(j).find('img').attr('src','${ctxPath}/resources/weixin/images/xx.png');
+		};
+		var i = $(this).index();
+		if(i < 2){
+			for(var j=0; j<=i; j++){
+				aLi.eq(j).find('img').attr('src','${ctxPath}/resources/weixin/images/cha.png');
+				$('.s1').text(arr[i]);
+			}
+		}else{
+			for(var j=0; j<=i; j++){
+				aLi.eq(j).find('img').attr('src','${ctxPath}/resources/weixin/images/hao.png');
+				$('.s1').text(arr[i]);
+			}
+		}
+	},function(){
+		for(var i = 0; i<leng; i++){
+			aLi.eq(i).find('img').attr('src',arr2[i]);
+		}
+		$('.s1').val(s1);
+	});
+
+});
+</script>

@@ -1,0 +1,37 @@
+@charset "utf-8";
+/* CSS Document */
+
+/*购买页面*/
+.purchase-box{ margin:40px auto;}
+.product-type{ background:#f8f9fb; border-bottom:1px solid #e5e9ed; padding:10px 20px;}
+.product-type .version-type{ font-size:16px; color:#345; font-weight:bold;}
+.product-type .choose-versions{ padding-top:11px;}
+.product-main{ padding:40px;}
+.purchase-info{ padding-bottom:30px;}
+.purchase-note{ line-height:1.8;}
+.pay-way{ padding:10px 0 40px 0;}
+.purchase-item{float:left; font-weight:bold; color:#345;width:75px;}
+.item1{ padding-top:30px;}
+.item2{ padding-top:10px;}
+.item3{ padding-top:15px;}
+.text-bold{ font-weight:bold; color:#345;}
+.purchase-time li{ background:#f8f9fb; border:1px solid #e5e9ed; box-sizing:border-box; border-radius:3px; padding:10px 0; height:82px; display:inline-block; margin:0 2px; width:194px; text-align:center; position:relative;}
+.purchase-time li span{ color:#345; font-size:20px;}
+.purchase-time li a{ display:block; width:194px;}
+.purchase-time li:hover,.purchase-time li.active{ border:1px solid #e74c3c;}
+.purchase-time li.active:after{ background:url(./images/ico-set.png) no-repeat 0 -88px; width:32px; height:32px; display:block; content:"";  position:absolute; right:-1px; bottom:-1px;}
+.select-month{ margin-top:65px;}
+.select-month li{ border-radius:0 0 1px 1px;}
+.select-month li:hover .special-off{ background:#e74c3c;}
+.select-month li.active .special-off{ background:#e74c3c;}
+.purchase-time .special-off{ display:none;}
+.select-month .special-off{ display:block; position:absolute; left:-1px; right:-1px; top:-77px; height:60px; border-radius:3px 3px 0 0; color:#FFF; text-align:left; line-height:1.6; background:#7a8a9a; padding:8px 11px; font-size:13px; text-align:left;}
+.select-month .special-off strong{ color:#FF9;}
+.text-red{ color:#e74c3c;}
+.text-b{ font-size:24px;}
+.terms-payment li{ height:52px; line-height:52px; vertical-align:middle; padding:0;}
+.terms-payment .contrary-transfer{ font-size:18px; color:#345; font-weight:bold;}
+.purchas-checkout-btn{ display:block; width:194px; height:54px; line-height:54px; border-radius:3px; font-weight:bold; font-size:18px; color:#fff; background:#e74c3c; text-align:center;}
+.payment-box{ padding-left:77px;}
+.more{ background:url(./images/ico-set.png) no-repeat 0 -120px; width:14px; height:14px; display:inline-block; vertical-align:middle;}
+

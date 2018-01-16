@@ -1,0 +1,61 @@
+[#include "/includes/_layout.html"/]
+<title>添加二维码</title>
+<script type="text/javascript">
+$(document).ready(function() {
+$(".js-save").click(function() {
+	var hasError = false;
+	var params = {}, error = {};
+	var scene_name = $("#scene_name").val(),id=$("#id").val();
+	params.id=id;
+	if($.trim(scene_name) =="") {error.error_scene_name = "二维码名称不能为空"; } else {error.error_scene_name=""; params.scene_name = $.trim(scene_name);}
+	for(var key in error){
+		if(error[key]!=""){
+			//alert(key);
+			if(!hasError) hasError = true;
+			$("#"+key).addClass("has-error");
+			$("#"+key).find("label").text(error[key]);
+		}else{
+			$("#"+key).removeClass("has-error");
+			$("#"+key).find("label").empty();
+		}
+	}
+	if(hasError){
+		return false;
+	}
+	$.post(obz.ctx+"/scan/save", params, function(json) {
+
+		if(json.code!=200){
+			BootstrapDialog.alert({title:'提示', message:json.msg});
+		}else{
+			location.href=obz.ctx+"/scan";			
+		}
+          },"json");
+	if(addGroupDialog != null) addGroupDialog.close();
+	
+	//location.href=obz.ctx+"/attachment"
+});
+
+$(".js-cancel").click(function() {
+	if(addGroupDialog != null) addGroupDialog.close();
+});
+});
+</script>
+<style type="text/css">
+</style>
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+<div class="wrapper wrapper-content">
+<div class="ui-popover-inner" style="min-width: auto; width: 180px;">
+     <input class="form-control" id="id" value="${scene.id}" type="hidden">
+    <div style="margin-bottom: 6px;" id="error_scene_name">
+        <input class="form-control" id="scene_name" value="${scene.scene_name}" placeholder="二维码名称" style=" width: 166px;" type="text">
+        <label class="control-label" for="scene_name"></label>
+    </div>
+</div>
+ <div class="panel-footer" align="center">
+        <a href="javascript:;" class="btn btn-sm btn-success js-save" style="width: 48px;">确定</a>
+        <a href="javascript:;" class="btn btn-default js-cancel" style="width: 48px;">取消</a>
+</div>
+</div>
+</body>
+</head>
+</html>

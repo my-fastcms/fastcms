@@ -1,0 +1,572 @@
+[#include "/includes/_layout.html"/]
+[#macro css_import]
+<link rel="stylesheet" type="text/css" href="${webctx}/resources/css/jquery.filer.css"/>
+<link rel="stylesheet" type="text/css" href="${webctx}/resources/css/jquery.filer-dragdropbox-theme.css"/>
+<link rel="stylesheet" type="text/css" href="${webctx}/resources/css/product.css"/>
+[/#macro]
+<script type="text/javascript">
+var listImg="";	
+var listImgUrl="";
+var listUpload="";
+var catagory="${product.product_category_id}";
+var selectImg = new Array();
+[#if product??]
+var productId = '${product.id}';
+[/#if]
+function getPrice(){
+	[#if productAllResultDto??]
+		[#list productAllResultDto.stocks as stock] 
+	  	$("#priceId"+"${stock_index}").val(${stock.price}); 
+	  	$("#stockId"+"${stock_index}").val(${stock.stock});
+	  	$("#weightId"+"${stock_index}").val(${stock.weight});
+	  	[/#list]	
+	[/#if]
+}
+</script>
+[#macro script_import]
+<script src="${webctx}/resources/js/jquery.filer.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="${webctx}/resources/ueditor/ueditor.config.js"></script>
+<script type="text/javascript" charset="utf-8" src="${webctx}/resources/ueditor/ueditor.all.min.js"></script>
+<script type="text/javascript" src="${webctx}/resources/js/product/product.edit.js"></script>
+[/#macro]
+[@layout]
+<form id="inputForm" action="${webctx}/product/save" method="post">
+<input type="hidden"   name="id" value="${product.id}" class="form-control" />
+<div class="wrapper wrapper-content">
+
+	<div class="row animated fadeInLeft">
+	
+	[#include "/includes/menu-product.html" /]
+	
+	<div class="col-sm-11">
+		<!-- <div class="row content-tabs">
+			<nav class="page-tabs J_menuTabs">
+		       <div class="page-tabs-content" style="margin-left: 0px;">
+		           <a href="${webctx}/product" class="J_menuTab active">商品</a>
+			       <a href="${webctx}/category" class="J_menuTab">分类 </a>
+			       <a href="${webctx}/group" class="J_menuTab">分组 </a>
+			       <a href="${webctx}/specification" class="J_menuTab">规格 </a>
+			       <a href="${webctx}/delivery" class="J_menuTab">运费模板</a>
+		       </div>
+		   	</nav>
+		</div> -->
+		<div class="ibox-title row">
+			<h2><small><a href="${webctx}/product">《返回列表</a></small></h2>
+		</div>
+		<div class="tabs-container row" style="padding-top: 12px;">
+	        <ul class="nav nav-tabs" id="myTab">
+	            <li class="active"><a role="tab" data-toggle="tab" href="#js-step-1">1.选择分类</a></li>
+	            <li><a role="tab" data-toggle="tab" href="#js-step-2">2.基本信息</a></li>
+	            <li><a role="tab" data-toggle="tab" href="#js-step-3">3.商品详情</a></li>
+	        </ul>
+	    </div>
+		
+	<div class="tab-content ibox-content row col-sm-10">
+	    <div id="js-step-1"  role="tabpanel" class="tab-pane [#if !product??]active[/#if]">
+	      <div class="form-horizontal fm-goods-info">
+	          <div id="class-info-region" class="goods-info-group">
+		        <div class="js-goods-klass">
+		           <div class="class-block">
+		                <div class="js-class-block control-group">
+		                  <div class="controls">
+				            <div class="widget-goods-klass">
+				            [#list productCategory as productCategory]
+				            	<div class="widget-goods-klass-item [#if productCategory.id == product.productCategoryId] current[/#if]" category-id="${productCategory.id}" category-name="${productCategory.name}">
+					                <span class="widget-goods-klass-name"> ${productCategory.name}  </span>    
+					            </div>
+				            [/#list]
+				            <!-- <div class="widget-goods-klass-item" category-id="8" category-name="其他">
+				                <span class="widget-goods-klass-name">其他 </span>  
+				                <ul class="widget-goods-klass-children" style="display: none;">
+	                            <li data-id="8-1">
+	                                <label class="checkbox-inline"><input name="goods-class-2" type="radio"/>礼品鲜花</label>
+	                            </li>
+	                          	</ul>  
+				            </div> -->
+				            <label id="assign_error_msg" style="color:red;"></label>
+			                </div>
+			               </div>
+		                </div>
+	                </div>
+		        </div>
+	      </div>
+	    </div>
+	    <div class="panel-heading" style="background-color:#f8f8f8;border-bottom:5px solid #fff;height: 50px;text-align: center;">
+	      	<button type="button"  onclick="nextStepTwo();" class="btn  btn-primary">下一步</button>
+	   	</div>
+		</div>
+		<div id="js-step-2"  role="tabpanel" class="tab-pane [#if product??]active[/#if]">
+		   <div class="form-horizontal fm-goods-info">
+		     <div id="base-info-region" class="goods-info-group">
+		         <div class="goods-info-group-inner">
+		             <div class="info-group-title vbox">
+						<div class="group-inner">基本信息</div>
+					 </div>
+					 <div class="info-group-cont vbox">
+	                        <div class="group-inner">
+	                          <div class="form-group">
+	                             <label class="col-md-2 control-label">商品类目：</label>
+	                             <div class="col-md-5">
+	                           <div class="static-value" style="font-size: 14px;vertical-align: middle;line-height: 30px;"><span id="productCategoryName">${categoryName}</span></div>
+	                           <input type="hidden" value="${product.product_category_id}" id="productCategoryId" name="productCategoryId"/>
+	                             </div>
+	                          </div>
+	                          
+	                           <div class="form-group">
+	                             <label class="col-md-2 control-label">商品展示图：<span style="color: red;"><em>*</em></span></label>
+	                             <div class="col-md-5">
+	                                 <ul class="js-picture-listss app-image-list">
+						                <li><a href="javascript:;" onclick="addPicture(true);" class="add-goods js-add-picture show">+加图</a></li>
+						                [#if product??]
+						                <li class="sort">
+	                                    <img src="${product.image}" id="imgId"  class="js-img-preview"/>
+	                                    <input name="image" value="${imgUrl}" type="hidden"  class="js-img-preview"/>
+	                                    <a class="js-delete-picture close-modal small hide" onclick="deleteImg(this);">×</a>
+	                                    </li>
+	                                    [/#if]
+					                 </ul>
+					                  <label id="only_error_msg" style="color:red;"></label>
+						          </div>
+	                           </div>
+	                        </div>
+	                 </div>
+		         </div>
+		         <div class="goods-info-group-inner">
+		             <div class="info-group-title vbox">
+						<div class="group-inner">库存/规格</div>
+					<input type="hidden" id="allStocks"  name="stocks" value="" class="form-control" />
+					 </div>
+					 <div class="info-group-cont vbox">
+	                        <div class="group-inner">
+	                            <div class="form-group">
+						            <label class="col-md-2 control-label">规格设置</label>
+						            <div class="col-md-8">
+						                <div class="sign_list">
+						                [#if product??]
+						                <label class="radio-inline" for="inline-radio1">
+	                                     <input id="checkbox4" name="is_unified_spec" class="frm_radio" value="true" onclick="changeType();" [#if product?? && product.is_unified_spec] checked="checked"[/#if] type="radio"/>
+	                                      <span>统一规格</span>
+	                         	        </label>
+	                         	        <label class="radio-inline" for="inline-radio1">
+	                                     <input id="checkbox4" name="is_unified_spec" class="frm_radio" value="false" onclick="changeType();" [#if product?? && !product.is_unified_spec] checked="checked"[/#if] type="radio"/>
+	                                      <span>多规格</span>
+	                         	        </label>
+	                         	        [#else]
+	                         	        <label class="radio-inline" for="inline-radio1">
+	                                     <input id="checkbox4" name="is_unified_spec" class="frm_radio" value="true" onclick="changeType();" checked="checked" type="radio"/>
+	                                      <span>统一规格</span>
+	                         	        </label>
+	                         	        <label class="radio-inline" for="inline-radio1">
+	                                     <input id="checkbox4" name="is_unified_spec" class="frm_radio" value="false" onclick="changeType();" type="radio"/>
+	                                      <span>多规格</span>
+	                         	        </label>
+						                [/#if]
+	                         	        </div>
+	                         	     </div>
+	                         	 </div>
+	                          <div class="form-group" id="allSpec" >
+	                             <label class="col-md-2 control-label">商品规格：<span style="color: red;"><em>*</em></span></label>
+	                             <div class="col-md-10">
+	                             <table class="table table-striped">
+	                              <tr>
+	                              <td>选择规格</td>
+					                 <td>
+						               <div id="specificationSelect" class="specificationSelect">
+											<ul id="specificationUl">
+											[#if specificationResultDto??]
+	                                           [#list specificationResultDto as ResultDto]
+	                                           	   [#if ResultDto.specification??]
+	                                           	   [#list ResultDto.specification as specification]
+														<li>
+															<label>
+																<input type="checkbox" name="specificationIds" value="${specification.id}" [#if productAllResultDto?? && productAllResultDto.specifications?seq_contains(specification)] checked="checked"[/#if] />${specification.name}
+																[#if specification.memo??]
+																	<span class="gray">[${specification.memo}]</span>
+																[/#if]
+															</label>
+														</li>
+													[/#list]
+	                                           	   [/#if]
+		                                       [/#list]
+											[/#if]	
+											<li><a href="javascript:;" onclick="addSpecification();" class="js-add-sku-atom add-sku" style="display: inline;">+添加规格</a></li>
+											</ul>																								    
+						               </div>
+						               </td>
+						               </tr>
+						               <tr>
+						               <td>选择规格值
+						               <label id="specificationValue_error_msg" style="color:red;"></label>
+						               </td>
+											<td>
+												[#if product??]
+												<table id="specificationProductTable" class="table table-striped table-bordered">
+												 <tbody id="specificationProductTbody">
+												[#if specificationResultDto??]
+												[#list specificationResultDto as ResultDto]
+													[#list ResultDto.specification as specification]
+												 	<tr class="specification_${specification.id} [#if productAllResultDto?? && !productAllResultDto.specifications?seq_contains(specification)] hidden [/#if]">
+													<td>	
+													<ul class="specificationSelect [#if productAllResultDto?? && productAllResultDto.specifications?seq_contains(specification)]Father_Title[/#if]" id="Title_${specification.id}"> <li>${specification.name}</li></ul>
+												  	</td>
+												  	<td>
+							                        <ul class="Title_${specification.id} Father_Item Item specificationSelect" id="Item_${specification.id}">
+							                        [#list ResultDto.specificationValues as specificationValue]
+														<li class="li_width">
+														<label>
+														<input type="checkbox" name="specificationValues" value="${specificationValue.id}_${specification.id}" data-value="${specificationValue.id}" data-val="${specificationValue.name}" [#if productAllResultDto?? && productAllResultDto.specificationValues?seq_contains(specificationValue)] checked="checked"[/#if]/>${specificationValue.name}								
+														</label>
+														</li>
+												    [/#list]
+												    </ul>
+												   	</td>
+													</tr>
+												   	[/#list]
+							                   	[/#list]
+												[/#if]
+												</tbody>
+												</table>
+												[#else]
+												<table id="specificationProductTable" class="table table-striped table-bordered">
+												<tbody id="specificationProductTbody">
+												[#if specificationResultDto??]
+												[#list specificationResultDto as ResultDto]
+													[#list ResultDto.specification as specification]
+												<tr class="specification_${specification.id} hidden">
+													<td>	
+													<ul class="specificationSelect" id="Title_${specification.id}"> <li>${specification.name}</li></ul>
+												  	</td>
+												  <td>
+							                        <ul class="Title_${specification.id} Father_Item Item specificationSelect" id="Item_${specification.id}">
+							                        [#list ResultDto.specificationValues as specificationValue]
+														<li class="li_width">
+														<label>
+														<input type="checkbox" name="specificationValues" value="${specificationValue.id}_${specification.id}" data-value="${specificationValue.id}" data-val="${specificationValue.name}"/>${specificationValue.name}														
+														</label>
+														</li>
+												    [/#list]
+												    </ul>
+												   </td>
+												</tr>
+													[/#list]
+							                    [/#list]
+							                    [/#if]
+							                    </tbody>
+												</table>
+												[/#if]
+											</td>
+										</tr>
+										<tr>
+										  <td>填写价格，库存</td>
+										  <td id="createTable"></td>
+										</tr>
+						              </table>
+						          </div>
+	                          </div>
+	                        </div>
+	                 </div>
+		         </div>
+		         <div class="goods-info-group-inner">
+		             <div class="info-group-title vbox">
+					 	<div class="group-inner">商品信息</div>
+					 </div>
+					 <div class="info-group-cont vbox">
+	                        <div class="group-inner">
+	                          <div class="form-group">
+	                              <label class="col-md-2 control-label">商品名：<span style="color: red;"><em>*</em></span></label>
+	                              <div class="col-md-4" id="error_product_name">
+						                <input type="text" id="product_name"  name="name" value="${product.name}"  class="form-control"/>
+						                <label class="control-label" for="product_name"></label>
+						          </div>
+	                          </div>
+	                          <div id="unified">
+	                          <div class="form-group">
+	                             <label class="col-md-2 control-label">价格：<span style="color: red;"><em>*</em></span></label>
+	                              <div class="col-md-2" id="error_product_price">
+									  <input type="text" id="product_price" name="price" value="${product.price}" class="form-control" onkeyup="this.value=this.value.replace(/[^\d.]/g,'')"/>
+									   <label class="control-label" for="product_price"></label>
+									</div>
+	                          </div>
+	                          <!-- <div class="form-group">
+	                             <label class="col-md-2 control-label">市场价格：<span style="color: red;"><em>*</em></span></label>
+	                              <div class="col-md-2" id="error_product_price">
+									 <input type="text" name="market_price" class="form-control" value="${product.market_price}" placeholder="市场价：￥99:99" onkeyup="value=value.replace(/[^\d]/g,'')"/>
+						          </div>
+	                          </div> -->
+	                          <div class="form-group">
+	                           <div class="row">
+	                             <label class="col-md-2 control-label">商品库存：<span style="color: red;"><em>*</em></span></label>
+	                              <div class="col-md-2">
+						                <input type="text" id="allStock"  name="stock" value="${product.stock}" class="form-control" onkeyup="value=value.replace(/[^\d]/g,'')"/>
+						          </div>
+	                          </div>
+	                          </div>
+	                          </div>
+	                          <div class="form-group">
+	                             <label class="col-md-2 control-label">设置：<span style="color: red;"><em>*</em></span></label>
+	                              <div class="col-md-2">
+	                              <label>
+										<input type="checkbox" name="isMarketable" value="true" [#if product?? && product.isMarketable] checked="checked"[/#if]/>是否上架
+										<input type="hidden" name="_isMarketable" value="false" />
+								  </label>
+	                              </div>
+	                          </div>
+	                          
+	                           <div class="form-group">
+	                             <label class="col-md-2 control-label">商品图：<span style="color: red;"><em>*</em></span></label>
+	                             <div class="col-md-5">
+	                                 <ul class="js-picture-lists app-image-list">
+						                <li><a href="javascript:;" onclick="addPicture(false);" class="add-goods js-add-picture show">+加图</a></li>
+						                [#if productAllResultDto?? ]
+										[#list productAllResultDto.imageList as images]
+	                                    <li class="sort"><img src="${images.imgPath}"  class="js-img-preview"/>
+	                                    <input name="imgList" value="${images.imgUrl}" type="hidden"  class="js-img-preview"/>
+	                                    <a class="js-delete-picture close-modal small hide" onclick="deleteImg(this);"/>×</a>
+	                                    </li>
+	                                    [/#list]					                
+						                [/#if]
+					                 </ul>
+					                 <label id="image_error_msg" style="color:red;"></label>
+						          </div>
+	                           </div>
+	                        </div>
+	                 </div>
+		         </div>
+		         <div class="goods-info-group-inner">
+		             <div class="info-group-title vbox">
+						<div class="group-inner">物流/其它</div>
+					 </div>
+					 <div class="info-group-cont vbox">
+	                        <div class="group-inner">
+	                        <div class="form-group">
+	                             <label class="col-md-2 control-label">运费设置：<span style="color: red;"><em>*</em></span></label>
+	                              <div class="col-md-4">
+	                              <label>
+										<input id="js-unified-postage" name="delivery_type" value="0" [#if product?? && product.delivery_type==0] checked="checked"[/#if]  type="radio" onclick="changeDelivertyType();">
+										统一邮费 
+						               <div class="input-group" style="margin-bottom: 0px;vertical-align: middle;display: inline-block;">
+										  <input type="text" name="delivery_fees"  value="${product.delivery_fees}" class="form-control" onkeyup="value=value.replace(/[^\d]/g,'')"/>
+										  <label class="delivery_fees_error_msg" style="color:red;"></label>
+									   </div>
+						          </label>
+						          </div>
+	                          </div>
+	                          <div class="form-group">
+	                          <label class="col-md-2 control-label"></label>
+	                              <div class="col-md-6">
+	                              <label>
+										<input id="js-unified-postage" name="delivery_type" value="1" [#if product?? && product.delivery_type==1] checked="checked"[/#if] type="radio" onclick="changeDelivertyType();">
+										运费模板
+										<div class="delivery-template" style="display: inline-block;vertical-align: middle;">
+										
+										   <select class="form-control" name="delivery_template_id" id="delivery_memo">
+										   <option value="${deliveryTemplate.id}">${deliveryTemplate.name}</option>
+										    </select>
+										  
+									   </div>
+						               <div class="help-inline" style=" display: inline-block;padding-left: 5px;vertical-align: middle;">
+						               <a class="js-refresh-delivery" href="javascript:;">刷新</a>
+						               <span class="c-gray">|</span>
+	                                   <a class="new-window" href="${webctx}/delivery/add" target="_blank">新建</a>
+						               </div>
+						          </label>
+						          <label class="delivery_template_error_msg" style="color:red;"></label>
+						          </div>
+	                          </div>
+	                          
+	                             <div class="form-group" id="weight_memo" style="display: none">
+	                             
+	                              <div class="form-group">
+	                                <label class="col-md-2 control-label"></label>
+	                                <div class="col-md-6" style="color: #999999;">
+	                                  <label> 当前运费模板，按物流重量（含包装）计费</label>
+	                                </div>
+	                              </div>
+	                              <label class="col-md-2 control-label"></label>
+	                              <div class="col-md-10">
+	                              <label class="control-label">物流重量：<span style="color: red;"><em>*</em></span></label>
+	                                  <div class="input-group" id="unified_weight" style="margin-bottom: 0px;vertical-align: middle;display: inline-block;hidden">
+										  <input type="text" id="delivery_weight" name="delivery_weight"  value="${product.delivery_weight}" class="form-control" onkeyup="value=value.replace(/[^\d.]/g,'')"/>
+										  <label class="delivery_weight_error_msg" style="color:red;"></label>
+									  </div>
+									  <div class="input-group" id="disunified_weight" style="margin-bottom: 0px;vertical-align: middle;display: inline-block;hidden">
+										  <div id="createdWeight"></div>
+									  </div>
+	                              </div>
+	                           </div>
+	                        </div>
+	                  </div>
+	              </div>
+		     </div>
+		   </div>	
+		    <div class="panel-heading" style="background-color:#f8f8f8;border-bottom:5px solid #fff;height: 50px;text-align: center;">
+		  <button type="button"  onclick="lastStepFirst();" class="btn btn-default">上一步</button>
+	      <button type="button"  onclick="nextStepThree();" class="btn  btn-primary">下一步</button>
+	   </div>
+		   
+		</div>
+		
+		<div id="js-step-3"  role="tabpanel" class="tab-pane">
+	     <div id="step-content-region" style="padding-top: 20px;">
+			 <div class="app-sidebar-inner js-sidebar-region" style="width: 396px; z-index: 1;padding-top: 20px;">    
+			   <script type="text/plain" id="editor"  name="introduction"></script>
+			 </div>		 
+	     </div>
+	     
+	     <div class="panel-heading" style="background-color:#f8f8f8;border-bottom:5px solid #fff;height: 50px;text-align: center;">
+	      	<button type="button"  onclick="lastStepTwo();" class="btn btn-default">上一步</button>
+	       	<button type="button" onclick="saveProductForm();"  class="btn  btn-primary">保存商品</button>
+	   	</div>
+	 </div>
+	</div>	
+	
+	<div class="col-sm-2">
+	    <div class="wrapper-content project-manager">
+	        <h4>帮助说明</h4>
+	        <ol>
+	            <li>第一步：选择商品分类</li>
+	            <li>第二步：填写商品基本信息</li>
+	            <li>第二步：填写商品详细信息</li>
+	            <li>商品规格如何新建:操作路径：微商城，左侧导航，商品－规格－添加规格后：出现在商品基本信息《库存/规格》的多规格里</li>
+	        </ol>
+	    </div>
+	</div>
+	</div>
+	</div>
+</div>
+</form>
+
+<script type="text/template" id="specification_li_tpl">
+<li><label><input type="checkbox" name="specificationIds" value="{id}"/>{name}</label></li>
+</script>
+<script type="text/template" id="specificationValue_tr_tpl">
+<tr class="specification_{id} hidden">
+	<td><ul class="specificationSelect" id="Title_{id}"> <li>{name}</li></ul></td>
+	<td><ul class="Title_{id} Father_Item Item specificationSelect" id="Item_{id}"></ul></td>
+</tr>
+</script>
+
+<script type="text/template" id="specificationValue_li_tpl">
+<li class="li_width">
+	<label><input type="checkbox" name="specificationValues" value="{id}_{specification_id}" data-value="{id}" data-val="{name}"/>{name}</label>
+</li>
+</script>
+<script type="text/template" id="ul_li_tpl">
+    <li data-file="{filePath}" data-fileUrl="{fileName}">
+       <img alt="" src="{filePath}">
+       <div class="image-title">{fileName}</div>
+    </li>
+</script>
+<script type="text/template" id="select_memo">
+    <option value="{id}">{name}</option>
+</script>
+<script type="text/template" id="no_select_memo">
+    <option value="0">没有可用运费模板</option>
+</script>
+[/@layout]
+<script>
+Template.init("#menu-goods");
+Template.initSecond("#menu-product-secd");
+</script>
+
+<script type="text/javascript">
+//判断是不是运费模板
+function changeDelivertyType(){
+	var type = $("input[name='delivery_type']:checked").val();
+	if(type=="0"){
+		$("#weight_memo").hide();
+	}else{
+		var p1=$('#delivery_memo').children('option:selected').val();
+		 $.post(obz.ctx+"/delivery/getDeliveryMemoName", {id:p1}, function(json) {
+			 var dataList = json;
+				if(dataList.length>0){
+					var valuation_type=dataList[0].valuation_type;
+					if(valuation_type=="2"){
+						$("#weight_memo").show();	
+					}else{
+						$("#weight_memo").hide();
+					}
+				}
+		 });
+	}
+}
+$(document).ready(function() {
+	$(".col-md-5 ul>li").hover(function(){
+		$(this).find("a").removeClass("hide");
+	   $(this).find("a").addClass("hover");
+	},function(){
+		 $(this).find("a").addClass("hide");  
+		 $(this).find("a").removeClass("hover");
+	});
+	selectMemo();
+	changeDelivertyType();
+	$('#delivery_memo').change(function(){
+		var p1=$(this).children('option:selected').val();//这就是selected的值
+		 $.post(obz.ctx+"/delivery/getDeliveryMemoName", {id:p1}, function(json) {
+			 var dataList = json;
+				if(dataList.length>0){
+					var valuation_type=dataList[0].valuation_type;
+					if(valuation_type=="2"){
+						$("#weight_memo").show();
+						var type = $("input[name='is_unified_spec']:checked").val();
+						var delivery_type = $("input[name='delivery_type']:checked").val();
+						if(delivery_type=='1'){
+						if(type=="true"){
+							$("#unified_weight").show();
+							$("#disunified_weight").hide();
+							}else{
+						    $("#unified_weight").hide();
+						    $("#disunified_weight").show();
+							}
+						}
+					}else{
+						$("#weight_memo").hide();
+					}
+				}
+		 });
+		});
+});
+//刷新模板
+$(function (){
+	var s=$(".help-inline");	
+	 s.on("click",".js-refresh-delivery",function(s){
+		 $("#delivery_memo").empty();
+		 selectMemo();
+	});
+});
+//选择运费模板
+function selectMemo(){
+	 var params={};
+		 $.post(obz.ctx+"/delivery/getDeliveryMemoName", params, function(json) {
+			 var dataList = json;
+				if(dataList.length>0){
+					for(var i=0;i<dataList.length;i++){
+						var _row = dataList[i];
+						var optionHtml = obz.dataTemplate4obj($("#select_memo").html(), _row);	
+						$("#delivery_memo").append(optionHtml);
+					}
+				}else{
+					$("#delivery_memo").append($("#no_select_memo").html());
+				}
+		}); 
+	}
+var ue = UE.getEditor('editor',{
+	toolbars: [
+				["bold", "italic", "underline", "strikethrough", "forecolor", "backcolor", "justifyleft", "justifycenter", "justifyright", "|", "insertunorderedlist", "insertorderedlist", "blockquote",
+				"simpleupload", "insertimage", "insertvideo", "link", "removeformat", "|", "rowspacingtop", "rowspacingbottom", "lineheight", "paragraph", "fontsize",
+				"inserttable", "deletetable", "insertparagraphbeforetable", "insertrow", "deleterow", "insertcol", "deletecol", "mergecells", "mergeright", "mergedown", "splittocells", "splittorows", "splittocols"]
+			],
+			autoClearinitialContent: false,
+			enableAutoSave: false,
+			autoFloatEnabled: !0,
+			wordCount: !1,
+			elementPathEnabled: !1,
+			initialContent:'${product.introduction}',
+  		/* 	initialFrameWidth: 396, */
+			initialFrameHeight: 350, 
+			focus: !1,
+			pasteplain: !1
+});
+</script>
+</body>
+</html>

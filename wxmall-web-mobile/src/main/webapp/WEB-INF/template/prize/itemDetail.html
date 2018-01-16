@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=640,target-densitydpi=320, user-scalable=no"/> 
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<title>${_sellerUser.title }</title>
+[#include "/includes/header.html" /]
+<link rel="stylesheet" type="text/css" href="${webctx}/resources/css/detail.css?v=1415759714002">
+<script type="text/javascript" src="${webctx}/resources/js/goods.js?v=1415759714002"></script>
+<script type="text/javascript"src="${webctx}/resources/js/area.js?v=1415759714002"></script>
+</head>
+<body>
+	<div class="register_msgcont">
+		<h1 class="register_msgtitle">${prize.exchange_title }</h1>
+		
+		<div class="immediately_explain">
+			<ul>
+				<li class="goods_pic">
+					<p><a href="http://item.taobao.com/item.htm?id=${prize.out_id }"><img width="620px" src="${prize.item_img }" /></a></p>
+				</li>
+				<li><p>${prize.item_name}...</p></li>
+				<li><p>剩余数量：<span>${prize.publish_count - prize.had_exchange_count}</span></p></li>
+				<li><p>结束时间：<span>${fn:substring(end_date, 0, 10)}</span></p></li>
+				<li>
+					<p>每人限兑<span>${prize.exchange_count }</span>次，您已兑<span>${exchange_count }</span>次</p>
+				</li>
+				<li>
+					<p>需要${_sellerUser.jifenalias}：<span>${prize.need_points }</span> <span class="sep">我的${_sellerUser.jifenalias}：</span><span>${buyerUser.scroe}</span></p>
+				</li>
+				<li class="width_input">
+				<p>真实姓名：<input type="text" id="name" class="text" /></p>
+				<p>联系电话：<input type="text" id="phone" class="text" maxlength="11" /></p> 
+					<p class="area_p">
+						<select class="area_selector province_selector"
+							data-type="province" style="width: 180px;"><option
+								value="">请选择省</option>
+							<option value="110000">北京</option>
+							<option value="120000">天津</option>
+							<option value="130000">河北省</option>
+							<option value="140000">山西省</option>
+							<option value="150000">内蒙古自治区</option>
+							<option value="210000">辽宁省</option>
+							<option value="220000">吉林省</option>
+							<option value="230000">黑龙江省</option>
+							<option value="310000">上海</option>
+							<option value="320000">江苏省</option>
+							<option value="330000">浙江省</option>
+							<option value="340000">安徽省</option>
+							<option value="350000">福建省</option>
+							<option value="360000">江西省</option>
+							<option value="370000">山东省</option>
+							<option value="410000">河南省</option>
+							<option value="420000">湖北省</option>
+							<option value="430000">湖南省</option>
+							<option value="440000">广东省</option>
+							<option value="450000">广西壮族自治区</option>
+							<option value="460000">海南省</option>
+							<option value="500000">重庆</option>
+							<option value="510000">四川省</option>
+							<option value="520000">贵州省</option>
+							<option value="530000">云南省</option>
+							<option value="540000">西藏自治区</option>
+							<option value="610000">陕西省</option>
+							<option value="620000">甘肃省</option>
+							<option value="630000">青海省</option>
+							<option value="640000">宁夏回族自治区</option>
+							<option value="650000">新疆维吾尔自治区</option>
+							<option value="710000">台湾省</option>
+							<option value="810000">香港特别行政区</option>
+							<option value="820000">澳门特别行政区</option>
+							<option value="990000">海外</option></select><img class="area_loadding_image"
+							width="20" src="/resources/images/loading.gif" />
+					</p>
+					<p class="area_p">
+						<select class="area_selector city_selector"
+							data-type="city" style="width: 180px;"><option value="">请选择市</option></select>
+					</p>
+					<p class="area_p">
+						<select class="area_selector county_selector" data-type="district" style="width: 180px;">
+							<option value="">请选择区县</option>
+						</select>
+					</p> 
+					<p>详细地址:</p> <p><input type="text" id="address" class="text"/></p>
+					<p>邮编：</p><p><input type="text" id="addrzip" class="text" style="width: 150px;"/></p>
+				</li>
+			</ul>
+			<a class="immediately_sign btn_exchange" href="javascript:javascript:(0);">立即兑换</a>
+		</div>
+[#include "/includes/footer.html" /]
+<input type="hidden" id="db_seller_nick" value="${_sellerUser.encodSellerNick }" />
+<input type="hidden" id="db_prize_id" value="${prize.id }" />
+<input type="hidden" id="db_real_buyer_nick" value="${_buyerUser.realNick }" />
+<div id="tips" class="immediately_popupbg">
+	<div class="immediately_popup">
+		<div class="immediately_popup_cont">
+			<div class="exchange_success_box">
+				<div class="tips">提交成功，我们会尽快为您处理！<br/>如果有问题请联系客服。</div>
+			</div>
+		</div>
+		<div class="immediately_popup_cont">
+			<a class="but" href="javascript:location.reload();">确定</a>
+		</div>
+	</div>
+</div>		
+	</div>
+</body>
+</html>

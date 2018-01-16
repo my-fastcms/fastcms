@@ -1,0 +1,229 @@
+.lottery_prize_box{
+	width:320px;
+	height:320px;
+	overflow:hidden;
+	margin:0 auto;
+	/* background-color:#9CBF30; */ 
+}
+.lottery_prize_box ul{
+	width:297px;
+	height:297px;
+	overflow:hidden;
+	margin:0 auto;
+	margin-top:13px;
+	margin-left:13px;
+	position:relative;
+}
+.lottery_prize_box ul li{
+	width:99px;
+	height:99px;
+	overflow:hidden;
+	background:transparent url(/resources/images/lottery_prize_bg.png) no-repeat;
+	/* background-color:#9CBF30; */
+	background-size:94px 94px;
+	float:left;
+	position:relative;
+}
+.lottery_prize_box ul li.prize_item_no{
+	background:transparent url(/resources/images/lottery_prize_no_bg.jpg) no-repeat;
+	background-size:94px 94px;
+}
+.lottery_prize_box ul li.lottery_btn{
+	background:transparent url(/resources/images/lottery_btn.jpg) no-repeat 0 2px;
+	background-size:94px 94px;
+}
+.lottery_prize_box ul li.floater{
+	width:94px;
+	height:94px;
+	background:transparent;
+	position:absolute;
+	top:0px;
+	left:0px;
+	background-color:#fff;
+	opacity:0.6;
+	display:none;
+}
+.lottery_prize_box ul li h2{
+	width:94px;
+	text-align:center;
+	color:#4c0093;
+	margin:8px 0 0 0;
+	font-size:14px;
+	position:absolute;
+}
+ 
+.lottery_prize_box ul li .prize_type_name{
+	width:94px;
+	text-align:center;
+	/* color:#ff4e00; */
+	position:absolute;
+	top:27px;
+	font-size: 9px;
+}
+.lottery_prize_box ul li .prize_item_icon{
+	width:92px;
+	height:50px;
+	margin:0 auto;
+	position:absolute;
+	top:42px;
+	text-align: center;
+	padding-top: 10px;
+}
+.lottery_prize_box ul li .prize_item_2{
+	background:transparent url(/resources/images/prize_item_huafei.png) no-repeat center;
+	background-size:27px 30px;
+	margin-top:2px;
+}
+.lottery_prize_box ul li .prize_item_3{
+	background:transparent url(/resources/images/prize_item_goods.png) no-repeat center;
+	background-size:30px 26px;
+}
+.lottery_prize_box ul li .prize_item_5{
+	background:transparent url(/resources/images/prize_item_caipiao.png) no-repeat center;
+	background-size:30px 28px;
+}
+.lottery_prize_box ul li .prize_item_6 , .lottery_prize_box ul li .prize_item_12{
+	background:transparent url(/resources/images/prize_item_hongbao.png) no-repeat center;
+	background-size:30px 24px;
+	margin-top:3px;
+}
+.lottery_prize_box ul li .prize_item_7{
+	background:transparent url(/resources/images/prize_item_jifenbao.png) no-repeat center;
+	background-size:31px 27px;
+}
+.lottery_prize_box ul li .prize_item_9{
+	background:transparent url(/resources/images/prize_item_coupon.png) no-repeat center;
+	background-size:48px 24px;
+	margin-top:1px;
+}
+.lottery_prize_box ul li .prize_item_11{
+	background:transparent url(/resources/images/prize_item_score.png) no-repeat center;
+	background-size:30px 31px;
+}
+.lottery_prize_box ul li .prize_item_13{
+	background:transparent url(/resources/images/prize_item_flow.png) no-repeat center;
+	background-size:40px auto;
+}
+.lottery_info{
+	width:297px;
+	margin:10px auto;
+}
+.lottery_info .lottery_count{
+	margin-bottom:10px;
+}
+
+.lottery_info .prize_list{
+	margin-bottom:20px;
+}
+.lottery_info .prize_list ul li{
+	margin:7px 0;
+}
+.lottery_info .prize_list ul li span.prize_name{
+	padding:0 8px;
+}
+
+.lottery_hit_box{
+	text-align:left;
+}
+.lottery_hit_box .no_hit{
+	margin-bottom:10px;
+}
+.lottery_hit_box .hit_tips{
+	margin-bottom:10px;
+	line-height:1.8;
+}
+.lottery_hit_box .info_item{
+	margin:5px 0;
+}
+.lottery_hit_box .get_btn{
+	margin:10px 0;
+}
+.lottery_info .desc{
+	margin:8px 0 20px 0;
+	line-height:1.8;
+}
+
+@media screen and (min-width:360px) and (max-width:399px) {
+	.lottery_prize_box{
+		width:360px;
+		height:360px;
+	}
+	.lottery_prize_box ul{
+		width:345px;
+		height:345px;
+		margin-top:12px;
+		margin-left:12px;
+	}
+	.lottery_prize_box ul li{
+		width:115px;
+		height:115px;
+		background-size:108px 108px;
+	}
+	.lottery_prize_box ul li.prize_item_no{
+		background-size:108px 108px;
+	}
+	.lottery_prize_box ul li.lottery_btn{
+		background-size:108px 108px;
+	}
+	.lottery_prize_box ul li.floater{
+		width:108px;
+		height:108px;
+	}
+	.lottery_prize_box ul li h2{
+		width:108px;
+		margin:10px 0 0 0;
+	}
+	.lottery_prize_box ul li .prize_type_name{
+		width:108px;
+		top:31px;
+	}
+	.lottery_prize_box ul li .prize_item_icon{
+		width:102px;
+		top:52px;
+	}
+	.lottery_info{
+		width:337px;
+	}
+}
+@media screen and (min-width:400px) and (max-width:10000px) {
+	.lottery_prize_box{
+		width:400px;
+		height:400px;
+	}
+	.lottery_prize_box ul{
+		width:375px;
+		height:375px;
+		margin-top:15px;
+		margin-left:15px;
+	}
+	.lottery_prize_box ul li{
+		width:125px;
+		height:125px;
+		background-size:120px 120px;
+	}
+	.lottery_prize_box ul li.prize_item_no{
+		background-size:120px 120px;
+	}
+	.lottery_prize_box ul li.lottery_btn{
+		background-size:120px 120px;
+	}
+	.lottery_prize_box ul li.floater{
+		width:120px;
+		height:120px;
+	}
+	.lottery_prize_box ul li h2{
+		width:120px;
+		margin:12px 0 0 0;
+	}
+	.lottery_prize_box ul li .prize_type_name{
+		width:120px;
+		top:35px;
+	}
+	.lottery_prize_box ul li .prize_item_icon{
+		width:120px;
+		top:60px;
+	}
+	.lottery_info{
+		width:375px;
+	}
+}

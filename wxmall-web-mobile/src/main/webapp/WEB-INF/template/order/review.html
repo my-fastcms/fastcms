@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>我的评价</title>
+[#include "/includes/header.html" /]
+<style>
+</style>
+</head>
+<body>
+<div class="weui-tab">
+
+<div class="weui-panel weui-panel_access">
+    <div id="productInfo">
+    [#list orderDto.orderItems as items]
+	<div class="weui-panel__bd">
+	    <input value="${items.productId}" type="hidden" id="productId" name="productId">
+		<a href="${webctx}/product/detail/?id=${items.productId}" class="weui-media-box weui-media-box_appmsg">
+	    <div class="weui-media-box__hd"><img class="weui-media-box__thumb" src="${items.productImg}" alt=""></div>
+	    <div class="weui-media-box__bd">
+	       	<h4 class="weui-media-box__title" style="font-size:12px;">${items.productName}</h4>
+	    	<p class="weui-media-box__desc">${items.quantity}件</p>
+	    </div>
+	</a>
+	</div>
+	[/#list]
+	</div>	
+   <div class="weui-cells weui-cells_radio" style="font-size: 14px;">
+		<label class="weui-cell weui-check__label" for="x11">
+		<div class="weui-cell__bd">
+		<p>差评</p>
+		</div>
+		<div class="weui-cell__ft">
+		<input id="x11" class="weui-check" value="1" name="radio1" type="radio">
+		<span class="weui-icon-checked"></span>
+		</div>
+		</label>
+		<label class="weui-cell weui-check__label" for="x12">
+		<div class="weui-cell__bd">
+		<p>一般般</p>
+		</div>
+		<div class="weui-cell__ft">
+		<input id="x12" class="weui-check" name="radio1" value="2" type="radio">
+		<span class="weui-icon-checked"></span>
+		</div>
+		</label>
+		<label class="weui-cell weui-check__label" for="x13">
+		<div class="weui-cell__bd">
+		<p>好评</p>
+		</div>
+		<div class="weui-cell__ft">
+		<input id="x13" class="weui-check" value="3" name="radio1"  type="radio">
+		<span class="weui-icon-checked"></span>
+		</div>
+		</label>
+</div>
+   
+   <div class="weui-cells__title"></div>
+<div class="weui-cells weui-cells_form">
+  <div class="weui-cell">
+    <div class="weui-cell__bd">
+      <textarea class="weui-textarea" id="content" placeholder="商品是否给力？快分享你的购买心得吧~" rows="3"></textarea>
+      <div class="weui-textarea-counter"><span></span>200</div>
+    </div>
+  </div>
+</div>
+   
+    <a  onclick="btnSubmit();"  class="weui-btn weui-btn_primary review" style="width:90px;height:35px;font-size: 14px;margin-top: 30px;">发  表</a>
+</div>
+</div>
+[#include "/includes/footer.html" /]
+<script type="text/javascript">
+function btnSubmit(){
+	var score=$("input[name='radio1']:checked").val();
+	var content=$("#content").val();
+	var productId=$("#productId").val();
+	if(score&&content !='' ){
+		$.ajax({
+			type: "post",
+			url: "${webctx}/order/saveReview",
+			data: {productId:productId,score:score,content:content,orderId:${orderDto.orderId}},
+			async: true,
+			success: function(data){	
+				$.toast(data.content, "text");
+				location.href="${webctx}/order/completed";
+			}
+		});
+	}else{
+		$.toast("请填写评论", "text");
+	}
+
+	 
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=640,target-densitydpi=320, user-scalable=no"/> 
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="format-detection" content="telephone=no">
+<title>${_sellerUser.title }</title>
+[#include "/includes/header.html" /]
+</head>
+<body>
+<div class="register_content">
+	<ul class="register_list">
+		<c:if test="${fn:length(prizes)<=0}">
+			<li>
+			<div class="register_title">
+				<p class="name">掌柜还没有空去创建奖品</p>
+				<div class="register_msgcont">
+		        	<a class="enshrine_but" href="javascript:void(0);" onclick="OpenWW('${_sellerUser.sid }','${_sellerUser.sellerNick }');">联系老板</a>
+		        </div>
+			</div>
+			</li>
+		</c:if>
+		<c:if test="${fn:length(prizes)>0}">
+			<c:forEach items="${prizes }" var="prize">
+				<li>
+					<a href="/prize/detail?prizeId=${prize.id }&snick=${_sellerUser.encodSellerNick }">
+						<div class="register_title">
+							<p class="name">${prize.exchange_title }</p>
+							<p class="time">截至：${fn:substring(prize.end_date, 0, 19)}</p>
+						</div>
+						<div class="register_but"> 
+							<h4 class="register_no">兑换</h4>
+							<p>需要${prize.need_points }个${_sellerUser.jifenalias}¸</p>
+						</div>
+					</a>
+				</li>
+			</c:forEach>
+		</c:if>
+	</ul>
+[#include "/includes/footer.html" /]
+</div>
+<input type="hidden" id="db_seller_nick" value="${_sellerUser.encodSellerNick }"/>
+<input type="hidden" id="db_real_buyer_nick" value="${_buyerUser.realNick }" />
+<input type="hidden" id="bc_user_phone" value="${buyerContact.user_phone }"/>
+<input type="hidden" id="bc_user_nick" value="${buyerContact.user_nick }"/>
+<input type="hidden" id="bc_user_prov" value="${buyerContact.user_prov }"/>
+<input type="hidden" id="bc_user_city" value="${buyerContact.user_city }"/>
+<input type="hidden" id="bc_user_stract" value="${buyerContact.user_stract }"/>
+<input type="hidden" id="bc_user_address" value="${buyerContact.user_address }"/>
+<script type="text/javascript" src="${webctx}/resources/js/menu_prize.js"></script>
+</body>
+</html>

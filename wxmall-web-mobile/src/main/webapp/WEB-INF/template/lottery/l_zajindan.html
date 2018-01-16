@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="d_files/reset.css" media="all">
+<link rel="stylesheet" type="text/css" href="d_files/main.css" media="all">
+<style>
+.pxbtn{
+	width: 100%;
+	text-align: center;
+	display: inline-block;box-sizing: border-box;
+	font-size: 16px;
+	font-weight:bold;
+	color: #6D5939;
+	border-radius: 40px;
+	padding: 10px 0;
+	border: 1px solid #D89322;
+	background-color:#fafc88;
+	cursor: pointer;
+}
+.pxbtn4{
+	width: 100%;
+	text-align: center;
+	display: inline-block;box-sizing: border-box;
+	font-size: 16px;
+	font-weight:bold;
+	color: #aaa;
+	border-radius: 40px;
+	padding: 10px 0;
+	border: 1px solid #ddd;
+	background-color:#ddd;
+	cursor: pointer;
+}
+#mask {
+	position: absolute;
+	z-index:999;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: none;
+	background-color: #000;
+	filter: alpha(Opacity=90);
+	-moz-opacity: 0.9;
+	opacity: 0.9;
+}
+#process{
+	position: absolute;
+	z-index: 1000;
+	color:white;
+	width:100%;
+	top: 50%;
+	text-align:center;
+}
+</style>
+<!--<script src="d_files/zepto.js" type="text/javascript"></script>-->
+<script src="//cdn.bootcss.com/zepto/1.0rc1/zepto.min.js"></script>
+<script src="//cdn.bootcss.com/PreloadJS/0.6.0/preloadjs.min.js"></script>
+<script src="loading.js"></script>
+<script src="d_files/dialog_min.js" type="text/javascript"></script>
+<script src="d_files/main.js" type="text/javascript"></script>
+<title> </title>
+<script src="../ls.js"></script>
+<style type="text/css">
+	a{ text-decoration:none}
+	p{ margin:2px; padding:2px; line-height:20px;}
+</style>
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+<!-- Mobile Devices Support @begin -->
+<meta content="no-cache,must-revalidate" http-equiv="Cache-Control">
+<meta content="no-cache" http-equiv="pragma">
+<meta content="0" http-equiv="expires">
+<meta content="telephone=no, address=no" name="format-detection">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<!-- apple devices fullscreen -->
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- Mobile Devices Support @end -->
+<script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
+<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<script src="//cdn.bootcss.com/animo.js/1.0.3/animo.min.js"></script>
+<script>
+var aniFunc=function(){
+	$('#hit').animo( { animation: 'tada', duration: 1 }, function() {
+		//$('#hit').animo( { animation: 'pulse' } );
+	});
+}
+</script>
+</head>
+<body>
+
+<div class="body pb_10">
+  <section class="stage"> 
+  	<img src="d_files/stage.jpg">
+    <div id="shape" class="cube on">
+      <div class="plane one"><span>
+        <figure>&nbsp;</figure>
+        </span></div>
+      <div class="plane two"><span>
+        <figure>&nbsp;</figure>
+        </span></div>
+      <div class="plane three"><span>
+        <figure>&nbsp;</figure>
+        </span></div>
+    </div>
+    <div id="hit" class="hit" style=""><img src="d_files/smashegg/1.png"></div>
+  </section>
+  <section>
+    <div class="instro_wall">
+            <!--<article>
+        <h6>近期中奖</h6>
+        <div>
+          <p> 您中了1等奖，获得<font style="color:#fff000">一等奖品</font>，兑奖码为：305272<br />
+            <a style="color:white; text-decoration:underline;" href="javascript:void(null)" onClick="lq('1','一等奖品','305272');">点击此处提交中奖信息>></a> </p>
+        </div>
+      </article>-->
+      	<article style="display:none">
+        <h6>我的积分</h6>
+        <div>
+          <p>
+		  			砸奖一次所需积分：0<br>
+			您当前积分：<span id="curtimes6">0</span><br><br>		  </p>
+        </div>
+    </article>
+          <article class="a1" style="display:none">
+        <h6>奖品设置</h6>
+        <div>
+          <ul>
+            <ol>
+              <li><p>一等奖<label class="color_golden">：一等奖品</label></p></li><li><p>二等奖<label class="color_golden">：</label></p></li><li><p>三等奖<label class="color_golden">：</label></p></li>            </ol>
+          </ul>
+        </div>
+      </article>
+      <article>
+        <h6>活动说明</h6>
+        <div>
+          <p>  <br>
+            活动时间：2016-08-08 10:57至2016-08-11 10:58 <br>
+          </p>
+        </div>
+      </article>
+                  <article>
+        <h6>最新中奖名单</h6>
+        <div>
+          <p>
+            <marquee align="left" behavior="scroll" direction="up" height="80" hspace="0" vspace="0" loop="-1" scrollamount="2" scrolldelay="100" style="height: 80px; margin: 0px;">
+            暂无人中奖            </marquee>
+          </p>
+        </div>
+      </article>
+          </div>
+  </section>
+  <footer style="text-align:center; color:#fff;margin-right:20px"></footer>
+</div>
+</body>
+</html>

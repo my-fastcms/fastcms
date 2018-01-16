@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+[#include "/includes/header.html" /]
+<link rel="stylesheet" type="text/css" href="${webctx}/resources/css/product.css"/>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg">
+[@layout]
+<div class="wrapper wrapper-content">
+	<div class="row animated fadeInLeft">
+	[#include "/includes/menu-product.html" /]
+	<div class="middle-box text-center animated fadeInDown">
+        <h3 class="font-bold">发布商品出错,错误信息如下</h3>
+        <div class="error-desc">
+            <font color="red">${error}</font>	
+            <br/>您可以返回商品列表
+            <br/><a href="${webctx}/product" class="btn btn-primary m-t">返回</a>
+        </div>
+    </div>
+	</div>
+</div>
+[/@layout]
+<script>
+Template.init("#menu-goods");
+Template.initSecond("#menu-product-secd");
+</script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+</div>
+<!--右侧部分结束-->
+<!-- <div id="footer" class="footer ibox-content">
+    <div class="pull-right">&copy; 2015-2016 <a href="http://www.dbumama.com/" target="_blank">点步科技</a></div>
+</div> -->
+</div>
+</div>
+<script type="text/javascript">
+    $("#header, #footer").show();
+    $.validator.setDefaults({
+        highlight: function (element) {
+            $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+        },
+        success: function (element) {
+            element.closest('.form-group').removeClass('has-error').addClass('has-success');
+        },
+        errorElement: "span",
+        errorPlacement: function (error, element) {
+            if (element.is(":radio") || element.is(":checkbox")) {
+                error.appendTo(element.parent().parent().parent());
+            } else {
+                error.appendTo(element.parent());
+            }
+        },
+        errorClass: "help-block m-b-none",
+        validClass: "help-block m-b-none"
+    });
+</script>

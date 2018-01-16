@@ -1,0 +1,106 @@
+[#include "/includes/_layout.html"/]
+<title>新建微页面</title>
+[@layout]
+<div class="wrapper wrapper-content">
+	<div class="row animated fadeInLeft">
+	
+	[#include "/includes/menu-store.html" /]
+	
+	<div class="col-sm-11">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	           <a href="${webctx}/weipage" class="J_menuTab active">微页面</a>
+		       <a href="${webctx}/weipage/cat" class="J_menuTab">分类</a>
+	       </div>
+	   	</nav>
+	</div>
+	<div class="ibox float-e-margins">
+		<div class="ibox-title row">
+			<a href="${webctx}/weipage">返回列表</a><span style="font-weight:700;">--新建微页面--</span>
+		</div>
+		<div class="row ibox-content active_statistics">
+			<div class="title_query padtop"> 
+			<form id="qiandaoForm" class="form-horizontal">
+			      <input type="hidden" id="id" value="${entity.id}" class="input-xfat"  name="id"  >
+				  <div class="form-group">
+			            <label class="col-md-2 control-label">标题<span style="color: red;"><em>*</em></span></label>
+			            <div class="col-md-8" id="error_title">
+			                <input id="title" name="title" value="${entity.title}" maxlength="60" type="text" class="form-control" style="width: 200px" >
+			                <label class="control-label"  for="title"></label>
+			            </div>
+			        </div>
+			        
+			        <div class="form-group">
+			            <label class="col-md-2 control-label">分类</label>
+			            <div class="col-sm-4">
+							<select id="categoryId"  class="form-control" name="categoryId">
+								<option value=""></option>
+								   [#if categoryList??]
+								    [#list categoryList as vo]  
+								      <option value="${vo.id}"  [#if entity.categoryId?? && entity.categoryId==vo.id] selected [/#if]>${vo.name}</option>
+			                        [/#list]
+							   	  [/#if]
+							 </select>
+						</div>
+			        </div>
+			        
+			        
+			       [#if action=="add"]
+			        <div class="form-group">
+			            <label class="col-md-2 control-label">模板</label>
+			            <div class="col-md-8">
+			                <input id="tplId" type="hidden" name="tplId" value="">
+			                <label class="control-label" for="tplId"></label>
+			            </div>
+			        </div>
+			       [/#if] 
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	<div class="panel-footer" align="center">
+   	 	<button onclick="saveCategory();" class="btn btn-sm btn-success"><i class="fa fa-dot-circle-o"></i>提交</button>
+	</div>
+</div>
+</div>
+</div>
+[/@layout]
+<script type="text/javascript">
+function saveCategory(){
+	var params = {},error = {};	
+	var title = $("#title").val();
+		
+	if($.trim(title) =="") {error.error_title = "不能为空"; } else {error.error_title=""; params.title = $.trim(title);}
+	var hasError = false;
+	for(var key in error){
+		if(error[key]!=""){
+			if(!hasError) hasError = true;
+			$("#"+key).addClass("has-error");
+			$("#"+key).find("label").text(error[key]);
+		}else{
+			$("#"+key).removeClass("has-error");
+			$("#"+key).find("label").empty();
+		}
+	}
+	//主表信息不完整，返回
+	if(hasError) return false;
+
+	params.category_id=$("#categoryId").val();
+	params.id=$("#id").val();
+	
+	$.post(obz.ctx+"/weipage/create", params, function(resp) {
+		if(resp.code == 200){
+			location.href = "${webctx}/weipage";
+		}else {
+			obz.error(data.msg==null ? "系统错误" : resp.msg);
+		}
+		
+	});
+}
+</script>
+<script>
+Template.init("#menu-shop");
+Template.initSecond("#menu-weipage");
+</script>

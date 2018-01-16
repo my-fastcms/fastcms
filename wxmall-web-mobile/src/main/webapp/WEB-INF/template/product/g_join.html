@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>我要参团</title>
+[#include "/includes/header.html" /]
+<style>
+.weui-panel:after, .weui-panel:before{
+content : none !important;
+}
+.weui-btn-area{
+    margin: 0.17647059em 15px .3em !important;
+}
+</style>
+</head>
+<body>
+<div class="weui-panel weui-panel_access">
+  <div class="weui-panel__hd">拼团商品</div>
+  <div class="weui-panel__bd">
+    <div class="weui-media-box weui-media-box_appmsg">
+      <div class="weui-media-box__hd">
+      	[#if groupingInfo?? && groupingInfo.isGrouped?? && groupingInfo.isGrouped==true]
+			<a href="${webctx}/product/detail/?id=${product.id}"><img class="weui-media-box__thumb" src="${img_domain}${product.image}" alt=""/></a>
+		[#elseif groupingInfo?? && groupingInfo.isExpires?? && groupingInfo.isExpires==true]
+			<a href="${webctx}/product/detail/?id=${product.id}"><img class="weui-media-box__thumb" src="${img_domain}${product.image}" alt=""/></a>
+		[#else]
+			<a href="${webctx}/product/detail/?id=${product.id}&gheaderUserId=${groupingInfo.groupHeaderId}"><img class="weui-media-box__thumb" src="${img_domain}${product.image}" alt=""/></a>
+		[/#if]
+      </div>
+      <div class="weui-media-box__bd">
+        <h4 class="weui-media-box__title">
+        [#if groupingInfo?? && groupingInfo.isGrouped?? && groupingInfo.isGrouped==true]
+			<a href="${webctx}/product/detail/?id=${product.id}">${product.name}</a>
+		[#elseif groupingInfo?? && groupingInfo.isExpires?? && groupingInfo.isExpires==true]
+			<a href="${webctx}/product/detail/?id=${product.id}">${product.name}</a>
+		[#else]
+			<a href="${webctx}/product/detail/?id=${product.id}&gheaderUserId=${groupingInfo.groupHeaderId}">${product.name}</a>
+		[/#if]
+        </h4>
+        <p class="price weui-media-box__desc">${product.price}</p>
+        <p class="weui-media-box__desc">${groupInfo.groupNum}</p>    
+      </div>
+    </div>
+  </div>
+</div>
+[#if groupingInfo?? && groupingInfo.groupUsers?? && groupingInfo.groupUsers?size>0]
+<div class="weui-panel">
+   <div class="weui-panel__bd">
+     <div class="weui-media-box weui-media-box_text">
+     	<div>
+		<span class="weui-media-box__title" style="font-size: 14px;color: gray;">${groupingInfo.groupHeader}的团,还差${groupingInfo.diffUserCount}人成团</span>
+		<ul class="weui-media-box__info">
+			[#list groupingInfo.groupUsers as guser]
+				<li class="weui-media-box__info__meta"><img style="width:40px; height:40px; border-radius:50%; overflow:hidden;" alt="${guser.nickName}" src="${guser.headimg}"><p>${guser.nickName}</p></li>
+			[/#list]
+		</ul>
+		</div>          	
+     </div>
+   </div>
+</div>          
+[/#if]
+[#if groupingInfo?? && groupingInfo.isExpires?? && groupingInfo.isExpires==false]
+	<div class="weui-btn-area">
+		<span class="timer" style="color: red">
+			<span></span>天<span></span>小时<span></span>分<span></span>秒
+		</span>
+		<input id="db_end_timestamp" type="hidden" value="${groupingInfo.expiresIn }"/>
+	</div>   
+[/#if]
+
+[#if groupingInfo?? && groupingInfo.isGrouped?? && groupingInfo.isGrouped==true]
+	<p class="weui-btn-area"><a href="javascript:void(0);" class="weui-btn weui-btn_primary to-show">邀请加团</a></p>
+[#elseif groupingInfo?? && groupingInfo.isExpires?? && groupingInfo.isExpires==true]
+	<p class="weui-btn-area"><a href="${webctx}/product/detail/?id=${product.id}" class="weui-btn weui-btn_primary">立即开团</a></p>
+[#else]
+	<p class="weui-btn-area"><a href="${webctx}/product/detail/?id=${product.id}&gheaderUserId=${groupingInfo.groupHeaderId}" class="weui-btn weui-btn_primary">立即参团</a></p>
+[/#if]
+<!-- <p class="weui-btn-area">
+  <a href="javascript:void(0);" class="weui-btn weui-btn_primary">立即参团</a>
+</p> -->
+<!--手机端script需要加载后方-->
+[#include "includes/footer.html"/]
+<script type="text/javascript" src="${webctx}/resources/js/timer2.js"></script>
+<script type="text/javascript">
+//去分享
+$(".to-show").click(function(){
+	showMsg("点击右上角分享");
+});
+
+wx.ready(function(){
+	wx.onMenuShareAppMessage({
+	    title: '${session._buyerUser.nickname}邀请你来拼团，开团了！', // 分享标题
+	    desc: '${product.name}开团了！开团了', // 分享描述
+	    link: '${requestUrl}', // 分享链接
+	    imgUrl: '${img_domain}${product.image}', // 分享图标
+	    //type: '', // 分享类型,music、video或link，不填默认为link
+	    //dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+	    success: function () {},
+	    cancel: function () {}
+	});
+	wx.onMenuShareTimeline({
+	    title: '${session._buyerUser.nickname}邀请你来拼团，开团了！', // 分享标题
+	    desc: '${product.name}开团了！开团了', // 分享描述
+	    link: '${requestUrl}', // 分享链接
+	    imgUrl: '${img_domain}${product.image}', // 分享图标
+	    success: function () {},
+	    cancel: function () {}
+	});
+})
+
+</script>
+</body>
+</html>

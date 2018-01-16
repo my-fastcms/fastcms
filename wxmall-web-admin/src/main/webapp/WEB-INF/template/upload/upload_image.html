@@ -1,0 +1,108 @@
+[#include "/includes/_layout.html"/]
+<title>上传图片</title>
+<link rel="stylesheet" type="text/css" href="${webctx}/resources/css/jquery.filer.css"/>
+<link rel="stylesheet" type="text/css" href="${webctx}/resources/css/jquery.filer-dragdropbox-theme.css"/>
+<link rel="stylesheet" type="text/css" href="${webctx}/resources/css/product.css"/>
+<script src="${webctx}/resources/js/jquery.filer.min.js"></script>
+<script type="text/javascript">
+var group_id = ${groupId};
+var uploadUrl = "${webctx}/upload/";
+if(group_id != null){
+	uploadUrl += "?groupId=" + group_id;
+}
+$(document).ready(function() {
+	filer_default_opts = {
+            changeInput2: '<div class="jFiler-input-dragDrop"><div class="jFiler-input-inner"><div class="jFiler-input-icon">\
+            <i class="icon-jfi-cloud-up-o"></i></div>\
+            <a class="jFiler-input-choose-btn blue-light">选 择 文 件</a></div></div>',
+            limit: null,
+            extensions: ['jpg', 'jpeg', 'png', 'gif'],
+            templates: {
+                box: '<ul class="js-picture-list app-image-list clearfix"></ul>',
+                item: '<li class="sort">\
+                                        <div class="jFiler-item-info hide">\
+                                            <span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name | limitTo: 25}}</b></span>\
+                                            <span class="jFiler-item-others">{{fi-size2}}</span>\
+                                        </div>\
+                                        {{fi-image}}\
+                                        {{fi-progressBar}}\
+                                        <a class="js-delete-picture close-modal small">×</a>\
+                        </li>',
+                itemAppend:'<li class="sort">\
+				                        <div class="jFiler-item-info hide">\
+				                        <span class="jFiler-item-title"><b title="{{fi-name}}">{{fi-name | limitTo: 25}}</b></span>\
+				                        <span class="jFiler-item-others">{{fi-size2}}</span>\
+				                    </div>\
+				                    {{fi-image}}\
+				                    <a class="js-delete-picture close-modal small">×</a>\
+                    </li>',
+            progressBar: '<div class="bar"></div>',
+                itemAppendToEnd: false,
+                removeConfirmation: false,
+                _selectors: {
+                    list: '.js-picture-list',
+                    item: '.sort',
+                    remove: '.js-delete-picture'
+                }
+            },
+            uploadFile: {
+                url: uploadUrl,
+                data: null,
+                type: 'POST',
+                enctype: 'multipart/form-data',
+                beforeSend: function(){},
+                success: function(resp){
+                    $("#saveImagess").removeAttr("disabled");
+                },
+                error: function(el){},
+                statusCode: true,
+                onProgress: true,
+                onComplete: null
+            },
+            onRemove: function(itemEl, file, id, listEl, boxEl, newInputEl, inputEl){
+                var file = file.name;
+            },
+        };
+ 
+ $('#fileInput-7').filer({
+        changeInput: filer_default_opts.changeInput2,
+        showThumbs: true,
+        theme: "dragdropbox",
+        templates: filer_default_opts.templates,
+        uploadFile: filer_default_opts.uploadFile,
+        onRemove: filer_default_opts.onRemove
+    });
+ 
+ $("#saveImagess").click(function() {
+	 obz.doUploadImage();
+	 if(uploadImageDialog != null) uploadImageDialog.close();
+	 if(searchImages) searchImages();
+ });
+});
+</script>
+<style type="text/css">
+.form-group .title {
+    font-size: 14px;
+    line-height: 28px;
+    margin-right: 20px;
+}
+a {
+    color: #07d;
+    text-decoration: none;
+}
+</style>
+<div class="panel-body">
+<div class="modal-body" style="padding-left: 5px;">    
+      <div class="form-group" id="uploadImg">
+          <!-- <a class="title js-show-image-view" href="javascript:selectImage();" style="margin-right: 4px;">《选择图片</a>
+          <span style="font-size: 14px;"> | </span> -->
+          <!-- <span class="title">上传图片:</span> -->
+     <input type="file" name="files[]"  id="fileInput-7" multiple="multiple"/>    
+</div>
+</div>
+</div>
+<div class="panel-footer">
+	<div  style="display: block;" align="center">
+		<button id="saveImagess" type="button" class="btn btn-sm btn-success" disabled="disabled"><i class="fa fa-dot-circle-o"></i>确      定</button>
+	</div>
+</div>

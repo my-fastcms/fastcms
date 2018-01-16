@@ -1,0 +1,233 @@
+[#include "/includes/_layout.html"/]
+[#macro css_import]
+<link rel="stylesheet" type="text/css" href="${webctx}/resources/js/jquery/themes/ui-lightness/jquery-ui-1.10.3.custom.css"/>
+<link rel="stylesheet" type="text/css" href="${webctx}/resources/css/fbuilder.css"></link>
+[/#macro]
+[@layout]
+<div class="wrapper wrapper-content">
+	<div class="row animated fadeInLeft">
+	
+	[#include "/includes/menu-store.html" /]
+	
+	<div class="col-sm-11">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+	           <a href="${webctx}/weipage" class="J_menuTab active">微页面</a>
+		       <a href="${webctx}/weipage/cat" class="J_menuTab">分类</a>
+	       </div>
+	   	</nav>
+	</div>
+
+
+<div id="mainTable">
+	   <div id="tableList" class="content row ibox-content" style="padding-top: 10px;">
+					<div style="float:left;position: relative;">
+						<a href="${webctx}/weipage/add" class="btn btn-success">新建微页面</a>
+					</div>
+					
+					<div style="float:right;position: relative;">
+					      <form class="form-inline">
+					    	    <div class="form-group">
+					    	             <label>分类：</label>
+				                         <select id="categoryId"  class="form-control" name="categoryId">
+											<option value="">全部</option>
+											   [#if categoryList??]
+											    [#list categoryList as vo]  
+											      <option value="${vo.id}"  >${vo.name}</option>
+						                        [/#list]
+										   	  [/#if]
+										 </select>
+										  <label>状态：</label>
+				                         <select id="status"  class="form-control" name="status">
+											      <option value="">全部</option>
+											      <option value="0">未发布</option>
+											      <option value="1">已发布</option>
+						                       
+										 </select>
+										 
+										 <button id="myqueryBtn" class="btn btn-primary" type="button"> 查询</button>
+								  </div>
+					    	</form> 
+						    
+				  	</div>	
+				  	
+				  	<table class="table table-striped table-bordered bootstrap-datatable datatable"  border="0" style="margin-top: 80px;">
+				<thead>
+					<tr>
+						<th>
+							<input type="checkbox" id="all" title="全选/反选" style="margin-right: 4px; vertical-align: middle;"/>
+						</th>
+						<th>
+							<span style="vertical-align: middle;">&nbsp;&nbsp;标题</span>
+						</th>
+						<th>创建时间</th>
+						<th>发布时间</th>
+						<th>状态</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody class="weipageGrid">
+				</tbody>
+			</table>
+	       </div>
+</div>
+
+</div>	
+</div>
+</div>
+
+[/@layout]
+<!-- 模板开始 -->
+<script type="text/template" id="weipage_table_tr_tpl">
+		<tr class="package">
+			<td>
+				<input type="checkbox" class="commchk" id="checkbox_{id}" style="margin-right: 4px; vertical-align: middle;"/>
+			</td>
+			<td>
+				<span style="margin-right: 5px; margin-left: 2px; vertical-align: middle;"><a href="${webctx}/weipage/add?id={id}">{title}</a></span>
+			</td>
+			<td><span>{created}</span></td>
+			<td><span>{published}</span></td>
+            <td><span>{statusStr}</span></td>
+			<td>
+				&nbsp;<a id="edit_{id}" href="javascript:void(0)" style="text-decoration: underline;">编辑</a>
+                &nbsp;<a id="publish_{id}" href="javascript:void(0)" style="text-decoration: underline;">发布</a>
+                &nbsp;<a id="outPublish_{id}" href="javascript:void(0)" style="text-decoration: underline;">取消发布</a>
+				&nbsp;<a id="del_{id}" href="javascript:void(0)" style="text-decoration: underline;">删除</a>
+			</td>
+		</tr>
+</script>
+<script type="text/template" id="table_noresult_tr_tpl">
+	   <tr class="package">
+			<td class="center" colspan="6">
+				没有结果集，现在去创建吧，
+				<a href="${webctx}/weipage/add"  style="text-decoration: underline;">去创建</a>
+			</td>
+		</tr>
+</script>       
+<script type="text/javascript">
+	
+	$(document).ready(function() {
+		
+	    $("#myqueryBtn").click(function(){
+	    	 searchWeiPages();
+	    });
+	   
+	    searchWeiPages();
+	});
+	
+	function showCreatePageDlg(){
+		$('#createModal').modal('show');
+	}
+	
+	var pageClick = function(pageNo) {
+		searchWeiPages(pageNo);
+	}
+	
+	var searchWeiPages = function(currPage){
+		var params = {};
+		//其他查询条件
+		if(currPage){
+			params.page = currPage;
+		}
+		
+		params.category_id = $("#categoryId").val();
+		params.status = $("#status").val();
+		
+		$("#mainTable").mask("加载中...");
+		var url = obz.ctx + "/weipage/list";
+		obz.ajaxJson(url, params, function(resp){
+			$("#mainTable").unmask();
+			var result = resp.data;
+			$(".weipageGrid").empty();
+			if(currPage){
+				$("#pager").pager({ pagenumber:currPage, recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });
+			}else{
+				$("#pager").pager({ recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });	
+			}
+			var dataList = result.list;
+			if(dataList.length>0){
+				for(var i=0;i<dataList.length;i++){
+					
+					var _row = dataList[i];
+					if(_row.status==0){
+						_row.statusStr="未发布";
+					}else if(_row.status==1){
+						_row.statusStr="已发布";
+					}
+					var trHtml = obz.dataTemplate4obj($("#weipage_table_tr_tpl").html(), _row);
+					$(".weipageGrid").append(trHtml);
+					$("#outPublish_"+_row.id).hide();
+					if(_row.status==1){
+						$("#publish_"+_row.id).hide();
+						$("#outPublish_"+_row.id).show();
+					}
+				}
+				TBatch.checkCheckbox();
+				TBatch.initCheckboxClick();
+				TBatch.initOptEvent(ActivityTableOpt.init());
+			}else{
+				$(".weipageGrid").append($("#table_noresult_tr_tpl").html());
+			}
+		});
+	}
+	
+	//=============================表格操作事件开始=============================================
+	var ActivityTableOpt = {
+		edit : function(param){
+			var id = param[1];
+			location.href = obz.ctx + "/weipage/edit?id="+id;
+		},
+		publish : function(param){
+			var id = param[1];
+			obz.showMessage("确定发布！", function(){
+    			var id = param[1];
+	    		obz.ajaxJson(obz.ctx + "/weipage/publish", {id: id}, function(resp){
+	    			if(resp.code==200){
+	    				obz.msg("发布成功！");	
+	    				searchWeiPages();	
+	    			}
+	    		});
+    		});
+			return false;
+		},
+		outPublish : function(param){
+			var id = param[1];
+			obz.showMessage("确定取消发布？", function(){
+    			var id = param[1];
+	    		obz.ajaxJson(obz.ctx + "/weipage/outPublish", {id: id}, function(resp){
+	    			if(resp.code==200){
+	    				obz.msg("取消发布成功！");	
+	    				searchWeiPages();	
+	    			}
+	    		});
+    		});
+			return false;
+		},
+		del : function(param){
+			obz.showMessage("确定删除吗？删除后不可恢复，请谨慎操作！", function(){
+    			var id = param[1];
+	    		obz.ajaxJson(obz.ctx + "/weipage/del", {id: id}, function(resp){
+	    			if(resp.code==200){
+	    				searchWeiPages();	
+	    			}
+	    		});
+    		});
+			return false;
+		},
+		init : function(){
+			var optArray = new Array();
+			optArray.push(this.edit);
+			optArray.push(this.publish);
+			optArray.push(this.outPublish);
+			optArray.push(this.del);
+			return optArray;
+		}
+	}	
+	//=============================表格操作事件结束=============================================
+</script>
+<script>
+Template.init("#menu-shop");
+Template.initSecond("#menu-weipage");
+</script>

@@ -1,0 +1,180 @@
+[#include "/includes/_layout.html"/]
+<style>
+.select_item {
+background-color :#E6FAB6
+}
+</style>
+<script type="text/javascript" src="${webctx}/resources/js/map.js"></script>
+<script type="text/javascript">
+var userMap = new Map();//选择的用户
+var touser = new Array();
+var qname = "";
+var searchItemss = function(currPage){
+	var params = {};
+	//其他查询条件
+	if(currPage){
+		params.page = currPage;
+	}
+	if(qname!=null && ""!=qname){
+		params.qname = qname;
+	}
+	params.active = $("#a_status_sel").val();
+	$("#mainTableSelect").mask("加载中...");
+	var url = obz.ctx + "/customer/list";
+	obz.ajaxJson(url, params, function(resp){
+		var result = resp.data;
+		$(".itemsLotGridSelect").empty();
+		if(currPage){
+			$("#pagerSelect").pager({ pagenumber:currPage, recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });
+		}else{
+			$("#pagerSelect").pager({ recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });	
+		}
+		var dataList = result.list;
+		if(dataList.length>0){
+			for(var i=0;i<dataList.length;i++){
+				var _row = dataList[i];
+				if(_row.active == 1) _row.active = "正常";
+				else _row.active = "禁用";
+				if(_row.sex == 1) _row.sex = "男";
+				else _row.sex = "女";
+				var trHtml = obz.dataTemplate4obj($("#item_table_tr_tpl_select").html(), _row);
+				$(".itemsLotGridSelect").append(trHtml);
+				//check是否选中
+				for(var k=0;k<userMap.keys().length;k++){
+					var selectId = userMap.keys()[k];
+					if(selectId == _row.open_id){
+						$("#unSelect_"+_row.open_id).show();
+						$("#select_"+_row.open_id).hide();
+						$("#unSelect_"+_row.open_id).parent().parent().css({'background-color':'#E6FAB6'});
+					}
+				}
+			}
+			bindSetTableAEvent();
+		}else{
+			$(".itemsLotGridSelect").append($("#table_noresult_tr_tpl_select").html());
+		}
+		
+		$("#mainTableSelect").unmask();
+	});
+}
+
+function saveTouser(){
+	 if(userMap.size() <=0){
+		 obz.warn("请选择投放用户");
+	 }else{
+		 obz.doAddTouser(userMap);
+	     if(addTouserDialog != null) addTouserDialog.close();
+	 }
+}
+function bindSetTableAEvent(){
+	//注册取消返现商品事件
+	$("#mainTableSelect").find("tr a.select_a").each(function(){
+		$(this).click(function(){
+			var me = $(this);
+			var id=me.attr("data-id");
+			if(!userMap.containsKey(id)){
+				var userObj = new Object();
+				userObj.headImg = me.attr("head_img");
+				userObj.nickName = me.attr("nick_name");
+				userObj.openId = me.attr("data-id");
+				userMap.put(id, userObj);
+			}
+			//touser.push(id);
+			me.parent().parent().css({'background-color':'#E6FAB6'});
+			$("#unSelect_"+id).show();
+			me.hide();
+			return false;
+		});
+	});
+	
+	$("#mainTableSelect").find("tr a.unselect_a").each(function(){
+		$(this).click(function(){
+			var me = $(this);
+			var id=me.attr("data-id");
+			if(userMap.containsKey(id)){
+				userMap.removeByKey(id);
+			}
+			me.parent().parent().css({'background-color':''});
+			$("#select_"+id).show();
+			me.hide();
+			return false;
+		});	
+	});
+}
+$(document).ready(function() {
+	searchItemss();
+	$("#myqueryBtn").click(function(){
+		qname = $("#q_pond_txt").val();
+		searchItemss();
+	});
+});
+
+var pageClick = function(pageNo) {
+	searchItemss(pageNo);
+}
+</script>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+<div class="wrapper wrapper-content">	
+	<div id="tableList" class="content row ibox-content">
+		<table class="table-striped">
+		<tr>
+			<td colspan="3" style="text-align: left;">&nbsp;&nbsp;
+			<input type="text" name="q_pond_txt" id="q_pond_txt" class="input-text" style="width:190px;" />
+			&nbsp;&nbsp;&nbsp;
+				<select id="a_status_sel" style="width: 102px">
+					<option value="">全部</option>
+					<option value="1" selected="selected">正常</option>
+					<option value="0">被禁用</option>
+				</select>
+				&nbsp;&nbsp;&nbsp;
+				<button id="myqueryBtn" class="btn btn-success btn-sm">查询</button>
+			</td>
+		</tr>
+		</table>
+		
+		<div id="prizeToolsbar" class="panel-body">
+			<div id="pagerSelect" class="jqpager" style="margin-bottom: 1px;"></div>		
+		</div>
+		<table id="mainTableSelect" class="table table-striped table-bordered bootstrap-datatable datatable" border="0">
+		  <thead>
+			  <tr>
+			  	<th><span style="vertical-align: middle;">&nbsp;&nbsp;昵称</span></th>
+				<th>性别</th>
+				<th>地区</th>
+				<th>首次来访时间</th>
+				<th>状态</th>
+				<th>操作</th>
+			  </tr>
+		  </thead>   
+		  <tbody class="itemsLotGridSelect"></tbody>
+	  	</table>
+	</div>
+	<div class="panel-footer" align="center">
+		<button onclick="saveTouser();" type="button" class="btn btn-sm btn-primary">确      定</button>	
+	</div>	    
+</div>
+
+<!-- html 模板文件 -->
+<script type="text/template" id="item_table_tr_tpl_select">
+		<tr class="package">
+			<td>
+				<span style="margin-right: 5px; margin-left: 2px; vertical-align: middle;">
+					<img src="{headimgurl}" width="40" height="40">&nbsp;&nbsp;{nickname}</img>
+				</span>
+			</td>
+			<td><span style="margin-right: 5px; margin-left: 2px; vertical-align: middle;">{sex}</span></td>
+			<td><span>{province}</span></td>
+			<td>{created}</td>
+			<td><span class="customer_status">{active}</span></td>
+			<td>
+				&nbsp;<a id="select_{open_id}" data-id="{open_id}" head_img="{headimgurl}" class="select_a" nick_name="{nickname}" href="javascript:void(0)">选择</a>
+				&nbsp;<a id="unSelect_{open_id}" data-id="{open_id}" href="javascript:void(0)" class="unselect_a" style="display: none;"><font color="red">取消选择</font></a>
+			</td>
+		</tr>
+</script>
+<script type="text/template" id="table_noresult_tr_tpl_select">
+	<tr class="package"><td colspan="7" class="center">没有结果集</td></tr>
+</script>
+</body>
+</html>	

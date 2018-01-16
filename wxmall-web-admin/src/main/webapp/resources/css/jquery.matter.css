@@ -1,0 +1,196 @@
+.appmsg_edit_item {
+        max-width: 560px;
+        margin: 0 auto;
+    }
+
+    .view {
+        max-width: 560px !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+    }
+
+        .view img {
+            max-width: 560px;
+            width: 100%;
+        }
+
+    .appmsg_edit_item input {
+        width: 500px;
+        border: none;
+        padding-bottom: 20px;
+		color:#000;
+    }
+
+    .title .frm_input {
+        font-size: 24px;
+        padding: 40px 0 20px;
+    }
+
+    .editor_content_placeholder {
+        border-top: 1px solid #e5e9ed;
+        padding: 10px 0 0 0;
+    }
+
+    .frm_input_box.with_counter.warn .frm_counter {
+        color: #e15f63;
+    }
+
+    .edui_iframe_switch_tips {
+        padding: 20px 0;
+        text-align: center;
+        cursor: pointer;
+        color: #8d8d8d;
+    }
+.appmsg_edit_box {
+    position: relative;
+}
+.appmsg_edit_container {
+    height: 100%;
+}
+.appmsg_container_hd {
+    padding: 10px 20px 0;
+}
+.appmsg_container_bd {
+    padding: 20px;
+}
+.appmsg_container_title {
+    font-weight: 400;
+}
+.appmsg_preview_area {
+    height: 100%;
+    left: 0;
+    position: absolute;
+}
+.appmsg_preview_container {
+    background-color: #f8f8f8;
+    border-right: 1px solid #e7e7eb;
+    width: 250px;
+}
+
+
+
+.scroll-wrapper {
+    overflow: hidden !important;
+    padding: 0 !important;
+    position: relative;
+}
+.scroll-wrapper > .scroll-content {
+    border: medium none !important;
+    box-sizing: content-box !important;
+    height: auto;
+    left: 0;
+    margin: 0;
+    max-height: none;
+    max-width: none !important;
+    overflow: scroll !important;
+    padding: 0;
+    position: relative !important;
+    top: 0;
+    width: auto !important;
+}
+.editor-wrapper { background: #f8f9fb; top:49px; height: auto; background:#f8f9fb;}/**/
+.editor-wrapper .editor-view { max-width: 400px; float: left; height:100%; position:relative; overflow:auto; overflow-x:hidden; padding-bottom:135px;}
+.editor-wrapper .editor-view .editor-appmsg-top { padding: 16px; position: relative; }
+.editor-wrapper .editor-view .editor-appmsg-top img { max-width: 368px; width: 100%; }
+.editor-view .editor-appmsg-top .editor-title { background: #2a3542; height: 36px; width: 100%; z-index: 2; line-height: 36px; padding: 0 15px; filter: alpha(opacity=90); -moz-opacity: 0.9; -khtml-opacity: 0.9; opacity: 0.9; color: #fff; font-size: 16px; margin-top: -36px; }
+.editor-appmsg-list { vertical-align:middle; position:relative;list-style: none; border-bottom: 1px solid #e5e9ed; height:80px; margin-bottom:20px;}
+.editor-appmsg-list a{ display:block; width:100%; height:100%;}
+.editor-appmsg-list .li-mask{ background:#2a3542; opacity:0.9; width:100%; height:80px; position:absolute; left:0; top:0; color:#fff; text-align:center; line-height:80px;}
+.editor-appmsg-list img{ width:44px; height:44px; float:right; margin-left:10px;}
+
+.btn-save-edit{ display:block; padding:16px;}
+.btn-save-edit a{ width:100%;}
+.editor-style { margin-left:340px; position:relative; border-left:1px solid #e5e9ed;}
+.editor-heading { height:49px; line-height: 47px; vertical-align: middle; background: #fff; padding:0 0 0 320px; border-bottom:1px solid #e5e9ed; box-sizing:border-box; position:fixed; left:230px; top:0px; right:0; z-index:88;}/**/
+.editor-heading-content{ max-width:660px; margin:0 auto; }
+.editor-heading-content strong{ font-weight:bold; color:#345;}
+.editor-heading img { width: 30px; height: 30px; }
+.editor-heading-btn i { margin-right: 10px; }
+.editor-heading-btn a { margin-left: 30px; color: #89a; }
+.editor-area-box{ overflow-x:hidden;}
+.editor-area { min-height:50px; border-bottom: 1px solid #e5e9ed; margin: 0 auto; background: #edf0f5; padding:20px 0 40px 0;}/**/
+.edit-content-area{ border:1px solid #e5e9ed; position:relative;}
+.edit-field{ background:#f8f9fb; width:100%; min-height:92px; padding:10px 40px; border-bottom:1px solid #e5e9ed;}/**/
+.edit-body{ padding:0; background:#fff;}
+.area660 {max-width: 660px; margin: 0 auto; color: #a3a3a3; font-size: 14px; }
+.area660 .checkbox-inline{ padding-left:0;}
+.link-input{ border:1px solid #e5e9ed; width:100%; border-radius:3px; }
+.edit-main-header{ border-bottom:1px solid #e5e9ed;}
+.edit-main-body{ padding:10px 0; height:auto;}
+.enter-footer { background:#fff; padding:25px 40px; border-top:1px solid #e5e9ed;}/**/
+.enter-footer a { margin: 0 10px; color: #aaa; }
+.enter-footer a:last-child { margin-right: 0; }
+.enter-footer .link-box{ padding-top:10px;}
+.editor-area-footer { background: #fff; padding: 18px 0; position:fixed; bottom:0; right:0; left:0px; border:1px solid #e5e9ed; border-width:1px 0 0 0; z-index:60; text-align:center;}
+.editor-area-footer a { text-decoration: none; border-radius: 5px; padding:8px 22px; color: #6d8092; margin: 0 5px 0 0; }
+.editor-area-footer a:link, .editor-area-footer a:visited { background: #fff; display: inline-block; border: 1px solid #e5e9ed; }
+.editor-area-footer a:hover, .editor-area-footer a:active { background: #27a547; color: #fff; }
+.editor-area-footer a.save{ background:#46be68; color:#fff;}
+.editor-area-footer a.save:hover, .editor-area-footer a.save:active { background: #27a547; color: #fff; }
+.textarea-area{max-width:700px; width:100%; height:100px;}
+
+.editor-area-padding{ padding:30px 10px 90px; background:#f8f9fb;}
+.editorGroup{ margin-bottom:15px;}
+.editorGroup .editorLabel{ font-size:14px; font-weight:normal; margin-bottom:20px;}
+.editorGroup .btn{ margin-right:15px;}
+.editorGroup .uploadCover{ display:inline-block; position:relative; z-index:1; vertical-align:bottom; margin-top:10px;}
+.editorGroup .uploadCoverBtn{ width:98px; position:relative; z-index:1; overflow:hidden; margin-bottom:10px}
+.editorGroup .uploadCoverBtn .uploadFile{ display:block; width:80px; height:32px; position:absolute; z-index:1; left:0; top:0; opacity:0; cursor:pointer;}
+.editorGroup .uploadCoverBtn .btn{ min-width:80px;}
+.editorGroup .uploadCoverBtn:hover .btn{ background:#EBEBEB; border-color:#ADADAD;}
+.editorGroup .uploadCoverImg img{ display:block; max-height:120px; max-width:190px;}
+.editorGroup .uploadCoverProcess{ position:absolute; width:100%; height:100%; z-index:2; left:0; top:0; overflow:hidden;}
+.editorGroup .uploadCoverProcess span{ display:block; width:100%; background:rgba(0,0,0,0.3); font-size:0; line-height:0; overflow:hidden; position:absolute; left:0; bottom:0;}
+.editorGroup .uploadCoverProcess span i{ width:18px; height:18px; font-size:18px; color:#fff; margin:0 auto; z-index:88; display:block; margin-top:10px;}
+.editorGroup .uploadCoverProcess span a{ text-decoration:none;}
+.editorGroup .checkShowCover{ padding:20px 0 0;}
+.editorInput textarea{ max-width:660px; width:100%; min-height:126px; border:1px solid #e5e9ed; background:#fff; padding:10px;}
+
+
+.editorView{ float:left; width:320px; height:100%; height:auto;}
+.editorViewAdd{ display:block; border:1px dashed #e5e9ed; border-width:1px 0; background:#FFF; text-align:center; height:80px; line-height:80px; font-size:20px; color:#345; overflow:hidden;}
+.editorViewAdd:hover{ border-color:#e5e9ed; color:#345;}
+.editorViewAdd a{ cursor:pointer; margin:0 10px; color:#7a8a9a;}
+.editorViewAdd a:hover{ text-decoration:none; color:#345;}
+.editorViewAdd .editorViewAddBtns{ display:none;}
+.editorViewAdd .editorViewAddPrev{ display:inline-block; font-size:52px; line-height:76px;}
+.editorViewAdd:hover .editorViewAddPrev{ display:none;}
+.editorViewAdd:hover .editorViewAddBtns{ display:block;}
+.editorViewItem{ border-bottom:1px solid #e5e9ed; background:#FFF; padding:15px; position:relative; z-index:1;}
+.editorViewItem:last-child{ border-bottom:none;}
+.editorViewItem.itemSelected{ background-color:#f1f5fc;}
+.editorViewItem .arrow{ display:none; width:20px; height:20px; background:#FFF; border:1px solid #e5e9ed; border-width:0 0 1px 1px; -moz-transform:rotate(45deg); -webkit-transform:rotate(45deg); transform:rotate(45deg); position:absolute; z-index:10; right:-32px; top:50%; margin-top:-15px;}
+.editorViewItem.itemSelected .arrow{ display:block;}
+.editorViewItem .appmsgWrap{ overflow:hidden; position:relative; z-index:1;}
+.editorViewItem h4{ margin:0;}
+.editorViewItem .appmsgTitle{ color:#345; float:left; font-size:14px; height:48px; line-height:1.6; overflow:hidden; width:232px;}
+.editorViewItem .appmsgCover{ float:right; width:48px; height:48px; overflow:hidden;line-height:48px;}
+.editorViewItem .appmsgCover img{ display:block; width:100%; height:100%;}
+.editorViewItem .appmsgCover .defaultCover{ display:block; background:#f1f5fc; color:#7a8a9a; font-style:normal; font-size:16px; line-height:48px; height:48px; text-align:center;}
+.editorViewItem .appmsgMark{ display:none; position:absolute; z-index:1; left:0; top:0; width:100%; height:100%; background:rgba(42,53,66,0.9); text-align:center;}
+.editorViewItem:hover .appmsgMark{ display:block;}
+.editorViewItem:active,.editorViewItem:focus{ cursor:move;}
+.editorViewItem.itemSelected:active .arrow{ display:none;}
+.editorViewItem .appmsgBtn{ display:inline-block; margin:10px 6px 0 6px; font-size:20px;}
+.editorViewItem .appmsgBtn:hover{ color:#ff0;}
+.editorViewItem .appmsgDelete{ background:#e74c3c; width:32px; height:32px; border-radius:16px; color:#fff;}
+.editorViewItem .appmsgEditor{ background:#46be68; width:32px; height:32px; border-radius:16px; color:#fff;}
+.editorViewItem .appmsgTips{ margin-top:13px; color:#fff;}
+.editorViewItem .appmsgTips span{ padding-right:20px;}
+.editorViewItem a{ color:#7a8a9a; cursor:pointer;}
+.editorViewItem a:hover{ color:#7a8a9a;}
+.editorViewItem.topItem .appmsgCover{ float:none; width:100%; height:200px;}
+.editorViewItem.topItem .appmsgCover img{ height:200px;}
+.editorViewItem.topItem .appmsgCover .defaultCover{ width:100%; height:100%; line-height:120px;}
+.editorViewItem.topItem .appmsgTitle{ margin:0; color:#fff; width:100%; position:absolute; z-index:9; left:0; bottom:0; background-color:rgba(0,0,0,0.7); text-overflow:ellipsis; padding:10px; height:40px; white-space:nowrap;}
+.editorViewItem.topItem .appmsgBtn{ margin-top:90px; margin-bottom:30px;}
+.editorViewItem-last{ border-bottom:none;}
+.graphic-title{ border-bottom:1px solid #e5e9ed; height:44px; line-height:44px; font-weight:bold; color:#345; padding:0 15px;}
+.graphic-title .fold-button{ float:right; font-weight:normal; color:#7a8a9a;}
+.graphic-title .fold-button em{ font-style:normal;}
+.graphic-title .fold-button a{ display:inline-block; color:#7a8a9a;}
+.graphic-title .fold-button i{ font-size:16px; color:#7a8a9a; padding-left:3px;}
+.appmsg_input_area {
+    margin: 0 211px 0 251px;
+    position: relative;
+}

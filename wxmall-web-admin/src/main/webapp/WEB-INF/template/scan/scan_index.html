@@ -1,0 +1,421 @@
+[#include "/includes/_layout.html"/]
+<style type="text/css">
+h1, h2, h3, h4, h5, h6 {
+    color: inherit;
+    font-family: inherit;
+    font-weight: 700;
+    line-height: 20px;
+    margin: 10px 0;
+    text-rendering: optimizelegibility;
+}
+img::before {
+    background-color: #e6e6e6;
+    border: 2px dotted #c8c8c8;
+    border-radius: 5px;
+    content: "";
+    display: block;
+    height: calc(100% + 10px);
+    left: -7px;
+    position: absolute;
+    top: -7px;
+    width: calc(100% + 10px);
+}
+img::after {
+    color: #646464;
+    content: "(>_<)";
+    display: block;
+    height: 1em;
+    left: 50%;
+    line-height: 1em;
+    margin-left: -1.5em;
+    margin-top: -0.5em;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    width: 3em;
+}
+img {
+    border: 0 none;
+    height: auto;
+    max-width: 100%;
+    position: relative;
+    vertical-align: middle;
+}
+.weixin-scan {
+    padding-bottom: 80px;
+}
+.weixin-scan .rule-group {
+    position: relative;
+    width: 70%;
+    margin-left: 60px;
+}
+.weixin-scan .rule-group::before {
+    border-right: 1px solid #d7d7d7;
+    bottom: 0px;
+    content: "";
+    left: 30%;
+    position: absolute;
+    top: 42px;
+}
+.weixin-scan .rule-group::after {
+    border-right: 1px solid #d7d7d7;
+    bottom: 0px;
+    content: "";
+    left: 100%;
+    position: absolute;
+    top: 42px;
+}
+.rule-group {
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    position: relative;
+}
+.weixin-scan .rule-level {
+    border-top: 1px solid #ccc;
+    float: right;
+    margin-top: 50px;
+    width: 24%;
+}
+.weixin-scan .rule-level h4 {
+    color: #000;
+    font-size: 14px;
+    font-weight: normal;
+    margin: 0 0 5px;
+    padding: 10px 10px 5px;
+}
+.weixin-scan .rule-tags {
+    float: right;
+    width: 70%;
+}
+.weixin-scan .rule-replies {
+    float: left;
+    width: 46%;
+}
+.weixin-scan .rule-keywords {
+    float: left;
+    width: 30%;
+}
+.weixin-scan .rule-group .rule-meta h3 {
+    width: 313px;
+}
+.rule-group .long-dashed {
+    border-bottom: 1px dashed #d7d7d7;
+    position: absolute;
+    top: 80px;
+    width: 100%;
+}
+.rule-group .rule-meta {
+    padding: 10px;
+}
+.rule-group .rule-meta:hover h3 .rule-opts a {
+    color: #07d;
+}
+.rule-group .rule-meta h3 {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.5em;
+    margin: 0;
+    position: relative;
+    width: 300px;
+}
+.rule-group .rule-meta h3 .rule-opts {
+    color: #ddd;
+    font-size: 12px;
+    font-weight: normal;
+    position: absolute;
+    right: -90px;
+    top: 0;
+}
+.rule-group .rule-meta h3 .rule-opts a {
+    color: #ddd;
+}
+.rule-group .rule-body {
+    border-top: 1px solid #ccc;
+    margin: 0 0 10px;
+    padding-top: 5px;
+}
+.rule-group .rule-body::before, .rule-group .rule-body::after {
+    content: "";
+    display: table;
+    line-height: 0;
+}
+.rule-group .rule-body::after {
+    clear: both;
+}
+.rule-group .rule-inner {
+    font-size: 12px;
+    padding: 0 10px 5px;
+}
+.rule-group .rule-inner h4 {
+    color: #000;
+    font-size: 14px;
+    font-weight: normal;
+    margin: 0 0 5px;
+    padding: 5px 0;
+}
+.rule-group .rule-inner h4.dashed {
+    border-bottom: 1px dashed #d7d7d7;
+    margin-bottom: 0;
+}
+.rule-group .keyword-container {
+    margin-bottom: 5px;
+    padding-top: 5px;
+}
+.rule-group .keyword-container:empty {
+    display: none;
+}
+.rule-group .keyword-list {
+    margin-top: 10px;
+}
+.rule-group .keyword-list:empty {
+    margin-top: 0;
+}
+.rule-group .qrcode-container {
+    border: 1px solid #808080;
+    height: 200px;
+    margin: 10px auto;
+    width: 200px;
+}
+.rule-group .tag-container, .rule-group .level-container {
+    padding: 5px 0;
+}
+.rule-group .tag-list, .rule-group .level-list {
+    margin-top: 10px;
+}
+.rule-group .tag-list:empty, .rule-group .level-list:empty {
+    margin-top: 0;
+}
+.rule-group .tag {
+    background: #fff none repeat scroll 0 0;
+    border: 1px solid #d7d7d7;
+    border-radius: 3px;
+    display: inline-block;
+    margin: 0 10px 10px;
+    padding: 1px 5px 1px 10px;
+    position: relative;
+}
+.rule-group .tag::before {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    background: #fff none repeat scroll 0 0;
+    border-color: currentcolor currentcolor #d7d7d7 #d7d7d7;
+    border-image: none;
+    border-radius: 2px;
+    border-style: none none solid solid;
+    border-width: medium medium 1px 1px;
+    content: "";
+    height: 14px;
+    left: -8px;
+    position: absolute;
+    top: 3px;
+    transform: rotate(45deg);
+    width: 14px;
+}
+.rule-group .tag::after {
+    border: 1px solid #d7d7d7;
+    border-radius: 50%;
+    content: "";
+    height: 3px;
+    left: 0;
+    position: absolute;
+    top: 8px;
+    width: 3px;
+}
+.rule-group .level {
+    background: #fff none repeat scroll 0 0;
+    border: 1px solid #d7d7d7;
+    border-radius: 3px;
+    display: inline-block;
+    margin: 0 10px 10px;
+    padding: 1px 6px;
+    position: relative;
+}
+.rule-group .level:hover .close-modal {
+    display: inline;
+}
+</style>
+<script type="text/javascript">
+var addGroupDialog;
+$(document).ready(function() {
+	searchItems();
+	
+	$("#js-nav-add-rule").click(function() {
+		 addGroupDialog = BootstrapDialog.show({
+				size: BootstrapDialog.SIZE_LARGE,
+				title: "新建二维码",
+		        message: $('<div></div>').load(obz.ctx+'/scan/addScan')
+		    });
+	 });
+	
+	
+});
+var pageClick = function(pageNo) {
+	searchItems(pageNo);
+}
+var searchItems = function(currPage){
+	var params = {};
+	//其他查询条件
+	if(currPage){
+		params.page = currPage;
+	}
+	$("#tableList").mask("加载中...");
+	var url = obz.ctx + "/scan/list";
+	obz.ajaxJson(url, params, function(resp){
+		var result = resp.data;
+		$("#js-rule-container").empty();
+		
+		if(currPage){
+			$("#pager").pager({ pagenumber:currPage, recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });
+		}else{
+			$("#pager").pager({ recordcount:result.totalRow, pagesize:result.pageSize, recordtext:'共 {0} 页, {1} 条记录', buttonClickCallback: pageClick });	
+		}
+		
+		var dataList = result.list;
+		if(dataList.length>0){
+			for(var i=0;i<dataList.length;i++){
+				var _row = dataList[i];
+				var trHtml = obz.dataTemplate4obj($("#item_table_tr_tpl").html(), _row);
+				$("#js-rule-container").append(trHtml);
+				var tagHtml;
+				if(_row.sceneTag!=''&&_row.sceneTag!=null){
+				tagHtml = obz.dataTemplate4obj($("#rule_tags_tpl").html(), _row);	
+				}else{
+			    tagHtml = obz.dataTemplate4obj($("#rule_tags_null_tpl").html(), _row);		
+				}
+				$("#rule_tags_"+_row.id).append(tagHtml);
+				var content='<img  src="'+obz.ctx+'/qrcode/genio/?url='+_row.wirlessUrl+'"/>'
+				$("#img_"+_row.id).append(content);
+				
+				$("#qrcode_"+_row.id).attr("data-href",_row.wirlessUrl);
+			}
+		}
+		bindClick();
+		$("#tableList").unmask();
+	});
+}
+
+function bindClick(){
+	$(".js-edit-rule").click(function() {
+		var id=$(this).attr("data-id");
+		 addGroupDialog = BootstrapDialog.show({
+				size: BootstrapDialog.SIZE_LARGE,
+				title: "编辑二维码",
+		        message: $('<div></div>').load(obz.ctx+'/scan/addScan?id='+id)
+		    });
+	 });
+	
+	$(".js-edit-tag").click(function() {
+		var id=$(this).attr("data-index");
+		 addGroupDialog = BootstrapDialog.show({
+				size: BootstrapDialog.SIZE_LARGE,
+				title: "标签",
+		        message: $('<div></div>').load(obz.ctx+'/scan/addTag?id='+id)
+		    });
+	 });
+	
+	$(".js-download-qrcode").click(function() {
+		var href=$(this).attr("data-href");
+		location.href=obz.ctx+"/qrcode/genio/?url="+href;
+	});
+}
+</script>
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+[@layout]
+<div class="wrapper wrapper-content">
+<div class="row animated fadeInLeft">
+	
+	[#include "/includes/menus-setting.html" /]
+	
+	<div class="col-sm-11">
+	<div class="row content-tabs">
+		<nav class="page-tabs J_menuTabs">
+	       <div class="page-tabs-content" style="margin-left: 0px;">
+		       <a href="${webctx}/scan" class="J_menuTab active">参数二维码</a>
+	       </div>
+	   	</nav>
+	</div>
+	<div id="tableList" class="content row ibox-content">
+		<div class="panel-body">
+			<a id="js-nav-add-rule" href="javascript:;" class="btn btn-info">新建二维码
+			</a>
+		</div>	
+		<div id="prizeToolsbar" class="panel-body">
+			<div id="pager" class="jqpager" style="margin-bottom: 1px;"></div>	
+		</div>
+        
+        <div class="weixin-scan">
+			<div id="js-rule-container" class="rule-group-container">
+			</div>
+		</div>
+	</div>    
+</div>
+</div>
+</div>
+<!-- html 模板文件 -->
+<script type="text/template" id="item_table_tr_tpl">
+ <div class="rule-group">
+					<div class="rule-meta">
+						<h3>
+							<em class="rule-id">{id})</em>
+							<span class="rule-name">{sceneName}</span>
+							<div class="rule-opts">
+								<a data-id="{id}"  class="js-edit-rule" href="javascript:;">编辑</a>
+								<!--<span>-</span>
+								<a data-id="{id}"  class="js-disable-rule" href="javascript:;">失效</a>-->
+							</div>
+						</h3>
+					</div>
+					<div class="rule-body">
+                         <div class="long-dashed"></div>
+                         <div class="rule-keywords">
+							<div class="rule-inner">
+							<a data-index="{id}" class="pull-right opt js-download-qrcode" id="qrcode_{id}" data-href="" href="javascript:;">下载二维码</a>
+							<h4>扫带参数二维码：</h4>
+							<h5 class="ta-c">scene_id：{id}</h5>
+							<div id="img_{id}" class="qrcode-container loading">
+							</div>
+							</div>
+						</div>
+                    <div class="rule-tags" id="rule_tags_{id}">
+                    
+                    </div>
+               </div>
+				</div>
+</script>
+<script type="text/template" id="rule_tags_tpl">
+                   <div class="rule-inner">
+                       <h4>给粉丝打标签：</h4>
+                       <div class="tag-container">
+						<div class="info"></div>
+						<div class="tag-list">{sceneTag}</div>
+					  </div>
+					  <hr class="dashed">
+					  <div class="opt">
+						<a class="js-edit-tag" data-index="{id}" href="javascript:;">+ 修改标签组</a>
+						</div>
+                    </div>
+</script>
+<script type="text/template" id="rule_tags_null_tpl">
+                   <div class="rule-inner">
+                       <h4>给粉丝打标签：</h4>
+                       <div class="tag-container">
+						<div class="info">还没有任何标签！</div>
+						<div class="tag-list"></div>
+					  </div>
+					  <hr class="dashed">
+					  <div class="opt">
+						<a class="js-edit-tag" data-index="{id}" href="javascript:;">+ 添加标签组</a>
+						</div>
+                    </div>
+</script>
+[/@layout]
+<script type="text/javascript">
+	Template.init("#menu-setting");
+	Template.initSecond("#menu-scan");
+</script>
+</body>
+</html>	

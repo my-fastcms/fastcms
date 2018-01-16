@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>刮刮卡</title>
+[#include "/includes/header.html" /]
+<link href="${webctx }/resources/css/activity-style.css" rel="stylesheet" type="text/css">
+<link href="${webctx }/resources/css/animate.min.css" rel="stylesheet">
+<style type="text/css">
+	#box{width:100%; position: relative; margin: 10px auto;}
+	a{ text-decoration:none}
+	p{ margin:0px; padding:0px;}
+	
+	#guakadiv {
+	    width: 280px;
+	    max-width: 480px;
+	    margin: 0 auto;
+	    position: relative;
+	}
+</style>
+</head>
+<body style="margin: 0px; padding: 0px; zoom: 1; background: url(../../resources/images/activity-scratch-card-bg.jpg) 0% 0% / 120px rgb(148, 79, 32);">
+<div class="content native-scroll content-blockt">
+	<div class="weui-cells">
+	  	<div class="weui-cell weui-cell_access">
+	    <div class="weui-cell__hd"><img src="${session._buyerUser.headimgurl}" alt="${session._buyerUser.nickname}" style="width:40px;margin-right:5px;display:block"></div>
+	    <div class="weui-cell__bd">
+	      <p>${session._buyerUser.nickname}</p>
+	      <p style="font-size: 12px;">还有<font color="red"><span id="user_left_count">${session._buyerUser.score}</span></font>个积分</p>
+	    </div>
+	    <div id="chongzhi" class="weui-cell__ft">我要积分</div>
+	 	</div>
+ 	</div>
+
+	<div id="box">
+		<input type="hidden" id="curtimes1" value="3">
+		<input type="hidden" id="curtimes3" value="3">
+		<div id="roll">
+		    <div class="cover" id="begin"> 
+		        <img id="prizebg" style="visibility:hidden;" src="${webctx }/resources/images/activity-scratch-card-bannerbg.png">
+			   <div id="prize"></div>
+			   
+		       <div id="scratchpad">
+		       </div>
+		       
+		       <div id="scratchpadf" style="position: absolute; width: 320px; height: 208px; top: 0px; left: 0px; text-align: center; line-height: 40px;">
+		           <img src="${webctx }/resources/images/mygua.png">
+		      </div>
+		    </div> 
+		    
+	     </div>
+	     <div id="guakadiv">
+	         <input type="button" id="iwantbtn" class="pxbtn exchange_gift" data-id="633" value="我要刮卡">
+	     </div>
+	</div>
+	
+	<div class="boxcontent boxwhite">
+		<div class="box">
+			<div class="title-brown">活动说明：</div>
+			<div class="Detail">
+				<div >
+	  				<p>你总共还有<span id="db_buyer_score" style="color: #f60">${_buyerUser.scroe }</span>个${_sellerUser.jifenalias}</p>
+	  				[#if lottery.conditionType == 2 ]
+	  					[#if lottcond.tradeType ==1 ]
+	  						<p>最近<span id="user_total_used_count" style="color: #f60">${lottcond.conditionDay }内下单</span></p>
+	  					[/#if]
+	  					[#if lottcond.tradeType ==2 ]
+	  						<p>自<span id="user_total_used_count" style="color: #f60">
+	  						${lottcond.conditionTradeStartdate }到${lottcond.conditionTradeEnddate }下单</span></p>
+	  					[/#if]
+	  					且订单状态为
+	  					[#if lottcond.tradeStatus==1 ]>确认收货[/#if]
+	  					[#if lottcond.tradeStatus==2 ]>订单付款[/#if]
+	  					且订单金额满${lottcond.tradeMoney }元
+	  					<p>可抽奖</p>
+		  			[#elseif lottery.conditionType == 3 ]
+		  				<p>每次抽奖需要扣除:<span id="user_total_used_count" style="color: #f60">${lottery.needPay }</span>个积分</p>
+		  			[#elseif lottery.conditionType == 4 ]
+		  				<p>每次抽奖需要扣除:<span id="user_total_used_count" style="color: #f60">${lottery.needPay }</span>个淘金币</p>
+		  			[/#if]
+		  			[#if lottery.conditionType == 1]
+		  				<p>本次抽奖活动不限条件，到店即可抽奖</p>
+		  			[/#if]
+	  			</div>
+	  			<div class="lottery_count">
+	  				<p>每人每天只能参与<span id="today_used_count" style="color: #f60">${lottery.dayCount }</span>次抽奖</p>
+	  				<p>你今天已抽奖<span id="user_today_used_count" style="color: #f60">${usetodaycount }</span>次</p>
+	  			</div>
+	  			<div class="lottery_count">
+	  				<p>每人总共只能参与<span id="total_used_count" style="color: #f60">${lottery.allCount }</span>次抽奖</p>
+	  				<p>你已总共抽奖<span id="user_total_used_count" style="color: #f60">${usetotalRecord }</span>次</p>
+	  			</div>
+			</div>
+			
+		</div>
+	</div>
+</div>
+<input type="hidden" id="lottery_id" value="${lottery.id }"/>
+[#include "/includes/footer.html" /]
+<script src="${webctx }/resources/js/wScratchPad.js" type="text/javascript"></script>
+<script src="${webctx }/resources/js/animo.min.js" type="text/javascript"></script>
+<script type="text/javascript"> 
+
+var lotteryFunc = function(awards){  //awards:奖项，text:奖品或提示
+	/*积分扣减
+	$("#curtimes1").val(parseInt($("#curtimes1").val())+1);
+	$("#curtimes3").val(parseInt($("#curtimes3").val())+1);
+	document.getElementById('curtimes2').innerText=$("#curtimes1").val();
+	document.getElementById('curtimes4').innerText=$("#curtimes3").val();
+	document.getElementById('curtimes5').innerText=999999-parseInt($("#curtimes3").val());
+	$('#curtimes6').text(parseInt($('#curtimes6').text())-0);
+	*/	
+	display=awards.name;
+	
+		$('#prize').html(display);
+		$('#scratchpadf').hide();
+		if((navigator.userAgent.indexOf('WP7') > -1) || (navigator.userAgent.indexOf('Windows Phone') > -1)){
+			return;
+		}
+		$('#scratchpad').show();
+		//alert2('在刮奖区滑动手指刮奖！');
+		var useragent = window.navigator.userAgent.toLowerCase();
+		$('#scratchpad').wScratchPad({
+			width:150,
+			height:40,
+			color:"#a9a9a7",
+			scratchUp:function(i,ii){
+				if(ii>40 && !window.iscyggldeduijing){//刮开40%
+					window.iscyggldeduijing = true;
+					if(awards.luck){
+						$.alert('恭喜您抽中'+display+'！');	
+					}
+					$("#iwantbtn").css("visibility","visible").val("再刮一次");
+				}
+			},
+			scratchMove:function(i){
+				if ($("#scratchpad").css("color").indexOf("51") > 0) {	    		
+					$("#scratchpad").css("color", "rgb(50,50,50)");
+				} else if ($("#scratchpad").css("color").indexOf("50") > 0) {
+					$("#scratchpad").css("color", "rgb(51,51,51)");
+				}
+			}
+		});
+};
+
+
+function lottery(){ 
+		$.post(obz.ctx+'/lottery/start', {id:$("#lottery_id").val()},
+	function(data,status){
+		if(status=='success'){
+			if(data.code=="-200"){
+				$.alert(data.msg);
+				return false;
+			}
+			else {
+				lotteryFunc(data.data);
+			}
+		}else{
+			$.alert("请求错误");
+		}
+	},"json");
+}
+
+//----------
+
+$(document).ready(function(){
+	////进入直接领取刮刮卡
+    $("#iwantbtn").click(function(){
+    	$(this).css("visibility","hidden"); //hidden button
+    	$('#scratchpad').empty();// clear pre
+    	$('#scratchpadf').animo( { animation: 'shake' } );
+    	$("#scratchpadf").css("display","none");//hidden
+    	$("#prizebg").css("visibility","visible");
+    	lottery();
+    });
+	
+    wx.ready(function(res){
+		//充值
+		$("#chongzhi").click(function(){
+			showChongzhi();
+			return false;
+		});
+	});
+});
+	
+</script>
+</body>

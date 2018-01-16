@@ -1,0 +1,171 @@
+.card-region, .wx-card-region {
+    background-color: #ccc;
+    background-position: 50% center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border-radius: 5px;
+    box-sizing: border-box;
+    color: #fff;
+    margin: 10px;
+    margin-top:20px;
+    padding: 20px;
+}
+.card-region .card-header, .wx-card-region .card-header {
+    font-size: 16px;
+    height: 35px;
+    line-height: 35px;
+    margin-bottom: 30px;
+    overflow: hidden;
+    position: relative;
+}
+.card-region .qr-code, .wx-card-region .qr-code {
+    background-image: url("../../resources/images/qc_code.png");
+    background-position: 50% center;
+    background-repeat: no-repeat;
+    background-size: 25px auto;
+    float: right;
+    height: 25px;
+    margin-top: 5px;
+    width: 25px;
+}
+
+.card-region .qr-code, .wx-card-region .qr-code {
+    background-image: url("../../resources/images/qc_code.png");
+}
+.card-region .shop-logo {
+    background-position: 50% center;
+    background-repeat: no-repeat;
+    background-size: 30px auto;
+    border-radius: 15px;
+    display: inline-block;
+    height: 30px;
+    vertical-align: top;
+    width: 30px;
+}
+.card-region .shop-name {
+    background-size: 30px auto;
+    float: left;
+    height: 30px;
+    line-height: 30px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+.card-region .member-type {
+    font-size: 20px;
+    height: 24px;
+    line-height: 24px;
+    margin-bottom: 10px;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+.card-region .card-content {
+    font-size: 14px;
+    overflow: hidden;
+}
+.card-region .expiry-date {
+    float: left;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+.card-region .card-state {
+    float: right;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.app-sidebar {
+    float: left;
+    font-size: 14px;
+    margin-left: 10px;
+    padding-bottom: 50px;
+    position: relative;
+    /* width: 500px; */
+}
+.app-sidebar .app-sidebar-inner {
+    background: #f8f8f8 none repeat scroll 0 0;
+    border: 1px solid #d1d1d1;
+    border-radius: 5px;
+    min-height: 28px;
+    padding: 12px 10px;
+}
+.form-horizontal .control-group::after, .form-horizontal .control-group::before {
+    content: "";
+    display: table;
+    line-height: 0;
+}
+.app-sidebar .title h4 {
+    display: inline-block;
+    font-weight: 700;
+}
+
+
+.app-sidebar .avatar {
+    background-color: #eee;
+    display: inline-block;
+    height: 50px;
+    width: 50px;
+}
+.app-sidebar .avatar .avatar-img {
+    height: auto;
+    max-height: 100%;
+    max-width: 100%;
+    width: auto;
+}
+
+.form-horizontal .help-desc {
+    font-size: 12px;
+    line-height: 14px;
+    margin-bottom: 0;
+    margin-top: 6px;
+    opacity: 0.6;
+}
+
+.card-color {
+    padding-bottom: 2px;
+}
+.card-color .card-color-show {
+    float: left;
+    height: 20px;
+    width: 60px;
+}
+
+.card-color .caret {
+    float: left;
+    margin-left: 5px;
+    margin-right: -5px;
+}
+
+.card-color .dropdown-menu {
+    padding: 10px 0 6px;
+    width: 190px;
+}
+.card-color .dropdown-menu li {
+    box-sizing: border-box;
+    float: left;
+}
+.card-color .dropdown-menu .card-color-box {
+    cursor: pointer;
+    display: inline-block;
+    height: 20px;
+    margin-left: 10px;
+    width: 20px;
+}
+ .app-actions {
+    background-color:#FFFFCC;
+    left: 12%;
+    min-width: 780px;
+    /* right: 10px; */
+    transition: right 0.5s ease 0s;
+    width: auto;
+}
+.app-actions {
+    bottom: 0;
+    clear: both;
+    padding-top: 0px;
+    position: fixed;
+    text-align: center;
+    /* width: 100%; */
+    z-index: 2;
+}
+.app-actions .form-actions {
+    background-color: #ffc;
+    border-top: medium none;
+    margin: 0;
+    padding: 10px;
+}

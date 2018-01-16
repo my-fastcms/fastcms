@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>商城首页</title>
+[#include "/includes/header.html" /]
+</head>
+<body ontouchstart>
+<!--主体-->
+<div class='weui-content'>
+  <!--顶部轮播-->
+  <div class="swiper-container swiper-banner">
+    <div class="swiper-wrapper">
+      <!-- <div class="swiper-slide"><a href="pro_list.html"><img src="upload/ban4.jpg" /></a></div> -->
+      [#if shop?? && shop.shop_sign??]
+		<div class="swiper-slide"><a href="${webctx}"><img src="${img_domain}${shop.shop_sign}" /></a></div>
+	  [/#if]
+    </div>
+    <div class="swiper-pagination"></div>
+  </div>
+  <!--图标分类-->
+  <div class="weui-flex wy-iconlist-box">
+    <div class="weui-flex__item"><a href="${webctx}/product" class="wy-links-iconlist"><div class="img"><img src="resources/images/icon-link1.png"></div><p>新鲜蔬菜</p></a></div>
+    <div class="weui-flex__item"><a href="${webctx}/product" class="wy-links-iconlist"><div class="img"><img src="resources/images/icon-link2.png"></div><p>农庄</p></a></div>
+    <div class="weui-flex__item"><a href="${webctx}/product" class="wy-links-iconlist"><div class="img"><img src="resources/images/icon-link3.png"></div><p>蔬菜</p></a></div>
+    <div class="weui-flex__item"><a href="${webctx}/product" class="wy-links-iconlist"><div class="img"><img src="resources/images/icon-link4.png"></div><p>禽蛋粮油</p></a></div>
+  </div>
+   <div class="weui-flex wy-iconlist-box">
+    <div class="weui-flex__item"><a href="${webctx}/product" class="wy-links-iconlist"><div class="img"><img src="resources/images/icon-link1.png"></div><p>干货调料</p></a></div>
+    <div class="weui-flex__item"><a href="${webctx}/product" class="wy-links-iconlist"><div class="img"><img src="resources/images/icon-link2.png"></div><p>半成品</p></a></div>
+    <div class="weui-flex__item"><a href="${webctx}/product" class="wy-links-iconlist"><div class="img"><img src="resources/images/icon-link3.png"></div><p>物流查询</p></a></div>
+    <div class="weui-flex__item"><a href="${webctx}/product" class="wy-links-iconlist"><div class="img"><img src="resources/images/icon-link4.png"></div><p>我的关注</p></a></div>
+  </div>
+  <!--新闻切换-->
+  <div class="wy-ind-news">
+    <i class="news-icon-laba"></i>
+    <div class="swiper-container swiper-news">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide"><a href="javascript:void(0)">祝贺全球农品汇微信商城正式上线</a></div>
+        <div class="swiper-slide"><a href="javascript:void(0)">今日酒水特价</a></div>
+      </div>
+      <div class="swiper-pagination"></div>
+    </div>
+    <a href="javascript:void(0)" class="newsmore"><i class="news-icon-more"></i></a>
+  </div>
+  <!--精选推荐-->
+  <div class="wy-Module">
+    <div class="wy-Module-tit"><span>精选推荐</span></div>
+    <div class="wy-Module-con">
+      <div class="swiper-container swiper-jingxuan" style="padding-top:34px;">
+        <div class="swiper-wrapper">
+        	[#list commondProducts as product]
+			<div class="swiper-slide"><a href="${ctxPath}/product/detail?id=${product.id}"><img src="${product.mainPic}" /></a></div>
+			[/#list]
+          <!-- <div class="swiper-slide"><a href="pro_info.html"><img src="upload/jingxuan2.jpg" /></a></div>
+          <div class="swiper-slide"><a href="pro_info.html"><img src="upload/jingxuan3.jpg" /></a></div> -->
+        </div>
+        <div class="swiper-pagination jingxuan-pagination"></div>
+      </div>
+    </div>
+  </div>
+  <!--新品上线-->
+  <div class="wy-Module">
+    <div class="wy-Module-tit"><span>新品上线</span></div>
+    <div class="wy-Module-con">
+      <div class="swiper-container swiper-jiushui" style="padding-top:34px;">
+        <div class="swiper-wrapper">
+        [#list hotProducts as product]
+		<div class="swiper-slide"><a href="${ctxPath}/product/detail?id=${product.id}"><img src="${product.mainPic}" /></a></div>			
+		[/#list]
+          <!-- <div class="swiper-slide"><a href="pro_info.html"><img src="upload/jingxuan5.jpg" /></a></div>
+          <div class="swiper-slide"><a href="pro_info.html"><img src="upload/jingxuan1.jpg" /></a></div> -->
+        </div>
+        <div class="swiper-pagination jingxuan-pagination"></div>
+      </div>
+    </div>
+  </div>
+  
+  <!--猜你喜欢-->
+  [#if indexProducts?? && indexProducts?size>0]
+<div class="wy-Module">
+	<div class="wy-Module-tit-line"><span>猜你喜欢</span></div>
+	<div class="wy-Module-con">
+	<ul class="wy-pro-list clear">
+	[#list indexProducts as product]
+	<li>
+      <a href="${ctxPath}/product/detail?id=${product.id}">
+        <div class="proimg"><img src="${product.mainPic}"></div>
+        <div class="protxt">
+          <div class="name">${product.name}</div>
+          <div class="wy-pro-pri">¥<span>${product.price}</span></div>
+        </div>
+      </a>
+    </li>
+	[/#list]
+	</ul>
+	<div class="morelinks"><a href="${webctx}/product">查看更多 >></a></div>
+	</div>
+</div>
+  [/#if]
+</div>	
+[#include "/includes/menus.html" /]
+[#include "/includes/footer.html" /]
+<script type="text/javascript">
+$(".swiper-banner").swiper({
+    loop: true,
+    autoplay: 3000
+});
+$(".swiper-news").swiper({
+	loop: true,
+	direction: 'vertical',
+	paginationHide :true,
+    autoplay: 30000
+});
+$(".swiper-jingxuan").swiper({
+	pagination: '.swiper-pagination',
+	loop: true,
+	paginationType:'fraction',
+    slidesPerView:3,
+    paginationClickable: true,
+    spaceBetween: 2
+});
+$(".swiper-jiushui").swiper({
+	pagination: '.swiper-pagination',
+	paginationType:'fraction',
+	loop: true,
+    slidesPerView:3,
+	slidesPerColumn: 1,
+    paginationClickable: true,
+    spaceBetween:2
+});
+Template.init("#nav-page-index");
+</script>
+</body>
+</html>
