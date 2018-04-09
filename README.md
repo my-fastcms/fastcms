@@ -12,10 +12,8 @@ http://admin.dbumama.com/admin
 密码：123456
 
 微信商城请扫二维码查看演示（注：演示为企业版）
-微信公众号商城请扫二维码
-![输入图片说明](https://gitee.com/uploads/images/2018/0410/001233_6e7954db_471938.jpeg "wxmall_p.jpg")
 
-微信小程序商城请扫二维码
+![wxmall公众号](https://gitee.com/uploads/images/2018/0410/001233_6e7954db_471938.jpeg "wxmall_p.jpg")
 ![wxmall小程序](https://git.oschina.net/uploads/images/2017/0824/102442_8a96a2b3_471938.jpeg "wxmall-weapp.jpg")
 
 官方网站：[http://www.dbumama.com](http://)
@@ -86,3 +84,4 @@ http://admin.dbumama.com/admin
  1、具备运行环境：JDK 1.7+、Maven 3.0+、MySQL 5.6+、Eclipse mars 
 
  2、git下载项目后，在Eclipse 左侧空白处右击->import-import-> Existing Maven Projects
+1. 这里输入代码
