@@ -12,6 +12,8 @@ http://admin.dbumama.com/admin
 密码：123456
 
 微信商城请扫二维码查看演示（注：演示为企业版）
+微信公众号商城请扫二维码
+![输入图片说明](https://gitee.com/uploads/images/2018/0410/001233_6e7954db_471938.jpeg "wxmall_p.jpg")
 
 微信小程序商城请扫二维码
 ![wxmall小程序](https://git.oschina.net/uploads/images/2017/0824/102442_8a96a2b3_471938.jpeg "wxmall-weapp.jpg")
