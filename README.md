@@ -3,13 +3,13 @@
 
 ###  
 **
-### [wxmall-saas 多公众号，多小程序版本，Jboot微服务开发](https://gitee.com/dianbuapp/wxmall-saas))
+### [jee-weapp 多公众号，多小程序版本，Jboot微服务开发，全新开源](https://gitee.com/dianbuapp_admin/jee-weapp)
 
 ** 
 
  **
 
-### [wxmall多店铺版本，带pc，公众号，app，Jboot微服务开发](https://gitee.com/dianbuapp/jfinal-wxmall-mshop)
+### [wxmall多店铺版本，带pc，公众号，app，Jboot微服务开发](https://gitee.com/dianbuapp_admin/jfinal-wxmall-mshop)
 ** 
 
   _
