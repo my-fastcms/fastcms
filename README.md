@@ -22,13 +22,13 @@
 JFinalMall商城系统专门针对微信服务号开发的一套微信商城，微信分销商城，支持商品多规格，支持按地区设置邮费，支持限时打折，订单返现，满减送，满包邮，支持订单打印，订单打印模板自定义，发货单打印，发货单打印模板自定义，支持抽奖，签到等互动功能。是在JFinal web框架上搭建的一个Java项目。代码规范遵循淘宝分布式框架dubbox协议规范，方便分布式部署，数据库采用mysql，管理端跟微信端前后端分离
 
   _**WxMall 1.0演示地址：**_  
-http://admin.dbumama.com
+http://mp.xjd2020.com
 
 微信商城请扫二维码查看演示（注：演示为企业版）
 
-![wxmall公众号](https://gitee.com/uploads/images/2018/0410/001233_6e7954db_471938.jpeg "wxmall_p.jpg")
+![wxmall公众号]![输入图片说明](https://images.gitee.com/uploads/images/2020/0804/110657_f822af09_471938.jpeg "qrcode_for_gh_83e7299bc3ea_258.jpg")
 
-官方网站：[http://www.dbumama.com](http://)
+官方网站：[http://www.xjd2020.com](http://)
 
  **_WxMall 1.0 功能简介_** 
 ![输入图片说明](https://gitee.com/uploads/images/2017/1227/120552_035cd6ad_471938.png "QQ图片20171215172721.png")
