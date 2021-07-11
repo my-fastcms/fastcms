@@ -1,19 +1,9 @@
 一直以来找不到合适的开源微信商城，本人最终自主研发，基于jfinal web框架开发出微信商城，微信分销商城，并经过客户锤炼，源码拿来即可对项目进行实施，节省大部分时间去陪老婆。。。创业维艰，哄好老婆也很重要。。。
 
 
-###  
-**
- _**
-
-### ### ### [jee-weapp 多公众号，多小程序版本，Jboot微服务开发，全新开源](https://gitee.com/dianbuapp_admin/jee-weapp)
-**_ 
-
-** 
-
- **
-
-### [wxmall多店铺版本，带pc，公众号，app，Jboot微服务开发](https://gitee.com/dianbuapp_admin/jfinal-wxmall-mshop)
-** 
+ **WXMall全面升级
+最新开源地址** 
+[输入链接说明](https://gitee.com/dianbuapp_admin/jeegot)
 
   _
 
