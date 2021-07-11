@@ -3,7 +3,7 @@
 
  **WXMall全面升级
 最新开源地址** 
-[输入链接说明](https://gitee.com/dianbuapp_admin/jeegot)
+[Jeegot](https://gitee.com/dianbuapp_admin/jeegot)
 
   _
 
