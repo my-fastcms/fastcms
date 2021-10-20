@@ -20,19 +20,14 @@ import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.core.response.Response;
 import com.fastcms.core.utils.CaptchaUtils;
 import com.fastcms.service.IUserService;
-import com.google.code.kaptcha.Constants;
-import com.google.code.kaptcha.impl.DefaultKaptcha;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.imageio.ImageIO;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 /**
@@ -49,8 +44,8 @@ public class AdminController {
     @Autowired
     private IUserService userService;
 
-    @Autowired
-    private DefaultKaptcha captchaProducer;
+//    @Autowired
+//    private DefaultKaptcha captchaProducer;
 
     @RequestMapping({"", "/", "index"})
     public String index() {
@@ -95,13 +90,13 @@ public class AdminController {
         response.addHeader("Cache-Control", "post-check=0, pre-check=0");
         response.setHeader("Pragma", "no-cache");
         response.setContentType("image/jpeg");
-        String capText = captchaProducer.createText();
-        session.setAttribute(Constants.KAPTCHA_SESSION_KEY, capText);
-        BufferedImage bi = captchaProducer.createImage(capText);
-        ServletOutputStream out = response.getOutputStream();
-        ImageIO.write(bi, "jpg", out);
-        out.flush();
-        out.close();
+//        String capText = captchaProducer.createText();
+//        session.setAttribute(Constants.KAPTCHA_SESSION_KEY, capText);
+//        BufferedImage bi = captchaProducer.createImage(capText);
+//        ServletOutputStream out = response.getOutputStream();
+//        ImageIO.write(bi, "jpg", out);
+//        out.flush();
+//        out.close();
     }
 
 }
