@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: fastcms
+  profiles:
+    active: dev
+  cache:
+    type: ehcache
+
+  freemarker:
+    template-loader-path: classpath:/templates/
+    suffix: .html
+    charset: UTF-8
+    cache: false
+    settings:
+      number_format: 0.##
+    datetime_format: yyyy-MM-dd HH:mm:ss
+    date_format: yyyy-MM-dd
+    expose-request-attributes: true
+    expose-session-attributes: true
+    request-context-attribute: request
+
+  servlet:
+    multipart:
+      max-request-size: 10MB
+      max-file-size: 1024000KB
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/fastcms?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+
+mybatis-plus:
+  global-config:
+    banner: false
+  mapper-locations: classpath*:/mapper/*Mapper.xml
+
+shiro:
+  loginUrl: /admin/login
+  successUrl: /admin/index
+  unauthorizedUrl: /admin/unauthor
+  userNativeSessionManager: true
+  sessionManager:
+    sessionIdUrlRewritingEnabled: false
+  annotations:
+    enabled: false
+
+plugin:
+  path: ./plugins
+
+jwt:
+  secret: xjd2020
+md5:
+  sign:
+    key: fastcms2021

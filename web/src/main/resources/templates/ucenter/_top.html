@@ -1,0 +1,50 @@
+<ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
+    <li class="dropdown nav-item user user-menu">
+        <@loginUser>
+            <a href="javascript:void(0)" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                <img src="${data.avatar!'/img/user2-160x160.jpg'}" class="user-image">
+                <span class="hidden-xs">您好，${data.loginAccount!}</span>
+            </a>
+        </@loginUser>
+        <div class="dropdown-menu">
+            <div class="dropdown-divider"></div>
+            <a href="/ucenter/user/info" class="dropdown-item">
+                <i class="fas fa-users mr-2"></i> 我的资料
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="/ucenter/logout" class="dropdown-item">
+                <i class="fas fa-sign-out-alt"></i> 退出
+            </a>
+            <div class="dropdown-divider"></div>
+        </div>
+    </li>
+    <!--
+    <li class="nav-item dropdown">
+        <a class="nav-link" data-toggle="dropdown" href="#">
+            <i class="far fa-bell"></i>
+            <span class="badge badge-warning navbar-badge">15</span>
+        </a>
+        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+            <span class="dropdown-header">15 Notifications</span>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item">
+                <i class="fas fa-envelope mr-2"></i> 4 new messages
+                <span class="float-right text-muted text-sm">3 mins</span>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item">
+                <i class="fas fa-users mr-2"></i> 8 friend requests
+                <span class="float-right text-muted text-sm">12 hours</span>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item">
+                <i class="fas fa-file mr-2"></i> 3 new reports
+                <span class="float-right text-muted text-sm">2 days</span>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
+        </div>
+    </li>
+    -->
+
+</ul>

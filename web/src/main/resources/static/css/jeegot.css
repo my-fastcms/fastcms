@@ -1,0 +1,87 @@
+.content-header {padding: 6px .5rem !important; }
+
+.attachment_item {
+    height: 220px;
+    width: 200px;
+    padding: 0px;
+    border: 1px solid #ddd;
+    margin: 10px;
+    float: left;
+    cursor: pointer;
+}
+
+.attachment_item:hover {
+    border: 1px solid #3c8dbc;
+}
+
+.attachment_item img {
+    height: 90%;
+    min-height: 90%;
+    width: 100%;
+}
+
+.attachment_item_title {
+    height: 10%;
+    background-color: #ecf0f5;
+    text-align: center;
+    padding: 0 5px;
+    overflow: hidden;
+}
+
+.attachment_item_title p {
+    overflow: hidden;
+}
+
+#uploader {
+    height: 230px;
+}
+
+.myPanel {
+    font-size: 25px;
+    color: #ccc;
+    text-align: center;
+    padding-top: 60px;
+}
+
+.img-wrapper {
+    position: relative;
+    width: 20%;
+    height: 160px;
+    border: 1px solid #eee;
+    display: inline-block;
+    cursor: move;
+}
+
+.img-wrapper img {
+    width: 100%;
+    height: 100%;
+}
+
+.form-group .img-wrapper img {
+    border: none
+}
+
+.image-reset {
+    display: none;
+}
+
+.img-hover:hover .image-reset {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    color: #FFF;
+    width: 100%;
+    z-index: 10;
+    height: 36px;
+    line-height: 36px;
+    background: #000;
+    filter: alpha(opacity=30);
+    -moz-opacity: 0.5;
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.img-hover .image-reset {
+    display: none;
+}

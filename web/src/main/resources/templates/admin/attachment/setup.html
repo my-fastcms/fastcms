@@ -1,0 +1,45 @@
+<#import "/admin/_layout.html" as layout>
+<@layout.header "小程序设置"></@layout.header>
+<@layout.body>
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-left">
+                        <li class="breadcrumb-item"><a href="#">设置</a></li>
+                        <li class="breadcrumb-item active">小程序</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card card-default">
+                <form id="myForm" method="POST" action="/admin/config/doSave">
+                    <input type="hidden" name="listener" value="FileDomainConfigChangeListener">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="roleName">文件服务器域名</label>
+                            <input type="text" name="file_domain" class="form-control" id="file_domain" placeholder="请输入文件服务器域名" value="${fastcmsConfig("file_domain")!}">
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">提交</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</@layout.body>
+<@layout.script>
+    <script>
+        $(function () {
+            submitForm({
+                file_domain: { required: true},
+            },{
+                file_domain: {required: "请输入文件服务器域名"},
+            })
+        });
+    </script>
+</@layout.script>

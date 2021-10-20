@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastcms.mapper.RoleMapper">
+
+    <insert id="saveRolePermission">
+        insert into role_permission (role_id, permission_id) values
+        <foreach collection="permissionIdList" item="permissionId" separator=",">
+            (#{roleId}, #{permissionId})
+        </foreach>
+    </insert>
+
+    <delete id="deleteByRoleId">
+        delete from role_permission where role_id = #{roleId}
+    </delete>
+
+    <select id="getRoleListByUserId" resultType="com.fastcms.mapper.RoleMapper$UserRole">
+        SELECT r.*, urs.user_id FROM role r LEFT JOIN (select * from user_role ur where ur.user_id = #{userId}) urs on r.id = urs.role_id
+    </select>
+
+    <select id="getUserRoleList" resultType="com.fastcms.entity.Role">
+        SELECT r.* FROM role r JOIN (select * from user_role ur where ur.user_id = #{userId}) urs on r.id = urs.role_id
+    </select>
+
+    <insert id="saveUserRole">
+        insert into user_role (user_id, role_id) values
+        <foreach collection="roleIds" item="roleId" separator=",">
+            (#{userId}, #{roleId})
+        </foreach>
+    </insert>
+
+    <delete id="deleteRoleByUserId">
+        delete from user_role where user_id = #{userId}
+    </delete>
+
+</mapper>

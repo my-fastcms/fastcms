@@ -1,0 +1,71 @@
+<#macro menuTree menus>
+    <#if menus?? && menus?size gt 0>
+        <#list menus as md>
+            <li class="nav-item <#if md.hasChildren>dropdown</#if>">
+            <a href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">${md.name!}</a>
+            <#if md.hasChildren>
+                <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
+                <#list md.children as item>
+                    <li <#if item.hasChildren>class="dropdown-submenu dropdown-hover"</#if>>
+                        <a href="${item.url!'#'}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="dropdown-item dropdown-toggle">${item.name!}</a>
+                        <@menuChildren children=item.children></@menuChildren>
+                    </li>
+                </#list>
+                </ul>
+            </#if>
+            </li>
+        </#list>
+    </#if>
+</#macro>
+
+<#macro menuChildren children>
+    <#if children?? && children?size gt 0>
+        <ul class="dropdown-menu border-0 shadow">
+            <#list children as child>
+                <li>
+                    <a href="${child.url!'#'}" class="dropdown-item">${child.name!}</a>
+                    <#if child.children?? && child.children?size gt 0>
+                        <@menuChildren children=child.children></@menuChildren>
+                    </#if>
+                </li>
+            </#list>
+        </ul>
+    </#if>
+</#macro>
+<nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
+    <div class="container">
+        <a href="/" class="navbar-brand">
+            <img src="/static/img/AdminLTELogo.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+            <span class="brand-text font-weight-light">fastcms</span>
+        </a>
+
+        <button class="navbar-toggler order-1" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+            <!-- Left navbar links -->
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a href="/ucenter/index" class="nav-link">首页</a>
+                </li>
+                <#--<li class="nav-item dropdown">
+                    <a id="dropdownSubMenu1" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">个人信息</a>
+                    <ul aria-labelledby="dropdownSubMenu1" class="dropdown-menu border-0 shadow">
+                        <li><a href="/ucenter/user/info" class="dropdown-item">基本信息</a></li>
+                        <li class="dropdown-divider"></li>
+                        <li><a href="/ucenter/user/avatar" class="dropdown-item">头像设置</a></li>
+                        <li class="dropdown-divider"></li>
+                        <li><a href="/ucenter/user/pwd" class="dropdown-item">账号密码</a></li>
+                    </ul>
+                </li>-->
+
+                <@ucenterMenu>
+                    <@menuTree menus = data></@menuTree>
+                </@ucenterMenu>
+            </ul>
+        </div>
+
+        <#include "_top.html">
+    </div>
+</nav>

@@ -1,0 +1,112 @@
+.sku-div{}
+/*sku选择样式*/
+.sku-div li{list-style: none;margin-right:10px;}
+.sku-div li label{cursor: pointer;}
+.sku-div li{float: left;line-height: 30px;}
+.clear{ clear: both; }
+.delCusSkuVal,
+.delCusSkuType {
+	font-size: 14px;
+    text-decoration: none;
+    color: #666;
+}
+/*表格样式*/
+table.skuTable {
+    font-size:14px;
+    color:#333333;
+    border-width: 1px;
+    border-color: #ddd;
+    margin:30px;
+    border-collapse: collapse;
+}
+table.skuTable th {
+    border-width: 1px;
+    padding: 10px 10px;
+    border-style: solid;
+    border-color: #ddd;
+    color:#666;
+    background-color: #ededed;
+}
+table.skuTable td {
+    border-width: 1px;
+    padding: 5px 10px;
+    border-style: solid;
+    border-color: #ddd;
+    background-color: #ffffff;
+    color:#777;
+    widows: auto;
+    text-align: center;
+    font-size: 12px;
+}
+table.skuTable td input{
+	width:100%;
+	border:none;
+	font-size:14px;
+	padding:0;
+	margin:0;
+	color:#666;
+	text-align: center;
+}
+/*输入框样式*/
+/*input[type="text"]{*/
+/*	height: 24px;*/
+/*	display: inline-block;*/
+/*	padding: 2px 12px;*/
+/*	font-size: 14px;*/
+/*	line-height: 24px;*/
+/*	color: #555;*/
+/*	background-color: #fff;*/
+/*	background-image: none;*/
+/*	border: 1px solid #ccc;*/
+/*	border-radius: 4px;*/
+/*	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);*/
+/*	box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);*/
+/*	-webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;*/
+/*	-o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;*/
+/*	transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;*/
+/*}*/
+/*input[type="text"]:focus {*/
+/* 	border-color: #66afe9;*/
+/*	outline: 0;*/
+/*	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);*/
+/*	box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6)*/
+/* }*/
+
+/*按钮样式*/
+.button{
+	padding: 4px 10px;
+	border: none;
+	background: #34495e;
+	color: white;
+	font-size: 16.5px;
+	text-decoration: none;
+	text-shadow: none;
+	-webkit-box-shadow: none;
+	-moz-box-shadow: none;
+	box-shadow: none;
+	-webkit-transition: 0.25s;
+	-moz-transition: 0.25s;
+	-o-transition: 0.25s;
+	transition: 0.25s;
+	-webkit-backface-visibility: hidden;
+	-webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+	border-radius: 6px;
+	font-size: 14px;
+	cursor: pointer;
+}
+.cloneSku{
+	margin: 10px 0 0 40px;
+	background-color: #3498db;
+}
+button:focus {
+	outline: none;
+}
+/*其他样式*/
+.sku-div li em{
+	color: #f00;
+	margin-left: -8px;
+	width: 8px;
+	font-style: normal;
+    vertical-align: sub;
+}

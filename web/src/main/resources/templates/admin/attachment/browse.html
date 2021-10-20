@@ -1,0 +1,81 @@
+<#import "/admin/_layer.html" as layout>
+<@layout.header "">
+    <link rel="stylesheet" href="/static/libs/jquery-file-upload/css/jquery.fileupload.css">
+</@layout.header>
+<@layout.body>
+<div class="col-xs-12" style="padding: 0 20px">
+
+    <div class="card card-primary card-outline card-outline-tabs">
+        <ul class="nav nav-tabs">
+            <li class="nav-item"><a class="nav-link active" href="#activity" data-toggle="tab">附件库</a></li>
+            <li class="nav-item"><a class="nav-link" href="#timeline" data-toggle="tab">附件上传</a></li>
+        </ul>
+        <div class="tab-content">
+            <div class="tab-pane fade show" id="timeline">
+                <div class="col-12 row" style="padding: 10px 10px 10px 10px;">
+                    <div id="uploader">
+                        <span class="btn btn-block btn-primary fileinput-button" style="width: 120px">
+                            <i class="glyphicon glyphicon-plus"></i>
+                            <span>选择文件...</span>
+                            <input id="cfile" type="file" name="file">
+                        </span>
+
+                        <div class="myPanel">
+                            或者拖动文件到这里进行上传...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="active tab-pane fade show" id="activity">
+                <div class="row">
+                    <#list pageData.records as item>
+                        <div class="attachment_item" data-aid="${item.id!}">
+                            <img src="${item.path!}"
+                                 data-path="${item.filePath!}"
+                                 alt="${item.fileName!}" >
+                            <div class="attachment_item_title">
+                                <p>${item.fileName!}</p>
+                            </div>
+                        </div>
+                    </#list>
+                </div>
+                <@layout._adminPage/>
+            </div>
+        </div>
+    </div>
+</div>
+</@layout.body>
+<@layout.script>
+    <script src="/static/libs/jquery-file-upload/js/vendor/jquery.ui.widget.js"></script>
+    <script src="/static/libs/jquery-file-upload/js/jquery.iframe-transport.js"></script>
+    <script src="/static/libs/jquery-file-upload/js/jquery.fileupload.js"></script>
+    <script>
+
+        parent.layer.data = {};
+
+        $('#cfile').fileupload({
+            dropZone: $('#uploader'),
+            url: '/admin/attachment/doUploadOfCKEditorBrowse',
+            sequentialUploads: true,
+            progressall: function (e, data) {
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $(".myPanel").text("上传进度：" + progress + "%")
+            },
+            done: function (e, data) {
+                $(".myPanel").text("或者拖动文件到这里进行上传...");
+                if (data.result.code == 1) {
+                    parent.layer.data.src = data.result.src;
+                    parent.layer.closeAll();
+                }
+            }
+        });
+
+        $(".attachment_item").click(function () {
+            var src = $(this).children().attr("data-path");
+            parent.layer.data.src = src;
+            parent.layer.closeAll();
+        })
+
+    </script>
+</@layout.script>

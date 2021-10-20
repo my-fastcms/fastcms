@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastcms.mapper.UserMapper">
+
+    <select id="getUserTagList" resultType="com.fastcms.entity.UserTag">
+        SELECT ut.* from user_tag_relation utr JOIN user_tag ut on utr.tag_id = ut.id
+        where utr.user_id = #{userId}
+    </select>
+
+    <select id="getUserTeam" resultType="com.fastcms.service.IUserService$UserTeam">
+        select * from user_team ut where ut.parent_id = #{parentId} and user_id = #{userId}
+    </select>
+
+    <select id="getTeamUserByUserName" resultType="com.fastcms.entity.User">
+        select u.* from `user` u
+        join user_team ut on ut.parent_id = #{parentId} and ut.user_id = u.id
+        where u.user_name = #{userName}
+    </select>
+
+    <select id="getUserStationList" resultType="com.fastcms.entity.Station">
+        SELECT ut.* from user_station utr JOIN station ut on utr.station_id = ut.id
+        where utr.user_id = #{userId}
+    </select>
+
+    <select id="getUserTeamList" resultType="com.fastcms.service.IUserService$UserTeamVo">
+        select u.id, u.user_name, s.station_name,
+        (SELECT sum(ws.`amount`)  from `wh_shipping` ws where ws.`user_id` = u.id and ws.status=1) as money
+        from user_team ut
+        JOIN `user` u on ut.user_id = u.id
+        JOIN user_station us on us.user_id = u.id
+        JOIN station s on us.station_id = s.id
+        where ut.parent_id = #{userId} and s.station_name = #{stationName}
+    </select>
+
+    <select id="getUserBelongToTeam" resultType="com.fastcms.service.IUserService$UserTeam">
+        select * from user_team ut where ut.user_id = #{userId}
+    </select>
+
+    <insert id="saveUserTeam">
+        INSERT INTO `user_team` (`parent_id`, `user_id`) VALUES (#{parentId}, #{userId});
+    </insert>
+
+</mapper>

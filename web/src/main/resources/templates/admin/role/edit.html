@@ -1,0 +1,49 @@
+<#import "/admin/_layout.html" as layout>
+<@layout.header "角色"></@layout.header>
+<@layout.body>
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-left">
+                        <li class="breadcrumb-item"><a href="#">角色</a></li>
+                        <li class="breadcrumb-item active">新增</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card card-default">
+                <form id="myForm" method="POST" action="/admin/role/doSave" ok="/admin/role/list">
+                    <input type="hidden" name="id" value="${(role.id)!}">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="roleName">角色名称</label>
+                            <input type="text" name="roleName" class="form-control" id="roleName" placeholder="请输入角色名称" value="${(role.roleName)!}">
+                        </div>
+                        <div class="form-group">
+                            <label for="nickName">角色描述</label>
+                            <input type="text" name="roleDesc" class="form-control" id="roleDesc" placeholder="请输入角色描述" value="${(role.roleDesc)!}">
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">提交</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</@layout.body>
+<@layout.script>
+    <script>
+        $(function () {
+            submitForm({
+                roleName: { required: true}
+            },{
+                roleName: {required: "请输入角色名称"}
+            })
+        });
+    </script>
+</@layout.script>

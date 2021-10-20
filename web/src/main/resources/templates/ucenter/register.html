@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>fastcms | 注册</title>
+  <link rel="stylesheet" href="/static/libs/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="/static/libs/icheck-bootstrap/icheck-bootstrap.min.css">
+  <link rel="stylesheet" href="/static/libs/toastr/toastr.css">
+  <link rel="stylesheet" href="/static/css/adminlte.min.css">
+</head>
+<body class="hold-transition register-page">
+<div class="register-box">
+  <div class="card card-outline card-primary">
+    <div class="card-header text-center">
+      <a href="javascript:void(0)" class="h1"><b>fastcms</b></a>
+    </div>
+    <div class="card-body">
+      <p class="login-box-msg">注册一个新账号</p>
+
+      <form id="myForm" action="/ucenter/doRegister" method="post" ok="/ucenter/index">
+        <div class="input-group mb-3 form-group">
+          <input type="text" class="form-control" placeholder="账号" name="loginAccount" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-user"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3 form-group">
+          <input type="text" class="form-control" placeholder="昵称" name="nickName">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-user"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3 form-group">
+          <input type="email" class="form-control" placeholder="邮箱" name="email">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-envelope"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3 form-group">
+          <input type="password" class="form-control" placeholder="密码" id="password" name="password">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3 form-group">
+          <input type="password" class="form-control" placeholder="确认密码" id="confirmPassword" name="confirmPassword">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3 form-group">
+          <input type="text" class="form-control" style="float: left;width: 100px;" placeholder="请输入验证码" name="captcha">
+          <img id="captchaImg" src="/admin/captcha" style="float: right;height: 38px;" onclick="this.src='/admin/captcha?d='+Math.random();">
+        </div>
+        <div class="row">
+          <div class="col-8">
+            <div class="icheck-primary form-group">
+              <input type="checkbox" id="agreeTerms" name="terms" value="agree">
+              <label for="agreeTerms">
+               我同意 <a href="http://www.xjd2020.com" target="_blank">用户协议</a>
+              </label>
+            </div>
+          </div>
+          <div class="col-4">
+            <button type="submit" class="btn btn-primary btn-block">注册</button>
+          </div>
+        </div>
+      </form>
+
+      <a href="/ucenter/login" class="text-center">已有账号，直接登录</a>
+    </div>
+  </div>
+</div>
+<script src="/static/libs/jquery/jquery.min.js"></script>
+<script src="/static/libs/jquery-validation/jquery.validate.min.js"></script>
+<script src="/static/libs/jquery-validation/localization/messages_zh.min.js"></script>
+<script src="/static/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/static/js/adminlte.min.js"></script>
+<script src="/static/libs/toastr/toastr.min.js"></script>
+<script src="/static/js/fastcms.js"></script>
+<script type="text/javascript">
+  var ctx = "${request.contextPath}";
+  $(function () {
+    submitForm({
+      loginAccount: { required: true},
+      nickName: { required: true},
+      email: {
+        required: true,
+        email: true,
+      },
+      password: { required: true, minlength: 6 },
+      confirmPassword: { required: true, minlength: 6, equalTo: "#password"},
+      captcha: { required: true},
+      terms: {
+        required: true
+      }
+    }, {
+      loginAccount: { required: "请输入账号"},
+      nickName: { required: "请输入昵称"},
+      email: {
+        required: "请输入邮箱地址",
+        email: "你输入的邮箱地址不合法"
+      },
+      password: {required: "请输入密码", minlength: "密码长度至少6位"},
+      confirmPassword: { required: "请输入确认密码", minlength: "密码长度至少6位", equalTo: "2次输入的密码不一致"},
+      captcha: { required: "请输入验证码"},
+      terms: "请勾选同意用户协议"
+    }, function(data){
+      if(data.code == 0) {
+        $('#captchaImg').attr('src', '/admin/captcha?d='+Math.random());
+      }
+    })
+  });
+</script>
+</body>
+</html>

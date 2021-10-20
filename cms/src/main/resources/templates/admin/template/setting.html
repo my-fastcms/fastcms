@@ -1,0 +1,62 @@
+<#import "/admin/_layout.html" as layout>
+<@layout.header "网站设置"></@layout.header>
+<@layout.body>
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-left">
+                        <li class="breadcrumb-item"><a href="#">设置</a></li>
+                        <li class="breadcrumb-item active">网站设置</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card card-default">
+                <form id="myForm" method="POST" action="/admin/config/doSave">
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label for="roleName">网站名称</label>
+                            <input type="text" name="website_name" class="form-control" id="website_name" placeholder="请输入网站名称" value="${fastcmsConfig("website_name")!}">
+                        </div>
+                        <div class="form-group">
+                            <label for="roleName">网站标题</label>
+                            <input type="text" name="website_title" class="form-control" id="website_title" placeholder="请输入网站标题" value="${fastcmsConfig("website_title")!}">
+                        </div>
+                        <div class="form-group">
+                            <label for="roleName">网站副标题</label>
+                            <input type="text" name="website_sub_title" class="form-control" id="website_sub_title" placeholder="请输入网站副标题" value="${fastcmsConfig("website_sub_title")!}">
+                        </div>
+                        <div class="form-group">
+                            <label for="roleName">网站域名</label>
+                            <input type="text" name="website_domain" class="form-control" id="website_domain" placeholder="请输入网站域名" value="${fastcmsConfig("website_domain")!}">
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">提交</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</@layout.body>
+<@layout.script>
+    <script>
+        $(function () {
+            submitForm({
+                website_name: { required: true},
+                website_title: { required: true},
+                website_sub_title: { required: true},
+                website_domain: { required: true}
+            },{
+                website_name: {required: "请输入网站名称"},
+                website_title: {required: "请输入网站标题"},
+                website_sub_title: {required: "请输入网站副标题"},
+                website_domain: {required: "请输入网站域名"}
+            })
+        });
+    </script>
+</@layout.script>

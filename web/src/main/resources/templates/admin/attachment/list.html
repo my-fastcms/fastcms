@@ -1,0 +1,59 @@
+<#import "/admin/_layout.html" as layout>
+<@layout.header "文件管理"></@layout.header>
+<@layout.body>
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-left">
+                        <li class="breadcrumb-item"><a href="#">附件</a></li>
+                        <li class="breadcrumb-item active">列表</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Main content -->
+    <section class="content">
+
+        <div class="card card-success">
+            <div class="card-body">
+                <div class="row">
+                    <a href="/admin/attachment/upload" class="btn btn-info"><i class="fas fa-plus"></i> 上传</a>
+                </div>
+                <div class="row">
+                    <#list pageData.records as item>
+                        <div class="attachment_item" onclick="show(${item.id!})">
+                            <img src="${item.path!}"
+                                 alt="${item.fileName!}" >
+                            <div class="attachment_item_title">
+                                <p>${item.fileName!}</p>
+                            </div>
+                        </div>
+                    </#list>
+                </div>
+            </div>
+            <div class="card-footer">
+                <@layout._adminPage/>
+            </div>
+        </div>
+    </section>
+</@layout.body>
+<@layout.script>
+    <script>
+        function show(id) {
+            layer.open({
+                type: 2,
+                title: '附件详情',
+                anim: 2,
+                shadeClose: true,
+                shade: 0.6,
+                area: ['90%', '90%'],
+                content: '/admin/attachment/detail/?id=' + id,
+                end: function () {
+                    //location.reload();
+                }
+            });
+        }
+    </script>
+</@layout.script>

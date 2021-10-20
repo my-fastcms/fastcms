@@ -1,0 +1,142 @@
+<#import "/admin/_layout.html" as layout>
+<@layout.header "文章管理"></@layout.header>
+<@layout.body>
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-left">
+                        <li class="breadcrumb-item"><a href="#">文章</a></li>
+                        <li class="breadcrumb-item active">列表</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="content">
+    <div class="container-fluid">
+        <div class="card">
+
+            <div class="card-header">
+
+                <form class="form-horizontal" action="/admin/article/list">
+                    <div class="row">
+                        <div class="form-group row col-3">
+                            <label for="title" class="col-sm-3 col-form-label">标题</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="title" name="title" value="${param('title')!}" placeholder="标题">
+                            </div>
+                        </div>
+
+                        <#if categoryList??>
+                            <div class="form-group row col-3">
+                                <label for="inputPassword3" class="col-sm-4 col-form-label">分类</label>
+                                <div class="col-sm-8">
+                                    <#assign _categoryId=param('categoryId')!""/>
+                                    <select id="categoryId" name="categoryId" class="form-control">
+                                        <option value="">全部</option>
+                                        <#list categoryList as item>
+                                            <option value="${item.id!}" <@selectedIf value=(_categoryId ==item.id!?string)/>>${item.title!}</option>
+                                        </#list>
+                                    </select>
+                                </div>
+                            </div>
+                        </#if>
+
+                        <#if tagList??>
+                            <div class="form-group row col-3">
+                                <label for="inputPassword3" class="col-sm-4 col-form-label">标签</label>
+                                <div class="col-sm-8">
+                                    <#assign _tagId=param('tagId')!""/>
+                                    <select id="tagId" name="tagId" class="form-control">
+                                        <option value="">全部</option>
+                                        <#list tagList as item>
+                                            <option value="${item.id!}" <@selectedIf value=(_tagId ==item.id!?string)/>>${item.title!}</option>
+                                        </#list>
+                                    </select>
+                                </div>
+                            </div>
+                        </#if>
+
+                        <div class="form-group row col-3">
+                            <label for="inputPassword3" class="col-sm-4 col-form-label">状态</label>
+                            <div class="col-sm-8">
+                                <#assign _status=param('status')!""/>
+                                <select id="status" name="status" class="form-control">
+                                    <option value="">全部</option>
+                                    <option value="publish" <@selectedIf value=(_status =="publish")/>>已发布</option>
+                                    <option value="draft" <@selectedIf value=(_status =="draft")/>>草稿</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group row col-3">
+                            <div class="col-sm-12">
+                                <button type="submit" class="btn btn-primary btn-sm">查询</button>
+                                <button type="reset" class="btn btn-default btn-sm">重置</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+
+            <div class="card-body">
+                <div class="row">
+                    <a href="/admin/article/write" class="btn btn-info"><i class="fas fa-plus"></i> 新增</a>
+                </div>
+                <table class="table table-hover" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th width="300px">标题</th>
+                        <th>作者</th>
+                        <th width="100px">分类</th>
+                        <th width="100px">标签</th>
+                        <th>浏览量</th>
+                        <th>状态</th>
+                        <th>发布时间</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <#list pageData.records as item>
+                        <tr>
+                            <td>${item.id!}</td>
+                            <td><a href="${item.url!}" target="_blank">${text(item.title!, 12)}</a></td>
+                            <td>${item.author!}</td>
+                            <td>
+                                <#if item.categoryList??>
+                                    <#list item.categoryList as category>
+                                        <#if category.type=='category'>
+                                            ${category.title!}<#if category_index+1 < item.categoryList?size>,&nbsp;</#if>
+                                        </#if>
+                                    </#list>
+                                </#if>
+                            </td>
+                            <td>
+                                <#if item.categoryList??>
+                                    <#list item.categoryList as category>
+                                        <#if category.type=='tag'>
+                                            ${category.title!}<#if category_index+1 < item.categoryList?size>,&nbsp;</#if>
+                                        </#if>
+                                    </#list>
+                                </#if>
+                            </td>
+                            <td>${item.viewCount!}</td>
+                            <td>
+                            <#if item.status! == 'publish'>已发布</#if>
+                            <#if item.status! == 'draft'>草稿</#if>
+                            </td>
+                            <td><@formatTime value=item.created!/></td>
+                            <td><a href="/admin/article/write?id=${item.id!?c}">编辑</a></td>
+                        </tr>
+                    </#list>
+                </table>
+                <@layout._adminPage/>
+            </div>
+        </div>
+    </div>
+    </section>
+</@layout.body>
+<@layout.script></@layout.script>

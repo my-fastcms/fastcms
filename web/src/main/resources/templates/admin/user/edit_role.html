@@ -1,0 +1,104 @@
+<#import "/admin/_layout.html" as layout>
+<@layout.header "用户"></@layout.header>
+<@layout.body>
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-left">
+                        <li class="breadcrumb-item"><a href="#">用户</a></li>
+                        <li class="breadcrumb-item active">角色分配</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-primary card-outline card-outline-tabs">
+                        <div class="card-header p-0 pt-1">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/admin/user/edit?id=${(user.id)!}">基本信息</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/admin/user/pwd?id=${(user.id)!}">修改密码</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link active">角色分配</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/admin/user/tag?id=${(user.id)!}">标签设置</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/admin/user/station?id=${(user.id)!}">岗位设置</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="card-body">
+                            <div class="tab-content" id="custom-tabs-one-tabContent">
+                                <div class="tab-pane fade show active">
+                                    <input type="hidden" name="id" value="${(user.id)!}">
+                                    <table id="roleTableList" class="table table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th style="width: 10px"><input type="checkbox"></th>
+                                            <th>角色名称</th>
+                                            <th>描述</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <#if roleList??>
+                                            <#list roleList as role>
+                                                <tr>
+                                                    <td><input type="checkbox" name="roleIds" value="${role.id!}" <#if role.userId??>checked="checked"</#if></td>
+                                                    <td>${role.roleName!} <#if role.id==1>(系统内置)</#if></td>
+                                                    <td>${role.roleDesc!}</td>
+                                                </tr>
+                                            </#list>
+                                        </#if>
+                                        </tbody>
+                                    </table>
+                                    <button id="saveRole" type="button" class="btn btn-primary">提交</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</@layout.body>
+<@layout.script>
+    <script>
+        $(document).ready(function(){
+            function getChecked() {
+                var ids = [];
+                $("#roleTableList input[type=checkbox]:checked").each(function(){
+                    ids.push($(this).val());
+                });
+                return ids;
+            }
+
+            $("#saveRole").click(function () {
+                var roleIds = getChecked();
+                var userId = ${user.id!};
+
+                if(roleIds.length <= 0){
+                    alertWarn("请选中至少一个角色");
+                    return;
+                }
+                ajaxPost("/admin/user/doEditRole", {userId: userId, roleIds: roleIds},
+                    function() {
+                        alertSuccess("提交成功");
+                    }
+                );
+            })
+        });
+    </script>
+</@layout.script>

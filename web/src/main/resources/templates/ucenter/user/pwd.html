@@ -1,0 +1,66 @@
+<#import "/ucenter/_layout.html" as layout>
+<@layout.header "用户"></@layout.header>
+<@layout.body>
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-left">
+                        <li class="breadcrumb-item"><a href="#">用户</a></li>
+                        <li class="breadcrumb-item active">修改密码</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-primary card-outline card-outline-tabs">
+                        <div class="card-body">
+                            <div class="tab-content">
+                                <div class="tab-pane fade show active">
+                                    <form id="myForm" method="POST" action="/ucenter/user/doEditPwd">
+                                        <input type="hidden" name="id" value="${(user.id)!}">
+                                        <div class="form-group">
+                                            <label for="password">旧密码</label>
+                                            <input type="password" name="password" class="form-control" id="password" placeholder="请输入旧密码">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="newPassword">新密码</label>
+                                            <input type="password" name="newPassword" class="form-control" id="newPassword" placeholder="请输入新密码">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="confirm_password">确认新密码</label>
+                                            <input type="password" name="newConfirmPassword" class="form-control" id="newConfirmPassword" placeholder="请再次输入新密码">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">提交</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</@layout.body>
+<@layout.script>
+    <script>
+        $(function () {
+            submitForm({
+                password: { required: true, minlength: 6 },
+                newPassword: { required: true, minlength: 6},
+                newConfirmPassword: { required: true, minlength: 6, equalTo: "#newPassword"},
+            }, {
+                password: {required: "请输入旧密码", minlength: "密码不能少于6位" },
+                newPassword: {required: "请输入新密码", minlength: "密码不能少于6位" },
+                newConfirmPassword: {required: "请再次输入新密码", minlength: "密码不能少于6位", equalTo: "2次输入的密码不一致"},
+            })
+        });
+    </script>
+</@layout.script>

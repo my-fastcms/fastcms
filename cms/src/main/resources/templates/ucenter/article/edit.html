@@ -1,0 +1,194 @@
+<#import "/ucenter/_layout.html" as layout>
+<@layout.header "文章编辑">
+    <link href="/static/libs/selectize/css/selectize.css" rel="stylesheet">
+    <link href="/static/libs/selectize/css/selectize.fastcms.css" rel="stylesheet">
+</@layout.header>
+<@layout.body>
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <ol class="breadcrumb float-sm-left">
+                        <li class="breadcrumb-item"><a href="#">文章</a></li>
+                        <li class="breadcrumb-item active">编辑</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+
+            <div class="card card-primary card-outline card-outline-tabs">
+                <ul class="nav nav-tabs">
+                    <li class="nav-item"><a class="nav-link active" href="#timeline" data-toggle="tab">文章属性</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#categoryAndTag" data-toggle="tab">分类标签</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#activity" data-toggle="tab">文章详情</a></li>
+                </ul>
+                <form id="myForm" method="POST" action="/ucenter/article/doSave">
+                    <input type="hidden" name="id" value="${(article.id)!}">
+                    <div class="tab-content">
+                        <div class="active tab-pane fade show" id="timeline">
+                            <div class="col-12" style="padding: 10px 10px 10px 10px;">
+                                <div class="form-group">
+                                    <label for="loginAccount">文章标题</label>
+                                    <input type="text" name="title" class="form-control" id="title" value="${(article.title)!}" placeholder="请输入文章标题">
+                                </div>
+                                <div class="box box-solid" style="width: 200px;">
+                                    <div class="box-header with-border ">
+                                        <label for="isAdmin">缩略图</label>
+                                    </div>
+                                    <div class="box-body no-padding">
+                                        <img src="${(article.thumbnail)!'/static/img/default.jpg'}"
+                                             style="width: 100%;height: 200px"
+                                             id="thumbnail">
+                                        <input type="hidden" value="${(article.thumbnail)!}" name="thumbnail" id="articleThumbnail">
+                                    </div>
+                                    <div class="box-footer">
+                                        <button type="button" class="btn-image-browser btn btn-default btn-sm "
+                                                for-src="thumbnail"
+                                                for-input="articleThumbnail">选择图片
+                                        </button>
+                                        <a href="javascript:;" style="padding-left: 15px" id="removeThumbnail">移除</a>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="loginAccount">文章摘要</label>
+                                    <textarea rows="2" name="summary" class="form-control" id="summary" placeholder="请输入文章摘要">${(article.summary)!}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="loginAccount">SEO关键字</label>
+                                    <textarea rows="2" name="seoKeywords" class="form-control" id="seoKeywords" placeholder="请输入SEO关键字">${(article.seoKeywords)!}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="loginAccount">SEO描述</label>
+                                    <textarea rows="2" name="seoDescription" class="form-control" id="seoDescription" placeholder="请输入SEO描述">${(article.seoDescription)!}</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="loginAccount">排序号</label>
+                                    <input type="number" name="sortNum" class="form-control" id="sortNum" value="${(article.sortNum)!}" placeholder="请输入文章排序号">
+                                </div>
+                                <div class="form-group">
+                                    <label for="loginAccount">外链</label>
+                                    <input type="text" name="outLink" class="form-control" id="outLink" value="${(article.outLink)!}" placeholder="请输入文章外链">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade show" id="categoryAndTag">
+                            <div class="col-12" style="padding: 10px 10px 10px 10px;">
+                                <#function isCheckedCategory categoryId>
+                                    <#if categories?? && (categories?size>0)>
+                                        <#list categories as item>
+                                            <#if item.id == categoryId>
+                                                <#return "checked">
+                                            </#if>
+                                        </#list>
+                                    </#if>
+                                    <#return "">
+                                </#function>
+                                <div class="form-group">
+                                    <label for="articleCategory">分类</label>
+                                    <div class="form-check col-12">
+                                    <#if categoryList?? && (categoryList?size>0)>
+                                        <#list categoryList as item>
+                                            <#if item.type=="category">
+                                                <div class="col-12">
+                                                    <input class="form-check-input" id="articleCategory_${item.id!}" type="checkbox" ${isCheckedCategory(item.id!)} name="articleCategory" value="${item.id!}">
+                                                    <label class="form-check-label" for="articleCategory_${item.id!}">${item.title!}</label>
+                                                </div>
+                                            </#if>
+                                        </#list>
+                                    <#else>
+                                        <div>无分类可选</div>
+                                    </#if>
+                                    </div>
+                                </div>
+
+                                <div class="box box-solid">
+                                    <label>标签</label>
+                                    <div class="box-body">
+                                        <select class="form-control article-tags" multiple="multiple" name="articleTag">
+                                            <#if tags??>
+                                                <#list tags as item>
+                                                    <option value="${item.title!}" selected>${item.title!}</option>
+                                                </#list>
+                                            </#if>
+                                        </select>
+                                        <p class="help-block">多个标签请用“回车键”隔开。</p>
+
+                                        <div class="tags">
+                                                <#if categoryList?? && (categoryList?size>0)>
+                                                    <#list categoryList as item>
+                                                        <#if item.type=="tag">
+                                                            <a href="javascript:;" class="newTag">${item.title!}</a>
+                                                        </#if>
+                                                    </#list>
+                                                </#if>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade show" id="activity">
+                            <div class="form-group">
+                                <textarea class="form-control" id="editor1" name="contentHtml" style="height: 467px;width: 100%;background-color: white">${(article.contentHtml)!}</textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">提交</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</@layout.body>
+<@layout.script>
+    <script src="/static/libs/ckeditor/ckeditor.js"></script>
+    <script src="/static/libs/selectize/selectize.min.js"></script>
+    <script>
+        $("#removeThumbnail").on("click", function () {
+            $("#thumbnail").attr("src", "/static/img/default.jpg");
+            $("#articleThumbnail").val("");
+        })
+        initEditor('editor1', 467, "html");
+        $(function () {
+            submitForm({
+                title: { required: true},
+                thumbnail: { required: true},
+                summary: { required: true},
+                contentHtml: { required: true},
+            }, {
+                title: {required: "请输入文章标题"},
+                thumbnail: {required: "请选择文章缩略图"},
+                summary: {required: "请输入文章摘要"},
+                contentHtml: {required: "请输入文章详情"}
+            })
+        });
+
+        var $select = $('.article-tags').selectize({
+            plugins: ['remove_button'],
+            delimiter: ',',
+            persist: false,
+            addPrecedence: true,
+            create: true,
+            render: {
+                option_create: function (data, escape) {
+                    return '<div class="create" style="padding-left: 5px"> 添加标签：<strong style="color: #DD1144">' + escape(data.input) + '</strong> &hellip; </div>';
+                }
+            }
+        });
+
+        var selectize = $select[0].selectize;
+
+        $(".newTag").each(function () {
+            $(this).on('click', function () {
+                selectize.createItem($(this).text());
+            })
+        });
+    </script>
+</@layout.script>

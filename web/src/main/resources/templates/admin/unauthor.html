@@ -1,0 +1,27 @@
+<@hasLogin>
+<#if data?string('yes', 'no') == 'yes'>
+  <#import "/admin/_layout.html" as layout>
+  <@layout.header "无访问权限"></@layout.header>
+  <@layout.body>
+    <section class="content">
+      <div class="row">
+        <div class="error-page">
+          <h2 class="headline text-warning">403</h2>
+          <div class="error-content">
+            <h3><i class="fas fa-exclamation-triangle text-warning"></i> 无权限访问.</h3>
+            <p>
+              你无权访问该资源，请联系系统管理员授权后，方可访问.
+              <a href="/admin/index">返回首页</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </@layout.body>
+  <@layout.script></@layout.script>
+  <#else>
+    没有访问权限
+</#if>
+</@hasLogin>
+
+

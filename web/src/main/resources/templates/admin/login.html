@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>fastcms | 登录</title>
+  <link rel="stylesheet" href="/static/libs/fontawesome-free/css/all.min.css">
+  <link rel="stylesheet" href="/static/libs/icheck-bootstrap/icheck-bootstrap.min.css">
+  <link rel="stylesheet" href="/static/libs/toastr/toastr.css">
+  <link rel="stylesheet" href="/static/css/adminlte.min.css">
+</head>
+<body class="hold-transition login-page">
+<div class="login-box">
+  <div class="card card-outline card-primary">
+    <div class="card-header text-center">
+      <a href="/" class="h1"><b>fastcms</b></a>
+    </div>
+    <div class="card-body">
+      <#--<p class="login-box-msg">登录</p>-->
+      <form id="myForm" action="/admin/doLogin" method="post" ok="/admin/index">
+        <div class="input-group mb-3 form-group">
+          <input type="text" name="loginAccount" class="form-control" placeholder="账号">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-envelope"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3 form-group">
+          <input type="password" name="password" class="form-control" placeholder="密码">
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-lock"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3 form-group">
+          <input type="text" class="form-control" style="float: left;width: 100px;" placeholder="验证码" name="captcha">
+          <img id="captchaImg" src="/admin/captcha" style="float: right;height: 38px;" onclick="this.src='/admin/captcha?d='+Math.random();">
+        </div>
+        <div class="row">
+          <div class="col-8">
+            <div class="icheck-primary">
+              <input type="checkbox" id="remember">
+              <label for="remember">
+                记住我
+              </label>
+            </div>
+          </div>
+          <div class="col-4">
+            <button type="submit" class="btn btn-primary btn-block">登录</button>
+          </div>
+        </div>
+      </form>
+
+<#--      <p class="mb-1">
+        <a href="forgot-password.html">忘记密码</a>
+      </p>-->
+<#--      <p class="mb-0">
+        <a href="/admin/register" class="text-center">注册一个新账号</a>
+      </p>-->
+    </div>
+  </div>
+</div>
+<script src="/static/libs/jquery/jquery.min.js"></script>
+<script src="/static/libs/jquery-validation/jquery.validate.min.js"></script>
+<script src="/static/libs/jquery-validation/localization/messages_zh.min.js"></script>
+<script src="/static/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/static/js/adminlte.min.js"></script>
+<script src="/static/libs/toastr/toastr.min.js"></script>
+<script src="/static/js/fastcms.js"></script>
+<script type="text/javascript">
+  var ctx = "${request.contextPath}";
+  $(function () {
+    submitForm({
+      loginAccount: { required: true},
+      password: { required: true},
+      captcha: { required: true}
+    }, {
+      loginAccount: { required: "请输入账号"},
+      password: { required: "请输入密码"},
+      captcha: { required: "请输入验证码"}
+    }, function(data){
+      if(data.code == 0) {
+        $('#captchaImg').attr('src', '/admin/captcha?d='+Math.random());
+      }
+    })
+  });
+</script>
+</body>
+</html>

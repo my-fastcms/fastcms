@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastcms.cms.mapper.ArticleMapper">
+
+    <resultMap type="com.fastcms.cms.service.IArticleService$ArticleVo" id="ArticleToResult">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="view_count" jdbcType="INTEGER" property="viewCount"/>
+        <result column="status" jdbcType="VARCHAR" property="status"/>
+        <result column="created" jdbcType="OTHER" property="created" typeHandler="org.apache.ibatis.type.LocalDateTimeTypeHandler"/>
+        <result column="nick_name" jdbcType="VARCHAR" property="author"/>
+        <collection property="categoryList" ofType="com.fastcms.cms.entity.ArticleCategory" column="id" select="getArticleCategoriesByArticleId"/>
+    </resultMap>
+
+    <resultMap type="com.fastcms.cms.service.IArticleService$ArticleInfoVo" id="ArticleInfoToResult">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="created" jdbcType="OTHER" property="created" typeHandler="org.apache.ibatis.type.LocalDateTimeTypeHandler"/>
+        <result column="nick_name" jdbcType="VARCHAR" property="author"/>
+        <result column="head_img" jdbcType="VARCHAR" property="headImg"/>
+        <collection property="categoryList" ofType="com.fastcms.cms.entity.ArticleCategory" column="id" select="getArticleCategoriesByArticleId"/>
+    </resultMap>
+
+    <insert id="saveArticleCategoryRelation">
+        insert into article_category_relation (article_id, category_id) values
+        <foreach collection="articleCategoryIdList" item="articleCategoryId" separator=",">
+            (#{articleId}, #{articleCategoryId})
+        </foreach>
+    </insert>
+
+    <update id="updateViewCount">
+        update article set view_count = view_count + #{count} where id = #{id}
+    </update>
+
+    <delete id="deleteRelationByArticleId">
+        delete from article_category_relation where article_id = #{articleId}
+    </delete>
+
+    <select id="pageArticle" resultMap="ArticleToResult">
+        select distinct a.id, a.title, a.status, a.created, a.view_count, a.thumbnail,
+        u.nick_name from article a
+        LEFT JOIN `user` u on a.user_id = u.id
+        LEFT JOIN article_category_relation acr on acr.article_id = a.id
+        ${ew.customSqlSegment}
+    </select>
+
+    <select id="getArticleCategoriesByArticleId" resultType="com.fastcms.cms.entity.ArticleCategory">
+        select ac.* from article_category_relation acr join article_category ac on acr.category_id = ac.id
+        where acr.article_id = #{articleId}
+    </select>
+
+    <select id="getArticleById" resultMap="ArticleInfoToResult">
+        select a.*,
+        u.nick_name, u.head_img from article a
+        LEFT JOIN `user` u on a.user_id = u.id
+        where a.id = #{id}
+    </select>
+
+    <select id="pageArticleByCategoryId" resultType="com.fastcms.cms.service.IArticleService$ArticleVo">
+        select DISTINCT a.id, a.title, a.status, a.created, a.view_count, a.thumbnail, u.nick_name as author from article_category_relation acr
+        join article a on acr.article_id = a.id
+        LEFT JOIN `user` u on a.user_id = u.id
+        ${ew.customSqlSegment}
+    </select>
+
+    <select id="getArticleListByCategoryId" resultType="com.fastcms.cms.service.IArticleService$ArticleVo">
+        select a.id, a.title, a.status, a.created, a.view_count, a.thumbnail, u.nick_name as author from article_category_relation acr
+        join article a on acr.article_id = a.id
+        LEFT JOIN `user` u on a.user_id = u.id
+        ${ew.customSqlSegment}
+    </select>
+
+</mapper>

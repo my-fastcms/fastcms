@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastcms.mapper.StationMapper">
+
+    <insert id="saveUserStation">
+        insert into user_station (user_id, station_id) values
+        <foreach collection="stationIds" item="stationId" separator=",">
+            (#{userId}, #{stationId})
+        </foreach>
+    </insert>
+
+    <delete id="deleteUserStation">
+        delete from user_station where user_id = #{userId}
+    </delete>
+
+    <select id="getUserStationList" resultType="com.fastcms.service.IStationService$StationVo">
+    SELECT r.*, urs.user_id FROM station r LEFT JOIN (select * from user_station ur where ur.user_id = #{userId}) urs on r.id = urs.station_id
+    </select>
+
+</mapper>

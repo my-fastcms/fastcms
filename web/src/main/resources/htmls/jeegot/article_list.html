@@ -1,0 +1,23 @@
+<#import "_layout.html" as layout>
+<@layout.header "文章列表"></@layout.header>
+<@layout.body>
+    <section id="feature1">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 wow fadeInUp" data-wow-delay="0.6s">
+                    <h2 class="text-uppercase">网站建设</h2>
+                    <#if articleVoPage??>
+                        <#list articleVoPage.records as item>
+                            <p>标题:<a href="${item.url!}">${item.title!}</a></p>
+                            <p>作者:${item.author!}</p>
+                            <p>------------------------------------</p>
+                        </#list>
+                    </#if>
+                </div>
+                <@layout._articlePage/>
+            </div>
+        </div>
+    </section>
+</@layout.body>
+<@layout.script>
+</@layout.script>
