@@ -22,7 +22,6 @@ import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.entity.Permission;
 import com.fastcms.service.IPermissionService;
-import com.fastcms.service.IPluginService;
 import com.fastcms.service.IRoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -61,9 +60,6 @@ public class DefaultPermissionManager implements PermissionManager {
 	private IPermissionService permissionService;
 
 	@Autowired
-	private IPluginService pluginService;
-
-	@Autowired
 	private IRoleService roleService;
 
 	final List<Class> controllerClassList = Collections.synchronizedList(new ArrayList<>());
@@ -87,7 +83,7 @@ public class DefaultPermissionManager implements PermissionManager {
 
 			processNeedAddPermissions(modulePermission);
 
-			prepareSystemModulePermission(FastcmsConstants.SYSTEM_MODULE_ID);
+//			prepareSystemModulePermission(FastcmsConstants.SYSTEM_MODULE_ID);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -127,7 +123,7 @@ public class DefaultPermissionManager implements PermissionManager {
 	}
 
 	boolean checkInit(String moduleId) {
-		return pluginService.getPlugin(moduleId) != null;
+		return true;
 	}
 
 	Permission initModulePermission(String moduleId, String moduleName) {
@@ -352,18 +348,6 @@ public class DefaultPermissionManager implements PermissionManager {
 				roleService.saveRolePermissionOfPlugin(FastcmsConstants.ADMIN_ROLE_ID, needAddAdminPermissionList.stream().map(item -> item.getId()).collect(Collectors.toList()));
 			}finally {
 				needAddAdminPermissionList.clear();
-			}
-		}
-	}
-
-	private void prepareSystemModulePermission(String moduleId) {
-		final List<Long> permissions = new ArrayList<>();
-		Permission modulePermission = initModulePermission(moduleId, SystemModule.getValue(moduleId));
-		if(pluginService.getPlugin(moduleId) == null) {
-			permissions.add(modulePermission.getId());
-			pluginService.insertPlugin(moduleId, SystemModule.getValue(moduleId));
-			if(!permissions.isEmpty()) {
-				roleService.saveRolePermissionOfPlugin(FastcmsConstants.ADMIN_ROLE_ID, permissions);
 			}
 		}
 	}

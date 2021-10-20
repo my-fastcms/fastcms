@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>fastcms-payment-starter</artifactId>
+    <name>fastcms-payment-starter-${project.version}</name>
 
     <properties>
         <pay-java.version>2.14.1</pay-java.version>

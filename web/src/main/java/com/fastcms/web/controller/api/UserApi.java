@@ -16,13 +16,10 @@
  */
 package com.fastcms.web.controller.api;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.core.jwt.ApiToken;
 import com.fastcms.core.response.Response;
-import com.fastcms.entity.Station;
-import com.fastcms.service.IStationService;
 import com.fastcms.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +42,6 @@ public class UserApi extends ApiBaseController {
 
 	@Autowired
 	private IUserService userService;
-
-	@Autowired
-	private IStationService stationService;
 
 	@ApiToken
 	@GetMapping("tag/getTagList")
@@ -83,20 +77,5 @@ public class UserApi extends ApiBaseController {
 		}
 		return Response.success(userService.getUserTeamList(new Page(page, pageSize), userId, stationName));
 	}
-
-	@ApiToken
-	@GetMapping("station/getUserStationList")
-	public ResponseEntity getUserStationList() {
-		return Response.success(userService.getUserStationList(getUserId()));
-	}
-
-	@ApiToken
-	@GetMapping("station/getStationList")
-	public ResponseEntity getStationList() {
-		LambdaQueryWrapper<Station> queryWrapper = new LambdaQueryWrapper();
-		queryWrapper.eq(Station::getStatus, 1);
-		return Response.success(stationService.list(queryWrapper));
-	}
-
 
 }

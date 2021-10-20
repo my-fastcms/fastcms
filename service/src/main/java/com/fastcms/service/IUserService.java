@@ -2,7 +2,6 @@ package com.fastcms.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.fastcms.entity.Station;
 import com.fastcms.entity.User;
 import com.fastcms.entity.UserTag;
 import lombok.Data;
@@ -74,21 +73,6 @@ public interface IUserService extends IService<User> {
      * @return
      */
     Page<UserTeamVo> getUserTeamList(Page page, Long userId, String stationName);
-
-    /**
-     * 获取用户属于哪个高级副总的team
-     * 如果是团购经理就往上找2次
-     * @param userId
-     * @return
-     */
-    User getUserBelongToTeam(Long userId);
-
-    /**
-     * 获取用户岗位
-     * @param userId
-     * @return
-     */
-    List<Station> getUserStationList(Long userId);
 
     /**
      * 根据手机号或用户姓名查询用户

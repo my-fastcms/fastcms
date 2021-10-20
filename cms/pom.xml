@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>fastcms-cms</artifactId>
+    <name>fastcms-cms-${project.version}</name>
 
     <dependencies>
 

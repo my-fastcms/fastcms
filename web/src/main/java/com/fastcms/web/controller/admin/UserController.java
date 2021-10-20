@@ -19,16 +19,18 @@ package com.fastcms.web.controller.admin;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.fastcms.core.mybatis.DataPermission;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.utils.StrUtils;
+import com.fastcms.core.mybatis.DataPermission;
 import com.fastcms.core.permission.AdminMenu;
 import com.fastcms.core.response.Response;
-import com.fastcms.common.utils.StrUtils;
 import com.fastcms.entity.PaymentRecord;
-import com.fastcms.entity.Station;
 import com.fastcms.entity.User;
 import com.fastcms.entity.UserTag;
-import com.fastcms.service.*;
+import com.fastcms.service.IPaymentRecordService;
+import com.fastcms.service.IRoleService;
+import com.fastcms.service.IUserService;
+import com.fastcms.service.IUserTagService;
 import com.fastcms.utils.PasswordUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,8 +64,6 @@ public class UserController extends AdminBaseController {
     private IRoleService roleService;
     @Autowired
     private IUserTagService userTagService;
-    @Autowired
-    private IStationService stationService;
     @Autowired
     private IPaymentRecordService paymentRecordService;
 
@@ -193,44 +193,6 @@ public class UserController extends AdminBaseController {
     @PostMapping("doEditTag")
     public ResponseEntity doEditTag(@RequestParam("userId") Long userId, @RequestParam("tagIds[]") List<Long> tagIds) {
         userTagService.saveUserTagRelation(userId, tagIds);
-        return Response.success();
-    }
-
-    @AdminMenu(name = "岗位", sort = 3)
-    @GetMapping("station/list")
-    public String userStationlist(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-                              @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
-                              Model model) {
-        LambdaQueryWrapper<Station> queryWrapper = new QueryWrapper().lambda();
-        queryWrapper.orderByDesc(Station::getCreated);
-        Page pageParam = new Page<>(page, pageSize);
-        Page<UserTag> pageData = stationService.page(pageParam, queryWrapper);
-        model.addAttribute(PAGE_DATA_ATTR, pageData);
-        return "admin/user/station_list";
-    }
-
-    @RequestMapping("station/edit")
-    public String editStation(@RequestParam(name = "id", required = false) Long id, Model model) {
-        model.addAttribute("station", stationService.getById(id));
-        return "admin/user/station_edit";
-    }
-
-    @PostMapping("station/doSave")
-    public ResponseEntity doSaveUserStation(@Validated Station station) {
-        stationService.saveOrUpdate(station);
-        return Response.success();
-    }
-
-    @RequestMapping("station")
-    public String editUserStation(@RequestParam(name = "id") Long id, Model model) {
-        model.addAttribute("user", userService.getById(id));
-        model.addAttribute("stationList", stationService.getUserStationList(id));
-        return "admin/user/edit_station";
-    }
-
-    @PostMapping("doEditStation")
-    public ResponseEntity doEditStation(@RequestParam("userId") Long userId, @RequestParam("stationIds[]") List<Long> stationIds) {
-        stationService.saveUserStation(userId, stationIds);
         return Response.success();
     }
 

@@ -17,11 +17,6 @@
         where u.user_name = #{userName}
     </select>
 
-    <select id="getUserStationList" resultType="com.fastcms.entity.Station">
-        SELECT ut.* from user_station utr JOIN station ut on utr.station_id = ut.id
-        where utr.user_id = #{userId}
-    </select>
-
     <select id="getUserTeamList" resultType="com.fastcms.service.IUserService$UserTeamVo">
         select u.id, u.user_name, s.station_name,
         (SELECT sum(ws.`amount`)  from `wh_shipping` ws where ws.`user_id` = u.id and ws.status=1) as money

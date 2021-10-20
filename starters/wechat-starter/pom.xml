@@ -9,7 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>fastcms-wx-starter</artifactId>
+    <artifactId>fastcms-wechat-starter</artifactId>
+    <name>fastcms-wechat-starter-${project.version}</name>
 
     <properties>
         <weixin.version>3.5.0</weixin.version>

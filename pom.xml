@@ -115,7 +115,7 @@
 			</dependency>
 			<dependency>
 				<groupId>com.fastcms</groupId>
-				<artifactId>fastcms-wx-starter</artifactId>
+				<artifactId>fastcms-wechat-starter</artifactId>
 				<version>${revision}</version>
 			</dependency>
 		</dependencies>

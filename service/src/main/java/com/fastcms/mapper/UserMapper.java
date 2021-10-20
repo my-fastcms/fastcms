@@ -2,7 +2,6 @@ package com.fastcms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.fastcms.entity.Station;
 import com.fastcms.entity.User;
 import com.fastcms.entity.UserTag;
 import com.fastcms.service.IUserService;
@@ -20,8 +19,6 @@ import java.util.List;
 public interface UserMapper extends BaseMapper<User> {
 
 	List<UserTag> getUserTagList(Long userId);
-
-	List<Station> getUserStationList(Long userId);
 
 	Page<IUserService.UserTeamVo> getUserTeamList(Page page, Long userId, String stationName);
 

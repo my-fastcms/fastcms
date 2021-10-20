@@ -6,12 +6,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fastcms.aspect.Log;
 import com.fastcms.common.exception.FastcmsException;
-import com.fastcms.entity.Station;
 import com.fastcms.entity.User;
 import com.fastcms.entity.UserOpenid;
 import com.fastcms.entity.UserTag;
 import com.fastcms.mapper.UserMapper;
-import com.fastcms.service.IStationService;
 import com.fastcms.service.IUserOpenidService;
 import com.fastcms.service.IUserService;
 import com.fastcms.utils.PasswordUtils;
@@ -40,9 +38,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Autowired
     private IUserOpenidService userOpenidService;
-
-    @Autowired
-    private IStationService stationService;
 
     @Override
     @Log
@@ -162,30 +157,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public User getUserBelongToTeam(Long userId) {
-        List<Station> userStationList = getUserStationList(userId);
-        if(userStationList == null || userStationList.size()<=0) {
-            return null;
-        }
-
-        Station station = userStationList.get(0);
-        if(station.getWithManager()) {
-            //管理岗位角色
-            return getById(userId);
-        }
-
-        UserTeam userBelongToTeam = getBaseMapper().getUserBelongToTeam(userId);
-        if (userBelongToTeam == null) return null;
-
-        return getUserBelongToTeam(userBelongToTeam.getParentId());
-    }
-
-    @Override
-    public List<Station> getUserStationList(Long userId) {
-        return getBaseMapper().getUserStationList(userId);
-    }
-
-    @Override
     public User getUserBySearch(Long userId, String keyword) {
         User user = getBaseMapper().getTeamUserByUserName(userId, keyword);
         if(user == null) {
@@ -228,7 +199,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         List<Long> stationIds = new ArrayList<>();
         stationIds.add(addGroupUserParam.getTagId());
-        stationService.saveUserStation(user.getId(), stationIds);
 
     }
 
