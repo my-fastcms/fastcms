@@ -16,18 +16,12 @@
  */
 package com.fastcms.core.mybatis;
 
-import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.plugins.handler.DataPermissionHandler;
 import com.fastcms.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.expression.Expression;
-import net.sf.jsqlparser.expression.LongValue;
-import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
-import net.sf.jsqlparser.expression.operators.relational.EqualsTo;
 import net.sf.jsqlparser.schema.Column;
 import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.SecurityUtils;
-import org.springframework.core.annotation.AnnotationUtils;
 
 import java.lang.reflect.Method;
 
@@ -72,24 +66,24 @@ public class FastcmsDataPermissionHandler implements DataPermissionHandler {
 
 			final User user;
 			try {
-				user = (User) SecurityUtils.getSubject().getPrincipal();
-				if(user.isAdmin()) {
-					return where;
-				}
+//				user = (User) SecurityUtils.getSubject().getPrincipal();
+//				if(user.isAdmin()) {
+//					return where;
+//				}
 			} catch (Exception e) {
 				return where;
 			}
 
-			if(user != null) {
-				//只查看自己的数据
-				DataPermission annotation = AnnotationUtils.getAnnotation(myMethod, DataPermission.class);
-				if(annotation != null) {
-					EqualsTo equalsTo = new EqualsTo();
-					equalsTo.setLeftExpression(buildColumn(annotation.value(), USER_COLUMN));
-					equalsTo.setRightExpression(new LongValue(user.getId()));
-					return ObjectUtils.isNotEmpty(where) ? new AndExpression(where, equalsTo) : equalsTo;
-				}
-			}
+//			if(user != null) {
+//				//只查看自己的数据
+//				DataPermission annotation = AnnotationUtils.getAnnotation(myMethod, DataPermission.class);
+//				if(annotation != null) {
+//					EqualsTo equalsTo = new EqualsTo();
+//					equalsTo.setLeftExpression(buildColumn(annotation.value(), USER_COLUMN));
+//					equalsTo.setRightExpression(new LongValue(user.getId()));
+//					return ObjectUtils.isNotEmpty(where) ? new AndExpression(where, equalsTo) : equalsTo;
+//				}
+//			}
 		}
 
 		return where;

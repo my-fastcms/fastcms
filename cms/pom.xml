@@ -26,11 +26,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.shiro</groupId>
-            <artifactId>shiro-spring-boot-web-starter</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.fastcms</groupId>
             <artifactId>fastcms-core</artifactId>
         </dependency>

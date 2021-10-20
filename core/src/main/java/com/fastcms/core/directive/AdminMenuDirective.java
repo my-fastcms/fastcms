@@ -16,12 +16,8 @@
  */
 package com.fastcms.core.directive;
 
-import com.fastcms.core.directive.BaseDirective;
-import com.fastcms.entity.User;
 import com.fastcms.service.IPermissionService;
 import freemarker.core.Environment;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -42,9 +38,10 @@ public class AdminMenuDirective extends BaseDirective {
 
     @Override
     public Object doExecute(Environment env, Map params) {
-        Subject subject = SecurityUtils.getSubject();
-        User user = (User) subject.getPrincipal();
-        return user == null ? null : permissionService.getUserMenuPermission(user.getId());
+//        Subject subject = SecurityUtils.getSubject();
+//        User user = (User) subject.getPrincipal();
+//        return user == null ? null : permissionService.getUserMenuPermission(user.getId());
+        return null;
     }
 
 }

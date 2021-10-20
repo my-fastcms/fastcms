@@ -25,7 +25,6 @@ import com.fastcms.service.IPermissionService;
 import com.fastcms.service.IRoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.io.Resource;
@@ -282,8 +281,9 @@ public class DefaultPermissionManager implements PermissionManager {
 	}
 
 	String getPermissionPermInfo(Method method) {
-		RequiresPermissions annotation = AnnotationUtils.getAnnotation(method, RequiresPermissions.class);
-		return annotation == null ? null : Arrays.stream(annotation.value()).collect(Collectors.joining(","));
+//		RequiresPermissions annotation = AnnotationUtils.getAnnotation(method, RequiresPermissions.class);
+//		return annotation == null ? null : Arrays.stream(annotation.value()).collect(Collectors.joining(","));
+		return null;
 	}
 
 	void deletePermissions(List<Permission> permissionList) {

@@ -32,7 +32,6 @@ import com.fastcms.service.IRoleService;
 import com.fastcms.service.IUserService;
 import com.fastcms.service.IUserTagService;
 import com.fastcms.utils.PasswordUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -69,7 +68,7 @@ public class UserController extends AdminBaseController {
 
     @AdminMenu(name = "用户管理", sort = 1)
     @GetMapping("list")
-    @RequiresPermissions("user:list")
+//    @RequiresPermissions("user:list")
     public String list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
                        @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
                        @RequestParam(name = "loginAccount", required = false) String loginAccount,
@@ -97,7 +96,7 @@ public class UserController extends AdminBaseController {
     }
 
     @AdminMenu(name = "保存", type = FastcmsConstants.PERMISSION_OPTION)
-    @RequiresPermissions("user:save")
+//    @RequiresPermissions("user:save")
     @PostMapping("doSave")
     public ResponseEntity doSave(@Validated User user) {
 

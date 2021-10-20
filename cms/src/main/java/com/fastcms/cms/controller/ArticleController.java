@@ -29,7 +29,6 @@ import com.fastcms.core.permission.AdminMenu;
 import com.fastcms.core.response.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -63,7 +62,6 @@ public class ArticleController {
 
     @AdminMenu(name = "文章管理", sort = 1)
     @RequestMapping("list")
-    @RequiresPermissions("article:list")
     public String list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
                        @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
                        @RequestParam(name = "title", required = false) String title,

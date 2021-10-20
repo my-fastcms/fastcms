@@ -17,9 +17,6 @@
 package com.fastcms.core.interceptor;
 
 import com.fastcms.common.constants.FastcmsConstants;
-import com.fastcms.core.utils.RequestUtils;
-import org.apache.shiro.SecurityUtils;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,27 +31,10 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class BaseInterceptor implements HandlerInterceptor {
 
-	static final String[] exclude = new String[] {"doLogin", "doRegister"};
-
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		request.setAttribute(FastcmsConstants.STATIC_PATH_KEY, FastcmsConstants.STATIC_RESOURCE_PATH);
-
-		if(!SecurityUtils.getSubject().isAuthenticated()) {
-			if(!isExclude(request) && RequestUtils.isAjaxRequest(request)) {
-				response.sendError(HttpStatus.FORBIDDEN.value());
-				return false;
-			}
-		}
-
 		return true;
-	}
-
-	boolean isExclude(HttpServletRequest request) {
-		for (String s : exclude) {
-			if(request.getRequestURI().contains(s)) return true;
-		}
-		return false;
 	}
 
 }

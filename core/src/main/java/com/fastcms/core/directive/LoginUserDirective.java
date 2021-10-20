@@ -16,10 +16,7 @@
  */
 package com.fastcms.core.directive;
 
-import com.fastcms.entity.User;
 import freemarker.core.Environment;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -36,9 +33,10 @@ public class LoginUserDirective extends BaseDirective {
 
     @Override
     public Object doExecute(Environment env, Map params) {
-        Subject subject = SecurityUtils.getSubject();
-        User user = (User) subject.getPrincipal();
-        return user == null ? new User() : user;
+//        Subject subject = SecurityUtils.getSubject();
+//        User user = (User) subject.getPrincipal();
+//        return user == null ? new User() : user;
+        return null;
     }
 
 }

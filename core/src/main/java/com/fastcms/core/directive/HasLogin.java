@@ -17,8 +17,6 @@
 package com.fastcms.core.directive;
 
 import freemarker.core.Environment;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -35,8 +33,9 @@ public class HasLogin extends BaseDirective {
 
     @Override
     public Object doExecute(Environment env, Map params) {
-        Subject subject = SecurityUtils.getSubject();
-        return subject == null ? false : subject.isAuthenticated();
+//        Subject subject = SecurityUtils.getSubject();
+//        return subject == null ? false : subject.isAuthenticated();
+        return null;
     }
 
 }

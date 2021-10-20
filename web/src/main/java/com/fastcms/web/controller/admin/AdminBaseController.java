@@ -17,7 +17,6 @@
 package com.fastcms.web.controller.admin;
 
 import com.fastcms.entity.User;
-import org.apache.shiro.SecurityUtils;
 
 /**
  * @author： wjun_java@163.com
@@ -31,7 +30,8 @@ public abstract class AdminBaseController {
     protected static final String PAGE_DATA_ATTR = "pageData";
 
     public User getLoginUser(){
-        return (User) SecurityUtils.getSubject().getPrincipal();
+//        return (User) SecurityUtils.getSubject().getPrincipal();
+        return null;
     }
 
 }

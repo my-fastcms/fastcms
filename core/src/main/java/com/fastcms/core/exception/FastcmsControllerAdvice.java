@@ -18,17 +18,12 @@ package com.fastcms.core.exception;
 
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.core.response.Response;
-import com.fastcms.core.utils.RequestUtils;
-import org.apache.shiro.authz.AuthorizationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author： wjun_java@163.com
@@ -56,12 +51,12 @@ public class FastcmsControllerAdvice {
 		return Response.fail(e.getMessage());
 	}
 
-	@ExceptionHandler(AuthorizationException.class)
-	public Object authorizationExceptionHandler(AuthorizationException e, HttpServletRequest request) {
-		if(RequestUtils.isAjaxRequest(request)) {
-			return Response.fail(e.getMessage());
-		}
-		return new ModelAndView("/admin/unauthor");
-	}
+//	@ExceptionHandler(AuthorizationException.class)
+//	public Object authorizationExceptionHandler(AuthorizationException e, HttpServletRequest request) {
+//		if(RequestUtils.isAjaxRequest(request)) {
+//			return Response.fail(e.getMessage());
+//		}
+//		return new ModelAndView("/admin/unauthor");
+//	}
 
 }

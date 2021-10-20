@@ -16,17 +16,12 @@
  */
 package com.fastcms.web.controller.admin;
 
-import com.google.code.kaptcha.Constants;
-import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.core.response.Response;
 import com.fastcms.core.utils.CaptchaUtils;
 import com.fastcms.service.IUserService;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.UnknownAccountException;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.subject.Subject;
+import com.google.code.kaptcha.Constants;
+import com.google.code.kaptcha.impl.DefaultKaptcha;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -74,17 +69,18 @@ public class AdminController {
             return Response.fail("验证码错误");
         }
 
-        UsernamePasswordToken token = new UsernamePasswordToken(loginAccount, password);
-        Subject subject = SecurityUtils.getSubject();
-        try {
-            subject.login(token);
-            userService.updateUserLoginTime(loginAccount);
-            return Response.success();
-        } catch (UnknownAccountException e) {
-            return Response.fail("账号不存在");
-        } catch (AuthenticationException e) {
-            return Response.fail("密码不正确");
-        }
+//        UsernamePasswordToken token = new UsernamePasswordToken(loginAccount, password);
+//        Subject subject = SecurityUtils.getSubject();
+//        try {
+//            subject.login(token);
+//            userService.updateUserLoginTime(loginAccount);
+//            return Response.success();
+//        } catch (UnknownAccountException e) {
+//            return Response.fail("账号不存在");
+//        } catch (AuthenticationException e) {
+//            return Response.fail("密码不正确");
+//        }
+        return null;
     }
 
     @RequestMapping("unauthor")

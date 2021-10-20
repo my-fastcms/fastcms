@@ -19,7 +19,6 @@ package com.fastcms.core.mybatis;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.fastcms.entity.User;
 import org.apache.ibatis.reflection.MetaObject;
-import org.apache.shiro.SecurityUtils;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -56,7 +55,8 @@ public class FastcmsMetaObjectHandler implements MetaObjectHandler {
     }
 
     public User getLoginUser(){
-        return (User) SecurityUtils.getSubject().getPrincipal();
+//        return (User) SecurityUtils.getSubject().getPrincipal();
+        return null;
     }
 
 }

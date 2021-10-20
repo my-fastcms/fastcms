@@ -28,7 +28,6 @@ import com.fastcms.entity.Role;
 import com.fastcms.service.IPermissionService;
 import com.fastcms.service.IRoleService;
 import com.fastcms.web.Fastcms;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -65,7 +64,7 @@ public class RoleController extends AdminBaseController {
 
     @AdminMenu(name = "角色管理", sort = 1)
     @GetMapping("list")
-    @RequiresPermissions("role:list")
+//    @RequiresPermissions("role:list")
     public String list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
                        @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
                        @RequestParam(name = "roleName", required = false) String roleName,
