@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
-    <artifactId>plugins</artifactId>
+    <artifactId>fastcms-plugins</artifactId>
     <name>plugins-${project.version}</name>
 
     <properties>
