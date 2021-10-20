@@ -21,7 +21,7 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-undertow</artifactId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
         <!-- log -->
@@ -43,10 +43,10 @@
             <artifactId>fastcms-core</artifactId>
         </dependency>
 
-        <dependency>
+<!--        <dependency>
             <groupId>com.fastcms</groupId>
             <artifactId>fastcms-cms</artifactId>
-        </dependency>
+        </dependency>-->
 
     </dependencies>
 
