@@ -5,7 +5,7 @@
 		</div>
 		<div class="login-content" :class="{ 'login-content-mobile': tabsActiveName === 'mobile' }">
 			<div class="login-content-main">
-				<h4 class="login-content-title">{{ getThemeConfig.globalTitle }}后台模板</h4>
+				<h4 class="login-content-title">{{ getThemeConfig.globalTitle }}</h4>
 				<div v-if="!isScan">
 					<el-tabs v-model="tabsActiveName" @tab-click="onTabsClick">
 						<el-tab-pane :label="$t('message.label.one1')" name="account" :disabled="tabsActiveName === 'account'">
@@ -19,10 +19,10 @@
 							</transition>
 						</el-tab-pane>
 					</el-tabs>
-					<div class="mt10">
+					<!-- <div class="mt10">
 						<el-button type="text" size="small">{{ $t('message.link.one3') }}</el-button>
 						<el-button type="text" size="small">{{ $t('message.link.two4') }}</el-button>
-					</div>
+					</div> -->
 				</div>
 				<Scan v-else />
 				<div class="login-content-main-sacn" @click="isScan = !isScan">
