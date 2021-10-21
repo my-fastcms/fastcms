@@ -20,7 +20,6 @@ import com.alibaba.fastjson.JSON;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.core.jwt.ApiToken;
 import com.fastcms.core.response.Response;
-import com.fastcms.utils.PasswordUtils;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -165,7 +164,7 @@ public class ApiInterceptor implements HandlerInterceptor {
 		}
 		query.append(md5Key);
 
-		return PasswordUtils.md5(query.toString());
+		return query.toString();
 	}
 
 	private SecretKey generalKey() {

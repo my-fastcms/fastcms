@@ -31,7 +31,6 @@ import com.fastcms.service.IPaymentRecordService;
 import com.fastcms.service.IRoleService;
 import com.fastcms.service.IUserService;
 import com.fastcms.service.IUserTagService;
-import com.fastcms.utils.PasswordUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -106,8 +105,8 @@ public class UserController extends AdminBaseController {
         }
 
         final String salt = System.currentTimeMillis() + "";
-        final String password = PasswordUtils.getMd5Password(salt, user.getPassword());
-        user.setPassword(password);
+//        final String password = PasswordUtils.getMd5Password(salt, user.getPassword());
+//        user.setPassword(password);
         user.setSalt(salt);
         userService.saveOrUpdate(user);
         return Response.success();

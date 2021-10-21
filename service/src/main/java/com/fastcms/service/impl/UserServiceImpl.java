@@ -12,7 +12,6 @@ import com.fastcms.entity.UserTag;
 import com.fastcms.mapper.UserMapper;
 import com.fastcms.service.IUserOpenidService;
 import com.fastcms.service.IUserService;
-import com.fastcms.utils.PasswordUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,16 +76,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             throw new Exception("两次新密码输入不一致");
         }
 
-        final String result = PasswordUtils.getMd5Password(user.getSalt(), userParam.getPassword());
-        if(!result.equals(user.getPassword())) {
-            throw new Exception("旧密码输入错误");
-        }
+//        final String result = PasswordUtils.getMd5Password(user.getSalt(), userParam.getPassword());
+//        if(!result.equals(user.getPassword())) {
+//            throw new Exception("旧密码输入错误");
+//        }
+//
+//        final String salt = System.currentTimeMillis() + "";
+//        final String newPwd = PasswordUtils.getMd5Password(salt, userParam.getNewPassword());
 
-        final String salt = System.currentTimeMillis() + "";
-        final String newPwd = PasswordUtils.getMd5Password(salt, userParam.getNewPassword());
-
-        user.setPassword(newPwd);
-        user.setSalt(salt);
+//        user.setPassword(newPwd);
+//        user.setSalt(salt);
         updateById(user);
 
     }

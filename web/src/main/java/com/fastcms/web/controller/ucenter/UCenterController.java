@@ -22,7 +22,6 @@ import com.fastcms.core.response.Response;
 import com.fastcms.core.utils.CaptchaUtils;
 import com.fastcms.entity.User;
 import com.fastcms.service.IUserService;
-import com.fastcms.utils.PasswordUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -88,11 +87,11 @@ public class UCenterController extends UCenterBaseController {
         }
 
         final String salt = System.currentTimeMillis() + "";
-        final String md5password = PasswordUtils.getMd5Password(salt, password);
+//        final String md5password = PasswordUtils.getMd5Password(salt, password);
         User user = new User();
         user.setLoginAccount(loginAccount);
         user.setNickName(nickName);
-        user.setPassword(md5password);
+//        user.setPassword(md5password);
         user.setEmail(email);
         user.setSalt(salt);
         user.setSource(User.SourceType.WEB_REGISTER.name().toLowerCase());
