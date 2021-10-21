@@ -32,7 +32,7 @@ import org.springframework.context.annotation.Configuration;
  * @version: 1.0
  */
 @Configuration
-@MapperScan("com.fastcms.mapper")
+@MapperScan({"com.fastcms.mapper", "com.fastcms.cms.mapper"})
 public class MyBatisPlusConfig {
 
     @Bean

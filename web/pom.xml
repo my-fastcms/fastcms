@@ -43,10 +43,10 @@
             <artifactId>fastcms-core</artifactId>
         </dependency>
 
-<!--        <dependency>
+        <dependency>
             <groupId>com.fastcms</groupId>
             <artifactId>fastcms-cms</artifactId>
-        </dependency>-->
+        </dependency>
 
     </dependencies>
 
