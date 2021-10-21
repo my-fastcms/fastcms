@@ -17,7 +17,8 @@
 ### 核心技术
 - SpringBoot作为底层框架
 - mybatis-plus代码生成，可快速生成模块，插件的骨架代码。
-- 使用shiro进行登录验证，权限控制。
+- 使用spring security jwt进行登录验证，权限控制。
+- 前后端分离技术
 - 完美的数据权限解决方案。
 - 集成pf4j插件框架。
 - 基于pf4j实现springmvc controller的动态插拔。
