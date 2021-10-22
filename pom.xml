@@ -9,7 +9,7 @@
 	<name>fastcms-${project.version}</name>
 	<description>fastcms project for Spring Boot</description>
 	<properties>
-		<revision>0.0.1</revision>
+		<revision>0.0.1-SNAPSHOT</revision>
 		<!-- Compiler settings properties -->
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
@@ -24,6 +24,35 @@
 		<spring-boot-dependencies.version>2.5.5</spring-boot-dependencies.version>
 
 	</properties>
+
+	<scm>
+		<url>git@gitee.com:dianbuapp_admin/fastcms.git</url>
+		<connection>scm:git@gitee.com:dianbuapp_admin/fastcms.git</connection>
+		<developerConnection>scm:git@gitee.com:dianbuapp_admin/fastcms.git</developerConnection>
+		<tag>fastcms-${revision}</tag>
+	</scm>
+
+	<developers>
+		<developer>
+			<id>XJD Fastcms</id>
+			<name>Fastcms</name>
+			<url>http://www.xjd2020.com</url>
+			<email>wjun_java@163.com</email>
+		</developer>
+	</developers>
+
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<issueManagement>
+		<system>gitee</system>
+		<url>https://gitee.com/dianbuapp_admin/fastcms/issues</url>
+	</issueManagement>
 
 	<modules>
 		<module>codegen</module>
