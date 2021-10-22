@@ -1,7 +1,3 @@
-server:
-  servlet:
-    context-path: /fastcms
-
 spring:
   application:
     name: fastcms

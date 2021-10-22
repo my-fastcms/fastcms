@@ -29,7 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 /**
  * @author： wjun_java@163.com
@@ -58,14 +57,6 @@ public class TemplateIndexController extends TemplateBaseController {
     @RequestMapping({"/", "index"})
     public String index() {
         return getTemplatePath() + INDEX;
-    }
-
-    @RequestMapping({"/{file}"})
-    public String index(@PathVariable("file") String file) {
-        if(StringUtils.isBlank(file) || !file.contains(".txt")) {
-            return UrlBasedViewResolver.REDIRECT_URL_PREFIX  + INDEX;
-        }
-        return getTemplatePath() + file.substring(0, file.lastIndexOf("."));
     }
 
     @RequestMapping("p/{path}")
