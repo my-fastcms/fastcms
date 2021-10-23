@@ -7,7 +7,7 @@ import request from '/@/utils/request';
  */
 export function signIn(params: object) {
 	return request({
-		url: '/user/signIn',
+		url: '/fastcms/login',
 		method: 'post',
 		data: params,
 	});

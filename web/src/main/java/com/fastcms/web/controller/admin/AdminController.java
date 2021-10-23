@@ -67,9 +67,9 @@ public class AdminController {
     private JwtTokenManager tokenManager;
 
     @PostMapping("login")
-    public ResponseEntity login(@RequestParam String username, @RequestParam String password, String captcha, HttpRequest request, HttpResponse response) throws AccessException {
+    public ResponseEntity login(@RequestParam String username, @RequestParam String password, @RequestParam String code, HttpRequest request, HttpResponse response) throws AccessException {
 
-        if(!CaptchaUtils.checkCaptcha(captcha)) {
+        if(!CaptchaUtils.checkCaptcha(code)) {
             return Response.fail("验证码错误");
         }
 

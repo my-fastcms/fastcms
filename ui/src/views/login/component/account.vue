@@ -5,7 +5,7 @@
 				type="text"
 				:placeholder="$t('message.account.accountPlaceholder1')"
 				prefix-icon="el-icon-user"
-				v-model="ruleForm.userName"
+				v-model="ruleForm.username"
 				clearable
 				autocomplete="off"
 			>
@@ -67,6 +67,8 @@ import { initBackEndControlRoutes } from '/@/router/backEnd';
 import { useStore } from '/@/store/index';
 import { Session } from '/@/utils/storage';
 import { formatAxis } from '/@/utils/formatTime';
+import { signIn } from '/@/api/login/index';
+
 export default defineComponent({
 	name: 'login',
 	setup() {
@@ -78,7 +80,7 @@ export default defineComponent({
 		const state = reactive({
 			isShowPassword: false,
 			ruleForm: {
-				userName: 'admin',
+				username: 'admin',
 				password: '123456',
 				code: '1234',
 			},
@@ -92,6 +94,9 @@ export default defineComponent({
 		});
 		// 登录
 		const onSignIn = async () => {
+			signIn(state.ruleForm).then(res => {
+				ElMessage({showClose: true, message: 'res:' + res , type: 'info'})	
+			})
 			state.loading.signIn = true;
 			let defaultAuthPageList: Array<string> = [];
 			let defaultAuthBtnList: Array<string> = [];
@@ -104,7 +109,7 @@ export default defineComponent({
 			// test 按钮权限标识
 			let testAuthBtnList: Array<string> = ['btn.add', 'btn.link'];
 			// 不同用户模拟不同的用户权限
-			if (state.ruleForm.userName === 'admin') {
+			if (state.ruleForm.username === 'admin') {
 				defaultAuthPageList = adminAuthPageList;
 				defaultAuthBtnList = adminAuthBtnList;
 			} else {
@@ -113,9 +118,9 @@ export default defineComponent({
 			}
 			// 用户信息模拟数据
 			const userInfos = {
-				userName: state.ruleForm.userName,
+				username: state.ruleForm.username,
 				photo:
-					state.ruleForm.userName === 'admin'
+					state.ruleForm.username === 'admin'
 						? 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1813762643,1914315241&fm=26&gp=0.jpg'
 						: 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=317673774,2961727727&fm=26&gp=0.jpg',
 				time: new Date().getTime(),
