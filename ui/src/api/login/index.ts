@@ -10,9 +10,6 @@ export function signIn(params: object) {
 		url: '/fastcms/login',
 		method: 'post',
 		data: params,
-		headers:{
-			'Content-type': 'application/x-www-form-urlencoded'
-		},
 	});
 }
 
