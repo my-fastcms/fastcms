@@ -16,19 +16,32 @@
  */
 package com.fastcms.web.controller.admin;
 
-import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.core.response.Response;
 import com.fastcms.core.utils.CaptchaUtils;
 import com.fastcms.service.IUserService;
+import com.fastcms.web.security.JwtTokenManager;
+import com.google.code.kaptcha.Constants;
+import com.google.code.kaptcha.impl.DefaultKaptcha;
+import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.rmi.AccessException;
 
 /**
  * @author： wjun_java@163.com
@@ -37,50 +50,41 @@ import java.io.IOException;
  * @modifiedBy：
  * @version: 1.0
  */
-@RequestMapping(FastcmsConstants.ADMIN_MAPPING)
-@Controller
+@RestController
+@RequestMapping("fastcms")
 public class AdminController {
 
     @Autowired
     private IUserService userService;
 
-//    @Autowired
-//    private DefaultKaptcha captchaProducer;
+    @Autowired
+    private DefaultKaptcha captchaProducer;
 
-    @RequestMapping({"", "/", "index"})
-    public String index() {
-        return "admin/index";
-    }
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
-    @RequestMapping("login")
-    public String login() {
-        return "admin/login";
-    }
+    @Autowired
+    private JwtTokenManager tokenManager;
 
-    @PostMapping("doLogin")
-    public ResponseEntity doLogin(String loginAccount, String password, String captcha) {
+    @PostMapping("login")
+    public ResponseEntity login(@RequestParam String username, @RequestParam String password, String captcha, HttpRequest request, HttpResponse response) throws AccessException {
 
         if(!CaptchaUtils.checkCaptcha(captcha)) {
             return Response.fail("验证码错误");
         }
 
-//        UsernamePasswordToken token = new UsernamePasswordToken(loginAccount, password);
-//        Subject subject = SecurityUtils.getSubject();
-//        try {
-//            subject.login(token);
-//            userService.updateUserLoginTime(loginAccount);
-//            return Response.success();
-//        } catch (UnknownAccountException e) {
-//            return Response.fail("账号不存在");
-//        } catch (AuthenticationException e) {
-//            return Response.fail("密码不正确");
-//        }
-        return null;
-    }
+        try {
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+            Authentication authenticate = authenticationManager.authenticate(authenticationToken);
 
-    @RequestMapping("unauthor")
-    public String unauthor() {
-        return "admin/unauthor";
+            String token = tokenManager.createToken(authenticate.getName());
+
+            return Response.success(token);
+
+        } catch (AuthenticationException e) {
+            throw new AccessException("unknown user!");
+        }
+
     }
 
     @RequestMapping("captcha")
@@ -90,13 +94,13 @@ public class AdminController {
         response.addHeader("Cache-Control", "post-check=0, pre-check=0");
         response.setHeader("Pragma", "no-cache");
         response.setContentType("image/jpeg");
-//        String capText = captchaProducer.createText();
-//        session.setAttribute(Constants.KAPTCHA_SESSION_KEY, capText);
-//        BufferedImage bi = captchaProducer.createImage(capText);
-//        ServletOutputStream out = response.getOutputStream();
-//        ImageIO.write(bi, "jpg", out);
-//        out.flush();
-//        out.close();
+        String capText = captchaProducer.createText();
+        session.setAttribute(Constants.KAPTCHA_SESSION_KEY, capText);
+        BufferedImage bi = captchaProducer.createImage(capText);
+        ServletOutputStream out = response.getOutputStream();
+        ImageIO.write(bi, "jpg", out);
+        out.flush();
+        out.close();
     }
 
 }

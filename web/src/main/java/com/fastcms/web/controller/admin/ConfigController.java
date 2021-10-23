@@ -16,8 +16,8 @@
  */
 package com.fastcms.web.controller.admin;
 
-import com.fastcms.core.config.ConfigChangeListenerManager;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.core.config.ConfigChangeListenerManager;
 import com.fastcms.core.response.Response;
 import com.fastcms.entity.Config;
 import com.fastcms.service.IConfigService;
@@ -25,9 +25,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -40,9 +40,9 @@ import java.util.*;
  * @version: 1.0
  */
 @Slf4j
-@Controller
+@RestController
 @RequestMapping(FastcmsConstants.ADMIN_MAPPING + "/config")
-public class ConfigController extends AdminBaseController {
+public class ConfigController {
 
 	private static final String LISTENER_KEY = "listener";
 

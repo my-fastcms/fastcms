@@ -21,10 +21,8 @@ import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.fastcms.common.constants.FastcmsConstants;
-import com.fastcms.core.jwt.ApiToken;
-import com.fastcms.core.jwt.JwtUtils;
-import com.fastcms.core.response.Response;
 import com.fastcms.common.utils.StrUtils;
+import com.fastcms.core.response.Response;
 import com.fastcms.entity.User;
 import com.fastcms.entity.UserOpenid;
 import com.fastcms.service.IUserService;
@@ -33,7 +31,6 @@ import me.chanjar.weixin.common.session.WxSession;
 import me.chanjar.weixin.common.session.WxSessionManager;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,7 +52,7 @@ import java.util.Map;
 @Slf4j
 @Controller
 @RequestMapping(FastcmsConstants.API_MAPPING + "/wechat/user")
-public class WechatMiniUserApi extends ApiBaseController {
+public class WechatMiniUserApi {
 
 	@Autowired
 	private WxMaService wxService;
@@ -66,7 +63,6 @@ public class WechatMiniUserApi extends ApiBaseController {
 	@Autowired
 	private IUserService userService;
 
-	@Value("${jwt.secret}")
 	private String jwtSecret;
 
 	@GetMapping("code2session")
@@ -138,7 +134,7 @@ public class WechatMiniUserApi extends ApiBaseController {
 
 		try {
 			User user = userService.saveUserOfOpenid(userInfo.getOpenId(), userInfo.getUnionId(), userInfo.getNickName(), userInfo.getAvatarUrl(), UserOpenid.TYPE_WECHAT_MINI);
-			return Response.success(JwtUtils.createJwtToken(jwtSecret, user.getId(), userInfo.getOpenId()));
+			return Response.success();
 		} catch (Exception e) {
 			return Response.fail("登录失败:user is null");
 		}
@@ -150,7 +146,6 @@ public class WechatMiniUserApi extends ApiBaseController {
 	 * @param params
 	 * @return
 	 */
-	@ApiToken
 	@PostMapping("getUserPhone")
 	public ResponseEntity getUserPhone(@RequestBody Map<String, Object> params) {
 		String sessionId = (String) params.get("sessionId");
@@ -168,7 +163,7 @@ public class WechatMiniUserApi extends ApiBaseController {
 		if(wxMaPhoneNumberInfo == null || StrUtils.isBlank(wxMaPhoneNumberInfo.getPhoneNumber())) {
 			return Response.fail("获取手机号码失败");
 		}
-		User user = userService.getById(getUserId());
+		User user = userService.getById(null);
 		user.setMobile(wxMaPhoneNumberInfo.getPhoneNumber());
 		userService.updateById(user);
 		return Response.success(wxMaPhoneNumberInfo.getPhoneNumber());
@@ -208,7 +203,7 @@ public class WechatMiniUserApi extends ApiBaseController {
 		}
 		try {
 			User user = userService.saveUserOfOpenidAndPhone(openId, unionId, wxMaPhoneNumberInfo.getPurePhoneNumber(), UserOpenid.TYPE_WECHAT_MINI);
-			return Response.success(JwtUtils.createJwtToken(jwtSecret, user.getId(), openId));
+			return Response.success();
 		} catch (Exception e) {
 			return Response.fail("登录失败:user is null");
 		}

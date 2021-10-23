@@ -40,7 +40,7 @@ import java.io.IOException;
 @Slf4j
 @Controller
 @RequestMapping(FastcmsConstants.API_MAPPING + "/upload")
-public class UploadApi extends ApiBaseController {
+public class UploadApi {
 
 	@PostMapping("doUpload")
 	public ResponseEntity doUpload(@RequestParam("file") MultipartFile file) {

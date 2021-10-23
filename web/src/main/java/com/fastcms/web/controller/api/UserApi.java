@@ -18,7 +18,6 @@ package com.fastcms.web.controller.api;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.constants.FastcmsConstants;
-import com.fastcms.core.jwt.ApiToken;
 import com.fastcms.core.response.Response;
 import com.fastcms.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
@@ -38,24 +37,21 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @Controller
 @RequestMapping(FastcmsConstants.API_MAPPING + "/user")
-public class UserApi extends ApiBaseController {
+public class UserApi {
 
 	@Autowired
 	private IUserService userService;
 
-	@ApiToken
 	@GetMapping("tag/getTagList")
 	public ResponseEntity getTagList() {
-		return Response.success(userService.getUserTagList(getUserId()));
+		return null;
 	}
 
-	@ApiToken
 	@GetMapping("team/getUserBySearch")
 	public ResponseEntity getUserBySearch(@RequestParam(name = "keyword") String keyword) {
-		return Response.success(userService.getUserBySearch(getUserId(), keyword));
+		return null;
 	}
 
-	@ApiToken
 	@PostMapping("team/doSaveUserTeam")
 	public ResponseEntity doSaveUserTeam(@Validated @RequestBody IUserService.AddGroupUserParam addGroupUserParam) {
 		try {
@@ -66,15 +62,11 @@ public class UserApi extends ApiBaseController {
 		}
 	}
 
-	@ApiToken
 	@GetMapping("team/getUserTeamList")
 	public ResponseEntity getUserTeamList(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
 										  @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
 										  @RequestParam(name = "userId", required = false) Long userId,
 										  @RequestParam(name = "stationName") String stationName) {
-		if(userId == null) {
-			userId = getUserId();
-		}
 		return Response.success(userService.getUserTeamList(new Page(page, pageSize), userId, stationName));
 	}
 

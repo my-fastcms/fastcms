@@ -35,6 +35,13 @@ public interface IUserService extends IService<User> {
     void updateUserPassword(User userParam) throws Exception;
 
     /**
+     * 根据登录账号获取用户
+     * @param username
+     * @return
+     */
+    User getUserByUsername(String username);
+
+    /**
      * 根据手机号码获取用户
      * @param phone
      * @return

@@ -23,10 +23,13 @@ mybatis-plus:
 plugin:
   path: ./plugins
 
-jwt:
-  secret: xjd2020
-md5:
-  sign:
-    key: fastcms2021
+fastcms:
+  auth:
+    token:
+      expire:
+        seconds: 18000
+      secret-key: SecretKey-www.xjd2020.com
+
+
 
 

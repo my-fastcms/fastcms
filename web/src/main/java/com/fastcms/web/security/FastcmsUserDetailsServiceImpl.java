@@ -14,24 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.web.controller.admin;
+package com.fastcms.web.security;
 
 import com.fastcms.entity.User;
+import com.fastcms.service.IUserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 /**
  * @author： wjun_java@163.com
- * @date： 2021/4/3
+ * @date： 2021/10/23
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-public abstract class AdminBaseController {
+@Service
+public class FastcmsUserDetailsServiceImpl implements UserDetailsService {
 
-    protected static final String PAGE_DATA_ATTR = "pageData";
+	@Autowired
+	private IUserService userService;
 
-    public User getLoginUser(){
-//        return (User) SecurityUtils.getSubject().getPrincipal();
-        return null;
-    }
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		User user = userService.getUserByUsername(username);
+		if(user == null) throw new UsernameNotFoundException(username);
+		return new FastcmsUserDetails(user);
+	}
 
 }

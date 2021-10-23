@@ -18,8 +18,8 @@ package com.fastcms.web.controller.admin;
 
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.core.permission.AdminMenu;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author： wjun_java@163.com
@@ -28,10 +28,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @modifiedBy：
  * @version: 1.0
  */
-@Controller
+@RestController
 @AdminMenu(name = "设置", icon = "<i class=\"nav-icon fa fa-cog\"></i>", sort = 5)
 @RequestMapping(FastcmsConstants.ADMIN_MAPPING + "/setup")
-public class SetupController extends AdminBaseController {
+public class SetupController {
 
 	@AdminMenu(name = "小程序", sort = 1)
 	@RequestMapping("wechatMini")

@@ -18,6 +18,7 @@
 		<mybatis-plus.version>3.4.1</mybatis-plus.version>
 		<commons.lang.version>2.6</commons.lang.version>
 		<jsoup.version>1.11.3</jsoup.version>
+		<jjwt.version>0.11.2</jjwt.version>
 
 		<maven-flatten-version>1.1.0</maven-flatten-version>
 		<maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
@@ -139,6 +140,24 @@
 				<groupId>com.fastcms</groupId>
 				<artifactId>fastcms-wechat-starter</artifactId>
 				<version>${revision}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>io.jsonwebtoken</groupId>
+				<artifactId>jjwt-api</artifactId>
+				<version>${jjwt.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.jsonwebtoken</groupId>
+				<artifactId>jjwt-impl</artifactId>
+				<version>${jjwt.version}</version>
+				<scope>runtime</scope>
+			</dependency>
+			<dependency>
+				<groupId>io.jsonwebtoken</groupId>
+				<artifactId>jjwt-jackson</artifactId>
+				<version>${jjwt.version}</version>
+				<scope>runtime</scope>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

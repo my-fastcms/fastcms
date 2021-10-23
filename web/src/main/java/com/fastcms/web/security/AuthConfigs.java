@@ -14,28 +14,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.web.controller.api;
+package com.fastcms.web.security;
 
-import com.fastcms.common.constants.FastcmsConstants;
-import com.fastcms.core.utils.RequestUtils;
+import io.jsonwebtoken.io.Decoders;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * @author： wjun_java@163.com
- * @date： 2021/6/6
+ * @date： 2021/10/24
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-public abstract class ApiBaseController {
+@Configuration
+public class AuthConfigs {
 
-	public Long getUserId() {
-		Object attribute = RequestUtils.getRequest().getAttribute(FastcmsConstants.USER_ID);
-		return attribute == null ? null : Long.valueOf((Integer) attribute) ;
+	@Value("${fastcms.auth.token.secret-key:}")
+	private String secretKey;
+
+	@Value("${fastcms.auth.token.expire.seconds:18000}")
+	private long tokenValidityInSeconds;
+
+	private byte[] secretKeyBytes;
+
+	public long getTokenValidityInSeconds() {
+		return tokenValidityInSeconds;
 	}
 
-	public String getOpenid() {
-		Object attribute = RequestUtils.getRequest().getAttribute(FastcmsConstants.OPEN_ID);
-		return attribute == null ? null : (String) RequestUtils.getRequest().getAttribute(FastcmsConstants.OPEN_ID);
+	public byte[] getSecretKeyBytes() {
+		if (secretKeyBytes == null) {
+			secretKeyBytes = Decoders.BASE64.decode(secretKey);
+		}
+		return secretKeyBytes;
 	}
 
 }

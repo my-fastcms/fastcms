@@ -17,7 +17,6 @@
 package com.fastcms.core.config;
 
 import com.fastcms.core.interceptor.AdminInterceptor;
-import com.fastcms.core.interceptor.ApiInterceptor;
 import com.fastcms.core.interceptor.UCenterInterceptor;
 import com.fastcms.core.template.Template;
 import com.fastcms.core.template.TemplateService;
@@ -78,7 +77,6 @@ public class FastcmsWebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(adminInterceptor()).addPathPatterns("/admin/**");
         registry.addInterceptor(ucenterInterceptor()).addPathPatterns("/ucenter/**");
-        registry.addInterceptor(apiInterceptor()).addPathPatterns("/api/**");
     }
 
     @Bean
@@ -89,11 +87,6 @@ public class FastcmsWebMvcConfig implements WebMvcConfigurer {
     @Bean
     public UCenterInterceptor ucenterInterceptor(){
         return new UCenterInterceptor();
-    }
-
-    @Bean
-    public ApiInterceptor apiInterceptor() {
-        return new ApiInterceptor();
     }
 
     @Bean

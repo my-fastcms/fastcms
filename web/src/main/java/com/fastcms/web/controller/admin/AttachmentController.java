@@ -28,12 +28,8 @@ import com.fastcms.service.IAttachmentService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -53,10 +49,10 @@ import java.util.stream.Collectors;
  * @version: 1.0
  */
 @Slf4j
-@Controller
+@RestController
 @RequestMapping(FastcmsConstants.ADMIN_MAPPING + "/attachment")
 @AdminMenu(name = "附件", icon = "<i class=\"nav-icon fas fa-folder-open\"></i>", sort = 4)
-public class AttachmentController extends AdminBaseController {
+public class AttachmentController {
 
     @Autowired
     private IAttachmentService attachmentService;
@@ -70,14 +66,7 @@ public class AttachmentController extends AdminBaseController {
         queryWrapper.orderByDesc(Attachment::getCreated);
         Page pageParam = new Page<>(page, pageSize);
         Page<Attachment> pageData = attachmentService.page(pageParam, queryWrapper);
-        model.addAttribute(PAGE_DATA_ATTR, pageData);
         return "admin/attachment/list";
-    }
-
-    @AdminMenu(name = "上传", sort = 2)
-    @RequestMapping("upload")
-    public String upload(){
-        return "admin/attachment/upload";
     }
 
     @PostMapping("doUpload")
@@ -168,7 +157,6 @@ public class AttachmentController extends AdminBaseController {
         queryWrapper.orderByDesc(Attachment::getCreated);
         Page pageParam = new Page<>(page, pageSize);
         Page<Attachment> pageData = attachmentService.page(pageParam, queryWrapper);
-        model.addAttribute(PAGE_DATA_ATTR, pageData);
         return "admin/attachment/browse";
     }
 

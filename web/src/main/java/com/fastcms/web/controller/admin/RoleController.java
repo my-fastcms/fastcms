@@ -30,13 +30,9 @@ import com.fastcms.service.IRoleService;
 import com.fastcms.web.Fastcms;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
@@ -48,10 +44,10 @@ import java.util.Objects;
  * @modifiedBy：
  * @version: 1.0
  */
-@Controller
+@RestController
 @AdminMenu(name = "角色", icon = "<i class=\"nav-icon fas fa-sitemap\"></i>", sort = 2)
 @RequestMapping(FastcmsConstants.ADMIN_MAPPING + "/role")
-public class RoleController extends AdminBaseController {
+public class RoleController {
 
     @Autowired
     private IRoleService roleService;
@@ -73,7 +69,6 @@ public class RoleController extends AdminBaseController {
         queryWrapper.like(roleName != null, Role::getRoleName, roleName);
         Page pageParam = new Page<>(page, pageSize);
         Page<Role> pageData = roleService.page(pageParam, queryWrapper);
-        model.addAttribute(PAGE_DATA_ATTR, pageData);
         return "admin/role/list";
     }
 
@@ -122,7 +117,6 @@ public class RoleController extends AdminBaseController {
         LambdaQueryWrapper<Permission> queryWrapper = new QueryWrapper().lambda();
         Page pageParam = new Page<>(page, pageSize);
         Page<Permission> pageData = permissionService.page(pageParam, queryWrapper);
-        model.addAttribute(PAGE_DATA_ATTR, pageData);
         return "admin/role/permission_list";
     }
 

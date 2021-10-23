@@ -33,13 +33,9 @@ import com.fastcms.service.IUserService;
 import com.fastcms.service.IUserTagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
@@ -51,10 +47,10 @@ import java.util.Objects;
  * @modifiedBy：
  * @version: 1.0
  */
-@Controller
+@RestController
 @RequestMapping(FastcmsConstants.ADMIN_MAPPING + "/user")
 @AdminMenu(name = "用户", icon = "<i class=\"nav-icon far fas fa-user\"></i>", sort = 1)
-public class UserController extends AdminBaseController {
+public class UserController {
 
     @Autowired
     private IUserService userService;
@@ -85,13 +81,7 @@ public class UserController extends AdminBaseController {
         queryWrapper.orderByDesc(User::getCreated);
         Page pageParam = new Page<>(page, pageSize);
         Page<User> pageData = userService.page(pageParam, queryWrapper);
-        model.addAttribute(PAGE_DATA_ATTR, pageData);
         return "admin/user/list";
-    }
-
-    @RequestMapping("add")
-    public String add() {
-        return "admin/user/add";
     }
 
     @AdminMenu(name = "保存", type = FastcmsConstants.PERMISSION_OPTION)
@@ -112,22 +102,10 @@ public class UserController extends AdminBaseController {
         return Response.success();
     }
 
-    @RequestMapping("edit")
-    public String edit(@RequestParam(name = "id") Long id, Model model) {
-        model.addAttribute("user", userService.getById(id));
-        return "admin/user/edit";
-    }
-
     @PostMapping("doEdit")
     public ResponseEntity doEdit(User user) {
         userService.saveOrUpdate(user);
         return Response.success();
-    }
-
-    @RequestMapping("pwd")
-    public String editPassword(@RequestParam(name = "id") Long id, Model model) {
-        model.addAttribute("user", userService.getById(id));
-        return "admin/user/edit_pwd";
     }
 
     @PostMapping("doEditPwd")
@@ -138,13 +116,6 @@ public class UserController extends AdminBaseController {
         } catch (Exception e) {
             return Response.fail(e.getMessage());
         }
-    }
-
-    @RequestMapping("role")
-    public String editRole(@RequestParam(name = "id") Long id, Model model) {
-        model.addAttribute("user", userService.getById(id));
-        model.addAttribute("roleList", roleService.getRoleListByUserId(id));
-        return "admin/user/edit_role";
     }
 
     @PostMapping("doEditRole")
@@ -165,7 +136,6 @@ public class UserController extends AdminBaseController {
         queryWrapper.orderByDesc(UserTag::getCreated);
         Page pageParam = new Page<>(page, pageSize);
         Page<UserTag> pageData = userTagService.page(pageParam, queryWrapper);
-        model.addAttribute(PAGE_DATA_ATTR, pageData);
         return "admin/user/tag_list";
     }
 
@@ -201,9 +171,7 @@ public class UserController extends AdminBaseController {
                           @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
                           Model model) {
         QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("user_id", getLoginUser().getId());
         Page<PaymentRecord> paymentRecordPage = paymentRecordService.page(new Page<>(page, pageSize), queryWrapper);
-        model.addAttribute(PAGE_DATA_ATTR, paymentRecordPage);
         return "admin/user/payment_list";
     }
 
