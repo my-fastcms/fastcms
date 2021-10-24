@@ -94,7 +94,6 @@ export default defineComponent({
 			return formatAxis(new Date());
 		});
 		const refreshCode = () => {
-			this.src = "http://localhost:8080/fastcms/captcha";
 		}
 		// 登录
 		const onSignIn = async () => {
