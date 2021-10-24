@@ -31,7 +31,7 @@ public class FastcmsAuthConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers("/fastcms/login");
+        web.ignoring().antMatchers("/fastcms/login", "/fastcms/captcha");
     }
 
     @Override

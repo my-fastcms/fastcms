@@ -6,7 +6,7 @@ import { Session } from '/@/utils/storage';
 const service = axios.create({
 	baseURL: import.meta.env.VITE_API_URL as any,
 	timeout: 50000,
-	headers: { 'Content-Type': 'application/json' },
+	headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 });
 
 // 添加请求拦截器

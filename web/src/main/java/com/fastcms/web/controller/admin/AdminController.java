@@ -22,9 +22,7 @@ import com.fastcms.service.IUserService;
 import com.fastcms.web.security.JwtTokenManager;
 import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.impl.DefaultKaptcha;
-import org.apache.http.HttpResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
@@ -67,7 +66,7 @@ public class AdminController {
     private JwtTokenManager tokenManager;
 
     @PostMapping("login")
-    public ResponseEntity login(@RequestParam String username, @RequestParam String password, @RequestParam String code, HttpRequest request, HttpResponse response) throws AccessException {
+    public ResponseEntity login(@RequestParam String username, @RequestParam String password, @RequestParam String code, HttpServletRequest request, HttpServletResponse response) throws AccessException {
 
         if(!CaptchaUtils.checkCaptcha(code)) {
             return Response.fail("验证码错误");

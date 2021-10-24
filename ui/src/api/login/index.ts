@@ -5,7 +5,7 @@ import request from '/@/utils/request';
  * @param params 要传的参数值
  * @returns 返回接口数据
  */
-export function signIn(params: object) {
+export function signIn(params: string) {
 	return request({
 		url: '/fastcms/login',
 		method: 'post',

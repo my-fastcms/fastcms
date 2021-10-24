@@ -31,7 +31,7 @@
 		</el-form-item>
 		<el-form-item>
 			<el-row :gutter="15">
-				<el-col :span="16">
+				<el-col :span="14">
 					<el-input
 						type="text"
 						maxlength="4"
@@ -42,9 +42,9 @@
 						autocomplete="off"
 					></el-input>
 				</el-col>
-				<el-col :span="8">
+				<el-col :span="10">
 					<div class="login-content-code">
-						<span class="login-content-code-img">1234</span>
+						<img class="login-content-code-img" alt="fastcms" @click="refreshCode" src="http://localhost:8080/fastcms/captcha">
 					</div>
 				</el-col>
 			</el-row>
@@ -68,6 +68,7 @@ import { useStore } from '/@/store/index';
 import { Session } from '/@/utils/storage';
 import { formatAxis } from '/@/utils/formatTime';
 import { signIn } from '/@/api/login/index';
+import qs from 'qs';
 
 export default defineComponent({
 	name: 'login',
@@ -82,7 +83,7 @@ export default defineComponent({
 			ruleForm: {
 				username: 'admin',
 				password: '123456',
-				code: '1234',
+				code: '',
 			},
 			loading: {
 				signIn: false,
@@ -92,9 +93,12 @@ export default defineComponent({
 		const currentTime = computed(() => {
 			return formatAxis(new Date());
 		});
+		const refreshCode = () => {
+			this.src = "http://localhost:8080/fastcms/captcha";
+		}
 		// 登录
 		const onSignIn = async () => {
-			signIn(state.ruleForm).then(res => {
+			signIn(qs.stringify(state.ruleForm)).then(res => {
 				ElMessage({showClose: true, message: 'res:' + res , type: 'info'})	
 			})
 			state.loading.signIn = true;
