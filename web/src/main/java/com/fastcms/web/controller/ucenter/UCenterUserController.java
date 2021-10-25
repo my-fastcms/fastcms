@@ -25,11 +25,11 @@ import com.fastcms.entity.User;
 import com.fastcms.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author： wjun_java@163.com
@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @modifiedBy：
  * @version: 1.0
  */
-@Controller
+@RestController
 @UcenterMenu(name = "我的资料", sort = 1)
 @RequestMapping(FastcmsConstants.UCENTER_MAPPING + "/user")
 public class UCenterUserController extends UCenterBaseController {
@@ -58,12 +58,6 @@ public class UCenterUserController extends UCenterBaseController {
 		user.setLoginAccount(getLoginUser().getLoginAccount());
 		userService.updateById(user);
 		return Response.success();
-	}
-
-	@UcenterMenu(name = "头像设置", sort = 2)
-	@RequestMapping("avatar")
-	public String avatar() {
-		return "ucenter/user/avatar";
 	}
 
 	@UcenterMenu(name = "账号密码", sort = 3)

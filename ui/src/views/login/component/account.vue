@@ -1,11 +1,11 @@
 <template>
-	<el-form class="login-content-form">
+	<el-form class="login-content-form" :model="myForm" :rules="rules" ref="myRefForm">
 		<el-form-item>
 			<el-input
 				type="text"
 				:placeholder="$t('message.account.accountPlaceholder1')"
 				prefix-icon="el-icon-user"
-				v-model="ruleForm.username"
+				v-model="myForm.username"
 				clearable
 				autocomplete="off"
 			>
@@ -16,7 +16,7 @@
 				:type="isShowPassword ? 'text' : 'password'"
 				:placeholder="$t('message.account.accountPlaceholder2')"
 				prefix-icon="el-icon-lock"
-				v-model="ruleForm.password"
+				v-model="myForm.password"
 				autocomplete="off"
 			>
 				<template #suffix>
@@ -37,14 +37,14 @@
 						maxlength="4"
 						:placeholder="$t('message.account.accountPlaceholder3')"
 						prefix-icon="el-icon-position"
-						v-model="ruleForm.code"
+						v-model="myForm.code"
 						clearable
 						autocomplete="off"
 					></el-input>
 				</el-col>
 				<el-col :span="10">
 					<div class="login-content-code">
-						<img class="login-content-code-img" alt="fastcms" @click="refreshCode" :src="captchaSrc">
+						<img class="login-content-code-img" alt="fastcms" @click="refreshCode" :src="captcha">
 					</div>
 				</el-col>
 			</el-row>
@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts">
-import { toRefs, reactive, defineComponent, computed, getCurrentInstance } from 'vue';
+import { toRefs, ref, unref, reactive, defineComponent, computed, getCurrentInstance } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { useI18n } from 'vue-i18n';
@@ -78,13 +78,19 @@ export default defineComponent({
 		const store = useStore();
 		const route = useRoute();
 		const router = useRouter();
+		
 		const state = reactive({
 			isShowPassword: false,
-			captchaSrc: "http://localhost:8080/fastcms/captcha",
-			ruleForm: {
-				username: 'admin',
-				password: '123456',
+			captcha: import.meta.env.VITE_API_URL + "/fastcms/captcha",
+			myForm: {
+				username: '',
+				password: '',
 				code: '',
+			},
+			rules: {
+				username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+				password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+				code: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
 			},
 			loading: {
 				signIn: false,
@@ -94,13 +100,29 @@ export default defineComponent({
 		const currentTime = computed(() => {
 			return formatAxis(new Date());
 		});
+
 		const refreshCode = () => {
 			let v:string = new Date().getTime();
-			state.captchaSrc = "http://localhost:8080/fastcms/captcha?v=" + v;
+			state.captcha = import.meta.env.VITE_API_URL + "/fastcms/captcha?v=" + v;
 		};
+
+		const myRefForm = ref(null);
+
 		// 登录
 		const onSignIn = async () => {
-			signIn(qs.stringify(state.ruleForm)).then(res => {
+
+			const form: any = unref(myRefForm);
+			if (!form) return;
+			try {
+				await form.validate();
+				// eslint-disable-next-line no-unused-vars
+				const { username, password } = state.myForm;
+			// eslint-disable-next-line no-empty
+			} catch (error) {
+				
+			}
+
+			signIn(qs.stringify(state.myForm)).then(res => {
 				ElMessage({showClose: true, message: 'res:' + res , type: 'info'})	
 			})
 			state.loading.signIn = true;
@@ -115,7 +137,7 @@ export default defineComponent({
 			// test 按钮权限标识
 			let testAuthBtnList: Array<string> = ['btn.add', 'btn.link'];
 			// 不同用户模拟不同的用户权限
-			if (state.ruleForm.username === 'admin') {
+			if (state.myForm.username === 'admin') {
 				defaultAuthPageList = adminAuthPageList;
 				defaultAuthBtnList = adminAuthBtnList;
 			} else {
@@ -124,9 +146,9 @@ export default defineComponent({
 			}
 			// 用户信息模拟数据
 			const userInfos = {
-				username: state.ruleForm.username,
+				username: state.myForm.username,
 				photo:
-					state.ruleForm.username === 'admin'
+					state.myForm.username === 'admin'
 						? 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1813762643,1914315241&fm=26&gp=0.jpg'
 						: 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=317673774,2961727727&fm=26&gp=0.jpg',
 				time: new Date().getTime(),
@@ -178,6 +200,7 @@ export default defineComponent({
 		};
 		return {
 			currentTime,
+			myRefForm,
 			onSignIn,
 			refreshCode,
 			...toRefs(state),

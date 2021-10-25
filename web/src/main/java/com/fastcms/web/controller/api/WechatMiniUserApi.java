@@ -33,10 +33,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -50,7 +47,7 @@ import java.util.Map;
  * @version: 1.0
  */
 @Slf4j
-@Controller
+@RestController
 @RequestMapping(FastcmsConstants.API_MAPPING + "/wechat/user")
 public class WechatMiniUserApi {
 

@@ -30,14 +30,10 @@ import com.fastcms.service.IConfigService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -60,7 +56,7 @@ import java.util.stream.Stream;
  * @modifiedBy：
  * @version: 1.0
  */
-@Controller
+@RestController
 @RequestMapping(FastcmsConstants.ADMIN_MAPPING + "/template")
 @AdminMenu(name = "模板", icon = "<i class=\"nav-icon fas fa-columns\"></i>", sort = 3)
 public class TemplateController {

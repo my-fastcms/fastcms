@@ -27,12 +27,12 @@ import com.fastcms.core.response.Response;
 import com.fastcms.core.utils.CaptchaUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author： wjun_java@163.com
@@ -41,7 +41,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @modifiedBy：
  * @version: 1.0
  */
-@Controller
+@RestController
 @RequestMapping(FastcmsConstants.UCENTER_MAPPING + "/article")
 @UcenterMenu(name = "文章")
 public class UCenterArticleController {

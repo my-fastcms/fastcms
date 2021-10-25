@@ -31,12 +31,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author： wjun_java@163.com
@@ -46,7 +46,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @version: 1.0
  */
 @Slf4j
-@Controller
+@RestController
 @RequestMapping(FastcmsConstants.ADMIN_MAPPING + "/article")
 @AdminMenu(name = "文章", icon = "<i class=\"nav-icon fas fa-book\"></i>", sort = 1)
 public class ArticleController {

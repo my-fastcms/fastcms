@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.*;
  * @version: 1.0
  */
 @Slf4j
-@Controller
+@RestController
 @RequestMapping(FastcmsConstants.API_MAPPING + "/user")
 public class UserApi {
 
