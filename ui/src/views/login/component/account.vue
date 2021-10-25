@@ -44,7 +44,7 @@
 				</el-col>
 				<el-col :span="10">
 					<div class="login-content-code">
-						<img class="login-content-code-img" alt="fastcms" @click="refreshCode" src="http://localhost:8080/fastcms/captcha">
+						<img class="login-content-code-img" alt="fastcms" @click="refreshCode" :src="captchaSrc">
 					</div>
 				</el-col>
 			</el-row>
@@ -80,6 +80,7 @@ export default defineComponent({
 		const router = useRouter();
 		const state = reactive({
 			isShowPassword: false,
+			captchaSrc: "http://localhost:8080/fastcms/captcha",
 			ruleForm: {
 				username: 'admin',
 				password: '123456',
@@ -94,7 +95,9 @@ export default defineComponent({
 			return formatAxis(new Date());
 		});
 		const refreshCode = () => {
-		}
+			let v:string = new Date().getTime();
+			state.captchaSrc = "http://localhost:8080/fastcms/captcha?v=" + v;
+		};
 		// 登录
 		const onSignIn = async () => {
 			signIn(qs.stringify(state.ruleForm)).then(res => {
@@ -176,6 +179,7 @@ export default defineComponent({
 		return {
 			currentTime,
 			onSignIn,
+			refreshCode,
 			...toRefs(state),
 		};
 	},
