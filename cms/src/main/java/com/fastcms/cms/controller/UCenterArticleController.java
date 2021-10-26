@@ -24,7 +24,6 @@ import com.fastcms.cms.service.IArticleService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.core.permission.UcenterMenu;
 import com.fastcms.core.response.Response;
-import com.fastcms.core.utils.CaptchaUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -95,10 +94,6 @@ public class UCenterArticleController {
 
 	@PostMapping("doSaveComment")
 	public ResponseEntity doSaveComment(Long articleId, Long commentId, String context, String captcha) {
-		if(!CaptchaUtils.checkCaptcha(captcha)) {
-			return Response.fail("验证码输入错误");
-		}
-
 		try {
 			articleCommentService.saveArticleComment(articleId, commentId, context);
 			return Response.success();

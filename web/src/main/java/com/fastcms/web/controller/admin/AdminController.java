@@ -16,31 +16,25 @@
  */
 package com.fastcms.web.controller.admin;
 
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.response.Response;
-import com.fastcms.core.utils.CaptchaUtils;
 import com.fastcms.service.IUserService;
 import com.fastcms.web.security.JwtTokenManager;
-import com.google.code.kaptcha.Constants;
-import com.google.code.kaptcha.impl.DefaultKaptcha;
+import com.wf.captcha.SpecCaptcha;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.imageio.ImageIO;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.rmi.AccessException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author： wjun_java@163.com
@@ -57,19 +51,21 @@ public class AdminController {
     private IUserService userService;
 
     @Autowired
-    private DefaultKaptcha captchaProducer;
-
-    @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
     private JwtTokenManager tokenManager;
 
+    @Autowired
+    private CacheManager cacheManager;
+
     @PostMapping("login")
     public ResponseEntity login(@RequestParam String username, @RequestParam String password, @RequestParam String code, HttpServletRequest request, HttpServletResponse response) throws AccessException {
 
-        if(!CaptchaUtils.checkCaptcha(code)) {
-            return Response.fail("验证码错误");
+        String codeInMemory = (String) cacheManager.getCache("web_login_code").get(request.getHeader("code-uuid")).get();
+
+        if(StrUtils.isBlank(code) || !code.equalsIgnoreCase(codeInMemory)) {
+            return ResponseEntity.status(403).build();
         }
 
         try {
@@ -86,20 +82,18 @@ public class AdminController {
 
     }
 
-    @RequestMapping("captcha")
-    public void captcha(HttpServletResponse response, HttpSession session) throws IOException {
-        response.setDateHeader("Expires", 0);
-        response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate");
-        response.addHeader("Cache-Control", "post-check=0, pre-check=0");
-        response.setHeader("Pragma", "no-cache");
-        response.setContentType("image/jpeg");
-        String capText = captchaProducer.createText();
-        session.setAttribute(Constants.KAPTCHA_SESSION_KEY, capText);
-        BufferedImage bi = captchaProducer.createImage(capText);
-        ServletOutputStream out = response.getOutputStream();
-        ImageIO.write(bi, "jpg", out);
-        out.flush();
-        out.close();
+    @GetMapping("captcha")
+    public ResponseEntity captcha() {
+        SpecCaptcha specCaptcha = new SpecCaptcha(130, 48, 5);
+        String verCode = specCaptcha.text().toLowerCase();
+        String key = StrUtils.uuid();
+
+        cacheManager.getCache("web_login_code").put(key, verCode);
+
+        Map<String, String> result = new HashMap<>();
+        result.put("code-uuid", key);
+        result.put("image", specCaptcha.toBase64());
+        return Response.success(result);
     }
 
 }

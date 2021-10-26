@@ -13,8 +13,8 @@ export default {
 		two6: 'Copyright: Guangzhou xiaojudeng Software Technology 粵ICP備20053122號',
 	},
 	account: {
-		accountPlaceholder1: '用戶名admin或不輸均為test',
-		accountPlaceholder2: '密碼：123456',
+		accountPlaceholder1: '用戶名',
+		accountPlaceholder2: '密碼',
 		accountPlaceholder3: '請輸入驗證碼',
 		accountBtnText: '登入',
 	},

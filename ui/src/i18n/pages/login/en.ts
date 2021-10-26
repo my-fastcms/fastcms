@@ -13,8 +13,8 @@ export default {
 		two6: 'Copyright: Guangzhou xiaojudeng software technology Guangdong ICP preparation no.20053122',
 	},
 	account: {
-		accountPlaceholder1: 'The user name admin or not is test',
-		accountPlaceholder2: 'Password: 123456',
+		accountPlaceholder1: 'The user name',
+		accountPlaceholder2: 'Password',
 		accountPlaceholder3: 'Please enter the verification code',
 		accountBtnText: 'Sign in',
 	},

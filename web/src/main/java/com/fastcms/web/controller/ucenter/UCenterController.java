@@ -19,13 +19,11 @@ package com.fastcms.web.controller.ucenter;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.core.response.Response;
-import com.fastcms.core.utils.CaptchaUtils;
 import com.fastcms.entity.User;
 import com.fastcms.service.IUserService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -61,10 +59,6 @@ public class UCenterController extends UCenterBaseController {
 
     @PostMapping("doRegister")
     public ResponseEntity doRegister(String loginAccount, String nickName, String email, String password, String captcha) {
-
-        if(!CaptchaUtils.checkCaptcha(captcha)) {
-            return Response.fail("验证码错误");
-        }
 
         if(StringUtils.isBlank(loginAccount)) {
             return Response.fail("请输入账号");

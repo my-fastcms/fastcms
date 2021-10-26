@@ -1,6 +1,6 @@
 <template>
 	<el-form class="login-content-form" :model="myForm" :rules="rules" ref="myRefForm">
-		<el-form-item>
+		<el-form-item prop="username">
 			<el-input
 				type="text"
 				:placeholder="$t('message.account.accountPlaceholder1')"
@@ -11,7 +11,7 @@
 			>
 			</el-input>
 		</el-form-item>
-		<el-form-item>
+		<el-form-item prop="password">
 			<el-input
 				:type="isShowPassword ? 'text' : 'password'"
 				:placeholder="$t('message.account.accountPlaceholder2')"
@@ -29,12 +29,12 @@
 				</template>
 			</el-input>
 		</el-form-item>
-		<el-form-item>
+		<el-form-item prop="code">
 			<el-row :gutter="15">
 				<el-col :span="14">
 					<el-input
 						type="text"
-						maxlength="4"
+						maxlength="5"
 						:placeholder="$t('message.account.accountPlaceholder3')"
 						prefix-icon="el-icon-position"
 						v-model="myForm.code"
@@ -58,7 +58,7 @@
 </template>
 
 <script lang="ts">
-import { toRefs, ref, unref, reactive, defineComponent, computed, getCurrentInstance } from 'vue';
+import { toRefs, reactive, defineComponent, computed, getCurrentInstance, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { useI18n } from 'vue-i18n';
@@ -67,7 +67,7 @@ import { initBackEndControlRoutes } from '/@/router/backEnd';
 import { useStore } from '/@/store/index';
 import { Session } from '/@/utils/storage';
 import { formatAxis } from '/@/utils/formatTime';
-import { signIn } from '/@/api/login/index';
+import { signIn, getCaptcha } from '/@/api/login/index';
 import qs from 'qs';
 
 export default defineComponent({
@@ -81,16 +81,17 @@ export default defineComponent({
 		
 		const state = reactive({
 			isShowPassword: false,
-			captcha: import.meta.env.VITE_API_URL + "/fastcms/captcha",
+			captcha: '',
+			captchaKey: '',
 			myForm: {
 				username: '',
 				password: '',
 				code: '',
 			},
 			rules: {
-				username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
-				password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
-				code: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
+				username: { required: true, message: '请输入用户名', trigger: 'blur' },
+				password: { required: true, message: '请输入密码', trigger: 'blur' },
+				code: { required: true, message: '请输入验证码', trigger: 'blur' },
 			},
 			loading: {
 				signIn: false,
@@ -101,30 +102,50 @@ export default defineComponent({
 			return formatAxis(new Date());
 		});
 
-		const refreshCode = () => {
-			let v:string = new Date().getTime();
-			state.captcha = import.meta.env.VITE_API_URL + "/fastcms/captcha?v=" + v;
+		const refreshCode = async () => {
+			getCaptcha().then(res => {
+				// eslint-disable-next-line no-console
+				console.log("res:" + res.data.key)
+				
+				state.captcha = res.data.image;
+				state.captchaKey = res.data.key;
+			}).catch(() => {
+				// eslint-disable-next-line no-console
+			});
 		};
 
-		const myRefForm = ref(null);
+		onMounted(() => {
+			// eslint-disable-next-line no-console
+			console.log("===onMounted==");
+			refreshCode();
+		});
 
 		// 登录
 		const onSignIn = async () => {
 
-			const form: any = unref(myRefForm);
-			if (!form) return;
-			try {
-				await form.validate();
-				// eslint-disable-next-line no-unused-vars
-				const { username, password } = state.myForm;
-			// eslint-disable-next-line no-empty
-			} catch (error) {
-				
-			}
+			new Promise((resolve) => {
+				proxy.$refs['myRefForm'].validate((valid) => {
+					if (valid) {
+						resolve(valid);
+						signLogin();
+					}
+				});
+			});
+		};
 
+		const signLogin = async() => {
 			signIn(qs.stringify(state.myForm)).then(res => {
-				ElMessage({showClose: true, message: 'res:' + res , type: 'info'})	
+				doLogin(res);
+			}).catch((res) => {
+				refreshCode();
+				ElMessage({showClose: true, message: res , type: 'info'})
 			})
+		}
+
+		const doLogin = async(res) => {
+			// eslint-disable-next-line no-console
+			console.log(res)
+			
 			state.loading.signIn = true;
 			let defaultAuthPageList: Array<string> = [];
 			let defaultAuthBtnList: Array<string> = [];
@@ -172,7 +193,8 @@ export default defineComponent({
 				// 执行完 initBackEndControlRoutes，再执行 signInSuccess
 				signInSuccess();
 			}
-		};
+		}
+
 		// 登录成功后的跳转
 		const signInSuccess = () => {
 			// 初始化登录成功时间问候语
@@ -200,7 +222,6 @@ export default defineComponent({
 		};
 		return {
 			currentTime,
-			myRefForm,
 			onSignIn,
 			refreshCode,
 			...toRefs(state),

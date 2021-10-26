@@ -167,7 +167,7 @@ export default {
 					})
 					.catch(() => {});
 			} else if (path === 'wareHouse') {
-				window.open('https://gitee.com/lyt-top/vue-next-admin');
+				window.open('https://gitee.com/dianbuapp_admin/fastcms.git');
 			} else {
 				router.push(path);
 			}

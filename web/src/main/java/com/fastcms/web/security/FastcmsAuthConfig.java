@@ -1,7 +1,5 @@
 package com.fastcms.web.security;
 
-import com.google.code.kaptcha.impl.DefaultKaptcha;
-import com.google.code.kaptcha.util.Config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
@@ -13,8 +11,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsUtils;
-
-import java.util.Properties;
 
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class FastcmsAuthConfig extends WebSecurityConfigurerAdapter {
@@ -47,22 +43,6 @@ public class FastcmsAuthConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public DefaultKaptcha getDefaultKaptcha(){
-        DefaultKaptcha defaultKaptcha = new DefaultKaptcha();
-        Properties properties = new Properties();
-        properties.put("kaptcha.border", "no");
-        properties.put("kaptcha.textproducer.font.color", "black");
-        properties.put("kaptcha.image.width", "150");
-        properties.put("kaptcha.image.height", "40");
-        properties.put("kaptcha.textproducer.font.size", "30");
-        properties.put("kaptcha.session.key", "verifyCode");
-        properties.put("kaptcha.textproducer.char.space", "5");
-        Config config = new Config(properties);
-        defaultKaptcha.setConfig(config);
-        return defaultKaptcha;
     }
 
 }

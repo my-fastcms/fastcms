@@ -17,6 +17,8 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<mybatis-plus.version>3.4.1</mybatis-plus.version>
 		<commons.lang.version>2.6</commons.lang.version>
+		<commons-io.version>2.7</commons-io.version>
+		<easy-captcha.version>1.6.2</easy-captcha.version>
 		<jsoup.version>1.11.3</jsoup.version>
 		<jjwt.version>0.11.2</jjwt.version>
 
@@ -92,6 +94,11 @@
 				<version>${commons.lang.version}</version>
 			</dependency>
 			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${commons-io.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>org.jsoup</groupId>
 				<artifactId>jsoup</artifactId>
 				<version>${jsoup.version}</version>
@@ -159,6 +166,13 @@
 				<version>${jjwt.version}</version>
 				<scope>runtime</scope>
 			</dependency>
+
+			<dependency>
+				<groupId>com.github.whvcse</groupId>
+				<artifactId>easy-captcha</artifactId>
+				<version>${easy-captcha.version}</version>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 

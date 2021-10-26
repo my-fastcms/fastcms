@@ -25,3 +25,13 @@ export function signOut(params: object) {
 		data: params,
 	});
 }
+
+/**
+ * 获取验证码
+ */
+export function getCaptcha() {
+	return request({
+		url: '/fastcms/captcha',
+		method: 'get'
+	});
+}
