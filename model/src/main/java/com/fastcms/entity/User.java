@@ -30,8 +30,6 @@ public class User implements Serializable {
     private Long id;
 
     @NotBlank(message = "登录账号不能为空")
-    private String loginAccount;
-
     private String userName;
 
     private String nickName;

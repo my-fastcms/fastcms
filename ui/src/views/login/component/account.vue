@@ -87,6 +87,7 @@ export default defineComponent({
 				username: '',
 				password: '',
 				code: '',
+				codeKey: '',
 			},
 			rules: {
 				username: { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -104,19 +105,13 @@ export default defineComponent({
 
 		const refreshCode = async () => {
 			getCaptcha().then(res => {
-				// eslint-disable-next-line no-console
-				console.log("res:" + res.data.key)
-				
 				state.captcha = res.data.image;
-				state.captchaKey = res.data.key;
+				state.captchaKey = res.data.codeUuid;
 			}).catch(() => {
-				// eslint-disable-next-line no-console
 			});
 		};
 
 		onMounted(() => {
-			// eslint-disable-next-line no-console
-			console.log("===onMounted==");
 			refreshCode();
 		});
 
@@ -134,11 +129,13 @@ export default defineComponent({
 		};
 
 		const signLogin = async() => {
+			state.myForm.codeKey = state.captchaKey;
+			
 			signIn(qs.stringify(state.myForm)).then(res => {
 				doLogin(res);
 			}).catch((res) => {
 				refreshCode();
-				ElMessage({showClose: true, message: res , type: 'info'})
+				ElMessage({showClose: true, message: res.message ? res.message : '系统错误' , type: 'error'});
 			})
 		}
 

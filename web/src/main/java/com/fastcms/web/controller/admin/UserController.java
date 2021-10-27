@@ -66,14 +66,10 @@ public class UserController {
 //    @RequiresPermissions("user:list")
     public String list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
                        @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
-                       @RequestParam(name = "loginAccount", required = false) String loginAccount,
                        @RequestParam(name = "phone", required = false) String phone,
                        @RequestParam(name = "status", required = false, defaultValue = "1") Integer status,
                        Model model) {
         LambdaQueryWrapper<User> queryWrapper = new QueryWrapper().lambda();
-        if(StrUtils.isNotBlank(loginAccount)) {
-            queryWrapper.like(loginAccount != null, User::getLoginAccount, loginAccount);
-        }
         queryWrapper.eq(User::getStatus, status);
         if(StrUtils.isNotBlank(phone)) {
             queryWrapper.eq(User::getMobile, phone);
@@ -89,10 +85,10 @@ public class UserController {
     @PostMapping("doSave")
     public ResponseEntity doSave(@Validated User user) {
 
-        User userInDb = userService.getOne(new QueryWrapper<User>().lambda().eq(User::getLoginAccount, user.getLoginAccount()));
-        if(userInDb != null) {
-            return Response.fail("登录账号不可重复");
-        }
+//        User userInDb = userService.getOne(new QueryWrapper<User>().lambda().eq(User::getLoginAccount, user.getLoginAccount()));
+//        if(userInDb != null) {
+//            return Response.fail("登录账号不可重复");
+//        }
 
         final String salt = System.currentTimeMillis() + "";
 //        final String password = PasswordUtils.getMd5Password(salt, user.getPassword());

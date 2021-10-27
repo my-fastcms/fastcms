@@ -46,22 +46,10 @@ public class JwtTokenManager {
 	@Autowired
 	private AuthConfigs authConfigs;
 
-	/**
-	 * Create token.
-	 *
-	 * @param authentication auth info
-	 * @return token
-	 */
 	public String createToken(Authentication authentication) {
 		return createToken(authentication.getName());
 	}
 
-	/**
-	 * Create token.
-	 *
-	 * @param userName auth info
-	 * @return token
-	 */
 	public String createToken(String userName) {
 
 		long now = System.currentTimeMillis();
@@ -74,12 +62,6 @@ public class JwtTokenManager {
 				.signWith(Keys.hmacShaKeyFor(authConfigs.getSecretKeyBytes()), SignatureAlgorithm.HS256).compact();
 	}
 
-	/**
-	 * Get auth Info.
-	 *
-	 * @param token token
-	 * @return auth info
-	 */
 	public Authentication getAuthentication(String token) {
 		Claims claims = Jwts.parserBuilder().setSigningKey(authConfigs.getSecretKeyBytes()).build()
 				.parseClaimsJws(token).getBody();
@@ -91,11 +73,6 @@ public class JwtTokenManager {
 		return new UsernamePasswordAuthenticationToken(principal, "", authorities);
 	}
 
-	/**
-	 * validate token.
-	 *
-	 * @param token token
-	 */
 	public void validateToken(String token) {
 		Jwts.parserBuilder().setSigningKey(authConfigs.getSecretKeyBytes()).build().parseClaimsJws(token);
 	}

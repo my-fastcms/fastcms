@@ -14,24 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.fastcms.web;
 
-package com.fastcms;
-
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import com.fastcms.core.permission.PermissionManager;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 /**
  * @author： wjun_java@163.com
- * @date： 2021/2/28
+ * @date： 2021/5/31
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-@SpringBootApplication
-public class AppTest {
+@SpringBootTest
+public class TestPermissionManager {
 
-    public static void main(String[] args) {
-        SpringApplication.run(AppTest.class, args);
-    }
+	@Autowired
+	private PermissionManager permissionManager;
+
+	@Test
+	public void testInitPermissions() throws Exception {
+//		permissionManager.initPermissions(fastcmsConstants.SYSTEM_MODULE_ID, "系统", fastcmsWebApplication.class);
+	}
 
 }

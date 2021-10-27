@@ -14,16 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.service;
+package com.fastcms.web;
 
-import com.fastcms.entity.User;
-import lombok.extern.slf4j.Slf4j;
+import com.fastcms.service.IPermissionService;
+import com.fastcms.service.IRoleService;
+import com.fastcms.service.IUserService;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,7 +35,6 @@ import java.util.List;
  * @version: 1.0
  */
 @SpringBootTest
-@Slf4j
 public class TestUserService {
 
     @Autowired
@@ -46,42 +46,31 @@ public class TestUserService {
     @Autowired
     private IRoleService roleService;
 
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
+    @Disabled
     @Test
     public void testBatchInsert() {
-
-        List<User> userList = new ArrayList<>();
-
-        for(int i=0; i<10; i++){
-            User user = new User();
-            user.setUserName("user" + i);
-            user.setNickName("nick" + i);
-            user.setCreated(LocalDateTime.now());
-            user.setUpdated(LocalDateTime.now());
-            userList.add(user);
-        }
-
-        userService.saveBatch(userList, userList.size());
 
     }
 
     @Test
     public void testGetPermissionTreeNodeList() {
         List<IPermissionService.PermissionTreeNode> treeNodeList = permissionService.getPermissionByRoleId(1l);
-        log.info("treeNodeList:" + treeNodeList.size());
 
         treeNodeList = permissionService.getPermissionByRoleId(1l);
-        log.info("treeNodeList in cache:" + treeNodeList.size());
+    }
+
+    @Disabled
+    @Test
+    public void testSaveRolePermission() {
+
     }
 
     @Test
-    public void testSaveRolePermission() {
-        List<Long> list = new ArrayList<>();
-        list.add(1l);
-        list.add(2l);
-        list.add(3l);
-        list.add(4l);
-        list.add(5l);
-        roleService.saveRolePermission(2l, list);
+    public void testPasswordEncode() {
+        System.out.println(passwordEncoder.encode("1"));
     }
 
 }

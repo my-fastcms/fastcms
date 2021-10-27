@@ -40,10 +40,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     @Log
-    public void updateUserLoginTime(String loginAccount) {
+    public void updateUserLoginTime(String username) {
 
         LambdaQueryWrapper<User> queryWrapper = new QueryWrapper().lambda();
-        queryWrapper.eq(User::getLoginAccount, loginAccount);
+        queryWrapper.eq(User::getUserName, username);
         User user = getOne(queryWrapper);
         if(user != null){
             user.setLoginTime(LocalDateTime.now());

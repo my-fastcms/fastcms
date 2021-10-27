@@ -18,7 +18,6 @@ package com.fastcms.web.controller.admin;
 
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.response.Response;
-import com.fastcms.service.IUserService;
 import com.fastcms.web.security.JwtTokenManager;
 import com.wf.captcha.SpecCaptcha;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +47,6 @@ import java.util.Map;
 public class AdminController {
 
     @Autowired
-    private IUserService userService;
-
-    @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
@@ -59,13 +55,21 @@ public class AdminController {
     @Autowired
     private CacheManager cacheManager;
 
-    @PostMapping("login")
-    public ResponseEntity login(@RequestParam String username, @RequestParam String password, @RequestParam String code, HttpServletRequest request, HttpServletResponse response) throws AccessException {
+    private static final String WEB_LOGIN_CODE_CACHE_NAME = "web_login_code";
 
-        String codeInMemory = (String) cacheManager.getCache("web_login_code").get(request.getHeader("code-uuid")).get();
+    @PostMapping("login")
+    public ResponseEntity login(@RequestParam String username,
+                                @RequestParam String password,
+                                @RequestParam(required = false) String code,
+                                @RequestParam(required = false) String codeKey,
+                                HttpServletRequest request, HttpServletResponse response) throws AccessException {
+
+        String codeInMemory = StrUtils.isBlank (codeKey) ? "" : (String) cacheManager.getCache(WEB_LOGIN_CODE_CACHE_NAME).get(codeKey).get();
+        if(StrUtils.isNotBlank(codeKey))
+            cacheManager.getCache(WEB_LOGIN_CODE_CACHE_NAME).evict(codeKey);
 
         if(StrUtils.isBlank(code) || !code.equalsIgnoreCase(codeInMemory)) {
-            return ResponseEntity.status(403).build();
+            return Response.fail("验证码错误");
         }
 
         try {
@@ -84,14 +88,14 @@ public class AdminController {
 
     @GetMapping("captcha")
     public ResponseEntity captcha() {
-        SpecCaptcha specCaptcha = new SpecCaptcha(130, 48, 5);
-        String verCode = specCaptcha.text().toLowerCase();
-        String key = StrUtils.uuid();
+        SpecCaptcha specCaptcha = new SpecCaptcha(130, 48, 4);
+        final String verCode = specCaptcha.text().toLowerCase();
+        final String key = StrUtils.uuid();
 
-        cacheManager.getCache("web_login_code").put(key, verCode);
+        cacheManager.getCache(WEB_LOGIN_CODE_CACHE_NAME).put(key, verCode);
 
         Map<String, String> result = new HashMap<>();
-        result.put("code-uuid", key);
+        result.put("codeUuid", key);
         result.put("image", specCaptcha.toBase64());
         return Response.success(result);
     }

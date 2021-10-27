@@ -6,7 +6,7 @@ import { Session } from '/@/utils/storage';
 const service = axios.create({
 	baseURL: import.meta.env.VITE_API_URL as any,
 	timeout: 50000,
-	headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+	headers: { 'Content-Type': 'application/json' },
 });
 
 // 添加请求拦截器
@@ -28,8 +28,9 @@ service.interceptors.request.use(
 service.interceptors.response.use(
 	(response) => {
 		// 对响应数据做点什么
-		const res: any = response.data;
-		if (res.code && res.code !== 1) {
+		const res = response.data;
+
+		if (res.code === 0) {
 			// `token` 过期或者账号已在别处登录
 			if (res.code === 401 || res.code === 4001) {
 				Session.clear(); // 清除浏览器全部临时缓存
@@ -38,7 +39,7 @@ service.interceptors.response.use(
 					.then(() => {})
 					.catch(() => {});
 			}
-			return Promise.reject(service.interceptors.response);
+			return Promise.reject(res);
 		} else {
 			return response.data;
 		}

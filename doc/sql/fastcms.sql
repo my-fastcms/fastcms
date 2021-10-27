@@ -340,7 +340,6 @@ CREATE TABLE `single_page_comment` (
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `login_account` varchar(32) DEFAULT NULL COMMENT '登录账号',
   `user_name` varchar(32) DEFAULT NULL COMMENT '真实名称',
   `nick_name` varchar(32) DEFAULT NULL COMMENT '用户昵称',
   `email` varchar(128) DEFAULT NULL,

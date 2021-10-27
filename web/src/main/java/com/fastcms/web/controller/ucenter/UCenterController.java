@@ -58,9 +58,9 @@ public class UCenterController extends UCenterBaseController {
     }
 
     @PostMapping("doRegister")
-    public ResponseEntity doRegister(String loginAccount, String nickName, String email, String password, String captcha) {
+    public ResponseEntity doRegister(String username, String nickName, String email, String password, String captcha) {
 
-        if(StringUtils.isBlank(loginAccount)) {
+        if(StringUtils.isBlank(username)) {
             return Response.fail("请输入账号");
         }
 
@@ -76,7 +76,7 @@ public class UCenterController extends UCenterBaseController {
             return Response.fail("请输入密码");
         }
 
-        User userInDb = userService.getOne(new QueryWrapper<User>().lambda().eq(User::getLoginAccount, loginAccount));
+        User userInDb = userService.getOne(new QueryWrapper<User>().lambda().eq(User::getUserName, username));
         if(userInDb != null) {
             return Response.fail("登录账号不可重复");
         }
@@ -84,7 +84,7 @@ public class UCenterController extends UCenterBaseController {
         final String salt = System.currentTimeMillis() + "";
 //        final String md5password = PasswordUtils.getMd5Password(salt, password);
         User user = new User();
-        user.setLoginAccount(loginAccount);
+        user.setUserName(username);
         user.setNickName(nickName);
 //        user.setPassword(md5password);
         user.setEmail(email);

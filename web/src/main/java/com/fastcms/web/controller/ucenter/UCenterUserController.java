@@ -55,7 +55,6 @@ public class UCenterUserController extends UCenterBaseController {
 
 	@PostMapping("doSave")
 	public ResponseEntity doSave(@Validated User user) {
-		user.setLoginAccount(getLoginUser().getLoginAccount());
 		userService.updateById(user);
 		return Response.success();
 	}
