@@ -21,6 +21,7 @@ import com.fastcms.core.response.Response;
 import com.fastcms.web.security.JwtTokenManager;
 import com.wf.captcha.SpecCaptcha;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -60,13 +61,15 @@ public class AdminController {
     @PostMapping("login")
     public ResponseEntity login(@RequestParam String username,
                                 @RequestParam String password,
-                                @RequestParam(required = false) String code,
-                                @RequestParam(required = false) String codeKey,
+                                @RequestParam String code,
+                                @RequestParam String codeKey,
                                 HttpServletRequest request, HttpServletResponse response) throws AccessException {
 
-        String codeInMemory = StrUtils.isBlank (codeKey) ? "" : (String) cacheManager.getCache(WEB_LOGIN_CODE_CACHE_NAME).get(codeKey).get();
-        if(StrUtils.isNotBlank(codeKey))
+        Cache.ValueWrapper valueWrapper = cacheManager.getCache(WEB_LOGIN_CODE_CACHE_NAME).get(codeKey);
+        String codeInMemory = StrUtils.isBlank (codeKey) ? "" : (valueWrapper == null) ? "" : (String) valueWrapper.get();
+        if(StrUtils.isNotBlank(codeKey)) {
             cacheManager.getCache(WEB_LOGIN_CODE_CACHE_NAME).evict(codeKey);
+        }
 
         if(StrUtils.isBlank(code) || !code.equalsIgnoreCase(codeInMemory)) {
             return Response.fail("验证码错误");
@@ -81,7 +84,7 @@ public class AdminController {
             return Response.success(token);
 
         } catch (AuthenticationException e) {
-            throw new AccessException("unknown user!");
+            return Response.fail(e.getMessage());
         }
 
     }

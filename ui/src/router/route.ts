@@ -1079,7 +1079,7 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 					isLink: 'https://wdd.js.org/jsplumb-chinese-tutorial/#/',
 					isHide: false,
 					isKeepAlive: false,
-					isAffix: true,
+					isAffix: false,
 					isIframe: true,
 					auth: ['admin'],
 					icon: 'iconfont icon-neiqianshujuchucun',

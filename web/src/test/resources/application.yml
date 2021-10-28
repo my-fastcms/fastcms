@@ -28,7 +28,7 @@ fastcms:
     token:
       expire:
         seconds: 18000
-      secret-key: SecretKey-www.xjd2020.com
+      secret-key: SecretKey012345678901234567890123456789012345678901234567890123456789
 
 
 

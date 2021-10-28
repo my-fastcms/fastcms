@@ -6,7 +6,6 @@ import { Session } from '/@/utils/storage';
 const service = axios.create({
 	baseURL: import.meta.env.VITE_API_URL as any,
 	timeout: 50000,
-	headers: { 'Content-Type': 'application/json' },
 });
 
 // 添加请求拦截器
@@ -16,6 +15,9 @@ service.interceptors.request.use(
 		if (Session.get('token')) {
 			config.headers.common['Authorization'] = `${Session.get('token')}`;
 		}
+		if (config.method === "GET"){
+            config.headers.common['Content-Type'] = 'application/json';
+        }
 		return config;
 	},
 	(error) => {

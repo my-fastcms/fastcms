@@ -2,7 +2,6 @@ package com.fastcms.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fastcms.aspect.Log;
 import com.fastcms.common.exception.FastcmsException;
@@ -158,50 +157,30 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public Page<UserTeamVo> getUserTeamList(Page page, Long userId, String stationName) {
-        return getBaseMapper().getUserTeamList(page, userId, stationName);
-    }
-
-    @Override
     public User getUserBySearch(Long userId, String keyword) {
-        User user = getBaseMapper().getTeamUserByUserName(userId, keyword);
-        if(user == null) {
-            user = getUserByPhone(keyword);
-        }
-        return user;
+        return getUserByPhone(keyword);
     }
 
     @Override
     @Transactional
     public synchronized void saveGroupUser(AddGroupUserParam addGroupUserParam) throws Exception {
 
-        if(addGroupUserParam.getTagId() == null) {
-            throw new FastcmsException("请选择成员岗位");
-        }
-
         User parent = getById(addGroupUserParam.getParentId());
         if(parent == null) {
-            throw new FastcmsException("上级用户不存在");
+            throw new FastcmsException(FastcmsException.INVALID_PARAM, "上级用户不存在");
         }
 
         User user = getUserByPhone(addGroupUserParam.getPhone());
         if(user == null) {
-            throw new FastcmsException("用户不存在");
+            throw new FastcmsException(FastcmsException.INVALID_PARAM, "用户不存在");
         }
 
         if(Objects.equals(parent.getId(), user.getId())) {
-            throw new FastcmsException("自己不能分配给自己");
-        }
-
-        UserTeam userTeam = getBaseMapper().getUserTeam(parent.getId(), user.getId());
-        if(userTeam != null) {
-            throw new FastcmsException("该用户已经存在其他团队了");
+            throw new FastcmsException(FastcmsException.INVALID_PARAM, "自己不能分配给自己");
         }
 
         user.setUserName(addGroupUserParam.getUserName());
         updateById(user);
-
-        getBaseMapper().saveUserTeam(parent.getId(), user.getId());
 
         List<Long> stationIds = new ArrayList<>();
         stationIds.add(addGroupUserParam.getTagId());

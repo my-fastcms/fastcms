@@ -14,34 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.core.directive;
+package com.fastcms.web.filter;
 
-import com.fastcms.service.IPermissionService;
-import freemarker.core.Environment;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import java.util.Map;
+import javax.servlet.*;
+import java.io.IOException;
 
 /**
  * @author： wjun_java@163.com
- * @date： 2021/4/17
+ * @date： 2021/10/24
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-@Component("adminMenu")
-public class AdminMenuDirective extends BaseDirective {
-
-    @Autowired
-    private IPermissionService permissionService;
+public class AuthFilter implements Filter {
 
     @Override
-    public Object doExecute(Environment env, Map params) {
-//        Subject subject = SecurityUtils.getSubject();
-//        User user = (User) subject.getPrincipal();
-//        return user == null ? null : permissionService.getUserMenuPermission(user.getId());
-        return null;
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+        System.out.println(request.getRemoteAddr());
     }
 
 }

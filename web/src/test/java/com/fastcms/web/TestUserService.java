@@ -19,6 +19,9 @@ package com.fastcms.web;
 import com.fastcms.service.IPermissionService;
 import com.fastcms.service.IRoleService;
 import com.fastcms.service.IUserService;
+import com.fastcms.web.security.AuthConfigs;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +52,9 @@ public class TestUserService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private AuthConfigs authConfigs;
+
     @Disabled
     @Test
     public void testBatchInsert() {
@@ -62,10 +68,13 @@ public class TestUserService {
         treeNodeList = permissionService.getPermissionByRoleId(1l);
     }
 
-    @Disabled
     @Test
     public void testSaveRolePermission() {
-
+        Claims claims = Jwts.parserBuilder().setSigningKey(authConfigs.getSecretKeyBytes()).build()
+                .parseClaimsJws("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTYzNTQwMDI5OH0.0N_liADYX5nkLuC8JRoGPwudREw9gq0lr_YaoG_7fQM").getBody();
+        System.out.println(claims.getSubject());
+        String auths = (String) claims.get("auth");
+        System.out.println(auths);
     }
 
     @Test

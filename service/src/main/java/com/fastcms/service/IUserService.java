@@ -24,9 +24,9 @@ public interface IUserService extends IService<User> {
 
     /**
      * 通过登录账号更新用户登录时间
-     * @param loginAccount
+     * @param username
      */
-    void updateUserLoginTime(String loginAccount);
+    void updateUserLoginTime(String username);
 
     /**
      * 修改用户密码
@@ -74,14 +74,6 @@ public interface IUserService extends IService<User> {
     List<UserTag> getUserTagList(Long userId);
 
     /**
-     * 获取用户团队数据列表
-     * @param page
-     * @param userId
-     * @return
-     */
-    Page<UserTeamVo> getUserTeamList(Page page, Long userId, String stationName);
-
-    /**
      * 根据手机号或用户姓名查询用户
      * @param keyword
      * @param userId
@@ -101,20 +93,6 @@ public interface IUserService extends IService<User> {
         private Long parentId;
         @NotNull(message = "职位不能为空")
         private Long tagId;
-    }
-
-    @Data
-    class UserTeam implements Serializable {
-        Long parentId;
-        Long userId;
-    }
-
-    @Data
-    class UserTeamVo implements Serializable {
-        Long id;
-        String userName;
-        String stationName;
-        BigDecimal money = BigDecimal.ZERO;
     }
 
 }

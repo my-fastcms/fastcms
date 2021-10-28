@@ -17,7 +17,6 @@
 package com.fastcms.core.directive;
 
 import freemarker.template.SimpleScalar;
-import freemarker.template.TemplateModelException;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +33,7 @@ import java.util.List;
 public class ParamFunction extends BaseFunction {
 
     @Override
-    public Object exec(List arguments) throws TemplateModelException {
+    public Object exec(List arguments) {
         HttpServletRequest request = getRequest();
         SimpleScalar simpleScalar = (SimpleScalar) arguments.get(0);
         return request.getParameter((simpleScalar.getAsString()));

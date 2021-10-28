@@ -65,8 +65,6 @@ public interface FastcmsConstants {
      */
     String SYSTEM_MODULE_ID = "system-core";
     String PLUGIN_MODULE_ID = "module-plugin";
-    String CMS_MODULE_ID = "cms-plugin";
-    String MALL_MODULE_ID = "mall-plugin";
 
     String PERMISSION_MODULE = "module";
     String PERMISSION_MENU = "menu";

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.core.exception;
+package com.fastcms.core.advice;
 
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.core.response.Response;
@@ -50,13 +50,5 @@ public class FastcmsControllerAdvice {
 	public ResponseEntity<String> fastcmsExceptionHandler(FastcmsException e) {
 		return Response.fail(e.getMessage());
 	}
-
-//	@ExceptionHandler(AuthorizationException.class)
-//	public Object authorizationExceptionHandler(AuthorizationException e, HttpServletRequest request) {
-//		if(RequestUtils.isAjaxRequest(request)) {
-//			return Response.fail(e.getMessage());
-//		}
-//		return new ModelAndView("/admin/unauthor");
-//	}
 
 }

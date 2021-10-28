@@ -1,7 +1,7 @@
 <template>
 	<div class="layout-footer mt15" v-show="isDelayFooter">
 		<div class="layout-footer-warp">
-			<div>vue-next-admin，Made by lyt with ❤️</div>
+			<div>Fastcms:v0.0.1</div>
 			<div class="mt5">{{ $t('message.copyright.one5') }}</div>
 		</div>
 	</div>

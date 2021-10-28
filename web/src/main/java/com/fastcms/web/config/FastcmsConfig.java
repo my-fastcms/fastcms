@@ -14,33 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.core.config;
+package com.fastcms.web.config;
 
-import com.fastcms.core.interceptor.AdminInterceptor;
-import com.fastcms.core.interceptor.UCenterInterceptor;
 import com.fastcms.core.template.Template;
 import com.fastcms.core.template.TemplateService;
 import com.fastcms.core.utils.FileUtils;
-import com.fastcms.core.utils.LocalDateTimeConverter;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.format.FormatterRegistry;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * @author： wjun_java@163.com
@@ -49,9 +41,8 @@ import java.util.Properties;
  * @modifiedBy：
  * @version: 1.0
  */
-@Slf4j
 @Configuration
-public class FastcmsWebMvcConfig implements WebMvcConfigurer {
+public class FastcmsConfig implements WebMvcConfigurer {
 
     @Autowired
     private TemplateService templateService;
@@ -69,38 +60,7 @@ public class FastcmsWebMvcConfig implements WebMvcConfigurer {
             locations.add(ResourceUtils.FILE_URL_PREFIX + templateDir + template.getPath() + "/static/");
         }
 
-        registry.addResourceHandler("/static/**")
-                .addResourceLocations(locations.toArray(new String[]{}));
-    }
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(adminInterceptor()).addPathPatterns("/admin/**");
-        registry.addInterceptor(ucenterInterceptor()).addPathPatterns("/ucenter/**");
-    }
-
-    @Bean
-    public AdminInterceptor adminInterceptor(){
-        return new AdminInterceptor();
-    }
-
-    @Bean
-    public UCenterInterceptor ucenterInterceptor(){
-        return new UCenterInterceptor();
-    }
-
-    @Bean
-    public SimpleMappingExceptionResolver simpleMappingExceptionResolver() {
-        SimpleMappingExceptionResolver simpleMappingExceptionResolver = new SimpleMappingExceptionResolver();
-        Properties mappings = new Properties();
-        mappings.setProperty("org.springframework.web.multipart.MaxUploadSizeExceededException", "error");
-        simpleMappingExceptionResolver.setExceptionMappings(mappings);
-        return simpleMappingExceptionResolver;
-    }
-
-    @Override
-    public void addFormatters(FormatterRegistry registry) {
-        registry.addConverter(new LocalDateTimeConverter());
+        registry.addResourceHandler("/static/**").addResourceLocations(locations.toArray(new String[]{}));
     }
 
     @Bean

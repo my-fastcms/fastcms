@@ -18,7 +18,6 @@ package com.fastcms.core.directive;
 
 import freemarker.template.SimpleNumber;
 import freemarker.template.SimpleScalar;
-import freemarker.template.TemplateModelException;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -35,7 +34,7 @@ import java.util.List;
 public class TextDirective extends BaseFunction {
 
 	@Override
-	public Object exec(List arguments) throws TemplateModelException {
+	public Object exec(List arguments) {
 		SimpleScalar textSimpleScalar = (SimpleScalar) arguments.get(0);
 		String text = textSimpleScalar.getAsString();
 

@@ -63,7 +63,6 @@ public class UserController {
 
     @AdminMenu(name = "用户管理", sort = 1)
     @GetMapping("list")
-//    @RequiresPermissions("user:list")
     public String list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
                        @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
                        @RequestParam(name = "phone", required = false) String phone,
@@ -81,14 +80,13 @@ public class UserController {
     }
 
     @AdminMenu(name = "保存", type = FastcmsConstants.PERMISSION_OPTION)
-//    @RequiresPermissions("user:save")
     @PostMapping("doSave")
     public ResponseEntity doSave(@Validated User user) {
 
-//        User userInDb = userService.getOne(new QueryWrapper<User>().lambda().eq(User::getLoginAccount, user.getLoginAccount()));
-//        if(userInDb != null) {
-//            return Response.fail("登录账号不可重复");
-//        }
+        User userInDb = userService.getOne(new QueryWrapper<User>().lambda().eq(User::getUserName, user.getUserName()));
+        if(userInDb != null) {
+            return Response.fail("登录账号不可重复");
+        }
 
         final String salt = System.currentTimeMillis() + "";
 //        final String password = PasswordUtils.getMd5Password(salt, user.getPassword());

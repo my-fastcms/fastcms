@@ -17,7 +17,6 @@
 package com.fastcms.web.controller.admin;
 
 import com.fastcms.common.constants.FastcmsConstants;
-import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.core.permission.AdminMenu;
 import com.fastcms.core.response.Response;
 import com.fastcms.core.utils.FileUtils;
@@ -92,8 +91,6 @@ public class PluginController {
     @PostMapping("doUnInstall")
     public ResponseEntity doUnInstall(@RequestParam(name = "pluginId") String pluginId) {
 
-        if("mall-plugin".equals(pluginId) || "cms-plugin".equals(pluginId))
-            throw new FastcmsException("系统插件不允许卸载");
         try {
 //            pluginService.unInstallPlugin(pluginId);
             return Response.success();

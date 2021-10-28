@@ -16,14 +16,12 @@
  */
 package com.fastcms.web.controller.api;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.core.response.Response;
 import com.fastcms.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,14 +58,6 @@ public class UserApi {
 		} catch (Exception e) {
 			return Response.fail(e.getMessage());
 		}
-	}
-
-	@GetMapping("team/getUserTeamList")
-	public ResponseEntity getUserTeamList(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-										  @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
-										  @RequestParam(name = "userId", required = false) Long userId,
-										  @RequestParam(name = "stationName") String stationName) {
-		return Response.success(userService.getUserTeamList(new Page(page, pageSize), userId, stationName));
 	}
 
 }

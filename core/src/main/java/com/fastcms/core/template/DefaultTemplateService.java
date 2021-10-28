@@ -24,7 +24,6 @@ import com.fastcms.service.IConfigService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.EnvironmentAware;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
@@ -49,12 +48,13 @@ import java.util.stream.Stream;
  */
 @Slf4j
 @Service
-public class DefaultTemplateService implements TemplateService, InitializingBean, EnvironmentAware {
+public class DefaultTemplateService implements TemplateService, InitializingBean {
 
     private String templateDir = "./htmls";
 
     private Map<String, Template> templateMap = new HashMap<>();
 
+    @Autowired
     private Environment environment;
 
     private TemplateFinder templateFinder;
@@ -140,12 +140,12 @@ public class DefaultTemplateService implements TemplateService, InitializingBean
     public void unInstall(String templateId) throws Exception {
         Template template = getTemplate(templateId);
         if(template == null) {
-            throw new FastcmsException("模板不存在");
+            throw new FastcmsException(FastcmsException.INVALID_PARAM, "模板不存在");
         }
 
         Template currTemplate = getCurrTemplate();
         if(currTemplate != null && currTemplate.getId().equals(templateId)) {
-            throw new FastcmsException("正在使用中的模板不能卸载");
+            throw new FastcmsException(FastcmsException.CLIENT_INVALID_PARAM, "正在使用中的模板不能卸载");
         }
         org.apache.commons.io.FileUtils.deleteDirectory(template.getTemplatePath().toFile());
         initialize();
@@ -154,11 +154,6 @@ public class DefaultTemplateService implements TemplateService, InitializingBean
     @Override
     public void afterPropertiesSet() throws Exception {
         initialize();
-    }
-
-    @Override
-    public void setEnvironment(Environment environment) {
-        this.environment = environment;
     }
 
 }

@@ -14,31 +14,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.core.directive;
+package com.fastcms.web.security;
 
-import com.fastcms.service.IPermissionService;
-import freemarker.core.Environment;
+import com.fastcms.entity.Permission;
+import com.fastcms.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author： wjun_java@163.com
- * @date： 2021/6/4
- * @description：
- * @modifiedBy：
- * @version: 1.0
+ *  @author： wjun_java@163.com
+ *  * @date： 2021/10/24
+ *  * @description：
+ *  * @modifiedBy：
+ *  * @version: 1.0
  */
-@Component("ucenterMenu")
-public class UCenterMenuDirective extends BaseDirective {
+@Component
+public class FastcmsAuthManager implements AuthManager {
 
-	@Autowired
-	private IPermissionService permissionService;
+    @Autowired
+    private JwtTokenManager tokenManager;
 
-	@Override
-	public Object doExecute(Environment env, Map params) {
-		return permissionService.getUCenterMenuList();
-	}
+    @Override
+    public User login(HttpServletRequest request) {
+        return null;
+    }
+
+    @Override
+    public void auth(Permission permission, User user) throws AccessException {
+
+    }
 
 }

@@ -19,6 +19,7 @@ package com.fastcms.core.permission;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
+import com.fastcms.common.exception.FastcmsRuntimeException;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.entity.Permission;
 import com.fastcms.service.IPermissionService;
@@ -86,7 +87,7 @@ public class DefaultPermissionManager implements PermissionManager {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new FastcmsException(e.getMessage());
+			throw new FastcmsRuntimeException(FastcmsException.SERVER_ERROR, e.getMessage());
 		} finally {
 			controllerClassList.clear();
 			adminPermissionMaps.clear();

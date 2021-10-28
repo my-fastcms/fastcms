@@ -14,27 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.core.interceptor;
+package com.fastcms.web.security;
 
-import com.fastcms.common.constants.FastcmsConstants;
-import org.springframework.web.servlet.HandlerInterceptor;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.fastcms.common.exception.FastcmsException;
 
 /**
+ * 授权异常
  * @author： wjun_java@163.com
- * @date： 2021/6/5
+ * @date： 2021/10/24
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-public class BaseInterceptor implements HandlerInterceptor {
-
-	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		request.setAttribute(FastcmsConstants.STATIC_PATH_KEY, FastcmsConstants.STATIC_RESOURCE_PATH);
-		return true;
-	}
-
+public class AccessException extends FastcmsException {
 }
