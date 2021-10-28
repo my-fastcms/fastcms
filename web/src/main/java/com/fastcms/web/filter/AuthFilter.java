@@ -32,7 +32,7 @@ public class AuthFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        System.out.println(request.getRemoteAddr());
+        chain.doFilter(request, response);
     }
 
 }
