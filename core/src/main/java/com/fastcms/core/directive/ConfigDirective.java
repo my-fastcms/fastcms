@@ -34,7 +34,7 @@ import java.util.List;
  * @modifiedBy：
  * @version: 1.0
  */
-@Component("fastcmsConfig")
+@Component("configTag")
 public class ConfigDirective extends BaseFunction {
 
 	@Autowired
