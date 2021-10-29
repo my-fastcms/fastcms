@@ -20,16 +20,15 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.permission.AdminMenu;
 import com.fastcms.core.permission.PermissionManager;
-import com.fastcms.core.response.Response;
 import com.fastcms.entity.Permission;
 import com.fastcms.entity.Role;
 import com.fastcms.service.IPermissionService;
 import com.fastcms.service.IRoleService;
 import com.fastcms.web.Fastcms;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -60,8 +59,7 @@ public class RoleController {
 
     @AdminMenu(name = "角色管理", sort = 1)
     @GetMapping("list")
-//    @RequiresPermissions("role:list")
-    public String list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
+    public Object list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
                        @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
                        @RequestParam(name = "roleName", required = false) String roleName,
                        Model model) {
@@ -69,64 +67,52 @@ public class RoleController {
         queryWrapper.like(roleName != null, Role::getRoleName, roleName);
         Page pageParam = new Page<>(page, pageSize);
         Page<Role> pageData = roleService.page(pageParam, queryWrapper);
-        return "admin/role/list";
-    }
-
-    @RequestMapping("edit")
-    public String edit(@RequestParam(name = "id", required = false) Long id, Model model) {
-        model.addAttribute("role", roleService.getById(id));
-        return "admin/role/edit";
+        return RestResultUtils.success(pageData);
     }
 
     @PostMapping("doSave")
-    public ResponseEntity doSave(@Validated Role role) {
+    public Object doSave(@Validated Role role) {
 
         if(role.getId() != null && Objects.equals(role.getId(), FastcmsConstants.ADMIN_ROLE_ID)) {
-            return Response.fail("超级管理员角色不可修改");
+            return RestResultUtils.failed("超级管理员角色不可修改");
         }
 
         roleService.saveOrUpdate(role);
-        return Response.success();
-    }
-
-    @GetMapping("perm")
-    public String perm(@RequestParam(name = "roleId") Long roleId, Model model) {
-        model.addAttribute("role", roleService.getById(roleId));
-        return "admin/role/permission";
+        return RestResultUtils.success();
     }
 
     @GetMapping("getPermissionList")
-    public ResponseEntity getPermissionList(@RequestParam(name = "roleId") Long roleId) {
-        return ResponseEntity.ok(permissionService.getPermissionByRoleId(roleId));
+    public Object getPermissionList(@RequestParam(name = "roleId") Long roleId) {
+        return RestResultUtils.success(permissionService.getPermissionByRoleId(roleId));
     }
 
     @PostMapping("doSavePermission")
-    public ResponseEntity doSavePermission(@RequestParam("roleId") Long roleId, @RequestParam("permissionIdList[]") List<Long> permissionIdList) {
+    public Object doSavePermission(@RequestParam("roleId") Long roleId, @RequestParam("permissionIdList[]") List<Long> permissionIdList) {
         if(roleId != null && Objects.equals(roleId, FastcmsConstants.ADMIN_ROLE_ID)) {
-            return Response.fail("超级管理员不可修改权限");
+            return RestResultUtils.failed("超级管理员不可修改权限");
         }
         roleService.saveRolePermission(roleId, permissionIdList);
-        return Response.success();
+        return RestResultUtils.success();
     }
 
     @AdminMenu(name = "权限", sort = 2)
     @GetMapping("permission/list")
-    public String permList(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
+    public Object permList(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
                            @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
                            Model model) {
         LambdaQueryWrapper<Permission> queryWrapper = new QueryWrapper().lambda();
         Page pageParam = new Page<>(page, pageSize);
         Page<Permission> pageData = permissionService.page(pageParam, queryWrapper);
-        return "admin/role/permission_list";
+        return RestResultUtils.success(pageData);
     }
 
     @PostMapping("doSyncPermission")
-    public ResponseEntity doSyncPermission() {
+    public Object doSyncPermission() {
         try {
             permissionManager.refreshSystemPermissions(Fastcms.class);
-            return Response.success();
+            return RestResultUtils.success();
         } catch (Exception e) {
-            return Response.fail(e.getMessage());
+            return RestResultUtils.failed(e.getMessage());
         }
     }
 

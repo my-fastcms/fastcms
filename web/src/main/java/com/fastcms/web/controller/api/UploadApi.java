@@ -17,11 +17,9 @@
 package com.fastcms.web.controller.api;
 
 import com.fastcms.common.constants.FastcmsConstants;
-import com.fastcms.core.response.Response;
+import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.utils.FileUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,7 +42,7 @@ import java.io.IOException;
 public class UploadApi {
 
 	@PostMapping("doUpload")
-	public ResponseEntity doUpload(@RequestParam("file") MultipartFile file) {
+	public Object doUpload(@RequestParam("file") MultipartFile file) {
 		String newFilePath = FileUtils.newFileName(file.getOriginalFilename());
 		File uploadFile = new File(FileUtils.getUploadDir(), newFilePath);
 		try {
@@ -55,16 +53,16 @@ public class UploadApi {
 			long fileSize = uploadFile.length();
 			if(fileSize > 1024 * 1024 * 5) {
 				uploadFile.delete();
-				return Response.fail("文件超过上传限制5MB");
+				return RestResultUtils.failed("文件超过上传限制5MB");
 			}
 
-			return Response.success(newFilePath.replace("\\", "/"));
+			return RestResultUtils.success(newFilePath.replace("\\", "/"));
 		} catch (IOException e) {
 			log.error(e.getMessage());
 			if(uploadFile != null) {
 				uploadFile.delete();
 			}
-			return Response.fail(e.getMessage());
+			return RestResultUtils.failed(e.getMessage());
 		}
 	}
 

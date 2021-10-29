@@ -21,9 +21,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.service.IArticleService;
 import com.fastcms.common.constants.FastcmsConstants;
-import com.fastcms.core.response.Response;
+import com.fastcms.common.model.RestResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,7 +42,7 @@ public class ArticleApi {
 	private IArticleService articleService;
 
 	@RequestMapping("/list")
-	public ResponseEntity list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
+	public Object list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
 							   @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
 							   @RequestParam(name = "categoryId", required = false) Long categoryId) {
 
@@ -55,13 +54,13 @@ public class ArticleApi {
 
 		Page<IArticleService.ArticleVo> articleVoPage = articleService.pageArticle(new Page(page, pageSize), queryWrapper);
 
-		return Response.success(articleVoPage);
+		return RestResultUtils.success(articleVoPage);
 	}
 
 	@RequestMapping("/detail")
-	public ResponseEntity detail(Long articleId) {
+	public Object detail(Long articleId) {
 		IArticleService.ArticleInfoVo articleInfo = articleService.getArticleById(articleId);
-		return Response.success(articleInfo);
+		return RestResultUtils.success(articleInfo);
 	}
 
 }

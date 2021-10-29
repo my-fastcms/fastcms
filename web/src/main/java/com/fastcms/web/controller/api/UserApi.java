@@ -17,13 +17,9 @@
 package com.fastcms.web.controller.api;
 
 import com.fastcms.common.constants.FastcmsConstants;
-import com.fastcms.core.response.Response;
-import com.fastcms.service.IUserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author： wjun_java@163.com
@@ -36,28 +32,5 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(FastcmsConstants.API_MAPPING + "/user")
 public class UserApi {
-
-	@Autowired
-	private IUserService userService;
-
-	@GetMapping("tag/getTagList")
-	public ResponseEntity getTagList() {
-		return null;
-	}
-
-	@GetMapping("team/getUserBySearch")
-	public ResponseEntity getUserBySearch(@RequestParam(name = "keyword") String keyword) {
-		return null;
-	}
-
-	@PostMapping("team/doSaveUserTeam")
-	public ResponseEntity doSaveUserTeam(@Validated @RequestBody IUserService.AddGroupUserParam addGroupUserParam) {
-		try {
-			userService.saveGroupUser(addGroupUserParam);
-			return Response.success();
-		} catch (Exception e) {
-			return Response.fail(e.getMessage());
-		}
-	}
 
 }

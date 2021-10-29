@@ -17,8 +17,8 @@
 package com.fastcms.core.advice;
 
 import com.fastcms.common.exception.FastcmsException;
-import com.fastcms.core.response.Response;
-import org.springframework.http.ResponseEntity;
+import com.fastcms.common.model.RestResult;
+import com.fastcms.common.model.RestResultUtils;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -37,18 +37,18 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class FastcmsControllerAdvice {
 
 	@ExceptionHandler(BindException.class)
-	public ResponseEntity<String> bindExceptionHandler(BindException e) {
-		return Response.fail(e.getBindingResult().getFieldErrors().get(0).getDefaultMessage());
+	public RestResult<String> bindExceptionHandler(BindException e) {
+		return RestResultUtils.failed(e.getBindingResult().getFieldErrors().get(0).getDefaultMessage());
 	}
 
 	@ExceptionHandler(MethodArgumentNotValidException.class)
-	public ResponseEntity<String> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e) {
-		return Response.fail(e.getBindingResult().getFieldErrors().get(0).getDefaultMessage());
+	public RestResult<String> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e) {
+		return RestResultUtils.failed(e.getBindingResult().getFieldErrors().get(0).getDefaultMessage());
 	}
 
 	@ExceptionHandler(FastcmsException.class)
-	public ResponseEntity<String> fastcmsExceptionHandler(FastcmsException e) {
-		return Response.fail(e.getMessage());
+	public RestResult<String> fastcmsExceptionHandler(FastcmsException e) {
+		return RestResultUtils.failed(e.getMessage());
 	}
 
 }

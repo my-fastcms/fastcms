@@ -21,15 +21,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.cms.entity.Menu;
 import com.fastcms.cms.service.IMenuService;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.permission.AdminMenu;
-import com.fastcms.core.response.Response;
 import com.fastcms.core.template.Template;
 import com.fastcms.core.template.TemplateService;
 import com.fastcms.core.utils.FileUtils;
 import com.fastcms.service.IConfigService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.annotation.Validated;
@@ -91,25 +90,25 @@ public class TemplateController {
     }
 
     @PostMapping("doInstall")
-    public ResponseEntity doInstall(@RequestParam("file") MultipartFile file) {
+    public Object doInstall(@RequestParam("file") MultipartFile file) {
 
         String fileName = file.getOriginalFilename();
         String suffixName = fileName.substring(fileName.lastIndexOf(".") + 1);
         //检查文件格式是否合法
         if(StringUtils.isEmpty(suffixName)) {
-            return Response.fail("文件格式不合格，请上传zip文件");
+            return RestResultUtils.failed("文件格式不合格，请上传zip文件");
         }
         if(!"zip".equalsIgnoreCase(suffixName)) {
-            return Response.fail("文件格式不合格，请上传zip文件");
+            return RestResultUtils.failed("文件格式不合格，请上传zip文件");
         }
 
         File uploadFile = new File(FileUtils.getTemplateDir(), file.getOriginalFilename());
         try {
             file.transferTo(uploadFile);
             templateService.install(uploadFile);
-            return Response.success();
+            return RestResultUtils.success();
         } catch (Exception e) {
-            return Response.fail(e.getMessage());
+            return RestResultUtils.failed(e.getMessage());
         } finally {
             if(uploadFile != null) {
                 uploadFile.delete();
@@ -118,13 +117,13 @@ public class TemplateController {
     }
 
     @PostMapping("doUnInstall")
-    public ResponseEntity doUnInstall(@RequestParam("templateId") String templateId) {
+    public Object doUnInstall(@RequestParam("templateId") String templateId) {
 
         try {
             templateService.unInstall(templateId);
-            return Response.success();
+            return RestResultUtils.success();
         } catch (Exception e) {
-            return Response.fail(e.getMessage());
+            return RestResultUtils.failed(e.getMessage());
         }
 
     }
@@ -196,16 +195,16 @@ public class TemplateController {
     }
 
     @PostMapping("doEnable")
-    public ResponseEntity doEnable(@RequestParam(name = "templateId") String templateId) {
+    public Object doEnable(@RequestParam(name = "templateId") String templateId) {
         configService.saveConfig(FastcmsConstants.TEMPLATE_ENABLE_ID, templateId);
-        return Response.success();
+        return RestResultUtils.success();
     }
 
     @PostMapping("doEditSave")
-    public ResponseEntity doEditSave(String dirName, String fileName, String fileContent) throws IOException {
+    public Object doEditSave(String dirName, String fileName, String fileContent) throws IOException {
         Template currTemplate = templateService.getCurrTemplate();
         if(currTemplate == null) {
-            return Response.fail("没有找到模板");
+            return RestResultUtils.failed("没有找到模板");
         }
         Path templatePath = currTemplate.getTemplatePath();
 
@@ -215,7 +214,7 @@ public class TemplateController {
         }
 
         if(StringUtils.isNotBlank(fileName) && fileName.contains("..")) {
-            return Response.fail("没有找到模板");
+            return RestResultUtils.failed("没有找到模板");
         }
 
         Stream<Path> list = Files.list(templatePath);
@@ -224,32 +223,32 @@ public class TemplateController {
         Path currFile = getCurrFile(files, fileName);
 
         if(currFile == null) {
-            return Response.fail("文件不存在");
+            return RestResultUtils.failed("文件不存在");
         }
 
         File file = currFile.toFile();
         if(!file.canWrite()) {
-            return Response.fail("文件没有写入权限");
+            return RestResultUtils.failed("文件没有写入权限");
         }
 
         FileUtils.writeString(file, fileContent);
 
-        return Response.success();
+        return RestResultUtils.success();
     }
 
     @PostMapping("doUpload")
     @ExceptionHandler(value = MultipartException.class)
-    public ResponseEntity doUpload(String dirName, @RequestParam("files") MultipartFile files[]) {
+    public Object doUpload(String dirName, @RequestParam("files") MultipartFile files[]) {
 
         Template currTemplate = templateService.getCurrTemplate();
         if(currTemplate == null) {
-            return Response.fail("没有找到模板");
+            return RestResultUtils.failed("没有找到模板");
         }
         Path templatePath = currTemplate.getTemplatePath();
 
         if(StringUtils.isNotBlank(dirName)) {
             if(dirName.contains("..")) {
-                return Response.fail("目录不存在");
+                return RestResultUtils.failed("目录不存在");
             }
             templatePath = Paths.get(templatePath.toString().concat("/" + dirName));
         }
@@ -287,32 +286,32 @@ public class TemplateController {
 
         }
 
-        return errorFiles.isEmpty() ? Response.success()
-                : Response.fail(errorFiles.stream().collect(Collectors.joining(",")).concat(",以上文件上传失败"));
+        return errorFiles.isEmpty() ? RestResultUtils.success()
+                : RestResultUtils.failed(errorFiles.stream().collect(Collectors.joining(",")).concat(",以上文件上传失败"));
     }
 
     @PostMapping("doDelFile")
-    public ResponseEntity doDelFile(String filePath) {
+    public Object doDelFile(String filePath) {
 
         if(StringUtils.isBlank(filePath)) {
-            return Response.fail("文件路径为空");
+            return RestResultUtils.failed("文件路径为空");
         }
 
         if(filePath.contains("..")) {
-            return Response.fail("文件路径不合法");
+            return RestResultUtils.failed("文件路径不合法");
         }
 
         Template currTemplate = templateService.getCurrTemplate();
         if(currTemplate == null) {
-            return Response.fail("没有找到模板");
+            return RestResultUtils.failed("没有找到模板");
         }
         Path templatePath = currTemplate.getTemplatePath();
         try {
             Paths.get(templatePath.toString() + File.separator + filePath).toFile().delete();
-            return Response.success();
+            return RestResultUtils.success();
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.fail(e.getMessage());
+            return RestResultUtils.failed(e.getMessage());
         }
     }
 
@@ -338,15 +337,15 @@ public class TemplateController {
     }
 
     @PostMapping("menu/doSave")
-    public ResponseEntity doSaveMenu(@Validated Menu menu) {
+    public Object doSaveMenu(@Validated Menu menu) {
         menuService.saveOrUpdate(menu);
-        return Response.success();
+        return RestResultUtils.success();
     }
 
     @PostMapping("menu/doDelete")
-    public ResponseEntity doDeleteMenu(@RequestParam(name = "id") Long id) {
+    public Object doDeleteMenu(@RequestParam(name = "id") Long id) {
         menuService.removeById(id);
-        return Response.success();
+        return RestResultUtils.success();
     }
 
     @RequestMapping("setting")
@@ -356,8 +355,8 @@ public class TemplateController {
     }
 
     @PostMapping("setting/doSave")
-    public ResponseEntity doSave(HttpServletRequest request) {
-        return Response.success();
+    public Object doSave(HttpServletRequest request) {
+        return RestResultUtils.success();
     }
 
     List<Path> listPathFiles(List<Path> files) {

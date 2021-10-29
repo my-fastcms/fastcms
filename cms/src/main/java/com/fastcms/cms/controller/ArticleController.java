@@ -25,12 +25,10 @@ import com.fastcms.cms.service.IArticleCategoryService;
 import com.fastcms.cms.service.IArticleCommentService;
 import com.fastcms.cms.service.IArticleService;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.permission.AdminMenu;
-import com.fastcms.core.response.Response;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,7 +43,6 @@ import org.springframework.web.bind.annotation.RestController;
  * @modifiedBy：
  * @version: 1.0
  */
-@Slf4j
 @RestController
 @RequestMapping(FastcmsConstants.ADMIN_MAPPING + "/article")
 @AdminMenu(name = "文章", icon = "<i class=\"nav-icon fas fa-book\"></i>", sort = 1)
@@ -67,8 +64,7 @@ public class ArticleController {
                        @RequestParam(name = "title", required = false) String title,
                        @RequestParam(name = "status", required = false) String status,
                        @RequestParam(name = "categoryId", required = false) String categoryId,
-                       @RequestParam(name = "tagId", required = false) String tagId,
-                       Model model) {
+                       @RequestParam(name = "tagId", required = false) String tagId) {
         QueryWrapper queryWrapper = new QueryWrapper();
         if(StringUtils.isNotBlank(title)) {
             queryWrapper.like("a.title", title);
@@ -93,37 +89,14 @@ public class ArticleController {
         return "admin/article/list";
     }
 
-    @AdminMenu(name = "写文章", sort = 2)
-    @RequestMapping("write")
-    public String edit(@RequestParam(name = "id", required = false) Long id, Model model) {
-        model.addAttribute("article", articleService.getById(id));
-        model.addAttribute("tags", articleCategoryService.getArticleTagListByArticleId(id));
-        model.addAttribute("categories", articleCategoryService.getArticleCategoryListByArticleId(id));
-//        model.addAttribute("categoryList", articleCategoryService.getCategoryList(getLoginUser().getId()));
-//        model.addAttribute("tagList", articleCategoryService.getTagList(getLoginUser().getId()));
-        return "admin/article/edit";
-    }
-
     @PostMapping("doSave")
-    public ResponseEntity doSave(@Validated Article article) {
+    public Object doSave(@Validated Article article) {
         try {
             articleService.saveArticle(article);
-            return Response.success();
+            return RestResultUtils.success();
         } catch (Exception e) {
-            return Response.fail(e.getMessage());
+            return RestResultUtils.failed(e.getMessage());
         }
-    }
-
-    @AdminMenu(name = "分类", sort = 3)
-    @RequestMapping("category/list")
-    public String categoryList(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-                       @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
-                       Model model) {
-        QueryWrapper queryWrapper = new QueryWrapper();
-        Page pageParam = new Page<>(page, pageSize);
-        Page<IArticleCategoryService.ArticleCategoryVo> pageData = articleCategoryService.pageArticleCategory(pageParam, queryWrapper);
-//        model.addAttribute(PAGE_DATA_ATTR, pageData);
-        return "admin/article/category_list";
     }
 
     @RequestMapping("category/edit")
@@ -134,45 +107,27 @@ public class ArticleController {
     }
 
     @PostMapping("category/doSave")
-    public ResponseEntity doSaveCategory(ArticleCategory articleCategory) {
+    public Object doSaveCategory(ArticleCategory articleCategory) {
         articleCategoryService.saveOrUpdate(articleCategory);
-        return Response.success();
+        return RestResultUtils.success();
     }
 
     @PostMapping("category/doDelete")
-    public ResponseEntity doDeleteCategory(@RequestParam(name = "id") Long id) {
+    public Object doDeleteCategory(@RequestParam(name = "id") Long id) {
         articleCategoryService.deleteByCategoryId(id);
-        return Response.success();
-    }
-
-    @AdminMenu(name = "评论", sort = 4)
-    @RequestMapping("comment/list")
-    public String commentList(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-                               @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
-                               Model model) {
-        QueryWrapper queryWrapper = new QueryWrapper();
-        Page pageParam = new Page<>(page, pageSize);
-        Page<IArticleCommentService.ArticleCommentVo> pageData = articleCommentService.pageArticleComment(pageParam, queryWrapper);
-//        model.addAttribute(PAGE_DATA_ATTR, pageData);
-        return "admin/article/comment_list";
-    }
-
-    @RequestMapping("comment/edit")
-    public String editComment(@RequestParam(name = "id", required = false) Long id, Model model) {
-        model.addAttribute("articleComment", articleCommentService.getById(id));
-        return "admin/article/comment_edit";
+        return RestResultUtils.success();
     }
 
     @PostMapping("comment/doSave")
-    public ResponseEntity doSaveComment(@Validated ArticleComment articleComment) {
+    public Object doSaveComment(@Validated ArticleComment articleComment) {
         articleCommentService.saveOrUpdate(articleComment);
-        return Response.success();
+        return RestResultUtils.success();
     }
 
     @PostMapping("comment/doDelete")
-    public ResponseEntity doDeleteComment(@RequestParam(name = "id") Long id) {
+    public Object doDeleteComment(@RequestParam(name = "id") Long id) {
         articleCommentService.removeById(id);
-        return Response.success();
+        return RestResultUtils.success();
     }
 
 }

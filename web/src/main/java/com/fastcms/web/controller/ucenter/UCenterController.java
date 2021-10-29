@@ -16,14 +16,11 @@
  */
 package com.fastcms.web.controller.ucenter;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fastcms.common.constants.FastcmsConstants;
-import com.fastcms.core.response.Response;
+import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.entity.User;
 import com.fastcms.service.IUserService;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,44 +39,8 @@ public class UCenterController extends UCenterBaseController {
     @Autowired
     private IUserService userService;
 
-    @RequestMapping({"", "index"})
-    public String index(){
-        return "ucenter/index";
-    }
-
-    @RequestMapping("login")
-    public String login() {
-        return "ucenter/login";
-    }
-
-    @RequestMapping("register")
-    public String register() {
-        return "ucenter/register";
-    }
-
     @PostMapping("doRegister")
-    public ResponseEntity doRegister(String username, String nickName, String email, String password, String captcha) {
-
-        if(StringUtils.isBlank(username)) {
-            return Response.fail("请输入账号");
-        }
-
-        if(StringUtils.isBlank(nickName)) {
-            return Response.fail("请输入昵称");
-        }
-
-        if(StringUtils.isBlank(email)) {
-            return Response.fail("请输入邮箱地址");
-        }
-
-        if(StringUtils.isBlank(password)) {
-            return Response.fail("请输入密码");
-        }
-
-        User userInDb = userService.getOne(new QueryWrapper<User>().lambda().eq(User::getUserName, username));
-        if(userInDb != null) {
-            return Response.fail("登录账号不可重复");
-        }
+    public Object doRegister(String username, String nickName, String email, String password, String captcha) {
 
         final String salt = System.currentTimeMillis() + "";
 //        final String md5password = PasswordUtils.getMd5Password(salt, password);
@@ -92,7 +53,7 @@ public class UCenterController extends UCenterBaseController {
         user.setSource(User.SourceType.WEB_REGISTER.name().toLowerCase());
         userService.saveOrUpdate(user);
 
-        return Response.success();
+        return RestResultUtils.success();
     }
 
 }

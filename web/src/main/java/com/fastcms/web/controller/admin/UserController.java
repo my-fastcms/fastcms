@@ -20,19 +20,17 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.model.RestResult;
+import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.StrUtils;
-import com.fastcms.core.mybatis.DataPermission;
 import com.fastcms.core.permission.AdminMenu;
-import com.fastcms.core.response.Response;
-import com.fastcms.entity.PaymentRecord;
 import com.fastcms.entity.User;
 import com.fastcms.entity.UserTag;
-import com.fastcms.service.IPaymentRecordService;
 import com.fastcms.service.IRoleService;
 import com.fastcms.service.IUserService;
 import com.fastcms.service.IUserTagService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -59,11 +57,11 @@ public class UserController {
     @Autowired
     private IUserTagService userTagService;
     @Autowired
-    private IPaymentRecordService paymentRecordService;
+    private PasswordEncoder passwordEncoder;
 
     @AdminMenu(name = "用户管理", sort = 1)
     @GetMapping("list")
-    public String list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
+    public Object list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
                        @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
                        @RequestParam(name = "phone", required = false) String phone,
                        @RequestParam(name = "status", required = false, defaultValue = "1") Integer status,
@@ -76,97 +74,50 @@ public class UserController {
         queryWrapper.orderByDesc(User::getCreated);
         Page pageParam = new Page<>(page, pageSize);
         Page<User> pageData = userService.page(pageParam, queryWrapper);
-        return "admin/user/list";
+        return RestResultUtils.success(pageData);
     }
 
     @AdminMenu(name = "保存", type = FastcmsConstants.PERMISSION_OPTION)
     @PostMapping("doSave")
-    public ResponseEntity doSave(@Validated User user) {
+    public Object doSave(@Validated User user) {
 
         User userInDb = userService.getOne(new QueryWrapper<User>().lambda().eq(User::getUserName, user.getUserName()));
         if(userInDb != null) {
-            return Response.fail("登录账号不可重复");
+            return RestResultUtils.failed("登录账号不可重复");
         }
 
         final String salt = System.currentTimeMillis() + "";
-//        final String password = PasswordUtils.getMd5Password(salt, user.getPassword());
-//        user.setPassword(password);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setSalt(salt);
         userService.saveOrUpdate(user);
-        return Response.success();
+        return RestResultUtils.success();
     }
 
     @PostMapping("doEdit")
-    public ResponseEntity doEdit(User user) {
+    public Object doEdit(User user) {
         userService.saveOrUpdate(user);
-        return Response.success();
-    }
-
-    @PostMapping("doEditPwd")
-    public ResponseEntity doEditPwd(@Validated User user) {
-        try {
-            userService.updateUserPassword(user);
-            return Response.success();
-        } catch (Exception e) {
-            return Response.fail(e.getMessage());
-        }
+        return RestResultUtils.success();
     }
 
     @PostMapping("doEditRole")
-    public ResponseEntity doEditRole(@RequestParam("userId") Long userId, @RequestParam("roleIds[]") List<Long> roleIds) {
+    public RestResult doEditRole(@RequestParam("userId") Long userId, @RequestParam("roleIds[]") List<Long> roleIds) {
         if(userId != null && Objects.equals(userId, FastcmsConstants.ADMIN_USER_ID)) {
-            return Response.fail("admin不允许修改权限");
+            return RestResultUtils.failed("admin不允许修改权限");
         }
         roleService.saveUserRole(userId, roleIds);
-        return Response.success();
-    }
-
-    @AdminMenu(name = "标签", sort = 2)
-    @GetMapping("tag/list")
-    public String userTaglist(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-                       @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
-                       Model model) {
-        LambdaQueryWrapper<UserTag> queryWrapper = new QueryWrapper().lambda();
-        queryWrapper.orderByDesc(UserTag::getCreated);
-        Page pageParam = new Page<>(page, pageSize);
-        Page<UserTag> pageData = userTagService.page(pageParam, queryWrapper);
-        return "admin/user/tag_list";
-    }
-
-    @RequestMapping("tag/edit")
-    public String editTag(@RequestParam(name = "id", required = false) Long id, Model model) {
-        model.addAttribute("userTag", userTagService.getById(id));
-        return "admin/user/tag_edit";
+        return RestResultUtils.success();
     }
 
     @PostMapping("tag/doSave")
-    public ResponseEntity doSaveUserTag(@Validated UserTag userTag) {
+    public Object doSaveUserTag(@Validated UserTag userTag) {
         userTagService.saveOrUpdate(userTag);
-        return Response.success();
-    }
-
-    @RequestMapping("tag")
-    public String editUserTag(@RequestParam(name = "id") Long id, Model model) {
-        model.addAttribute("user", userService.getById(id));
-        model.addAttribute("tagList", userTagService.getTagListByUserId(id));
-        return "admin/user/edit_tag";
+        return RestResultUtils.success();
     }
 
     @PostMapping("doEditTag")
-    public ResponseEntity doEditTag(@RequestParam("userId") Long userId, @RequestParam("tagIds[]") List<Long> tagIds) {
+    public Object doEditTag(@RequestParam("userId") Long userId, @RequestParam("tagIds[]") List<Long> tagIds) {
         userTagService.saveUserTagRelation(userId, tagIds);
-        return Response.success();
-    }
-
-    @DataPermission("p")
-    @AdminMenu(value = "支付记录", sort = 99)
-    @RequestMapping("payment")
-    public String payment(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-                          @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
-                          Model model) {
-        QueryWrapper queryWrapper = new QueryWrapper();
-        Page<PaymentRecord> paymentRecordPage = paymentRecordService.page(new Page<>(page, pageSize), queryWrapper);
-        return "admin/user/payment_list";
+        return RestResultUtils.success();
     }
 
 }

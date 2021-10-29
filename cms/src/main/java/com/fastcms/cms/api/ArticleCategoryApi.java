@@ -20,9 +20,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fastcms.cms.entity.ArticleCategory;
 import com.fastcms.cms.service.IArticleCategoryService;
 import com.fastcms.common.constants.FastcmsConstants;
-import com.fastcms.core.response.Response;
+import com.fastcms.common.model.RestResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,10 +40,10 @@ public class ArticleCategoryApi {
 	private IArticleCategoryService articleCategoryService;
 
 	@RequestMapping("list")
-	public ResponseEntity list() {
+	public Object list() {
 		QueryWrapper queryWrapper = new QueryWrapper();
 		queryWrapper.eq("type", ArticleCategory.CATEGORY_TYPE);
-		return Response.success(articleCategoryService.list(queryWrapper));
+		return RestResultUtils.success(articleCategoryService.list(queryWrapper));
 	}
 
 }

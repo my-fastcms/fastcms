@@ -16,8 +16,6 @@
  */
 package com.fastcms.web.controller.ucenter;
 
-import com.fastcms.entity.User;
-
 /**
  * @author： wjun_java@163.com
  * @date： 2021/6/4
@@ -26,14 +24,5 @@ import com.fastcms.entity.User;
  * @version: 1.0
  */
 public abstract class UCenterBaseController {
-
-	protected static final String USER_ID = "user_id";
-
-	protected static final String PAGE_DATA_ATTR = "pageData";
-
-	public User getLoginUser(){
-//		return (User) SecurityUtils.getSubject().getPrincipal();
-		return null;
-	}
 
 }

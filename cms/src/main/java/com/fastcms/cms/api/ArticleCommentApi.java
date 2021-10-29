@@ -19,9 +19,8 @@ package com.fastcms.cms.api;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.cms.service.IArticleCommentService;
 import com.fastcms.common.constants.FastcmsConstants;
-import com.fastcms.core.response.Response;
+import com.fastcms.common.model.RestResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,20 +41,20 @@ public class ArticleCommentApi {
 	IArticleCommentService articleCommentService;
 
 	@RequestMapping("list")
-	public ResponseEntity list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
+	public Object list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
 							   @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
 							   Long articleId) {
-		return Response.success(articleCommentService.pageArticleCommentByArticleId(new Page(page, pageSize), articleId));
+		return RestResultUtils.success(articleCommentService.pageArticleCommentByArticleId(new Page(page, pageSize), articleId));
 	}
 
 	@PostMapping("doSaveComment")
-	public ResponseEntity doSaveComment(Long articleId, Long commentId, String context, String captcha) {
+	public Object doSaveComment(Long articleId, Long commentId, String context, String captcha) {
 
 		try {
 			articleCommentService.saveArticleComment(articleId, commentId, context);
-			return Response.success();
+			return RestResultUtils.success();
 		} catch (Exception e) {
-			return Response.fail(e.getMessage());
+			return RestResultUtils.failed(e.getMessage());
 		}
 
 	}

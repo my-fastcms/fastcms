@@ -21,8 +21,8 @@ import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.StrUtils;
-import com.fastcms.core.response.Response;
 import com.fastcms.entity.User;
 import com.fastcms.entity.UserOpenid;
 import com.fastcms.service.IUserService;
@@ -31,8 +31,6 @@ import me.chanjar.weixin.common.session.WxSession;
 import me.chanjar.weixin.common.session.WxSessionManager;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -63,10 +61,10 @@ public class WechatMiniUserApi {
 	private String jwtSecret;
 
 	@GetMapping("code2session")
-	public ResponseEntity code2Session(String code) {
+	public Object code2Session(String code) {
 
 		if(StringUtils.isBlank(code)) {
-			return Response.fail("code is null");
+			return RestResultUtils.failed("code is null");
 		}
 
 		String sessionKey;
@@ -78,11 +76,11 @@ public class WechatMiniUserApi {
 			openId = result.getOpenid();
 			unionId = result.getUnionid();
 		} catch (Exception e) {
-			return Response.fail(e.getMessage());
+			return RestResultUtils.failed(e.getMessage());
 		}
 
 		if (sessionKey == null || openId == null) {
-			return Response.fail("sessionKey is null or openId is null");
+			return RestResultUtils.failed("sessionKey is null or openId is null");
 		}
 
 		final String sessionId = StrUtils.uuid();
@@ -92,16 +90,16 @@ public class WechatMiniUserApi {
 		session.setAttribute("unionId", unionId);
 		HashMap<Object, Object> result = new HashMap<>();
 		result.put("sessionId", sessionId);
-		return Response.success(result);
+		return RestResultUtils.success(result);
 	}
 
 	@PostMapping("doLogin")
-	public ResponseEntity doLogin(@RequestBody Map<String, Object> params) {
+	public Object doLogin(@RequestBody Map<String, Object> params) {
 
 		String sessionId = (String) params.get("sessionId");
 		WxSession session = wxSessionManager.getSession(sessionId);
 		if(session == null) {
-			return Response.fail("登录失败:获取到空session");
+			return RestResultUtils.failed("登录失败:获取到空session");
 		}
 
 		final String sessionKey = (String) session.getAttribute("sessionKey");
@@ -109,7 +107,7 @@ public class WechatMiniUserApi {
 		final String unionId = (String) session.getAttribute("unionId");
 
 		if(StrUtils.isBlank(openId)) {
-			return Response.fail("登录失败:获取不到用户的openId");
+			return RestResultUtils.failed("登录失败:获取不到用户的openId");
 		}
 
 		//不包括敏感信息的原始数据字符串，用于计算签名
@@ -122,7 +120,7 @@ public class WechatMiniUserApi {
 		//加密算法的初始向量
 		String iv = (String) params.get("iv");
 		if(!wxService.getUserService().checkUserInfo(sessionKey, rawData, signature)) {
-			return Response.fail("登录失败:校验用户信息失败");
+			return RestResultUtils.failed("登录失败:校验用户信息失败");
 		}
 
 		WxMaUserInfo userInfo = wxService.getUserService().getUserInfo(sessionKey, encryptedData, iv);
@@ -131,9 +129,10 @@ public class WechatMiniUserApi {
 
 		try {
 			User user = userService.saveUserOfOpenid(userInfo.getOpenId(), userInfo.getUnionId(), userInfo.getNickName(), userInfo.getAvatarUrl(), UserOpenid.TYPE_WECHAT_MINI);
-			return Response.success();
+			return RestResultUtils.success(user);
 		} catch (Exception e) {
-			return Response.fail("登录失败:user is null");
+			e.printStackTrace();
+			return RestResultUtils.failed("登录失败:user is null");
 		}
 	}
 
@@ -144,26 +143,26 @@ public class WechatMiniUserApi {
 	 * @return
 	 */
 	@PostMapping("getUserPhone")
-	public ResponseEntity getUserPhone(@RequestBody Map<String, Object> params) {
+	public Object getUserPhone(@RequestBody Map<String, Object> params) {
 		String sessionId = (String) params.get("sessionId");
 		if(StrUtils.isBlank(sessionId)) {
-			return Response.fail("获取手机号:获取到空session");
+			return RestResultUtils.failed("获取手机号:获取到空session");
 		}
 		WxSession session = wxSessionManager.getSession(sessionId);
 		if(session == null) {
-			return Response.fail("获取手机号:获取到空session");
+			return RestResultUtils.failed("获取手机号:获取到空session");
 		}
 		final String sessionKey = (String) session.getAttribute("sessionKey");
 		String encryptedData = (String) params.get("encryptedData");
 		String iv = (String) params.get("iv");
 		WxMaPhoneNumberInfo wxMaPhoneNumberInfo = wxService.getUserService().getPhoneNoInfo(sessionKey, encryptedData, iv);
 		if(wxMaPhoneNumberInfo == null || StrUtils.isBlank(wxMaPhoneNumberInfo.getPhoneNumber())) {
-			return Response.fail("获取手机号码失败");
+			return RestResultUtils.failed("获取手机号码失败");
 		}
 		User user = userService.getById(null);
 		user.setMobile(wxMaPhoneNumberInfo.getPhoneNumber());
 		userService.updateById(user);
-		return Response.success(wxMaPhoneNumberInfo.getPhoneNumber());
+		return RestResultUtils.success(wxMaPhoneNumberInfo.getPhoneNumber());
 	}
 
 	/**
@@ -176,19 +175,19 @@ public class WechatMiniUserApi {
 	 * @return
 	 */
 	@PostMapping("doLoginByPhone")
-	public ResponseEntity doLoginByPhone(@RequestBody Map<String, Object> params) {
+	public Object doLoginByPhone(@RequestBody Map<String, Object> params) {
 		String sessionId = (String) params.get("sessionId");
 		if(StrUtils.isBlank(sessionId)) {
-			return Response.fail("获取手机号:获取到空session");
+			return RestResultUtils.failed("获取手机号:获取到空session");
 		}
 		WxSession session = wxSessionManager.getSession(sessionId);
 		if(session == null) {
-			return Response.fail("获取手机号:获取到空session");
+			return RestResultUtils.failed("获取手机号:获取到空session");
 		}
 
 		final String openId = (String) session.getAttribute("openId");
 		if(StrUtils.isBlank(openId)) {
-			return Response.fail("登录失败:获取不到用户的openId");
+			return RestResultUtils.failed("登录失败:获取不到用户的openId");
 		}
 		final String unionId = (String) session.getAttribute("unionId");
 		final String sessionKey = (String) session.getAttribute("sessionKey");
@@ -196,13 +195,13 @@ public class WechatMiniUserApi {
 		String iv = (String) params.get("iv");
 		WxMaPhoneNumberInfo wxMaPhoneNumberInfo = wxService.getUserService().getPhoneNoInfo(sessionKey, encryptedData, iv);
 		if(wxMaPhoneNumberInfo == null || StrUtils.isBlank(wxMaPhoneNumberInfo.getPhoneNumber())) {
-			return Response.fail("获取手机号码失败");
+			return RestResultUtils.failed("获取手机号码失败");
 		}
 		try {
 			User user = userService.saveUserOfOpenidAndPhone(openId, unionId, wxMaPhoneNumberInfo.getPurePhoneNumber(), UserOpenid.TYPE_WECHAT_MINI);
-			return Response.success();
+			return RestResultUtils.success(user);
 		} catch (Exception e) {
-			return Response.fail("登录失败:user is null");
+			return RestResultUtils.failed("登录失败:user is null");
 		}
 
 	}

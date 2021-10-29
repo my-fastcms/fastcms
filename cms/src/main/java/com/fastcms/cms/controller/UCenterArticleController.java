@@ -22,10 +22,9 @@ import com.fastcms.cms.service.IArticleCategoryService;
 import com.fastcms.cms.service.IArticleCommentService;
 import com.fastcms.cms.service.IArticleService;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.permission.UcenterMenu;
-import com.fastcms.core.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -80,25 +79,25 @@ public class UCenterArticleController {
 	}
 
 	@PostMapping("doSave")
-	public ResponseEntity doSave(@Validated Article article) {
+	public Object doSave(@Validated Article article) {
 		try {
 			if(article.getId() == null) {
 				article.setStatus(Article.STATUS_AUDIT);
 			}
 			articleService.saveArticle(article);
-			return Response.success();
+			return RestResultUtils.success();
 		} catch (Exception e) {
-			return Response.fail(e.getMessage());
+			return RestResultUtils.failed(e.getMessage());
 		}
 	}
 
 	@PostMapping("doSaveComment")
-	public ResponseEntity doSaveComment(Long articleId, Long commentId, String context, String captcha) {
+	public Object doSaveComment(Long articleId, Long commentId, String context, String captcha) {
 		try {
 			articleCommentService.saveArticleComment(articleId, commentId, context);
-			return Response.success();
+			return RestResultUtils.success();
 		} catch (Exception e) {
-			return Response.fail(e.getMessage());
+			return RestResultUtils.failed(e.getMessage());
 		}
 
 	}

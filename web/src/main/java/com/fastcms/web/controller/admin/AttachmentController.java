@@ -20,15 +20,12 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.permission.AdminMenu;
-import com.fastcms.core.response.Response;
 import com.fastcms.core.utils.FileUtils;
 import com.fastcms.entity.Attachment;
 import com.fastcms.service.IAttachmentService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,7 +45,6 @@ import java.util.stream.Collectors;
  * @modifiedBy：
  * @version: 1.0
  */
-@Slf4j
 @RestController
 @RequestMapping(FastcmsConstants.ADMIN_MAPPING + "/attachment")
 @AdminMenu(name = "附件", icon = "<i class=\"nav-icon fas fa-folder-open\"></i>", sort = 4)
@@ -59,19 +55,18 @@ public class AttachmentController {
 
     @AdminMenu(name = "附件管理", sort = 1)
     @RequestMapping("list")
-    public String list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-                       @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
-                       Model model){
+    public Object list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
+                       @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize){
         LambdaQueryWrapper<Attachment> queryWrapper = new QueryWrapper().lambda();
         queryWrapper.orderByDesc(Attachment::getCreated);
         Page pageParam = new Page<>(page, pageSize);
         Page<Attachment> pageData = attachmentService.page(pageParam, queryWrapper);
-        return "admin/attachment/list";
+        return RestResultUtils.success(pageData);
     }
 
     @PostMapping("doUpload")
     @ExceptionHandler(value = MultipartException.class)
-    public ResponseEntity doUpload(@RequestParam("files") MultipartFile files[]) {
+    public Object doUpload(@RequestParam("files") MultipartFile files[]) {
 
         List<String> errorFiles = new ArrayList<>();
 
@@ -96,7 +91,7 @@ public class AttachmentController {
                     attachment.setFilePath(newFilePath.replace("\\", "/"));
                     attachmentService.save(attachment);
                 } catch (IOException e) {
-                    log.error(e.getMessage());
+                    e.printStackTrace();
                     if(uploadFile != null) {
                         uploadFile.delete();
                     }
@@ -106,12 +101,12 @@ public class AttachmentController {
 
         }
 
-        return errorFiles.isEmpty() ? Response.success() : Response.fail(errorFiles.stream().collect(Collectors.joining(",")).concat(",以上文件上传失败"));
+        return errorFiles.isEmpty() ? RestResultUtils.success() : RestResultUtils.failed(errorFiles.stream().collect(Collectors.joining(",")).concat(",以上文件上传失败"));
 
     }
 
     @RequestMapping("detail")
-    public String detail(@RequestParam(name = "id") Long id, Model model) {
+    public Object detail(@RequestParam(name = "id") Long id) {
 
         Attachment attachment = attachmentService.getById(id);
 
@@ -129,14 +124,13 @@ public class AttachmentController {
         }
         attachment.setFileSize(fileLen + fileLenUnit);
 
-        model.addAttribute("file", attachment);
-        return "admin/attachment/detail";
+        return RestResultUtils.success(attachment);
     }
 
     @PostMapping("doDelete")
-    public ResponseEntity doDelete(@RequestParam(name = "id") Long id) {
+    public Object doDelete(@RequestParam(name = "id") Long id) {
         Attachment attachment = attachmentService.getById(id);
-        if(attachment == null) return Response.fail("文件不存在");
+        if(attachment == null) return RestResultUtils.failed("文件不存在");
 
         if(attachmentService.removeById(attachment.getId())) {
             //删除文件
@@ -146,33 +140,32 @@ public class AttachmentController {
             }
         }
 
-        return Response.success();
+        return RestResultUtils.success();
     }
 
     @RequestMapping("browse")
-    public String browse(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-                         @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
-                         Model model) {
+    public Object browse(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
+                         @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
         LambdaQueryWrapper<Attachment> queryWrapper = new QueryWrapper().lambda();
         queryWrapper.orderByDesc(Attachment::getCreated);
         Page pageParam = new Page<>(page, pageSize);
         Page<Attachment> pageData = attachmentService.page(pageParam, queryWrapper);
-        return "admin/attachment/browse";
+        return RestResultUtils.success(pageData);
     }
 
     @PostMapping("doUploadOfCKEditor")
     @ExceptionHandler(value = MultipartException.class)
-    public ResponseEntity doUploadOfCKEditor(@RequestParam("upload") MultipartFile file) {
+    public Object doUploadOfCKEditor(@RequestParam("upload") MultipartFile file) {
         return uploadOfCKEditor(file, false);
     }
 
     @PostMapping("doUploadOfCKEditorBrowse")
     @ExceptionHandler(value = MultipartException.class)
-    public ResponseEntity doUploadOfCKEditorBrowse(@RequestParam("file") MultipartFile file) {
+    public Object doUploadOfCKEditorBrowse(@RequestParam("file") MultipartFile file) {
         return uploadOfCKEditor(file, true);
     }
 
-    ResponseEntity uploadOfCKEditor(MultipartFile file, boolean isBrowse) {
+    Object uploadOfCKEditor(MultipartFile file, boolean isBrowse) {
         String newFilePath = FileUtils.newFileName(file.getOriginalFilename());
         File uploadFile = new File(FileUtils.getUploadDir(), newFilePath);
         try {
@@ -183,7 +176,7 @@ public class AttachmentController {
             long fileSize = uploadFile.length();
             if(fileSize > 1024 * 1024 * 5) {
                 uploadFile.delete();
-                return Response.fail("文件超过上传限制5MB");
+                return RestResultUtils.failed("文件超过上传限制5MB");
             }
             Attachment attachment = new Attachment();
             attachment.setFileName(file.getOriginalFilename());
@@ -197,20 +190,14 @@ public class AttachmentController {
                 result.put("uploaded", 1);
                 result.put("url", attachment.getPath());
             }
-            return Response.success(result);
+            return RestResultUtils.success(result);
         } catch (IOException e) {
-            log.error(e.getMessage());
+            e.printStackTrace();
             if(uploadFile != null) {
                 uploadFile.delete();
             }
-            return Response.fail(e.getMessage());
+            return RestResultUtils.failed(e.getMessage());
         }
-    }
-
-    @AdminMenu(name = "设置", sort = 3)
-    @RequestMapping("setup")
-    public String setup() {
-        return "admin/attachment/setup";
     }
 
 }

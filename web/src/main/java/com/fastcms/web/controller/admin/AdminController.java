@@ -16,14 +16,13 @@
  */
 package com.fastcms.web.controller.admin;
 
+import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.StrUtils;
-import com.fastcms.core.response.Response;
 import com.fastcms.web.security.JwtTokenManager;
 import com.wf.captcha.SpecCaptcha;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -59,11 +58,11 @@ public class AdminController {
     private static final String WEB_LOGIN_CODE_CACHE_NAME = "web_login_code";
 
     @PostMapping("login")
-    public ResponseEntity login(@RequestParam String username,
-                                @RequestParam String password,
-                                @RequestParam String code,
-                                @RequestParam String codeKey,
-                                HttpServletRequest request, HttpServletResponse response) throws AccessException {
+    public Object login(@RequestParam String username,
+                                    @RequestParam String password,
+                                    @RequestParam String code,
+                                    @RequestParam String codeKey,
+                                    HttpServletRequest request, HttpServletResponse response) throws AccessException {
 
         Cache.ValueWrapper valueWrapper = cacheManager.getCache(WEB_LOGIN_CODE_CACHE_NAME).get(codeKey);
         String codeInMemory = StrUtils.isBlank (codeKey) ? "" : (valueWrapper == null) ? "" : (String) valueWrapper.get();
@@ -72,7 +71,7 @@ public class AdminController {
         }
 
         if(StrUtils.isBlank(code) || !code.equalsIgnoreCase(codeInMemory)) {
-            return Response.fail("验证码错误");
+            return RestResultUtils.failed("验证码错误");
         }
 
         try {
@@ -81,16 +80,16 @@ public class AdminController {
 
             String token = tokenManager.createToken(authenticate.getName());
 
-            return Response.success(token);
+            return RestResultUtils.success(token);
 
         } catch (AuthenticationException e) {
-            return Response.fail(e.getMessage());
+            return RestResultUtils.failed(e.getMessage());
         }
 
     }
 
     @GetMapping("captcha")
-    public ResponseEntity captcha() {
+    public Object captcha() {
         SpecCaptcha specCaptcha = new SpecCaptcha(130, 48, 4);
         final String verCode = specCaptcha.text().toLowerCase();
         final String key = StrUtils.uuid();
@@ -100,7 +99,7 @@ public class AdminController {
         Map<String, String> result = new HashMap<>();
         result.put("codeUuid", key);
         result.put("image", specCaptcha.toBase64());
-        return Response.success(result);
+        return RestResultUtils.success(result);
     }
 
 }

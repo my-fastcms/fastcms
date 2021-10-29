@@ -17,12 +17,10 @@
 package com.fastcms.web.controller.admin;
 
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.permission.AdminMenu;
-import com.fastcms.core.response.Response;
 import com.fastcms.core.utils.FileUtils;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,7 +37,6 @@ import java.io.File;
  * @modifiedBy：
  * @version: 1.0
  */
-@Slf4j
 @RestController
 @RequestMapping(FastcmsConstants.ADMIN_MAPPING + "/plugin")
 @AdminMenu(name = "插件", icon = "<i class=\"nav-icon fas fa-plug\"></i>", sort = 3)
@@ -62,41 +59,41 @@ public class PluginController {
     }
 
     @PostMapping("doInstall")
-    public ResponseEntity doInstall(@RequestParam("file") MultipartFile file) {
+    public Object doInstall(@RequestParam("file") MultipartFile file) {
 
         String fileName = file.getOriginalFilename();
         String suffixName = fileName.substring(fileName.lastIndexOf(".") + 1);
         //检查文件格式是否合法
         if(StringUtils.isEmpty(suffixName)) {
-            return Response.fail("文件格式不合格，请上传jar或zip文件");
+            return RestResultUtils.failed("文件格式不合格，请上传jar或zip文件");
         }
         if(!"jar".equalsIgnoreCase(suffixName) && !"zip".equalsIgnoreCase(suffixName)) {
-            return Response.fail("文件格式不合格，请上传jar或zip文件");
+            return RestResultUtils.failed("文件格式不合格，请上传jar或zip文件");
         }
 
         File uploadFile = new File(FileUtils.getPluginDir(), file.getOriginalFilename());
         try {
             file.transferTo(uploadFile);
 //            pluginService.installPlugin(Paths.get(uploadFile.getPath()));
-            return Response.success();
+            return RestResultUtils.success();
         } catch (Exception e) {
-            log.error(e.getMessage());
+            e.printStackTrace();
             if(uploadFile != null) {
                 uploadFile.delete();
             }
-            return Response.fail(e.getMessage());
+            return RestResultUtils.failed(e.getMessage());
         }
     }
 
     @PostMapping("doUnInstall")
-    public ResponseEntity doUnInstall(@RequestParam(name = "pluginId") String pluginId) {
+    public Object doUnInstall(@RequestParam(name = "pluginId") String pluginId) {
 
         try {
 //            pluginService.unInstallPlugin(pluginId);
-            return Response.success();
+            return RestResultUtils.success();
         } catch (Exception e) {
             e.printStackTrace();
-            return Response.fail(e.getMessage());
+            return RestResultUtils.failed(e.getMessage());
         }
 
     }

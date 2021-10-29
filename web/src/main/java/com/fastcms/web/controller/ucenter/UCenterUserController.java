@@ -17,15 +17,11 @@
 package com.fastcms.web.controller.ucenter;
 
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.permission.UcenterMenu;
-import com.fastcms.core.response.Response;
-import com.fastcms.core.utils.FileUtils;
-import com.fastcms.core.utils.ImageUtils;
 import com.fastcms.entity.User;
 import com.fastcms.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,62 +42,25 @@ public class UCenterUserController extends UCenterBaseController {
 	@Autowired
 	private IUserService userService;
 
-	@UcenterMenu(name = "基本信息", sort = 1)
-	@RequestMapping("info")
-	public String info(Model model) {
-		model.addAttribute("user", userService.getById(getLoginUser().getId()));
-		return "ucenter/user/info";
-	}
-
 	@PostMapping("doSave")
-	public ResponseEntity doSave(@Validated User user) {
+	public Object doSave(@Validated User user) {
 		userService.updateById(user);
-		return Response.success();
-	}
-
-	@UcenterMenu(name = "账号密码", sort = 3)
-	@RequestMapping("pwd")
-	public String pwd(Model model) {
-		model.addAttribute("user", userService.getById(getLoginUser().getId()));
-		return "ucenter/user/pwd";
+		return RestResultUtils.success();
 	}
 
 	@PostMapping("doEditPwd")
-	public ResponseEntity doEditPwd(User user) {
+	public Object doEditPwd(User user) {
 		try {
 			userService.updateUserPassword(user);
-			return Response.success();
+			return RestResultUtils.success();
 		} catch (Exception e) {
-			return Response.fail(e.getMessage());
+			return RestResultUtils.failed(e.getMessage());
 		}
 	}
 
 	@PostMapping("doSaveAvatar")
-	public ResponseEntity doSaveAvatar(String path, int x, int y, int w, int h) {
-
-		User user = userService.getById(getLoginUser().getId());
-		if(user == null) {
-			return Response.fail("该用户不存在");
-		}
-
-		String attachmentRoot = FileUtils.getUploadDir();
-
-		String oldPath = attachmentRoot + path;
-
-		String zoomPath = FileUtils.newFile(path).getAbsolutePath();
-		//500的值必须和 html图片的max-width值一样
-		ImageUtils.zoom(500, oldPath, zoomPath);
-
-		String newAvatarPath = FileUtils.newFile(path).getAbsolutePath();
-		ImageUtils.crop(zoomPath, newAvatarPath, x, y, w, h);
-
-		String newPath = FileUtils.removePrefix(newAvatarPath, attachmentRoot).replace("\\", "/");
-
-		//刷新session
-		getLoginUser().setHeadImg(newPath);
-		user.setHeadImg(newPath);
-		userService.saveOrUpdate(user);
-		return Response.success();
+	public Object doSaveAvatar(String path, int x, int y, int w, int h) {
+		return RestResultUtils.success();
 	}
 
 }

@@ -17,14 +17,12 @@
 package com.fastcms.web.controller.admin;
 
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.config.ConfigChangeListenerManager;
-import com.fastcms.core.response.Response;
 import com.fastcms.entity.Config;
 import com.fastcms.service.IConfigService;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,7 +37,6 @@ import java.util.*;
  * @modifiedBy：
  * @version: 1.0
  */
-@Slf4j
 @RestController
 @RequestMapping(FastcmsConstants.ADMIN_MAPPING + "/config")
 public class ConfigController {
@@ -53,11 +50,11 @@ public class ConfigController {
 	private ConfigChangeListenerManager configChangeListenerManager;
 
 	@PostMapping("doSave")
-	public ResponseEntity doSave(HttpServletRequest request) {
+	public Object doSave(HttpServletRequest request) {
 
 		Map<String, String[]> parameterMap = request.getParameterMap();
 		if (parameterMap == null || parameterMap.isEmpty()) {
-			return Response.fail("没有数据提交");
+			return RestResultUtils.failed("没有数据提交");
 		}
 
 		HashMap<String, String> datasMap = new HashMap<>();
@@ -93,12 +90,12 @@ public class ConfigController {
 				try {
 					configChangeListenerManager.onChange(listener);
 				} catch (Exception e) {
-					log.error(e.getMessage());
+					e.printStackTrace();
 				}
 			}
 		}
 
-		return Response.success();
+		return RestResultUtils.success();
 	}
 
 }
