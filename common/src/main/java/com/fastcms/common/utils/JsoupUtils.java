@@ -16,7 +16,6 @@
  */
 package com.fastcms.common.utils;
 
-import com.fastcms.common.constants.FastcmsConfig;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -51,7 +50,7 @@ public abstract class JsoupUtils {
 			Element element = iterator.next();
 			String src = element.attr(attrName);
 			if(!src.startsWith("http")) {
-				src = FastcmsConfig.FILE_DOMAIN_URL.replace("/static", "") + src;
+				//src = FastcmsConfig.FILE_DOMAIN_URL.replace("/static", "") + src;
 				element.attr(attrName, src);
 			}
 		}

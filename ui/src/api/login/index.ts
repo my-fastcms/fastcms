@@ -7,7 +7,7 @@ import request from '/@/utils/request';
  */
 export function signIn(params: string) {
 	return request({
-		url: '/fastcms/login',
+		url: '/admin/login',
 		method: 'post',
 		data: params,
 		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -21,7 +21,7 @@ export function signIn(params: string) {
  */
 export function signOut(params: object) {
 	return request({
-		url: '/user/signOut',
+		url: '/admin/signOut',
 		method: 'post',
 		data: params,
 	});
@@ -32,7 +32,7 @@ export function signOut(params: object) {
  */
 export function getCaptcha() {
 	return request({
-		url: '/fastcms/captcha',
+		url: '/admin/captcha',
 		method: 'get'
 	});
 }

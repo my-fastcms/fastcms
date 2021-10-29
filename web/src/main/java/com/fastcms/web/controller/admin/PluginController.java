@@ -21,7 +21,6 @@ import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.permission.AdminMenu;
 import com.fastcms.core.utils.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,19 +43,6 @@ public class PluginController {
 
 //    @Autowired
 //    private PluginManagerService pluginService;
-
-    @AdminMenu(name = "插件管理", sort = 1)
-    @RequestMapping("list")
-    public String index(Model model) {
-//        model.addAttribute("plugins", pluginService.getInstallPlugins());
-        return "admin/plugin/list";
-    }
-
-    @AdminMenu(name = "安装", sort = 2)
-    @RequestMapping("install")
-    public String install() {
-        return "admin/plugin/install";
-    }
 
     @PostMapping("doInstall")
     public Object doInstall(@RequestParam("file") MultipartFile file) {

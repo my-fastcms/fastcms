@@ -16,6 +16,7 @@
  */
 package com.fastcms.web.controller.admin;
 
+import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.web.security.JwtTokenManager;
@@ -43,7 +44,7 @@ import java.util.Map;
  * @version: 1.0
  */
 @RestController
-@RequestMapping("fastcms")
+@RequestMapping(FastcmsConstants.ADMIN_MAPPING)
 public class AdminController {
 
     @Autowired

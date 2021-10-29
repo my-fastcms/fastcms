@@ -29,7 +29,6 @@ import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.permission.AdminMenu;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -97,13 +96,6 @@ public class ArticleController {
         } catch (Exception e) {
             return RestResultUtils.failed(e.getMessage());
         }
-    }
-
-    @RequestMapping("category/edit")
-    public String editCategory(@RequestParam(name = "id", required = false) Long id, Model model) {
-        model.addAttribute("articleCategory", articleCategoryService.getById(id));
-        model.addAttribute("articleCategoryList", articleCategoryService.list());
-        return "admin/article/category_edit";
     }
 
     @PostMapping("category/doSave")

@@ -25,7 +25,6 @@ import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.permission.UcenterMenu;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -58,24 +57,12 @@ public class UCenterArticleController {
 	public String list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
 					   @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
 					   @RequestParam(name = "title", required = false) String title,
-					   @RequestParam(name = "status", required = false) String status,
-					   Model model) {
+					   @RequestParam(name = "status", required = false) String status) {
 		QueryWrapper queryWrapper = new QueryWrapper();
 //		queryWrapper.eq(USER_ID, getLoginUser().getId());
 //		Page<Article> pageData = articleService.page(new Page<>(page, pageSize), queryWrapper);
 //		model.addAttribute(PAGE_DATA_ATTR, pageData);
 		return "ucenter/article/list";
-	}
-
-	@RequestMapping("write")
-	@UcenterMenu(name = "投稿", sort = 2)
-	public String write(@RequestParam(name = "id", required = false) Long id, Model model) {
-		model.addAttribute("article", articleService.getById(id));
-		model.addAttribute("tags", articleCategoryService.getArticleTagListByArticleId(id));
-//		model.addAttribute("tagList", articleCategoryService.getTagList(getLoginUser().getId()));
-		model.addAttribute("categories", articleCategoryService.getArticleCategoryListByArticleId(id));
-//		model.addAttribute("categoryList", articleCategoryService.getCategoryList(getLoginUser().getId()));
-		return "ucenter/article/edit";
 	}
 
 	@PostMapping("doSave")

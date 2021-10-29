@@ -29,7 +29,6 @@ import com.fastcms.service.IPermissionService;
 import com.fastcms.service.IRoleService;
 import com.fastcms.web.Fastcms;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,8 +60,7 @@ public class RoleController {
     @GetMapping("list")
     public Object list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
                        @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
-                       @RequestParam(name = "roleName", required = false) String roleName,
-                       Model model) {
+                       @RequestParam(name = "roleName", required = false) String roleName) {
         LambdaQueryWrapper<Role> queryWrapper = new QueryWrapper().lambda();
         queryWrapper.like(roleName != null, Role::getRoleName, roleName);
         Page pageParam = new Page<>(page, pageSize);
@@ -98,8 +96,7 @@ public class RoleController {
     @AdminMenu(name = "权限", sort = 2)
     @GetMapping("permission/list")
     public Object permList(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-                           @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
-                           Model model) {
+                           @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
         LambdaQueryWrapper<Permission> queryWrapper = new QueryWrapper().lambda();
         Page pageParam = new Page<>(page, pageSize);
         Page<Permission> pageData = permissionService.page(pageParam, queryWrapper);

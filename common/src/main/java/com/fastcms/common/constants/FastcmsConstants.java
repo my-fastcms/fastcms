@@ -16,6 +16,8 @@
  */
 package com.fastcms.common.constants;
 
+import com.fastcms.common.utils.VersionUtils;
+
 /**
  * @author： wjun_java@163.com
  * @date： 2021/2/17
@@ -25,17 +27,15 @@ package com.fastcms.common.constants;
  */
 public interface FastcmsConstants {
 
-    String version = "0.0.1";
+    String version = VersionUtils.version;
 
-    String VISIT_TO = "visit";
+    String API_PREFIX_MAPPING = "fastcms/api";
 
-    String STATIC_PATH_KEY = "spath";
+    String ADMIN_MAPPING = API_PREFIX_MAPPING + "/admin";
 
-    String ADMIN_MAPPING = "admin";
+    String API_MAPPING = API_PREFIX_MAPPING + "/api";
 
-    String UCENTER_MAPPING = "ucenter";
-
-    String API_MAPPING = "api";
+    String UCENTER_MAPPING = API_PREFIX_MAPPING + "/ucenter";
 
     String DEV_MODE = "dev";
 

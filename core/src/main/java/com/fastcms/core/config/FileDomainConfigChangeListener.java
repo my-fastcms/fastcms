@@ -16,9 +16,6 @@
  */
 package com.fastcms.core.config;
 
-import com.fastcms.common.constants.FastcmsConfig;
-import com.fastcms.common.constants.FastcmsConstants;
-import com.fastcms.common.constants.FastcmsConfig;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.service.IConfigService;
 import org.apache.commons.lang.StringUtils;
@@ -41,7 +38,7 @@ public class FileDomainConfigChangeListener extends BaseConfigChangeListener imp
 
 	@Override
 	protected void doChange() throws Exception {
-		FastcmsConfig.FILE_DOMAIN_URL = configService.getValue(FastcmsConstants.FILE_DOMAIN);
+		//FastcmsConfig.FILE_DOMAIN_URL = configService.getValue(FastcmsConstants.FILE_DOMAIN);
 	}
 
 	@Override
@@ -51,7 +48,7 @@ public class FileDomainConfigChangeListener extends BaseConfigChangeListener imp
 
 		String fileDomainUrl = configService.getValue(FastcmsConstants.FILE_DOMAIN);
 		if(StringUtils.isNotBlank(fileDomainUrl)) {
-			FastcmsConfig.FILE_DOMAIN_URL = fileDomainUrl + FastcmsConstants.STATIC_RESOURCE_PATH;
+			//FastcmsConfig.FILE_DOMAIN_URL = fileDomainUrl + FastcmsConstants.STATIC_RESOURCE_PATH;
 		}
 	}
 }

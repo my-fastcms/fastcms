@@ -26,7 +26,6 @@ import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.permission.AdminMenu;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,8 +51,7 @@ public class PageController {
 	@AdminMenu(name = "页面管理", sort = 1)
 	@GetMapping("list")
 	public String list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-					   @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
-					   Model model) {
+					   @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 		QueryWrapper<SinglePage> queryWrapper = new QueryWrapper();
 //		model.addAttribute(PAGE_DATA_ATTR, singlePageService.pageSinglePage(new Page<>(page, pageSize), queryWrapper));
 		return "admin/page/list";
@@ -67,12 +65,6 @@ public class PageController {
 		} catch (Exception e) {
 			return RestResultUtils.failed(e.getMessage());
 		}
-	}
-
-	@RequestMapping("comment/edit")
-	public String editComment(@RequestParam(name = "id", required = false) Long id, Model model) {
-		model.addAttribute("pageComment", singlePageCommentService.getById(id));
-		return "admin/page/comment_edit";
 	}
 
 	@PostMapping("comment/doSave")

@@ -24,6 +24,7 @@ import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.permission.AdminMenu;
+import com.fastcms.core.permission.MenuNode;
 import com.fastcms.entity.User;
 import com.fastcms.entity.UserTag;
 import com.fastcms.service.IRoleService;
@@ -31,10 +32,10 @@ import com.fastcms.service.IUserService;
 import com.fastcms.service.IUserTagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -64,8 +65,7 @@ public class UserController {
     public Object list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
                        @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
                        @RequestParam(name = "phone", required = false) String phone,
-                       @RequestParam(name = "status", required = false, defaultValue = "1") Integer status,
-                       Model model) {
+                       @RequestParam(name = "status", required = false, defaultValue = "1") Integer status) {
         LambdaQueryWrapper<User> queryWrapper = new QueryWrapper().lambda();
         queryWrapper.eq(User::getStatus, status);
         if(StrUtils.isNotBlank(phone)) {
@@ -75,6 +75,26 @@ public class UserController {
         Page pageParam = new Page<>(page, pageSize);
         Page<User> pageData = userService.page(pageParam, queryWrapper);
         return RestResultUtils.success(pageData);
+    }
+
+    @GetMapping("getMenus")
+    public Object getMenus() {
+        List<MenuNode> menuNodes = new ArrayList<>();
+        MenuNode menuNode = new MenuNode();
+        menuNode.setName("home");
+        menuNode.setPath("/home");
+        menuNode.setComponent("home/index");
+        MenuNode.Meta meta = new MenuNode.Meta();
+        meta.setTitle("message.router.home");
+        meta.setIsHide(false);
+        meta.setIsAffix(true);
+        meta.setIcon("iconfont icon-shouye");
+        List<String> authList = new ArrayList<>();
+        authList.add("admin");
+        meta.setAuth(authList);
+        menuNode.setMeta(meta);
+        menuNodes.add(menuNode);
+        return RestResultUtils.success(menuNodes);
     }
 
     @AdminMenu(name = "保存", type = FastcmsConstants.PERMISSION_OPTION)
