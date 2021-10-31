@@ -21,13 +21,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.core.permission.AdminMenu;
-import com.fastcms.core.permission.PermissionManager;
-import com.fastcms.entity.Permission;
 import com.fastcms.entity.Role;
 import com.fastcms.service.IPermissionService;
 import com.fastcms.service.IRoleService;
-import com.fastcms.web.Fastcms;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +39,6 @@ import java.util.Objects;
  * @version: 1.0
  */
 @RestController
-@AdminMenu(name = "角色", icon = "<i class=\"nav-icon fas fa-sitemap\"></i>", sort = 2)
 @RequestMapping(FastcmsConstants.ADMIN_MAPPING + "/role")
 public class RoleController {
 
@@ -53,10 +48,6 @@ public class RoleController {
     @Autowired
     private IPermissionService permissionService;
 
-    @Autowired
-    private PermissionManager permissionManager;
-
-    @AdminMenu(name = "角色管理", sort = 1)
     @GetMapping("list")
     public Object list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
                        @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
@@ -68,8 +59,8 @@ public class RoleController {
         return RestResultUtils.success(pageData);
     }
 
-    @PostMapping("doSave")
-    public Object doSave(@Validated Role role) {
+    @PostMapping("save")
+    public Object save(@Validated Role role) {
 
         if(role.getId() != null && Objects.equals(role.getId(), FastcmsConstants.ADMIN_ROLE_ID)) {
             return RestResultUtils.failed("超级管理员角色不可修改");
@@ -84,33 +75,13 @@ public class RoleController {
         return RestResultUtils.success(permissionService.getPermissionByRoleId(roleId));
     }
 
-    @PostMapping("doSavePermission")
-    public Object doSavePermission(@RequestParam("roleId") Long roleId, @RequestParam("permissionIdList[]") List<Long> permissionIdList) {
+    @PostMapping("saveRolePermission")
+    public Object saveRolePermission(@RequestParam("roleId") Long roleId, @RequestParam("permissionIdList[]") List<Long> permissionIdList) {
         if(roleId != null && Objects.equals(roleId, FastcmsConstants.ADMIN_ROLE_ID)) {
             return RestResultUtils.failed("超级管理员不可修改权限");
         }
         roleService.saveRolePermission(roleId, permissionIdList);
         return RestResultUtils.success();
-    }
-
-    @AdminMenu(name = "权限", sort = 2)
-    @GetMapping("permission/list")
-    public Object permList(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-                           @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
-        LambdaQueryWrapper<Permission> queryWrapper = new QueryWrapper().lambda();
-        Page pageParam = new Page<>(page, pageSize);
-        Page<Permission> pageData = permissionService.page(pageParam, queryWrapper);
-        return RestResultUtils.success(pageData);
-    }
-
-    @PostMapping("doSyncPermission")
-    public Object doSyncPermission() {
-        try {
-            permissionManager.refreshSystemPermissions(Fastcms.class);
-            return RestResultUtils.success();
-        } catch (Exception e) {
-            return RestResultUtils.failed(e.getMessage());
-        }
     }
 
 }

@@ -18,7 +18,6 @@ package com.fastcms.web.controller.admin;
 
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.core.permission.AdminMenu;
 import com.fastcms.core.utils.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,7 +37,6 @@ import java.io.File;
  */
 @RestController
 @RequestMapping(FastcmsConstants.ADMIN_MAPPING + "/plugin")
-@AdminMenu(name = "插件", icon = "<i class=\"nav-icon fas fa-plug\"></i>", sort = 3)
 public class PluginController {
 
 //    @Autowired

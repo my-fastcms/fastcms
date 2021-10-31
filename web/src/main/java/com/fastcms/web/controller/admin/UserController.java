@@ -23,10 +23,9 @@ import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.StrUtils;
-import com.fastcms.core.permission.AdminMenu;
-import com.fastcms.core.permission.MenuNode;
 import com.fastcms.entity.User;
 import com.fastcms.entity.UserTag;
+import com.fastcms.service.IPermissionService;
 import com.fastcms.service.IRoleService;
 import com.fastcms.service.IUserService;
 import com.fastcms.service.IUserTagService;
@@ -36,6 +35,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -48,7 +48,6 @@ import java.util.Objects;
  */
 @RestController
 @RequestMapping(FastcmsConstants.ADMIN_MAPPING + "/user")
-@AdminMenu(name = "用户", icon = "<i class=\"nav-icon far fas fa-user\"></i>", sort = 1)
 public class UserController {
 
     @Autowired
@@ -60,7 +59,6 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @AdminMenu(name = "用户管理", sort = 1)
     @GetMapping("list")
     public Object list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
                        @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
@@ -79,25 +77,19 @@ public class UserController {
 
     @GetMapping("getMenus")
     public Object getMenus() {
-        List<MenuNode> menuNodes = new ArrayList<>();
-        MenuNode menuNode = new MenuNode();
-        menuNode.setName("home");
-        menuNode.setPath("/home");
-        menuNode.setComponent("home/index");
-        MenuNode.Meta meta = new MenuNode.Meta();
-        meta.setTitle("message.router.home");
-        meta.setIsHide(false);
-        meta.setIsAffix(true);
-        meta.setIcon("iconfont icon-shouye");
-        List<String> authList = new ArrayList<>();
-        authList.add("admin");
-        meta.setAuth(authList);
-        menuNode.setMeta(meta);
-        menuNodes.add(menuNode);
+        List<IPermissionService.MenuNode> menuNodes = new ArrayList<>();
+
+        IPermissionService.MenuNode home = new IPermissionService.MenuNode("home", "/home", "home/index", "", 1,
+                "message.router.home", "iconfont icon-shouye", false, true, true, false, Arrays.asList("admin"), null);
+
+        IPermissionService.MenuNode menu = new IPermissionService.MenuNode("systemMenu", "/system/menu", "system/menu/index", "", 2,
+                "message.router.systemMenu", "iconfont icon-caidan", false, true, false, false, Arrays.asList("admin"), null);
+
+        menuNodes.add(home);
+        menuNodes.add(menu);
         return RestResultUtils.success(menuNodes);
     }
 
-    @AdminMenu(name = "保存", type = FastcmsConstants.PERMISSION_OPTION)
     @PostMapping("doSave")
     public Object doSave(@Validated User user) {
 

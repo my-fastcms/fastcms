@@ -2,15 +2,11 @@ package com.fastcms.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.entity.Permission;
-import com.fastcms.mapper.PermissionMapper;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -27,7 +23,7 @@ public interface IPermissionService extends IService<Permission> {
      * @param roleId
      * @return
      */
-    List<PermissionTreeNode> getPermissionByRoleId(Long roleId);
+    List<MenuNode> getPermissionByRoleId(Long roleId);
 
     /**
      * 获取用户已授权权限
@@ -67,114 +63,37 @@ public interface IPermissionService extends IService<Permission> {
     }
 
     @Data
-    abstract class TreeNode<T extends TreeNode> {
-        private Long id;
-        private Long parentId;
-        private int sortNum = 0;
-        private String type;
-        List<T> children;
-    }
-
-    interface TreeNodeConvert<T extends TreeNode> {
-        T convert2Node(Object object);
-        List<T> convert2NodeList(List<?> list);
-
-        default void getChildrenNode(T node, List<T> nodeList) {
-            List<T> childrenNodeList = nodeList.stream().filter(item -> accept(item, node)).sorted(Comparator.comparing(TreeNode::getSortNum)).collect(Collectors.toList());
-            if(childrenNodeList != null && childrenNodeList.size()>0){
-                node.setChildren(childrenNodeList);
-                childrenNodeList.forEach(item -> nodeList.remove(item));
-                childrenNodeList.forEach(item -> getChildrenNode(item, nodeList));
-            }
-        }
-
-        boolean accept(T node1, T node2);
-
-    }
-
-    class PermissionTreeNodeConvert<T extends TreeNode> implements TreeNodeConvert<T> {
-
-        @Override
-        public T convert2Node(Object object) {
-            PermissionMapper.RolePermission rolePermission = (PermissionMapper.RolePermission) object;
-            PermissionTreeNode treeNode = new PermissionTreeNode();
-            treeNode.setId(rolePermission.getId());
-            treeNode.setParentId(rolePermission.getParentId());
-            treeNode.setName(rolePermission.getName());
-            treeNode.setType(rolePermission.getType());
-            treeNode.setOpen("true");
-            treeNode.setSortNum(rolePermission.getSortNum());
-            if(rolePermission.getRoleId() != null){
-                treeNode.setChecked(true);
-            }
-            return (T) treeNode;
-        }
-
-        @Override
-        public List<T> convert2NodeList(List<?> list) {
-            List<TreeNode> treeNodeList = new ArrayList<>();
-            list.forEach(item -> treeNodeList.add((TreeNode) convert2Node(item)));
-            List<TreeNode> parentNodeList = treeNodeList.stream().sorted(Comparator.comparing(TreeNode::getSortNum)).filter(item -> item.getParentId() == null).collect(Collectors.toList());
-            parentNodeList.forEach(item -> getChildrenNode((T) item, (List<T>) treeNodeList));
-            return (List<T>) parentNodeList;
-        }
-
-        @Override
-        public boolean accept(T node1, T node2) {
-            return Objects.equals(node1.getParentId(), node2.getId());
-        }
-
-    }
-
-    class MenuNodeConvert<T extends TreeNode> implements TreeNodeConvert<T> {
-
-        @Override
-        public T convert2Node(Object object) {
-            Permission permission = (Permission) object;
-            MenuNode menuNode = new MenuNode();
-            menuNode.setId(permission.getId());
-            menuNode.setParentId(permission.getParentId());
-            menuNode.setName(permission.getName());
-            menuNode.setUrl(permission.getUrl());
-            menuNode.setType(permission.getType());
-            menuNode.setIcon(permission.getIcon());
-            menuNode.setSortNum(permission.getSortNum());
-            return (T) menuNode;
-        }
-
-        @Override
-        public List<T> convert2NodeList(List<?> list) {
-            List<MenuNode> menuNodeList = new ArrayList<>();
-            list.stream().filter(item -> {
-                Permission p = ((Permission)item);
-                return p.getType().equals(PermissionType.MENU.getType()) || p.getType().equals(PermissionType.MODULE.getType());
-            }).forEach(item -> menuNodeList.add((MenuNode) convert2Node(item)));
-            List<MenuNode> parentNodeList = menuNodeList.stream().sorted(Comparator.comparing(MenuNode::getSortNum)).filter(item -> item.getParentId() == null).collect(Collectors.toList());
-            parentNodeList.forEach(item -> getChildrenNode((T) item, (List<T>) menuNodeList));
-            return (List<T>) parentNodeList;
-        }
-
-        @Override
-        public boolean accept(T node1, T node2) {
-            return Objects.equals(node1.getParentId(), node2.getId()) && PermissionType.MENU.getType().equals(node1.getType());
-        }
-
-    }
-
-    @Data
-    class PermissionTreeNode extends TreeNode implements Serializable {
+    class MenuNode implements Serializable {
         private String name;
-        private String open;
-        private Boolean checked = false;
-    }
+        private String path;
+        private String component;
+        private String isLink = "";
+        private Integer menuSort;
+        private Meta meta;
+        private List<MenuNode> children;
 
-    @Data
-    class MenuNode extends PermissionTreeNode {
-        private String url;
-        private String icon;
-        private Boolean hasChildren = false;
-        public Boolean getHasChildren() {
-            return children != null && children.size()>0;
+        public MenuNode(String name, String path, String component, String isLink, Integer menuSort,
+                        String title, String icon, Boolean isHide, Boolean isKeepAlive, Boolean isAffix, Boolean isIframe, List<String> auth, List<MenuNode> children) {
+            this.name = name;
+            this.path = path;
+            this.component = component;
+            this.isLink = isLink;
+            this.menuSort = menuSort;
+            Meta meta = new Meta(title, icon, isHide, isKeepAlive, isAffix, isIframe, auth);
+            this.meta = meta;
+            this.children = children;
+        }
+
+        @Data
+        @AllArgsConstructor
+        public static class Meta implements Serializable {
+            private String title;
+            private String icon;
+            private Boolean isHide = false;
+            private Boolean isKeepAlive = true;
+            private Boolean isAffix = false;
+            private Boolean isIframe = false;
+            private List<String> auth;
         }
     }
 

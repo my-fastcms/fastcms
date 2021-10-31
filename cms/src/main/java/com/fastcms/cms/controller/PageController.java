@@ -23,7 +23,6 @@ import com.fastcms.cms.service.ISinglePageCommentService;
 import com.fastcms.cms.service.ISinglePageService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.core.permission.AdminMenu;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -39,7 +38,6 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping(FastcmsConstants.ADMIN_MAPPING + "/page")
-@AdminMenu(name = "页面", icon = "<i class=\"nav-icon fas fa-copy\"></i>", sort = 2)
 public class PageController {
 
 	@Autowired
@@ -48,7 +46,6 @@ public class PageController {
 	@Autowired
 	ISinglePageCommentService singlePageCommentService;
 
-	@AdminMenu(name = "页面管理", sort = 1)
 	@GetMapping("list")
 	public String list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
 					   @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {

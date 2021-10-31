@@ -14,50 +14,40 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.web.controller.ucenter;
+package com.fastcms.web.controller.admin;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.entity.User;
-import com.fastcms.service.IUserService;
+import com.fastcms.entity.Permission;
+import com.fastcms.service.IPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author： wjun_java@163.com
- * @date： 2021/6/4
+ * @date： 2021/10/31
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
 @RestController
-@RequestMapping(FastcmsConstants.UCENTER_MAPPING + "/user")
-public class UCenterUserController extends UCenterBaseController {
+@RequestMapping(FastcmsConstants.ADMIN_MAPPING + "/menu")
+public class MenuController {
 
 	@Autowired
-	private IUserService userService;
+	private IPermissionService permissionService;
 
-	@PostMapping("doSave")
-	public Object doSave(@Validated User user) {
-		userService.updateById(user);
-		return RestResultUtils.success();
+	@GetMapping("list")
+	public Object list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
+					   @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
+		return RestResultUtils.success(permissionService.page(new Page<>(page, pageSize)));
 	}
 
-	@PostMapping("doEditPwd")
-	public Object doEditPwd(User user) {
-		try {
-			userService.updateUserPassword(user);
-			return RestResultUtils.success();
-		} catch (Exception e) {
-			return RestResultUtils.failed(e.getMessage());
-		}
-	}
-
-	@PostMapping("doSaveAvatar")
-	public Object doSaveAvatar(String path, int x, int y, int w, int h) {
+	@PostMapping("save")
+	public Object save(@Validated Permission permission) {
+		permissionService.saveOrUpdate(permission);
 		return RestResultUtils.success();
 	}
 

@@ -29,10 +29,9 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
 
     @Override
     @Cacheable(value = CacheConfig.ROLE_PERMISSION_CACHE_NAME, key = "#roleId")
-    public List<PermissionTreeNode> getPermissionByRoleId(Long roleId) {
+    public List<MenuNode> getPermissionByRoleId(Long roleId) {
         List<PermissionMapper.RolePermission> rolePermissionList = getBaseMapper().getPermissionByRoleId(roleId);
-        List<PermissionTreeNode> treeNodeList = new PermissionTreeNodeConvert<PermissionTreeNode>().convert2NodeList(rolePermissionList);
-        return treeNodeList;
+        return null;
     }
 
     @Override
@@ -44,8 +43,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
 //    @Cacheable(value = CacheConfig.USER_MENU_PERMISSION_CACHE_NAME, key = "#userId")
     public List<MenuNode> getUserMenuPermission(Long userId) {
         List<Permission> userPermissionList = getPermissionByUserId(userId);
-        List<MenuNode> menuNodeList = new MenuNodeConvert<MenuNode>().convert2NodeList(userPermissionList);
-        return menuNodeList;
+        return null;
     }
 
     @Override
@@ -55,8 +53,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         queryWrapper.or();
         queryWrapper.isNull("parent_id");
         List<Permission> permissionList = list(queryWrapper);
-        List<MenuNode> menuNodeList = new MenuNodeConvert<MenuNode>().convert2NodeList(permissionList);
-        return menuNodeList;
+        return null;
     }
 
     @Override

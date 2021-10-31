@@ -23,7 +23,6 @@ import com.fastcms.cms.service.IArticleCommentService;
 import com.fastcms.cms.service.IArticleService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.core.permission.UcenterMenu;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,7 +39,6 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(FastcmsConstants.UCENTER_MAPPING + "/article")
-@UcenterMenu(name = "文章")
 public class UCenterArticleController {
 
 	@Autowired
@@ -53,7 +51,6 @@ public class UCenterArticleController {
 	private IArticleCommentService articleCommentService;
 
 	@RequestMapping("list")
-	@UcenterMenu(name = "文章列表", sort = 1)
 	public String list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
 					   @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
 					   @RequestParam(name = "title", required = false) String title,

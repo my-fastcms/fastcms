@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -25,28 +26,41 @@ public class Permission implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public static final String CATEGORY_ADMIN = "admin";
-    public static final String CATEGORY_CENTER = "center";
+    public static final String CATEGORY_CENTER = "ucenter";
 
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     private Long parentId;
 
+    @NotBlank(message = "路由名称不能为空")
     private String name;
 
-    private String url;
+    @NotBlank(message = "路由地址不能为空")
+    private String path;
 
-    private String permInfo;
+    @NotBlank(message = "VUE组件地址不能为空")
+    private String component;
 
+    @NotBlank(message = "菜单名称不能为空")
+    @TableField("meta_title")
+    private String title;
+
+    @NotBlank(message = "菜单图标不能为空")
+    @TableField("meta_icon")
     private String icon;
 
-    private String type;
+    private Boolean isLink;
 
-    private String moduleId;
+    private Boolean isHide;
 
-    private Integer sortNum;
+    private Boolean isKeepAlive;
 
-    private String className;
+    private Boolean isAffix;
+
+    private Boolean isIframe;
+
+    private int sortNum;
 
     private String category;
 
@@ -55,6 +69,5 @@ public class Permission implements Serializable {
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updated;
-
 
 }

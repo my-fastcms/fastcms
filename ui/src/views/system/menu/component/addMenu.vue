@@ -1,31 +1,36 @@
 <template>
 	<div class="system-menu-container">
 		<el-dialog title="新增菜单" v-model="isShowDialog" width="769px">
-			<el-form :model="ruleForm" size="small" label-width="80px">
+			<el-form :model="ruleForm" size="small" label-width="80px" :rules="rules" ref="myRefForm">
 				<el-row :gutter="35">
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="菜单名称">
-							<el-input v-model="ruleForm.meta.title" placeholder="格式：message.router.xxx" clearable></el-input>
+						<el-form-item label="路由名称" prop="name">
+							<el-input v-model="ruleForm.name" placeholder="路由名称" clearable></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="路由名称">
-							<el-input v-model="ruleForm.name" placeholder="路由名称（路由中的name值）" clearable></el-input>
+						<el-form-item label="路由地址" prop="path">
+							<el-input v-model="ruleForm.path" placeholder="路由地址" clearable></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="菜单图标">
-							<IconSelector placeholder="请输入菜单图标" v-model="ruleForm.meta.icon" />
+						<el-form-item label="菜单名称" prop="title">
+							<el-input v-model="ruleForm.title" placeholder="格式：message.router.xxx" clearable></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="组件地址">
+						<el-form-item label="菜单图标" prop="icon">
+							<IconSelector placeholder="请输入菜单图标" v-model="ruleForm.icon" />
+						</el-form-item>
+					</el-col>
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+						<el-form-item label="组件地址" prop="component">
 							<el-input v-model="ruleForm.component" placeholder="组件地址" clearable></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="是否隐藏">
-							<el-select v-model="ruleForm.meta.isHide" placeholder="请选择是否隐藏" clearable class="w100">
+							<el-select v-model="ruleForm.isHide" placeholder="请选择是否隐藏" clearable class="w100">
 								<el-option label="是" value="true"></el-option>
 								<el-option label="否" value="false"></el-option>
 							</el-select>
@@ -33,7 +38,7 @@
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="是否缓存">
-							<el-select v-model="ruleForm.meta.isKeepAlive" placeholder="请选择是否缓存" clearable class="w100">
+							<el-select v-model="ruleForm.isKeepAlive" placeholder="请选择是否缓存" clearable class="w100">
 								<el-option label="是" value="true"></el-option>
 								<el-option label="否" value="false"></el-option>
 							</el-select>
@@ -41,7 +46,7 @@
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="是否固定">
-							<el-select v-model="ruleForm.meta.isAffix" placeholder="请选择是否固定" clearable class="w100">
+							<el-select v-model="ruleForm.isAffix" placeholder="请选择是否固定" clearable class="w100">
 								<el-option label="是" value="true"></el-option>
 								<el-option label="否" value="false"></el-option>
 							</el-select>
@@ -49,7 +54,7 @@
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="是否外链">
-							<el-select v-model="ruleForm.isLink" placeholder="请选择是否外链" clearable class="w100" :disabled="ruleForm.meta.isIframe === 'true'">
+							<el-select v-model="ruleForm.isLink" placeholder="请选择是否外链" clearable class="w100" :disabled="ruleForm.isIframe === 'true'">
 								<el-option label="是" value="true"></el-option>
 								<el-option label="否" value="false"></el-option>
 							</el-select>
@@ -57,7 +62,7 @@
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="是否内嵌">
-							<el-select v-model="ruleForm.meta.isIframe" placeholder="请选择是否iframe" clearable class="w100" @change="onSelectIframeChange">
+							<el-select v-model="ruleForm.isIframe" placeholder="请选择是否iframe" clearable class="w100" @change="onSelectIframeChange">
 								<el-option label="是" value="true"></el-option>
 								<el-option label="否" value="false"></el-option>
 							</el-select>
@@ -66,7 +71,7 @@
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="链接地址">
 							<el-input
-								v-model="ruleForm.meta.isLink"
+								v-model="ruleForm.isLink"
 								placeholder="外链/内嵌时链接地址（http:xxx.com）"
 								clearable
 								:disabled="ruleForm.isLink === '' || ruleForm.isLink === 'false'"
@@ -76,7 +81,7 @@
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="权限标识">
-							<el-input v-model="ruleForm.meta.auth" placeholder="路由权限标识（多个请用逗号隔开）" clearable></el-input>
+							<el-input v-model="ruleForm.auth" placeholder="路由权限标识（多个请用逗号隔开）" clearable></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -97,13 +102,16 @@
 </template>
 
 <script lang="ts">
-import { reactive, toRefs } from 'vue';
+import { reactive, toRefs, getCurrentInstance } from 'vue';
+import { ElMessage } from 'element-plus';
 import IconSelector from '/@/components/iconSelector/index.vue';
+import { saveMenu } from '/@/api/menu/index';
 // import { setBackEndControlRefreshRoutes } from "/@/router/backEnd";
 export default {
 	name: 'systemAddMenu',
 	components: { IconSelector },
 	setup() {
+		const { proxy } = getCurrentInstance() as any;
 		const state = reactive({
 			isShowDialog: false,
 			/**
@@ -114,19 +122,24 @@ export default {
 			 */
 			ruleForm: {
 				name: '', // 路由名称
+				path: '',
 				component: '', // 组件地址
-				isLink: '', // 是否外链
+				// isLink: '', // 是否外链
 				menuSort: '', // 菜单排序
-				meta: {
-					title: '', // 菜单名称
-					icon: '', // 菜单图标
-					isHide: '', // 是否隐藏
-					isKeepAlive: '', // 是否缓存
-					isAffix: '', // 是否固定
-					isLink: '', // 是否外链，开启外链条件，`1、isLink:true 2、链接地址不为空`
-					isIframe: '', // 是否内嵌，开启条件，`1、isIframe:true 2、链接地址不为空`
-					auth: '', // 路由权限标识（多个请用逗号隔开），最后转成数组格式
-				},
+				title: '', // 菜单名称
+				icon: '', // 菜单图标
+				isHide: '', // 是否隐藏
+				isKeepAlive: '', // 是否缓存
+				isAffix: '', // 是否固定
+				isLink: '', // 是否外链，开启外链条件，`1、isLink:true 2、链接地址不为空`
+				isIframe: '', // 是否内嵌，开启条件，`1、isIframe:true 2、链接地址不为空`
+				auth: '', // 路由权限标识（多个请用逗号隔开），最后转成数组格式
+			},
+			rules: {
+				"name": { required: true, message: '请输入路由名称', trigger: 'blur' },
+				"path": { required: true, message: '请输入路由地址', trigger: 'blur' },
+				"title": { required: true, message: '请输入菜单名称', trigger: 'blur' },
+				"component": { required: true, message: '请输入组件地址', trigger: 'blur' },
 			},
 		});
 		// 打开弹窗
@@ -141,7 +154,7 @@ export default {
 		};
 		// 是否内嵌下拉改变
 		const onSelectIframeChange = () => {
-			if (state.ruleForm.meta.isIframe === 'true') {
+			if (state.ruleForm.isIframe === 'true') {
 				state.ruleForm.isLink = 'true';
 			} else {
 				state.ruleForm.isLink = '';
@@ -155,23 +168,33 @@ export default {
 		// 新增
 		const onSubmit = () => {
 			console.log(state.ruleForm); // 数据，请注意需要转换的类型
-			closeDialog(); // 关闭弹窗
-			// setBackEndControlRefreshRoutes() // 刷新菜单，未进行后端接口测试
+
+			proxy.$refs['myRefForm'].validate((valid: any) => {
+				if (valid) {
+					saveMenu(state.ruleForm).then((res) => {
+						closeDialog(); // 关闭弹窗
+						// setBackEndControlRefreshRoutes() // 刷新菜单，未进行后端接口测试
+					}).catch((res) => {
+						ElMessage({showClose: true, message: res.message ? res.message : '系统错误' , type: 'error'});
+					})
+				}
+			});
+
 		};
 		// 表单初始化，方法：`resetFields()` 无法使用
 		const initForm = () => {
 			state.ruleForm.name = '';
+			state.ruleForm.path = '';
 			state.ruleForm.component = '';
 			state.ruleForm.isLink = '';
 			state.ruleForm.menuSort = '';
-			state.ruleForm.meta.title = '';
-			state.ruleForm.meta.icon = '';
-			state.ruleForm.meta.isHide = '';
-			state.ruleForm.meta.isKeepAlive = '';
-			state.ruleForm.meta.isAffix = '';
-			state.ruleForm.meta.isLink = '';
-			state.ruleForm.meta.isIframe = '';
-			state.ruleForm.meta.auth = '';
+			state.ruleForm.title = '';
+			state.ruleForm.icon = '';
+			state.ruleForm.isHide = '';
+			state.ruleForm.isKeepAlive = '';
+			state.ruleForm.isAffix = '';
+			state.ruleForm.isIframe = '';
+			state.ruleForm.auth = '';
 		};
 		return {
 			openDialog,

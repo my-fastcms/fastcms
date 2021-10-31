@@ -22,7 +22,6 @@ import com.fastcms.cms.entity.Menu;
 import com.fastcms.cms.service.IMenuService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.core.permission.AdminMenu;
 import com.fastcms.core.template.Template;
 import com.fastcms.core.template.TemplateService;
 import com.fastcms.core.utils.FileUtils;
@@ -57,7 +56,6 @@ import java.util.stream.Stream;
  */
 @RestController
 @RequestMapping(FastcmsConstants.ADMIN_MAPPING + "/template")
-@AdminMenu(name = "模板", icon = "<i class=\"nav-icon fas fa-columns\"></i>", sort = 3)
 public class TemplateController {
 
     private static final String FILES_ATTR = "files";
@@ -75,7 +73,6 @@ public class TemplateController {
     @Autowired
     private IMenuService menuService;
 
-    @AdminMenu(name = "模板管理", sort = 1)
     @RequestMapping("list")
     public String list(Model model) {
         model.addAttribute("templates", templateService.getTemplateList());
@@ -83,7 +80,6 @@ public class TemplateController {
         return "admin/template/list";
     }
 
-    @AdminMenu(name = "安装", sort = 3)
     @RequestMapping("install")
     public String install() {
         return "admin/template/install";
@@ -128,7 +124,6 @@ public class TemplateController {
 
     }
 
-    @AdminMenu(name = "编辑", sort = 2)
     @RequestMapping("edit")
     public String edit(@RequestParam(name = "fileName", required = false) String fileName,
                        @RequestParam(name = "dirName", required = false) String dirName,
@@ -315,7 +310,6 @@ public class TemplateController {
         }
     }
 
-    @AdminMenu(name = "菜单", sort = 4)
     @RequestMapping("menu/list")
     public String menuList(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
                                @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
@@ -349,8 +343,7 @@ public class TemplateController {
     }
 
     @RequestMapping("setting")
-    @AdminMenu(name = "设置", sort = 5)
-    public String setting() {
+	public String setting() {
         return "admin/template/setting";
     }
 

@@ -28,8 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.List;
-
 /**
  * @author： wjun_java@163.com
  * @date： 2021/2/28
@@ -62,14 +60,7 @@ public class TestUserService {
     }
 
     @Test
-    public void testGetPermissionTreeNodeList() {
-        List<IPermissionService.PermissionTreeNode> treeNodeList = permissionService.getPermissionByRoleId(1l);
-
-        treeNodeList = permissionService.getPermissionByRoleId(1l);
-    }
-
-    @Test
-    public void testSaveRolePermission() {
+    public void testJwtSecurity() {
         Claims claims = Jwts.parserBuilder().setSigningKey(authConfigs.getSecretKeyBytes()).build()
                 .parseClaimsJws("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTYzNTQwMDI5OH0.0N_liADYX5nkLuC8JRoGPwudREw9gq0lr_YaoG_7fQM").getBody();
         System.out.println(claims.getSubject());

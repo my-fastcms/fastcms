@@ -21,7 +21,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.core.permission.AdminMenu;
 import com.fastcms.core.utils.FileUtils;
 import com.fastcms.entity.Attachment;
 import com.fastcms.service.IAttachmentService;
@@ -47,13 +46,11 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping(FastcmsConstants.ADMIN_MAPPING + "/attachment")
-@AdminMenu(name = "附件", icon = "<i class=\"nav-icon fas fa-folder-open\"></i>", sort = 4)
 public class AttachmentController {
 
     @Autowired
     private IAttachmentService attachmentService;
 
-    @AdminMenu(name = "附件管理", sort = 1)
     @RequestMapping("list")
     public Object list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
                        @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize){

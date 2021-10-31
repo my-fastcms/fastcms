@@ -26,7 +26,6 @@ import com.fastcms.cms.service.IArticleCommentService;
 import com.fastcms.cms.service.IArticleService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.core.permission.AdminMenu;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -44,7 +43,6 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(FastcmsConstants.ADMIN_MAPPING + "/article")
-@AdminMenu(name = "文章", icon = "<i class=\"nav-icon fas fa-book\"></i>", sort = 1)
 public class ArticleController {
 
     @Autowired
@@ -56,7 +54,6 @@ public class ArticleController {
     @Autowired
     private IArticleCommentService articleCommentService;
 
-    @AdminMenu(name = "文章管理", sort = 1)
     @RequestMapping("list")
     public String list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
                        @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,

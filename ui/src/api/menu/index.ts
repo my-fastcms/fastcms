@@ -32,3 +32,16 @@ export function getMenuTest(params?: object) {
 		params,
 	});
 }
+
+/**
+ * 管理后台保存菜单数据
+ * @param params 
+ * @returns 
+ */
+export function saveMenu(params?: object) {
+	return request({
+		url: '/admin/menu/save',
+		method: 'post',
+		params,
+	});
+}
