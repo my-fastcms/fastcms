@@ -252,19 +252,23 @@ DROP TABLE IF EXISTS `permission`;
 CREATE TABLE `permission` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `parent_id` bigint(20) DEFAULT NULL COMMENT '父节点id',
-  `name` varchar(32) DEFAULT NULL COMMENT '权限名称',
-  `url` varchar(64) DEFAULT NULL COMMENT 'url请求地址',
-  `perm_info` varchar(128) DEFAULT NULL COMMENT '权限信息',
-  `icon` varchar(128) DEFAULT NULL,
-  `type` varchar(32) DEFAULT NULL COMMENT 'module,menu,tab,option',
-  `module_id` varchar(255) DEFAULT NULL COMMENT '模块，plugin_id',
+  `name` varchar(32) DEFAULT NULL,
+  `path` varchar(64) DEFAULT NULL,
+  `component` varchar(128) DEFAULT NULL,
+  `meta_title` varchar(32) DEFAULT NULL,
+  `meta_icon` varchar(128) DEFAULT NULL,
+  `is_link` tinyint(1) DEFAULT '0',
+  `is_hide` tinyint(1) DEFAULT '0',
+  `is_keep_alive` tinyint(1) DEFAULT '0',
+  `is_affix` tinyint(1) DEFAULT '0',
+  `is_iframe` tinyint(1) DEFAULT '0',
   `sort_num` int(11) DEFAULT '0',
-  `class_name` varchar(128) DEFAULT NULL,
-  `category` varchar(32) DEFAULT NULL COMMENT 'admin,center',
+  `category` varchar(16) DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   `updated` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='权限表';
+
 
 -- ----------------------------
 -- Table structure for role
