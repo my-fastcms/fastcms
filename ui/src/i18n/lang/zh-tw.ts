@@ -5,6 +5,7 @@ export default {
 		system: '系統設置',
 		systemMenu: '選單管理',
 		systemUser: '用戶管理',
+		systemRole: '角色管理',
 		limits: '許可權管理',
 		limitsFrontEnd: '前端控制',
 		limitsFrontEndPage: '頁面許可權',

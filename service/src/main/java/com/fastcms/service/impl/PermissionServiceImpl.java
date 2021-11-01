@@ -1,6 +1,5 @@
 package com.fastcms.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fastcms.cache.CacheConfig;
 import com.fastcms.entity.Permission;
@@ -43,16 +42,6 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
 //    @Cacheable(value = CacheConfig.USER_MENU_PERMISSION_CACHE_NAME, key = "#userId")
     public List<MenuNode> getUserMenuPermission(Long userId) {
         List<Permission> userPermissionList = getPermissionByUserId(userId);
-        return null;
-    }
-
-    @Override
-    public List<MenuNode> getUCenterMenuList() {
-        QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("category", Permission.CATEGORY_CENTER);
-        queryWrapper.or();
-        queryWrapper.isNull("parent_id");
-        List<Permission> permissionList = list(queryWrapper);
         return null;
     }
 

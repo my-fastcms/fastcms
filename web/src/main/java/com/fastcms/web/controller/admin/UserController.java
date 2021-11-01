@@ -82,11 +82,24 @@ public class UserController {
         IPermissionService.MenuNode home = new IPermissionService.MenuNode("home", "/home", "home/index", "", 1,
                 "message.router.home", "iconfont icon-shouye", false, true, true, false, Arrays.asList("admin"), null);
 
+        IPermissionService.MenuNode permission = new IPermissionService.MenuNode("system", "/system", "layout/routerView/parent", "", 2,
+                "message.router.system", "iconfont icon-xitongshezhi", false, true, false, false, Arrays.asList("admin"), null);
+        List<IPermissionService.MenuNode> permissionChildren = new ArrayList<>();
         IPermissionService.MenuNode menu = new IPermissionService.MenuNode("systemMenu", "/system/menu", "system/menu/index", "", 2,
                 "message.router.systemMenu", "iconfont icon-caidan", false, true, false, false, Arrays.asList("admin"), null);
 
+        IPermissionService.MenuNode role = new IPermissionService.MenuNode("systemRole", "/system/role", "system/role/index", "", 2,
+                "message.router.systemRole", "iconfont icon-shuxingtu", false, true, false, false, Arrays.asList("admin"), null);
+
+        IPermissionService.MenuNode user = new IPermissionService.MenuNode("systemUser", "/system/user", "system/user/index", "", 2,
+                "message.router.systemUser", "iconfont icon-icon-", false, true, false, false, Arrays.asList("admin"), null);
+        permissionChildren.add(menu);
+        permissionChildren.add(role);
+        permissionChildren.add(user);
+        permission.setChildren(permissionChildren);
+
         menuNodes.add(home);
-        menuNodes.add(menu);
+        menuNodes.add(permission);
         return RestResultUtils.success(menuNodes);
     }
 

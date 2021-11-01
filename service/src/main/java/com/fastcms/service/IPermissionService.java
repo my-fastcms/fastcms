@@ -40,27 +40,11 @@ public interface IPermissionService extends IService<Permission> {
     List<MenuNode> getUserMenuPermission(Long userId);
 
     /**
-     * 获取用户中心菜单
-     * @return
-     */
-    List<MenuNode> getUCenterMenuList();
-
-    /**
      * 删除掉权限
      * @param permissionList
      */
     void deleteRolePermissionByPermission(List<Permission> permissionList);
 
-    enum PermissionType {
-        MENU("menu"), TAB("tab"), OPTION("option"), MODULE("module");
-        PermissionType(String type){
-            this.type = type;
-        }
-        public final String type;
-        public String getType() {
-            return this.type;
-        }
-    }
 
     @Data
     class MenuNode implements Serializable {
@@ -89,10 +73,10 @@ public interface IPermissionService extends IService<Permission> {
         public static class Meta implements Serializable {
             private String title;
             private String icon;
-            private Boolean isHide = false;
-            private Boolean isKeepAlive = true;
-            private Boolean isAffix = false;
-            private Boolean isIframe = false;
+            private Boolean isHide;
+            private Boolean isKeepAlive;
+            private Boolean isAffix;
+            private Boolean isIframe;
             private List<String> auth;
         }
     }
