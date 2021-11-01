@@ -23,7 +23,7 @@ public interface IPermissionService extends IService<Permission> {
      * @param roleId
      * @return
      */
-    List<MenuNode> getPermissionByRoleId(Long roleId);
+    List<PermissionNode> getPermissionByRoleId(Long roleId);
 
     /**
      * 获取用户已授权权限
@@ -37,7 +37,7 @@ public interface IPermissionService extends IService<Permission> {
      * @param userId
      * @return
      */
-    List<MenuNode> getUserMenuPermission(Long userId);
+    List<PermissionNode> getUserMenuPermission(Long userId);
 
     /**
      * 删除掉权限
@@ -47,17 +47,17 @@ public interface IPermissionService extends IService<Permission> {
 
 
     @Data
-    class MenuNode implements Serializable {
+    class PermissionNode implements Serializable {
         private String name;
         private String path;
         private String component;
         private String isLink = "";
         private Integer menuSort;
         private Meta meta;
-        private List<MenuNode> children;
+        private List<PermissionNode> children;
 
-        public MenuNode(String name, String path, String component, String isLink, Integer menuSort,
-                        String title, String icon, Boolean isHide, Boolean isKeepAlive, Boolean isAffix, Boolean isIframe, List<String> auth, List<MenuNode> children) {
+        public PermissionNode(String name, String path, String component, String isLink, Integer menuSort,
+                        String title, String icon, Boolean isHide, Boolean isKeepAlive, Boolean isAffix, Boolean isIframe, List<String> auth, List<PermissionNode> children) {
             this.name = name;
             this.path = path;
             this.component = component;

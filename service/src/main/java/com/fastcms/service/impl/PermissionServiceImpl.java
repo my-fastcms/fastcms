@@ -28,7 +28,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
 
     @Override
     @Cacheable(value = CacheConfig.ROLE_PERMISSION_CACHE_NAME, key = "#roleId")
-    public List<MenuNode> getPermissionByRoleId(Long roleId) {
+    public List<PermissionNode> getPermissionByRoleId(Long roleId) {
         List<PermissionMapper.RolePermission> rolePermissionList = getBaseMapper().getPermissionByRoleId(roleId);
         return null;
     }
@@ -40,8 +40,9 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
 
     @Override
 //    @Cacheable(value = CacheConfig.USER_MENU_PERMISSION_CACHE_NAME, key = "#userId")
-    public List<MenuNode> getUserMenuPermission(Long userId) {
+    public List<PermissionNode> getUserMenuPermission(Long userId) {
         List<Permission> userPermissionList = getPermissionByUserId(userId);
+
         return null;
     }
 
