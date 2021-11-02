@@ -10,7 +10,11 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -25,6 +29,32 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
 
     @Autowired
     private CacheManager cacheManager;
+
+    @Override
+    public List<PermissionNode> getPermissions() {
+        List<Permission> permissionList = list();
+        List<PermissionNode> permissionNodeList = new ArrayList<>();
+        permissionList.forEach(item -> permissionNodeList.add(getPermissionNode(item)));
+        List<PermissionNode> parents = permissionNodeList.stream().filter(item -> item.getParentId() == null).collect(Collectors.toList());
+        parents.forEach(item -> getChildren(item, permissionNodeList));
+        return permissionNodeList;
+    }
+
+    void getChildren(PermissionNode menuNode, List<PermissionNode> menuNodeList) {
+        List<PermissionNode> childrenNodeList = menuNodeList.stream().filter(item -> Objects.equals(item.getParentId(), menuNode.getId())).collect(Collectors.toList());
+        if(childrenNodeList != null && !childrenNodeList.isEmpty()) {
+            menuNode.setChildren(childrenNodeList);
+            childrenNodeList.forEach(item -> getChildren(item, menuNodeList));
+        }
+    }
+
+    private PermissionNode getPermissionNode(Permission permission) {
+        PermissionNode permissionNode = new PermissionNode(permission.getId(), permission.getParentId(), permission.getName(), permission.getPath(), permission.getComponent(),
+                permission.getIsLink(), permission.getSortNum(), permission.getTitle(), permission.getIcon(),
+                permission.getIsHide(), permission.getIsKeepAlive(), permission.getIsAffix(),
+                permission.getIsIframe(), Arrays.asList("admin"), null);
+        return permissionNode;
+    }
 
     @Override
     @Cacheable(value = CacheConfig.ROLE_PERMISSION_CACHE_NAME, key = "#roleId")

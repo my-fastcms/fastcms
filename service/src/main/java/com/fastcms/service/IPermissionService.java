@@ -19,6 +19,12 @@ import java.util.List;
 public interface IPermissionService extends IService<Permission> {
 
     /**
+     * 获取系统权限列表
+     * @return
+     */
+    List<PermissionNode> getPermissions();
+
+    /**
      * 获取角色对应的权限
      * @param roleId
      * @return
@@ -48,16 +54,20 @@ public interface IPermissionService extends IService<Permission> {
 
     @Data
     class PermissionNode implements Serializable {
+        private Long id;
+        private Long parentId;
         private String name;
         private String path;
         private String component;
-        private String isLink = "";
+        private Boolean isLink;
         private Integer menuSort;
         private Meta meta;
         private List<PermissionNode> children;
 
-        public PermissionNode(String name, String path, String component, String isLink, Integer menuSort,
+        public PermissionNode(Long id, Long parentId, String name, String path, String component, Boolean isLink, Integer menuSort,
                         String title, String icon, Boolean isHide, Boolean isKeepAlive, Boolean isAffix, Boolean isIframe, List<String> auth, List<PermissionNode> children) {
+            this.id = id;
+            this.parentId = parentId;
             this.name = name;
             this.path = path;
             this.component = component;

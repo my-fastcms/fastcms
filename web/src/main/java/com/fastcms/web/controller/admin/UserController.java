@@ -55,6 +55,8 @@ public class UserController {
     @Autowired
     private IRoleService roleService;
     @Autowired
+    private IPermissionService permissionService;
+    @Autowired
     private IUserTagService userTagService;
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -79,19 +81,19 @@ public class UserController {
     public Object getMenus() {
         List<IPermissionService.PermissionNode> menuNodes = new ArrayList<>();
 
-        IPermissionService.PermissionNode home = new IPermissionService.PermissionNode("home", "/home", "home/index", "", 1,
-                "message.router.home", "iconfont icon-shouye", false, true, true, false, Arrays.asList("admin"), null);
+        IPermissionService.PermissionNode home = new IPermissionService.PermissionNode(null, null, "home", "/home", "home/index", false, 1,
+                "message.router.home", "iconfont icon-shouye", false, true, true, false, null, null);
 
-        IPermissionService.PermissionNode permission = new IPermissionService.PermissionNode("system", "/system", "layout/routerView/parent", "", 2,
+        IPermissionService.PermissionNode permission = new IPermissionService.PermissionNode(null, null, "system", "/system", "layout/routerView/parent", false, 2,
                 "message.router.system", "iconfont icon-xitongshezhi", false, true, false, false, Arrays.asList("admin"), null);
         List<IPermissionService.PermissionNode> permissionChildren = new ArrayList<>();
-        IPermissionService.PermissionNode menu = new IPermissionService.PermissionNode("systemMenu", "/system/menu", "system/menu/index", "", 2,
+        IPermissionService.PermissionNode menu = new IPermissionService.PermissionNode(null, null, "systemMenu", "/system/menu", "system/menu/index", false, 2,
                 "message.router.systemMenu", "iconfont icon-caidan", false, true, false, false, Arrays.asList("admin"), null);
 
-        IPermissionService.PermissionNode role = new IPermissionService.PermissionNode("systemRole", "/system/role", "system/role/index", "", 2,
+        IPermissionService.PermissionNode role = new IPermissionService.PermissionNode(null, null, "systemRole", "/system/role", "system/role/index", false, 2,
                 "message.router.systemRole", "iconfont icon-shuxingtu", false, true, false, false, Arrays.asList("admin"), null);
 
-        IPermissionService.PermissionNode user = new IPermissionService.PermissionNode("systemUser", "/system/user", "system/user/index", "", 2,
+        IPermissionService.PermissionNode user = new IPermissionService.PermissionNode(null, null, "systemUser", "/system/user", "system/user/index", false, 2,
                 "message.router.systemUser", "iconfont icon-icon-", false, true, false, false, Arrays.asList("admin"), null);
         permissionChildren.add(menu);
         permissionChildren.add(role);
@@ -100,7 +102,7 @@ public class UserController {
 
         menuNodes.add(home);
         menuNodes.add(permission);
-        return RestResultUtils.success(menuNodes);
+        return RestResultUtils.success(permissionService.getPermissions());
     }
 
     @PostMapping("doSave")
