@@ -82,7 +82,7 @@ public class UserController {
         List<IPermissionService.PermissionNode> menuNodes = new ArrayList<>();
 
         IPermissionService.PermissionNode home = new IPermissionService.PermissionNode(null, null, "home", "/home", "home/index", false, 1,
-                "message.router.home", "iconfont icon-shouye", false, true, true, false, null, null);
+                "message.router.home", "iconfont icon-shouye", false, true, true, false, Arrays.asList("admin"), null);
 
         IPermissionService.PermissionNode permission = new IPermissionService.PermissionNode(null, null, "system", "/system", "layout/routerView/parent", false, 2,
                 "message.router.system", "iconfont icon-xitongshezhi", false, true, false, false, Arrays.asList("admin"), null);
@@ -102,7 +102,7 @@ public class UserController {
 
         menuNodes.add(home);
         menuNodes.add(permission);
-        return RestResultUtils.success(permissionService.getPermissions());
+        return RestResultUtils.success(menuNodes);
     }
 
     @PostMapping("doSave")
