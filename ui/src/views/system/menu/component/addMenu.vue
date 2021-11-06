@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable no-console */
 <template>
 	<div class="system-menu-container">
 		<el-dialog title="新增菜单" v-model="isShowDialog" width="769px">
@@ -105,8 +107,8 @@
 import { reactive, toRefs, getCurrentInstance } from 'vue';
 import { ElMessage } from 'element-plus';
 import IconSelector from '/@/components/iconSelector/index.vue';
-import { saveMenu } from '/@/api/menu/index';
-// import { setBackEndControlRefreshRoutes } from "/@/router/backEnd";
+import { saveMenu, getMenuList } from '/@/api/menu/index';
+
 export default {
 	name: 'systemAddMenu',
 	components: { IconSelector },
@@ -146,6 +148,7 @@ export default {
 		const openDialog = (row?: object) => {
 			console.log(row);
 			state.isShowDialog = true;
+			state.ruleForm.parentId=row.id;
 		};
 		// 关闭弹窗
 		const closeDialog = (row?: object) => {
@@ -165,15 +168,16 @@ export default {
 			closeDialog();
 			initForm();
 		};
+
 		// 新增
 		const onSubmit = () => {
-			console.log(state.ruleForm); // 数据，请注意需要转换的类型
 
 			proxy.$refs['myRefForm'].validate((valid: any) => {
 				if (valid) {
-					saveMenu(state.ruleForm).then((res) => {
+					saveMenu(state.ruleForm).then(() => {
 						closeDialog(); // 关闭弹窗
-						// setBackEndControlRefreshRoutes() // 刷新菜单，未进行后端接口测试
+						// 刷新菜单，未进行后端接口测试
+						loadMenuList();
 					}).catch((res) => {
 						ElMessage({showClose: true, message: res.message ? res.message : '系统错误' , type: 'error'});
 					})
@@ -181,6 +185,15 @@ export default {
 			});
 
 		};
+
+		const loadMenuList = () => {
+			getMenuList().then((res) => {
+				state.menuData = res.data;
+			}).catch(() => {
+
+			})
+		}
+
 		// 表单初始化，方法：`resetFields()` 无法使用
 		const initForm = () => {
 			state.ruleForm.name = '';

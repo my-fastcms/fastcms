@@ -6,12 +6,12 @@ import request from '/@/utils/request';
  */
 
 /**
- * 获取后端动态路由菜单(admin)
+ * 获取后端动态路由菜单(根据用户权限加载菜单)
  * @link 参考：https://gitee.com/lyt-top/vue-next-admin-images/tree/master/menu
  * @param params 要传的参数值，非必传
  * @returns 返回接口数据
  */
-export function getMenuAdmin(params?: object) {
+export function getUserMenus(params?: object) {
 	return request({
 		url: '/admin/user/getMenus',
 		method: 'get',
@@ -20,14 +20,13 @@ export function getMenuAdmin(params?: object) {
 }
 
 /**
- * 获取后端动态路由菜单(test)
- * @link 参考：https://gitee.com/lyt-top/vue-next-admin-images/tree/master/menu
- * @param params 要传的参数值，非必传
- * @returns 返回接口数据
+ * 管理后台获取全部菜单数据
+ * @param params 
+ * @returns 
  */
-export function getMenuTest(params?: object) {
+export function getMenuList(params?: object) {
 	return request({
-		url: '/gitee/lyt-top/vue-next-admin-images/raw/master/menu/testMenu.json',
+		url: '/admin/menu/list',
 		method: 'get',
 		params,
 	});
@@ -41,6 +40,19 @@ export function getMenuTest(params?: object) {
 export function saveMenu(params?: object) {
 	return request({
 		url: '/admin/menu/save',
+		method: 'post',
+		params,
+	});
+}
+
+/**
+ * 管理后台删除菜单数据
+ * @param params 
+ * @returns 
+ */
+export function delMenu(params?: object) {
+	return request({
+		url: '/admin/menu/del',
 		method: 'post',
 		params,
 	});

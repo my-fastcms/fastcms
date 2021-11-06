@@ -16,7 +16,6 @@
  */
 package com.fastcms.web.controller.admin;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.entity.Permission;
@@ -40,14 +39,19 @@ public class MenuController {
 	private IPermissionService permissionService;
 
 	@GetMapping("list")
-	public Object list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-					   @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
-		return RestResultUtils.success(permissionService.page(new Page<>(page, pageSize)));
+	public Object list() {
+		return RestResultUtils.success(permissionService.getPermissions());
 	}
 
 	@PostMapping("save")
 	public Object save(@Validated Permission permission) {
 		permissionService.saveOrUpdate(permission);
+		return RestResultUtils.success();
+	}
+
+	@PostMapping("del")
+	public Object del(@RequestParam Long id) {
+		permissionService.removeById(id);
 		return RestResultUtils.success();
 	}
 

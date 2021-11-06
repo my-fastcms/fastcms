@@ -65,22 +65,24 @@
 </template>
 
 <script lang="ts">
-import { ref, toRefs, reactive, computed } from 'vue';
-import { ElMessageBox } from 'element-plus';
-import { useStore } from '/@/store/index';
+import { ref, toRefs, reactive, computed, onMounted } from 'vue';
+import { ElMessageBox, ElMessage } from 'element-plus';
+import { getMenuList, delMenu } from '/@/api/menu/index';
+import {setBackEndControlRefreshRoutes} from '/@/router/backEnd';
 import AddMenu from '/@/views/system/menu/component/addMenu.vue';
 import EditMenu from '/@/views/system/menu/component/editMenu.vue';
 export default {
 	name: 'systemMenu',
 	components: { AddMenu, EditMenu },
 	setup() {
-		const store = useStore();
 		const addMenuRef = ref();
 		const editMenuRef = ref();
-		const state = reactive({});
+		const state = reactive({
+			menuData: []
+		});
 		// 获取 vuex 中的路由
 		const menuTableData = computed(() => {
-			return store.state.routesList.routesList;
+			return state.menuData;
 		});
 		// 打开新增菜单弹窗
 		const onOpenAddMenu = (row: object) => {
@@ -99,9 +101,27 @@ export default {
 			})
 				.then(() => {
 					console.log(row);
+					delMenu({id: row.id}).then(() => {
+						ElMessage.info("删除成功");
+						loadMenuList();
+						setBackEndControlRefreshRoutes();
+					});
 				})
 				.catch(() => {});
 		};
+
+		const loadMenuList = () => {
+			getMenuList().then((res) => {
+				state.menuData = res.data;
+			}).catch(() => {
+
+			})
+		}
+
+		onMounted(() => {
+			loadMenuList();
+		});
+
 		return {
 			addMenuRef,
 			editMenuRef,

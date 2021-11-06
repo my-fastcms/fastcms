@@ -10,10 +10,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -34,16 +31,17 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     public List<PermissionNode> getPermissions() {
         List<Permission> permissionList = list();
         List<PermissionNode> permissionNodeList = new ArrayList<>();
+
         permissionList.forEach(item -> permissionNodeList.add(getPermissionNode(item)));
         List<PermissionNode> parents = permissionNodeList.stream().filter(item -> item.getParentId() == null).collect(Collectors.toList());
         parents.forEach(item -> getChildren(item, permissionNodeList));
-        return permissionNodeList;
+        return parents.stream().sorted(Comparator.comparing(PermissionNode::getMenuSort).reversed()).collect(Collectors.toList());
     }
 
-    void getChildren(PermissionNode menuNode, List<PermissionNode> menuNodeList) {
-        List<PermissionNode> childrenNodeList = menuNodeList.stream().filter(item -> Objects.equals(item.getParentId(), menuNode.getId())).collect(Collectors.toList());
+    void getChildren(PermissionNode permissionNode, List<PermissionNode> menuNodeList) {
+        List<PermissionNode> childrenNodeList = menuNodeList.stream().filter(item -> Objects.equals(item.getParentId(), permissionNode.getId())).collect(Collectors.toList());
         if(childrenNodeList != null && !childrenNodeList.isEmpty()) {
-            menuNode.setChildren(childrenNodeList);
+            permissionNode.setChildren(childrenNodeList);
             childrenNodeList.forEach(item -> getChildren(item, menuNodeList));
         }
     }
