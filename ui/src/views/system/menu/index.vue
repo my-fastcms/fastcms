@@ -68,7 +68,7 @@
 import { ref, toRefs, reactive, computed, onMounted } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { getMenuList, delMenu } from '/@/api/menu/index';
-import {setBackEndControlRefreshRoutes} from '/@/router/backEnd';
+import { initBackEndControlRoutes } from '/@/router/backEnd';
 import AddMenu from '/@/views/system/menu/component/addMenu.vue';
 import EditMenu from '/@/views/system/menu/component/editMenu.vue';
 export default {
@@ -104,7 +104,7 @@ export default {
 					delMenu({id: row.id}).then(() => {
 						ElMessage.info("删除成功");
 						loadMenuList();
-						setBackEndControlRefreshRoutes();
+						initBackEndControlRoutes();
 					});
 				})
 				.catch(() => {});
