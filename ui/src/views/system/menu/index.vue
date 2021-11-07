@@ -78,7 +78,7 @@ export default {
 		const addMenuRef = ref();
 		const editMenuRef = ref();
 		const state = reactive({
-			menuData: []
+			menuData: null
 		});
 		// 获取 vuex 中的路由
 		const menuTableData = computed(() => {

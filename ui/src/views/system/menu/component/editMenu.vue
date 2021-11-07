@@ -9,6 +9,11 @@
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+						<el-form-item label="菜单图标" prop="icon">
+							<IconSelector placeholder="请输入菜单图标" v-model="ruleForm.icon" />
+						</el-form-item>
+					</el-col>
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="路由名称" prop="name">
 							<el-input v-model="ruleForm.name" placeholder="路由名称（路由中的name值）" clearable></el-input>
 						</el-form-item>
@@ -16,11 +21,6 @@
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="路由地址" prop="path">
 							<el-input v-model="ruleForm.path" placeholder="路由地址" clearable></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="菜单图标" prop="icon">
-							<IconSelector placeholder="请输入菜单图标" v-model="ruleForm.icon" />
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">

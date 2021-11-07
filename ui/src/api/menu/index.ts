@@ -50,7 +50,7 @@ export function saveMenu(params?: object) {
  * @param params 
  * @returns 
  */
-export function delMenu(params?: object) {
+export function delMenu(params?: any) {
 	return request({
 		url: '/admin/menu/del',
 		method: 'post',
