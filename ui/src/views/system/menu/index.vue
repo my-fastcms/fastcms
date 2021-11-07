@@ -93,7 +93,7 @@ export default {
 			editMenuRef.value.openDialog(row);
 		};
 		// 删除当前行
-		const onTabelRowDel = (row: object) => {
+		const onTabelRowDel = (row: any) => {
 			ElMessageBox.confirm('此操作将永久删除路由, 是否继续?', '提示', {
 				confirmButtonText: '删除',
 				cancelButtonText: '取消',

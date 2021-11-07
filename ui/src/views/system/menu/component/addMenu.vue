@@ -108,6 +108,7 @@ import { reactive, toRefs, getCurrentInstance } from 'vue';
 import { ElMessage } from 'element-plus';
 import IconSelector from '/@/components/iconSelector/index.vue';
 import { saveMenu, getMenuList } from '/@/api/menu/index';
+import { number } from 'echarts';
 
 export default {
 	name: 'systemAddMenu',
@@ -123,6 +124,8 @@ export default {
 			 * 路由权限标识为数组格式，基本都需要自行转换类型
 			 */
 			ruleForm: {
+				id: number,
+				parentId: number,
 				name: '', // 路由名称
 				path: '',
 				component: '', // 组件地址
