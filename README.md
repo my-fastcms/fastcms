@@ -14,7 +14,7 @@
 ### 开源协议
 - apache协议，代码100%完全开源
 
-### 核心技术
+### 后端技术
 - SpringBoot作为底层框架
 - mybatis-plus代码生成，可快速生成模块，插件的骨架代码。
 - 使用spring security jwt进行登录验证，权限控制。
@@ -27,6 +27,12 @@
 - 基于pf4j实现springmvc拦截器的动态插拔。
 - 支持插件之间的通信。
 - lombock 使代码更简洁
+
+### 前端技术
+- vue3
+- elementui-plus
+- typescript
+- vite
 
 ### 核心功能
 - 完整的用户权限管理
