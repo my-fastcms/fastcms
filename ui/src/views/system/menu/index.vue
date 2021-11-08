@@ -59,8 +59,8 @@
 				</el-table-column>
 			</el-table>
 		</el-card>
-		<AddMenu ref="addMenuRef" />
-		<EditMenu ref="editMenuRef" />
+		<AddMenu ref="addMenuRef" @reloadTable="loadMenuList"/>
+		<EditMenu ref="editMenuRef" @reloadTable="loadMenuList"/>
 	</div>
 </template>
 
@@ -71,6 +71,7 @@ import { getMenuList, delMenu } from '/@/api/menu/index';
 import { initBackEndControlRoutes } from '/@/router/backEnd';
 import AddMenu from '/@/views/system/menu/component/addMenu.vue';
 import EditMenu from '/@/views/system/menu/component/editMenu.vue';
+
 export default {
 	name: 'systemMenu',
 	components: { AddMenu, EditMenu },
@@ -129,6 +130,7 @@ export default {
 			onOpenEditMenu,
 			menuTableData,
 			onTabelRowDel,
+			loadMenuList,
 			...toRefs(state),
 		};
 	},

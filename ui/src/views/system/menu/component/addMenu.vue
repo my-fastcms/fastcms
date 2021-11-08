@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable no-console */
 <template>
 	<div class="system-menu-container">
 		<el-dialog title="新增菜单" v-model="isShowDialog" width="769px">
@@ -107,13 +105,12 @@
 import { reactive, toRefs, getCurrentInstance } from 'vue';
 import { ElMessage } from 'element-plus';
 import IconSelector from '/@/components/iconSelector/index.vue';
-import { saveMenu, getMenuList } from '/@/api/menu/index';
-import { number } from 'echarts';
+import { saveMenu } from '/@/api/menu/index';
 
 export default {
 	name: 'systemAddMenu',
 	components: { IconSelector },
-	setup() {
+	setup(props, ctx) {
 		const { proxy } = getCurrentInstance() as any;
 		const state = reactive({
 			isShowDialog: false,
@@ -124,8 +121,8 @@ export default {
 			 * 路由权限标识为数组格式，基本都需要自行转换类型
 			 */
 			ruleForm: {
-				id: number,
-				parentId: number,
+				id: null,
+				parentId: null,
 				name: '', // 路由名称
 				path: '',
 				component: '', // 组件地址
@@ -180,7 +177,8 @@ export default {
 					saveMenu(state.ruleForm).then(() => {
 						closeDialog(); // 关闭弹窗
 						// 刷新菜单，未进行后端接口测试
-						loadMenuList();
+						initForm();
+						ctx.emit("reloadTable");
 					}).catch((res) => {
 						ElMessage({showClose: true, message: res.message ? res.message : '系统错误' , type: 'error'});
 					})
@@ -188,14 +186,6 @@ export default {
 			});
 
 		};
-
-		const loadMenuList = () => {
-			getMenuList().then((res) => {
-				state.menuData = res.data;
-			}).catch(() => {
-
-			})
-		}
 
 		// 表单初始化，方法：`resetFields()` 无法使用
 		const initForm = () => {

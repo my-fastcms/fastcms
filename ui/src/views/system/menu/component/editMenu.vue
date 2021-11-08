@@ -106,11 +106,11 @@ import { reactive, toRefs, getCurrentInstance } from 'vue';
 import IconSelector from '/@/components/iconSelector/index.vue';
 import { useI18n } from 'vue-i18n';
 import { ElMessage } from 'element-plus';
-import { saveMenu, getMenuList } from '/@/api/menu/index';
+import { saveMenu } from '/@/api/menu/index';
 export default {
 	name: 'systemEditMenu',
 	components: { IconSelector },
-	setup() {
+	setup(props, ctx) {
 		const { proxy } = getCurrentInstance() as any;
 		const { t } = useI18n();
 		const state = reactive({
@@ -187,21 +187,13 @@ export default {
 				if (valid) {
 					saveMenu(state.ruleForm).then(() => {
 						closeDialog(); // 关闭弹窗
-						loadMenuList(); // 刷新菜单，未进行后端接口测试
+						ctx.emit("reloadTable");
 					}).catch((res) => {
 						ElMessage({showClose: true, message: res.message ? res.message : '系统错误' , type: 'error'});
 					})
 				}
 			});
 		};
-
-		const loadMenuList = () => {
-			getMenuList().then((res) => {
-				state.menuData = res.data;
-			}).catch(() => {
-
-			})
-		}
 
 		// 表单初始化，方法：`resetFields()` 无法使用
 		const initForm = () => {
