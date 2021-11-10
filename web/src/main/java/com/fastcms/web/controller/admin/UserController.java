@@ -34,8 +34,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -79,29 +77,6 @@ public class UserController {
 
     @GetMapping("getMenus")
     public Object getMenus() {
-        List<IPermissionService.PermissionNode> menuNodes = new ArrayList<>();
-
-        IPermissionService.PermissionNode home = new IPermissionService.PermissionNode(1l, null, "home", "/home", "home/index", false, 1,
-                "message.router.home", "iconfont icon-shouye", false, true, true, false, Arrays.asList("admin"), null);
-
-        IPermissionService.PermissionNode permission = new IPermissionService.PermissionNode(2l, null, "system", "/system", "layout/routerView/parent", false, 2,
-                "message.router.system", "iconfont icon-xitongshezhi", false, true, false, false, Arrays.asList("admin"), null);
-        List<IPermissionService.PermissionNode> permissionChildren = new ArrayList<>();
-        IPermissionService.PermissionNode menu = new IPermissionService.PermissionNode(3l, 2l, "systemMenu", "/system/menu", "system/menu/index", false, 2,
-                "message.router.systemMenu", "iconfont icon-caidan", false, true, false, false, Arrays.asList("admin"), null);
-
-        IPermissionService.PermissionNode role = new IPermissionService.PermissionNode(4l, 2l, "systemRole", "/system/role", "system/role/index", false, 2,
-                "message.router.systemRole", "iconfont icon-shuxingtu", false, true, false, false, Arrays.asList("admin"), null);
-
-        IPermissionService.PermissionNode user = new IPermissionService.PermissionNode(5l, 2l, "systemUser", "/system/user", "system/user/index", false, 2,
-                "message.router.systemUser", "iconfont icon-icon-", false, true, false, false, Arrays.asList("admin"), null);
-        permissionChildren.add(menu);
-        permissionChildren.add(role);
-        permissionChildren.add(user);
-        permission.setChildren(permissionChildren);
-
-        menuNodes.add(home);
-        menuNodes.add(permission);
         return RestResultUtils.success(permissionService.getPermissions());
     }
 

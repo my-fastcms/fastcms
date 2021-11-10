@@ -1,0 +1,8 @@
+{
+  "serverUrl": "http://127.0.0.1:8080",
+  "isStrict": false,
+  "allInOne": true,
+  "outPath": "src/main/resources/static/doc",
+  "createDebugPage": true,
+  "projectName": "fastcms-doc"
+}

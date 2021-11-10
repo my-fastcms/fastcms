@@ -5,6 +5,7 @@
 				<el-input size="small" placeholder="请输入角色名" prefix-icon="el-icon-search" style="max-width: 180px"></el-input>
 				<el-button size="small" type="primary" class="ml10">查询</el-button>
 			</div>
+			<el-button @click="onOpenAddMenu" class="mt15" size="small" type="primary" icon="iconfont icon-shuxingtu">新建角色</el-button>
 			<el-table :data="tableData.data" stripe style="width: 100%">
 				<el-table-column prop="num" label="ID" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="name" label="角色名" show-overflow-tooltip></el-table-column>

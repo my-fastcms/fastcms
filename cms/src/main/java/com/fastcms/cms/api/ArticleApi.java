@@ -28,9 +28,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * 文章接口
  * @author： wjun_java@163.com
  * @date： 2021/6/7
- * @description：
+ * @description：文章接口
  * @modifiedBy：
  * @version: 1.0
  */
@@ -41,6 +42,13 @@ public class ArticleApi {
 	@Autowired
 	private IArticleService articleService;
 
+	/**
+	 * 文章列表
+	 * @param page 			页码
+	 * @param pageSize		每页多少条
+	 * @param categoryId  	分类id
+	 * @return
+	 */
 	@RequestMapping("/list")
 	public Object list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
 							   @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
@@ -57,6 +65,11 @@ public class ArticleApi {
 		return RestResultUtils.success(articleVoPage);
 	}
 
+	/**
+	 * 文章详情
+	 * @param articleId 文章id
+	 * @return
+	 */
 	@RequestMapping("/detail")
 	public Object detail(Long articleId) {
 		IArticleService.ArticleInfoVo articleInfo = articleService.getArticleById(articleId);
