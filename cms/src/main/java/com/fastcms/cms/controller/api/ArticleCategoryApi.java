@@ -14,16 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.cms.api;
+package com.fastcms.cms.controller.api;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.fastcms.cms.service.IArticleCommentService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.fastcms.cms.entity.ArticleCategory;
+import com.fastcms.cms.service.IArticleCategoryService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -34,29 +33,17 @@ import org.springframework.web.bind.annotation.RestController;
  * @version: 1.0
  */
 @RestController
-@RequestMapping(FastcmsConstants.API_MAPPING + "/article/comment")
-public class ArticleCommentApi {
+@RequestMapping(FastcmsConstants.API_MAPPING + "/article/category")
+public class ArticleCategoryApi {
 
 	@Autowired
-	IArticleCommentService articleCommentService;
+	private IArticleCategoryService articleCategoryService;
 
 	@RequestMapping("list")
-	public Object list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-							   @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
-							   Long articleId) {
-		return RestResultUtils.success(articleCommentService.pageArticleCommentByArticleId(new Page(page, pageSize), articleId));
-	}
-
-	@PostMapping("doSaveComment")
-	public Object doSaveComment(Long articleId, Long commentId, String context, String captcha) {
-
-		try {
-			articleCommentService.saveArticleComment(articleId, commentId, context);
-			return RestResultUtils.success();
-		} catch (Exception e) {
-			return RestResultUtils.failed(e.getMessage());
-		}
-
+	public Object list() {
+		QueryWrapper queryWrapper = new QueryWrapper();
+		queryWrapper.eq("type", ArticleCategory.CATEGORY_TYPE);
+		return RestResultUtils.success(articleCategoryService.list(queryWrapper));
 	}
 
 }

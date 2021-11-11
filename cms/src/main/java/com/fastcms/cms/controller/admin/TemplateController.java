@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.cms.controller;
+package com.fastcms.cms.controller.admin;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -48,6 +48,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
+ * 模板管理接口
  * @author： wjun_java@163.com
  * @date： 2021/2/18
  * @description：
@@ -311,14 +312,13 @@ public class TemplateController {
     }
 
     @RequestMapping("menu/list")
-    public String menuList(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
+    public Object menuList(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
                                @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
                                Model model) {
         QueryWrapper queryWrapper = new QueryWrapper();
         Page pageParam = new Page<>(page, pageSize);
         Page<Menu> pageData = menuService.page(pageParam, queryWrapper);
-//        model.addAttribute(PAGE_DATA_ATTR, pageData);
-        return "admin/template/menu_list";
+        return RestResultUtils.success(pageData);
     }
 
     @RequestMapping("menu/edit")
@@ -340,11 +340,6 @@ public class TemplateController {
     public Object doDeleteMenu(@RequestParam(name = "id") Long id) {
         menuService.removeById(id);
         return RestResultUtils.success();
-    }
-
-    @RequestMapping("setting")
-	public String setting() {
-        return "admin/template/setting";
     }
 
     @PostMapping("setting/doSave")

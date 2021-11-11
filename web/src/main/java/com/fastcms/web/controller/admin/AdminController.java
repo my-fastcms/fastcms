@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 登录授权接口
  * @author： wjun_java@163.com
  * @date： 2021/2/14
  * @description：
@@ -58,6 +59,17 @@ public class AdminController {
 
     private static final String WEB_LOGIN_CODE_CACHE_NAME = "web_login_code";
 
+    /**
+     * 登录接口
+     * @param username  账号
+     * @param password  密码
+     * @param code      验证码
+     * @param codeKey   验证码key
+     * @param request   请求
+     * @param response  响应
+     * @return
+     * @throws AccessException
+     */
     @PostMapping("login")
     public Object login(@RequestParam String username,
                                     @RequestParam String password,
@@ -89,6 +101,10 @@ public class AdminController {
 
     }
 
+    /**
+     * 验证码接口
+     * @return
+     */
     @GetMapping("captcha")
     public Object captcha() {
         SpecCaptcha specCaptcha = new SpecCaptcha(130, 48, 4);

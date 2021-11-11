@@ -1,624 +1,591 @@
 let api = [];
-const apiDocListSize = 1
+const apiDocListSize = 3
 api.push({
     name: 'default',
     order: '1',
     list: []
 })
-api[0].list.push({
-    alias: 'ArticleApi',
-    order: '1',
-    link: '文章接口',
-    desc: '文章接口',
+api.push({
+    name: '管理后台',
+    order: '2',
     list: []
 })
-api[0].list[0].list.push({
-    order: '1',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.API_MAPPING+/article/list',
-    desc: '文章列表',
-});
-api[0].list[0].list.push({
-    order: '2',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.API_MAPPING+/article/detail',
-    desc: '文章详情',
-});
-api[0].list.push({
-    alias: 'ArticleCategoryApi',
-    order: '2',
-    link: '',
-    desc: '',
-    list: []
-})
-api[0].list[1].list.push({
-    order: '1',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.API_MAPPING+/article/category/list',
-    desc: '',
-});
-api[0].list.push({
-    alias: 'ArticleCommentApi',
-    order: '3',
-    link: '',
-    desc: '',
-    list: []
-})
-api[0].list[2].list.push({
-    order: '1',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.API_MAPPING+/article/comment/list',
-    desc: '',
-});
-api[0].list[2].list.push({
-    order: '2',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.API_MAPPING+/article/comment/doSaveComment',
-    desc: '',
-});
-api[0].list.push({
-    alias: 'ArticleController',
-    order: '4',
-    link: '',
-    desc: '',
-    list: []
-})
-api[0].list[3].list.push({
-    order: '1',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/article/list',
-    desc: '',
-});
-api[0].list[3].list.push({
-    order: '2',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/article/doSave',
-    desc: '',
-});
-api[0].list[3].list.push({
-    order: '3',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/article/category/doSave',
-    desc: '',
-});
-api[0].list[3].list.push({
-    order: '4',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/article/category/doDelete',
-    desc: '',
-});
-api[0].list[3].list.push({
-    order: '5',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/article/comment/doSave',
-    desc: '',
-});
-api[0].list[3].list.push({
-    order: '6',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/article/comment/doDelete',
-    desc: '',
-});
-api[0].list.push({
-    alias: 'PageController',
-    order: '5',
-    link: '',
-    desc: '',
-    list: []
-})
-api[0].list[4].list.push({
-    order: '1',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/page/list',
-    desc: '',
-});
-api[0].list[4].list.push({
-    order: '2',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/page/doSave',
-    desc: '',
-});
-api[0].list[4].list.push({
-    order: '3',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/page/comment/doSave',
-    desc: '',
-});
-api[0].list[4].list.push({
-    order: '4',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/page/comment/doDelete',
-    desc: '',
-});
-api[0].list.push({
-    alias: 'TemplateController',
-    order: '6',
-    link: '',
-    desc: '',
-    list: []
-})
-api[0].list[5].list.push({
-    order: '1',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/template/list',
-    desc: '',
-});
-api[0].list[5].list.push({
-    order: '2',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/template/install',
-    desc: '',
-});
-api[0].list[5].list.push({
-    order: '3',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/template/doInstall',
-    desc: '',
-});
-api[0].list[5].list.push({
-    order: '4',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/template/doUnInstall',
-    desc: '',
-});
-api[0].list[5].list.push({
-    order: '5',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/template/edit',
-    desc: '',
-});
-api[0].list[5].list.push({
-    order: '6',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/template/doEnable',
-    desc: '',
-});
-api[0].list[5].list.push({
-    order: '7',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/template/doEditSave',
-    desc: '',
-});
-api[0].list[5].list.push({
-    order: '8',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/template/doUpload',
-    desc: '',
-});
-api[0].list[5].list.push({
-    order: '9',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/template/doDelFile',
-    desc: '',
-});
-api[0].list[5].list.push({
-    order: '10',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/template/menu/list',
-    desc: '',
-});
-api[0].list[5].list.push({
-    order: '11',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/template/menu/edit',
-    desc: '',
-});
-api[0].list[5].list.push({
-    order: '12',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/template/menu/doSave',
-    desc: '',
-});
-api[0].list[5].list.push({
-    order: '13',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/template/menu/doDelete',
-    desc: '',
-});
-api[0].list[5].list.push({
-    order: '14',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/template/setting',
-    desc: '',
-});
-api[0].list[5].list.push({
-    order: '15',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/template/setting/doSave',
-    desc: '',
-});
-api[0].list.push({
-    alias: 'UCenterArticleController',
-    order: '7',
-    link: '',
-    desc: '',
-    list: []
-})
-api[0].list[6].list.push({
-    order: '1',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.UCENTER_MAPPING+/article/list',
-    desc: '',
-});
-api[0].list[6].list.push({
-    order: '2',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.UCENTER_MAPPING+/article/doSave',
-    desc: '',
-});
-api[0].list[6].list.push({
-    order: '3',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.UCENTER_MAPPING+/article/doSaveComment',
-    desc: '',
-});
-api[0].list.push({
-    alias: 'TemplateIndexController',
-    order: '8',
-    link: '',
-    desc: '',
-    list: []
-})
-api[0].list[7].list.push({
-    order: '1',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/;	http:/127.0.0.1:8080/index',
-    desc: '',
-});
-api[0].list[7].list.push({
-    order: '2',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/p/{path}',
-    desc: '',
-});
-api[0].list[7].list.push({
-    order: '3',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/a/{id}',
-    desc: '',
-});
-api[0].list[7].list.push({
-    order: '4',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/a/c/{id}',
-    desc: '',
-});
-api[0].list[7].list.push({
-    order: '5',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/favicon.ico',
-    desc: '',
-});
-api[0].list.push({
+api[1].list.push({
     alias: 'AdminController',
+    order: '1',
+    link: '登录授权接口',
+    desc: '登录授权接口',
+    list: []
+})
+api[1].list[0].list.push({
+    order: '1',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/login',
+    desc: '登录接口',
+});
+api[1].list[0].list.push({
+    order: '2',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/captcha',
+    desc: '验证码接口',
+});
+api[1].list.push({
+    alias: 'AttachmentController',
+    order: '2',
+    link: '',
+    desc: '',
+    list: []
+})
+api[1].list[1].list.push({
+    order: '1',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/list',
+    desc: '',
+});
+api[1].list[1].list.push({
+    order: '2',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/doUpload',
+    desc: '',
+});
+api[1].list[1].list.push({
+    order: '3',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/detail',
+    desc: '',
+});
+api[1].list[1].list.push({
+    order: '4',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/doDelete',
+    desc: '',
+});
+api[1].list[1].list.push({
+    order: '5',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/browse',
+    desc: '',
+});
+api[1].list[1].list.push({
+    order: '6',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/doUploadOfCKEditor',
+    desc: '',
+});
+api[1].list[1].list.push({
+    order: '7',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/doUploadOfCKEditorBrowse',
+    desc: '',
+});
+api[1].list.push({
+    alias: 'ConfigController',
+    order: '3',
+    link: '',
+    desc: '',
+    list: []
+})
+api[1].list[2].list.push({
+    order: '1',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/config/doSave',
+    desc: '',
+});
+api[1].list.push({
+    alias: 'MenuController',
+    order: '4',
+    link: '',
+    desc: '',
+    list: []
+})
+api[1].list[3].list.push({
+    order: '1',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/menu/list',
+    desc: '',
+});
+api[1].list[3].list.push({
+    order: '2',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/menu/save',
+    desc: '',
+});
+api[1].list[3].list.push({
+    order: '3',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/menu/del',
+    desc: '',
+});
+api[1].list.push({
+    alias: 'PluginController',
+    order: '5',
+    link: '',
+    desc: '',
+    list: []
+})
+api[1].list[4].list.push({
+    order: '1',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/plugin/doInstall',
+    desc: '',
+});
+api[1].list[4].list.push({
+    order: '2',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/plugin/doUnInstall',
+    desc: '',
+});
+api[1].list.push({
+    alias: 'RoleController',
+    order: '6',
+    link: '',
+    desc: '',
+    list: []
+})
+api[1].list[5].list.push({
+    order: '1',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/role/list',
+    desc: '',
+});
+api[1].list[5].list.push({
+    order: '2',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/role/save',
+    desc: '',
+});
+api[1].list[5].list.push({
+    order: '3',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/role/getPermissionList',
+    desc: '',
+});
+api[1].list[5].list.push({
+    order: '4',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/role/saveRolePermission',
+    desc: '',
+});
+api[1].list.push({
+    alias: 'SetupController',
+    order: '7',
+    link: '',
+    desc: '',
+    list: []
+})
+api[1].list[6].list.push({
+    order: '1',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/setup/wechatMini',
+    desc: '',
+});
+api[1].list[6].list.push({
+    order: '2',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/setup/pay',
+    desc: '',
+});
+api[1].list[6].list.push({
+    order: '3',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/setup/icons',
+    desc: '',
+});
+api[1].list.push({
+    alias: 'UserController',
+    order: '8',
+    link: '',
+    desc: '',
+    list: []
+})
+api[1].list[7].list.push({
+    order: '1',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/user/list',
+    desc: '',
+});
+api[1].list[7].list.push({
+    order: '2',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/user/getMenus',
+    desc: '',
+});
+api[1].list[7].list.push({
+    order: '3',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/user/doSave',
+    desc: '',
+});
+api[1].list[7].list.push({
+    order: '4',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/user/doEdit',
+    desc: '',
+});
+api[1].list[7].list.push({
+    order: '5',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/user/doEditRole',
+    desc: '',
+});
+api[1].list[7].list.push({
+    order: '6',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/user/tag/doSave',
+    desc: '',
+});
+api[1].list[7].list.push({
+    order: '7',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/user/doEditTag',
+    desc: '',
+});
+api[1].list.push({
+    alias: 'PaymentCallbackController',
     order: '9',
     link: '',
     desc: '',
     list: []
 })
-api[0].list[8].list.push({
-    order: '1',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING/login',
-    desc: '',
-});
-api[0].list[8].list.push({
-    order: '2',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING/captcha',
-    desc: '',
-});
-api[0].list.push({
-    alias: 'AttachmentController',
-    order: '10',
-    link: '',
-    desc: '',
-    list: []
-})
-api[0].list[9].list.push({
-    order: '1',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/attachment/list',
-    desc: '',
-});
-api[0].list[9].list.push({
-    order: '2',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/attachment/doUpload',
-    desc: '',
-});
-api[0].list[9].list.push({
-    order: '3',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/attachment/detail',
-    desc: '',
-});
-api[0].list[9].list.push({
-    order: '4',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/attachment/doDelete',
-    desc: '',
-});
-api[0].list[9].list.push({
-    order: '5',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/attachment/browse',
-    desc: '',
-});
-api[0].list[9].list.push({
-    order: '6',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/attachment/doUploadOfCKEditor',
-    desc: '',
-});
-api[0].list[9].list.push({
-    order: '7',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/attachment/doUploadOfCKEditorBrowse',
-    desc: '',
-});
-api[0].list.push({
-    alias: 'ConfigController',
-    order: '11',
-    link: '',
-    desc: '',
-    list: []
-})
-api[0].list[10].list.push({
-    order: '1',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/config/doSave',
-    desc: '',
-});
-api[0].list.push({
-    alias: 'MenuController',
-    order: '12',
-    link: '',
-    desc: '',
-    list: []
-})
-api[0].list[11].list.push({
-    order: '1',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/menu/list',
-    desc: '',
-});
-api[0].list[11].list.push({
-    order: '2',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/menu/save',
-    desc: '',
-});
-api[0].list[11].list.push({
-    order: '3',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/menu/del',
-    desc: '',
-});
-api[0].list.push({
-    alias: 'PluginController',
-    order: '13',
-    link: '',
-    desc: '',
-    list: []
-})
-api[0].list[12].list.push({
-    order: '1',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/plugin/doInstall',
-    desc: '',
-});
-api[0].list[12].list.push({
-    order: '2',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/plugin/doUnInstall',
-    desc: '',
-});
-api[0].list.push({
-    alias: 'RoleController',
-    order: '14',
-    link: '',
-    desc: '',
-    list: []
-})
-api[0].list[13].list.push({
-    order: '1',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/role/list',
-    desc: '',
-});
-api[0].list[13].list.push({
-    order: '2',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/role/save',
-    desc: '',
-});
-api[0].list[13].list.push({
-    order: '3',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/role/getPermissionList',
-    desc: '',
-});
-api[0].list[13].list.push({
-    order: '4',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/role/saveRolePermission',
-    desc: '',
-});
-api[0].list.push({
-    alias: 'SetupController',
-    order: '15',
-    link: '',
-    desc: '',
-    list: []
-})
-api[0].list[14].list.push({
-    order: '1',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/setup/wechatMini',
-    desc: '',
-});
-api[0].list[14].list.push({
-    order: '2',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/setup/pay',
-    desc: '',
-});
-api[0].list[14].list.push({
-    order: '3',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/setup/icons',
-    desc: '',
-});
-api[0].list.push({
-    alias: 'UserController',
-    order: '16',
-    link: '',
-    desc: '',
-    list: []
-})
-api[0].list[15].list.push({
-    order: '1',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/user/list',
-    desc: '',
-});
-api[0].list[15].list.push({
-    order: '2',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/user/getMenus',
-    desc: '',
-});
-api[0].list[15].list.push({
-    order: '3',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/user/doSave',
-    desc: '',
-});
-api[0].list[15].list.push({
-    order: '4',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/user/doEdit',
-    desc: '',
-});
-api[0].list[15].list.push({
-    order: '5',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/user/doEditRole',
-    desc: '',
-});
-api[0].list[15].list.push({
-    order: '6',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/user/tag/doSave',
-    desc: '',
-});
-api[0].list[15].list.push({
-    order: '7',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.ADMIN_MAPPING+/user/doEditTag',
-    desc: '',
-});
-api[0].list.push({
-    alias: 'PaymentCallbackController',
-    order: '17',
-    link: '',
-    desc: '',
-    list: []
-})
-api[0].list[16].list.push({
+api[1].list[8].list.push({
     order: '1',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/payback/{platform}',
     desc: '',
 });
-api[0].list.push({
+api[1].list.push({
     alias: 'UploadApi',
-    order: '18',
+    order: '10',
     link: '',
     desc: '',
     list: []
 })
-api[0].list[17].list.push({
+api[1].list[9].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.API_MAPPING+/upload/doUpload',
+    url: 'http://127.0.0.1:8080/fastcms/api/api/upload/doUpload',
     desc: '',
 });
-api[0].list.push({
+api[1].list.push({
     alias: 'UserApi',
-    order: '19',
+    order: '11',
     link: '',
     desc: '',
     list: []
 })
-api[0].list.push({
+api[1].list.push({
     alias: 'WechatMiniUserApi',
-    order: '20',
+    order: '12',
     link: '微信小程序用户授权登录',
     desc: '微信小程序用户授权登录',
     list: []
 })
-api[0].list[19].list.push({
+api[1].list[11].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.API_MAPPING+/wechat/user/code2session',
+    url: 'http://127.0.0.1:8080/fastcms/api/api/wechat/user/code2session',
     desc: '',
 });
-api[0].list[19].list.push({
+api[1].list[11].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.API_MAPPING+/wechat/user/doLogin',
+    url: 'http://127.0.0.1:8080/fastcms/api/api/wechat/user/doLogin',
     desc: '',
 });
-api[0].list[19].list.push({
+api[1].list[11].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.API_MAPPING+/wechat/user/getUserPhone',
+    url: 'http://127.0.0.1:8080/fastcms/api/api/wechat/user/getUserPhone',
     desc: '小程序用户通过昵称授权后，再通过获取手机号授权获取用户手机号码',
 });
-api[0].list[19].list.push({
+api[1].list[11].list.push({
     order: '4',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.API_MAPPING+/wechat/user/doLoginByPhone',
+    url: 'http://127.0.0.1:8080/fastcms/api/api/wechat/user/doLoginByPhone',
     desc: '用户直接通过手机号码授权登录注意:用户通过手机号码授权登录，后台是获取不到用户的昵称跟头像的，需要手动设置小程序前端可以通过WXML标签直接显示用户头像昵称&lt;open-datatype="userAvatarUrl"&gt;&lt;/open-data&gt;&lt;open-datatype="userNickName"&gt;&lt;/open-data&gt;',
 });
-api[0].list.push({
+api[1].list.push({
     alias: 'UCenterController',
-    order: '21',
+    order: '13',
     link: '',
     desc: '',
     list: []
 })
-api[0].list[20].list.push({
+api[1].list[12].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.UCENTER_MAPPING/doRegister',
+    url: 'http://127.0.0.1:8080/fastcms/api/ucenter/doRegister',
     desc: '',
 });
-api[0].list.push({
+api[1].list.push({
     alias: 'UCenterUserController',
-    order: '22',
+    order: '14',
     link: '',
     desc: '',
     list: []
 })
-api[0].list[21].list.push({
+api[1].list[13].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.UCENTER_MAPPING+/user/doSave',
+    url: 'http://127.0.0.1:8080/fastcms/api/ucenter/user/doSave',
     desc: '',
 });
-api[0].list[21].list.push({
+api[1].list[13].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.UCENTER_MAPPING+/user/doEditPwd',
+    url: 'http://127.0.0.1:8080/fastcms/api/ucenter/user/doEditPwd',
     desc: '',
 });
-api[0].list[21].list.push({
+api[1].list[13].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/FastcmsConstants.UCENTER_MAPPING+/user/doSaveAvatar',
+    url: 'http://127.0.0.1:8080/fastcms/api/ucenter/user/doSaveAvatar',
+    desc: '',
+});
+api.push({
+    name: 'CMS接口',
+    order: '3',
+    list: []
+})
+api[2].list.push({
+    alias: 'ArticleController',
+    order: '1',
+    link: '文章管理接口',
+    desc: '文章管理接口',
+    list: []
+})
+api[2].list[0].list.push({
+    order: '1',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/article/list',
+    desc: '',
+});
+api[2].list[0].list.push({
+    order: '2',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/article/doSave',
+    desc: '',
+});
+api[2].list[0].list.push({
+    order: '3',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/article/category/doSave',
+    desc: '',
+});
+api[2].list[0].list.push({
+    order: '4',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/article/category/doDelete',
+    desc: '',
+});
+api[2].list[0].list.push({
+    order: '5',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/article/comment/doSave',
+    desc: '',
+});
+api[2].list[0].list.push({
+    order: '6',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/article/comment/doDelete',
+    desc: '',
+});
+api[2].list.push({
+    alias: 'PageController',
+    order: '2',
+    link: '',
+    desc: '',
+    list: []
+})
+api[2].list[1].list.push({
+    order: '1',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/page/list',
+    desc: '',
+});
+api[2].list[1].list.push({
+    order: '2',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/page/doSave',
+    desc: '',
+});
+api[2].list[1].list.push({
+    order: '3',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/page/comment/doSave',
+    desc: '',
+});
+api[2].list[1].list.push({
+    order: '4',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/page/comment/doDelete',
+    desc: '',
+});
+api[2].list.push({
+    alias: 'TemplateController',
+    order: '3',
+    link: '模板管理接口',
+    desc: '模板管理接口',
+    list: []
+})
+api[2].list[2].list.push({
+    order: '1',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/list',
+    desc: '',
+});
+api[2].list[2].list.push({
+    order: '2',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/install',
+    desc: '',
+});
+api[2].list[2].list.push({
+    order: '3',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/doInstall',
+    desc: '',
+});
+api[2].list[2].list.push({
+    order: '4',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/doUnInstall',
+    desc: '',
+});
+api[2].list[2].list.push({
+    order: '5',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/edit',
+    desc: '',
+});
+api[2].list[2].list.push({
+    order: '6',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/doEnable',
+    desc: '',
+});
+api[2].list[2].list.push({
+    order: '7',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/doEditSave',
+    desc: '',
+});
+api[2].list[2].list.push({
+    order: '8',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/doUpload',
+    desc: '',
+});
+api[2].list[2].list.push({
+    order: '9',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/doDelFile',
+    desc: '',
+});
+api[2].list[2].list.push({
+    order: '10',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/menu/list',
+    desc: '',
+});
+api[2].list[2].list.push({
+    order: '11',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/menu/edit',
+    desc: '',
+});
+api[2].list[2].list.push({
+    order: '12',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/menu/doSave',
+    desc: '',
+});
+api[2].list[2].list.push({
+    order: '13',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/menu/doDelete',
+    desc: '',
+});
+api[2].list[2].list.push({
+    order: '14',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/setting/doSave',
+    desc: '',
+});
+api[2].list.push({
+    alias: 'ArticleApi',
+    order: '4',
+    link: '文章接口',
+    desc: '文章接口',
+    list: []
+})
+api[2].list[3].list.push({
+    order: '1',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/api/article/list',
+    desc: '文章列表',
+});
+api[2].list[3].list.push({
+    order: '2',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/api/article/detail',
+    desc: '文章详情',
+});
+api[2].list.push({
+    alias: 'ArticleCategoryApi',
+    order: '5',
+    link: '',
+    desc: '',
+    list: []
+})
+api[2].list[4].list.push({
+    order: '1',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/api/article/category/list',
+    desc: '',
+});
+api[2].list.push({
+    alias: 'ArticleCommentApi',
+    order: '6',
+    link: '',
+    desc: '',
+    list: []
+})
+api[2].list[5].list.push({
+    order: '1',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/api/article/comment/list',
+    desc: '',
+});
+api[2].list[5].list.push({
+    order: '2',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/api/article/comment/doSaveComment',
+    desc: '',
+});
+api[2].list.push({
+    alias: 'UCenterArticleController',
+    order: '7',
+    link: '文章接口',
+    desc: '文章接口',
+    list: []
+})
+api[2].list[6].list.push({
+    order: '1',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/ucenter/article/list',
+    desc: '',
+});
+api[2].list[6].list.push({
+    order: '2',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/ucenter/article/doSave',
+    desc: '',
+});
+api[2].list[6].list.push({
+    order: '3',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/ucenter/article/doSaveComment',
     desc: '',
 });
 document.onkeydown = keyDownSearch;

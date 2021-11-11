@@ -2,7 +2,37 @@
   "serverUrl": "http://127.0.0.1:8080",
   "isStrict": false,
   "allInOne": true,
+  "coverOld": true,
+  "apiConstants":[{
+    "constantsClassName":"com.fastcms.common.constants.FastcmsConstants"
+  }],
+  "groups": [
+    {
+      "name": "管理后台",
+      "apis": "com.fastcms.web.controller.*"
+    },
+    {
+      "name": "CMS接口",
+      "apis": "com.fastcms.cms.controller.*"
+    }
+  ],
+  "requestHeaders": [{
+    "name": "token",
+    "type": "string",
+    "desc": "自定义请求头 - token",
+    "value":"token",
+    "required": false,
+    "since": "-",
+    "pathPatterns": "/*/admin/**",
+    "excludePathPatterns":"/*/admin/login"
+  }],
+  "responseBodyAdvice":{
+    "className":"com.fastcms.common.model.RestResult"
+  },
   "outPath": "src/main/resources/static/doc",
   "createDebugPage": true,
+  "showAuthor":false,
+  "style":"xt256",
+  "allInOneDocFileName":"index.html",
   "projectName": "fastcms-doc"
 }

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.cms.controller;
+package com.fastcms.cms.controller.ucenter;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fastcms.cms.entity.Article;
@@ -31,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * 文章接口
  * @author： wjun_java@163.com
  * @date： 2021/6/4
  * @description：

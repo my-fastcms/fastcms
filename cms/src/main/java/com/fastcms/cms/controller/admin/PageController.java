@@ -14,9 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.cms.controller;
+package com.fastcms.cms.controller.admin;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.cms.entity.SinglePage;
 import com.fastcms.cms.entity.SinglePageComment;
 import com.fastcms.cms.service.ISinglePageCommentService;
@@ -47,11 +48,10 @@ public class PageController {
 	ISinglePageCommentService singlePageCommentService;
 
 	@GetMapping("list")
-	public String list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
+	public Object list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
 					   @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 		QueryWrapper<SinglePage> queryWrapper = new QueryWrapper();
-//		model.addAttribute(PAGE_DATA_ATTR, singlePageService.pageSinglePage(new Page<>(page, pageSize), queryWrapper));
-		return "admin/page/list";
+		return RestResultUtils.success(singlePageService.pageSinglePage(new Page<>(page, pageSize), queryWrapper));
 	}
 
 	@PostMapping("doSave")

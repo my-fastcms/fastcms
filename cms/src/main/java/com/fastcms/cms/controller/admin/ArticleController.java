@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.cms.controller;
+package com.fastcms.cms.controller.admin;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * 文章管理接口
  * @author： wjun_java@163.com
  * @date： 2021/4/22
  * @description：
@@ -55,7 +56,7 @@ public class ArticleController {
     private IArticleCommentService articleCommentService;
 
     @RequestMapping("list")
-    public String list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
+    public Object list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
                        @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
                        @RequestParam(name = "title", required = false) String title,
                        @RequestParam(name = "status", required = false) String status,
@@ -77,12 +78,8 @@ public class ArticleController {
         queryWrapper.orderByDesc("a.created");
         Page pageParam = new Page<>(page, pageSize);
         Page<IArticleService.ArticleVo> pageData = articleService.pageArticle(pageParam, queryWrapper);
-//        model.addAttribute(PAGE_DATA_ATTR, pageData);
 
-//        model.addAttribute("categoryList", articleCategoryService.getCategoryList(getLoginUser().getId()));
-//        model.addAttribute("tagList", articleCategoryService.getTagList(getLoginUser().getId()));
-
-        return "admin/article/list";
+        return RestResultUtils.success(pageData);
     }
 
     @PostMapping("doSave")
