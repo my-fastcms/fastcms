@@ -277,12 +277,10 @@ function toCurl(request) {
     if (request.url.indexOf('https') == 0) {
         cmd.push("-k");
     }
-
     // append Content-Type
-    if (request.contentType) {
+    if (request.data && request.data.length > 0) {
         cmd.push("-H");
-        cmd.push("'Content-Type:");
-        cmd.push(request.contentType+"'");
+        cmd.push("'Content-Type: application/json; charset=utf-8'");
     }
     // append request headers
     let headerValue;
@@ -312,39 +310,10 @@ function toCurl(request) {
     }
     cmd.push(url);
     // append data
-
-    if (typeof request.data == 'object') {
-        let index = 0;
-        const bodyData = [];
-        bodyData.push("\"")
-        for (let key in request.data) {
-            if (Object.prototype.hasOwnProperty.call(request.data, key)) {
-                if (index===0){
-                    bodyData.push(key);
-                    bodyData.push("=");
-                    bodyData.push(request.data[key]);
-                } else {
-                    bodyData.push("&")
-                    bodyData.push(key);
-                    bodyData.push("=");
-                    bodyData.push(request.data[key]);
-                }
-            }
-            index++;
-        }
-        bodyData.push("\"");
-        let bodyStr = ""
-        bodyData.forEach(function (item) {
-            bodyStr += item;
-        });
-        cmd.push("--data");
-        cmd.push(bodyStr);
-    } else if (request.data && request.data.length > 0) {
-        // append json data
+    if (request.data && request.data.length > 0) {
         cmd.push("--data");
         cmd.push("'" + request.data + "'");
     }
-
     let curlCmd = "";
     cmd.forEach(function (item) {
         curlCmd += item + " ";

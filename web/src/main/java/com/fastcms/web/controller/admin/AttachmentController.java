@@ -119,7 +119,7 @@ public class AttachmentController {
      * @return
      */
     @RequestMapping("detail")
-    public Object detail(@RequestParam(name = "id") Long id) {
+    public RestResult<Attachment> detail(@RequestParam(name = "id") Long id) {
 
         Attachment attachment = attachmentService.getById(id);
         if(attachment == null) {
