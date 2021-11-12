@@ -2,7 +2,6 @@ package com.fastcms.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.entity.UserTag;
-import lombok.Data;
 
 import java.util.List;
 
@@ -20,9 +19,16 @@ public interface IUserTagService extends IService<UserTag> {
 
 	List<UserTagVo> getTagListByUserId(Long userId);
 
-	@Data
 	class UserTagVo extends UserTag {
 		Long userId;
+
+		public Long getUserId() {
+			return userId;
+		}
+
+		public void setUserId(Long userId) {
+			this.userId = userId;
+		}
 	}
 
 }

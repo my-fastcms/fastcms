@@ -16,7 +16,6 @@
  */
 package com.fastcms.core.utils;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -39,7 +38,6 @@ import java.util.Iterator;
  * @modifiedBy：
  * @version: 1.0
  */
-@Slf4j
 public abstract class ImageUtils {
 
 	private final static String[] imgExts = new String[]{"jpg", "jpeg", "png", "bmp"};
@@ -260,7 +258,7 @@ public abstract class ImageUtils {
 			save(image, destImageFile);
 
 		} catch (Exception e) {
-			log.warn("ImageUtils pressImage error", e);
+			e.printStackTrace();
 		}
 	}
 
@@ -323,7 +321,7 @@ public abstract class ImageUtils {
 			save(resizeImage, destImageFile);
 
 		} catch (Exception e) {
-			log.error(e.toString(), e);
+			e.printStackTrace();
 		}
 	}
 
@@ -353,7 +351,7 @@ public abstract class ImageUtils {
 		try {
 			ImageIO.write(bi, getExtName(outputImageFile), new File(outputImageFile));
 		} catch (Exception e) {
-			log.error(e.toString(), e);
+			e.printStackTrace();
 		}
 	}
 

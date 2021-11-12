@@ -19,8 +19,6 @@ package com.fastcms.core.directive;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import freemarker.core.Environment;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -115,11 +113,30 @@ public abstract class BasePaginationDirective extends BaseDirective {
 
 	protected abstract String getPageAttr();
 
-	@Data
-	@AllArgsConstructor
 	public static class PageItem {
 		private String text;
 		private String url;
+
+		public PageItem(String text, String url) {
+			this.text = text;
+			this.url = url;
+		}
+
+		public String getText() {
+			return text;
+		}
+
+		public void setText(String text) {
+			this.text = text;
+		}
+
+		public String getUrl() {
+			return url;
+		}
+
+		public void setUrl(String url) {
+			this.url = url;
+		}
 	}
 
 }

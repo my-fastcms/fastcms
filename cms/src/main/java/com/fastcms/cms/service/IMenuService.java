@@ -2,7 +2,6 @@ package com.fastcms.cms.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.cms.entity.Menu;
-import lombok.Data;
 
 import java.io.Serializable;
 import java.util.List;
@@ -19,12 +18,27 @@ public interface IMenuService extends IService<Menu> {
 
 	List<MenuNode> getMenus();
 
-	@Data
 	class MenuNode extends Menu implements Serializable {
 		boolean hasChildren = false;
 		List<MenuNode> children;
 		public boolean getHasChildren() {
 			return children != null && children.size()>0;
+		}
+
+		public boolean isHasChildren() {
+			return hasChildren;
+		}
+
+		public void setHasChildren(boolean hasChildren) {
+			this.hasChildren = hasChildren;
+		}
+
+		public List<MenuNode> getChildren() {
+			return children;
+		}
+
+		public void setChildren(List<MenuNode> children) {
+			this.children = children;
 		}
 	}
 

@@ -2,7 +2,7 @@ package com.fastcms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.fastcms.entity.Role;
-import lombok.Data;
+import com.fastcms.service.IRoleService;
 
 import java.util.List;
 
@@ -24,13 +24,8 @@ public interface RoleMapper extends BaseMapper<Role> {
 
     void deleteRoleByUserId(Long userId);
 
-    List<UserRole> getRoleListByUserId(Long userId);
+    List<IRoleService.UserRole> getRoleListByUserId(Long userId);
 
     List<Role> getUserRoleList(Long userId);
-
-    @Data
-    class UserRole extends Role {
-        private Long userId;
-    }
 
 }

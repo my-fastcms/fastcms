@@ -17,7 +17,6 @@
 package com.fastcms.payment.config;
 
 import com.egzosn.pay.common.bean.PayOrder;
-import lombok.Data;
 
 import java.math.BigDecimal;
 
@@ -28,7 +27,6 @@ import java.math.BigDecimal;
  * @modifiedBy：
  * @version: 1.0
  */
-@Data
 public class FastcmsPayOrder extends PayOrder {
 
 	/**
@@ -52,6 +50,22 @@ public class FastcmsPayOrder extends PayOrder {
 	public FastcmsPayOrder(String platform, String wayTrade, String subject, String body, BigDecimal price, String outTradeNo) {
 		super(subject, body, price, outTradeNo);
 		this.platform = platform;
+		this.wayTrade = wayTrade;
+	}
+
+	public String getPlatform() {
+		return platform;
+	}
+
+	public void setPlatform(String platform) {
+		this.platform = platform;
+	}
+
+	public String getWayTrade() {
+		return wayTrade;
+	}
+
+	public void setWayTrade(String wayTrade) {
 		this.wayTrade = wayTrade;
 	}
 

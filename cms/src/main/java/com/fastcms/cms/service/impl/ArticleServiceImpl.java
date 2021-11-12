@@ -25,7 +25,6 @@ import com.fastcms.cms.mapper.ArticleMapper;
 import com.fastcms.cms.service.IArticleCategoryService;
 import com.fastcms.cms.service.IArticleService;
 import com.fastcms.cms.task.ArticleViewCountUpdateTask;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,7 +41,6 @@ import java.util.List;
  * @modifiedBy：
  * @version: 1.0
  */
-@Slf4j
 @Service
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements IArticleService {
 

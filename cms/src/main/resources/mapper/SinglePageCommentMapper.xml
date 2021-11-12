@@ -3,7 +3,7 @@
 <mapper namespace="com.fastcms.cms.mapper.SinglePageCommentMapper">
 
     <select id="pageSinglePageComment"
-            resultType="com.fastcms.cms.mapper.SinglePageCommentMapper$PageCommentVo">
+            resultType="com.fastcms.cms.service.ISinglePageCommentService$PageCommentVo">
         select spc.*, u.nick_name as author, s.title as pageTitle, pac.content as parentComment from single_page_comment spc
         left join `user` u on spc.user_id = u.id
         left join single_page s on spc.page_id = s.id

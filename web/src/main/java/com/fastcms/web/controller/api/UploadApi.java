@@ -19,7 +19,6 @@ package com.fastcms.web.controller.api;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.utils.FileUtils;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,7 +35,6 @@ import java.io.IOException;
  * @modifiedBy：
  * @version: 1.0
  */
-@Slf4j
 @RestController
 @RequestMapping(FastcmsConstants.API_MAPPING + "/upload")
 public class UploadApi {
@@ -58,7 +56,7 @@ public class UploadApi {
 
 			return RestResultUtils.success(newFilePath.replace("\\", "/"));
 		} catch (IOException e) {
-			log.error(e.getMessage());
+			e.printStackTrace();
 			if(uploadFile != null) {
 				uploadFile.delete();
 			}

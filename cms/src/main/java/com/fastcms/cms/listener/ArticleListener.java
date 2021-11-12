@@ -17,7 +17,8 @@
 package com.fastcms.cms.listener;
 
 import com.fastcms.cms.service.IArticleService;
-import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
@@ -30,9 +31,10 @@ import org.springframework.stereotype.Component;
  * @modifiedBy：
  * @version: 1.0
  */
-@Slf4j
 @Component
 public class ArticleListener implements ApplicationListener<ApplicationStartedEvent> {
+
+	private Log log = LogFactory.getLog(ArticleListener.class.getName());
 
 	@Autowired
 	private IArticleService articleService;

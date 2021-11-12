@@ -24,7 +24,6 @@ import com.fastcms.cms.service.ISinglePageCommentService;
 import com.fastcms.cms.service.ISinglePageService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResultUtils;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +35,6 @@ import org.springframework.web.bind.annotation.*;
  * @modifiedBy：
  * @version: 1.0
  */
-@Slf4j
 @RestController
 @RequestMapping(FastcmsConstants.ADMIN_MAPPING + "/page")
 public class PageController {

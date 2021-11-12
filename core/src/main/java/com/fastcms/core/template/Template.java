@@ -16,10 +16,6 @@
  */
 package com.fastcms.core.template;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.io.Serializable;
 import java.nio.file.Path;
 
@@ -30,9 +26,6 @@ import java.nio.file.Path;
  * @modifiedBy：
  * @version: 1.0
  */
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class Template implements Serializable {
     String id;
     String name;
@@ -41,4 +34,60 @@ public class Template implements Serializable {
     String provider;
     String description;
     Path templatePath;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getProvider() {
+        return provider;
+    }
+
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Path getTemplatePath() {
+        return templatePath;
+    }
+
+    public void setTemplatePath(Path templatePath) {
+        this.templatePath = templatePath;
+    }
 }

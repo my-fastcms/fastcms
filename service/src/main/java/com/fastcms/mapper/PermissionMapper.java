@@ -2,10 +2,9 @@ package com.fastcms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.fastcms.entity.Permission;
-import lombok.Data;
+import com.fastcms.service.IPermissionService;
 import org.apache.ibatis.annotations.Param;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -23,7 +22,7 @@ public interface PermissionMapper extends BaseMapper<Permission> {
      * @param roleId
      * @return
      */
-    List<RolePermission> getPermissionByRoleId(@Param("roleId") Long roleId);
+    List<IPermissionService.RolePermission> getPermissionByRoleId(@Param("roleId") Long roleId);
 
     /**
      * 查询用户已授权权限
@@ -38,10 +37,5 @@ public interface PermissionMapper extends BaseMapper<Permission> {
      * @param permissionId
      */
     void deleteByPermissionId(Long permissionId);
-
-    @Data
-    class RolePermission extends Permission implements Serializable {
-        private Long roleId;
-    }
 
 }

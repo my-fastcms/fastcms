@@ -18,7 +18,6 @@ package com.fastcms.core.mybatis;
 
 import com.baomidou.mybatisplus.extension.plugins.handler.DataPermissionHandler;
 import com.fastcms.entity.User;
-import lombok.extern.slf4j.Slf4j;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.schema.Column;
 import org.apache.commons.lang.StringUtils;
@@ -32,7 +31,6 @@ import java.lang.reflect.Method;
  * @modifiedBy：
  * @version: 1.0
  */
-@Slf4j
 public class FastcmsDataPermissionHandler implements DataPermissionHandler {
 
 	static final String USER_COLUMN = "user_id";

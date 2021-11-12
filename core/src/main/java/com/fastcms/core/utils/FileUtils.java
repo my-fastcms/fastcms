@@ -17,7 +17,6 @@
 package com.fastcms.core.utils;
 
 import com.fastcms.common.utils.StrUtils;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
@@ -41,7 +40,6 @@ import java.util.Objects;
  * @modifiedBy：
  * @version: 1.0
  */
-@Slf4j
 public abstract class FileUtils {
 
     final static String UPLOAD_DIR = "upload/";
@@ -170,7 +168,7 @@ public abstract class FileUtils {
             fos = new FileOutputStream(file, false);
             fos.write(string.getBytes("UTF-8"));
         } catch (Exception e) {
-            log.error(e.toString(), e);
+            e.printStackTrace();
         } finally {
             close(fos);
         }
@@ -183,7 +181,7 @@ public abstract class FileUtils {
                     try {
                         c.close();
                     } catch (IOException e) {
-                        log.error(e.toString(), e);
+                        e.printStackTrace();
                     }
                 }
             }

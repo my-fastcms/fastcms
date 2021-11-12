@@ -16,116 +16,55 @@
  */
 package com.fastcms.codegen;
 
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
-import com.baomidou.mybatisplus.generator.AutoGenerator;
-import com.baomidou.mybatisplus.generator.InjectionConfig;
-import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
-import com.baomidou.mybatisplus.generator.config.FileOutConfig;
-import com.baomidou.mybatisplus.generator.config.PackageConfig;
-import com.baomidou.mybatisplus.generator.config.StrategyConfig;
-import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
-import com.baomidou.mybatisplus.generator.config.po.TableInfo;
-import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.baomidou.mybatisplus.generator.config.GlobalConfig;
+import com.baomidou.mybatisplus.generator.config.TemplateConfig;
 
 /**
  * @author： wjun_java@163.com
- * @date： 2021/2/9
+ * @date： 2021/2/10
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-public abstract class SystemCodeGen extends AutoGenerator {
+public class SystemCodeGen extends AbstractCodeGen {
 
-    protected ConfigBuilder config;
-
-    abstract void setSystemGlobalConfig();
-    abstract void setSystemTemplateConfig();
-    abstract String getMapperXmlOutputDir();
-    abstract String getModelName();
-
-    protected StrategyConfig setStrategyConfig() {
-        // 策略配置
-        StrategyConfig strategy = new StrategyConfig();
-        strategy.setInclude("user", "role", "permission" , "config", "attachment", "user_tag", "user_openid", "payment_record", "plugin", "station");
-        strategy.setNaming(NamingStrategy.underline_to_camel);
-        strategy.setColumnNaming(NamingStrategy.underline_to_camel);
-        strategy.setEntityLombokModel(true);
-        strategy.setRestControllerStyle(true);
-        strategy.setControllerMappingHyphenStyle(true);
-        setStrategy(strategy);
-        return strategy;
+    public SystemCodeGen(){
+        super();
     }
 
-    protected SystemCodeGen() {
-        setTemplateEngine(new SystemCodegenTemplateEngine());
-
-        // 全局配置
-        setSystemGlobalConfig();
-
-        // 数据源配置
-        DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://localhost:3306/fastcms?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai");
-        // dsc.setSchemaName("public");
-        dsc.setDriverName("com.mysql.cj.jdbc.Driver");
-        dsc.setUsername("root");
-        dsc.setPassword("root");
-        setDataSource(dsc);
-
-        // 包配置
-        PackageConfig pc = new PackageConfig();
-
-        if(getModelName() != null) {
-            pc.setModuleName(getModelName());
-        }
-
-//        pc.setXml(null);
-        pc.setParent("com.fastcms");
-        setPackageInfo(pc);
-
-        if(getMapperXmlOutputDir() != null) {
-            String templatePath = "/templates/mapper.xml.ftl";
-            injectionConfig = new InjectionConfig() {
-                @Override
-                public void initMap() {}
-            };
-            List<FileOutConfig> focList = new ArrayList<>();
-
-            // 自定义配置会被优先输出
-            focList.add(new FileOutConfig(templatePath) {
-                @Override
-                public String outputFile(TableInfo tableInfo) {
-                    // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
-                    return getMapperXmlOutputDir() + "/src/main/resources/mapper/"+ tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
-                }
-            });
-            injectionConfig.setFileOutConfigList(focList);
-            setCfg(injectionConfig);
-        }
-
-        setSystemTemplateConfig();
-
-        StrategyConfig strategyConfig = setStrategyConfig();
-
-        config = new ConfigBuilder(getPackageInfo(), getDataSource(), strategyConfig, getTemplate(), getGlobalConfig());
-        if (null != injectionConfig) {
-            injectionConfig.setConfig(config);
-        }
-        setConfig(config);
-
-        getTemplateEngine().init(this.pretreatmentConfigBuilder(config)).mkdirs();
+    @Override
+    void setSystemGlobalConfig() {
+        GlobalConfig gc = new GlobalConfig();
+        String projectPath = System.getProperty("user.dir") + "/service";
+        gc.setOutputDir(projectPath + "/src/main/java");
+        gc.setAuthor("wjun_java@163.com");
+        gc.setOpen(false);
+        setGlobalConfig(gc);
     }
 
-    public void genModel() throws Exception {
-        SystemCodegenTemplateEngine systemCodegenTemplateEngine = (SystemCodegenTemplateEngine) getTemplateEngine();
-        systemCodegenTemplateEngine.genModel();
+    @Override
+    void setSystemTemplateConfig() {
+        // 配置模板
+        TemplateConfig templateConfig = new TemplateConfig();
+        templateConfig.setController(null);
+        templateConfig.setXml(null);
+        setTemplate(templateConfig);
     }
 
-    public void genService() throws Exception {
-        SystemCodegenTemplateEngine systemCodegenTemplateEngine = (SystemCodegenTemplateEngine) getTemplateEngine();
-        systemCodegenTemplateEngine.genService();
+    @Override
+    String getMapperXmlOutputDir() {
+        return System.getProperty("user.dir") + "/service";
+    }
+
+    @Override
+    protected String getModelName() {
+        return null;
+    }
+
+    public static void main(String[] args) throws Exception {
+        SystemCodeGen systemServiceGen = new SystemCodeGen();
+        systemServiceGen.genModel();
+        systemServiceGen.genService();
     }
 
 }

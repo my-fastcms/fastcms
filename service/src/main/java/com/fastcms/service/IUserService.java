@@ -1,15 +1,12 @@
 package com.fastcms.service;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.entity.User;
 import com.fastcms.entity.UserTag;
-import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -83,7 +80,6 @@ public interface IUserService extends IService<User> {
 
     void saveGroupUser(AddGroupUserParam addGroupUserParam) throws Exception;
 
-    @Data
     class AddGroupUserParam implements Serializable {
         @NotBlank(message = "手机号码不能为空")
         private String phone;
@@ -93,6 +89,38 @@ public interface IUserService extends IService<User> {
         private Long parentId;
         @NotNull(message = "职位不能为空")
         private Long tagId;
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public void setPhone(String phone) {
+            this.phone = phone;
+        }
+
+        public String getUserName() {
+            return userName;
+        }
+
+        public void setUserName(String userName) {
+            this.userName = userName;
+        }
+
+        public Long getParentId() {
+            return parentId;
+        }
+
+        public void setParentId(Long parentId) {
+            this.parentId = parentId;
+        }
+
+        public Long getTagId() {
+            return tagId;
+        }
+
+        public void setTagId(Long tagId) {
+            this.tagId = tagId;
+        }
     }
 
 }

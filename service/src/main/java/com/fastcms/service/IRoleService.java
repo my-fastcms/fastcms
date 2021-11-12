@@ -42,7 +42,7 @@ public interface IRoleService extends IService<Role> {
      * @param userId
      * @return
      */
-    List<RoleMapper.UserRole> getRoleListByUserId(Long userId);
+    List<UserRole> getRoleListByUserId(Long userId);
 
     /**
      * 获取用户分配角色集合
@@ -50,5 +50,17 @@ public interface IRoleService extends IService<Role> {
      * @return
      */
     List<Role> getUserRoleList(Long userId);
+
+    class UserRole extends Role {
+        private Long userId;
+
+        public Long getUserId() {
+            return userId;
+        }
+
+        public void setUserId(Long userId) {
+            this.userId = userId;
+        }
+    }
 
 }

@@ -16,7 +16,6 @@
  */
 package com.fastcms.core.template;
 
-import lombok.extern.slf4j.Slf4j;
 import org.pf4j.util.FileUtils;
 
 import java.io.IOException;
@@ -33,7 +32,6 @@ import java.util.Properties;
  * @modifiedBy：
  * @version: 1.0
  */
-@Slf4j
 public class DefaultTemplateFinder implements TemplateFinder {
 
 	public static final String PROPERTIES_FILE_NAME = "_template.properties";
@@ -62,7 +60,6 @@ public class DefaultTemplateFinder implements TemplateFinder {
 
 		Properties properties = new Properties();
 		try {
-			log.debug("Lookup template descriptor in '{}'", propertiesPath);
 			if (Files.notExists(propertiesPath)) {
 				return null;
 			}

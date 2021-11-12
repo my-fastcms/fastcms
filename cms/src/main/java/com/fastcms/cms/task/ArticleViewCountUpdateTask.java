@@ -17,7 +17,6 @@
 package com.fastcms.cms.task;
 
 import com.fastcms.cms.service.IArticleService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -35,7 +34,6 @@ import java.util.concurrent.atomic.AtomicLong;
  * @modifiedBy：
  * @version: 1.0
  */
-@Slf4j
 @Component
 @EnableScheduling
 public class ArticleViewCountUpdateTask {

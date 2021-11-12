@@ -16,7 +16,6 @@
  */
 package com.fastcms.core.directive;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,7 +25,6 @@ import org.springframework.stereotype.Component;
  * @modifiedBy：
  * @version: 1.0
  */
-@Slf4j
 @Component("adminPageTag")
 public class PaginationDirective extends BasePaginationDirective {
 

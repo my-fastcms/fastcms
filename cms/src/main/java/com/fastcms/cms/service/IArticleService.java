@@ -23,7 +23,6 @@ import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.entity.ArticleCategory;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.utils.JsoupUtils;
-import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -82,7 +81,6 @@ public interface IArticleService extends IService<Article> {
      */
     void updateViewCount(Long id, Long count);
 
-    @Data
     class ArticleVo implements Serializable {
         Long id;
         String title;
@@ -94,18 +92,118 @@ public interface IArticleService extends IService<Article> {
         String thumbnail;
         List<ArticleCategory> categoryList;
 
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public Integer getViewCount() {
+            return viewCount;
+        }
+
+        public void setViewCount(Integer viewCount) {
+            this.viewCount = viewCount;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public LocalDateTime getCreated() {
+            return created;
+        }
+
+        public void setCreated(LocalDateTime created) {
+            this.created = created;
+        }
+
+        public String getAuthor() {
+            return author;
+        }
+
+        public void setAuthor(String author) {
+            this.author = author;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public String getThumbnail() {
+            return thumbnail;
+        }
+
+        public void setThumbnail(String thumbnail) {
+            this.thumbnail = thumbnail;
+        }
+
+        public List<ArticleCategory> getCategoryList() {
+            return categoryList;
+        }
+
+        public void setCategoryList(List<ArticleCategory> categoryList) {
+            this.categoryList = categoryList;
+        }
+
         public String getUrl() {
             return "/a/" + getId();
         }
+
     }
 
-    @Data
     class ArticleInfoVo extends Article {
         String author;
         String headImg;
         String headImgUrl;
         String contentHtmlView;
         List<ArticleCategory> categoryList;
+
+        public String getAuthor() {
+            return author;
+        }
+
+        public void setAuthor(String author) {
+            this.author = author;
+        }
+
+        public String getHeadImg() {
+            return headImg;
+        }
+
+        public void setHeadImg(String headImg) {
+            this.headImg = headImg;
+        }
+
+        public void setHeadImgUrl(String headImgUrl) {
+            this.headImgUrl = headImgUrl;
+        }
+
+        public void setContentHtmlView(String contentHtmlView) {
+            this.contentHtmlView = contentHtmlView;
+        }
+
+        public List<ArticleCategory> getCategoryList() {
+            return categoryList;
+        }
+
+        public void setCategoryList(List<ArticleCategory> categoryList) {
+            this.categoryList = categoryList;
+        }
 
         public String getHeadImgUrl() {
             return FastcmsConstants.STATIC_RESOURCE_PATH + getHeadImg();

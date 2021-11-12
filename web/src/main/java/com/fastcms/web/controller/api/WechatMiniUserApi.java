@@ -26,7 +26,6 @@ import com.fastcms.common.utils.StrUtils;
 import com.fastcms.entity.User;
 import com.fastcms.entity.UserOpenid;
 import com.fastcms.service.IUserService;
-import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.session.WxSession;
 import me.chanjar.weixin.common.session.WxSessionManager;
 import org.apache.commons.lang.StringUtils;
@@ -44,7 +43,6 @@ import java.util.Map;
  * @modifiedBy：
  * @version: 1.0
  */
-@Slf4j
 @RestController
 @RequestMapping(FastcmsConstants.API_MAPPING + "/wechat/user")
 public class WechatMiniUserApi {

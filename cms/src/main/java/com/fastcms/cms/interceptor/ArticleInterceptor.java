@@ -16,7 +16,8 @@
  */
 package com.fastcms.cms.interceptor;
 
-import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,8 +30,9 @@ import javax.servlet.http.HttpServletResponse;
  * @modifiedBy：
  * @version: 1.0
  */
-@Slf4j
 public class ArticleInterceptor implements HandlerInterceptor {
+
+	private Log log = LogFactory.getLog(ArticleInterceptor.class.getName());
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

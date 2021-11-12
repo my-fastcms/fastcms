@@ -16,9 +16,6 @@
  */
 package com.fastcms.core.processor;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
 import java.io.Serializable;
 
 /**
@@ -28,8 +25,6 @@ import java.io.Serializable;
  * @modifiedBy：
  * @version: 1.0
  */
-@Data
-@AllArgsConstructor
 public class OrderPayAmount implements Serializable {
 
 	/**
@@ -40,4 +35,19 @@ public class OrderPayAmount implements Serializable {
 	String type;
 	Long businessId;
 
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public Long getBusinessId() {
+		return businessId;
+	}
+
+	public void setBusinessId(Long businessId) {
+		this.businessId = businessId;
+	}
 }

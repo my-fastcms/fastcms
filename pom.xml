@@ -61,7 +61,6 @@
 		<module>codegen</module>
 		<module>web</module>
 		<module>core</module>
-		<module>model</module>
 		<module>service</module>
 		<module>plugins</module>
         <module>common</module>
@@ -111,11 +110,6 @@
 			<dependency>
 				<groupId>com.fastcms</groupId>
 				<artifactId>fastcms-core</artifactId>
-				<version>${revision}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.fastcms</groupId>
-				<artifactId>fastcms-model</artifactId>
 				<version>${revision}</version>
 			</dependency>
 			<dependency>
@@ -182,11 +176,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
 		</dependency>
 
 	</dependencies>

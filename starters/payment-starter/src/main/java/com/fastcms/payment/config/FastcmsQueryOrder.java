@@ -17,7 +17,6 @@
 package com.fastcms.payment.config;
 
 import com.egzosn.pay.common.bean.BillType;
-import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -30,7 +29,6 @@ import java.util.Date;
  * @modifiedBy：
  * @version: 1.0
  */
-@Data
 public class FastcmsQueryOrder implements Serializable {
 
     /**
@@ -79,4 +77,83 @@ public class FastcmsQueryOrder implements Serializable {
      */
     private String wayTrade;
 
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
+    }
+
+    public String getTradeNo() {
+        return tradeNo;
+    }
+
+    public void setTradeNo(String tradeNo) {
+        this.tradeNo = tradeNo;
+    }
+
+    public String getOutTradeNo() {
+        return outTradeNo;
+    }
+
+    public void setOutTradeNo(String outTradeNo) {
+        this.outTradeNo = outTradeNo;
+    }
+
+    public BigDecimal getRefundAmount() {
+        return refundAmount;
+    }
+
+    public void setRefundAmount(BigDecimal refundAmount) {
+        this.refundAmount = refundAmount;
+    }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public Date getBillDate() {
+        return billDate;
+    }
+
+    public void setBillDate(Date billDate) {
+        this.billDate = billDate;
+    }
+
+    public BillType getBillType() {
+        return billType;
+    }
+
+    public void setBillType(BillType billType) {
+        this.billType = billType;
+    }
+
+    public Object getTradeNoOrBillDate() {
+        return tradeNoOrBillDate;
+    }
+
+    public void setTradeNoOrBillDate(Object tradeNoOrBillDate) {
+        this.tradeNoOrBillDate = tradeNoOrBillDate;
+    }
+
+    public String getOutTradeNoBillType() {
+        return outTradeNoBillType;
+    }
+
+    public void setOutTradeNoBillType(String outTradeNoBillType) {
+        this.outTradeNoBillType = outTradeNoBillType;
+    }
+
+    public String getWayTrade() {
+        return wayTrade;
+    }
+
+    public void setWayTrade(String wayTrade) {
+        this.wayTrade = wayTrade;
+    }
 }

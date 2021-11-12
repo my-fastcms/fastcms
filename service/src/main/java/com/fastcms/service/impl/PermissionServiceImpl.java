@@ -57,7 +57,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     @Override
     @Cacheable(value = CacheConfig.ROLE_PERMISSION_CACHE_NAME, key = "#roleId")
     public List<PermissionNode> getPermissionByRoleId(Long roleId) {
-        List<PermissionMapper.RolePermission> rolePermissionList = getBaseMapper().getPermissionByRoleId(roleId);
+        List<RolePermission> rolePermissionList = getBaseMapper().getPermissionByRoleId(roleId);
         return null;
     }
 

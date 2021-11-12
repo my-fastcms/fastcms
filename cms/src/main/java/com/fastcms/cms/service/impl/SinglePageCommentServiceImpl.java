@@ -2,10 +2,10 @@ package com.fastcms.cms.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fastcms.cms.entity.SinglePageComment;
 import com.fastcms.cms.mapper.SinglePageCommentMapper;
 import com.fastcms.cms.service.ISinglePageCommentService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 public class SinglePageCommentServiceImpl extends ServiceImpl<SinglePageCommentMapper, SinglePageComment> implements ISinglePageCommentService {
 
 	@Override
-	public Page<SinglePageCommentMapper.PageCommentVo> pageSinglePageComment(Page pageParam, QueryWrapper queryWrapper) {
+	public Page<PageCommentVo> pageSinglePageComment(Page pageParam, QueryWrapper queryWrapper) {
 		return getBaseMapper().pageSinglePageComment(pageParam, queryWrapper);
 	}
 }

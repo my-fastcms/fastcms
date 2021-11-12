@@ -2,8 +2,6 @@ package com.fastcms.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.entity.Permission;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 
 import java.io.Serializable;
 import java.util.List;
@@ -51,8 +49,6 @@ public interface IPermissionService extends IService<Permission> {
      */
     void deleteRolePermissionByPermission(List<Permission> permissionList);
 
-
-    @Data
     class PermissionNode implements Serializable {
         private Long id;
         private Long parentId;
@@ -78,8 +74,6 @@ public interface IPermissionService extends IService<Permission> {
             this.children = children;
         }
 
-        @Data
-        @AllArgsConstructor
         public static class Meta implements Serializable {
             private String title;
             private String icon;
@@ -88,6 +82,156 @@ public interface IPermissionService extends IService<Permission> {
             private Boolean isAffix;
             private Boolean isIframe;
             private List<String> auth;
+
+            public Meta(String title, String icon, Boolean isHide, Boolean isKeepAlive, Boolean isAffix, Boolean isIframe, List<String> auth) {
+                this.title = title;
+                this.icon = icon;
+                this.isHide = isHide;
+                this.isKeepAlive = isKeepAlive;
+                this.isAffix = isAffix;
+                this.isIframe = isIframe;
+                this.auth = auth;
+            }
+
+            public String getTitle() {
+                return title;
+            }
+
+            public void setTitle(String title) {
+                this.title = title;
+            }
+
+            public String getIcon() {
+                return icon;
+            }
+
+            public void setIcon(String icon) {
+                this.icon = icon;
+            }
+
+            public Boolean getHide() {
+                return isHide;
+            }
+
+            public void setHide(Boolean hide) {
+                isHide = hide;
+            }
+
+            public Boolean getKeepAlive() {
+                return isKeepAlive;
+            }
+
+            public void setKeepAlive(Boolean keepAlive) {
+                isKeepAlive = keepAlive;
+            }
+
+            public Boolean getAffix() {
+                return isAffix;
+            }
+
+            public void setAffix(Boolean affix) {
+                isAffix = affix;
+            }
+
+            public Boolean getIframe() {
+                return isIframe;
+            }
+
+            public void setIframe(Boolean iframe) {
+                isIframe = iframe;
+            }
+
+            public List<String> getAuth() {
+                return auth;
+            }
+
+            public void setAuth(List<String> auth) {
+                this.auth = auth;
+            }
+        }
+
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+
+        public Long getParentId() {
+            return parentId;
+        }
+
+        public void setParentId(Long parentId) {
+            this.parentId = parentId;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public void setPath(String path) {
+            this.path = path;
+        }
+
+        public String getComponent() {
+            return component;
+        }
+
+        public void setComponent(String component) {
+            this.component = component;
+        }
+
+        public Boolean getLink() {
+            return isLink;
+        }
+
+        public void setLink(Boolean link) {
+            isLink = link;
+        }
+
+        public Integer getMenuSort() {
+            return menuSort;
+        }
+
+        public void setMenuSort(Integer menuSort) {
+            this.menuSort = menuSort;
+        }
+
+        public Meta getMeta() {
+            return meta;
+        }
+
+        public void setMeta(Meta meta) {
+            this.meta = meta;
+        }
+
+        public List<PermissionNode> getChildren() {
+            return children;
+        }
+
+        public void setChildren(List<PermissionNode> children) {
+            this.children = children;
+        }
+    }
+
+    class RolePermission extends Permission implements Serializable {
+        private Long roleId;
+
+        public Long getRoleId() {
+            return roleId;
+        }
+
+        public void setRoleId(Long roleId) {
+            this.roleId = roleId;
         }
     }
 

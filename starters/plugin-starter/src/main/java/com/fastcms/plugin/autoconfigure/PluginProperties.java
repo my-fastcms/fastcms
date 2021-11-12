@@ -1,6 +1,5 @@
 package com.fastcms.plugin.autoconfigure;
 
-import lombok.Data;
 import org.pf4j.RuntimeMode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -11,7 +10,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @modifiedBy：
  * @version: 1.0
  */
-@Data
 @ConfigurationProperties(prefix = PluginProperties.PLUGIN_PREFIX)
 public class PluginProperties {
 
@@ -21,4 +19,19 @@ public class PluginProperties {
 
     private String path;
 
+    public String getMode() {
+        return mode;
+    }
+
+    public void setMode(String mode) {
+        this.mode = mode;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
 }

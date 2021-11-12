@@ -44,7 +44,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     }
 
     @Override
-    public List<RoleMapper.UserRole> getRoleListByUserId(Long userId) {
+    public List<UserRole> getRoleListByUserId(Long userId) {
         return getBaseMapper().getRoleListByUserId(userId);
     }
 

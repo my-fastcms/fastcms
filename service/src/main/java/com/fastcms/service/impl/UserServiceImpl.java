@@ -11,7 +11,6 @@ import com.fastcms.entity.UserTag;
 import com.fastcms.mapper.UserMapper;
 import com.fastcms.service.IUserOpenidService;
 import com.fastcms.service.IUserService;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +29,6 @@ import java.util.Objects;
  * @author wjun_java@163.com
  * @since 2021-02-14
  */
-@Slf4j
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
@@ -63,17 +61,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             throw new Exception("请输入旧密码");
         }
 
-        if(StringUtils.isBlank(userParam.getNewPassword())) {
-            throw new Exception("请输入新密码");
-        }
-
-        if(StringUtils.isBlank(userParam.getNewConfirmPassword())) {
-            throw new Exception("请再次输入新密码");
-        }
-
-        if(!userParam.getNewPassword().equals(userParam.getNewConfirmPassword())) {
-            throw new Exception("两次新密码输入不一致");
-        }
+//        if(StringUtils.isBlank(userParam.getNewPassword())) {
+//            throw new Exception("请输入新密码");
+//        }
+//
+//        if(StringUtils.isBlank(userParam.getNewConfirmPassword())) {
+//            throw new Exception("请再次输入新密码");
+//        }
+//
+//        if(!userParam.getNewPassword().equals(userParam.getNewConfirmPassword())) {
+//            throw new Exception("两次新密码输入不一致");
+//        }
 
 //        final String result = PasswordUtils.getMd5Password(user.getSalt(), userParam.getPassword());
 //        if(!result.equals(user.getPassword())) {
@@ -118,7 +116,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             userOpenid.setUserId(user.getId());
             userOpenid.setType(type);
             userOpenid.setValue(openid);
-            userOpenid.setUnionId(unionId);
+//            userOpenid.setUnionId(unionId);
             userOpenidService.save(userOpenid);
         }else {
             user = getById(userOpenid.getUserId());
@@ -143,7 +141,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             userOpenid.setUserId(user.getId());
             userOpenid.setType(type);
             userOpenid.setValue(openid);
-            userOpenid.setUnionId(unionId);
+//            userOpenid.setUnionId(unionId);
             userOpenidService.save(userOpenid);
         }else {
             user = getById(userOpenid.getUserId());

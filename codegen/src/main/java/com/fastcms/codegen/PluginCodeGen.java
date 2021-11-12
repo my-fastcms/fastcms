@@ -27,7 +27,7 @@ import com.baomidou.mybatisplus.generator.config.TemplateConfig;
  * @modifiedBy：
  * @version: 1.0
  */
-public abstract class PluginCodeGen extends SystemCodeGen {
+public abstract class PluginCodeGen extends AbstractCodeGen {
 
     protected static final String PLUGIN_DIR = "./plugins/";
 

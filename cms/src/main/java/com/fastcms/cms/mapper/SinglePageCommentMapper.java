@@ -5,11 +5,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.cms.entity.SinglePageComment;
-import lombok.Data;
+import com.fastcms.cms.service.ISinglePageCommentService;
 import org.apache.ibatis.annotations.Param;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -21,16 +18,6 @@ import java.time.LocalDateTime;
  */
 public interface SinglePageCommentMapper extends BaseMapper<SinglePageComment> {
 
-	Page<SinglePageCommentMapper.PageCommentVo> pageSinglePageComment(Page pageParam, @Param(Constants.WRAPPER) QueryWrapper queryWrapper);
-
-	@Data
-	class PageCommentVo implements Serializable {
-		Long id;
-		String pageTitle;
-		String author;
-		String content;
-		String parentComment;
-		LocalDateTime created;
-	}
+	Page<ISinglePageCommentService.PageCommentVo> pageSinglePageComment(Page pageParam, @Param(Constants.WRAPPER) QueryWrapper queryWrapper);
 
 }

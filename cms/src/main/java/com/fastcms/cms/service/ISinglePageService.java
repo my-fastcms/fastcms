@@ -3,10 +3,8 @@ package com.fastcms.cms.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.fastcms.core.mybatis.DataPermission;
 import com.fastcms.cms.entity.SinglePage;
-import lombok.Data;
-
+import com.fastcms.core.mybatis.DataPermission;
 /**
  * <p>
  * 单页表 服务类
@@ -33,9 +31,16 @@ public interface ISinglePageService extends IService<SinglePage> {
 	@DataPermission("p")
 	Page<ISinglePageService.SinglePageVo> pageSinglePage(Page pageParam, QueryWrapper queryWrapper);
 
-	@Data
 	class SinglePageVo extends SinglePage {
 		String createdUser;
+
+		public String getCreatedUser() {
+			return createdUser;
+		}
+
+		public void setCreatedUser(String createdUser) {
+			this.createdUser = createdUser;
+		}
 	}
 
 }

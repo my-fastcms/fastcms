@@ -19,7 +19,6 @@ package com.fastcms.cms.directive;
 import com.fastcms.cms.service.IArticleService;
 import com.fastcms.core.directive.BaseDirective;
 import freemarker.core.Environment;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +31,6 @@ import java.util.Map;
  * @modifiedBy：
  * @version: 1.0
  */
-@Slf4j
 @Component("articleTag")
 public class ArticleDirective extends BaseDirective {
 

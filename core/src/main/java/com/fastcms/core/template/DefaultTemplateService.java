@@ -21,7 +21,6 @@ import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.core.utils.FileUtils;
 import com.fastcms.entity.Config;
 import com.fastcms.service.IConfigService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -46,7 +45,6 @@ import java.util.stream.Stream;
  * @modifiedBy：
  * @version: 1.0
  */
-@Slf4j
 @Service
 public class DefaultTemplateService implements TemplateService, InitializingBean {
 
@@ -103,7 +101,7 @@ public class DefaultTemplateService implements TemplateService, InitializingBean
                 }
             }
         } catch (IOException e) {
-            log.error(e.getMessage());
+            e.printStackTrace();
         }
 
     }

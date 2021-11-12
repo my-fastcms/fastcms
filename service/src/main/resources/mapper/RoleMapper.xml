@@ -13,7 +13,7 @@
         delete from role_permission where role_id = #{roleId}
     </delete>
 
-    <select id="getRoleListByUserId" resultType="com.fastcms.mapper.RoleMapper$UserRole">
+    <select id="getRoleListByUserId" resultType="com.fastcms.service.IRoleService$UserRole">
         SELECT r.*, urs.user_id FROM role r LEFT JOIN (select * from user_role ur where ur.user_id = #{userId}) urs on r.id = urs.role_id
     </select>
 

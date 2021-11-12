@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.cms.entity.ArticleCategory;
-import lombok.Data;
 
 import java.util.List;
 
@@ -60,9 +59,16 @@ public interface IArticleCategoryService extends IService<ArticleCategory> {
 	 */
 	Page<IArticleCategoryService.ArticleCategoryVo> pageArticleCategory(Page pageParam, QueryWrapper queryWrapper);
 
-	@Data
 	class ArticleCategoryVo extends ArticleCategory {
 		String createdUser;
+
+		public String getCreatedUser() {
+			return createdUser;
+		}
+
+		public void setCreatedUser(String createdUser) {
+			this.createdUser = createdUser;
+		}
 	}
 
 }
