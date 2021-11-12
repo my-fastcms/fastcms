@@ -13,8 +13,8 @@ api.push({
 api[1].list.push({
     alias: 'AdminController',
     order: '1',
-    link: '登录授权接口',
-    desc: '登录授权接口',
+    link: '登录授权',
+    desc: '登录授权',
     list: []
 })
 api[1].list[0].list.push({
@@ -32,33 +32,33 @@ api[1].list[0].list.push({
 api[1].list.push({
     alias: 'AttachmentController',
     order: '2',
-    link: '',
-    desc: '',
+    link: '附件管理',
+    desc: '附件管理',
     list: []
 })
 api[1].list[1].list.push({
     order: '1',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/list',
-    desc: '',
+    desc: '附件列表',
 });
 api[1].list[1].list.push({
     order: '2',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/doUpload',
-    desc: '',
+    desc: '上传附件',
 });
 api[1].list[1].list.push({
     order: '3',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/detail',
-    desc: '',
+    desc: '附件明细',
 });
 api[1].list[1].list.push({
     order: '4',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/doDelete',
-    desc: '',
+    desc: '删除附件',
 });
 api[1].list[1].list.push({
     order: '5',
@@ -138,33 +138,33 @@ api[1].list[4].list.push({
 api[1].list.push({
     alias: 'RoleController',
     order: '6',
-    link: '',
-    desc: '',
+    link: '角色管理',
+    desc: '角色管理',
     list: []
 })
 api[1].list[5].list.push({
     order: '1',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/role/list',
-    desc: '',
+    desc: '角色列表',
 });
 api[1].list[5].list.push({
     order: '2',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/role/save',
-    desc: '',
+    desc: '保存角色',
 });
 api[1].list[5].list.push({
     order: '3',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/role/getPermissionList',
-    desc: '',
+    desc: '获取角色权限列表',
 });
 api[1].list[5].list.push({
     order: '4',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/role/saveRolePermission',
-    desc: '',
+    desc: '保存角色权限',
 });
 api[1].list.push({
     alias: 'SetupController',
@@ -194,33 +194,33 @@ api[1].list[6].list.push({
 api[1].list.push({
     alias: 'UserController',
     order: '8',
-    link: '',
-    desc: '',
+    link: '用户管理',
+    desc: '用户管理',
     list: []
 })
 api[1].list[7].list.push({
     order: '1',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/user/list',
-    desc: '',
+    desc: '用户列表',
 });
 api[1].list[7].list.push({
     order: '2',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/user/getMenus',
-    desc: '',
+    desc: '获取用户菜单',
 });
 api[1].list[7].list.push({
     order: '3',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/user/doSave',
-    desc: '',
+    desc: '保存用户信息',
 });
 api[1].list[7].list.push({
     order: '4',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/user/doEdit',
-    desc: '',
+    desc: '编辑用户信息',
 });
 api[1].list[7].list.push({
     order: '5',
@@ -350,15 +350,15 @@ api.push({
 api[2].list.push({
     alias: 'ArticleController',
     order: '1',
-    link: '文章管理接口',
-    desc: '文章管理接口',
+    link: '文章管理',
+    desc: '文章管理',
     list: []
 })
 api[2].list[0].list.push({
     order: '1',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/article/list',
-    desc: '',
+    desc: '文章列表',
 });
 api[2].list[0].list.push({
     order: '2',

@@ -18,8 +18,10 @@ package com.fastcms.web.controller.admin;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.utils.FileUtils;
 import com.fastcms.entity.Attachment;
@@ -38,6 +40,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
+ * 附件管理
  * @author： wjun_java@163.com
  * @date： 2021/2/19
  * @description：
@@ -51,16 +54,24 @@ public class AttachmentController {
     @Autowired
     private IAttachmentService attachmentService;
 
+    /**
+     * 附件列表
+     * @param page         页码
+     * @param pageSize     每页条数
+     * @return
+     */
     @RequestMapping("list")
-    public Object list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-                       @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize){
-        LambdaQueryWrapper<Attachment> queryWrapper = new QueryWrapper().lambda();
-        queryWrapper.orderByDesc(Attachment::getCreated);
-        Page pageParam = new Page<>(page, pageSize);
-        Page<Attachment> pageData = attachmentService.page(pageParam, queryWrapper);
+    public RestResult<Page<Attachment>> list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
+                                             @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
+        Page<Attachment> pageData = attachmentService.page(new Page<>(page, pageSize), Wrappers.<Attachment>lambdaQuery().orderByDesc(Attachment::getCreated));
         return RestResultUtils.success(pageData);
     }
 
+    /**
+     * 上传附件
+     * @param files     待上传文件
+     * @return
+     */
     @PostMapping("doUpload")
     @ExceptionHandler(value = MultipartException.class)
     public Object doUpload(@RequestParam("files") MultipartFile files[]) {
@@ -102,10 +113,18 @@ public class AttachmentController {
 
     }
 
+    /**
+     * 附件明细
+     * @param id    附件id
+     * @return
+     */
     @RequestMapping("detail")
     public Object detail(@RequestParam(name = "id") Long id) {
 
         Attachment attachment = attachmentService.getById(id);
+        if(attachment == null) {
+            return RestResultUtils.failed("附件不存在");
+        }
 
         File attachmentFile = new File(FileUtils.getUploadDir(), attachment.getFilePath());
 
@@ -124,6 +143,11 @@ public class AttachmentController {
         return RestResultUtils.success(attachment);
     }
 
+    /**
+     * 删除附件
+     * @param id    附件id
+     * @return
+     */
     @PostMapping("doDelete")
     public Object doDelete(@RequestParam(name = "id") Long id) {
         Attachment attachment = attachmentService.getById(id);

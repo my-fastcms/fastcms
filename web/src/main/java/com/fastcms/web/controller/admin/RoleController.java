@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * 角色管理
  * @author： wjun_java@163.com
  * @date： 2021/2/14
  * @description：
@@ -48,6 +49,13 @@ public class RoleController {
     @Autowired
     private IPermissionService permissionService;
 
+    /**
+     * 角色列表
+     * @param page
+     * @param pageSize
+     * @param roleName
+     * @return
+     */
     @GetMapping("list")
     public Object list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
                        @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
@@ -59,6 +67,11 @@ public class RoleController {
         return RestResultUtils.success(pageData);
     }
 
+    /**
+     * 保存角色
+     * @param role
+     * @return
+     */
     @PostMapping("save")
     public Object save(@Validated Role role) {
 
@@ -70,11 +83,22 @@ public class RoleController {
         return RestResultUtils.success();
     }
 
+    /**
+     * 获取角色权限列表
+     * @param roleId    角色id
+     * @return
+     */
     @GetMapping("getPermissionList")
     public Object getPermissionList(@RequestParam(name = "roleId") Long roleId) {
         return RestResultUtils.success(permissionService.getPermissionByRoleId(roleId));
     }
 
+    /**
+     * 保存角色权限
+     * @param roleId                角色id
+     * @param permissionIdList      权限id集合
+     * @return
+     */
     @PostMapping("saveRolePermission")
     public Object saveRolePermission(@RequestParam("roleId") Long roleId, @RequestParam("permissionIdList[]") List<Long> permissionIdList) {
         if(roleId != null && Objects.equals(roleId, FastcmsConstants.ADMIN_ROLE_ID)) {

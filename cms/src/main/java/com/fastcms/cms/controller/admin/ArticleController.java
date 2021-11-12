@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 文章管理接口
+ * 文章管理
  * @author： wjun_java@163.com
  * @date： 2021/4/22
  * @description：
@@ -55,6 +55,16 @@ public class ArticleController {
     @Autowired
     private IArticleCommentService articleCommentService;
 
+    /**
+     * 文章列表
+     * @param page
+     * @param pageSize
+     * @param title
+     * @param status
+     * @param categoryId
+     * @param tagId
+     * @return
+     */
     @RequestMapping("list")
     public Object list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
                        @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,

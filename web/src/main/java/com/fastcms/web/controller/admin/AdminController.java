@@ -37,7 +37,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 登录授权接口
+ * 登录授权
  * @author： wjun_java@163.com
  * @date： 2021/2/14
  * @description：
@@ -61,8 +61,8 @@ public class AdminController {
 
     /**
      * 登录接口
-     * @param username  账号
-     * @param password  密码
+     * @param username  账号|admin
+     * @param password  密码|1
      * @param code      验证码
      * @param codeKey   验证码key
      * @param request   请求
@@ -114,6 +114,7 @@ public class AdminController {
         cacheManager.getCache(WEB_LOGIN_CODE_CACHE_NAME).put(key, verCode);
 
         Map<String, String> result = new HashMap<>();
+        result.put("verCode", verCode);
         result.put("codeUuid", key);
         result.put("image", specCaptcha.toBase64());
         return RestResultUtils.success(result);

@@ -26,28 +26,61 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 用户id
+     */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+    /**
+     * 登录账号
+     */
     @NotBlank(message = "登录账号不能为空")
     private String userName;
 
+    /**
+     * 昵称
+     */
     private String nickName;
 
+    /**
+     * 邮件
+     */
     private String email;
 
+    /**
+     * 头像
+     */
     private String headImg;
 
+    /**
+     * 手机
+     */
     private String mobile;
 
+    /**
+     * 地址
+     */
     private String address;
 
+    /**
+     * 企业
+     */
     private String company;
 
+    /**
+     * 来源
+     */
     private String source;
 
+    /**
+     * 密码
+     */
     private String password;
 
+    /**
+     * 盐值
+     */
     private String salt;
 
     /**

@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * 用户管理
  * @author： wjun_java@163.com
  * @date： 2021/2/14
  * @description：
@@ -59,6 +60,14 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * 用户列表
+     * @param page      页码
+     * @param pageSize  每页多少条
+     * @param phone     手机号码
+     * @param status    状态
+     * @return
+     */
     @GetMapping("list")
     public Object list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
                        @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
@@ -75,11 +84,20 @@ public class UserController {
         return RestResultUtils.success(pageData);
     }
 
+    /**
+     * 获取用户菜单
+     * @return
+     */
     @GetMapping("getMenus")
     public Object getMenus() {
         return RestResultUtils.success(permissionService.getPermissions());
     }
 
+    /**
+     * 保存用户信息
+     * @param user
+     * @return
+     */
     @PostMapping("doSave")
     public Object doSave(@Validated User user) {
 
@@ -95,6 +113,11 @@ public class UserController {
         return RestResultUtils.success();
     }
 
+    /**
+     * 编辑用户信息
+     * @param user
+     * @return
+     */
     @PostMapping("doEdit")
     public Object doEdit(User user) {
         userService.saveOrUpdate(user);

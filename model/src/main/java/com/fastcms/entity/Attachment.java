@@ -11,10 +11,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * <p>
- *  附件表
- * </p>
- *
+ * 附件
  * @author wjun_java@163.com
  * @since 2021-02-19
  */
@@ -24,9 +21,15 @@ public class Attachment implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 附件id
+     */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+    /**
+     * 上传者
+     */
     @TableField(fill = FieldFill.INSERT)
     private Long userId;
 
@@ -35,16 +38,31 @@ public class Attachment implements Serializable {
      */
     private String fileName;
 
+    /**
+     * 文件描述
+     */
     private String fileDesc;
 
+    /**
+     * 文件路径
+     */
     private String filePath;
 
+    /**
+     * 文件大小
+     */
     @TableField(exist = false)
     private String fileSize;
 
+    /**
+     * @ignore
+     */
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime created;
 
+    /**
+     * @ignore
+     */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updated;
 

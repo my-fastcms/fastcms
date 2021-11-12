@@ -27,10 +27,19 @@ import java.io.Serializable;
  */
 public class RestResult<T> implements Serializable {
 
+    /**
+     * 响应状态码
+     */
     private int code;
 
+    /**
+     * 错误提示消息，正常返回数据则为空
+     */
     private String message;
 
+    /**
+     * 响应数据
+     */
     private T data;
 
     public RestResult() {
