@@ -17,24 +17,22 @@
 package com.fastcms.web.controller.admin;
 
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.model.Captcha;
+import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.StrUtils;
-import com.fastcms.web.security.JwtTokenManager;
+import com.fastcms.entity.User;
+import com.fastcms.web.security.AccessException;
+import com.fastcms.web.security.AuthManager;
 import com.wf.captcha.SpecCaptcha;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.rmi.AccessException;
-import java.util.HashMap;
-import java.util.Map;
+
+import static com.fastcms.common.constants.FastcmsConstants.WEB_LOGIN_CODE_CACHE_NAME;
 
 /**
  * 登录授权
@@ -49,75 +47,47 @@ import java.util.Map;
 public class AdminController {
 
     @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private JwtTokenManager tokenManager;
-
-    @Autowired
     private CacheManager cacheManager;
 
-    private static final String WEB_LOGIN_CODE_CACHE_NAME = "web_login_code";
+    @Autowired
+    private AuthManager authManager;
 
     /**
-     * 登录接口
+     * 登录
      * @param username  账号|admin
      * @param password  密码|1
      * @param code      验证码
      * @param codeKey   验证码key
      * @param request   请求
      * @param response  响应
-     * @return
-     * @throws AccessException
+     * @return token
      */
     @PostMapping("login")
-    public Object login(@RequestParam String username,
+    public RestResult<String> login(@RequestParam String username,
                                     @RequestParam String password,
                                     @RequestParam String code,
                                     @RequestParam String codeKey,
-                                    HttpServletRequest request, HttpServletResponse response) throws AccessException {
-
-        Cache.ValueWrapper valueWrapper = cacheManager.getCache(WEB_LOGIN_CODE_CACHE_NAME).get(codeKey);
-        String codeInMemory = StrUtils.isBlank (codeKey) ? "" : (valueWrapper == null) ? "" : (String) valueWrapper.get();
-        if(StrUtils.isNotBlank(codeKey)) {
-            cacheManager.getCache(WEB_LOGIN_CODE_CACHE_NAME).evict(codeKey);
-        }
-
-        if(StrUtils.isBlank(code) || !code.equalsIgnoreCase(codeInMemory)) {
-            return RestResultUtils.failed("验证码错误");
-        }
-
+                                    HttpServletRequest request, HttpServletResponse response) {
         try {
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
-            Authentication authenticate = authenticationManager.authenticate(authenticationToken);
-
-            String token = tokenManager.createToken(authenticate.getName());
-
-            return RestResultUtils.success(token);
-
-        } catch (AuthenticationException e) {
+            User user = authManager.login(request);
+            return RestResultUtils.success(user.getUserName());
+        } catch (AccessException e) {
             return RestResultUtils.failed(e.getMessage());
         }
 
     }
 
     /**
-     * 验证码接口
+     * 验证码
      * @return
      */
     @GetMapping("captcha")
-    public Object captcha() {
+    public RestResult<Captcha> captcha() {
         SpecCaptcha specCaptcha = new SpecCaptcha(130, 48, 4);
         final String verCode = specCaptcha.text().toLowerCase();
         final String key = StrUtils.uuid();
-
         cacheManager.getCache(WEB_LOGIN_CODE_CACHE_NAME).put(key, verCode);
-
-        Map<String, String> result = new HashMap<>();
-        result.put("verCode", verCode);
-        result.put("codeUuid", key);
-        result.put("image", specCaptcha.toBase64());
-        return RestResultUtils.success(result);
+        return RestResultUtils.success(new Captcha(verCode, key, specCaptcha.toBase64()));
     }
 
 }

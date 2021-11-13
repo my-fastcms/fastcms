@@ -19,6 +19,7 @@ package com.fastcms.common.model;
 import java.io.Serializable;
 
 /**
+ * 统一响应
  * @author： wjun_java@163.com
  * @date： 2021/5/25
  * @description：
@@ -33,7 +34,7 @@ public class RestResult<T> implements Serializable {
     private int code;
 
     /**
-     * 错误提示消息，正常返回数据则为空
+     * 错误消息
      */
     private String message;
 

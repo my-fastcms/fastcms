@@ -16,12 +16,21 @@
  */
 package com.fastcms.web.security;
 
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.entity.Permission;
 import com.fastcms.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+
+import static com.fastcms.common.constants.FastcmsConstants.WEB_LOGIN_CODE_CACHE_NAME;
 
 /**
  *  @author： wjun_java@163.com
@@ -36,9 +45,39 @@ public class FastcmsAuthManager implements AuthManager {
     @Autowired
     private JwtTokenManager tokenManager;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private CacheManager cacheManager;
+
     @Override
-    public User login(HttpServletRequest request) {
-        return null;
+    public User login(HttpServletRequest request) throws AccessException {
+        final String username = request.getParameter("username");
+        final String password = request.getParameter("password");
+        final String code = request.getParameter("code");
+        final String codeKey = request.getParameter("codeKey");
+        Cache.ValueWrapper valueWrapper = cacheManager.getCache(WEB_LOGIN_CODE_CACHE_NAME).get(codeKey);
+        String codeInMemory = StrUtils.isBlank (codeKey) ? "" : (valueWrapper == null) ? "" : (String) valueWrapper.get();
+        if(StrUtils.isNotBlank(codeKey)) {
+            cacheManager.getCache(WEB_LOGIN_CODE_CACHE_NAME).evict(codeKey);
+        }
+
+        if(StrUtils.isBlank(code) || !code.equalsIgnoreCase(codeInMemory)) {
+            throw new AccessException(500, "验证码错误");
+        }
+
+        try {
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+            Authentication authenticate = authenticationManager.authenticate(authenticationToken);
+
+            String token = tokenManager.createToken(authenticate.getName());
+
+            return new User();
+
+        } catch (AuthenticationException e) {
+            return null;
+        }
     }
 
     @Override

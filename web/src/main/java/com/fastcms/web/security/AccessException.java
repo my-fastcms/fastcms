@@ -27,4 +27,9 @@ import com.fastcms.common.exception.FastcmsException;
  * @version: 1.0
  */
 public class AccessException extends FastcmsException {
+
+    public AccessException(int code, String message) {
+        super(code, message);
+    }
+
 }

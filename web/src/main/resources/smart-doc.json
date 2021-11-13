@@ -7,14 +7,12 @@
     "constantsClassName":"com.fastcms.common.constants.FastcmsConstants"
   }],
   "groups": [
-    {
-      "name": "管理后台",
-      "apis": "com.fastcms.web.controller.*"
-    },
-    {
-      "name": "CMS接口",
-      "apis": "com.fastcms.cms.controller.*"
-    }
+    { "name": "基础-admin","apis": "com.fastcms.web.controller.admin.*" },
+    { "name": "基础-api","apis": "com.fastcms.web.controller.api.*" },
+    { "name": "基础-ucenter","apis": "com.fastcms.web.controller.ucenter.*" },
+    { "name": "CMS-admin","apis": "com.fastcms.cms.controller.admin.*" },
+    { "name": "CMS-api","apis": "com.fastcms.cms.controller.api.*" },
+    { "name": "CMS-ucenter","apis": "com.fastcms.cms.controller.ucenter.*" }
   ],
   "requestHeaders": [{
     "name": "Authorization",
@@ -29,6 +27,7 @@
   "responseBodyAdvice":{
     "className":"com.fastcms.common.model.RestResult"
   },
+  "packageFilters": "com.fastcms.web.controller.*,com.fastcms.cms.controller.*",
   "outPath": "src/main/resources/static/doc",
   "createDebugPage": true,
   "showAuthor":false,

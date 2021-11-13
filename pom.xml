@@ -230,9 +230,11 @@
 					<configFile>./src/main/resources/smart-doc.json</configFile>
 					<!--指定分析的依赖模块（避免分析所有依赖，导致生成文档变慢，循环依赖导致生成失败等问题）-->
 					<includes>
-						<!--格式为：groupId:artifactId;参考如下-->
 						<include>com.fastcms:fastcms-web</include>
 						<include>com.fastcms:fastcms-cms</include>
+						<include>com.fastcms:fastcms-common</include>
+						<include>com.fastcms:fastcms-service</include>
+						<include>com.baomidou:mybatis-plus-extension</include>
 					</includes>
 				</configuration>
 				<executions>

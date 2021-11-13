@@ -20,7 +20,7 @@ public interface AuthManager {
      * @param request
      * @return 返回认证用户
      */
-    User login(HttpServletRequest request);
+    User login(HttpServletRequest request) throws AccessException;
 
     /**
      * 通过授权用户以及用户访问资源，检查当前用户是否有授权

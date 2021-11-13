@@ -39,10 +39,19 @@ public class Attachment implements Serializable {
      */
     private String filePath;
 
+    /**
+     * 创建时间
+     */
     private LocalDateTime created;
 
+    /**
+     * 修改时间
+     */
     private LocalDateTime updated;
 
+    /**
+     * 文件大小
+     */
     @TableField(exist = false)
     private String fileSize;
 

@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(FastcmsConstants.UCENTER_MAPPING + "/user")
-public class UCenterUserController extends UCenterBaseController {
+public class UCenterUserController {
 
 	@Autowired
 	private IUserService userService;

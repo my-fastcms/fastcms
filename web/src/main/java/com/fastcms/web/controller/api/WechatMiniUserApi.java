@@ -58,6 +58,11 @@ public class WechatMiniUserApi {
 
 	private String jwtSecret;
 
+	/**
+	 * code2session
+	 * @param code code
+	 * @return
+	 */
 	@GetMapping("code2session")
 	public Object code2Session(String code) {
 
@@ -91,8 +96,13 @@ public class WechatMiniUserApi {
 		return RestResultUtils.success(result);
 	}
 
-	@PostMapping("doLogin")
-	public Object doLogin(@RequestBody Map<String, Object> params) {
+	/**
+	 * 登录
+	 * @param params
+	 * @return
+	 */
+	@PostMapping("login")
+	public Object login(@RequestBody Map<String, Object> params) {
 
 		String sessionId = (String) params.get("sessionId");
 		WxSession session = wxSessionManager.getSession(sessionId);
@@ -135,8 +145,7 @@ public class WechatMiniUserApi {
 	}
 
 	/**
-	 * 小程序用户通过昵称授权后，
-	 * 再通过获取手机号授权获取用户手机号码
+	 * 取用户手机号码
 	 * @param params
 	 * @return
 	 */
@@ -164,16 +173,18 @@ public class WechatMiniUserApi {
 	}
 
 	/**
+	 * 手机号码授权登录
+	 * @Description
 	 * 用户直接通过手机号码授权登录
-	 * 注意:用户通过手机号码授权登录，后台是获取不到用户的昵称跟头像的，需要手动设置
-	 * 小程序前端可以通过WXML标签直接显示用户头像昵称
-	 * <open-data type="userAvatarUrl"></open-data>
-	 * <open-data type="userNickName"></open-data>
+	 * 	 * 注意:用户通过手机号码授权登录，后台是获取不到用户的昵称跟头像的，需要手动设置
+	 * 	 * 小程序前端可以通过WXML标签直接显示用户头像昵称
+	 * 	 * <open-data type="userAvatarUrl"></open-data>
+	 * 	 * <open-data type="userNickName"></open-data>
 	 * @param params
 	 * @return
 	 */
-	@PostMapping("doLoginByPhone")
-	public Object doLoginByPhone(@RequestBody Map<String, Object> params) {
+	@PostMapping("loginByPhone")
+	public Object loginByPhone(@RequestBody Map<String, Object> params) {
 		String sessionId = (String) params.get("sessionId");
 		if(StrUtils.isBlank(sessionId)) {
 			return RestResultUtils.failed("获取手机号:获取到空session");

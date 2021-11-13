@@ -12,10 +12,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * <p>
  * 用户
- * </p>
- *
  * @author wjun_java@163.com
  * @since 2021-11-12
  */
@@ -36,8 +33,14 @@ public class User implements Serializable {
      */
     private String nickName;
 
+    /**
+     * 邮箱
+     */
     private String email;
 
+    /**
+     * 头像
+     */
     private String headImg;
 
     /**
@@ -45,8 +48,14 @@ public class User implements Serializable {
      */
     private String mobile;
 
+    /**
+     * 通信地址
+     */
     private String address;
 
+    /**
+     * 所在公司
+     */
     private String company;
 
     /**
@@ -74,8 +83,14 @@ public class User implements Serializable {
      */
     private LocalDateTime loginTime;
 
+    /**
+     * 创建时间
+     */
     private LocalDateTime created;
 
+    /**
+     * 修改时间
+     */
     private LocalDateTime updated;
 
     private Integer version;

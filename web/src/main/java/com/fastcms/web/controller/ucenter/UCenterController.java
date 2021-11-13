@@ -34,13 +34,13 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping(FastcmsConstants.UCENTER_MAPPING)
-public class UCenterController extends UCenterBaseController {
+public class UCenterController {
 
     @Autowired
     private IUserService userService;
 
-    @PostMapping("doRegister")
-    public Object doRegister(String username, String nickName, String email, String password, String captcha) {
+    @PostMapping("register")
+    public Object register(String username, String nickName, String email, String password, String captcha) {
 
         final String salt = System.currentTimeMillis() + "";
 //        final String md5password = PasswordUtils.getMd5Password(salt, password);
