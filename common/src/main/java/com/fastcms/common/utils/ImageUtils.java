@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.core.utils;
+package com.fastcms.common.utils;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;

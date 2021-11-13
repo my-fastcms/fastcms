@@ -21,16 +21,16 @@ import com.fastcms.common.model.Captcha;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.StrUtils;
-import com.fastcms.entity.User;
+import com.fastcms.core.utils.RequestUtils;
 import com.fastcms.web.security.AccessException;
 import com.fastcms.web.security.AuthManager;
+import com.fastcms.web.security.FastcmsUser;
 import com.wf.captcha.SpecCaptcha;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import static com.fastcms.common.constants.FastcmsConstants.WEB_LOGIN_CODE_CACHE_NAME;
 
@@ -57,20 +57,15 @@ public class AdminController {
      * @param username  账号|admin
      * @param password  密码|1
      * @param code      验证码
-     * @param codeKey   验证码key
-     * @param request   请求
-     * @param response  响应
-     * @return token
+     * @return FastcmsUser
      */
     @PostMapping("login")
-    public RestResult<String> login(@RequestParam String username,
+    public RestResult<FastcmsUser> login(@RequestParam String username,
                                     @RequestParam String password,
-                                    @RequestParam String code,
-                                    @RequestParam String codeKey,
-                                    HttpServletRequest request, HttpServletResponse response) {
+                                    @RequestParam String code) {
         try {
-            User user = authManager.login(username, password, code, codeKey);
-            return RestResultUtils.success(user.getUserName());
+            FastcmsUser user = authManager.login(username, password, code);
+            return RestResultUtils.success(user);
         } catch (AccessException e) {
             return RestResultUtils.failed(e.getMessage());
         }
@@ -82,10 +77,10 @@ public class AdminController {
      * @return
      */
     @GetMapping("captcha")
-    public RestResult<Captcha> captcha() {
+    public RestResult<Captcha> captcha(HttpServletRequest request) {
         SpecCaptcha specCaptcha = new SpecCaptcha(130, 48, 4);
         final String verCode = specCaptcha.text().toLowerCase();
-        final String key = StrUtils.uuid();
+        final String key = RequestUtils.getClientId(request) == null ? StrUtils.uuid() : RequestUtils.getClientId(request);
         cacheManager.getCache(WEB_LOGIN_CODE_CACHE_NAME).put(key, verCode);
         return RestResultUtils.success(new Captcha(verCode, key, specCaptcha.toBase64()));
     }

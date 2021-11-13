@@ -147,6 +147,10 @@ public abstract class RequestUtils {
 		return request.getHeader("Referer");
 	}
 
+	public static String getClientId(HttpServletRequest request) {
+		return request.getHeader("ClientId");
+	}
+
 	public static String getBaseUrl(HttpServletRequest request) {
 		int port = request.getServerPort();
 		StringBuilder defaultDomain = new StringBuilder(request.getScheme());

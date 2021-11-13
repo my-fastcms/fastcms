@@ -107,6 +107,7 @@ export default defineComponent({
 			getCaptcha().then(res => {
 				state.captcha = res.data.image;
 				state.captchaKey = res.data.codeUuid;
+				Session.set('ClientId', state.captchaKey);
 			}).catch(() => {
 			});
 		};
@@ -174,7 +175,7 @@ export default defineComponent({
 				authBtnList: defaultAuthBtnList,
 			};
 			// 存储 token 到浏览器缓存
-			Session.set('token', res.data);
+			Session.set('token', res.data.token);
 			// 存储用户信息到浏览器缓存
 			Session.set('userInfo', userInfos);
 			// 1、请注意执行顺序(存储用户信息到vuex)

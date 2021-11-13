@@ -8,8 +8,6 @@ import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * 用户
@@ -96,13 +94,7 @@ public class User implements Serializable {
     private Integer version;
 
     @TableField(exist = false)
-    private String newPassword;
-    @TableField(exist = false)
-    private String newConfirmPassword;
-    @TableField(exist = false)
     private String sourceStr;
-    @TableField(exist = false)
-    private List<Role> roleList;
 
     public String getSourceStr() {
         String text = SourceType.getValue(getSource());
@@ -146,16 +138,6 @@ public class User implements Serializable {
             return "";
         }
 
-    }
-
-    public boolean isAdmin() {
-        if(roleList != null) {
-            for (Role role : roleList) {
-                if(Objects.equals(role.getId(), FastcmsConstants.ADMIN_ROLE_ID))
-                    return true;
-            }
-        }
-        return false;
     }
 
     public Long getId() {

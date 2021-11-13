@@ -16,7 +16,9 @@
  */
 package com.fastcms.web.security;
 
+import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.utils.StrUtils;
+import com.fastcms.core.utils.RequestUtils;
 import com.fastcms.entity.Permission;
 import com.fastcms.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +29,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
-
-import javax.servlet.http.HttpServletRequest;
 
 import static com.fastcms.common.constants.FastcmsConstants.WEB_LOGIN_CODE_CACHE_NAME;
 
@@ -51,12 +51,12 @@ public class FastcmsAuthManager implements AuthManager {
     @Autowired
     private CacheManager cacheManager;
 
+    @Autowired
+    private AuthConfigs authConfigs;
+
     @Override
-    public User login(HttpServletRequest request) throws AccessException {
-        final String username = request.getParameter("username");
-        final String password = request.getParameter("password");
-        final String code = request.getParameter("code");
-        final String codeKey = request.getParameter("codeKey");
+    public FastcmsUser login(String username, String password, String code) throws AccessException {
+        final String codeKey = RequestUtils.getClientId(RequestUtils.getRequest());
         Cache.ValueWrapper valueWrapper = cacheManager.getCache(WEB_LOGIN_CODE_CACHE_NAME).get(codeKey);
         String codeInMemory = StrUtils.isBlank (codeKey) ? "" : (valueWrapper == null) ? "" : (String) valueWrapper.get();
         if(StrUtils.isNotBlank(codeKey)) {
@@ -73,10 +73,10 @@ public class FastcmsAuthManager implements AuthManager {
 
             String token = tokenManager.createToken(authenticate.getName());
 
-            return new User();
+            return new FastcmsUser(authenticate.getName(), token, authConfigs.getTokenValidityInSeconds(), true);
 
         } catch (AuthenticationException e) {
-            return null;
+            throw new AccessException(FastcmsException.NO_RIGHT, e.getMessage());
         }
     }
 

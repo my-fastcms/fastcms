@@ -18,11 +18,10 @@ public interface AuthManager {
      * @param username
      * @param password
      * @param code
-     * @param codeKey
      * @return 返回认证用户
      * @throws AccessException
      */
-    User login(String username, String password, String code, String codeKey) throws AccessException;
+    FastcmsUser login(String username, String password, String code) throws AccessException;
 
     /**
      * 通过授权用户以及用户访问资源，检查当前用户是否有授权

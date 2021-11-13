@@ -15,6 +15,9 @@ service.interceptors.request.use(
 		if (Session.get('token')) {
 			config.headers.common['Authorization'] = `${Session.get('token')}`;
 		}
+		if (Session.get('ClientId')) {
+			config.headers.common['ClientId'] = `${Session.get('ClientId')}`;
+		}
 		if (config.method === "GET"){
             config.headers.common['Content-Type'] = 'application/json';
         }
