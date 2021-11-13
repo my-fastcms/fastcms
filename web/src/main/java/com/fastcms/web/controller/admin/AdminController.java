@@ -69,7 +69,7 @@ public class AdminController {
                                     @RequestParam String codeKey,
                                     HttpServletRequest request, HttpServletResponse response) {
         try {
-            User user = authManager.login(request);
+            User user = authManager.login(username, password, code, codeKey);
             return RestResultUtils.success(user.getUserName());
         } catch (AccessException e) {
             return RestResultUtils.failed(e.getMessage());

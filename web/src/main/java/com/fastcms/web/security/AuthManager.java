@@ -3,8 +3,6 @@ package com.fastcms.web.security;
 import com.fastcms.entity.Permission;
 import com.fastcms.entity.User;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  *  @author： wjun_java@163.com
  *  * @date： 2021/10/24
@@ -15,12 +13,16 @@ import javax.servlet.http.HttpServletRequest;
 public interface AuthManager {
 
     /**
-     * 发起授权请求，从request中获取username，password
+     * 发起授权请求
      * 或者直接获取token
-     * @param request
+     * @param username
+     * @param password
+     * @param code
+     * @param codeKey
      * @return 返回认证用户
+     * @throws AccessException
      */
-    User login(HttpServletRequest request) throws AccessException;
+    User login(String username, String password, String code, String codeKey) throws AccessException;
 
     /**
      * 通过授权用户以及用户访问资源，检查当前用户是否有授权
