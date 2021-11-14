@@ -25,7 +25,6 @@ import com.fastcms.web.security.AccessException;
 import com.fastcms.web.security.AuthManager;
 import com.fastcms.web.security.FastcmsUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -39,9 +38,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(FastcmsConstants.ADMIN_MAPPING)
 public class AdminController {
-
-    @Autowired
-    private CacheManager cacheManager;
 
     @Autowired
     private AuthManager authManager;

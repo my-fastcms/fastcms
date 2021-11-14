@@ -16,6 +16,7 @@
  */
 package com.fastcms.web.controller.admin;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
@@ -67,9 +68,12 @@ public class MenuController {
 	 * @return
 	 */
 	@PostMapping("delete/{menuId}")
-	public Object del(@PathVariable("menuId") Long menuId) {
-		permissionService.removeById(menuId);
-		return RestResultUtils.success();
+	public RestResult<Object> del(@PathVariable("menuId") Long menuId) {
+		List<Permission> list = permissionService.list(Wrappers.<Permission>lambdaQuery().eq(Permission::getParentId, menuId));
+		if(list != null && list.size()>0) {
+			return RestResultUtils.failed("请先删除子菜单");
+		}
+		return RestResultUtils.success(permissionService.removeById(menuId));
 	}
 
 }

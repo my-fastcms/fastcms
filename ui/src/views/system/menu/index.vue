@@ -102,13 +102,17 @@ export default {
 			})
 				.then(() => {
 					console.log(row);
-					delMenu({id: row.id}).then(() => {
-						ElMessage.info("删除成功");
+					delMenu(row.id).then(() => {
+						ElMessage.success("删除成功");
 						loadMenuList();
 						initBackEndControlRoutes();
+					}).catch((res) => {
+						ElMessage.error(res.message);
 					});
 				})
-				.catch(() => {});
+				.catch((res) => {
+					ElMessage.error(res.message);
+				});
 		};
 
 		const loadMenuList = () => {

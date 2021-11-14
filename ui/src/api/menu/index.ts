@@ -47,13 +47,12 @@ export function saveMenu(params?: object) {
 
 /**
  * 管理后台删除菜单数据
- * @param params 
+ * @param menuId 
  * @returns 
  */
-export function delMenu(params?: any) {
+export function delMenu(menuId?: string) {
 	return request({
-		url: '/admin/menu/del',
-		method: 'post',
-		params,
+		url: '/admin/menu/delete/'+menuId,
+		method: 'post'
 	});
 }
