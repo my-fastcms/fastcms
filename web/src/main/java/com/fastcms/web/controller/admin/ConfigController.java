@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 /**
+ * 配置
  * @author： wjun_java@163.com
  * @date： 2021/5/28
  * @description：
@@ -49,8 +50,13 @@ public class ConfigController {
 	@Autowired
 	private ConfigChangeListenerManager configChangeListenerManager;
 
-	@PostMapping("doSave")
-	public Object doSave(HttpServletRequest request) {
+	/**
+	 * 保存配置
+	 * @param request
+	 * @return
+	 */
+	@PostMapping("save")
+	public Object save(HttpServletRequest request) {
 
 		Map<String, String[]> parameterMap = request.getParameterMap();
 		if (parameterMap == null || parameterMap.isEmpty()) {

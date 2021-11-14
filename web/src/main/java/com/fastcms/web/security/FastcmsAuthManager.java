@@ -17,20 +17,16 @@
 package com.fastcms.web.security;
 
 import com.fastcms.common.exception.FastcmsException;
-import com.fastcms.common.utils.StrUtils;
-import com.fastcms.core.utils.RequestUtils;
+import com.fastcms.core.captcha.FastcmsCaptchaService;
 import com.fastcms.entity.Permission;
 import com.fastcms.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
-
-import static com.fastcms.common.constants.FastcmsConstants.WEB_LOGIN_CODE_CACHE_NAME;
 
 /**
  *  @author： wjun_java@163.com
@@ -54,16 +50,13 @@ public class FastcmsAuthManager implements AuthManager {
     @Autowired
     private AuthConfigs authConfigs;
 
+    @Autowired
+    private FastcmsCaptchaService fastcmsCaptchaService;
+
     @Override
     public FastcmsUser login(String username, String password, String code) throws AccessException {
-        final String codeKey = RequestUtils.getClientId(RequestUtils.getRequest());
-        Cache.ValueWrapper valueWrapper = cacheManager.getCache(WEB_LOGIN_CODE_CACHE_NAME).get(codeKey);
-        String codeInMemory = StrUtils.isBlank (codeKey) ? "" : (valueWrapper == null) ? "" : (String) valueWrapper.get();
-        if(StrUtils.isNotBlank(codeKey)) {
-            cacheManager.getCache(WEB_LOGIN_CODE_CACHE_NAME).evict(codeKey);
-        }
 
-        if(StrUtils.isBlank(code) || !code.equalsIgnoreCase(codeInMemory)) {
+        if(!fastcmsCaptchaService.checkCaptcha(code)) {
             throw new AccessException(500, "验证码错误");
         }
 

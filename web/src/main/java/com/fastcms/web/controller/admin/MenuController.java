@@ -17,6 +17,7 @@
 package com.fastcms.web.controller.admin;
 
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.entity.Permission;
 import com.fastcms.service.IPermissionService;
@@ -24,7 +25,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
+ * 菜单管理
  * @author： wjun_java@163.com
  * @date： 2021/10/31
  * @description：
@@ -38,20 +42,33 @@ public class MenuController {
 	@Autowired
 	private IPermissionService permissionService;
 
+	/**
+	 * 菜单列表
+	 * @return
+	 */
 	@GetMapping("list")
-	public Object list() {
+	public RestResult<List<IPermissionService.PermissionNode>> list() {
 		return RestResultUtils.success(permissionService.getPermissions());
 	}
 
+	/**
+	 * 保存菜单
+	 * @param permission
+	 * @return
+	 */
 	@PostMapping("save")
-	public Object save(@Validated Permission permission) {
-		permissionService.saveOrUpdate(permission);
-		return RestResultUtils.success();
+	public RestResult<Boolean> save(@Validated Permission permission) {
+		return RestResultUtils.success(permissionService.saveOrUpdate(permission));
 	}
 
-	@PostMapping("del")
-	public Object del(@RequestParam Long id) {
-		permissionService.removeById(id);
+	/**
+	 * 删除菜单
+	 * @param menuId
+	 * @return
+	 */
+	@PostMapping("delete/{menuId}")
+	public Object del(@PathVariable("menuId") Long menuId) {
+		permissionService.removeById(menuId);
 		return RestResultUtils.success();
 	}
 

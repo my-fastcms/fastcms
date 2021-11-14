@@ -20,12 +20,16 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fastcms.cms.entity.ArticleCategory;
 import com.fastcms.cms.service.IArticleCategoryService;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
+ * 文章分类
  * @author： wjun_java@163.com
  * @date： 2021/6/7
  * @description：
@@ -39,8 +43,12 @@ public class ArticleCategoryApi {
 	@Autowired
 	private IArticleCategoryService articleCategoryService;
 
+	/**
+	 * 分类列表
+	 * @return
+	 */
 	@RequestMapping("list")
-	public Object list() {
+	public RestResult<List<ArticleCategory>> list() {
 		QueryWrapper queryWrapper = new QueryWrapper();
 		queryWrapper.eq("type", ArticleCategory.CATEGORY_TYPE);
 		return RestResultUtils.success(articleCategoryService.list(queryWrapper));

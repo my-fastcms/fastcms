@@ -19,27 +19,54 @@ public class Menu implements Serializable {
     public static final String STATUS_SHOW = "show";
     public static final String STATUS_HIDDEN = "hidden";
 
+    /**
+     * id
+     */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+    /**
+     * 上级id
+     */
     @TableField(updateStrategy = FieldStrategy.IGNORED)
     private Long parentId;
 
+    /**
+     * 创建者
+     */
     @TableField(fill = FieldFill.INSERT)
     private Long userId;
 
+    /**
+     * 菜单名称
+     */
     @NotBlank(message = "菜单名称不能为空")
     private String menuName;
 
+    /**
+     * 菜单地址
+     */
     @NotBlank(message = "菜单URL不能为空")
     private String menuUrl;
 
+    /**
+     * 菜单图标
+     */
     private String menuIcon;
 
+    /**
+     * 排序
+     */
     private Integer sortNum;
 
+    /**
+     * 打开方式
+     */
     private String target;
 
+    /**
+     * 状态
+     */
     private String status;
 
     @TableField(fill = FieldFill.INSERT)

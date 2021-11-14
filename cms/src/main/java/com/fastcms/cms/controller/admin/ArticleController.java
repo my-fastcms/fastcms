@@ -25,14 +25,12 @@ import com.fastcms.cms.service.IArticleCategoryService;
 import com.fastcms.cms.service.IArticleCommentService;
 import com.fastcms.cms.service.IArticleService;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 文章管理
@@ -66,12 +64,12 @@ public class ArticleController {
      * @return
      */
     @RequestMapping("list")
-    public Object list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-                       @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
-                       @RequestParam(name = "title", required = false) String title,
-                       @RequestParam(name = "status", required = false) String status,
-                       @RequestParam(name = "categoryId", required = false) String categoryId,
-                       @RequestParam(name = "tagId", required = false) String tagId) {
+    public RestResult<Page<IArticleService.ArticleVo>> list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
+                                                            @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
+                                                            @RequestParam(name = "title", required = false) String title,
+                                                            @RequestParam(name = "status", required = false) String status,
+                                                            @RequestParam(name = "categoryId", required = false) String categoryId,
+                                                            @RequestParam(name = "tagId", required = false) String tagId) {
         QueryWrapper queryWrapper = new QueryWrapper();
         if(StringUtils.isNotBlank(title)) {
             queryWrapper.like("a.title", title);
@@ -92,8 +90,13 @@ public class ArticleController {
         return RestResultUtils.success(pageData);
     }
 
-    @PostMapping("doSave")
-    public Object doSave(@Validated Article article) {
+    /**
+     * 保存文章
+     * @param article
+     * @return
+     */
+    @PostMapping("save")
+    public Object save(@Validated Article article) {
         try {
             articleService.saveArticle(article);
             return RestResultUtils.success();
@@ -102,27 +105,55 @@ public class ArticleController {
         }
     }
 
-    @PostMapping("category/doSave")
-    public Object doSaveCategory(ArticleCategory articleCategory) {
-        articleCategoryService.saveOrUpdate(articleCategory);
+    /**
+     * 文章详情
+     * @param articleId 文章id
+     * @return
+     */
+    @GetMapping("{articleId}")
+    public RestResult<Article> getArticle(@PathVariable("articleId") Long articleId) {
+        return RestResultUtils.success(articleService.getById(articleId));
+    }
+
+    /**
+     * 保存分类
+     * @param articleCategory
+     * @return
+     */
+    @PostMapping("category/save")
+    public RestResult<Boolean> saveCategory(ArticleCategory articleCategory) {
+        return RestResultUtils.success(articleCategoryService.saveOrUpdate(articleCategory));
+    }
+
+    /**
+     * 删除分类
+     * @param categoryId
+     * @return
+     */
+    @PostMapping("category/delete/{categoryId}")
+    public Object deleteCategory(@PathVariable("categoryId") Long categoryId) {
+        articleCategoryService.deleteByCategoryId(categoryId);
         return RestResultUtils.success();
     }
 
-    @PostMapping("category/doDelete")
-    public Object doDeleteCategory(@RequestParam(name = "id") Long id) {
-        articleCategoryService.deleteByCategoryId(id);
-        return RestResultUtils.success();
+    /**
+     * 保存评论
+     * @param articleComment
+     * @return
+     */
+    @PostMapping("comment/save")
+    public RestResult<Boolean> saveComment(@Validated ArticleComment articleComment) {
+        return RestResultUtils.success(articleCommentService.saveOrUpdate(articleComment));
     }
 
-    @PostMapping("comment/doSave")
-    public Object doSaveComment(@Validated ArticleComment articleComment) {
-        articleCommentService.saveOrUpdate(articleComment);
-        return RestResultUtils.success();
-    }
-
-    @PostMapping("comment/doDelete")
-    public Object doDeleteComment(@RequestParam(name = "id") Long id) {
-        articleCommentService.removeById(id);
+    /**
+     * 删除评论
+     * @param PathVariable
+     * @return
+     */
+    @PostMapping("comment/delete/{commentId}")
+    public Object doDeleteComment(@PathVariable("PathVariable") Long PathVariable) {
+        articleCommentService.removeById(PathVariable);
         return RestResultUtils.success();
     }
 

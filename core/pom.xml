@@ -49,6 +49,11 @@
             <artifactId>fastcms-wechat-starter</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.github.whvcse</groupId>
+            <artifactId>easy-captcha</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

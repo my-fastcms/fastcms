@@ -234,6 +234,7 @@
 						<include>com.fastcms:fastcms-cms</include>
 						<include>com.fastcms:fastcms-common</include>
 						<include>com.fastcms:fastcms-service</include>
+						<include>com.fastcms:fastcms-core</include>
 						<include>com.baomidou:mybatis-plus-extension</include>
 					</includes>
 				</configuration>

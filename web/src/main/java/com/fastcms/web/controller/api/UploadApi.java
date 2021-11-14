@@ -29,6 +29,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
+ * 文件上传
  * @author： wjun_java@163.com
  * @date： 2021/6/25
  * @description：
@@ -39,8 +40,13 @@ import java.io.IOException;
 @RequestMapping(FastcmsConstants.API_MAPPING + "/upload")
 public class UploadApi {
 
-	@PostMapping("doUpload")
-	public Object doUpload(@RequestParam("file") MultipartFile file) {
+	/**
+	 * 上传
+	 * @param file
+	 * @return
+	 */
+	@PostMapping
+	public Object upload(@RequestParam("file") MultipartFile file) {
 		String newFilePath = FileUtils.newFileName(file.getOriginalFilename());
 		File uploadFile = new File(FileUtils.getUploadDir(), newFilePath);
 		try {

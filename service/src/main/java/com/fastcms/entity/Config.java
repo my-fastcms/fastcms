@@ -7,10 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 
 /**
- * <p>
- * 系统配置表
- * </p>
- *
+ * 系统配置
  * @author wjun_java@163.com
  * @since 2021-11-12
  */

@@ -21,6 +21,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.cms.entity.Menu;
 import com.fastcms.cms.service.IMenuService;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.template.Template;
 import com.fastcms.core.template.TemplateService;
@@ -35,7 +36,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -48,7 +48,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * 模板管理接口
+ * 模板管理
  * @author： wjun_java@163.com
  * @date： 2021/2/18
  * @description：
@@ -74,20 +74,32 @@ public class TemplateController {
     @Autowired
     private IMenuService menuService;
 
-    @RequestMapping("list")
-    public String list(Model model) {
-        model.addAttribute("templates", templateService.getTemplateList());
-        model.addAttribute("enableTemplate", templateService.getCurrTemplate());
-        return "admin/template/list";
+    /**
+     * 模板列表
+     * @param model
+     * @return
+     */
+    @GetMapping("list")
+    public RestResult<List<Template>> list(Model model) {
+        return RestResultUtils.success(templateService.getTemplateList());
     }
 
-    @RequestMapping("install")
-    public String install() {
-        return "admin/template/install";
+    /**
+     * 获取当前模板
+     * @return
+     */
+    @GetMapping("current")
+    public RestResult<Template> getCurrTemplate() {
+        return RestResultUtils.success(templateService.getCurrTemplate());
     }
 
-    @PostMapping("doInstall")
-    public Object doInstall(@RequestParam("file") MultipartFile file) {
+    /**
+     * 安装模板
+     * @param file
+     * @return
+     */
+    @PostMapping("install")
+    public Object install(@RequestParam("file") MultipartFile file) {
 
         String fileName = file.getOriginalFilename();
         String suffixName = fileName.substring(fileName.lastIndexOf(".") + 1);
@@ -113,8 +125,13 @@ public class TemplateController {
         }
     }
 
-    @PostMapping("doUnInstall")
-    public Object doUnInstall(@RequestParam("templateId") String templateId) {
+    /**
+     * 卸载模板
+     * @param templateId    模板id
+     * @return
+     */
+    @PostMapping("unInstall")
+    public Object unInstall(@RequestParam("templateId") String templateId) {
 
         try {
             templateService.unInstall(templateId);
@@ -125,6 +142,14 @@ public class TemplateController {
 
     }
 
+    /**
+     * 编辑模板
+     * @param fileName
+     * @param dirName
+     * @param model
+     * @return
+     * @throws IOException
+     */
     @RequestMapping("edit")
     public String edit(@RequestParam(name = "fileName", required = false) String fileName,
                        @RequestParam(name = "dirName", required = false) String dirName,
@@ -190,14 +215,27 @@ public class TemplateController {
         return TEMPLATE_EDIT_VIEW;
     }
 
-    @PostMapping("doEnable")
-    public Object doEnable(@RequestParam(name = "templateId") String templateId) {
+    /**
+     * 激活模板
+     * @param templateId    模板id
+     * @return
+     */
+    @PostMapping("enable/{templateId}")
+    public Object enable(@PathVariable("templateId") String templateId) {
         configService.saveConfig(FastcmsConstants.TEMPLATE_ENABLE_ID, templateId);
         return RestResultUtils.success();
     }
 
-    @PostMapping("doEditSave")
-    public Object doEditSave(String dirName, String fileName, String fileContent) throws IOException {
+    /**
+     * 保存模板
+     * @param dirName
+     * @param fileName
+     * @param fileContent
+     * @return
+     * @throws IOException
+     */
+    @PostMapping("save")
+    public Object save(String dirName, String fileName, String fileContent) throws IOException {
         Template currTemplate = templateService.getCurrTemplate();
         if(currTemplate == null) {
             return RestResultUtils.failed("没有找到模板");
@@ -232,9 +270,15 @@ public class TemplateController {
         return RestResultUtils.success();
     }
 
-    @PostMapping("doUpload")
+    /**
+     * 上传模板文件
+     * @param dirName
+     * @param files
+     * @return
+     */
+    @PostMapping("upload")
     @ExceptionHandler(value = MultipartException.class)
-    public Object doUpload(String dirName, @RequestParam("files") MultipartFile files[]) {
+    public Object upload(String dirName, @RequestParam("files") MultipartFile files[]) {
 
         Template currTemplate = templateService.getCurrTemplate();
         if(currTemplate == null) {
@@ -286,8 +330,13 @@ public class TemplateController {
                 : RestResultUtils.failed(errorFiles.stream().collect(Collectors.joining(",")).concat(",以上文件上传失败"));
     }
 
-    @PostMapping("doDelFile")
-    public Object doDelFile(String filePath) {
+    /**
+     * 删除模板文件
+     * @param filePath
+     * @return
+     */
+    @PostMapping("file/delete/{filePath}")
+    public Object delFile(@PathVariable("filePath") String filePath) {
 
         if(StringUtils.isBlank(filePath)) {
             return RestResultUtils.failed("文件路径为空");
@@ -311,40 +360,52 @@ public class TemplateController {
         }
     }
 
+    /**
+     * 菜单列表
+     * @param page
+     * @param pageSize
+     * @return
+     */
     @RequestMapping("menu/list")
-    public Object menuList(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-                               @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
-                               Model model) {
+    public RestResult<Page<Menu>> menuList(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
+                                           @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
         QueryWrapper queryWrapper = new QueryWrapper();
         Page pageParam = new Page<>(page, pageSize);
         Page<Menu> pageData = menuService.page(pageParam, queryWrapper);
         return RestResultUtils.success(pageData);
     }
 
-    @RequestMapping("menu/edit")
-    public String editMenu(@RequestParam(name = "id", required = false) Long id, Model model) {
-        model.addAttribute("menu", menuService.getById(id));
-        QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("status", "show");
-        model.addAttribute("menus", menuService.list(queryWrapper));
-        return "admin/template/menu_edit";
+    /**
+     * 菜单信息
+     * @param menuId
+     * @return
+     */
+    @RequestMapping("menu/get/{menuId}")
+    public RestResult<Menu> getMenu(@PathVariable("menuId") Long menuId) {
+//        QueryWrapper queryWrapper = new QueryWrapper();
+//        queryWrapper.eq("status", "show");
+//        model.addAttribute("menus", menuService.list(queryWrapper));
+        return RestResultUtils.success(menuService.getById(menuId));
     }
 
-    @PostMapping("menu/doSave")
-    public Object doSaveMenu(@Validated Menu menu) {
-        menuService.saveOrUpdate(menu);
-        return RestResultUtils.success();
+    /**
+     * 保存菜单
+     * @param menu
+     * @return
+     */
+    @PostMapping("menu/save")
+    public RestResult<Boolean> saveMenu(@Validated Menu menu) {
+        return RestResultUtils.success(menuService.saveOrUpdate(menu));
     }
 
-    @PostMapping("menu/doDelete")
-    public Object doDeleteMenu(@RequestParam(name = "id") Long id) {
-        menuService.removeById(id);
-        return RestResultUtils.success();
-    }
-
-    @PostMapping("setting/doSave")
-    public Object doSave(HttpServletRequest request) {
-        return RestResultUtils.success();
+    /**
+     * 删除菜单
+     * @param menuId
+     * @return
+     */
+    @PostMapping("menu/delete/{menuId}")
+    public RestResult<Boolean> doDeleteMenu(@PathVariable("menuId") Long menuId) {
+        return RestResultUtils.success(menuService.removeById(menuId));
     }
 
     List<Path> listPathFiles(List<Path> files) {

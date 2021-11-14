@@ -20,6 +20,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.entity.Role;
 import com.fastcms.service.IPermissionService;
@@ -57,9 +58,9 @@ public class RoleController {
      * @return
      */
     @GetMapping("list")
-    public Object list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-                       @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
-                       @RequestParam(name = "roleName", required = false) String roleName) {
+    public RestResult<Page<Role>> list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
+                                       @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
+                                       @RequestParam(name = "roleName", required = false) String roleName) {
         LambdaQueryWrapper<Role> queryWrapper = new QueryWrapper().lambda();
         queryWrapper.like(roleName != null, Role::getRoleName, roleName);
         Page pageParam = new Page<>(page, pageSize);
@@ -89,7 +90,7 @@ public class RoleController {
      * @return
      */
     @GetMapping("getPermissionList")
-    public Object getPermissionList(@RequestParam(name = "roleId") Long roleId) {
+    public RestResult<List<IPermissionService.PermissionNode>> getPermissionList(@RequestParam(name = "roleId") Long roleId) {
         return RestResultUtils.success(permissionService.getPermissionByRoleId(roleId));
     }
 
@@ -99,8 +100,8 @@ public class RoleController {
      * @param permissionIdList      权限id集合
      * @return
      */
-    @PostMapping("saveRolePermission")
-    public Object saveRolePermission(@RequestParam("roleId") Long roleId, @RequestParam("permissionIdList[]") List<Long> permissionIdList) {
+    @PostMapping("{roleId}/permissions/save")
+    public Object saveRolePermission(@PathVariable("roleId") Long roleId, @RequestParam("permissionIdList[]") List<Long> permissionIdList) {
         if(roleId != null && Objects.equals(roleId, FastcmsConstants.ADMIN_ROLE_ID)) {
             return RestResultUtils.failed("超级管理员不可修改权限");
         }

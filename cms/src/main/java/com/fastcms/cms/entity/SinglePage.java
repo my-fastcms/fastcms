@@ -28,6 +28,9 @@ public class SinglePage implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+    /**
+     * 创建者
+     */
     @TableField(fill = FieldFill.INSERT)
     private Long userId;
 
@@ -37,6 +40,9 @@ public class SinglePage implements Serializable {
     @NotBlank(message = "页面标题不能为空")
     private String title;
 
+    /**
+     * 路径
+     */
     @NotBlank(message = "页面path不能为空")
     private String path;
 

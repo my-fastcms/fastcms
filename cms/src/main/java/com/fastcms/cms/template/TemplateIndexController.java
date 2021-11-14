@@ -31,6 +31,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 /**
+ * @ignore
  * Freemarker模板
  * @author： wjun_java@163.com
  * @date： 2021/2/16

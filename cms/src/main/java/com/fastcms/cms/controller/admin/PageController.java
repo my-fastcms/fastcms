@@ -23,12 +23,14 @@ import com.fastcms.cms.entity.SinglePageComment;
 import com.fastcms.cms.service.ISinglePageCommentService;
 import com.fastcms.cms.service.ISinglePageService;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
+ * 页面管理
  * @author： wjun_java@163.com
  * @date： 2021/5/17
  * @description：
@@ -45,15 +47,26 @@ public class PageController {
 	@Autowired
 	ISinglePageCommentService singlePageCommentService;
 
+	/**
+	 * 页面列表
+	 * @param page
+	 * @param pageSize
+	 * @return
+	 */
 	@GetMapping("list")
-	public Object list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-					   @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
+	public RestResult<Page<ISinglePageService.SinglePageVo>> list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
+																  @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
 		QueryWrapper<SinglePage> queryWrapper = new QueryWrapper();
 		return RestResultUtils.success(singlePageService.pageSinglePage(new Page<>(page, pageSize), queryWrapper));
 	}
 
-	@PostMapping("doSave")
-	public Object doSave(@Validated SinglePage singlePage) {
+	/**
+	 * 保存页面
+	 * @param singlePage
+	 * @return
+	 */
+	@PostMapping("save")
+	public Object save(@Validated SinglePage singlePage) {
 		try {
 			singlePageService.saveOrUpdate(singlePage);
 			return RestResultUtils.success();
@@ -62,16 +75,25 @@ public class PageController {
 		}
 	}
 
-	@PostMapping("comment/doSave")
-	public Object doSaveComment(@Validated SinglePageComment singlePageComment) {
+	/**
+	 * 保存评论
+	 * @param singlePageComment
+	 * @return
+	 */
+	@PostMapping("comment/save")
+	public Object saveComment(@Validated SinglePageComment singlePageComment) {
 		singlePageCommentService.saveOrUpdate(singlePageComment);
 		return RestResultUtils.success();
 	}
 
-	@PostMapping("comment/doDelete")
-	public Object doDeleteComment(@RequestParam(name = "id") Long id) {
-		singlePageCommentService.removeById(id);
-		return RestResultUtils.success();
+	/**
+	 * 删除评论
+	 * @param commentId
+	 * @return
+	 */
+	@PostMapping("comment/delete/{commentId}")
+	public RestResult<Boolean> deleteComment(@PathVariable("commentId") Long commentId) {
+		return RestResultUtils.success(singlePageCommentService.removeById(commentId));
 	}
 
 }

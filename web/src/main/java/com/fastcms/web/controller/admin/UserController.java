@@ -24,7 +24,6 @@ import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.entity.User;
-import com.fastcms.entity.UserTag;
 import com.fastcms.service.IPermissionService;
 import com.fastcms.service.IRoleService;
 import com.fastcms.service.IUserService;
@@ -69,10 +68,10 @@ public class UserController {
      * @return
      */
     @GetMapping("list")
-    public Object list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-                       @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
-                       @RequestParam(name = "phone", required = false) String phone,
-                       @RequestParam(name = "status", required = false, defaultValue = "1") Integer status) {
+    public RestResult<Page<User>> list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
+                                       @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
+                                       @RequestParam(name = "phone", required = false) String phone,
+                                       @RequestParam(name = "status", required = false, defaultValue = "1") Integer status) {
         LambdaQueryWrapper<User> queryWrapper = new QueryWrapper().lambda();
         queryWrapper.eq(User::getStatus, status);
         if(StrUtils.isNotBlank(phone)) {
@@ -89,7 +88,7 @@ public class UserController {
      * @return
      */
     @GetMapping("getMenus")
-    public Object getMenus() {
+    public RestResult<List<IPermissionService.PermissionNode>> getMenus() {
         return RestResultUtils.success(permissionService.getPermissions());
     }
 
@@ -98,8 +97,8 @@ public class UserController {
      * @param user
      * @return
      */
-    @PostMapping("doSave")
-    public Object doSave(@Validated User user) {
+    @PostMapping("save")
+    public RestResult<Boolean> save(@Validated User user) {
 
         User userInDb = userService.getOne(new QueryWrapper<User>().lambda().eq(User::getUserName, user.getUserName()));
         if(userInDb != null) {
@@ -109,8 +108,8 @@ public class UserController {
         final String salt = System.currentTimeMillis() + "";
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setSalt(salt);
-        userService.saveOrUpdate(user);
-        return RestResultUtils.success();
+        boolean result = userService.saveOrUpdate(user);
+        return RestResultUtils.success(result);
     }
 
     /**
@@ -118,14 +117,19 @@ public class UserController {
      * @param user
      * @return
      */
-    @PostMapping("doEdit")
-    public Object doEdit(User user) {
-        userService.saveOrUpdate(user);
-        return RestResultUtils.success();
+    @PostMapping("update")
+    public RestResult<Boolean> update(User user) {
+        return RestResultUtils.success(userService.updateById(user));
     }
 
-    @PostMapping("doEditRole")
-    public RestResult doEditRole(@RequestParam("userId") Long userId, @RequestParam("roleIds[]") List<Long> roleIds) {
+    /**
+     * 分配角色
+     * @param userId    用户id
+     * @param roleIds   角色集合
+     * @return
+     */
+    @PostMapping("{userId}/roles/save/")
+    public Object saveUserRoles(@PathVariable("userId") Long userId, @RequestParam("roleIds[]") List<Long> roleIds) {
         if(userId != null && Objects.equals(userId, FastcmsConstants.ADMIN_USER_ID)) {
             return RestResultUtils.failed("admin不允许修改权限");
         }
@@ -133,14 +137,14 @@ public class UserController {
         return RestResultUtils.success();
     }
 
-    @PostMapping("tag/doSave")
-    public Object doSaveUserTag(@Validated UserTag userTag) {
-        userTagService.saveOrUpdate(userTag);
-        return RestResultUtils.success();
-    }
-
-    @PostMapping("doEditTag")
-    public Object doEditTag(@RequestParam("userId") Long userId, @RequestParam("tagIds[]") List<Long> tagIds) {
+    /**
+     * 分配标签
+     * @param userId    用户id
+     * @param tagIds    标签集合
+     * @return
+     */
+    @PostMapping("{userId}/tags/save")
+    public Object saveUserTags(@PathVariable("userId") Long userId, @RequestParam("tagIds[]") List<Long> tagIds) {
         userTagService.saveUserTagRelation(userId, tagIds);
         return RestResultUtils.success();
     }

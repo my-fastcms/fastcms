@@ -21,8 +21,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.service.IArticleService;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,9 +52,9 @@ public class ArticleApi {
 	 * @return
 	 */
 	@RequestMapping("/list")
-	public Object list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-							   @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
-							   @RequestParam(name = "categoryId", required = false) Long categoryId) {
+	public RestResult<Page<IArticleService.ArticleVo>> list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
+															@RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
+															@RequestParam(name = "categoryId", required = false) Long categoryId) {
 
 		QueryWrapper queryWrapper = new QueryWrapper();
 		if(categoryId != null) {
@@ -70,8 +72,8 @@ public class ArticleApi {
 	 * @param articleId 文章id
 	 * @return
 	 */
-	@RequestMapping("/detail")
-	public Object detail(Long articleId) {
+	@RequestMapping("/detail/{articleId}")
+	public RestResult<IArticleService.ArticleInfoVo> detail(@PathVariable("articleId") Long articleId) {
 		IArticleService.ArticleInfoVo articleInfo = articleService.getArticleById(articleId);
 		return RestResultUtils.success(articleInfo);
 	}

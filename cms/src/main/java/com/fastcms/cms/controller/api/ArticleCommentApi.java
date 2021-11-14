@@ -19,6 +19,7 @@ package com.fastcms.cms.controller.api;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.cms.service.IArticleCommentService;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * 文章评论
  * @author： wjun_java@163.com
  * @date： 2021/6/7
  * @description：
@@ -40,15 +42,30 @@ public class ArticleCommentApi {
 	@Autowired
 	IArticleCommentService articleCommentService;
 
+	/**
+	 * 评论列表
+	 * @param page
+	 * @param pageSize
+	 * @param articleId
+	 * @return
+	 */
 	@RequestMapping("list")
-	public Object list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-							   @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
-							   Long articleId) {
+	public RestResult<Page<IArticleCommentService.ArticleCommentVo>> list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
+																		  @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
+																		  Long articleId) {
 		return RestResultUtils.success(articleCommentService.pageArticleCommentByArticleId(new Page(page, pageSize), articleId));
 	}
 
-	@PostMapping("doSaveComment")
-	public Object doSaveComment(Long articleId, Long commentId, String context, String captcha) {
+	/**
+	 * 保存评论
+	 * @param articleId
+	 * @param commentId
+	 * @param context
+	 * @param captcha
+	 * @return
+	 */
+	@PostMapping("save")
+	public Object saveComment(Long articleId, Long commentId, String context, String captcha) {
 
 		try {
 			articleCommentService.saveArticleComment(articleId, commentId, context);

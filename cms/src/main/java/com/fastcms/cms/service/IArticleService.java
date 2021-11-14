@@ -82,14 +82,41 @@ public interface IArticleService extends IService<Article> {
     void updateViewCount(Long id, Long count);
 
     class ArticleVo implements Serializable {
+        /**
+         * id
+         */
         Long id;
+        /**
+         * 标题
+         */
         String title;
+        /**
+         * 浏览次数
+         */
         Integer viewCount;
+        /**
+         * 状态
+         */
         String status;
+        /**
+         * 创建时间
+         */
         LocalDateTime created;
+        /**
+         * 作者
+         */
         String author;
+        /**
+         * 文章地址
+         */
         String url;
+        /**
+         * 缩略图
+         */
         String thumbnail;
+        /**
+         * 文章所属分类
+         */
         List<ArticleCategory> categoryList;
 
         public Long getId() {

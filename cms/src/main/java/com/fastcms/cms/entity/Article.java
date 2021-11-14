@@ -20,23 +20,44 @@ public class Article implements Serializable {
     public static final String STATUS_DRAFT = "draft";
     public static final String STATUS_AUDIT = "audit";
 
+    /**
+     * id
+     */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+    /**
+     * 创建用户
+     */
     @TableField(fill = FieldFill.INSERT)
     private Long userId;
 
+    /**
+     * 文章标题
+     */
     @NotBlank(message = "文章标题不能为空")
     private String title;
 
+    /**
+     * 文章详情
+     */
     @NotBlank(message = "文章详情不能为空")
     private String contentHtml;
 
+    /**
+     * 文章摘要
+     */
     @NotBlank(message = "文章摘要不能为空")
     private String summary;
 
+    /**
+     * seo关键字
+     */
     private String seoKeywords;
 
+    /**
+     * seo描述
+     */
     private String seoDescription;
 
     /**
@@ -65,13 +86,25 @@ public class Article implements Serializable {
     @NotBlank(message = "缩略图不能为空")
     private String thumbnail;
 
+    /**
+     * 状态
+     */
     private String status;
 
+    /**
+     * 前缀
+     */
     private String suffix;
 
+    /**
+     * 创建时间
+     */
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime created;
 
+    /**
+     * 更新时间
+     */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updated;
 

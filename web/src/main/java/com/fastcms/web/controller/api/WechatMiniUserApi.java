@@ -21,6 +21,7 @@ import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.entity.User;
@@ -36,7 +37,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 微信小程序用户授权登录
+ * 微信小程序用户
  * @author： wjun_java@163.com
  * @date： 2021/6/6
  * @description：
@@ -102,7 +103,7 @@ public class WechatMiniUserApi {
 	 * @return
 	 */
 	@PostMapping("login")
-	public Object login(@RequestBody Map<String, Object> params) {
+	public RestResult<User> login(@RequestBody Map<String, Object> params) {
 
 		String sessionId = (String) params.get("sessionId");
 		WxSession session = wxSessionManager.getSession(sessionId);
@@ -150,7 +151,7 @@ public class WechatMiniUserApi {
 	 * @return
 	 */
 	@PostMapping("getUserPhone")
-	public Object getUserPhone(@RequestBody Map<String, Object> params) {
+	public RestResult<String> getUserPhone(@RequestBody Map<String, Object> params) {
 		String sessionId = (String) params.get("sessionId");
 		if(StrUtils.isBlank(sessionId)) {
 			return RestResultUtils.failed("获取手机号:获取到空session");

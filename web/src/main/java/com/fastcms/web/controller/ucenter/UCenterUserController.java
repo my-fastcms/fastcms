@@ -17,6 +17,7 @@
 package com.fastcms.web.controller.ucenter;
 
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.entity.User;
 import com.fastcms.service.IUserService;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * 用户管理
  * @author： wjun_java@163.com
  * @date： 2021/6/4
  * @description：
@@ -40,13 +42,22 @@ public class UCenterUserController {
 	@Autowired
 	private IUserService userService;
 
-	@PostMapping("doSave")
-	public Object doSave(@Validated User user) {
-		userService.updateById(user);
-		return RestResultUtils.success();
+	/**
+	 * 保存用户信息
+	 * @param user
+	 * @return
+	 */
+	@PostMapping("save")
+	public RestResult<Boolean> save(@Validated User user) {
+		return RestResultUtils.success(userService.updateById(user));
 	}
 
-	@PostMapping("doEditPwd")
+	/**
+	 * 修改密码
+	 * @param user
+	 * @return
+	 */
+	@PostMapping("password/update")
 	public Object doEditPwd(User user) {
 		try {
 			userService.updateUserPassword(user);
@@ -56,8 +67,43 @@ public class UCenterUserController {
 		}
 	}
 
-	@PostMapping("doSaveAvatar")
-	public Object doSaveAvatar(String path, int x, int y, int w, int h) {
+	/**
+	 * 保存头像
+	 * @param path
+	 * @param x
+	 * @param y
+	 * @param w
+	 * @param h
+	 * @return
+	 */
+	@PostMapping("avatar/save")
+	public Object saveAvatar(String path, int x, int y, int w, int h) {
+		return RestResultUtils.success();
+	}
+
+	/**
+	 * 用户注册
+	 * @param username	账号
+	 * @param nickName	昵称
+	 * @param email		邮箱
+	 * @param password	密码
+	 * @param captcha	验证码
+	 * @return
+	 */
+	@PostMapping("register")
+	public Object register(String username, String nickName, String email, String password, String captcha) {
+
+		final String salt = System.currentTimeMillis() + "";
+//        final String md5password = PasswordUtils.getMd5Password(salt, password);
+		User user = new User();
+		user.setUserName(username);
+		user.setNickName(nickName);
+//        user.setPassword(md5password);
+		user.setEmail(email);
+		user.setSalt(salt);
+		user.setSource(User.SourceType.WEB_REGISTER.name().toLowerCase());
+		userService.saveOrUpdate(user);
+
 		return RestResultUtils.success();
 	}
 

@@ -91,6 +91,9 @@ public class User implements Serializable {
      */
     private LocalDateTime updated;
 
+    /**
+     * @ignore
+     */
     private Integer version;
 
     @TableField(exist = false)

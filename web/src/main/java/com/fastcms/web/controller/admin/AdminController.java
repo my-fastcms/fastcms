@@ -17,22 +17,16 @@
 package com.fastcms.web.controller.admin;
 
 import com.fastcms.common.constants.FastcmsConstants;
-import com.fastcms.common.model.Captcha;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.common.utils.StrUtils;
-import com.fastcms.core.utils.RequestUtils;
+import com.fastcms.core.captcha.FastcmsCaptcha;
+import com.fastcms.core.captcha.FastcmsCaptchaService;
 import com.fastcms.web.security.AccessException;
 import com.fastcms.web.security.AuthManager;
 import com.fastcms.web.security.FastcmsUser;
-import com.wf.captcha.SpecCaptcha;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-
-import static com.fastcms.common.constants.FastcmsConstants.WEB_LOGIN_CODE_CACHE_NAME;
 
 /**
  * 登录授权
@@ -51,6 +45,9 @@ public class AdminController {
 
     @Autowired
     private AuthManager authManager;
+
+    @Autowired
+    private FastcmsCaptchaService fastcmsCaptchaService;
 
     /**
      * 登录
@@ -77,12 +74,8 @@ public class AdminController {
      * @return
      */
     @GetMapping("captcha")
-    public RestResult<Captcha> captcha(HttpServletRequest request) {
-        SpecCaptcha specCaptcha = new SpecCaptcha(130, 48, 4);
-        final String verCode = specCaptcha.text().toLowerCase();
-        final String key = RequestUtils.getClientId(request) == null ? StrUtils.uuid() : RequestUtils.getClientId(request);
-        cacheManager.getCache(WEB_LOGIN_CODE_CACHE_NAME).put(key, verCode);
-        return RestResultUtils.success(new Captcha(verCode, key, specCaptcha.toBase64()));
+    public RestResult<FastcmsCaptcha> captcha() {
+        return RestResultUtils.success(fastcmsCaptchaService.getCaptcha());
     }
 
 }

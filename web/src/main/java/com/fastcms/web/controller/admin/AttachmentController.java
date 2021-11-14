@@ -16,8 +16,6 @@
  */
 package com.fastcms.web.controller.admin;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.constants.FastcmsConstants;
@@ -72,9 +70,9 @@ public class AttachmentController {
      * @param files     待上传文件
      * @return
      */
-    @PostMapping("doUpload")
+    @PostMapping("upload")
     @ExceptionHandler(value = MultipartException.class)
-    public Object doUpload(@RequestParam("files") MultipartFile files[]) {
+    public Object upload(@RequestParam("files") MultipartFile files[]) {
 
         List<String> errorFiles = new ArrayList<>();
 
@@ -145,12 +143,12 @@ public class AttachmentController {
 
     /**
      * 删除附件
-     * @param id    附件id
+     * @param attachId    附件id
      * @return
      */
-    @PostMapping("doDelete")
-    public Object doDelete(@RequestParam(name = "id") Long id) {
-        Attachment attachment = attachmentService.getById(id);
+    @PostMapping("delete/{attachId}")
+    public Object delete(@PathVariable(name = "attachId") Long attachId) {
+        Attachment attachment = attachmentService.getById(attachId);
         if(attachment == null) return RestResultUtils.failed("文件不存在");
 
         if(attachmentService.removeById(attachment.getId())) {
@@ -164,25 +162,25 @@ public class AttachmentController {
         return RestResultUtils.success();
     }
 
-    @RequestMapping("browse")
-    public Object browse(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-                         @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
-        LambdaQueryWrapper<Attachment> queryWrapper = new QueryWrapper().lambda();
-        queryWrapper.orderByDesc(Attachment::getCreated);
-        Page pageParam = new Page<>(page, pageSize);
-        Page<Attachment> pageData = attachmentService.page(pageParam, queryWrapper);
-        return RestResultUtils.success(pageData);
-    }
-
-    @PostMapping("doUploadOfCKEditor")
+    /**
+     * 在编辑器中上传附件
+     * @param file
+     * @return
+     */
+    @PostMapping("upload/ckeditor")
     @ExceptionHandler(value = MultipartException.class)
-    public Object doUploadOfCKEditor(@RequestParam("upload") MultipartFile file) {
+    public Object upload4CKEditor(@RequestParam("upload") MultipartFile file) {
         return uploadOfCKEditor(file, false);
     }
 
-    @PostMapping("doUploadOfCKEditorBrowse")
+    /**
+     * 弹出框中上传附件
+     * @param file
+     * @return
+     */
+    @PostMapping("upload/cKeditor/browse")
     @ExceptionHandler(value = MultipartException.class)
-    public Object doUploadOfCKEditorBrowse(@RequestParam("file") MultipartFile file) {
+    public Object upload4CKEditorBrowse(@RequestParam("file") MultipartFile file) {
         return uploadOfCKEditor(file, true);
     }
 

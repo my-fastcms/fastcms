@@ -45,7 +45,7 @@ api[1].list[1].list.push({
 api[1].list[1].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/doUpload',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/upload',
     desc: '上传附件',
 });
 api[1].list[1].list.push({
@@ -57,83 +57,77 @@ api[1].list[1].list.push({
 api[1].list[1].list.push({
     order: '4',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/doDelete',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/delete/{attachId}',
     desc: '删除附件',
 });
 api[1].list[1].list.push({
     order: '5',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/browse',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/upload/ckeditor',
+    desc: '在编辑器中上传附件',
 });
 api[1].list[1].list.push({
     order: '6',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/doUploadOfCKEditor',
-    desc: '',
-});
-api[1].list[1].list.push({
-    order: '7',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/doUploadOfCKEditorBrowse',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/upload/cKeditor/browse',
+    desc: '弹出框中上传附件',
 });
 api[1].list.push({
     alias: 'ConfigController',
     order: '3',
-    link: '',
-    desc: '',
+    link: '配置',
+    desc: '配置',
     list: []
 })
 api[1].list[2].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/config/doSave',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/config/save',
+    desc: '保存配置',
 });
 api[1].list.push({
     alias: 'MenuController',
     order: '4',
-    link: '',
-    desc: '',
+    link: '菜单管理',
+    desc: '菜单管理',
     list: []
 })
 api[1].list[3].list.push({
     order: '1',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/menu/list',
-    desc: '',
+    desc: '菜单列表',
 });
 api[1].list[3].list.push({
     order: '2',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/menu/save',
-    desc: '',
+    desc: '保存菜单',
 });
 api[1].list[3].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/menu/del',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/menu/delete/{menuId}',
+    desc: '删除菜单',
 });
 api[1].list.push({
     alias: 'PluginController',
     order: '5',
-    link: '',
-    desc: '',
+    link: '插件管理',
+    desc: '插件管理',
     list: []
 })
 api[1].list[4].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/plugin/doInstall',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/plugin/install',
+    desc: '上传插件',
 });
 api[1].list[4].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/plugin/doUnInstall',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/plugin/unInstall',
+    desc: '卸载插件',
 });
 api[1].list.push({
     alias: 'RoleController',
@@ -163,82 +157,51 @@ api[1].list[5].list.push({
 api[1].list[5].list.push({
     order: '4',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/role/saveRolePermission',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/role/{roleId}/permissions/save',
     desc: '保存角色权限',
 });
 api[1].list.push({
-    alias: 'SetupController',
-    order: '7',
-    link: '',
-    desc: '',
-    list: []
-})
-api[1].list[6].list.push({
-    order: '1',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/setup/wechatMini',
-    desc: '',
-});
-api[1].list[6].list.push({
-    order: '2',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/setup/pay',
-    desc: '',
-});
-api[1].list[6].list.push({
-    order: '3',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/setup/icons',
-    desc: '',
-});
-api[1].list.push({
     alias: 'UserController',
-    order: '8',
+    order: '7',
     link: '用户管理',
     desc: '用户管理',
     list: []
 })
-api[1].list[7].list.push({
+api[1].list[6].list.push({
     order: '1',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/user/list',
     desc: '用户列表',
 });
-api[1].list[7].list.push({
+api[1].list[6].list.push({
     order: '2',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/user/getMenus',
     desc: '获取用户菜单',
 });
-api[1].list[7].list.push({
+api[1].list[6].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/user/doSave',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/user/save',
     desc: '保存用户信息',
 });
-api[1].list[7].list.push({
+api[1].list[6].list.push({
     order: '4',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/user/doEdit',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/user/update',
     desc: '编辑用户信息',
 });
-api[1].list[7].list.push({
+api[1].list[6].list.push({
     order: '5',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/user/doEditRole',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/user/{userId}/roles/save/',
+    desc: '分配角色',
 });
-api[1].list[7].list.push({
+api[1].list[6].list.push({
     order: '6',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/user/tag/doSave',
-    desc: '',
-});
-api[1].list[7].list.push({
-    order: '7',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/user/doEditTag',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/user/{userId}/tags/save',
+    desc: '分配标签',
 });
 api.push({
     name: '基础-api',
@@ -248,8 +211,8 @@ api.push({
 api[2].list.push({
     alias: 'PaymentCallbackController',
     order: '1',
-    link: '',
-    desc: '',
+    link: '支付回调',
+    desc: '支付回调',
     list: []
 })
 api[2].list[0].list.push({
@@ -261,15 +224,15 @@ api[2].list[0].list.push({
 api[2].list.push({
     alias: 'UploadApi',
     order: '2',
-    link: '',
-    desc: '',
+    link: '文件上传',
+    desc: '文件上传',
     list: []
 })
 api[2].list[1].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/api/upload/doUpload',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/api/upload/',
+    desc: '上传',
 });
 api[2].list.push({
     alias: 'UserApi',
@@ -281,8 +244,8 @@ api[2].list.push({
 api[2].list.push({
     alias: 'WechatMiniUserApi',
     order: '4',
-    link: '微信小程序用户授权登录',
-    desc: '微信小程序用户授权登录',
+    link: '微信小程序用户',
+    desc: '微信小程序用户',
     list: []
 })
 api[2].list[3].list.push({
@@ -315,42 +278,35 @@ api.push({
     list: []
 })
 api[3].list.push({
-    alias: 'UCenterController',
+    alias: 'UCenterUserController',
     order: '1',
-    link: '',
-    desc: '',
+    link: '用户管理',
+    desc: '用户管理',
     list: []
 })
 api[3].list[0].list.push({
     order: '1',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/ucenter/register',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/ucenter/user/save',
+    desc: '保存用户信息',
 });
-api[3].list.push({
-    alias: 'UCenterUserController',
-    order: '2',
-    link: '',
-    desc: '',
-    list: []
-})
-api[3].list[1].list.push({
-    order: '1',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/ucenter/user/doSave',
-    desc: '',
-});
-api[3].list[1].list.push({
+api[3].list[0].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/ucenter/user/doEditPwd',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/ucenter/user/password/update',
+    desc: '修改密码',
 });
-api[3].list[1].list.push({
+api[3].list[0].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/ucenter/user/doSaveAvatar',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/ucenter/user/avatar/save',
+    desc: '保存头像',
+});
+api[3].list[0].list.push({
+    order: '4',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/ucenter/user/register',
+    desc: '用户注册',
 });
 api.push({
     name: 'CMS-admin',
@@ -373,154 +329,154 @@ api[4].list[0].list.push({
 api[4].list[0].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/article/doSave',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/article/save',
+    desc: '保存文章',
 });
 api[4].list[0].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/article/category/doSave',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/article/{articleId}',
+    desc: '文章详情',
 });
 api[4].list[0].list.push({
     order: '4',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/article/category/doDelete',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/article/category/save',
+    desc: '保存分类',
 });
 api[4].list[0].list.push({
     order: '5',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/article/comment/doSave',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/article/category/delete/{categoryId}',
+    desc: '删除分类',
 });
 api[4].list[0].list.push({
     order: '6',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/article/comment/doDelete',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/article/comment/save',
+    desc: '保存评论',
+});
+api[4].list[0].list.push({
+    order: '7',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/article/comment/delete/{commentId}',
+    desc: '删除评论',
 });
 api[4].list.push({
     alias: 'PageController',
     order: '2',
-    link: '',
-    desc: '',
+    link: '页面管理',
+    desc: '页面管理',
     list: []
 })
 api[4].list[1].list.push({
     order: '1',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/page/list',
-    desc: '',
+    desc: '页面列表',
 });
 api[4].list[1].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/page/doSave',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/page/save',
+    desc: '保存页面',
 });
 api[4].list[1].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/page/comment/doSave',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/page/comment/save',
+    desc: '保存评论',
 });
 api[4].list[1].list.push({
     order: '4',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/page/comment/doDelete',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/page/comment/delete/{commentId}',
+    desc: '删除评论',
 });
 api[4].list.push({
     alias: 'TemplateController',
     order: '3',
-    link: '模板管理接口',
-    desc: '模板管理接口',
+    link: '模板管理',
+    desc: '模板管理',
     list: []
 })
 api[4].list[2].list.push({
     order: '1',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/template/list',
-    desc: '',
+    desc: '模板列表',
 });
 api[4].list[2].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/install',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/current',
+    desc: '获取当前模板',
 });
 api[4].list[2].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/doInstall',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/install',
+    desc: '安装模板',
 });
 api[4].list[2].list.push({
     order: '4',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/doUnInstall',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/unInstall',
+    desc: '卸载模板',
 });
 api[4].list[2].list.push({
     order: '5',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/template/edit',
-    desc: '',
+    desc: '编辑模板',
 });
 api[4].list[2].list.push({
     order: '6',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/doEnable',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/enable/{templateId}',
+    desc: '激活模板',
 });
 api[4].list[2].list.push({
     order: '7',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/doEditSave',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/save',
+    desc: '保存模板',
 });
 api[4].list[2].list.push({
     order: '8',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/doUpload',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/upload',
+    desc: '上传模板文件',
 });
 api[4].list[2].list.push({
     order: '9',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/doDelFile',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/file/delete/{filePath}',
+    desc: '删除模板文件',
 });
 api[4].list[2].list.push({
     order: '10',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/template/menu/list',
-    desc: '',
+    desc: '菜单列表',
 });
 api[4].list[2].list.push({
     order: '11',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/menu/edit',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/menu/get/{menuId}',
+    desc: '菜单信息',
 });
 api[4].list[2].list.push({
     order: '12',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/menu/doSave',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/menu/save',
+    desc: '保存菜单',
 });
 api[4].list[2].list.push({
     order: '13',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/menu/doDelete',
-    desc: '',
-});
-api[4].list[2].list.push({
-    order: '14',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/setting/doSave',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/template/menu/delete/{menuId}',
+    desc: '删除菜单',
 });
 api.push({
     name: 'CMS-api',
@@ -543,40 +499,40 @@ api[5].list[0].list.push({
 api[5].list[0].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/api/article/detail',
+    url: 'http://127.0.0.1:8080/fastcms/api/api/article/detail/{articleId}',
     desc: '文章详情',
 });
 api[5].list.push({
     alias: 'ArticleCategoryApi',
     order: '2',
-    link: '',
-    desc: '',
+    link: '文章分类',
+    desc: '文章分类',
     list: []
 })
 api[5].list[1].list.push({
     order: '1',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/api/article/category/list',
-    desc: '',
+    desc: '分类列表',
 });
 api[5].list.push({
     alias: 'ArticleCommentApi',
     order: '3',
-    link: '',
-    desc: '',
+    link: '文章评论',
+    desc: '文章评论',
     list: []
 })
 api[5].list[2].list.push({
     order: '1',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/api/article/comment/list',
-    desc: '',
+    desc: '评论列表',
 });
 api[5].list[2].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/api/article/comment/doSaveComment',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/api/article/comment/save',
+    desc: '保存评论',
 });
 api.push({
     name: 'CMS-ucenter',
@@ -586,27 +542,21 @@ api.push({
 api[6].list.push({
     alias: 'UCenterArticleController',
     order: '1',
-    link: '文章接口',
-    desc: '文章接口',
+    link: '文章管理',
+    desc: '文章管理',
     list: []
 })
 api[6].list[0].list.push({
     order: '1',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/ucenter/article/list',
-    desc: '',
+    desc: '文章列表',
 });
 api[6].list[0].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/ucenter/article/doSave',
-    desc: '',
-});
-api[6].list[0].list.push({
-    order: '3',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/ucenter/article/doSaveComment',
-    desc: '',
+    url: 'http://127.0.0.1:8080/fastcms/api/ucenter/article/save',
+    desc: '保存评论',
 });
 document.onkeydown = keyDownSearch;
 function keyDownSearch(e) {

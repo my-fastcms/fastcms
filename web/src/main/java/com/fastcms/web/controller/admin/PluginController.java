@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 
 /**
+ * 插件管理
  * @author： wjun_java@163.com
  * @date： 2021/4/22
  * @description：
@@ -42,8 +43,13 @@ public class PluginController {
 //    @Autowired
 //    private PluginManagerService pluginService;
 
-    @PostMapping("doInstall")
-    public Object doInstall(@RequestParam("file") MultipartFile file) {
+    /**
+     * 上传插件
+     * @param file
+     * @return
+     */
+    @PostMapping("install")
+    public Object install(@RequestParam("file") MultipartFile file) {
 
         String fileName = file.getOriginalFilename();
         String suffixName = fileName.substring(fileName.lastIndexOf(".") + 1);
@@ -69,8 +75,13 @@ public class PluginController {
         }
     }
 
-    @PostMapping("doUnInstall")
-    public Object doUnInstall(@RequestParam(name = "pluginId") String pluginId) {
+    /**
+     * 卸载插件
+     * @param pluginId  插件id
+     * @return
+     */
+    @PostMapping("unInstall")
+    public Object unInstall(@RequestParam(name = "pluginId") String pluginId) {
 
         try {
 //            pluginService.unInstallPlugin(pluginId);

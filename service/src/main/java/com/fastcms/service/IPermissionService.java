@@ -50,14 +50,42 @@ public interface IPermissionService extends IService<Permission> {
     void deleteRolePermissionByPermission(List<Permission> permissionList);
 
     class PermissionNode implements Serializable {
+
+        /**
+         * id
+         */
         private Long id;
+        /**
+         * 上级id
+         */
         private Long parentId;
+        /**
+         * 名称
+         */
         private String name;
+        /**
+         * 路径
+         */
         private String path;
+        /**
+         * 组件
+         */
         private String component;
+        /**
+         * 是否链接
+         */
         private Boolean isLink;
+        /**
+         * 排序
+         */
         private Integer menuSort;
+        /**
+         * 元数据
+         */
         private Meta meta;
+        /**
+         * 子节点集合
+         */
         private List<PermissionNode> children;
 
         public PermissionNode(Long id, Long parentId, String name, String path, String component, Boolean isLink, Integer menuSort,
@@ -75,12 +103,33 @@ public interface IPermissionService extends IService<Permission> {
         }
 
         public static class Meta implements Serializable {
+            /**
+             * 标题
+             */
             private String title;
+            /**
+             * 图标
+             */
             private String icon;
+            /**
+             * 是否隐藏
+             */
             private Boolean isHide;
+            /**
+             * 是否保持
+             */
             private Boolean isKeepAlive;
+            /**
+             * 是否固定
+             */
             private Boolean isAffix;
+            /**
+             * 是否iframe
+             */
             private Boolean isIframe;
+            /**
+             * 权限集合
+             */
             private List<String> auth;
 
             public Meta(String title, String icon, Boolean isHide, Boolean isKeepAlive, Boolean isAffix, Boolean isIframe, List<String> auth) {

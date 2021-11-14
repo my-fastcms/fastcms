@@ -18,7 +18,6 @@ package com.fastcms.web.controller.api;
 
 import com.fastcms.payment.PayServiceManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 /**
+ * 支付回调
  * @author： wjun_java@163.com
  * @date： 2021/6/22
  * @description：

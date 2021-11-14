@@ -44,14 +44,38 @@ public interface IArticleCommentService extends IService<ArticleComment> {
 	void saveArticleComment(Long articleId, Long commentId, String content) throws Exception;
 
 	class ArticleCommentVo implements Serializable {
-		Long id;
-		String articleTitle;
-		String author;
-		String authorAvatar;
-		String content;
-		String parentComment;
-		LocalDateTime created;
 
+		/**
+		 * ID
+		 */
+		Long id;
+		/**
+		 * 文章标题
+		 */
+		String articleTitle;
+		/**
+		 * 作者
+		 */
+		String author;
+		/**
+		 * 作者头像
+		 */
+		String authorAvatar;
+		/**
+		 * 评论内容
+		 */
+		String content;
+		/**
+		 * 回复内容
+		 */
+		String parentComment;
+		/**
+		 * 创建者
+		 */
+		LocalDateTime created;
+		/**
+		 * 回复列表
+		 */
 		List<ArticleCommentVo> replyCommentList;
 
 		public Long getId() {

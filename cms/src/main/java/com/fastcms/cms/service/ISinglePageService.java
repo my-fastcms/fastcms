@@ -32,6 +32,10 @@ public interface ISinglePageService extends IService<SinglePage> {
 	Page<ISinglePageService.SinglePageVo> pageSinglePage(Page pageParam, QueryWrapper queryWrapper);
 
 	class SinglePageVo extends SinglePage {
+
+		/**
+		 * 创建者
+		 */
 		String createdUser;
 
 		public String getCreatedUser() {

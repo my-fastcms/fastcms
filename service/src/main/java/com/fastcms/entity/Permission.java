@@ -26,32 +26,74 @@ public class Permission implements Serializable {
      */
     private Long parentId;
 
+    /**
+     * 名称
+     */
     private String name;
 
+    /**
+     * 路径
+     */
     private String path;
 
+    /**
+     * 组件
+     */
     private String component;
 
+    /**
+     * 标题
+     */
     private String title;
 
+    /**
+     * 图标
+     */
     private String icon;
 
+    /**
+     * 是否超链接
+     */
     private Boolean isLink;
 
+    /**
+     * 是否隐藏
+     */
     private Boolean isHide;
 
+    /**
+     * 是否保持
+     */
     private Boolean isKeepAlive;
 
+    /**
+     * 是否固定
+     */
     private Boolean isAffix;
 
+    /**
+     * 是否iframe
+     */
     private Boolean isIframe;
 
+    /**
+     * 排序
+     */
     private Integer sortNum;
 
+    /**
+     * 类别
+     */
     private String category;
 
+    /**
+     * 创建时间
+     */
     private LocalDateTime created;
 
+    /**
+     * 更新时间
+     */
     private LocalDateTime updated;
 
     public Long getId() {
