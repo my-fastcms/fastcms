@@ -284,4 +284,55 @@ public interface IPermissionService extends IService<Permission> {
         }
     }
 
+    class TreeNode implements Serializable {
+        /**
+         * id
+         */
+        private Long id;
+        /**
+         * 名称
+         */
+        private String label;
+        /**
+         * 是否显示
+         */
+        private Boolean isShow;
+        /**
+         * 子节点集合
+         */
+        List<TreeNode> children;
+
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public void setLabel(String label) {
+            this.label = label;
+        }
+
+        public Boolean getShow() {
+            return isShow;
+        }
+
+        public void setShow(Boolean show) {
+            isShow = show;
+        }
+
+        public List<TreeNode> getChildren() {
+            return children;
+        }
+
+        public void setChildren(List<TreeNode> children) {
+            this.children = children;
+        }
+    }
+
 }

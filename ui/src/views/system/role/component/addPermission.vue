@@ -1,7 +1,14 @@
 <template>
 	<div class="system-menu-container">
 		<el-dialog title="权限设置" fullscreen v-model="isShowDialog" width="769px">
-			<el-tree :data="treeData" show-checkbox node-key="id" ref="treeTable" :props="treeDefaultProps" @check="onCheckTree">
+			<el-tree :data="treeData" 
+					show-checkbox 
+					node-key="id" 
+					:default-expand-all="true"
+					ref="treeTable" 
+					:props="treeDefaultProps" 
+					:default-checked-keys="defaultCheckedKeys"
+					@check="onCheckTree">
              </el-tree>
 			<template #footer>
 				<span class="dialog-footer">
@@ -25,6 +32,7 @@ export default {
 			isShowDialog: false,
 			treeCheckAll: false,
 			treeLoading: false,
+			defaultCheckedKeys: [1, 2],
 			treeData: [],
 			treeDefaultProps: {
 				children: 'children',

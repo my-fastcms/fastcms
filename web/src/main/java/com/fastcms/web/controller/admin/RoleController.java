@@ -98,8 +98,8 @@ public class RoleController {
      * @param roleId    角色id
      * @return
      */
-    @GetMapping("permissions")
-    public RestResult<List<IPermissionService.PermissionNode>> getPermissionList(@RequestParam(name = "roleId") Long roleId) {
+    @GetMapping("{roleId}/permissions")
+    public RestResult<List<IPermissionService.PermissionNode>> getPermissionList(@PathVariable("roleId") Long roleId) {
         return RestResultUtils.success(permissionService.getPermissionByRoleId(roleId));
     }
 
