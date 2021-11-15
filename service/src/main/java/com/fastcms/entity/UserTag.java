@@ -1,15 +1,15 @@
 package com.fastcms.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
+
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
- * <p>
- * 
- * </p>
- *
+ * 用户标签
  * @author wjun_java@163.com
  * @since 2021-11-12
  */
@@ -20,14 +20,31 @@ public class UserTag implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+    /**
+     * 标签名称
+     */
     private String title;
 
+    /**
+     * 标签描述
+     */
     private String desc;
 
+    /**
+     * 排序
+     */
     private Integer sortNum;
 
+    /**
+     * 创建时间
+     */
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime created;
 
+    /**
+     * 更新时间
+     */
+    @TableField(fill = FieldFill.UPDATE)
     private LocalDateTime updated;
 
     public Long getId() {

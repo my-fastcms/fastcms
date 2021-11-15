@@ -17,6 +17,7 @@
 package com.fastcms.cms.controller.admin;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.entity.ArticleCategory;
@@ -27,7 +28,8 @@ import com.fastcms.cms.service.IArticleService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
-import org.apache.commons.lang.StringUtils;
+import com.fastcms.common.utils.StrUtils;
+import com.fastcms.core.mybatis.PageModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -56,7 +58,6 @@ public class ArticleController {
     /**
      * 文章列表
      * @param page
-     * @param pageSize
      * @param title
      * @param status
      * @param categoryId
@@ -64,28 +65,18 @@ public class ArticleController {
      * @return
      */
     @RequestMapping("list")
-    public RestResult<Page<IArticleService.ArticleVo>> list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-                                                            @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
+    public RestResult<Page<IArticleService.ArticleVo>> list(PageModel page,
                                                             @RequestParam(name = "title", required = false) String title,
                                                             @RequestParam(name = "status", required = false) String status,
                                                             @RequestParam(name = "categoryId", required = false) String categoryId,
                                                             @RequestParam(name = "tagId", required = false) String tagId) {
-        QueryWrapper queryWrapper = new QueryWrapper();
-        if(StringUtils.isNotBlank(title)) {
-            queryWrapper.like("a.title", title);
-        }
-        if(StringUtils.isNotBlank(status)) {
-            queryWrapper.eq("a.status", status);
-        }
-        if(StringUtils.isNotBlank(categoryId)) {
-            queryWrapper.eq("acr.category_id", categoryId);
-        }
-        if(StringUtils.isNotBlank(tagId)) {
-            queryWrapper.eq("acr.category_id", tagId);
-        }
-        queryWrapper.orderByDesc("a.created");
-        Page pageParam = new Page<>(page, pageSize);
-        Page<IArticleService.ArticleVo> pageData = articleService.pageArticle(pageParam, queryWrapper);
+        QueryWrapper<Object> queryWrapper = Wrappers.query().like(StrUtils.isNotBlank(title), "a.title", status)
+                .eq(StrUtils.isNotBlank(status), "a.status", status)
+                .eq(StrUtils.isNotBlank(categoryId), "acr.category_id", categoryId)
+                .eq(StrUtils.isNotBlank(tagId), "acr.category_id", tagId)
+                .orderByDesc("a.created");
+
+        Page<IArticleService.ArticleVo> pageData = articleService.pageArticle(page.toPage(), queryWrapper);
 
         return RestResultUtils.success(pageData);
     }
@@ -148,12 +139,12 @@ public class ArticleController {
 
     /**
      * 删除评论
-     * @param PathVariable
+     * @param commentId
      * @return
      */
     @PostMapping("comment/delete/{commentId}")
-    public Object doDeleteComment(@PathVariable("PathVariable") Long PathVariable) {
-        articleCommentService.removeById(PathVariable);
+    public Object doDeleteComment(@PathVariable("commentId") Long commentId) {
+        articleCommentService.removeById(commentId);
         return RestResultUtils.success();
     }
 

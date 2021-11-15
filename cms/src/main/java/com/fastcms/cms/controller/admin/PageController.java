@@ -25,6 +25,7 @@ import com.fastcms.cms.service.ISinglePageService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.core.mybatis.PageModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -50,14 +51,12 @@ public class PageController {
 	/**
 	 * 页面列表
 	 * @param page
-	 * @param pageSize
 	 * @return
 	 */
 	@GetMapping("list")
-	public RestResult<Page<ISinglePageService.SinglePageVo>> list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-																  @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
+	public RestResult<Page<ISinglePageService.SinglePageVo>> list(PageModel page) {
 		QueryWrapper<SinglePage> queryWrapper = new QueryWrapper();
-		return RestResultUtils.success(singlePageService.pageSinglePage(new Page<>(page, pageSize), queryWrapper));
+		return RestResultUtils.success(singlePageService.pageSinglePage(page.toPage(), queryWrapper));
 	}
 
 	/**

@@ -23,6 +23,7 @@ import com.fastcms.cms.service.IMenuService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.core.template.Template;
 import com.fastcms.core.template.TemplateService;
 import com.fastcms.core.utils.FileUtils;
@@ -76,11 +77,10 @@ public class TemplateController {
 
     /**
      * 模板列表
-     * @param model
      * @return
      */
     @GetMapping("list")
-    public RestResult<List<Template>> list(Model model) {
+    public RestResult<List<Template>> list() {
         return RestResultUtils.success(templateService.getTemplateList());
     }
 
@@ -363,15 +363,12 @@ public class TemplateController {
     /**
      * 菜单列表
      * @param page
-     * @param pageSize
      * @return
      */
     @RequestMapping("menu/list")
-    public RestResult<Page<Menu>> menuList(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-                                           @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
+    public RestResult<Page<Menu>> menuList(PageModel page) {
         QueryWrapper queryWrapper = new QueryWrapper();
-        Page pageParam = new Page<>(page, pageSize);
-        Page<Menu> pageData = menuService.page(pageParam, queryWrapper);
+        Page<Menu> pageData = menuService.page(page.toPage(), queryWrapper);
         return RestResultUtils.success(pageData);
     }
 

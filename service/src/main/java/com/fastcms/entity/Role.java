@@ -1,9 +1,13 @@
 package com.fastcms.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
+
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -17,12 +21,16 @@ public class Role implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    /**
+     * ID
+     */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
      * 角色名称
      */
+    @NotBlank(message = "角色名称不能为空")
     private String roleName;
 
     /**
@@ -30,9 +38,22 @@ public class Role implements Serializable {
      */
     private String roleDesc;
 
+    /**
+     * 创建时间
+     */
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime created;
 
+    /**
+     * 修改时间
+     */
+    @TableField(fill = FieldFill.UPDATE)
     private LocalDateTime updated;
+
+    /**
+     * 是否启用
+     */
+    private Integer active;
 
     public Long getId() {
         return id;
@@ -70,6 +91,14 @@ public class Role implements Serializable {
         this.updated = updated;
     }
 
+    public Integer getActive() {
+        return active;
+    }
+
+    public void setActive(Integer active) {
+        this.active = active;
+    }
+
     @Override
     public String toString() {
         return "Role{" +
@@ -78,6 +107,7 @@ public class Role implements Serializable {
             ", roleDesc=" + roleDesc +
             ", created=" + created +
             ", updated=" + updated +
+            ", active=" + active +
         "}";
     }
 }

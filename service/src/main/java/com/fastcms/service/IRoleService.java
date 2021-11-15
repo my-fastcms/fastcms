@@ -2,7 +2,6 @@ package com.fastcms.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.entity.Role;
-import com.fastcms.mapper.RoleMapper;
 
 import java.util.List;
 
@@ -22,13 +21,6 @@ public interface IRoleService extends IService<Role> {
      * @param permissionIdList
      */
     void saveRolePermission(Long roleId, List<Long> permissionIdList);
-
-    /**
-     * 为指定角色保存插件菜单权限
-     * @param roleId
-     * @param permissionIdList
-     */
-    void saveRolePermissionOfPlugin(Long roleId, List<Long> permissionIdList);
 
     /**
      * 保存用户角色

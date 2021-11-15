@@ -23,6 +23,7 @@ import com.fastcms.cms.service.IArticleService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.core.mybatis.PageModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,18 +49,16 @@ public class UCenterArticleController {
 	/**
 	 * 文章列表
 	 * @param page
-	 * @param pageSize
 	 * @param title
 	 * @param status
 	 * @return
 	 */
 	@RequestMapping("list")
-	public RestResult<Page<Article>> list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-						   @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
-						   @RequestParam(name = "title", required = false) String title,
-						   @RequestParam(name = "status", required = false) String status) {
+	public RestResult<Page<Article>> list(PageModel page,
+										  @RequestParam(name = "title", required = false) String title,
+										  @RequestParam(name = "status", required = false) String status) {
 		QueryWrapper queryWrapper = new QueryWrapper();
-		Page<Article> pageData = articleService.page(new Page<>(page, pageSize), queryWrapper);
+		Page<Article> pageData = articleService.page(page.toPage(), queryWrapper);
 		return RestResultUtils.success(pageData);
 	}
 

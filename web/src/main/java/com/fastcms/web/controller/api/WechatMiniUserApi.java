@@ -150,7 +150,7 @@ public class WechatMiniUserApi {
 	 * @param params
 	 * @return
 	 */
-	@PostMapping("getUserPhone")
+	@PostMapping("phone")
 	public RestResult<String> getUserPhone(@RequestBody Map<String, Object> params) {
 		String sessionId = (String) params.get("sessionId");
 		if(StrUtils.isBlank(sessionId)) {
@@ -184,7 +184,7 @@ public class WechatMiniUserApi {
 	 * @param params
 	 * @return
 	 */
-	@PostMapping("loginByPhone")
+	@PostMapping("login/phone")
 	public Object loginByPhone(@RequestBody Map<String, Object> params) {
 		String sessionId = (String) params.get("sessionId");
 		if(StrUtils.isBlank(sessionId)) {

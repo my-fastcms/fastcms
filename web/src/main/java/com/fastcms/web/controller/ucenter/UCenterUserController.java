@@ -58,7 +58,7 @@ public class UCenterUserController {
 	 * @return
 	 */
 	@PostMapping("password/update")
-	public Object doEditPwd(User user) {
+	public Object updatePwd(User user) {
 		try {
 			userService.updateUserPassword(user);
 			return RestResultUtils.success();

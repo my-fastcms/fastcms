@@ -1,21 +1,20 @@
 <template>
-	<div class="system-user-container">
+	<div class="system-role-container">
 		<el-card shadow="hover">
-			<div class="system-user-search mb15">
-				<el-input size="small" placeholder="请输入角色名" prefix-icon="el-icon-search" style="max-width: 180px"></el-input>
+			<div class="system-role-search mb15">
+				<el-button @click="onOpenAddRole" class="mt15" size="small" type="primary" icon="iconfont icon-shuxingtu">新建角色</el-button>
+				<el-input size="small" placeholder="请输入角色名" prefix-icon="el-icon-search" style="max-width: 180px" class="ml10"></el-input>
 				<el-button size="small" type="primary" class="ml10">查询</el-button>
-				<el-button @click="onOpenAddMenu" class="mt15" size="small" type="primary" icon="iconfont icon-shuxingtu">新建角色</el-button>
 			</div>
 			<el-table :data="tableData.data" stripe style="width: 100%">
-				<el-table-column prop="num" label="ID" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="name" label="角色名" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="phone" label="手机" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="email" label="邮箱" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="sex" label="性别" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="time" label="加入时间" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="path" label="操作" width="90">
+				<el-table-column prop="id" label="ID" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="roleName" label="角色名" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="roleDesc" label="描述" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="created" label="创建时间" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="path" label="操作" width="200">
 					<template #default="scope">
-						<el-button size="mini" type="text">修改</el-button>
+						<el-button size="mini" type="text" @click="onOpenAddRole(scope.row)">修改</el-button>
+						<el-button size="mini" type="text" @click="onOpenAddPermission(scope.row.id)">权限设置</el-button>
 						<el-button size="mini" type="text" @click="onRowDel(scope.row)">删除</el-button>
 					</template>
 				</el-table-column>
@@ -34,45 +33,69 @@
 			>
 			</el-pagination>
 		</el-card>
+		<AddRole ref="addRoleRef" @reloadTable="initTableData"/>
+		<AddPermission ref="addPermissionRef"/>
 	</div>
 </template>
 
 <script lang="ts">
-import { toRefs, reactive, onMounted } from 'vue';
+import { toRefs, reactive, onMounted, ref } from 'vue';
+import { ElMessageBox, ElMessage } from 'element-plus';
+import { getRoleList, delRole } from '/@/api/role/index';
+import AddRole from '/@/views/system/role/component/addRole.vue';
+import AddPermission from '/@/views/system/role/component/addPermission.vue';
+
 export default {
 	name: 'systemUser',
+	components: { AddRole, AddPermission },
 	setup() {
+		const addRoleRef = ref();
+		const addPermissionRef = ref();
+
 		const state: any = reactive({
 			tableData: {
 				data: [],
 				total: 0,
 				loading: false,
 				param: {
-					pageNum: 1,
+					page: 1,
 					pageSize: 10,
 				},
 			},
 		});
+
+		const onOpenAddRole = (row: object) => {
+			addRoleRef.value.openDialog(row);
+		};
+
+		//角色权限设置弹出框
+		const onOpenAddPermission = (roleId: string) => {
+			addPermissionRef.value.openDialog(roleId);
+		}
+
 		// 初始化表格数据
 		const initTableData = () => {
-			const data: Array<object> = [];
-			for (let i = 0; i < 20; i++) {
-				data.push({
-					num: `00${i + 1}`,
-					name: (Math.round(Math.random() * 20901) + 19968).toString(16),
-					photo: 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1633081619,2004077072&fm=26&gp=0.jpg',
-					phone: Math.floor(Math.random() * 10000000000),
-					email: `${Math.floor(Math.random() * 1000)}@qq.com`,
-					sex: i % 2 === 0 ? '男' : '女',
-					time: new Date().toLocaleDateString(),
-				});
-			}
-			state.tableData.data = data;
-			state.tableData.total = state.tableData.data.length;
+			getRoleList(state.tableData.param).then((res) => {
+				state.tableData.data = res.data.records;
+				state.tableData.total = res.data.total;
+			}).catch(() => {
+			})
 		};
 		// 当前行删除
 		const onRowDel = (row: object) => {
-			console.log(row);
+			ElMessageBox.confirm('此操作将永久删除角色, 是否继续?', '提示', {
+				confirmButtonText: '删除',
+				cancelButtonText: '取消',
+				type: 'warning',
+			}).then(() => {
+				delRole(row.id).then(() => {
+					ElMessage.success("删除成功");
+					initTableData();
+				}).catch((res) => {
+					ElMessage.error(res.message);
+				});
+			})
+			.catch(() => {});
 		};
 		// 分页改变
 		const onHandleSizeChange = (val: number) => {
@@ -80,16 +103,21 @@ export default {
 		};
 		// 分页改变
 		const onHandleCurrentChange = (val: number) => {
-			state.tableData.param.pageNum = val;
+			state.tableData.param.page = val;
 		};
 		// 页面加载时
 		onMounted(() => {
 			initTableData();
 		});
 		return {
+			addRoleRef,
+			addPermissionRef,
 			onRowDel,
 			onHandleSizeChange,
 			onHandleCurrentChange,
+			onOpenAddRole,
+			onOpenAddPermission,
+			initTableData,
 			...toRefs(state),
 		};
 	},
@@ -97,11 +125,11 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.system-user-container {
-	.system-user-search {
-		text-align: right;
+.system-role-container {
+	.system-role-search {
+		text-align: left;
 	}
-	.system-user-photo {
+	.system-role-photo {
 		width: 40px;
 		height: 40px;
 		border-radius: 100%;

@@ -1,9 +1,12 @@
 package com.fastcms.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
+
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -40,8 +43,10 @@ public class UserOpenid implements Serializable {
 
     private Integer version;
 
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime created;
 
+    @TableField(fill = FieldFill.UPDATE)
     private LocalDateTime updated;
 
     public Long getId() {

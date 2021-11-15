@@ -21,6 +21,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.core.utils.FileUtils;
 import com.fastcms.entity.Attachment;
 import com.fastcms.service.IAttachmentService;
@@ -54,14 +55,12 @@ public class AttachmentController {
 
     /**
      * 附件列表
-     * @param page         页码
-     * @param pageSize     每页条数
+     * @param page
      * @return
      */
     @RequestMapping("list")
-    public RestResult<Page<Attachment>> list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-                                             @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize) {
-        Page<Attachment> pageData = attachmentService.page(new Page<>(page, pageSize), Wrappers.<Attachment>lambdaQuery().orderByDesc(Attachment::getCreated));
+    public RestResult<Page<Attachment>> list(PageModel page) {
+        Page<Attachment> pageData = attachmentService.page(page.toPage(), Wrappers.<Attachment>lambdaQuery().orderByDesc(Attachment::getCreated));
         return RestResultUtils.success(pageData);
     }
 

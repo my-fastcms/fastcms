@@ -158,35 +158,35 @@ public interface IPermissionService extends IService<Permission> {
                 this.icon = icon;
             }
 
-            public Boolean getHide() {
+            public Boolean getIsHide() {
                 return isHide;
             }
 
-            public void setHide(Boolean hide) {
+            public void setIsHide(Boolean hide) {
                 isHide = hide;
             }
 
-            public Boolean getKeepAlive() {
+            public Boolean getIsKeepAlive() {
                 return isKeepAlive;
             }
 
-            public void setKeepAlive(Boolean keepAlive) {
+            public void setIsKeepAlive(Boolean keepAlive) {
                 isKeepAlive = keepAlive;
             }
 
-            public Boolean getAffix() {
+            public Boolean getIsAffix() {
                 return isAffix;
             }
 
-            public void setAffix(Boolean affix) {
+            public void setIsAffix(Boolean affix) {
                 isAffix = affix;
             }
 
-            public Boolean getIframe() {
+            public Boolean getIsIframe() {
                 return isIframe;
             }
 
-            public void setIframe(Boolean iframe) {
+            public void setIsIframe(Boolean iframe) {
                 isIframe = iframe;
             }
 

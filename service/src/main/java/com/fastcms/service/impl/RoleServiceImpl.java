@@ -12,10 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * <p>
- *  服务实现类
- * </p>
- *
+ * 角色服务实现类
  * @author wjun_java@163.com
  * @since 2021-02-14
  */
@@ -27,12 +24,6 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @CacheEvict(value = {CacheConfig.ROLE_PERMISSION_CACHE_NAME, CacheConfig.USER_MENU_PERMISSION_CACHE_NAME}, key = "#roleId")
     public void saveRolePermission(Long roleId, List<Long> permissionIdList) {
         getBaseMapper().deleteByRoleId(roleId);
-        getBaseMapper().saveRolePermission(roleId, permissionIdList);
-    }
-
-    @Override
-    @CacheEvict(value = {CacheConfig.ROLE_PERMISSION_CACHE_NAME, CacheConfig.USER_MENU_PERMISSION_CACHE_NAME}, key = "#roleId")
-    public void saveRolePermissionOfPlugin(Long roleId, List<Long> permissionIdList) {
         getBaseMapper().saveRolePermission(roleId, permissionIdList);
     }
 

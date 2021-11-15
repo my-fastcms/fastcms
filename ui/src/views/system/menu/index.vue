@@ -99,27 +99,22 @@ export default {
 				confirmButtonText: '删除',
 				cancelButtonText: '取消',
 				type: 'warning',
-			})
-				.then(() => {
-					console.log(row);
-					delMenu(row.id).then(() => {
-						ElMessage.success("删除成功");
-						loadMenuList();
-						initBackEndControlRoutes();
-					}).catch((res) => {
-						ElMessage.error(res.message);
-					});
-				})
-				.catch((res) => {
+			}).then(() => {
+				console.log(row);
+				delMenu(row.id).then(() => {
+					ElMessage.success("删除成功");
+					loadMenuList();
+					initBackEndControlRoutes();
+				}).catch((res) => {
 					ElMessage.error(res.message);
 				});
+			}).catch(()=> {})
 		};
 
 		const loadMenuList = () => {
 			getMenuList().then((res) => {
 				state.menuData = res.data;
 			}).catch(() => {
-
 			})
 		}
 

@@ -151,7 +151,7 @@ api[1].list[5].list.push({
 api[1].list[5].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/role/getPermissionList',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/role/permissions',
     desc: '获取角色权限列表',
 });
 api[1].list[5].list.push({
@@ -176,7 +176,7 @@ api[1].list[6].list.push({
 api[1].list[6].list.push({
     order: '2',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/user/getMenus',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/user/menus',
     desc: '获取用户菜单',
 });
 api[1].list[6].list.push({
@@ -263,13 +263,13 @@ api[2].list[3].list.push({
 api[2].list[3].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/api/wechat/user/getUserPhone',
+    url: 'http://127.0.0.1:8080/fastcms/api/api/wechat/user/phone',
     desc: '取用户手机号码',
 });
 api[2].list[3].list.push({
     order: '4',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/api/wechat/user/loginByPhone',
+    url: 'http://127.0.0.1:8080/fastcms/api/api/wechat/user/login/phone',
     desc: '手机号码授权登录',
 });
 api.push({

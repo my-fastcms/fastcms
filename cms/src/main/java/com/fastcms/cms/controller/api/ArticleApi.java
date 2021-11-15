@@ -17,12 +17,14 @@
 package com.fastcms.cms.controller.api;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.service.IArticleService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.core.mybatis.PageModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,24 +48,17 @@ public class ArticleApi {
 
 	/**
 	 * 文章列表
-	 * @param page 			页码
-	 * @param pageSize		每页多少条
+	 * @param page
 	 * @param categoryId  	分类id
 	 * @return
 	 */
 	@RequestMapping("/list")
-	public RestResult<Page<IArticleService.ArticleVo>> list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-															@RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
+	public RestResult<Page<IArticleService.ArticleVo>> list(PageModel page,
 															@RequestParam(name = "categoryId", required = false) Long categoryId) {
 
-		QueryWrapper queryWrapper = new QueryWrapper();
-		if(categoryId != null) {
-			queryWrapper.eq("acr.category_id", categoryId);
-		}
-		queryWrapper.eq("a.status", Article.STATUS_PUBLISH);
-
-		Page<IArticleService.ArticleVo> articleVoPage = articleService.pageArticle(new Page(page, pageSize), queryWrapper);
-
+		QueryWrapper queryWrapper = Wrappers.query().eq(categoryId != null,"acr.category_id", categoryId)
+				.eq("a.status", Article.STATUS_PUBLISH);
+		Page<IArticleService.ArticleVo> articleVoPage = articleService.pageArticle(page.toPage(), queryWrapper);
 		return RestResultUtils.success(articleVoPage);
 	}
 

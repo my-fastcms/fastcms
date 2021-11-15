@@ -16,12 +16,13 @@
  */
 package com.fastcms.web.controller.admin;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.common.utils.StrUtils;
+import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.entity.Role;
 import com.fastcms.service.IPermissionService;
 import com.fastcms.service.IRoleService;
@@ -53,18 +54,13 @@ public class RoleController {
     /**
      * 角色列表
      * @param page
-     * @param pageSize
-     * @param roleName
+     * @param roleName 角色名称
      * @return
      */
     @GetMapping("list")
-    public RestResult<Page<Role>> list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-                                       @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
+    public RestResult<Page<Role>> list(PageModel page,
                                        @RequestParam(name = "roleName", required = false) String roleName) {
-        LambdaQueryWrapper<Role> queryWrapper = new QueryWrapper().lambda();
-        queryWrapper.like(roleName != null, Role::getRoleName, roleName);
-        Page pageParam = new Page<>(page, pageSize);
-        Page<Role> pageData = roleService.page(pageParam, queryWrapper);
+        Page<Role> pageData = roleService.page(page.toPage(), Wrappers.<Role>lambdaQuery().like(StrUtils.isNotBlank(roleName), Role::getRoleName, roleName));
         return RestResultUtils.success(pageData);
     }
 
@@ -85,11 +81,24 @@ public class RoleController {
     }
 
     /**
+     * 删除角色
+     * @param roleId
+     * @return
+     */
+    @PostMapping("delete/{roleId}")
+    public RestResult<Object> del(@PathVariable("roleId") Long roleId) {
+        if(roleId != null && Objects.equals(roleId, FastcmsConstants.ADMIN_ROLE_ID)) {
+            return RestResultUtils.failed("超级管理员角色不可删除");
+        }
+        return RestResultUtils.success(roleService.removeById(roleId));
+    }
+
+    /**
      * 获取角色权限列表
      * @param roleId    角色id
      * @return
      */
-    @GetMapping("getPermissionList")
+    @GetMapping("permissions")
     public RestResult<List<IPermissionService.PermissionNode>> getPermissionList(@RequestParam(name = "roleId") Long roleId) {
         return RestResultUtils.success(permissionService.getPermissionByRoleId(roleId));
     }

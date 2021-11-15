@@ -280,6 +280,7 @@ CREATE TABLE `role` (
   `role_desc` varchar(255) DEFAULT NULL COMMENT '角色描述',
   `created` datetime DEFAULT NULL,
   `updated` datetime DEFAULT NULL,
+  `active` int(4) DEFAULT '1' COMMENT '是否启用',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色表';
 
@@ -414,7 +415,7 @@ CREATE TABLE `user_tag_relation` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 
-INSERT INTO `role` (`id`, `role_name`, `role_desc`, `created`, `updated`) VALUES ('1', '超级管理员', '超级管理员角色是系统内置角色，拥有系统最大权限', NOW(), NOW());
+INSERT INTO `role` (`id`, `role_name`, `role_desc`, `created`, `updated`, 'active') VALUES ('1', '超级管理员', '超级管理员角色是系统内置角色，拥有系统最大权限', NOW(), NOW(), 1);
 INSERT INTO `user` (`id`, `nick_name`, `password`, `salt`, `created`, `updated`) VALUES ('1', 'admin', '$2a$10$sw5ryl9SLUiaJ9jAZgmp8eW29rEVvPJEx1vwz4v7on9DuLQOdHfZC', '1622734716287', NOW(), NOW());
 INSERT INTO `user_role` (`user_id`, `role_id`) VALUES ('1', '1');
 

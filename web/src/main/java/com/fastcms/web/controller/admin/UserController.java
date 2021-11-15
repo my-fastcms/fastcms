@@ -16,13 +16,13 @@
  */
 package com.fastcms.web.controller.admin;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.common.utils.StrUtils;
+import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.entity.User;
 import com.fastcms.service.IPermissionService;
 import com.fastcms.service.IRoleService;
@@ -61,25 +61,16 @@ public class UserController {
 
     /**
      * 用户列表
-     * @param page      页码
-     * @param pageSize  每页多少条
+     * @param page
      * @param phone     手机号码
      * @param status    状态
      * @return
      */
     @GetMapping("list")
-    public RestResult<Page<User>> list(@RequestParam(name = "page", required = false, defaultValue = "1") Long page,
-                                       @RequestParam(name = "pageSize", required = false, defaultValue = "10") Long pageSize,
+    public RestResult<Page<User>> list(PageModel page,
                                        @RequestParam(name = "phone", required = false) String phone,
                                        @RequestParam(name = "status", required = false, defaultValue = "1") Integer status) {
-        LambdaQueryWrapper<User> queryWrapper = new QueryWrapper().lambda();
-        queryWrapper.eq(User::getStatus, status);
-        if(StrUtils.isNotBlank(phone)) {
-            queryWrapper.eq(User::getMobile, phone);
-        }
-        queryWrapper.orderByDesc(User::getCreated);
-        Page pageParam = new Page<>(page, pageSize);
-        Page<User> pageData = userService.page(pageParam, queryWrapper);
+        Page<User> pageData = userService.page(page.toPage(), Wrappers.<User>lambdaQuery().eq(User::getMobile, phone).eq(User::getStatus, status).orderByDesc(User::getCreated));
         return RestResultUtils.success(pageData);
     }
 
@@ -87,7 +78,7 @@ public class UserController {
      * 获取用户菜单
      * @return
      */
-    @GetMapping("getMenus")
+    @GetMapping("menus")
     public RestResult<List<IPermissionService.PermissionNode>> getMenus() {
         return RestResultUtils.success(permissionService.getPermissions());
     }
