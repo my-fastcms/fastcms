@@ -8,6 +8,7 @@
 					ref="treeTable" 
 					:props="treeDefaultProps" 
 					:default-checked-keys="defaultCheckedKeys"
+					:check-strictly="true"
 					@check="onCheckTree">
              </el-tree>
 			<template #footer>
@@ -43,6 +44,7 @@ export default {
 				label: 'label',
 			},
 			treeSelArr: [],
+			treeSelParentArr: [],
 			treeLength: 0,
 		});
 		// 打开弹窗
@@ -82,6 +84,12 @@ export default {
 			state.treeSelArr = [];
 			state.treeSelArr = proxy.$refs.treeTable.getCheckedNodes();
 			state.treeSelArr.length == state.treeLength ? (state.treeCheckAll = true) : (state.treeCheckAll = false);
+
+			let parentIds = proxy.$refs.treeTable.getHalfCheckedNodes();
+			parentIds.forEach(item => {
+				//父节点id
+				state.treeSelParentArr.push(item.id);
+			})
 		};
 		// 选择元素按钮
 		const onSelect = () => {
@@ -126,8 +134,14 @@ export default {
 			state.treeSelArr.forEach(item => {
 				selectPermissionIdList.push(item.id);
 			})
+			state.treeSelParentArr.forEach(item => {
+				//提交父节点id
+				selectPermissionIdList.push(item.id);
+			})
 			saveRolePermissions(state.row.id, qs.stringify({"permissionIdList": selectPermissionIdList}, {arrayFormat: 'repeat'})).then(() => {
-				closeDialog();
+				ElMessage.success("保存成功", function() {
+					closeDialog();
+				});
 			}).catch((res) => {ElMessage.error(res.message);})
 
 		}
