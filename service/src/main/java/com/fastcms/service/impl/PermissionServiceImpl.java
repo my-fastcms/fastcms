@@ -30,8 +30,11 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     @Override
     public List<PermissionNode> getPermissions() {
         List<Permission> permissionList = list();
-        List<PermissionNode> permissionNodeList = new ArrayList<>();
+        return getPermissionNodeList(permissionList);
+    }
 
+    List<PermissionNode> getPermissionNodeList(List<Permission> permissionList) {
+        List<PermissionNode> permissionNodeList = new ArrayList<>();
         permissionList.forEach(item -> permissionNodeList.add(getPermissionNode(item)));
         List<PermissionNode> parents = permissionNodeList.stream().filter(item -> item.getParentId() == 0).collect(Collectors.toList());
         parents.forEach(item -> getChildren(item, permissionNodeList));
@@ -57,21 +60,13 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     @Override
     @Cacheable(value = CacheConfig.ROLE_PERMISSION_CACHE_NAME, key = "#roleId")
     public List<PermissionNode> getPermissionByRoleId(Long roleId) {
-        List<RolePermission> rolePermissionList = getBaseMapper().getPermissionByRoleId(roleId);
         return null;
     }
 
     @Override
-    public List<Permission> getPermissionByUserId(Long userId) {
-        return getBaseMapper().getPermissionByUserId(userId);
-    }
-
-    @Override
-//    @Cacheable(value = CacheConfig.USER_MENU_PERMISSION_CACHE_NAME, key = "#userId")
-    public List<PermissionNode> getUserMenuPermission(Long userId) {
-        List<Permission> userPermissionList = getPermissionByUserId(userId);
-
-        return null;
+    public List<PermissionNode> getPermissionByUserId(Long userId) {
+        List<Permission> permissionList = getBaseMapper().getPermissionByUserId(userId);
+        return getPermissionNodeList(permissionList);
     }
 
     @Override

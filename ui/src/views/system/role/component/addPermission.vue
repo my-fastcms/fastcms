@@ -112,13 +112,14 @@ export default {
 		const i18nTreeData= ((treeData) => {
 			treeData.forEach(item => {
 				item.label = i18n.global.t(item.label);
-				if(item.checked) {
+				if(item.checked && item.children == null) {
 					state.defaultCheckedKeys.push(item.id);
 				}
 				if(item.children && item.children.length >0) {
 					i18nTreeData(item.children);
 				}
 			});
+			console.log("====length:" + state.defaultCheckedKeys.length)
 		})
 
 		//提交数据
@@ -128,9 +129,8 @@ export default {
 				selectPermissionIdList.push(item.id);
 			})
 			saveRolePermissions(state.row.id, qs.stringify({"permissionIdList": selectPermissionIdList}, {arrayFormat: 'repeat'})).then(() => {
-				ElMessage.success("保存成功", function() {
-					closeDialog();
-				});
+				ElMessage.success("保存成功");
+				closeDialog();
 			}).catch((res) => {ElMessage.error(res.message);})
 
 		}

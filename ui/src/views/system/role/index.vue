@@ -7,7 +7,6 @@
 				<el-button size="small" type="primary" class="ml10">查询</el-button>
 			</div>
 			<el-table :data="tableData.data" stripe style="width: 100%">
-				<el-table-column prop="id" label="ID" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="roleName" label="角色名" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="roleDesc" label="描述" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="created" label="创建时间" show-overflow-tooltip></el-table-column>

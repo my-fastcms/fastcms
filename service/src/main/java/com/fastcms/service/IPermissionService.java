@@ -31,14 +31,7 @@ public interface IPermissionService extends IService<Permission> {
      * @param userId
      * @return
      */
-    List<Permission> getPermissionByUserId(Long userId);
-
-    /**
-     * 获取用户菜单权限
-     * @param userId
-     * @return
-     */
-    List<PermissionNode> getUserMenuPermission(Long userId);
+    List<PermissionNode> getPermissionByUserId(Long userId);
 
     /**
      * 删除掉权限
