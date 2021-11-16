@@ -87,7 +87,6 @@ export default defineComponent({
 				username: '',
 				password: '',
 				code: '',
-				codeKey: '',
 			},
 			rules: {
 				username: { required: true, message: '请输入用户名', trigger: 'blur' },
@@ -130,8 +129,6 @@ export default defineComponent({
 		};
 
 		const signLogin = async() => {
-			state.myForm.codeKey = state.captchaKey;
-			
 			signIn(qs.stringify(state.myForm)).then(res => {
 				doLogin(res);
 			}).catch((res) => {
@@ -141,9 +138,6 @@ export default defineComponent({
 		}
 
 		const doLogin = async(res) => {
-			// eslint-disable-next-line no-console
-			console.log(res)
-			
 			state.loading.signIn = true;
 			let defaultAuthPageList: Array<string> = [];
 			let defaultAuthBtnList: Array<string> = [];

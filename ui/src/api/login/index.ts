@@ -21,7 +21,7 @@ export function signIn(params: string) {
  */
 export function signOut(params: object) {
 	return request({
-		url: '/admin/signOut',
+		url: '/admin/logout',
 		method: 'post',
 		data: params,
 	});

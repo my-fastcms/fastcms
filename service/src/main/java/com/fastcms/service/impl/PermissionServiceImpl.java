@@ -33,7 +33,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         List<PermissionNode> permissionNodeList = new ArrayList<>();
 
         permissionList.forEach(item -> permissionNodeList.add(getPermissionNode(item)));
-        List<PermissionNode> parents = permissionNodeList.stream().filter(item -> item.getParentId() == null).collect(Collectors.toList());
+        List<PermissionNode> parents = permissionNodeList.stream().filter(item -> item.getParentId() == 0).collect(Collectors.toList());
         parents.forEach(item -> getChildren(item, permissionNodeList));
         return parents.stream().sorted(Comparator.comparing(PermissionNode::getMenuSort).reversed()).collect(Collectors.toList());
     }

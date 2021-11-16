@@ -14,7 +14,7 @@
 				<el-table-column prop="path" label="操作" width="200">
 					<template #default="scope">
 						<el-button size="mini" type="text" @click="onOpenAddRole(scope.row)">修改</el-button>
-						<el-button size="mini" type="text" @click="onOpenAddPermission(scope.row.id)">权限设置</el-button>
+						<el-button size="mini" type="text" @click="onOpenAddPermission(scope.row)">权限设置</el-button>
 						<el-button size="mini" type="text" @click="onRowDel(scope.row)">删除</el-button>
 					</template>
 				</el-table-column>
@@ -69,8 +69,8 @@ export default {
 		};
 
 		//角色权限设置弹出框
-		const onOpenAddPermission = (roleId: string) => {
-			addPermissionRef.value.openDialog(roleId);
+		const onOpenAddPermission = (row: object) => {
+			addPermissionRef.value.openDialog(row);
 		}
 
 		// 初始化表格数据

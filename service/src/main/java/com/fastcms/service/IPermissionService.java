@@ -7,10 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * <p>
- *  权限服务类
- * </p>
- *
+ * 权限服务类
  * @author wjun_java@163.com
  * @since 2021-02-14
  */
@@ -49,6 +46,9 @@ public interface IPermissionService extends IService<Permission> {
      */
     void deleteRolePermissionByPermission(List<Permission> permissionList);
 
+    /**
+     * 对应前端路由
+     */
     class PermissionNode implements Serializable {
 
         /**
@@ -284,11 +284,18 @@ public interface IPermissionService extends IService<Permission> {
         }
     }
 
+    /**
+     * element-ui-tree
+     */
     class TreeNode implements Serializable {
         /**
          * id
          */
         private Long id;
+        /**
+         * 上级id
+         */
+        private Long parentId;
         /**
          * 名称
          */
@@ -297,6 +304,18 @@ public interface IPermissionService extends IService<Permission> {
          * 是否显示
          */
         private Boolean isShow;
+        /**
+         * 是否被选中
+         */
+        private Boolean isChecked;
+
+        public TreeNode(Long id, Long parentId, String label, Boolean isShow) {
+            this.id = id;
+            this.parentId = parentId;
+            this.label = label;
+            this.isShow = isShow;
+        }
+
         /**
          * 子节点集合
          */
@@ -308,6 +327,14 @@ public interface IPermissionService extends IService<Permission> {
 
         public void setId(Long id) {
             this.id = id;
+        }
+
+        public Long getParentId() {
+            return parentId;
+        }
+
+        public void setParentId(Long parentId) {
+            this.parentId = parentId;
         }
 
         public String getLabel() {
@@ -324,6 +351,14 @@ public interface IPermissionService extends IService<Permission> {
 
         public void setShow(Boolean show) {
             isShow = show;
+        }
+
+        public Boolean getChecked() {
+            return isChecked;
+        }
+
+        public void setChecked(Boolean checked) {
+            isChecked = checked;
         }
 
         public List<TreeNode> getChildren() {

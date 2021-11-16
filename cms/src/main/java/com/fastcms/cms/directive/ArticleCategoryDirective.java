@@ -16,7 +16,7 @@
  */
 package com.fastcms.cms.directive;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.fastcms.cms.entity.ArticleCategory;
 import com.fastcms.cms.service.IArticleCategoryService;
 import com.fastcms.core.directive.BaseDirective;
@@ -50,9 +50,7 @@ public class ArticleCategoryDirective extends BaseDirective {
 		ArticleCategory articleCategory = articleCategoryService.getById(categoryId);
 
 		if(articleCategory != null) {
-			QueryWrapper queryWrapper = new QueryWrapper();
-			queryWrapper.eq("parent_id", categoryId);
-			List<ArticleCategory> children = articleCategoryService.list(queryWrapper);
+			List<ArticleCategory> children = articleCategoryService.list(Wrappers.<ArticleCategory>lambdaQuery().eq(ArticleCategory::getParentId, categoryId));
 			articleCategory.setChildren(children);
 		}
 

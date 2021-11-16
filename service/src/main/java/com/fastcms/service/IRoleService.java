@@ -23,6 +23,13 @@ public interface IRoleService extends IService<Role> {
     void saveRolePermission(Long roleId, List<Long> permissionIdList);
 
     /**
+     * 获取角色已分配路由权限
+     * @param roleId
+     * @return
+     */
+    List<IPermissionService.TreeNode> getRolePermission(Long roleId);
+
+    /**
      * 保存用户角色
      * @param userId
      * @param roleIds
@@ -44,6 +51,10 @@ public interface IRoleService extends IService<Role> {
     List<Role> getUserRoleList(Long userId);
 
     class UserRole extends Role {
+
+        /**
+         * 用户id
+         */
         private Long userId;
 
         public Long getUserId() {

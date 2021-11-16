@@ -251,7 +251,7 @@ CREATE TABLE `payment_record` (
 DROP TABLE IF EXISTS `permission`;
 CREATE TABLE `permission` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `parent_id` bigint(20) DEFAULT NULL COMMENT '父节点id',
+  `parent_id` bigint(20) DEFAULT '0' COMMENT '父节点id',
   `name` varchar(32) DEFAULT NULL,
   `path` varchar(64) DEFAULT NULL,
   `component` varchar(128) DEFAULT NULL,

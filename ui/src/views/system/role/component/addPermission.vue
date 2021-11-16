@@ -23,16 +23,20 @@
 <script lang="ts">
 import { reactive, toRefs, getCurrentInstance, onBeforeMount } from 'vue';
 import { ElMessage } from 'element-plus';
+import { getRolePermissions, saveRolePermissions } from '/@/api/role/index';
+import { i18n } from '/@/i18n/index';
+import qs from 'qs';
 
 export default {
 	name: 'pagesTree',
 	setup() {
 		const { proxy } = getCurrentInstance() as any;
 		const state = reactive({
+			row: null,
 			isShowDialog: false,
 			treeCheckAll: false,
 			treeLoading: false,
-			defaultCheckedKeys: [1, 2],
+			defaultCheckedKeys: [],
 			treeData: [],
 			treeDefaultProps: {
 				children: 'children',
@@ -42,13 +46,13 @@ export default {
 			treeLength: 0,
 		});
 		// 打开弹窗
-		const openDialog = (roleId?: string) => {
-			console.log("roleId:" + roleId);
+		const openDialog = (row?: object) => {
 			state.isShowDialog = true;
+			state.row = row;
+			getTreeData();
 		};
 		// 关闭弹窗
-		const closeDialog = (row?: object) => {
-			console.log(row);
+		const closeDialog = () => {
 			state.isShowDialog = false;
 		};
 		// 取消
@@ -91,75 +95,40 @@ export default {
 		};
 		// 初始化树模拟数据
 		const getTreeData = () => {
-			state.treeData = [
-				{
-					id: 1,
-					label: '12987121',
-					label1: '好滋好味鸡蛋仔',
-					label2: '荷兰优质淡奶，奶香浓而不腻',
-					isShow: true,
-					children: [
-						{
-							id: 11,
-							label: '一级 1-1',
-							label1: '好滋好味鸡蛋仔',
-							label2: '荷兰优质淡奶，奶香浓而不腻',
-						},
-						{
-							id: 12,
-							label: '一级 1-2',
-						},
-					],
-				},
-				{
-					id: 2,
-					label: '12987122',
-					label1: '好滋好味鸡蛋仔',
-					label2: '荷兰优质淡奶，奶香浓而不腻',
-					isShow: true,
-					children: [
-						{
-							id: 21,
-							label: '二级 2-1',
-							isShow: false,
-						},
-						{
-							id: 22,
-							label: '二级 2-2',
-						},
-					],
-				},
-				{
-					id: 3,
-					label: '12987123',
-					label1: '好滋好味鸡蛋仔',
-					label2: '荷兰优质淡奶，奶香浓而不腻',
-					isShow: true,
-					children: [
-						{
-							id: 31,
-							label: '二级 3-1',
-						},
-						{
-							id: 32,
-							label: '二级 3-2',
-						},
-						{
-							id: 33,
-							label: '二级 3-3',
-						},
-					],
-				},
-			];
-			initTreeLengh(state.treeData);
+			if(state.row && state.row.id) {
+				getRolePermissions(state.row.id).then((res) => {
+					state.treeData = res.data;
+					i18nTreeData(state.treeData);
+					initTreeLengh(state.treeData);
+				})
+			}		
 		};
 		// 页面加载前
 		onBeforeMount(() => {
 			getTreeData();
 		});
+		//递归处理国际化
+		const i18nTreeData= ((treeData) => {
+			treeData.forEach(item => {
+				item.label = i18n.global.t(item.label);
+				if(item.checked) {
+					state.defaultCheckedKeys.push(item.id);
+				}
+				if(item.children && item.children.length >0) {
+					i18nTreeData(item.children);
+				}
+			});
+		})
 
 		//提交数据
 		const onSubmit = () => {
+			const selectPermissionIdList = new Array();
+			state.treeSelArr.forEach(item => {
+				selectPermissionIdList.push(item.id);
+			})
+			saveRolePermissions(state.row.id, qs.stringify({"permissionIdList": selectPermissionIdList}, {arrayFormat: 'repeat'})).then(() => {
+				closeDialog();
+			}).catch((res) => {ElMessage.error(res.message);})
 
 		}
 

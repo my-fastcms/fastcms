@@ -48,9 +48,6 @@ public class RoleController {
     @Autowired
     private IRoleService roleService;
 
-    @Autowired
-    private IPermissionService permissionService;
-
     /**
      * 角色列表
      * @param page
@@ -99,8 +96,8 @@ public class RoleController {
      * @return
      */
     @GetMapping("{roleId}/permissions")
-    public RestResult<List<IPermissionService.PermissionNode>> getPermissionList(@PathVariable("roleId") Long roleId) {
-        return RestResultUtils.success(permissionService.getPermissionByRoleId(roleId));
+    public RestResult<List<IPermissionService.TreeNode>> getPermissionList(@PathVariable("roleId") Long roleId) {
+        return RestResultUtils.success(roleService.getRolePermission(roleId));
     }
 
     /**
@@ -110,7 +107,7 @@ public class RoleController {
      * @return
      */
     @PostMapping("{roleId}/permissions/save")
-    public Object saveRolePermission(@PathVariable("roleId") Long roleId, @RequestParam("permissionIdList[]") List<Long> permissionIdList) {
+    public Object saveRolePermission(@PathVariable("roleId") Long roleId, @RequestParam("permissionIdList") List<Long> permissionIdList) {
         if(roleId != null && Objects.equals(roleId, FastcmsConstants.ADMIN_ROLE_ID)) {
             return RestResultUtils.failed("超级管理员不可修改权限");
         }
