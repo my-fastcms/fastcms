@@ -8,7 +8,6 @@
 					ref="treeTable" 
 					:props="treeDefaultProps" 
 					:default-checked-keys="defaultCheckedKeys"
-					:check-strictly="true"
 					@check="onCheckTree">
              </el-tree>
 			<template #footer>
@@ -22,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, toRefs, getCurrentInstance, onBeforeMount } from 'vue';
+import { reactive, toRefs, getCurrentInstance, onUpdated } from 'vue';
 import { ElMessage } from 'element-plus';
 import { getRolePermissions, saveRolePermissions } from '/@/api/role/index';
 import { i18n } from '/@/i18n/index';
@@ -44,14 +43,13 @@ export default {
 				label: 'label',
 			},
 			treeSelArr: [],
-			treeSelParentArr: [],
 			treeLength: 0,
 		});
 		// 打开弹窗
 		const openDialog = (row?: object) => {
 			state.isShowDialog = true;
 			state.row = row;
-			getTreeData();
+			//getTreeData();
 		};
 		// 关闭弹窗
 		const closeDialog = () => {
@@ -82,28 +80,23 @@ export default {
 		// 节点选中状态发生变化时的回调
 		const onCheckTree = () => {
 			state.treeSelArr = [];
-			state.treeSelArr = proxy.$refs.treeTable.getCheckedNodes();
+			state.treeSelArr = proxy.$refs.treeTable.getCheckedNodes(false, true);
 			state.treeSelArr.length == state.treeLength ? (state.treeCheckAll = true) : (state.treeCheckAll = false);
-
-			let parentIds = proxy.$refs.treeTable.getHalfCheckedNodes();
-			parentIds.forEach(item => {
-				//父节点id
-				state.treeSelParentArr.push(item.id);
-			})
 		};
 		// 选择元素按钮
 		const onSelect = () => {
-			let treeArr = proxy.$refs.treeTable.getCheckedNodes();
+			let treeArr = proxy.$refs.treeTable.getCheckedNodes(false, true);
 			if (treeArr.length <= 0) {
 				ElMessage.warning('请选择元素');
 				return;
 			} else {
-				console.log(proxy.$refs.treeTable.getCheckedNodes());
+				console.log(proxy.$refs.treeTable.getCheckedNodes(false, true));
 			}
 		};
 		// 初始化树模拟数据
 		const getTreeData = () => {
 			if(state.row && state.row.id) {
+				state.defaultCheckedKeys = [];
 				getRolePermissions(state.row.id).then((res) => {
 					state.treeData = res.data;
 					i18nTreeData(state.treeData);
@@ -112,7 +105,7 @@ export default {
 			}		
 		};
 		// 页面加载前
-		onBeforeMount(() => {
+		onUpdated(() => {
 			getTreeData();
 		});
 		//递归处理国际化
@@ -132,10 +125,6 @@ export default {
 		const onSubmit = () => {
 			const selectPermissionIdList = new Array();
 			state.treeSelArr.forEach(item => {
-				selectPermissionIdList.push(item.id);
-			})
-			state.treeSelParentArr.forEach(item => {
-				//提交父节点id
 				selectPermissionIdList.push(item.id);
 			})
 			saveRolePermissions(state.row.id, qs.stringify({"permissionIdList": selectPermissionIdList}, {arrayFormat: 'repeat'})).then(() => {
