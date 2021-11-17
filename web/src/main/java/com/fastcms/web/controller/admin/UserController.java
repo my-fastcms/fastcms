@@ -28,6 +28,7 @@ import com.fastcms.service.IPermissionService;
 import com.fastcms.service.IRoleService;
 import com.fastcms.service.IUserService;
 import com.fastcms.service.IUserTagService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
@@ -70,7 +71,11 @@ public class UserController {
     public RestResult<Page<User>> list(PageModel page,
                                        @RequestParam(name = "phone", required = false) String phone,
                                        @RequestParam(name = "status", required = false, defaultValue = "1") Integer status) {
-        Page<User> pageData = userService.page(page.toPage(), Wrappers.<User>lambdaQuery().eq(User::getMobile, phone).eq(User::getStatus, status).orderByDesc(User::getCreated));
+        Page<User> pageData = userService.page(page.toPage(), Wrappers.<User>lambdaQuery()
+                .eq(StringUtils.isNoneBlank(phone), User::getMobile, phone)
+                .eq(User::getStatus, status)
+                .select(User::getId, User::getUserName, User::getCreated, User::getSource, User::getEmail)
+                .orderByDesc(User::getCreated));
         return RestResultUtils.success(pageData);
     }
 
@@ -99,18 +104,20 @@ public class UserController {
         final String salt = System.currentTimeMillis() + "";
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setSalt(salt);
-        boolean result = userService.saveOrUpdate(user);
-        return RestResultUtils.success(result);
+        return RestResultUtils.success(userService.saveOrUpdate(user));
     }
 
     /**
      * 编辑用户信息
-     * @param user
+     * @param userId
      * @return
      */
-    @PostMapping("update")
-    public RestResult<Boolean> update(User user) {
-        return RestResultUtils.success(userService.updateById(user));
+    @PostMapping("delete/{userId}")
+    public RestResult<Boolean> del(@PathVariable("userId") Long userId) {
+        if(FastcmsConstants.ADMIN_USER_ID == userId) {
+            return RestResultUtils.failed("超级管理员不可删除");
+        }
+        return RestResultUtils.success(userService.removeById(userId));
     }
 
     /**

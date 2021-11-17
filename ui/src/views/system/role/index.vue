@@ -12,9 +12,9 @@
 				<el-table-column prop="created" label="创建时间" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="path" label="操作" width="200">
 					<template #default="scope">
-						<el-button size="mini" type="text" @click="onOpenAddRole(scope.row)">修改</el-button>
-						<el-button size="mini" type="text" @click="onOpenAddPermission(scope.row)">权限设置</el-button>
-						<el-button size="mini" type="text" @click="onRowDel(scope.row)">删除</el-button>
+						<el-button v-if="scope.row.id != 1" size="mini" type="text" @click="onOpenAddRole(scope.row)">修改</el-button>
+						<el-button v-if="scope.row.id != 1" size="mini" type="text" @click="onOpenAddPermission(scope.row)">权限设置</el-button>
+						<el-button v-if="scope.row.id != 1" size="mini" type="text" @click="onRowDel(scope.row)">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>

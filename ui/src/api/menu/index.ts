@@ -15,7 +15,7 @@ export function getUserMenus(params?: object) {
 }
 
 /**
- * 管理后台获取全部菜单数据
+ * 获取全部菜单数据
  * @param params 
  * @returns 
  */
@@ -28,7 +28,7 @@ export function getMenuList(params?: object) {
 }
 
 /**
- * 管理后台保存菜单数据
+ * 保存菜单数据
  * @param params 
  * @returns 
  */
@@ -41,7 +41,7 @@ export function saveMenu(params?: object) {
 }
 
 /**
- * 管理后台删除菜单数据
+ * 删除菜单数据
  * @param menuId 
  * @returns 
  */

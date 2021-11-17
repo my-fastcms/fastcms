@@ -16,10 +16,8 @@
  */
 package com.fastcms.web.security;
 
-import com.fastcms.entity.User;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
 
@@ -30,46 +28,10 @@ import java.util.Collection;
  * @modifiedBy：
  * @version: 1.0
  */
-public class FastcmsUserDetails implements UserDetails {
+public class FastcmsUserDetails extends User {
 
-	private User user;
-
-	public FastcmsUserDetails(User user) {
-		this.user = user;
+	public FastcmsUserDetails(String username, String password, Collection<? extends GrantedAuthority> authorities) {
+		super(username, password, authorities);
 	}
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return AuthorityUtils.commaSeparatedStringToAuthorityList("");
-	}
-
-	@Override
-	public String getPassword() {
-		return user.getPassword();
-	}
-
-	@Override
-	public String getUsername() {
-		return user.getUserName();
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return true;
-	}
 }

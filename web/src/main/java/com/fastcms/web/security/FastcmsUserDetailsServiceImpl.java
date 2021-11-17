@@ -24,6 +24,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+
 /**
  * @author： wjun_java@163.com
  * @date： 2021/10/23
@@ -41,7 +43,7 @@ public class FastcmsUserDetailsServiceImpl implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userService.getUserByUsername(username);
 		if(user == null) throw new UsernameNotFoundException(username);
-		return new FastcmsUserDetails(user);
+		return new FastcmsUserDetails(user.getUserName(), user.getPassword(), Arrays.asList());
 	}
 
 }

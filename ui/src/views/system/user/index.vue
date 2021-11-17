@@ -6,17 +6,11 @@
 				<el-button size="small" type="primary" class="ml10">查询</el-button>
 			</div>
 			<el-table :data="tableData.data" stripe style="width: 100%">
-				<el-table-column prop="num" label="ID" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="name" label="用户名" show-overflow-tooltip></el-table-column>
-				<el-table-column label="头像" show-overflow-tooltip>
-					<template #default="scope">
-						<el-image class="system-user-photo" :src="scope.row.photo" :preview-src-list="[scope.row.photo]"> </el-image>
-					</template>
-				</el-table-column>
-				<el-table-column prop="phone" label="手机" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="id" label="ID" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="userName" label="用户名" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="email" label="邮箱" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="sex" label="性别" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="time" label="加入时间" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="sourceStr" label="来源" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="created" label="加入时间" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="path" label="操作" width="90">
 					<template #default="scope">
 						<el-button size="mini" type="text">修改</el-button>
@@ -42,7 +36,9 @@
 </template>
 
 <script lang="ts">
+import { ElMessageBox, ElMessage } from 'element-plus';
 import { toRefs, reactive, onMounted } from 'vue';
+import { getUserList, delUser } from '/@/api/user/index';
 export default {
 	name: 'systemUser',
 	setup() {
@@ -59,24 +55,27 @@ export default {
 		});
 		// 初始化表格数据
 		const initTableData = () => {
-			const data: Array<object> = [];
-			for (let i = 0; i < 20; i++) {
-				data.push({
-					num: `00${i + 1}`,
-					name: (Math.round(Math.random() * 20901) + 19968).toString(16),
-					photo: 'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1633081619,2004077072&fm=26&gp=0.jpg',
-					phone: Math.floor(Math.random() * 10000000000),
-					email: `${Math.floor(Math.random() * 1000)}@qq.com`,
-					sex: i % 2 === 0 ? '男' : '女',
-					time: new Date().toLocaleDateString(),
-				});
-			}
-			state.tableData.data = data;
-			state.tableData.total = state.tableData.data.length;
+			getUserList(state.tableData.param).then((res) => {
+				state.tableData.data = res.data.records;
+				state.tableData.total = res.data.total;
+			}).catch(() => {
+			})
 		};
 		// 当前行删除
 		const onRowDel = (row: object) => {
-			console.log(row);
+			ElMessageBox.confirm('此操作将永久删除用户, 是否继续?', '提示', {
+				confirmButtonText: '删除',
+				cancelButtonText: '取消',
+				type: 'warning',
+			}).then(() => {
+				delUser(row.id).then(() => {
+					ElMessage.success("删除成功");
+					initTableData();
+				}).catch((res) => {
+					ElMessage.error(res.message);
+				});
+			})
+			.catch(() => {});
 		};
 		// 分页改变
 		const onHandleSizeChange = (val: number) => {

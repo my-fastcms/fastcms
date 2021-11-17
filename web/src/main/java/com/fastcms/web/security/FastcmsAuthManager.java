@@ -21,7 +21,6 @@ import com.fastcms.core.captcha.FastcmsCaptchaService;
 import com.fastcms.entity.Permission;
 import com.fastcms.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -43,9 +42,6 @@ public class FastcmsAuthManager implements AuthManager {
 
     @Autowired
     private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private CacheManager cacheManager;
 
     @Autowired
     private AuthConfigs authConfigs;
