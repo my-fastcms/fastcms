@@ -43,7 +43,7 @@ public class FastcmsUserDetailsServiceImpl implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userService.getUserByUsername(username);
 		if(user == null) throw new UsernameNotFoundException(username);
-		return new FastcmsUserDetails(user.getUserName(), user.getPassword(), Arrays.asList());
+		return new FastcmsUserDetails(user.getId(), user.getUserName(), user.getPassword(), Arrays.asList());
 	}
 
 }

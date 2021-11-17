@@ -30,8 +30,11 @@ import java.util.Collection;
  */
 public class FastcmsUserDetails extends User {
 
-	public FastcmsUserDetails(String username, String password, Collection<? extends GrantedAuthority> authorities) {
+	private Long userId;
+
+	public FastcmsUserDetails(Long userId, String username, String password, Collection<? extends GrantedAuthority> authorities) {
 		super(username, password, authorities);
+		this.userId = userId;
 	}
 
 }
