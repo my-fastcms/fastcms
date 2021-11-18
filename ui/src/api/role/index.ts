@@ -63,3 +63,14 @@ export function getRolePermissions(roleId?: string) {
 		method: 'get'
 	});
 }
+
+/**
+ * 获取角色列表，不分页
+ * @returns 
+ */
+export function getRoleSelectList() {
+	return request({
+		url: '/admin/role/list/select',
+		method: 'get'
+	});
+}

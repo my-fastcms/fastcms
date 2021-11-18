@@ -91,6 +91,15 @@ public class RoleController {
     }
 
     /**
+     * 获取角色列表，不分页
+     * @return
+     */
+    @GetMapping("list/select")
+    public RestResult<List<Role>> getRoleList() {
+        return RestResultUtils.success(roleService.list(Wrappers.<Role>lambdaQuery().eq(Role::getActive, 1).select(Role::getId, Role::getRoleName)));
+    }
+
+    /**
      * 获取角色权限列表
      * @param roleId    角色id
      * @return

@@ -30,7 +30,7 @@
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="公司" prop="company">
-							<el-input v-model="ruleForm.company" placeholder="请输入公司" clearable></el-input>
+							<el-input v-model="ruleForm.company" placeholder="请输入公司名称" clearable></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -41,24 +41,23 @@
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="性别">
 							<el-select v-model="ruleForm.sex" placeholder="请选择性别" clearable class="w100">
-								<el-option label="男" value="true"></el-option>
-								<el-option label="女" value="false"></el-option>
+								<el-option label="男" value="1"></el-option>
+								<el-option label="女" value="0"></el-option>
 							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="状态">
 							<el-select v-model="ruleForm.status" placeholder="请选择状态" clearable class="w100">
-								<el-option label="启用" value="true"></el-option>
-								<el-option label="禁用" value="false"></el-option>
+								<el-option label="启用" value="1"></el-option>
+								<el-option label="禁用" value="0"></el-option>
 							</el-select>
 						</el-form-item>
 					</el-col>
 					<el-col class="mb20">
 						<el-form-item label="角色分配">
-							<el-select v-model="ruleForm.roleList" placeholder="请选择角色" clearable class="w100">
-								<el-option label="超级管理员" value="true"></el-option>
-								<el-option label="内容维护" value="false"></el-option>
+							<el-select v-model="ruleForm.roleList" multiple placeholder="请选择角色" clearable class="w100">
+								<el-option v-for="(item,index) in roleList" :key="index" :label="item.roleName" :value="item.id" />
 							</el-select>
 						</el-form-item>
 					</el-col>
@@ -75,9 +74,10 @@
 </template>
 
 <script lang="ts">
-import { reactive, toRefs, getCurrentInstance } from 'vue';
+import { reactive, toRefs, getCurrentInstance, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { saveUser } from '/@/api/user/index';
+import { getRoleSelectList } from '/@/api/role/index';
 
 export default {
 	name: 'systemAddUser',
@@ -85,6 +85,7 @@ export default {
 		const { proxy } = getCurrentInstance() as any;
 		const state = reactive({
 			isShowDialog: false,
+			roleList: [],
 			ruleForm: {
 				id: null,
 				userName: '',
@@ -94,8 +95,8 @@ export default {
 				email: '',
 				company: '',
 				address: '',
-				sex: '',
-				status: '',
+				sex: '1',
+				status: '1',
 				roleList: '',
 				source: 'admin_create'
 			},
@@ -108,20 +109,12 @@ export default {
 		const openDialog = (row?: object) => {
 			console.log(row);
 			state.isShowDialog = true;
-			state.ruleForm.parentId=row.id;
+			state.ruleForm.id=row.id;
 		};
 		// 关闭弹窗
 		const closeDialog = (row?: object) => {
 			console.log(row);
 			state.isShowDialog = false;
-		};
-		// 是否内嵌下拉改变
-		const onSelectIframeChange = () => {
-			if (state.ruleForm.isIframe === 'true') {
-				state.ruleForm.isLink = 'true';
-			} else {
-				state.ruleForm.isLink = '';
-			}
 		};
 		// 取消
 		const onCancel = () => {
@@ -147,6 +140,18 @@ export default {
 
 		};
 
+		const loadRoleList = () => {
+			getRoleSelectList().then((res) => {
+				state.roleList = res.data;
+			}).catch((err) => {
+				
+			});
+		}
+
+		onMounted(() => {
+			loadRoleList();
+		})
+
 		// 表单初始化，方法：`resetFields()` 无法使用
 		const initForm = () => {
 			state.ruleForm.id = null,
@@ -165,9 +170,9 @@ export default {
 		return {
 			openDialog,
 			closeDialog,
-			onSelectIframeChange,
 			onCancel,
 			onSubmit,
+			loadRoleList,
 			...toRefs(state),
 		};
 	},

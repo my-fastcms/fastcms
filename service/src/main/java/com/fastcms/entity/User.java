@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.fastcms.common.constants.FastcmsConstants;
 import org.apache.commons.lang.StringUtils;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -25,6 +26,7 @@ public class User implements Serializable {
     /**
      * 登录账号
      */
+    @NotBlank(message = "账号不能为空")
     private String userName;
 
     /**
@@ -65,6 +67,7 @@ public class User implements Serializable {
     /**
      * 登录密码
      */
+    @NotBlank(message = "密码不能为空")
     private String password;
 
     /**
