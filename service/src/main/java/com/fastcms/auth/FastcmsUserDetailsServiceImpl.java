@@ -14,17 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.web.security;
+package com.fastcms.auth;
 
+import com.fastcms.entity.Role;
 import com.fastcms.entity.User;
+import com.fastcms.service.IRoleService;
 import com.fastcms.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author： wjun_java@163.com
@@ -39,11 +44,16 @@ public class FastcmsUserDetailsServiceImpl implements UserDetailsService {
 	@Autowired
 	private IUserService userService;
 
+	@Autowired
+	private IRoleService roleService;
+
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userService.getUserByUsername(username);
 		if(user == null) throw new UsernameNotFoundException(username);
-		return new FastcmsUserDetails(user.getId(), user.getUserName(), user.getPassword(), Arrays.asList());
+		List<Role> userRoleList = roleService.getUserRoleList(user.getId());
+		List<GrantedAuthority> collect = userRoleList.stream().map(item -> new SimpleGrantedAuthority(String.valueOf(item.getId()))).collect(Collectors.toList());
+		return new FastcmsUserDetails(user.getId(), user.getUserName(), user.getPassword(), collect);
 	}
 
 }

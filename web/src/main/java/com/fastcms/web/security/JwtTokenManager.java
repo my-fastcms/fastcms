@@ -16,20 +16,20 @@
  */
 package com.fastcms.web.security;
 
+import com.fastcms.auth.FastcmsUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author： wjun_java@163.com
@@ -43,33 +43,35 @@ public class JwtTokenManager {
 
 	private static final String AUTHORITIES_KEY = "auth";
 
+	public static final String USER_ID = "userId";
+	public static final String USER_NAME = "username";
+
 	@Autowired
 	private AuthConfigs authConfigs;
 
 	public String createToken(Authentication authentication) {
-		return createToken(authentication.getName());
+		FastcmsUserDetails principal = (FastcmsUserDetails) authentication.getPrincipal();
+		return createToken(principal.getUserId(), authentication.getName(), principal.getAuthorities());
 	}
 
-	public String createToken(String userName) {
-
+	public String createToken(Long userId, String userName, Collection<? extends GrantedAuthority> authorities) {
 		long now = System.currentTimeMillis();
-
 		Date validity;
 		validity = new Date(now + authConfigs.getTokenValidityInSeconds() * 1000L);
-
-		Claims claims = Jwts.claims().setSubject(userName);
+		Map<String, Object> claims = new HashMap<>();
+		claims.put(USER_ID, userId);
+		claims.put(USER_NAME, userName);
+		claims.put(AUTHORITIES_KEY, StringUtils.join(authorities.toArray(), ","));
 		return Jwts.builder().setClaims(claims).setExpiration(validity)
 				.signWith(Keys.hmacShaKeyFor(authConfigs.getSecretKeyBytes()), SignatureAlgorithm.HS256).compact();
 	}
 
 	public Authentication getAuthentication(String token) {
-		Claims claims = Jwts.parserBuilder().setSigningKey(authConfigs.getSecretKeyBytes()).build()
-				.parseClaimsJws(token).getBody();
-
-		List<GrantedAuthority> authorities = AuthorityUtils
-				.commaSeparatedStringToAuthorityList((String) claims.get(AUTHORITIES_KEY));
-
-		User principal = new User(claims.getSubject(), "", authorities);
+		Claims claims = Jwts.parserBuilder().setSigningKey(authConfigs.getSecretKeyBytes()).build().parseClaimsJws(token).getBody();
+		List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get(AUTHORITIES_KEY));
+		Integer userId = (Integer) claims.get(USER_ID);
+		String username = (String) claims.get(USER_NAME);
+		FastcmsUserDetails principal = new FastcmsUserDetails(Long.valueOf(userId), username, "", authorities);
 		return new UsernamePasswordAuthenticationToken(principal, "", authorities);
 	}
 

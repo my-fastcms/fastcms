@@ -2,9 +2,9 @@ package com.fastcms.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fastcms.aspect.Log;
-import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.entity.User;
 import com.fastcms.entity.UserOpenid;
 import com.fastcms.entity.UserTag;
@@ -17,9 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * <p>
@@ -38,20 +36,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     @Log
     public void updateUserLoginTime(String username) {
-
-        LambdaQueryWrapper<User> queryWrapper = new QueryWrapper().lambda();
-        queryWrapper.eq(User::getUserName, username);
-        User user = getOne(queryWrapper);
-        if(user != null){
+        User user = getOne(Wrappers.<User>lambdaQuery().eq(User::getUserName, username));
+        if(user != null) {
             user.setLoginTime(LocalDateTime.now());
             updateById(user);
         }
-
     }
 
     @Override
     public void updateUserPassword(User userParam) throws Exception {
-
         User user = getById(userParam.getId());
         if(user == null) {
             throw new Exception("用户不存在");
@@ -60,31 +53,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if(StringUtils.isBlank(userParam.getPassword())) {
             throw new Exception("请输入旧密码");
         }
-
-//        if(StringUtils.isBlank(userParam.getNewPassword())) {
-//            throw new Exception("请输入新密码");
-//        }
-//
-//        if(StringUtils.isBlank(userParam.getNewConfirmPassword())) {
-//            throw new Exception("请再次输入新密码");
-//        }
-//
-//        if(!userParam.getNewPassword().equals(userParam.getNewConfirmPassword())) {
-//            throw new Exception("两次新密码输入不一致");
-//        }
-
-//        final String result = PasswordUtils.getMd5Password(user.getSalt(), userParam.getPassword());
-//        if(!result.equals(user.getPassword())) {
-//            throw new Exception("旧密码输入错误");
-//        }
-//
-//        final String salt = System.currentTimeMillis() + "";
-//        final String newPwd = PasswordUtils.getMd5Password(salt, userParam.getNewPassword());
-
-//        user.setPassword(newPwd);
-//        user.setSalt(salt);
         updateById(user);
-
     }
 
     @Override
@@ -152,37 +121,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public List<UserTag> getUserTagList(Long userId) {
         return getBaseMapper().getUserTagList(userId);
-    }
-
-    @Override
-    public User getUserBySearch(Long userId, String keyword) {
-        return getUserByPhone(keyword);
-    }
-
-    @Override
-    @Transactional
-    public synchronized void saveGroupUser(AddGroupUserParam addGroupUserParam) throws Exception {
-
-        User parent = getById(addGroupUserParam.getParentId());
-        if(parent == null) {
-            throw new FastcmsException(FastcmsException.INVALID_PARAM, "上级用户不存在");
-        }
-
-        User user = getUserByPhone(addGroupUserParam.getPhone());
-        if(user == null) {
-            throw new FastcmsException(FastcmsException.INVALID_PARAM, "用户不存在");
-        }
-
-        if(Objects.equals(parent.getId(), user.getId())) {
-            throw new FastcmsException(FastcmsException.INVALID_PARAM, "自己不能分配给自己");
-        }
-
-        user.setUserName(addGroupUserParam.getUserName());
-        updateById(user);
-
-        List<Long> stationIds = new ArrayList<>();
-        stationIds.add(addGroupUserParam.getTagId());
-
     }
 
 }

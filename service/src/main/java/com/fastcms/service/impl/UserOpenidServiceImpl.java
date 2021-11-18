@@ -8,10 +8,7 @@ import com.fastcms.service.IUserOpenidService;
 import org.springframework.stereotype.Service;
 
 /**
- * <p>
- * 账号绑定信息表 服务实现类
- * </p>
- *
+ * 账号绑定信息服务实现类
  * @author wjun_java@163.com
  * @since 2021-06-08
  */

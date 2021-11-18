@@ -1,6 +1,7 @@
 package com.fastcms.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fastcms.auth.AuthUtils;
 import com.fastcms.cache.CacheConfig;
 import com.fastcms.entity.Permission;
 import com.fastcms.mapper.PermissionMapper;
@@ -14,10 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * <p>
- *  服务实现类
- * </p>
- *
+ *  权限服务实现类
  * @author wjun_java@163.com
  * @since 2021-02-14
  */
@@ -30,6 +28,9 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     @Override
     public List<PermissionNode> getPermissions() {
         List<Permission> permissionList = list();
+        if(!AuthUtils.isAdmin()) {
+            permissionList = getBaseMapper().getPermissionByUserId(AuthUtils.getUserId());
+        }
         return getPermissionNodeList(permissionList);
     }
 

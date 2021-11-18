@@ -8,10 +8,7 @@ import com.fastcms.service.IConfigService;
 import org.springframework.stereotype.Service;
 
 /**
- * <p>
- *  服务实现类
- * </p>
- *
+ * 配置服务实现类
  * @author wjun_java@163.com
  * @since 2021-02-14
  */

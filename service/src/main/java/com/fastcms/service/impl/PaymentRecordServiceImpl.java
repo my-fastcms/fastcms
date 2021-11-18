@@ -8,10 +8,7 @@ import com.fastcms.service.IPaymentRecordService;
 import org.springframework.stereotype.Service;
 
 /**
- * <p>
- * 支付记录表 服务实现类
- * </p>
- *
+ * 支付记录服务实现类
  * @author wjun_java@163.com
  * @since 2021-06-19
  */

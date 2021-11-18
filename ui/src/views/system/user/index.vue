@@ -1,8 +1,9 @@
 <template>
 	<div class="system-user-container">
 		<el-card shadow="hover">
-			<div class="system-user-search mb15">
-				<el-input size="small" placeholder="请输入用户名" prefix-icon="el-icon-search" style="max-width: 180px"></el-input>
+			<div class="system-role-search mb15">
+				<el-button @click="onOpenAddUser" class="mt15" size="small" type="primary" icon="iconfont icon-shuxingtu">新建用户</el-button>
+				<el-input size="small" placeholder="请输入用户名|手机号" prefix-icon="el-icon-search" style="max-width: 180px" class="ml10"></el-input>
 				<el-button size="small" type="primary" class="ml10">查询</el-button>
 			</div>
 			<el-table :data="tableData.data" stripe style="width: 100%">
@@ -32,16 +33,20 @@
 			>
 			</el-pagination>
 		</el-card>
+		<AddUser ref="addUserRef" @reloadTable="initTableData"/>
 	</div>
 </template>
 
 <script lang="ts">
 import { ElMessageBox, ElMessage } from 'element-plus';
-import { toRefs, reactive, onMounted } from 'vue';
+import { ref, toRefs, reactive, onMounted } from 'vue';
+import AddUser from '/@/views/system/user/component/addUser.vue';
 import { getUserList, delUser } from '/@/api/user/index';
 export default {
 	name: 'systemUser',
+	components: { AddUser },
 	setup() {
+		const addUserRef = ref();
 		const state: any = reactive({
 			tableData: {
 				data: [],
@@ -53,6 +58,11 @@ export default {
 				},
 			},
 		});
+		
+		const onOpenAddUser = (row: object) => {
+			addUserRef.value.openDialog(row);
+		};
+
 		// 初始化表格数据
 		const initTableData = () => {
 			getUserList(state.tableData.param).then((res) => {
@@ -90,9 +100,12 @@ export default {
 			initTableData();
 		});
 		return {
+			addUserRef,
+			onOpenAddUser,
 			onRowDel,
 			onHandleSizeChange,
 			onHandleCurrentChange,
+			initTableData,
 			...toRefs(state),
 		};
 	},

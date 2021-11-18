@@ -17,7 +17,7 @@
 package com.fastcms.core.mybatis;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import com.fastcms.entity.User;
+import com.fastcms.auth.AuthUtils;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 
@@ -44,7 +44,7 @@ public class FastcmsMetaObjectHandler implements MetaObjectHandler {
         if(metaObject.hasSetter(USER_ID)) {
             Object fieldValByName = getFieldValByName(USER_ID, metaObject);
             if(fieldValByName == null) {
-                setFieldValByName(USER_ID, getLoginUser().getId(), metaObject);
+                setFieldValByName(USER_ID, AuthUtils.getUserId(), metaObject);
             }
         }
     }
@@ -52,11 +52,6 @@ public class FastcmsMetaObjectHandler implements MetaObjectHandler {
     @Override
     public void updateFill(MetaObject metaObject) {
         this.strictUpdateFill(metaObject, UPDATED, () -> LocalDateTime.now(), LocalDateTime.class);
-    }
-
-    public User getLoginUser(){
-//        return (User) SecurityUtils.getSubject().getPrincipal();
-        return null;
     }
 
 }

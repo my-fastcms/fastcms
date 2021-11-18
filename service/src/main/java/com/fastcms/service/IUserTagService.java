@@ -6,10 +6,7 @@ import com.fastcms.entity.UserTag;
 import java.util.List;
 
 /**
- * <p>
- *  服务类
- * </p>
- *
+ * 用户标签服务类
  * @author wjun_java@163.com
  * @since 2021-05-30
  */

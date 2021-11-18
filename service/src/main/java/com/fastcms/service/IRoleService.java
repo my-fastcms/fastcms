@@ -6,10 +6,7 @@ import com.fastcms.entity.Role;
 import java.util.List;
 
 /**
- * <p>
  *  角色服务类
- * </p>
- *
  * @author wjun_java@163.com
  * @since 2021-02-14
  */

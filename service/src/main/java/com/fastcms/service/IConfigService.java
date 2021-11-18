@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.entity.Config;
 
 /**
- * <p>
  *  配置服务类
- * </p>
- *
  * @author wjun_java@163.com
  * @since 2021-02-14
  */

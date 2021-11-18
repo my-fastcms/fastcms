@@ -17,6 +17,7 @@
 package com.fastcms.core.mybatis;
 
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.BlockAttackInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.DataPermissionInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
@@ -43,6 +44,7 @@ public class MyBatisPlusConfig {
         mybatisPlusInterceptor.addInnerInterceptor(new DataPermissionInterceptor(new FastcmsDataPermissionHandler()));
         mybatisPlusInterceptor.addInnerInterceptor(new PaginationInnerInterceptor());
         mybatisPlusInterceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());
+        mybatisPlusInterceptor.addInnerInterceptor(new BlockAttackInnerInterceptor());
 
         return mybatisPlusInterceptor;
     }

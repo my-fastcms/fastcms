@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.entity.PaymentRecord;
 
 /**
- * <p>
- * 支付记录表 服务类
- * </p>
- *
+ * 支付记录 服务类
  * @author wjun_java@163.com
  * @since 2021-06-19
  */

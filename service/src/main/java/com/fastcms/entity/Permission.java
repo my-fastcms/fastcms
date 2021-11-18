@@ -9,10 +9,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * <p>
  * 权限表
- * </p>
- *
  * @author wjun_java@163.com
  * @since 2021-11-12
  */

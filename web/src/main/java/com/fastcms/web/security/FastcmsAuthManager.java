@@ -16,6 +16,7 @@
  */
 package com.fastcms.web.security;
 
+import com.fastcms.auth.FastcmsUserDetails;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.core.captcha.FastcmsCaptchaService;
 import com.fastcms.entity.Permission;
@@ -60,9 +61,10 @@ public class FastcmsAuthManager implements AuthManager {
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
             Authentication authenticate = authenticationManager.authenticate(authenticationToken);
 
-            String token = tokenManager.createToken(authenticate.getName());
+            FastcmsUserDetails principal = (FastcmsUserDetails) authenticate.getPrincipal();
+            String token = tokenManager.createToken(principal.getUserId(), authenticate.getName(), principal.getAuthorities());
 
-            return new FastcmsUser(authenticate.getName(), token, authConfigs.getTokenValidityInSeconds(), true);
+            return new FastcmsUser(authenticate.getName(), token, authConfigs.getTokenValidityInSeconds(), principal.isAdmin());
 
         } catch (AuthenticationException e) {
             throw new AccessException(FastcmsException.NO_RIGHT, e.getMessage());

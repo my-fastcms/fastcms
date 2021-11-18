@@ -11,11 +11,15 @@
 
     <artifactId>codegen</artifactId>
 
+    <properties>
+        <mybatis-plus-generator.version>3.4.1</mybatis-plus-generator.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-generator</artifactId>
-            <version>3.4.1</version>
+            <version>${mybatis-plus-generator.version}</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>
@@ -28,7 +32,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.30</version>
         </dependency>
 
     </dependencies>

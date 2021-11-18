@@ -45,7 +45,7 @@ import AddRole from '/@/views/system/role/component/addRole.vue';
 import AddPermission from '/@/views/system/role/component/addPermission.vue';
 
 export default {
-	name: 'systemUser',
+	name: 'systemRole',
 	components: { AddRole, AddPermission },
 	setup() {
 		const addRoleRef = ref();
