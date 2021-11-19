@@ -139,24 +139,24 @@ export default defineComponent({
 
 		const doLogin = async(res) => {
 			state.loading.signIn = true;
-			let defaultAuthPageList: Array<string> = [];
-			let defaultAuthBtnList: Array<string> = [];
+			let defaultAuthPageList: Array<string> = ['admin'];
+			let defaultAuthBtnList: Array<string> = ['btn.add', 'btn.del', 'btn.edit', 'btn.link'];
 			// admin 页面权限标识，对应路由 meta.auth，用于控制路由的显示/隐藏
-			let adminAuthPageList: Array<string> = ['admin'];
+			// let adminAuthPageList: Array<string> = ['admin'];
 			// admin 按钮权限标识
-			let adminAuthBtnList: Array<string> = ['btn.add', 'btn.del', 'btn.edit', 'btn.link'];
+			// let adminAuthBtnList: Array<string> = ['btn.add', 'btn.del', 'btn.edit', 'btn.link'];
 			// test 页面权限标识，对应路由 meta.auth，用于控制路由的显示/隐藏
-			let testAuthPageList: Array<string> = ['test'];
+			// let testAuthPageList: Array<string> = ['test'];
 			// test 按钮权限标识
-			let testAuthBtnList: Array<string> = ['btn.add', 'btn.link'];
+			// let testAuthBtnList: Array<string> = ['btn.add', 'btn.link'];
 			// 不同用户模拟不同的用户权限
-			if (state.myForm.username === 'admin') {
-				defaultAuthPageList = adminAuthPageList;
-				defaultAuthBtnList = adminAuthBtnList;
-			} else {
-				defaultAuthPageList = testAuthPageList;
-				defaultAuthBtnList = testAuthBtnList;
-			}
+			// if (state.myForm.username === 'admin') {
+			// 	defaultAuthPageList = adminAuthPageList;
+			// 	defaultAuthBtnList = adminAuthBtnList;
+			// } else {
+			// 	defaultAuthPageList = testAuthPageList;
+			// 	defaultAuthBtnList = testAuthBtnList;
+			// }
 			// 用户信息模拟数据
 			const userInfos = {
 				username: res.data.username,

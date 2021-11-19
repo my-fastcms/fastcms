@@ -66,7 +66,7 @@
 			<template #footer>
 				<span class="dialog-footer">
 					<el-button @click="onCancel" size="small">取 消</el-button>
-					<el-button type="primary" @click="onSubmit" size="small">新 增</el-button>
+					<el-button type="primary" @click="onSubmit" size="small">保 存</el-button>
 				</span>
 			</template>
 		</el-dialog>
@@ -107,14 +107,11 @@ export default {
 			},
 		});
 		// 打开弹窗
-		const openDialog = (row?: object) => {
-			console.log(row);
+		const openDialog = () => {
 			state.isShowDialog = true;
-			state.ruleForm.id=row.id;
 		};
 		// 关闭弹窗
-		const closeDialog = (row?: object) => {
-			console.log(row);
+		const closeDialog = () => {
 			state.isShowDialog = false;
 		};
 		// 取消

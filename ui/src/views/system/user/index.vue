@@ -14,7 +14,7 @@
 				<el-table-column prop="created" label="加入时间" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="path" label="操作" width="90">
 					<template #default="scope">
-						<el-button size="mini" type="text">修改</el-button>
+						<el-button size="mini" type="text" @click="onOpenEditUser(scope.row)">修改</el-button>
 						<el-button v-if="scope.row.id != 1" size="mini" type="text" @click="onRowDel(scope.row)">删除</el-button>
 					</template>
 				</el-table-column>
@@ -34,6 +34,7 @@
 			</el-pagination>
 		</el-card>
 		<AddUser ref="addUserRef" @reloadTable="initTableData"/>
+		<EditUser ref="editUserRef" @reloadTable="initTableData"/>
 	</div>
 </template>
 
@@ -41,12 +42,14 @@
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { ref, toRefs, reactive, onMounted } from 'vue';
 import AddUser from '/@/views/system/user/component/addUser.vue';
+import EditUser from '/@/views/system/user/component/editUser.vue';
 import { getUserList, delUser } from '/@/api/user/index';
 export default {
 	name: 'systemUser',
-	components: { AddUser },
+	components: { AddUser, EditUser },
 	setup() {
 		const addUserRef = ref();
+		const editUserRef = ref();
 		const state: any = reactive({
 			tableData: {
 				data: [],
@@ -59,8 +62,12 @@ export default {
 			},
 		});
 		
-		const onOpenAddUser = (row: object) => {
-			addUserRef.value.openDialog(row);
+		const onOpenAddUser = () => {
+			addUserRef.value.openDialog();
+		};
+
+		const onOpenEditUser = (row: object) => {
+			editUserRef.value.openDialog(row);
 		};
 
 		// 初始化表格数据
@@ -101,6 +108,8 @@ export default {
 		});
 		return {
 			addUserRef,
+			editUserRef,
+			onOpenEditUser,
 			onOpenAddUser,
 			onRowDel,
 			onHandleSizeChange,

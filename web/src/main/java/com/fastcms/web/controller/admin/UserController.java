@@ -72,10 +72,10 @@ public class UserController {
     @GetMapping("list")
     public RestResult<Page<User>> list(PageModel page,
                                        @RequestParam(name = "phone", required = false) String phone,
-                                       @RequestParam(name = "status", required = false, defaultValue = "1") Integer status) {
+                                       @RequestParam(name = "status", required = false) Integer status) {
         Page<User> pageData = userService.page(page.toPage(), Wrappers.<User>lambdaQuery()
                 .eq(StringUtils.isNoneBlank(phone), User::getMobile, phone)
-                .eq(User::getStatus, status)
+                .eq(status != null, User::getStatus, status)
                 .select(User::getId, User::getUserName, User::getCreated, User::getSource, User::getEmail)
                 .orderByDesc(User::getCreated));
         return RestResultUtils.success(pageData);
@@ -126,7 +126,7 @@ public class UserController {
         if(FastcmsConstants.ADMIN_USER_ID == userId) {
             return RestResultUtils.failed("超级管理员不可删除");
         }
-        return RestResultUtils.success(userService.removeById(userId));
+        return RestResultUtils.success(userService.deleteUser(userId));
     }
 
     /**

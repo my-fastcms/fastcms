@@ -6,6 +6,7 @@ import com.fastcms.aspect.Log;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.entity.User;
 import com.fastcms.entity.UserTag;
+import com.fastcms.mapper.RoleMapper;
 import com.fastcms.mapper.UserMapper;
 import com.fastcms.service.IRoleService;
 import com.fastcms.service.IUserService;
@@ -34,6 +35,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private RoleMapper roleMapper;
 
     @Override
     @Log
@@ -66,8 +70,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     @Transactional
     public Boolean saveUser(User user) throws FastcmsException {
-        User one = getOne(Wrappers.<User>lambdaQuery().eq(User::getUserName, user.getUserName()));
-        if(one != null) throw new FastcmsException(FastcmsException.SERVER_ERROR, "账号已存在");
+
+        if(user.getId() == null) {
+            User one = getOne(Wrappers.<User>lambdaQuery().eq(User::getUserName, user.getUserName()));
+            if(one != null) throw new FastcmsException(FastcmsException.SERVER_ERROR, "账号已存在");
+
+            if(StringUtils.isBlank(user.getPassword())) {
+                throw new FastcmsException(FastcmsException.SERVER_ERROR, "密码不能为空");
+            }
+        }
 
         if(StringUtils.isNotBlank(user.getPassword())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -79,6 +90,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             roleService.saveUserRole(user.getId(), user.getRoleList());
         }
 
+        return true;
+    }
+
+    @Override
+    @Transactional
+    public Boolean deleteUser(Long userId) {
+        roleMapper.deleteRoleByUserId(userId);
+        removeById(userId);
         return true;
     }
 

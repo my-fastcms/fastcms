@@ -58,6 +58,11 @@ public class User implements Serializable {
     private String company;
 
     /**
+     * 性别
+     */
+    private Integer sex;
+
+    /**
      * 来源
      */
     private String source;
@@ -65,7 +70,6 @@ public class User implements Serializable {
     /**
      * 登录密码
      */
-    @NotBlank(message = "密码不能为空")
     private String password;
 
     /**
@@ -276,6 +280,14 @@ public class User implements Serializable {
 
     public void setRoleList(List<Long> roleList) {
         this.roleList = roleList;
+    }
+
+    public Integer getSex() {
+        return sex;
+    }
+
+    public void setSex(Integer sex) {
+        this.sex = sex;
     }
 
     @Override

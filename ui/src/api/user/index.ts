@@ -38,3 +38,15 @@ export function delUser(userId?: string) {
 		method: 'post'
 	});
 }
+
+/**
+ * 获取用户信息
+ * @param params 
+ * @returns 
+ */
+export function getUserInfo(userId?: string) {
+	return request({
+		url: '/admin/user/'+userId+'/get',
+		method: 'get',
+	});
+}

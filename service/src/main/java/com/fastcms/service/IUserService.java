@@ -40,4 +40,11 @@ public interface IUserService extends IService<User> {
      */
     Boolean saveUser(User user) throws FastcmsException;
 
+    /**
+     * 删除用户
+     * @param userId
+     * @return
+     */
+    Boolean deleteUser(Long userId);
+
 }
