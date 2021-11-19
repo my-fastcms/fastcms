@@ -25,7 +25,6 @@ import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.entity.User;
-import com.fastcms.entity.UserOpenid;
 import com.fastcms.service.IUserService;
 import me.chanjar.weixin.common.session.WxSession;
 import me.chanjar.weixin.common.session.WxSessionManager;
@@ -136,13 +135,16 @@ public class WechatMiniUserApi {
 		userInfo.setOpenId(openId);
 		userInfo.setUnionId(unionId);
 
-		try {
-			User user = userService.saveUserOfOpenid(userInfo.getOpenId(), userInfo.getUnionId(), userInfo.getNickName(), userInfo.getAvatarUrl(), UserOpenid.TYPE_WECHAT_MINI);
-			return RestResultUtils.success(user);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return RestResultUtils.failed("登录失败:user is null");
-		}
+//		try {
+//			User user = userService.saveUserOfOpenid(userInfo.getOpenId(), userInfo.getUnionId(), userInfo.getNickName(), userInfo.getAvatarUrl(), UserOpenid.TYPE_WECHAT_MINI);
+//			return RestResultUtils.success(user);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return RestResultUtils.failed("登录失败:user is null");
+//		}
+
+		return RestResultUtils.success();
+
 	}
 
 	/**
@@ -207,12 +209,14 @@ public class WechatMiniUserApi {
 		if(wxMaPhoneNumberInfo == null || StrUtils.isBlank(wxMaPhoneNumberInfo.getPhoneNumber())) {
 			return RestResultUtils.failed("获取手机号码失败");
 		}
-		try {
-			User user = userService.saveUserOfOpenidAndPhone(openId, unionId, wxMaPhoneNumberInfo.getPurePhoneNumber(), UserOpenid.TYPE_WECHAT_MINI);
-			return RestResultUtils.success(user);
-		} catch (Exception e) {
-			return RestResultUtils.failed("登录失败:user is null");
-		}
+//		try {
+//			User user = userService.saveUserOfOpenidAndPhone(openId, unionId, wxMaPhoneNumberInfo.getPurePhoneNumber(), UserOpenid.TYPE_WECHAT_MINI);
+//			return RestResultUtils.success(user);
+//		} catch (Exception e) {
+//			return RestResultUtils.failed("登录失败:user is null");
+//		}
+
+		return RestResultUtils.success();
 
 	}
 

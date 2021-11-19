@@ -22,7 +22,8 @@ export function saveUser(params?: object) {
 	return request({
 		url: '/admin/user/save',
 		method: 'post',
-		params,
+		data: params,
+		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 	});
 }
 

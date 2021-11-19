@@ -16,13 +16,14 @@
  */
 package com.fastcms.web.controller.admin;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.mybatis.PageModel;
+import com.fastcms.entity.Role;
 import com.fastcms.entity.User;
 import com.fastcms.service.IPermissionService;
 import com.fastcms.service.IRoleService;
@@ -30,12 +31,12 @@ import com.fastcms.service.IUserService;
 import com.fastcms.service.IUserTagService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * 用户管理
@@ -51,14 +52,15 @@ public class UserController {
 
     @Autowired
     private IUserService userService;
+
     @Autowired
     private IRoleService roleService;
+
     @Autowired
     private IPermissionService permissionService;
+
     @Autowired
     private IUserTagService userTagService;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     /**
      * 用户列表
@@ -95,16 +97,23 @@ public class UserController {
      */
     @PostMapping("save")
     public RestResult<Boolean> save(@Validated User user) {
-
-        User userInDb = userService.getOne(new QueryWrapper<User>().lambda().eq(User::getUserName, user.getUserName()));
-        if(userInDb != null) {
-            return RestResultUtils.failed("登录账号不可重复");
+        try {
+            return RestResultUtils.success(userService.saveUser(user));
+        } catch (FastcmsException e) {
+            return RestResultUtils.failed(e.getMessage());
         }
+    }
 
-        final String salt = System.currentTimeMillis() + "";
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setSalt(salt);
-        return RestResultUtils.success(userService.saveOrUpdate(user));
+    /**
+     * 获取用户详细信息
+     * @param userId
+     * @return
+     */
+    @GetMapping("{userId}/get")
+    public RestResult<User> getUserInfo(@PathVariable("userId") Long userId) {
+        User user = userService.getById(userId);
+        user.setRoleList(roleService.getUserRoleList(userId).stream().map(Role::getId).collect(Collectors.toList()));
+        return RestResultUtils.success(user);
     }
 
     /**

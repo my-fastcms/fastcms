@@ -1,18 +1,17 @@
 package com.fastcms.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fastcms.aspect.Log;
+import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.entity.User;
-import com.fastcms.entity.UserOpenid;
 import com.fastcms.entity.UserTag;
 import com.fastcms.mapper.UserMapper;
-import com.fastcms.service.IUserOpenidService;
+import com.fastcms.service.IRoleService;
 import com.fastcms.service.IUserService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,12 +30,15 @@ import java.util.List;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
     @Autowired
-    private IUserOpenidService userOpenidService;
+    private IRoleService roleService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     @Log
-    public void updateUserLoginTime(String username) {
-        User user = getOne(Wrappers.<User>lambdaQuery().eq(User::getUserName, username));
+    public void updateUserLoginTime(Long userId) {
+        User user = getById(userId);
         if(user != null) {
             user.setLoginTime(LocalDateTime.now());
             updateById(user);
@@ -57,70 +59,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public User getUserByUsername(String username) {
-        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper();
-        queryWrapper.eq(User::getUserName, username);
-        return getOne(queryWrapper);
-    }
-
-    @Override
-    public User getUserByPhone(String phone) {
-        QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("mobile", phone);
-        return getOne(queryWrapper);
+    public List<UserTag> getUserTagList(Long userId) {
+        return getBaseMapper().getUserTagList(userId);
     }
 
     @Override
     @Transactional
-    public User saveUserOfOpenid(String openid, String unionId, String nickName, String avatarUrl, String type) throws Exception {
-        UserOpenid userOpenid = userOpenidService.getByOpenid(openid, UserOpenid.TYPE_WECHAT_MINI);
-        User user;
-        if(userOpenid == null) {
-            user = new User();
-            user.setNickName(nickName);
-            user.setHeadImg(avatarUrl);
-            user.setSource(User.SourceType.WX_MINI_PROGRAM.name().toLowerCase());
-            save(user);
-            userOpenid = new UserOpenid();
-            userOpenid.setUserId(user.getId());
-            userOpenid.setType(type);
-            userOpenid.setValue(openid);
-//            userOpenid.setUnionId(unionId);
-            userOpenidService.save(userOpenid);
-        }else {
-            user = getById(userOpenid.getUserId());
+    public Boolean saveUser(User user) throws FastcmsException {
+        User one = getOne(Wrappers.<User>lambdaQuery().eq(User::getUserName, user.getUserName()));
+        if(one != null) throw new FastcmsException(FastcmsException.SERVER_ERROR, "账号已存在");
+
+        if(StringUtils.isNotBlank(user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-        return user;
-    }
 
-    @Override
-    public synchronized User saveUserOfOpenidAndPhone(String openid, String unionId, String phone, String type) throws Exception {
+        saveOrUpdate(user);
 
-        User userByPhone = getUserByPhone(phone);
-        if(userByPhone != null) return userByPhone;
-
-        UserOpenid userOpenid = userOpenidService.getByOpenid(openid, UserOpenid.TYPE_WECHAT_MINI);
-        User user;
-        if(userOpenid == null) {
-            user = new User();
-            user.setMobile(phone);
-            user.setSource(User.SourceType.WX_MINI_PROGRAM.name().toLowerCase());
-            save(user);
-            userOpenid = new UserOpenid();
-            userOpenid.setUserId(user.getId());
-            userOpenid.setType(type);
-            userOpenid.setValue(openid);
-//            userOpenid.setUnionId(unionId);
-            userOpenidService.save(userOpenid);
-        }else {
-            user = getById(userOpenid.getUserId());
+        if(user.getRoleList() != null) {
+            roleService.saveUserRole(user.getId(), user.getRoleList());
         }
-        return user;
-    }
 
-    @Override
-    public List<UserTag> getUserTagList(Long userId) {
-        return getBaseMapper().getUserTagList(userId);
+        return true;
     }
 
 }

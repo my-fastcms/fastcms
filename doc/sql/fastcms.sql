@@ -352,6 +352,7 @@ CREATE TABLE `user` (
   `mobile` varchar(32) DEFAULT NULL COMMENT '手机号码',
   `address` varchar(255) DEFAULT NULL,
   `company` varchar(255) DEFAULT NULL,
+  `sex` tinyint(4) DEFAULT '1' COMMENT '1男0女',
   `source` varchar(64) DEFAULT NULL COMMENT '来源',
   `password` varchar(256) DEFAULT NULL COMMENT '登录密码',
   `salt` varchar(64) DEFAULT NULL COMMENT '加密盐值',

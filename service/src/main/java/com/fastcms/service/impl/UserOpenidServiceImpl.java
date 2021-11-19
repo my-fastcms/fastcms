@@ -1,6 +1,5 @@
 package com.fastcms.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fastcms.entity.UserOpenid;
 import com.fastcms.mapper.UserOpenidMapper;
@@ -14,13 +13,5 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserOpenidServiceImpl extends ServiceImpl<UserOpenidMapper, UserOpenid> implements IUserOpenidService {
-
-	@Override
-	public UserOpenid getByOpenid(String openid, String type) {
-		LambdaQueryWrapper<UserOpenid> queryWrapper = new LambdaQueryWrapper<>();
-		queryWrapper.eq(UserOpenid::getValue, openid);
-		queryWrapper.eq(UserOpenid::getType, type);
-		return getOne(queryWrapper);
-	}
 
 }

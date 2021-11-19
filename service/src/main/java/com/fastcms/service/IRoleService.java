@@ -34,13 +34,6 @@ public interface IRoleService extends IService<Role> {
     void saveUserRole(Long userId, List<Long> roleIds);
 
     /**
-     * 获取用户角色列表
-     * @param userId
-     * @return
-     */
-    List<UserRole> getRoleListByUserId(Long userId);
-
-    /**
      * 获取用户分配角色集合
      * @param userId
      * @return

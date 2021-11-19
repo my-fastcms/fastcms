@@ -26,7 +26,6 @@
 - 基于pf4j实现freemarker自定义标签的动态插拔。
 - 基于pf4j实现springmvc拦截器的动态插拔。
 - 支持插件之间的通信。
-- lombock 使代码更简洁
 
 ### 前端技术
 - vue3

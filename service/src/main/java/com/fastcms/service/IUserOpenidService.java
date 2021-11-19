@@ -10,12 +10,4 @@ import com.fastcms.entity.UserOpenid;
  */
 public interface IUserOpenidService extends IService<UserOpenid> {
 
-	/**
-	 * 查找用户
-	 * @param openid
-	 * @param type
-	 * @return
-	 */
-	UserOpenid getByOpenid(String openid, String type);
-
 }

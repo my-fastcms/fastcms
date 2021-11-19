@@ -78,6 +78,7 @@ import { reactive, toRefs, getCurrentInstance, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { saveUser } from '/@/api/user/index';
 import { getRoleSelectList } from '/@/api/role/index';
+import qs from 'qs';
 
 export default {
 	name: 'systemAddUser',
@@ -127,7 +128,8 @@ export default {
 
 			proxy.$refs['myRefForm'].validate((valid: any) => {
 				if (valid) {
-					saveUser(state.ruleForm).then(() => {
+					let params = qs.stringify(state.ruleForm, {arrayFormat: 'repeat'});
+					saveUser(params).then(() => {
 						closeDialog(); // 关闭弹窗
 						// 刷新菜单，未进行后端接口测试
 						initForm();
@@ -144,7 +146,7 @@ export default {
 			getRoleSelectList().then((res) => {
 				state.roleList = res.data;
 			}).catch((err) => {
-				
+				console.log(err);
 			});
 		}
 

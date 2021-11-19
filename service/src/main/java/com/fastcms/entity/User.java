@@ -1,15 +1,13 @@
 package com.fastcms.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.*;
 import com.fastcms.common.constants.FastcmsConstants;
 import org.apache.commons.lang.StringUtils;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 用户
@@ -100,10 +98,20 @@ public class User implements Serializable {
     /**
      * @ignore
      */
+    @Version
     private Integer version;
 
+    /**
+     * 来源
+     */
     @TableField(exist = false)
     private String sourceStr;
+
+    /**
+     * 已分配角色列表
+     */
+    @TableField(exist = false)
+    private List<Long> roleList;
 
     public String getSourceStr() {
         String text = SourceType.getValue(getSource());
@@ -260,6 +268,14 @@ public class User implements Serializable {
 
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    public List<Long> getRoleList() {
+        return roleList;
+    }
+
+    public void setRoleList(List<Long> roleList) {
+        this.roleList = roleList;
     }
 
     @Override

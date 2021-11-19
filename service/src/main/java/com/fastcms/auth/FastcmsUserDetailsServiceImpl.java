@@ -16,6 +16,7 @@
  */
 package com.fastcms.auth;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.fastcms.entity.Role;
 import com.fastcms.entity.User;
 import com.fastcms.service.IRoleService;
@@ -49,7 +50,7 @@ public class FastcmsUserDetailsServiceImpl implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userService.getUserByUsername(username);
+		User user = userService.getOne(Wrappers.<User>lambdaQuery().eq(User::getUserName, username));
 		if(user == null) throw new UsernameNotFoundException(username);
 		List<Role> userRoleList = roleService.getUserRoleList(user.getId());
 		List<GrantedAuthority> collect = userRoleList.stream().map(item -> new SimpleGrantedAuthority(String.valueOf(item.getId()))).collect(Collectors.toList());
