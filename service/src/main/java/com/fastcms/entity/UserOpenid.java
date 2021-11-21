@@ -26,6 +26,7 @@ public class UserOpenid implements Serializable {
     /**
      * 用户ID
      */
+    @TableField(fill = FieldFill.INSERT)
     private Long userId;
 
     /**

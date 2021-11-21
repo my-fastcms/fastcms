@@ -23,6 +23,7 @@ public class Attachment implements Serializable {
     /**
      * 上传人id
      */
+    @TableField(fill = FieldFill.INSERT)
     private Long userId;
 
     /**
@@ -109,7 +110,7 @@ public class Attachment implements Serializable {
     }
 
     public String getPath() {
-        return "/static/" + getFilePath();
+        return "http://localhost:8080/static" + getFilePath();
     }
 
     public String getFileSize() {

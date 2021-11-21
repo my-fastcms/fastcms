@@ -55,7 +55,8 @@ public class PaymentRecord implements Serializable {
     /**
      * 付款人编号
      */
-    private Long payerUserId;
+    @TableField(fill = FieldFill.INSERT)
+    private Long userId;
 
     /**
      * 付款方手续费
@@ -172,12 +173,12 @@ public class PaymentRecord implements Serializable {
     public void setTrxNonceStr(String trxNonceStr) {
         this.trxNonceStr = trxNonceStr;
     }
-    public Long getPayerUserId() {
-        return payerUserId;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setPayerUserId(Long payerUserId) {
-        this.payerUserId = payerUserId;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
     public BigDecimal getPayerFee() {
         return payerFee;
@@ -314,7 +315,7 @@ public class PaymentRecord implements Serializable {
             ", trxNo=" + trxNo +
             ", trxType=" + trxType +
             ", trxNonceStr=" + trxNonceStr +
-            ", payerUserId=" + payerUserId +
+            ", userId=" + userId +
             ", payerFee=" + payerFee +
             ", orderIp=" + orderIp +
             ", orderFrom=" + orderFrom +

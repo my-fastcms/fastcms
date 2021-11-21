@@ -9,7 +9,8 @@
 						<span class="ml10">{{ $t(scope.row.meta.title) }}</span>
 					</template>
 				</el-table-column>
-				<el-table-column prop="path" label="路由名称" show-overflow-tooltip width="150"></el-table-column>
+				<el-table-column prop="name" label="路由名称" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="path" label="路由地址" show-overflow-tooltip></el-table-column>
 				<el-table-column label="组件地址" show-overflow-tooltip>
 					<template #default="scope">
 						<span>{{ scope.row.component }}</span>
@@ -43,11 +44,6 @@
 					<template #default="scope">
 						<span v-if="scope.row.meta.isLink && scope.row.meta.isIframe" class="color-primary">是</span>
 						<span v-else class="color-info">否</span>
-					</template>
-				</el-table-column>
-				<el-table-column label="权限标识" show-overflow-tooltip>
-					<template #default="scope">
-						<span>{{ scope.row.meta.auth }}</span>
 					</template>
 				</el-table-column>
 				<el-table-column label="操作" show-overflow-tooltip width="125">

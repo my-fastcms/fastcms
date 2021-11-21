@@ -80,11 +80,6 @@
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="权限标识">
-							<el-input v-model="ruleForm.auth" placeholder="路由权限标识（多个请用逗号隔开）" clearable></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="菜单排序">
 							<el-input v-model="ruleForm.menuSort" placeholder="菜单排序" clearable></el-input>
 						</el-form-item>
@@ -104,7 +99,6 @@
 <script lang="ts">
 import { reactive, toRefs, getCurrentInstance } from 'vue';
 import IconSelector from '/@/components/iconSelector/index.vue';
-import { useI18n } from 'vue-i18n';
 import { ElMessage } from 'element-plus';
 import { saveMenu } from '/@/api/menu/index';
 export default {
@@ -112,7 +106,6 @@ export default {
 	components: { IconSelector },
 	setup(props, ctx) {
 		const { proxy } = getCurrentInstance() as any;
-		const { t } = useI18n();
 		const state = reactive({
 			isShowDialog: false,
 			/**
@@ -122,6 +115,7 @@ export default {
 			 * 路由权限标识为数组格式，基本都需要自行转换类型
 			 */
 			ruleForm: {
+				id: null,
 				name: '', // 路由名称
 				path: '',
 				component: '', // 组件地址
@@ -134,7 +128,6 @@ export default {
 				isAffix: '', // 是否固定
 				isLink: '', // 是否外链，开启外链条件，`1、isLink:true 2、链接地址不为空`
 				isIframe: '', // 是否内嵌，开启条件，`1、isIframe:true 2、链接地址不为空`
-				auth: '', // 路由权限标识（多个请用逗号隔开），最后转成数组格式
 			},
 			rules: {
 				"name": { required: true, message: '请输入路由名称', trigger: 'blur' },
@@ -151,7 +144,7 @@ export default {
 			state.ruleForm.component = row.component;
 			state.ruleForm.isLink = row.isLink ? 'true' : '';
 			state.ruleForm.menuSort = '';
-			state.ruleForm.title = t(row.meta.title);
+			state.ruleForm.title = row.meta.title;
 			// 回显时，图标选择器有这个图标才可以回显，菜单中使用了阿里的、element plus的，二者不可共存
 			state.ruleForm.icon = row.meta.icon;
 			state.ruleForm.isHide = row.meta.isHide ? 'true' : 'false';
@@ -159,7 +152,6 @@ export default {
 			state.ruleForm.isAffix = row.meta.isAffix ? 'true' : 'false';
 			state.ruleForm.isLink = row.meta.isLink ? row.isLink : '';
 			state.ruleForm.isIframe = row.meta.isIframe ? 'true' : '';
-			state.ruleForm.auth = row.meta.auth ? row.meta.auth.join(',') : '';
 			state.isShowDialog = true;
 		};
 		// 关闭弹窗
@@ -208,7 +200,6 @@ export default {
 			state.ruleForm.isAffix = '';
 			state.ruleForm.isLink = '';
 			state.ruleForm.isIframe = '';
-			state.ruleForm.auth = '';
 		};
 		return {
 			openDialog,

@@ -80,11 +80,6 @@
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="权限标识">
-							<el-input v-model="ruleForm.auth" placeholder="路由权限标识（多个请用逗号隔开）" clearable></el-input>
-						</el-form-item>
-					</el-col>
-					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="菜单排序">
 							<el-input v-model="ruleForm.menuSort" placeholder="菜单排序" clearable></el-input>
 						</el-form-item>
@@ -121,8 +116,6 @@ export default {
 			 * 路由权限标识为数组格式，基本都需要自行转换类型
 			 */
 			ruleForm: {
-				id: null,
-				parentId: null,
 				name: '', // 路由名称
 				path: '',
 				component: '', // 组件地址
@@ -148,7 +141,9 @@ export default {
 		const openDialog = (row?: object) => {
 			console.log(row);
 			state.isShowDialog = true;
-			state.ruleForm.parentId=row.id;
+			if(row) {
+				state.ruleForm.parentId=row.id;
+			}
 		};
 		// 关闭弹窗
 		const closeDialog = (row?: object) => {

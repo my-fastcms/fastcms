@@ -76,7 +76,7 @@ public class AttachmentController {
         List<String> errorFiles = new ArrayList<>();
 
         if(files != null && files.length>0) {
-
+            List<Attachment> attachmentList = new ArrayList<>();
             for(MultipartFile file : files) {
                 String newFilePath = FileUtils.newFileName(file.getOriginalFilename());
                 File uploadFile = new File(FileUtils.getUploadDir(), newFilePath);
@@ -94,7 +94,7 @@ public class AttachmentController {
                     Attachment attachment = new Attachment();
                     attachment.setFileName(file.getOriginalFilename());
                     attachment.setFilePath(newFilePath.replace("\\", "/"));
-                    attachmentService.save(attachment);
+                    attachmentList.add(attachment);
                 } catch (IOException e) {
                     e.printStackTrace();
                     if(uploadFile != null) {
@@ -104,21 +104,27 @@ public class AttachmentController {
                 }
             }
 
+            if(!attachmentList.isEmpty()) {
+                attachmentService.saveBatch(attachmentList);
+            }
+
         }
 
-        return errorFiles.isEmpty() ? RestResultUtils.success() : RestResultUtils.failed(errorFiles.stream().collect(Collectors.joining(",")).concat(",以上文件上传失败"));
+        return errorFiles.isEmpty() ?
+                RestResultUtils.success() :
+                RestResultUtils.failed(errorFiles.stream().collect(Collectors.joining(",")).concat(",以上文件上传失败"));
 
     }
 
     /**
      * 附件明细
-     * @param id    附件id
+     * @param attachId    附件id
      * @return
      */
-    @RequestMapping("detail")
-    public RestResult<Attachment> detail(@RequestParam(name = "id") Long id) {
+    @GetMapping("get/{attachId}")
+    public RestResult<Attachment> detail(@PathVariable(name = "attachId") Long attachId) {
 
-        Attachment attachment = attachmentService.getById(id);
+        Attachment attachment = attachmentService.getById(attachId);
         if(attachment == null) {
             return RestResultUtils.failed("附件不存在");
         }

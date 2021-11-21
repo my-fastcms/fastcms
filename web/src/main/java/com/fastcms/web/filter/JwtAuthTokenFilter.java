@@ -18,6 +18,7 @@ package com.fastcms.web.filter;
 
 import com.fastcms.web.security.FastcmsAuthConfig;
 import com.fastcms.web.security.JwtTokenManager;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -52,12 +53,17 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
         String jwt = resolveToken(request);
 
         if (StringUtils.isNotBlank(jwt) && SecurityContextHolder.getContext().getAuthentication() == null) {
-            this.tokenManager.validateToken(jwt);
-            Authentication authentication = this.tokenManager.getAuthentication(jwt);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            try {
+                tokenManager.validateToken(jwt);
+                Authentication authentication = this.tokenManager.getAuthentication(jwt);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                filterChain.doFilter(request, response);
+            } catch (ExpiredJwtException e) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
+            } catch (Exception e) {
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Server failed," + e.getMessage());
+            }
         }
-        filterChain.doFilter(request, response);
-
     }
 
     private String resolveToken(HttpServletRequest request) {
