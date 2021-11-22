@@ -1,18 +1,26 @@
 <template>
 	<div class="list-adapt-container">
-
-		<el-upload
-			class="upload-demo"
-			:action="uploadUrl"
-			name="files"
-			multiple
-			:headers="headers"
-			:show-file-list="false"
-			:on-success="uploadSuccess"
-			:limit="3">
-			<el-button size="small" type="primary">上传附件</el-button>
-		</el-upload>
-
+		<el-row :gutter="35">
+			<el-col class="mb20">
+				<el-upload
+					:action="uploadUrl"
+					name="files"
+					multiple
+					:headers="headers"
+					:show-file-list="false"
+					:on-success="uploadSuccess"
+					:limit="3">
+					<el-button size="small" type="primary">上传附件</el-button>
+				</el-upload>
+			</el-col>
+			<el-col class="mb20">
+				<div class="attach-search mb15">
+					<el-input size="small" placeholder="请输入文件名称" prefix-icon="el-icon-search" style="max-width: 180px" class="ml10"></el-input>
+					<el-button size="small" type="primary" class="ml10">查询</el-button>
+				</div>
+			</el-col>
+		</el-row>				
+		
 		<el-card shadow="hover">
 			<div class="flex-warp" v-if="tableData.data.length > 0">
 				<el-row :gutter="15">
@@ -46,18 +54,20 @@
 				</el-pagination>
 			</template>
 		</el-card>
+		<Detail ref="detailRef" @reloadTable="initTableData"/>
 	</div>
 </template>
 
 <script lang="ts">
-import { toRefs, reactive, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
+import { toRefs, ref, reactive, onMounted } from 'vue';
 import { getAttachList } from '/@/api/attach/index';
 import { Session } from '/@/utils/storage';
+import Detail from '/@/views/attach/component/detail.vue';
 export default {
 	name: 'attachManager',
+	components: { Detail },
 	setup() {
-		const router = useRouter();
+		const detailRef = ref();
 		const state = reactive({
 			uploadUrl: import.meta.env.VITE_API_URL + "/admin/attachment/upload",
 			headers: {"Authorization": Session.get('token')},
@@ -89,10 +99,7 @@ export default {
 
 		// 当前列表项点击
 		const onTableItemClick = (v: object) => {
-			router.push({
-				path: '/pages/filteringDetails',
-				query: { id: v.id },
-			});
+			detailRef.value.openDialog(v.id);
 		};
 		// 分页点击
 		const onHandleSizeChange = (val: number) => {
@@ -103,6 +110,7 @@ export default {
 			state.tableData.param.pageNum = val;
 		};
 		return {
+			detailRef,
 			initTableData,
 			onTableItemClick,
 			onHandleSizeChange,
@@ -117,6 +125,11 @@ export default {
 <style scoped lang="scss">
 .upload-demo {
 	padding-bottom: 10px;
+}
+.list-adapt-container {
+	.attach-search {
+		text-align: right;
+	}
 }
 .flex-warp {
 	display: flex;
@@ -187,17 +200,6 @@ export default {
 					.item-txt-msg {
 						font-size: 12px;
 						color: #8d8d91;
-					}
-					.item-txt-price {
-						display: flex;
-						justify-content: space-between;
-						align-items: center;
-						.font-price {
-							color: #ff5000;
-							.font {
-								font-size: 22px;
-							}
-						}
 					}
 				}
 			}

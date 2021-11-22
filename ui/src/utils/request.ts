@@ -50,11 +50,12 @@ service.interceptors.response.use(
 	},
 	(error) => {
 		
-		if (error.response.data.status) {
+		if (error.response.data.status === 401) {
 			Session.clear(); // 清除浏览器全部临时缓存
-			window.location.href = '/'; // 去登录页
 			ElMessageBox.alert('你已被登出，请重新登录', '提示', {})
-				.then(() => {})
+				.then(() => {
+					window.location.href = '/'; // 去登录页
+				})
 				.catch(() => {});
 		}
 

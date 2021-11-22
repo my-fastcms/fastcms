@@ -25,6 +25,7 @@ import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.core.utils.FileUtils;
 import com.fastcms.entity.Attachment;
 import com.fastcms.service.IAttachmentService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartException;
@@ -56,11 +57,13 @@ public class AttachmentController {
     /**
      * 附件列表
      * @param page
+     * @param fileName  文件名称模糊搜索
      * @return
      */
     @RequestMapping("list")
-    public RestResult<Page<Attachment>> list(PageModel page) {
-        Page<Attachment> pageData = attachmentService.page(page.toPage(), Wrappers.<Attachment>lambdaQuery().orderByDesc(Attachment::getCreated));
+    public RestResult<Page<Attachment>> list(PageModel page, @RequestParam(value = "fileName", required = false) String fileName) {
+        Page<Attachment> pageData = attachmentService.page(page.toPage(), Wrappers.<Attachment>lambdaQuery().like(StringUtils.isNotBlank(fileName), Attachment::getFileName, fileName)
+                .orderByDesc(Attachment::getCreated));
         return RestResultUtils.success(pageData);
     }
 
@@ -85,12 +88,12 @@ public class AttachmentController {
                         uploadFile.getParentFile().mkdirs();
                     }
                     file.transferTo(uploadFile);
-                    long fileSize = uploadFile.length();
-                    if(fileSize > 1024 * 1024 * 5) {
-                        uploadFile.delete();
-                        errorFiles.add(file.getOriginalFilename());
-                        continue;
-                    }
+//                    long fileSize = uploadFile.length();
+//                    if(fileSize > 1024 * 1024 * 5) {
+//                        uploadFile.delete();
+//                        errorFiles.add(file.getOriginalFilename());
+//                        continue;
+//                    }
                     Attachment attachment = new Attachment();
                     attachment.setFileName(file.getOriginalFilename());
                     attachment.setFilePath(newFilePath.replace("\\", "/"));
@@ -114,6 +117,28 @@ public class AttachmentController {
                 RestResultUtils.success() :
                 RestResultUtils.failed(errorFiles.stream().collect(Collectors.joining(",")).concat(",以上文件上传失败"));
 
+    }
+
+    /**
+     * 修改附件名称以及描述
+     * @param attachId      附件id
+     * @param fileName      附件名称
+     * @param fileDesc      附件描述
+     * @return
+     */
+    @PostMapping("update/{attachId}")
+    public RestResult<Boolean> update(@PathVariable("attachId") Long attachId,
+                                      @RequestParam("fileName") String fileName,
+                                      @RequestParam(value = "fileDesc", required = false) String fileDesc) {
+        Attachment attachment = attachmentService.getById(attachId);
+        if(attachment == null) {
+            return RestResultUtils.failed("文件不存在");
+        }
+
+        attachment.setFileName(fileName);
+        attachment.setFileDesc(fileDesc);
+
+        return RestResultUtils.success(attachmentService.updateById(attachment));
     }
 
     /**
