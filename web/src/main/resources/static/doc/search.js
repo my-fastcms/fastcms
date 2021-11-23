@@ -51,23 +51,29 @@ api[1].list[1].list.push({
 api[1].list[1].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/detail',
-    desc: '附件明细',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/update/{attachId}',
+    desc: '修改附件名称以及描述',
 });
 api[1].list[1].list.push({
     order: '4',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/get/{attachId}',
+    desc: '附件明细',
+});
+api[1].list[1].list.push({
+    order: '5',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/delete/{attachId}',
     desc: '删除附件',
 });
 api[1].list[1].list.push({
-    order: '5',
+    order: '6',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/upload/ckeditor',
     desc: '在编辑器中上传附件',
 });
 api[1].list[1].list.push({
-    order: '6',
+    order: '7',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/upload/cKeditor/browse',
     desc: '弹出框中上传附件',
@@ -151,11 +157,23 @@ api[1].list[5].list.push({
 api[1].list[5].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/role/permissions',
-    desc: '获取角色权限列表',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/role/delete/{roleId}',
+    desc: '删除角色',
 });
 api[1].list[5].list.push({
     order: '4',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/role/list/select',
+    desc: '获取角色列表，不分页',
+});
+api[1].list[5].list.push({
+    order: '5',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/role/{roleId}/permissions',
+    desc: '获取角色权限列表',
+});
+api[1].list[5].list.push({
+    order: '6',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/role/{roleId}/permissions/save',
     desc: '保存角色权限',
@@ -188,17 +206,23 @@ api[1].list[6].list.push({
 api[1].list[6].list.push({
     order: '4',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/user/update',
-    desc: '编辑用户信息',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/user/{userId}/get',
+    desc: '获取用户详细信息',
 });
 api[1].list[6].list.push({
     order: '5',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/user/delete/{userId}',
+    desc: '编辑用户信息',
+});
+api[1].list[6].list.push({
+    order: '6',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/user/{userId}/roles/save/',
     desc: '分配角色',
 });
 api[1].list[6].list.push({
-    order: '6',
+    order: '7',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/user/{userId}/tags/save',
     desc: '分配标签',

@@ -22,32 +22,68 @@ public class ArticleComment implements Serializable {
     public static final String STATUS_UNAUDITED = "unaudited"; //待审核
     public static final String STATUS_HIDDEN = "hidden"; //隐藏
 
+    /**
+     * id
+     */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+    /**
+     * 创建人
+     */
     @TableField(fill = FieldFill.INSERT)
     private Long userId;
 
+    /**
+     * 上级评论
+     */
     private Long parentId;
 
+    /**
+     * 评论文章
+     */
     private Long articleId;
 
+    /**
+     * 评论内容
+     */
     @NotBlank(message = "评论内容不能为空")
     private String content;
 
+    /**
+     * 排序
+     */
     private Integer sortNum;
 
+    /**
+     * 回复次数
+     */
     private Integer replyCount;
 
+    /**
+     * 点赞次数
+     */
     private Integer upCount;
 
+    /**
+     * 踩赞次数
+     */
     private Integer downCount;
 
+    /**
+     * 状态
+     */
     private String status;
 
+    /**
+     * 创建时间
+     */
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime created;
 
+    /**
+     * 修改时间
+     */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updated;
 

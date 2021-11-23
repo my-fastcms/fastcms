@@ -2,8 +2,6 @@
 	<div class="system-menu-container">
 		<el-card shadow="hover">
 			<el-button @click="onOpenAddMenu" class="mt15" size="small" type="primary" icon="iconfont icon-shuxingtu">新建菜单</el-button>
-		</el-card>
-		<el-card shadow="hover">
 			<el-table :data="menuTableData" stripe style="width: 100%" row-key="path" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
 				<el-table-column label="菜单名称" show-overflow-tooltip>
 					<template #default="scope">

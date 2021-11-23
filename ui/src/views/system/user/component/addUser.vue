@@ -1,5 +1,5 @@
 <template>
-	<div class="system-menu-container">
+	<div class="system-user-container">
 		<el-dialog title="新增用户" v-model="isShowDialog" width="769px">
 			<el-form :model="ruleForm" size="small" label-width="80px" :rules="rules" ref="myRefForm">
 				<el-row :gutter="35">

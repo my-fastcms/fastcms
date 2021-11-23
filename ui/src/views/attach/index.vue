@@ -1,25 +1,18 @@
 <template>
 	<div class="list-adapt-container">
-		<el-row :gutter="35">
-			<el-col class="mb20">
-				<el-upload
-					:action="uploadUrl"
-					name="files"
-					multiple
-					:headers="headers"
-					:show-file-list="false"
-					:on-success="uploadSuccess"
-					:limit="3">
-					<el-button size="small" type="primary">上传附件</el-button>
-				</el-upload>
-			</el-col>
-			<el-col class="mb20">
-				<div class="attach-search mb15">
-					<el-input size="small" placeholder="请输入文件名称" prefix-icon="el-icon-search" style="max-width: 180px" class="ml10"></el-input>
-					<el-button size="small" type="primary" class="ml10">查询</el-button>
-				</div>
-			</el-col>
-		</el-row>				
+		<el-upload 
+			class="upload-btn"
+			:action="uploadUrl"
+			name="files"
+			multiple
+			:headers="headers"
+			:show-file-list="false"
+			:on-success="uploadSuccess"
+			:on-exceed="onHandleExceed"
+			:on-error="onHandleUploadError"
+			:limit="limit">
+			<el-button size="small" type="primary">上传附件</el-button>
+		</el-upload>
 		
 		<el-card shadow="hover">
 			<div class="flex-warp" v-if="tableData.data.length > 0">
@@ -61,6 +54,7 @@
 <script lang="ts">
 import { toRefs, ref, reactive, onMounted } from 'vue';
 import { getAttachList } from '/@/api/attach/index';
+import { ElMessage } from 'element-plus';
 import { Session } from '/@/utils/storage';
 import Detail from '/@/views/attach/component/detail.vue';
 export default {
@@ -69,6 +63,9 @@ export default {
 	setup() {
 		const detailRef = ref();
 		const state = reactive({
+			queryParams: {},
+			showSearch: true,
+			limit: 3,
 			uploadUrl: import.meta.env.VITE_API_URL + "/admin/attachment/upload",
 			headers: {"Authorization": Session.get('token')},
 			tableData: {
@@ -93,6 +90,14 @@ export default {
 			initTableData();
 		}
 
+		const onHandleExceed = () => {
+			ElMessage.error("上传文件数量不能超过 "+state.limit+" 个!");
+		}
+		// 上传失败
+		const onHandleUploadError = () => {
+			ElMessage.error("上传失败");
+		}
+
 		onMounted(() => {
 			initTableData();
 		});
@@ -115,6 +120,8 @@ export default {
 			onTableItemClick,
 			onHandleSizeChange,
 			onHandleCurrentChange,
+			onHandleExceed,
+			onHandleUploadError,
 			uploadSuccess,
 			...toRefs(state),
 		};
@@ -123,7 +130,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.upload-demo {
+.upload-btn {
 	padding-bottom: 10px;
 }
 .list-adapt-container {

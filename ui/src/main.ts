@@ -12,6 +12,7 @@ import '/@/theme/index.scss';
 import mitt from 'mitt';
 import screenShort from 'vue-web-screen-shot';
 import VueGridLayout from 'vue-grid-layout';
+import CKEditor from '@ckeditor/ckeditor5-vue';
 
 const app = createApp(App);
 app
@@ -21,6 +22,7 @@ app
 	.use(i18n)
 	.use(screenShort, { enableWebRtc: false })
 	.use(VueGridLayout)
+	.use(CKEditor)
 	.mount('#app');
 
 app.config.globalProperties.mittBus = mitt();

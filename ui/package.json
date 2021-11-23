@@ -10,6 +10,8 @@
 		"lint-fix": "eslint --fix --ext .js --ext .jsx --ext .vue src/"
 	},
 	"dependencies": {
+		"@ckeditor/ckeditor5-build-classic": "^31.0.0",
+		"@ckeditor/ckeditor5-vue": "^2.0.1",
 		"axios": "^0.23.0",
 		"countup.js": "^2.0.8",
 		"cropperjs": "^1.5.12",
@@ -36,6 +38,8 @@
 		"wangeditor": "^4.7.8"
 	},
 	"devDependencies": {
+		"@ckeditor/ckeditor5-build-classic": "^31.0.0",
+		"@ckeditor/ckeditor5-vue": "^2.0.1",
 		"@types/axios": "^0.14.0",
 		"@types/clipboard": "^2.0.1",
 		"@types/node": "^16.11.0",

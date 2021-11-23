@@ -21,34 +21,70 @@ public class ArticleCategory implements Serializable {
     public static final String CATEGORY_TYPE = "category";
     public static final String TAG_TYPE = "tag";
 
+    /**
+     * id
+     */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+    /**
+     * 创建人
+     */
     @TableField(fill = FieldFill.INSERT)
     private Long userId;
 
+    /**
+     * 上级分类
+     */
     private Long parentId;
 
+    /**
+     * 分类标题
+     */
     private String title;
 
+    /**
+     * 类型 可选值 category | tag
+     */
     private String type = CATEGORY_TYPE;
 
+    /**
+     * 排序
+     */
     private Integer sortNum;
 
+    /**
+     * 访问标识
+     */
     private String suffix;
 
+    /**
+     * 创建时间
+     */
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime created;
 
+    /**
+     * 修改时间
+     */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updated;
 
+    /**
+     * 是否选中
+     */
     @TableField(exist = false)
     private Boolean isCheck;
 
+    /**
+     * 分类访问地址
+     */
     @TableField(exist = false)
     private String url;
 
+    /**
+     * 子集分类
+     */
     @TableField(exist = false)
     List<ArticleCategory> children;
 
