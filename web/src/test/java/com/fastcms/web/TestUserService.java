@@ -16,17 +16,20 @@
  */
 package com.fastcms.web;
 
-import com.fastcms.service.IPermissionService;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.fastcms.entity.Role;
 import com.fastcms.service.IRoleService;
-import com.fastcms.service.IUserService;
 import com.fastcms.web.security.AuthConfigs;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author： wjun_java@163.com
@@ -39,23 +42,34 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class TestUserService {
 
     @Autowired
-    private IUserService userService;
-
-    @Autowired
-    private IPermissionService permissionService;
-
-    @Autowired
-    private IRoleService roleService;
-
-    @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     private AuthConfigs authConfigs;
 
-    @Disabled
+    @Autowired
+    private IRoleService roleService;
+
     @Test
     public void testBatchInsert() {
+        List<String> roleNames = new ArrayList<>();
+        roleNames.add("超级管理员");
+        roleNames.add("123");
+        roleNames.add("345");
+
+        List<Role> roleList = new ArrayList<>();
+        for (String roleName : roleNames) {
+            Role role = roleService.getOne(Wrappers.<Role>lambdaQuery().eq(Role::getRoleName, roleName));
+            if(role == null) {
+                role = new Role();
+                role.setRoleName(roleName);;
+            }
+            roleList.add(role);
+        }
+
+        roleService.saveBatch(roleList.stream().filter(role -> role.getId() == null).collect(Collectors.toList()));
+
+        System.out.println("=======================");
 
     }
 

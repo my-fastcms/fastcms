@@ -76,7 +76,7 @@ import { getRoleSelectList } from '/@/api/role/index';
 import qs from 'qs';
 
 export default {
-	name: 'systemAddUser',
+	name: 'systemEditUser',
 	setup(props, ctx) {
 		const { proxy } = getCurrentInstance() as any;
 		const state = reactive({

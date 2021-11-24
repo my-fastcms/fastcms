@@ -2,7 +2,7 @@
 	<div class="article-container">
 		<el-card shadow="hover">
 			<div class="article-search mb15">
-				<el-button class="mt15" size="small" type="primary" icon="iconfont icon-shuxingtu">新建文章</el-button>
+				<el-button class="mt15" size="small" @click="addArticle()" type="primary" icon="iconfont icon-shuxingtu">新建文章</el-button>
 				<el-input size="small" placeholder="请输入文章标题" prefix-icon="el-icon-search" style="max-width: 180px" class="ml10"></el-input>
 				<el-button size="small" type="primary" class="ml10">查询</el-button>
 			</div>
@@ -15,7 +15,7 @@
                 <el-table-column prop="created" label="创建时间" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="path" label="操作" width="90">
 					<template #default="scope">
-						<el-button size="mini" type="text">修改</el-button>
+						<el-button size="mini" type="text" @click="onRowUpdate(scope.row)">修改</el-button>
 						<el-button v-if="scope.row.id != 1" size="mini" type="text" @click="onRowDel(scope.row)">删除</el-button>
 					</template>
 				</el-table-column>
@@ -41,6 +41,7 @@
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { toRefs, reactive, onMounted } from 'vue';
 import { getArticleList, delArticle } from '/@/api/article/index';
+import { useRouter } from 'vue-router';
 export default {
 	name: 'articleManager',
 	setup() {
@@ -56,6 +57,7 @@ export default {
 			},
 		});
 
+        const router = useRouter();
 		// 初始化表格数据
 		const initTableData = () => {
 			getArticleList(state.tableData.param).then((res) => {
@@ -80,6 +82,14 @@ export default {
 			})
 			.catch(() => {});
 		};
+
+        const onRowUpdate = (row: object) => {
+            router.push({ 
+                path: '/article/write',
+                query: { id: row.id }
+            });
+        }
+
 		// 分页改变
 		const onHandleSizeChange = (val: number) => {
 			state.tableData.param.pageSize = val;
@@ -88,11 +98,16 @@ export default {
 		const onHandleCurrentChange = (val: number) => {
 			state.tableData.param.pageNum = val;
 		};
+        const addArticle = () => {
+            router.push({ path: '/article/write'});
+        };
 		// 页面加载时
 		onMounted(() => {
 			initTableData();
 		});
 		return {
+            addArticle,
+            onRowUpdate,
 			onRowDel,
 			onHandleSizeChange,
 			onHandleCurrentChange,

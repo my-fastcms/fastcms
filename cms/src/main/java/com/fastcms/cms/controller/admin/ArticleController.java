@@ -16,6 +16,7 @@
  */
 package com.fastcms.cms.controller.admin;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -33,6 +34,9 @@ import com.fastcms.core.mybatis.PageModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 文章管理
@@ -58,10 +62,10 @@ public class ArticleController {
     /**
      * 文章列表
      * @param page
-     * @param title
-     * @param status
-     * @param categoryId
-     * @param tagId
+     * @param title         文章标题
+     * @param status        状态
+     * @param categoryId    分类id
+     * @param tagId         标签id
      * @return
      */
     @RequestMapping("list")
@@ -87,23 +91,13 @@ public class ArticleController {
      * @return
      */
     @PostMapping("save")
-    public Object save(@Validated Article article) {
+    public RestResult<Long> save(@Validated Article article) {
         try {
             articleService.saveArticle(article);
-            return RestResultUtils.success();
+            return RestResultUtils.success(article.getId());
         } catch (Exception e) {
             return RestResultUtils.failed(e.getMessage());
         }
-    }
-
-    /**
-     * 文章详情
-     * @param articleId 文章id
-     * @return
-     */
-    @GetMapping("{articleId}")
-    public RestResult<Article> getArticle(@PathVariable("articleId") Long articleId) {
-        return RestResultUtils.success(articleService.getById(articleId));
     }
 
     /**
@@ -114,6 +108,44 @@ public class ArticleController {
     @PostMapping("category/save")
     public RestResult<Boolean> saveCategory(ArticleCategory articleCategory) {
         return RestResultUtils.success(articleCategoryService.saveOrUpdate(articleCategory));
+    }
+
+    /**
+     * 文章详情
+     * @param articleId 文章id
+     * @return
+     */
+    @GetMapping("get/{articleId}")
+    public RestResult<Article> getArticle(@PathVariable("articleId") Long articleId) {
+        LambdaQueryWrapper<Article> wrapper = Wrappers.<Article>lambdaQuery()
+                .select(Article.class, info -> !info.getColumn().equals("created") && !info.getColumn().equals("updated") && !info.getColumn().equals("version"))
+                .eq(Article::getId, articleId);
+        Article article = articleService.getOne(wrapper);
+        List<ArticleCategory> articleCategoryList = articleCategoryService.getArticleCategoryListByArticleId(articleId);
+        article.setArticleCategory(articleCategoryList.stream().filter(item -> item.getType().equals(ArticleCategory.CATEGORY_TYPE)).map(ArticleCategory::getTitle).collect(Collectors.toList()));
+        article.setArticleTag(articleCategoryList.stream().filter(item -> item.getType().equals(ArticleCategory.TAG_TYPE)).map(ArticleCategory::getTitle).collect(Collectors.toList()));
+        return RestResultUtils.success(article);
+    }
+
+    /**
+     * 删除文章
+     * @param articleId
+     * @return
+     */
+    @PostMapping("delete/{articleId}")
+    public Object deleteArticle(@PathVariable("articleId") Long articleId) {
+        articleService.removeById(articleId);
+        return RestResultUtils.success();
+    }
+
+    /**
+     * 分类列表
+     * @description     包括标签，不分页
+     * @return
+     */
+    @GetMapping("category/list")
+    public RestResult<List<ArticleCategory>> listCategory() {
+        return RestResultUtils.success(articleCategoryService.list());
     }
 
     /**

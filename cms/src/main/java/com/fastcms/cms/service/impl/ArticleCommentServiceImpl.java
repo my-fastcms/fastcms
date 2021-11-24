@@ -50,7 +50,7 @@ public class ArticleCommentServiceImpl extends ServiceImpl<ArticleCommentMapper,
 			throw new Exception("文章不存在");
 		}
 
-		if(article.getCommentEnable() == 0) {
+		if(!article.getCommentEnable()) {
 			throw new Exception("文章不允许评论");
 		}
 

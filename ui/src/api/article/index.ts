@@ -19,7 +19,7 @@ export function getArticleList() {
  */
 export function addArticle(params: object) {
 	return request({
-		url: '/admin/article/write',
+		url: '/admin/article/save',
 		method: 'post',
 		data: params,
 	});
@@ -60,5 +60,16 @@ export function delArticle(id: string) {
 	return request({
 		url: '/admin/article/delete/'+id,
 		method: 'post'
+	});
+}
+
+/**
+ * 获取文章分类，包括标签列表，不分页
+ * @returns 
+ */
+export function getArticleCategoryList() {
+	return request({
+		url: '/admin/article/category/list',
+		method: 'get'
 	});
 }

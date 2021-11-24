@@ -20,10 +20,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.fastcms.core.mybatis.DataPermission;
 import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.entity.ArticleCategory;
 import com.fastcms.cms.service.IArticleService;
+import com.fastcms.core.mybatis.DataPermission;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -39,7 +39,7 @@ public interface ArticleMapper extends BaseMapper<Article> {
 
 	void deleteRelationByArticleId(Long articleId);
 
-	void saveArticleCategoryRelation(Long articleId, List<Long> articleCategoryIdList);
+	void saveArticleCategoryRelation(@Param("articleId") Long articleId, @Param("articleCategoryIdList") List<Long> articleCategoryIdList);
 
 	@DataPermission("a")
 	Page<IArticleService.ArticleVo> pageArticle(Page pageParam, @Param(Constants.WRAPPER) QueryWrapper queryWrapper);

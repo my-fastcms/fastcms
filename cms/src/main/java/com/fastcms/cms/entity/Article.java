@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringUtils;
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 文章
@@ -78,7 +79,7 @@ public class Article implements Serializable {
     /**
      * 是否开启评论
      */
-    private Integer commentEnable = 0;
+    private Boolean commentEnable = true;
 
     /**
      * 文章缩略图
@@ -112,10 +113,10 @@ public class Article implements Serializable {
     private Integer version;
 
     @TableField(exist = false)
-    Long[] articleCategory;
+    List<String> articleCategory;
 
     @TableField(exist = false)
-    String[] articleTag;
+    List<String> articleTag;
 
     @TableField(exist = false)
     String url;
@@ -211,11 +212,11 @@ public class Article implements Serializable {
         this.viewCount = viewCount;
     }
 
-    public Integer getCommentEnable() {
+    public Boolean getCommentEnable() {
         return commentEnable;
     }
 
-    public void setCommentEnable(Integer commentEnable) {
+    public void setCommentEnable(Boolean commentEnable) {
         this.commentEnable = commentEnable;
     }
 
@@ -271,19 +272,19 @@ public class Article implements Serializable {
         this.thumbUrl = thumbUrl;
     }
 
-    public Long[] getArticleCategory() {
+    public List<String> getArticleCategory() {
         return articleCategory;
     }
 
-    public void setArticleCategory(Long[] articleCategory) {
+    public void setArticleCategory(List<String> articleCategory) {
         this.articleCategory = articleCategory;
     }
 
-    public String[] getArticleTag() {
+    public List<String> getArticleTag() {
         return articleTag;
     }
 
-    public void setArticleTag(String[] articleTag) {
+    public void setArticleTag(List<String> articleTag) {
         this.articleTag = articleTag;
     }
 

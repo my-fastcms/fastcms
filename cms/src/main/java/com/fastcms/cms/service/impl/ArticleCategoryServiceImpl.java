@@ -47,7 +47,7 @@ public class ArticleCategoryServiceImpl extends ServiceImpl<ArticleCategoryMappe
 
 	@Override
 	public List<ArticleCategory> getArticleCategoryListByArticleId(Long articleId) {
-		return getBaseMapper().getArticleCategoryListByArticleId(articleId, ArticleCategory.CATEGORY_TYPE);
+		return getBaseMapper().getArticleCategoryListByArticleId(articleId, null);
 	}
 
 	@Override

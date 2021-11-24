@@ -8,7 +8,10 @@
 
     <select id="getArticleCategoryListByArticleId" resultType="com.fastcms.cms.entity.ArticleCategory">
         select ac.* from article_category_relation acr join article_category ac on acr.category_id = ac.id
-        where acr.article_id = #{articleId} and ac.type = #{type}
+        where acr.article_id = #{articleId}
+        <if test="type != null">
+            and ac.type = #{type}
+        </if>
     </select>
 
     <select id="pageArticleCategory" resultType="com.fastcms.cms.service.IArticleCategoryService$ArticleCategoryVo">
