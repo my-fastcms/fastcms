@@ -163,7 +163,6 @@ export default {
         }
 
         const onSubmit = () => {
-            console.log("content:" + state.ruleForm.contentHtml);
             proxy.$refs['myRefForm'].validate((valid: any) => {
 				if (valid) {
 					let params = qs.stringify(state.ruleForm, {arrayFormat: 'repeat'});
