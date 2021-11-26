@@ -1,6 +1,6 @@
 <template>
 	<div class="layout-logo" v-if="setShowLogo" @click="onThemeConfigChange">
-		<img src="https://gitee.com/lyt-top/vue-next-admin-images/raw/master/logo/logo-mini.svg" class="layout-logo-medium-img" />
+		<!-- <img src="https://gitee.com/lyt-top/vue-next-admin-images/raw/master/logo/logo-mini.svg" class="layout-logo-medium-img" /> -->
 		<span>{{ getThemeConfig.globalTitle }}</span>
 	</div>
 	<div class="layout-logo-size" v-else @click="onThemeConfigChange">
