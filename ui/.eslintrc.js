@@ -11,7 +11,11 @@ module.exports = {
 		parser: '@typescript-eslint/parser',
 		sourceType: 'module',
 	},
-	extends: ['plugin:vue/vue3-essential', 'plugin:vue/essential', 'eslint:recommended'],
+	extends: [
+		// 'plugin:vue/vue3-essential', 
+		// 'plugin:vue/essential', 
+		// 'eslint:recommended'
+	],
 	plugins: ['vue', '@typescript-eslint'],
 	rules: {
 		// http://eslint.cn/docs/rules/

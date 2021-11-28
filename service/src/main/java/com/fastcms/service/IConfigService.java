@@ -3,6 +3,8 @@ package com.fastcms.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.entity.Config;
 
+import java.util.List;
+
 /**
  *  配置服务类
  * @author wjun_java@163.com
@@ -16,6 +18,11 @@ public interface IConfigService extends IService<Config> {
 
 	Config saveConfig(String key, String value);
 
-	void saveOrUpdateConfig(Config config);
+	/**
+	 * 获取多个配置
+	 * @param configKeys
+	 * @return
+	 */
+	List<Config> getConfigs(List<String> configKeys);
 
 }

@@ -17,18 +17,21 @@
 package com.fastcms.web.controller.admin;
 
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.core.config.ConfigChangeListenerManager;
 import com.fastcms.entity.Config;
 import com.fastcms.service.IConfigService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 配置
@@ -42,13 +45,8 @@ import java.util.*;
 @RequestMapping(FastcmsConstants.ADMIN_MAPPING + "/config")
 public class ConfigController {
 
-	private static final String LISTENER_KEY = "listener";
-
 	@Autowired
 	private IConfigService configService;
-
-	@Autowired
-	private ConfigChangeListenerManager configChangeListenerManager;
 
 	/**
 	 * 保存配置
@@ -56,7 +54,7 @@ public class ConfigController {
 	 * @return
 	 */
 	@PostMapping("save")
-	public Object save(HttpServletRequest request) {
+	public RestResult<Boolean> save(HttpServletRequest request) {
 
 		Map<String, String[]> parameterMap = request.getParameterMap();
 		if (parameterMap == null || parameterMap.isEmpty()) {
@@ -73,35 +71,31 @@ public class ConfigController {
 						break;
 					}
 				}
-				datasMap.put(entry.getKey(), value);
+
+				//值不发生变化的，不处理
+				String oldValue = configService.getValue(entry.getKey());
+				if(StringUtils.isNotBlank(value) && !value.equals(oldValue)) {
+					datasMap.put(entry.getKey(), value);
+				}
 			}
 		}
 
-		List<String> listeners = new ArrayList<>();
 		for (Map.Entry<String, String> entry : datasMap.entrySet()) {
 			String key = entry.getKey().trim();
-			if(LISTENER_KEY.equals(key)) {
-				if(StringUtils.isNotBlank(entry.getValue())) {
-					String[] listenerNames = entry.getValue().split(",");
-					listeners.addAll(Arrays.asList(listenerNames));
-				}
-			}else {
-				Config config = new Config(key, entry.getValue());
-				configService.saveOrUpdateConfig(config);
-			}
+			configService.saveConfig(key, entry.getValue());
 		}
 
-		if(!listeners.isEmpty()) {
-			for (String listener : listeners) {
-				try {
-					configChangeListenerManager.onChange(listener);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
+		return RestResultUtils.success(true);
+	}
 
-		return RestResultUtils.success();
+	/**
+	 * 获取配置
+	 * @param configKeys	key数组
+	 * @return
+	 */
+	@PostMapping("list")
+	public RestResult<List<Config>> getConfigList(@RequestParam("configKeys") List<String> configKeys) {
+		return RestResultUtils.success(configService.getConfigs(configKeys));
 	}
 
 }

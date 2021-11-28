@@ -71,9 +71,11 @@ public class UserController {
      */
     @GetMapping("list")
     public RestResult<Page<User>> list(PageModel page,
+                                       @RequestParam(name = "username", required = false) String username,
                                        @RequestParam(name = "phone", required = false) String phone,
                                        @RequestParam(name = "status", required = false) Integer status) {
         Page<User> pageData = userService.page(page.toPage(), Wrappers.<User>lambdaQuery()
+                .eq(StringUtils.isNotBlank(username), User::getUserName, username)
                 .eq(StringUtils.isNoneBlank(phone), User::getMobile, phone)
                 .eq(status != null, User::getStatus, status)
                 .select(User::getId, User::getUserName, User::getCreated, User::getSource, User::getEmail)

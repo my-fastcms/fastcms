@@ -12,7 +12,7 @@
     <select id="getRolePermission" resultType="com.fastcms.service.IPermissionService$RolePermission">
         select p.*, t.role_id from permission p LEFT JOIN
         (select rp.* from role_permission rp where rp.role_id=${roleId}) t
-        on p.id = t.permission_id where (p.category = 'admin' or p.parent_id = 0) order by p.parent_id
+        on p.id = t.permission_id order by p.parent_id
     </select>
 
     <delete id="deleteByRoleId">

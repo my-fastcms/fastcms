@@ -5,10 +5,11 @@ import request from '/@/utils/request';
  * @param params 
  * @returns 
  */
-export function getArticleList() {
+export function getArticleList(params: object) {
 	return request({
 		url: '/admin/article/list',
-		method: 'get'
+		method: 'get',
+		params: params
 	});
 }
 
@@ -17,7 +18,7 @@ export function getArticleList() {
  * @param params 
  * @returns 
  */
-export function addArticle(params: object) {
+export function addArticle(params: string) {
 	return request({
 		url: '/admin/article/save',
 		method: 'post',

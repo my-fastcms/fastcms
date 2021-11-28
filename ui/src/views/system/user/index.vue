@@ -3,8 +3,9 @@
 		<el-card shadow="hover">
 			<div class="system-role-search mb15">
 				<el-button @click="onOpenAddUser" class="mt15" size="small" type="primary" icon="iconfont icon-shuxingtu">新建用户</el-button>
-				<el-input size="small" placeholder="请输入用户名|手机号" prefix-icon="el-icon-search" style="max-width: 180px" class="ml10"></el-input>
-				<el-button size="small" type="primary" class="ml10">查询</el-button>
+				<el-input size="small" v-model="tableData.param.username" placeholder="请输入账号" style="max-width: 180px" class="ml10"></el-input>
+				<el-input size="small" v-model="tableData.param.phone" placeholder="请输入手机号" style="max-width: 180px" class="ml10"></el-input>
+				<el-button size="small" type="primary" class="ml10" @click="initTableData">查询</el-button>
 			</div>
 			<el-table :data="tableData.data" stripe style="width: 100%">
 				<el-table-column prop="id" label="ID" show-overflow-tooltip></el-table-column>
@@ -14,7 +15,7 @@
 				<el-table-column prop="created" label="加入时间" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="path" label="操作" width="90">
 					<template #default="scope">
-						<el-button size="mini" type="text" @click="onOpenEditUser(scope.row)">修改</el-button>
+						<el-button v-if="scope.row.id != 1" size="mini" type="text" @click="onOpenEditUser(scope.row)">修改</el-button>
 						<el-button v-if="scope.row.id != 1" size="mini" type="text" @click="onRowDel(scope.row)">删除</el-button>
 					</template>
 				</el-table-column>
@@ -56,6 +57,8 @@ export default {
 				total: 0,
 				loading: false,
 				param: {
+					username: '',
+					phone: '',
 					pageNum: 1,
 					pageSize: 10,
 				},

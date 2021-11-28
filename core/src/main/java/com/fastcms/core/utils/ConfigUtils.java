@@ -14,30 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.core.config;
+package com.fastcms.core.utils;
 
-import org.springframework.beans.factory.InitializingBean;
+import com.fastcms.service.IConfigService;
 
 /**
+ * 获取系统配置工具类
  * @author： wjun_java@163.com
- * @date： 2021/6/6
+ * @date： 2021/11/28
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-public abstract class BaseConfigChangeListener extends ConfigChangeListenerManager implements InitializingBean {
+public final class ConfigUtils {
 
-	@Override
-	public void onChange(String listenerName) throws Exception {
-		if(getClass().getSimpleName().equals(listenerName)) {
-			doChange();
-		}
+	public static String getConfig(String key) {
+		return SpringContextHolder.getApplicationContext().getBean(IConfigService.class).getValue(key);
 	}
 
-	protected abstract void doChange() throws Exception;
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		addListener(this);
-	}
 }

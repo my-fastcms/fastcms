@@ -5,13 +5,13 @@
     <select id="getPermissionByRoleId" resultType="com.fastcms.service.IPermissionService$RolePermission">
         select p.*, t.role_id from permission p LEFT JOIN
         (select rp.* from role_permission rp where rp.role_id=${roleId}) t
-        on p.id = t.permission_id where (p.category = 'admin' or p.parent_id = 0) order by p.parent_id
+        on p.id = t.permission_id order by p.parent_id
     </select>
 
     <select id="getPermissionByUserId" resultType="com.fastcms.entity.Permission">
         select p.* from permission p JOIN
         (select DISTINCT rp.permission_id from role_permission rp where rp.role_id in(select role_id from user_role ur where ur.user_id=${userId})) t
-        on p.id = t.permission_id and (p.category = 'admin' or p.parent_id = 0)
+        on p.id = t.permission_id
     </select>
 
     <delete id="deleteByPermissionId">

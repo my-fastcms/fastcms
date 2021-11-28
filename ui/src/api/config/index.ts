@@ -1,0 +1,28 @@
+import request from '/@/utils/request';
+
+/**
+ * 保存配置
+ * @param params 
+ * @returns 
+ */
+export function saveConfig(params: string) {
+	return request({
+		url: '/admin/config/save',
+		data: params,
+		method: 'post'
+	});
+}
+
+/**
+ * 根据配置key值获取配置
+ * @param params 
+ * @returns 
+ */
+export function getConfigList(params: string) {
+	return request({
+		url: '/admin/config/list',
+		data: params,
+		method: 'post'
+	});
+}
+

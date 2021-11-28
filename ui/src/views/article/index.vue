@@ -45,7 +45,7 @@ import { useRouter } from 'vue-router';
 export default {
 	name: 'articleManager',
 	setup() {
-		const state: any = reactive({
+		const state = reactive({
 			tableData: {
 				data: [],
 				total: 0,

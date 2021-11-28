@@ -3,6 +3,7 @@ package com.fastcms.service.impl;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fastcms.aspect.Log;
+import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.entity.User;
 import com.fastcms.entity.UserTag;
@@ -78,6 +79,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             if(StringUtils.isBlank(user.getPassword())) {
                 throw new FastcmsException(FastcmsException.SERVER_ERROR, "密码不能为空");
             }
+        } else{
+            if(user.getId() == FastcmsConstants.ADMIN_USER_ID) {
+                throw new FastcmsException(FastcmsException.NO_RIGHT, "超级管理员不可修改");
+            }
         }
 
         if(StringUtils.isNotBlank(user.getPassword())) {
@@ -85,11 +90,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
 
         saveOrUpdate(user);
-
-        if(user.getRoleList() != null) {
-            roleService.saveUserRole(user.getId(), user.getRoleList());
-        }
-
+        roleService.saveUserRole(user.getId(), user.getRoleList());
         return true;
     }
 

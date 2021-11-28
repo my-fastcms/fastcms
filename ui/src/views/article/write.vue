@@ -44,8 +44,11 @@
                     </el-form-item>
                 </el-col>
                 <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                    <el-form-item label="模板样式" prop="suffix">
-                        <el-input v-model="ruleForm.suffix" placeholder="请选择模板样式" clearable></el-input>
+                    <el-form-item label="模板" prop="suffix">
+                        <el-select v-model="ruleForm.suffix" placeholder="请选择模板" clearable class="w100">
+                            <el-option label="template1" value="template1"></el-option>
+                            <el-option label="template2" value="template2"></el-option>
+                        </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -60,6 +63,7 @@
                     <el-form-item label="分类" prop="categories">
                         <el-select
                             v-model="ruleForm.articleCategory"
+                            class="w100"
                             multiple
                             filterable
                             allow-create
@@ -73,6 +77,7 @@
                     <el-form-item label="标签" prop="tags">
                         <el-select
                             v-model="ruleForm.articleTag"
+                            class="w100"
                             multiple
                             filterable
                             allow-create
@@ -118,7 +123,7 @@ export default {
 	setup() {
         const route = useRoute();
         const { proxy } = getCurrentInstance() as any;
-		const state: any = reactive({
+		const state = reactive({
             params: {},
             categories: [],
             tags: [],
@@ -126,6 +131,7 @@ export default {
                 title: '',
                 commentEnable: 1,
                 contentHtml: '',
+                status: 'publish'
             },
 			editor: ClassicEditor,
             editorConfig: {

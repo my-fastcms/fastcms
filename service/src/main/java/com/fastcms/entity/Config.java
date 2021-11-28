@@ -15,13 +15,6 @@ public class Config implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Config() {}
-
-    public Config(String key, String value) {
-        this.key = key;
-        this.value = value;
-    }
-
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
@@ -36,6 +29,9 @@ public class Config implements Serializable {
      */
     @TableField("`value`")
     private String value;
+
+    @TableField(exist = false)
+    private Object jsonValue;
 
     public Long getId() {
         return id;
@@ -57,6 +53,10 @@ public class Config implements Serializable {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public Object getJsonValue() {
+        return "true".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value) ? Boolean.valueOf(value) : value;
     }
 
     @Override

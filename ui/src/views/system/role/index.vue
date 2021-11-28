@@ -3,8 +3,6 @@
 		<el-card shadow="hover">
 			<div class="system-role-search mb15">
 				<el-button @click="onOpenAddRole" class="mt15" size="small" type="primary" icon="iconfont icon-shuxingtu">新建角色</el-button>
-				<el-input size="small" placeholder="请输入角色名" prefix-icon="el-icon-search" style="max-width: 180px" class="ml10"></el-input>
-				<el-button size="small" type="primary" class="ml10">查询</el-button>
 			</div>
 			<el-table :data="tableData.data" stripe style="width: 100%">
 				<el-table-column prop="roleName" label="角色名" show-overflow-tooltip></el-table-column>

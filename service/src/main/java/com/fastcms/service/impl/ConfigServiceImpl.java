@@ -1,11 +1,17 @@
 package com.fastcms.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fastcms.entity.Config;
 import com.fastcms.mapper.ConfigMapper;
 import com.fastcms.service.IConfigService;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * 配置服务实现类
@@ -13,13 +19,20 @@ import org.springframework.stereotype.Service;
  * @since 2021-02-14
  */
 @Service
-public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> implements IConfigService {
+public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> implements IConfigService, InitializingBean {
+
+	/**
+	 * 缓存系统配置
+	 */
+	final Map<String, Config> configMap = new ConcurrentHashMap<>();
 
 	@Override
 	public Config findByKey(String key) {
-		LambdaQueryWrapper<Config> queryWrapper = new LambdaQueryWrapper();
-		queryWrapper.eq(Config::getKey, key);
-		return getOne(queryWrapper);
+		Config config = configMap.get(key);
+		if(config == null) {
+			config = getOne(Wrappers.<Config>lambdaQuery().eq(Config::getKey, key));
+		}
+		return config;
 	}
 
 	@Override
@@ -30,25 +43,25 @@ public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> impleme
 
 	@Override
 	public Config saveConfig(String key, String value) {
-		Config config = findByKey(key);
+		Config config = getOne(Wrappers.<Config>lambdaQuery().eq(Config::getKey, key));
 		if(config == null) {
 			config = new Config();
 			config.setKey(key);
 		}
 		config.setValue(value);
 		saveOrUpdate(config);
+		configMap.put(key, config);
 		return config;
 	}
 
 	@Override
-	public void saveOrUpdateConfig(Config config) {
-		Config myConfig = findByKey(config.getKey());
-		if(myConfig == null) {
-			myConfig = config;
-		}else {
-			myConfig.setValue(config.getValue());
-		}
-		saveOrUpdate(myConfig);
+	public List<Config> getConfigs(List<String> configKeys) {
+		return configMap.values().stream().filter(item -> configKeys.contains(item.getKey())).collect(Collectors.toList());
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		list().forEach(item -> configMap.put(item.getKey(), item));
 	}
 
 }

@@ -70,9 +70,24 @@ public interface FastcmsConstants {
     String PERMISSION_OPTION = "option";
 
     /**
-     * 文件服务器域名
+     * 附件设置相关
      */
-    String FILE_DOMAIN = "file_domain";
+    //附件域名
+    String ATTACH_FILE_DOMAIN = "file_domain";
+    //最大图片上传大小
+    String ATTACH_IMAGE_MAXSIZE = "imageMaxSize";
+    //其他文件最大上传大小
+    String ATTACH_OTHER_MAXSIZE = "otherMaxSize";
+    //是否开启图片水印
+    String ATTACH_ENABLE_WATERMARK = "enableWatermark";
+    //水印位置
+    String ATTACH_WATERMARK_POS = "waterMarkPos";
+    //水印透明度
+    String ATTACH_DIAPHANEITY = "diaphaneity";
+    //水印图片
+    String ATTACH_WATERMARK_FILE = "waterMarkFile";
+    //水印文字
+    String ATTACH_WATERMARK_TXT = "waterMarkTxt";
 
     /**
      * 系统配置相关key

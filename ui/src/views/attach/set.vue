@@ -5,22 +5,23 @@
 			<el-col :span="24">
 				<el-card shadow="hover">
 					
-					<el-form :model="attachSetForm" size="small" label-width="150px" class="mt35 mb35">
+					<el-form :model="ruleForm" :rules="rules" ref="myRefForm" size="small" label-width="150px" class="mt35 mb35">
                         
                         <div class="personal-edit-title mb15">文件大小限制</div>
 
 						<el-row :gutter="35">
 							<el-col class="mb20">
-								<el-form-item label="图片大小设置">
-									<el-input v-model="attachSetForm.name" placeholder="请输入允许上传图片的最大值" clearable></el-input>
+								<el-form-item label="图片大小设置" prop="imageMaxSize">
+									<el-input v-model="ruleForm.imageMaxSize" placeholder="请输入允许上传图片的最大值，单位MB" onkeyup="value=value.replace(/[^\d]/g,'')" clearable></el-input>
+									<div class="sub-title">单位M，0表示不限制文件大小</div>
 								</el-form-item>
 							</el-col>
 							<el-col class="mb20">
-								<el-form-item label="其他文件大小设置">
-									<el-input v-model="attachSetForm.email" placeholder="请输入允许上传其他文件的最大值" clearable></el-input>
+								<el-form-item label="其他文件大小设置" prop="otherMaxSize">
+									<el-input v-model="ruleForm.otherMaxSize" placeholder="请输入允许上传其他文件的最大值，单位MB" onkeyup="value=value.replace(/[^\d]/g,'')" clearable></el-input>
+									<div class="sub-title">单位M，0表示不限制文件大小</div>
 								</el-form-item>
 							</el-col>
-							
 						</el-row>
 
                         <div class="personal-edit-title mb15">水印设置</div>
@@ -28,14 +29,14 @@
 							<el-col class="mb20">
 								<el-form-item label="是否开启水印">
 									<el-switch
-										v-model="enableWatermark"
+										v-model="ruleForm.enableWatermark"
 										active-color="#13ce66">
 									</el-switch>
 								</el-form-item>
 							</el-col>
 							<el-col class="mb20">
 								<el-form-item label="水印位置">
-									<el-select v-model="value" placeholder="请选择">
+									<el-select v-model="ruleForm.waterMarkPos" placeholder="请选择" class="w100">
 										<el-option
 											v-for="item in posOptions"
 											:key="item.value"
@@ -47,18 +48,24 @@
 							</el-col>
 							<el-col class="mb20">
 								<el-form-item label="透明度">
-									<el-input v-model="attachSetForm.email" placeholder="请输入透明度" clearable></el-input>
+									<el-input v-model="ruleForm.diaphaneity" placeholder="请输入透明度" onkeyup="value=value.replace(/[^\d]/g,'')" clearable></el-input>
+								</el-form-item>
+							</el-col>
+							<el-col class="mb20">
+								<el-form-item label="水印文字">
+									<el-input v-model="ruleForm.waterMarkTxt" placeholder="请输入水印文字" clearable></el-input>
 								</el-form-item>
 							</el-col>
 							<el-col class="mb20">
 								<el-form-item label="水印图片">
-									<el-input v-model="attachSetForm.email" clearable></el-input>
+									<el-link type="primary">上传图片</el-link>
+									<!-- <el-input v-model="ruleForm.waterMarkFile"></el-input> -->
 								</el-form-item>
 							</el-col>
 						</el-row>
                         <el-col>
                             <el-form-item>
-                                <el-button type="primary" icon="el-icon-position">保 存</el-button>
+                                <el-button type="primary"  @click="onSubmit" icon="el-icon-position">保 存</el-button>
                             </el-form-item>
 						</el-col>
 					</el-form>
@@ -69,44 +76,85 @@
 </template>
 
 <script lang="ts">
-import { toRefs, reactive, computed } from 'vue';
+import { toRefs, reactive, computed, getCurrentInstance, onMounted } from 'vue';
 import { formatAxis } from '/@/utils/formatTime';
+import { ElMessage } from 'element-plus';
+import qs from 'qs';
+import { saveConfig, getConfigList } from '/@/api/config/index';
+
 export default {
 	name: 'personal',
 	setup() {
+		const { proxy } = getCurrentInstance() as any;
 		const state = reactive({
-			enableWatermark: true,
 			posOptions: [{
-				value: '选项1',
-				label: '黄金糕'
+				value: 'leftup',
+				label: '左上'
 			}, {
-				value: '选项2',
-				label: '双皮奶'
+				value: 'rightup',
+				label: '右上'
 			}, {
-				value: '选项3',
-				label: '蚵仔煎'
+				value: 'middle',
+				label: '中间'
 			}, {
-				value: '选项4',
-				label: '龙须面'
+				value: 'leftdown',
+				label: '左下'
 			}, {
-				value: '选项5',
-				label: '北京烤鸭'
+				value: 'rightdown',
+				label: '右下'
 			}],
-			attachSetForm: {
-				name: '',
-				email: '',
-				autograph: '',
-				occupation: '',
-				phone: '',
-				sex: '',
+			ruleForm: {
+				imageMaxSize: 0,
+				otherMaxSize: 0,
+				enableWatermark: true,
+				waterMarkPos: 'middle',
+				diaphaneity: 0,
+				waterMarkTxt: '',
+				waterMarkFile: ''
 			},
+			rules: {
+				"imageMaxSize": [
+					{required: true, message: '请输入允许上传图片大小最大值', trigger: 'blur'},
+				],
+				"otherMaxSize":[
+					{required: true, message: '请输入允许上传其他文件大小最大值', trigger: 'blur'},
+				] 
+			}
 		});
 		// 当前时间提示语
 		const currentTime = computed(() => {
 			return formatAxis(new Date());
 		});
+		const onSubmit = () => {
+
+			proxy.$refs['myRefForm'].validate((valid: any) => {
+				if (valid) {
+					let params = qs.stringify(state.ruleForm, {arrayFormat: 'repeat'});
+					saveConfig(params).then(() => {
+						ElMessage.success("保存成功")
+					}).catch((res) => {
+						ElMessage({showClose: true, message: res.message ? res.message : '系统错误' , type: 'error'});
+					})
+				}
+			});
+
+		};
+
+		onMounted(() => {
+			let paramKeys = new Array();
+			const keys: any[] = Object.keys(state.ruleForm);
+			keys.forEach(key => { paramKeys.push(key); });
+			let params = qs.stringify( {"configKeys" : paramKeys}, {arrayFormat: 'repeat'});
+			getConfigList(params).then((res) => {
+				res.data.forEach(item => {
+					state.ruleForm[item.key] = item.jsonValue;
+				});
+			});
+		});
+
 		return {
 			currentTime,
+			onSubmit,
 			...toRefs(state),
 		};
 	},
@@ -115,164 +163,4 @@ export default {
 
 <style scoped lang="scss">
 @import '../../theme/mixins/mixins.scss';
-.personal {
-	.personal-user {
-		height: 130px;
-		display: flex;
-		align-items: center;
-		.personal-user-left {
-			width: 100px;
-			height: 130px;
-			border-radius: 3px;
-			::v-deep(.el-upload) {
-				height: 100%;
-			}
-			.personal-user-left-upload {
-				img {
-					width: 100%;
-					height: 100%;
-					border-radius: 3px;
-				}
-				&:hover {
-					img {
-						animation: logoAnimation 0.3s ease-in-out;
-					}
-				}
-			}
-		}
-		.personal-user-right {
-			flex: 1;
-			padding: 0 15px;
-			.personal-title {
-				font-size: 18px;
-				@include text-ellipsis(1);
-			}
-			.personal-item {
-				display: flex;
-				align-items: center;
-				font-size: 13px;
-				.personal-item-label {
-					color: var(--el-text-color-secondary);
-					@include text-ellipsis(1);
-				}
-				.personal-item-value {
-					@include text-ellipsis(1);
-				}
-			}
-		}
-	}
-	.personal-info {
-		.personal-info-more {
-			float: right;
-			color: var(--el-text-color-secondary);
-			font-size: 13px;
-			&:hover {
-				color: var(--color-primary);
-				cursor: pointer;
-			}
-		}
-		.personal-info-box {
-			height: 130px;
-			overflow: hidden;
-			.personal-info-ul {
-				list-style: none;
-				.personal-info-li {
-					font-size: 13px;
-					padding-bottom: 10px;
-					.personal-info-li-title {
-						display: inline-block;
-						@include text-ellipsis(1);
-						color: var(--el-text-color-secondary);
-						text-decoration: none;
-					}
-					& a:hover {
-						color: var(--color-primary);
-						cursor: pointer;
-					}
-				}
-			}
-		}
-	}
-	.personal-recommend-row {
-		.personal-recommend-col {
-			.personal-recommend {
-				position: relative;
-				height: 100px;
-				color: var(--color-whites);
-				border-radius: 3px;
-				overflow: hidden;
-				cursor: pointer;
-				&:hover {
-					i {
-						right: 0px !important;
-						bottom: 0px !important;
-						transition: all ease 0.3s;
-					}
-				}
-				i {
-					position: absolute;
-					right: -10px;
-					bottom: -10px;
-					font-size: 70px;
-					transform: rotate(-30deg);
-					transition: all ease 0.3s;
-				}
-				.personal-recommend-auto {
-					padding: 15px;
-					position: absolute;
-					left: 0;
-					top: 5%;
-					.personal-recommend-msg {
-						font-size: 12px;
-						margin-top: 10px;
-					}
-				}
-			}
-		}
-	}
-	.personal-edit {
-		.personal-edit-title {
-			position: relative;
-			padding-left: 10px;
-			color: var(--el-text-color-regular);
-			&::after {
-				content: '';
-				width: 2px;
-				height: 10px;
-				position: absolute;
-				left: 0;
-				top: 50%;
-				transform: translateY(-50%);
-				background: var(--color-primary);
-			}
-		}
-		.personal-edit-safe-box {
-			border-bottom: 1px solid var(--el-border-color-light, #ebeef5);
-			padding: 15px 0;
-			.personal-edit-safe-item {
-				width: 100%;
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				.personal-edit-safe-item-left {
-					flex: 1;
-					overflow: hidden;
-					.personal-edit-safe-item-left-label {
-						color: var(--el-text-color-regular);
-						margin-bottom: 5px;
-					}
-					.personal-edit-safe-item-left-value {
-						color: var(--el-text-color-secondary);
-						@include text-ellipsis(1);
-						margin-right: 15px;
-					}
-				}
-			}
-			&:last-of-type {
-				padding-bottom: 0;
-				border-bottom: none;
-			}
-		}
-	}
-}
 </style>

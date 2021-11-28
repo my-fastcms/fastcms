@@ -60,7 +60,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Transactional
     public void saveUserRole(Long userId, List<Long> roleIds) {
         getBaseMapper().deleteRoleByUserId(userId);
-        getBaseMapper().saveUserRole(userId, roleIds);
+        if(roleIds != null && roleIds.size()>0) {
+            getBaseMapper().saveUserRole(userId, roleIds);
+        }
     }
 
     @Override
