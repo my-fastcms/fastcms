@@ -1,0 +1,106 @@
+package com.fastcms.core.utils;
+
+import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.utils.FileUtils;
+import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.geometry.Positions;
+import org.apache.commons.lang.StringUtils;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+/**
+ * 附件工具类
+ * wjun_java@163.com
+ */
+public abstract class AttachUtils {
+
+    public static Integer getImageMaxSize() {
+        String config = ConfigUtils.getConfig(FastcmsConstants.ATTACH_IMAGE_MAXSIZE);
+        try {
+            return Integer.parseInt(config);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    public static Integer getOtherMaxSize() {
+        String config = ConfigUtils.getConfig(FastcmsConstants.ATTACH_OTHER_MAXSIZE);
+        try {
+            return Integer.parseInt(config);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    /**
+     * 给图片添加水印图片
+     * @param file
+     * @param waterFile
+     * @return
+     * @throws IOException
+     */
+    public static final String addFileWaterMark(File file, File waterFile) throws IOException {
+        return addWaterMark(file, ImageIO.read(waterFile));
+    }
+
+    /**
+     * 给图片添加文字水印
+     * @param file
+     * @param text
+     * @return
+     * @throws IOException
+     */
+    public static final String addTextWaterMark(File file, String text) throws IOException {
+        return addWaterMark(file, handleTextWaterMark(text));
+    }
+
+    /**
+     * 添加水印
+     * @param file
+     * @param waterImage
+     * @return
+     * @throws IOException
+     */
+    public static final String addWaterMark(File file, BufferedImage waterImage) throws IOException {
+        Thumbnails.Builder<File> fileBuilder = Thumbnails.of(file)
+                .scale(1)
+                .watermark(Positions.BOTTOM_RIGHT, waterImage, 0.25f).outputQuality(0.8f);
+        String filePath = DirUtils.getUploadDir() +  FileUtils.newFileName(file.getName());
+        fileBuilder.toFile(filePath);
+        return filePath;
+    }
+
+    /**
+     * 转换文字为图片流
+     * @param waterText
+     * @return
+     */
+    private static BufferedImage handleTextWaterMark(String waterText) {
+
+        final Font font = new Font("宋体",Font.PLAIN,20);
+
+        BufferedImage image = new BufferedImage(100, 150, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = image.createGraphics();
+        image = g.getDeviceConfiguration().createCompatibleImage(100, 150, Transparency.TRANSLUCENT);
+
+        int y = 0;
+        int divider30 = 30;
+
+        g = image.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setColor(Color.red);
+        g.setFont(font);
+
+        if (StringUtils.isNotBlank(waterText)) {
+            g.drawString(waterText, 5, y += divider30);
+        }
+
+        g.dispose();
+        return image;
+    }
+
+}

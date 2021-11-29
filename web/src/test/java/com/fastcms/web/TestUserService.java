@@ -22,6 +22,7 @@ import com.fastcms.service.IRoleService;
 import com.fastcms.web.security.AuthConfigs;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -50,6 +51,7 @@ public class TestUserService {
     @Autowired
     private IRoleService roleService;
 
+    @Disabled
     @Test
     public void testBatchInsert() {
         List<String> roleNames = new ArrayList<>();

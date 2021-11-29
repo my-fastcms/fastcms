@@ -18,7 +18,8 @@ package com.fastcms.core.template;
 
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
-import com.fastcms.core.utils.FileUtils;
+import com.fastcms.common.utils.FileUtils;
+import com.fastcms.core.utils.DirUtils;
 import com.fastcms.entity.Config;
 import com.fastcms.service.IConfigService;
 import org.springframework.beans.factory.InitializingBean;
@@ -75,7 +76,7 @@ public class DefaultTemplateService implements TemplateService, InitializingBean
             String path = getClass().getResource("/").getPath() + templateDir;
             rootPath = Paths.get(path.substring(1));
         }else {
-            rootPath = Paths.get(FileUtils.getTemplateDir());
+            rootPath = Paths.get(DirUtils.getTemplateDir());
         }
 
         try {
@@ -130,7 +131,7 @@ public class DefaultTemplateService implements TemplateService, InitializingBean
 
     @Override
     public void install(File file) throws Exception {
-        FileUtils.unzip(file.toPath().toString(), FileUtils.getTemplateDir());
+        FileUtils.unzip(file.toPath().toString(), DirUtils.getTemplateDir());
         initialize();
     }
 

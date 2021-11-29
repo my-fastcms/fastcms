@@ -14,15 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.core.utils;
+package com.fastcms.common.utils;
 
-import com.fastcms.common.utils.StrUtils;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.util.ResourceUtils;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -42,13 +40,6 @@ import java.util.Objects;
  */
 public abstract class FileUtils {
 
-    final static String UPLOAD_DIR = "upload/";
-    final static String PLUGIN_DIR = "plugins/";
-    final static String TEMPLATE_DIR = "htmls/";
-
-    static String uploadDir;
-    static String pluginDir;
-    static String templateDir;
     static List<String> imageFileSuffix = new ArrayList<>();
     static List<String> notAllowFile = new ArrayList<>();
 
@@ -70,41 +61,6 @@ public abstract class FileUtils {
         notAllowFile.add(".jar");
         notAllowFile.add(".war");
 
-        File path;
-        try {
-            path = new File(ResourceUtils.getURL(ResourceUtils.CLASSPATH_URL_PREFIX).getPath());
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-        if(!path.exists()) {
-            path = new File(".");
-        }
-
-        File upload = new File(path.getAbsolutePath(), UPLOAD_DIR);
-        if(!upload.exists()) upload.mkdirs();
-
-        File plugins = new File(path.getAbsolutePath(), PLUGIN_DIR);
-        if(!plugins.exists()) plugins.mkdirs();
-
-        File htmls = new File(path.getAbsolutePath(), TEMPLATE_DIR);
-        if(!htmls.exists()) htmls.mkdirs();
-
-        uploadDir = path.getAbsolutePath() + File.separator + UPLOAD_DIR;
-        pluginDir = path.getAbsolutePath() + File.separator + PLUGIN_DIR;
-        templateDir = path.getAbsolutePath() + File.separator + TEMPLATE_DIR;
-    }
-
-    public static String getUploadDir() {
-        return uploadDir;
-    }
-
-    public static String getPluginDir() {
-        return pluginDir;
-    }
-
-    public static String getTemplateDir() {
-        return templateDir;
     }
 
     public static boolean isImage(String fileName) {
@@ -145,10 +101,6 @@ public abstract class FileUtils {
                 .append(File.separator).append(uuid)
                 .append(fileName.substring(fileName.lastIndexOf(".")));
         return newFilePath.toString();
-    }
-
-    public static File newFile(String fileName) {
-        return new File(FileUtils.getUploadDir() + newFileName(fileName));
     }
 
     private static final String[] htmlChars = {"&", "<", ">", "'", "\""};

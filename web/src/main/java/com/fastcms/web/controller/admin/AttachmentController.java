@@ -21,8 +21,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.common.utils.FileUtils;
 import com.fastcms.core.mybatis.PageModel;
-import com.fastcms.core.utils.FileUtils;
+import com.fastcms.core.utils.AttachUtils;
+import com.fastcms.core.utils.DirUtils;
 import com.fastcms.entity.Attachment;
 import com.fastcms.service.IAttachmentService;
 import org.apache.commons.lang3.StringUtils;
@@ -82,18 +84,22 @@ public class AttachmentController {
             List<Attachment> attachmentList = new ArrayList<>();
             for(MultipartFile file : files) {
                 String newFilePath = FileUtils.newFileName(file.getOriginalFilename());
-                File uploadFile = new File(FileUtils.getUploadDir(), newFilePath);
+                File uploadFile = new File(DirUtils.getUploadDir(), newFilePath);
+
+                if(AttachUtils.getImageMaxSize() > 0) {
+                    long fileSize = uploadFile.length(); //文件大小超过限制大小不上传
+                    if(fileSize > 1024 * 1024 * AttachUtils.getImageMaxSize()) {
+                        uploadFile.delete();
+                        errorFiles.add(file.getOriginalFilename());
+                        continue;
+                    }
+                }
+
                 try {
                     if (!uploadFile.getParentFile().exists()) {
                         uploadFile.getParentFile().mkdirs();
                     }
                     file.transferTo(uploadFile);
-//                    long fileSize = uploadFile.length();
-//                    if(fileSize > 1024 * 1024 * 5) {
-//                        uploadFile.delete();
-//                        errorFiles.add(file.getOriginalFilename());
-//                        continue;
-//                    }
                     Attachment attachment = new Attachment();
                     attachment.setFileName(file.getOriginalFilename());
                     attachment.setFilePath(newFilePath.replace("\\", "/"));
@@ -154,7 +160,7 @@ public class AttachmentController {
             return RestResultUtils.failed("附件不存在");
         }
 
-        File attachmentFile = new File(FileUtils.getUploadDir(), attachment.getFilePath());
+        File attachmentFile = new File(DirUtils.getUploadDir(), attachment.getFilePath());
 
         long fileLen = attachmentFile.length();
         String fileLenUnit = "Byte";
@@ -183,7 +189,7 @@ public class AttachmentController {
 
         if(attachmentService.removeById(attachment.getId())) {
             //删除文件
-            File file = new File(FileUtils.getUploadDir() + attachment.getFilePath());
+            File file = new File(DirUtils.getUploadDir() + attachment.getFilePath());
             if(file.exists() && file.isFile()) {
                 file.delete();
             }
@@ -216,7 +222,7 @@ public class AttachmentController {
 
     Object uploadOfCKEditor(MultipartFile file, boolean isBrowse) {
         String newFilePath = FileUtils.newFileName(file.getOriginalFilename());
-        File uploadFile = new File(FileUtils.getUploadDir(), newFilePath);
+        File uploadFile = new File(DirUtils.getUploadDir(), newFilePath);
         try {
             if (!uploadFile.getParentFile().exists()) {
                 uploadFile.getParentFile().mkdirs();

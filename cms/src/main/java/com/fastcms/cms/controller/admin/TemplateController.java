@@ -23,10 +23,11 @@ import com.fastcms.cms.service.IMenuService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.common.utils.FileUtils;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.core.template.Template;
 import com.fastcms.core.template.TemplateService;
-import com.fastcms.core.utils.FileUtils;
+import com.fastcms.core.utils.DirUtils;
 import com.fastcms.service.IConfigService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,7 +112,7 @@ public class TemplateController {
             return RestResultUtils.failed("文件格式不合格，请上传zip文件");
         }
 
-        File uploadFile = new File(FileUtils.getTemplateDir(), file.getOriginalFilename());
+        File uploadFile = new File(DirUtils.getTemplateDir(), file.getOriginalFilename());
         try {
             file.transferTo(uploadFile);
             templateService.install(uploadFile);

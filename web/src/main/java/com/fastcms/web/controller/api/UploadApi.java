@@ -18,7 +18,8 @@ package com.fastcms.web.controller.api;
 
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.core.utils.FileUtils;
+import com.fastcms.common.utils.FileUtils;
+import com.fastcms.core.utils.DirUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -48,7 +49,7 @@ public class UploadApi {
 	@PostMapping
 	public Object upload(@RequestParam("file") MultipartFile file) {
 		String newFilePath = FileUtils.newFileName(file.getOriginalFilename());
-		File uploadFile = new File(FileUtils.getUploadDir(), newFilePath);
+		File uploadFile = new File(DirUtils.getUploadDir(), newFilePath);
 		try {
 			if (!uploadFile.getParentFile().exists()) {
 				uploadFile.getParentFile().mkdirs();

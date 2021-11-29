@@ -18,7 +18,7 @@ package com.fastcms.web.config;
 
 import com.fastcms.core.template.Template;
 import com.fastcms.core.template.TemplateService;
-import com.fastcms.core.utils.FileUtils;
+import com.fastcms.core.utils.DirUtils;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,8 +70,8 @@ public class FastcmsConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
-        final String uploadDir = FileUtils.getUploadDir();
-        final String templateDir = FileUtils.getTemplateDir();
+        final String uploadDir = DirUtils.getUploadDir();
+        final String templateDir = DirUtils.getTemplateDir();
 
         List<String> locations = new ArrayList<>();
         locations.add("classpath:/static/");

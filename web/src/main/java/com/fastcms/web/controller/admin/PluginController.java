@@ -18,7 +18,7 @@ package com.fastcms.web.controller.admin;
 
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.core.utils.FileUtils;
+import com.fastcms.core.utils.DirUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,7 +61,7 @@ public class PluginController {
             return RestResultUtils.failed("文件格式不合格，请上传jar或zip文件");
         }
 
-        File uploadFile = new File(FileUtils.getPluginDir(), file.getOriginalFilename());
+        File uploadFile = new File(DirUtils.getPluginDir(), file.getOriginalFilename());
         try {
             file.transferTo(uploadFile);
 //            pluginService.installPlugin(Paths.get(uploadFile.getPath()));
