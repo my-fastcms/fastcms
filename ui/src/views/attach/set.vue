@@ -51,11 +51,11 @@
 									<el-input v-model="ruleForm.diaphaneity" placeholder="请输入透明度" onkeyup="value=value.replace(/[^\d]/g,'')" clearable></el-input>
 								</el-form-item>
 							</el-col>
-							<el-col class="mb20">
+							<!-- <el-col class="mb20">
 								<el-form-item label="水印文字">
 									<el-input v-model="ruleForm.waterMarkTxt" placeholder="请输入水印文字" clearable></el-input>
 								</el-form-item>
-							</el-col>
+							</el-col> -->
 							<el-col class="mb20">
 								<el-form-item label="水印图片">
 									<el-link type="primary">上传图片</el-link>
