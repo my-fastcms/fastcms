@@ -58,7 +58,7 @@
 							</el-col> -->
 							<el-col class="mb20">
 								<el-form-item label="水印图片">
-									<el-link type="primary">上传图片</el-link>
+									<el-link type="primary" @click="onAttachDialogOpen">选择图片</el-link>
 									<!-- <el-input v-model="ruleForm.waterMarkFile"></el-input> -->
 								</el-form-item>
 							</el-col>
@@ -72,19 +72,23 @@
 				</el-card>
 			</el-col>
 		</el-row>
+		<AttachDialog ref="attachDialogRef" />
 	</div>
 </template>
 
 <script lang="ts">
-import { toRefs, reactive, computed, getCurrentInstance, onMounted } from 'vue';
+import { toRefs, ref, reactive, computed, getCurrentInstance, onMounted } from 'vue';
 import { formatAxis } from '/@/utils/formatTime';
 import { ElMessage } from 'element-plus';
 import qs from 'qs';
 import { saveConfig, getConfigList } from '/@/api/config/index';
+import AttachDialog from '/@/components/attach/index.vue';
 
 export default {
-	name: 'personal',
+	name: 'attachSet',
+	components: { AttachDialog },
 	setup() {
+		const attachDialogRef = ref();
 		const { proxy } = getCurrentInstance() as any;
 		const state = reactive({
 			posOptions: [{
@@ -121,6 +125,7 @@ export default {
 				] 
 			}
 		});
+
 		// 当前时间提示语
 		const currentTime = computed(() => {
 			return formatAxis(new Date());
@@ -140,6 +145,11 @@ export default {
 
 		};
 
+		//打开附件弹出框
+		const onAttachDialogOpen = () => {
+			attachDialogRef.value.openDialog();
+		};
+
 		onMounted(() => {
 			let paramKeys = new Array();
 			const keys: any[] = Object.keys(state.ruleForm);
@@ -153,8 +163,10 @@ export default {
 		});
 
 		return {
+			attachDialogRef,
 			currentTime,
 			onSubmit,
+			onAttachDialogOpen,
 			...toRefs(state),
 		};
 	},
