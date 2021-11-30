@@ -30,6 +30,9 @@ public class Config implements Serializable {
     @TableField("`value`")
     private String value;
 
+    /**
+     * json值，适配Vue前端
+     */
     @TableField(exist = false)
     private Object jsonValue;
 

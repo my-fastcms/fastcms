@@ -1,6 +1,6 @@
 <template>
 	<el-dialog title="选择附件" fullscreen v-model="isShowDialog">
-		<div class="list-adapt-container">
+		<div>
 			<el-upload 
 				class="upload-btn"
 				:action="uploadUrl"
@@ -16,19 +16,15 @@
 			</el-upload>
 			
 			<el-card shadow="hover">
-				<div class="flex-warp" v-if="tableData.data.length > 0">
+				<div v-if="tableData.data.length > 0">
 					<el-row :gutter="15">
 						<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb15" v-for="(v, k) in tableData.data" :key="k" @click="onTableItemClick(v)">
-							<div class="flex-warp-item">
-								<div class="flex-warp-item-box">
-									<div class="item-img">
-										<img :src="v.path" />
-									</div>
-									<div class="item-txt">
-										<div class="item-txt-title">{{ v.fileName }}</div>
-									</div>
+							<el-card :body-style="{ padding: '0px' }">
+								<img :src="v.path" class="image">
+								<div style="padding: 14px;">
+									<el-checkbox :label="v.path" @change="handleCheckChange"><span>{{ v.fileName }}</span></el-checkbox>
 								</div>
-							</div>
+							</el-card>
 						</el-col>
 					</el-row>
 				</div>
@@ -49,6 +45,12 @@
 				</template>
 			</el-card>
 		</div>
+		<template #footer>
+				<span class="dialog-footer">
+					<el-button @click="closeDialog" size="small">取 消</el-button>
+					<el-button type="primary" @click="onSubmit" size="small">确 定</el-button>
+				</span>
+			</template>
 	</el-dialog>
 </template>
 
@@ -121,6 +123,17 @@ export default {
 		const onHandleCurrentChange = (val: number) => {
 			state.tableData.param.pageNum = val;
 		};
+		//checkbox
+		const handleCheckChange = (val) => {
+			console.log("val:" + val);
+			for(key in val) {
+				console.log("key:" + key + ",val:" + val[key]);
+			}
+		};
+		const onSubmit = () => {
+			console.log("=======onSubmit==");
+		};
+
 		return {
 			openDialog,
 			closeDialog,
@@ -131,6 +144,8 @@ export default {
 			onHandleExceed,
 			onHandleUploadError,
 			uploadSuccess,
+			onSubmit,
+			handleCheckChange,
 			...toRefs(state),
 		};
 	},
@@ -141,84 +156,29 @@ export default {
 .upload-btn {
 	padding-bottom: 10px;
 }
-.list-adapt-container {
-	.attach-search {
-		text-align: right;
-	}
+.bottom {
+    margin-top: 13px;
+    line-height: 12px;
 }
-.flex-warp {
-	display: flex;
-	flex-wrap: wrap;
-	align-content: flex-start;
-	margin: 0 -5px;
-	.flex-warp-item {
-		padding: 5px;
-		width: 100%;
-		.flex-warp-item-box {
-			border: 1px solid #ebeef5;
-			width: 100%;
-			height: 100%;
-			border-radius: 2px;
-			display: flex;
-			flex-direction: column;
-			transition: all 0.3s ease;
-			&:hover {
-				cursor: pointer;
-				border: 1px solid var(--color-primary);
-				transition: all 0.3s ease;
-				box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.03);
-				.item-txt-title {
-					color: var(--color-primary) !important;
-					transition: all 0.3s ease;
-				}
-				.item-img {
-					img {
-						transition: all 0.3s ease;
-						transform: translateZ(0) scale(1.05);
-					}
-				}
-			}
-			.item-img {
-				width: 100%;
-				height: 215px;
-				overflow: hidden;
-				img {
-					transition: all 0.3s ease;
-					width: 100%;
-					height: 100%;
-				}
-			}
-			.item-txt {
-				flex: 1;
-				padding: 15px;
-				display: flex;
-				flex-direction: column;
-				overflow: hidden;
-				.item-txt-title {
-					text-overflow: ellipsis;
-					overflow: hidden;
-					-webkit-line-clamp: 2;
-					-webkit-box-orient: vertical;
-					display: -webkit-box;
-					color: #666666;
-					transition: all 0.3s ease;
-					&:hover {
-						color: var(--color-primary);
-						text-decoration: underline;
-						transition: all 0.3s ease;
-					}
-				}
-				.item-txt-other {
-					flex: 1;
-					align-items: flex-end;
-					display: flex;
-					.item-txt-msg {
-						font-size: 12px;
-						color: #8d8d91;
-					}
-				}
-			}
-		}
-	}
+
+.button {
+	padding: 0;
+	float: right;
+}
+
+.image {
+    width: 100%;
+	height: 200px;
+    display: block;
+}
+
+.clearfix:before,
+.clearfix:after {
+    display: table;
+    content: "";
+}
+  
+.clearfix:after {
+	clear: both
 }
 </style>
