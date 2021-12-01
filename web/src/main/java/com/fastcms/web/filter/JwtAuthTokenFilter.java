@@ -63,6 +63,8 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
             } catch (Exception e) {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Server failed," + e.getMessage());
             }
+        } else {
+            filterChain.doFilter(request, response);
         }
     }
 

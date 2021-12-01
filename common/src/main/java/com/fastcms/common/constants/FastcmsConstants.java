@@ -35,8 +35,6 @@ public interface FastcmsConstants {
 
     String DEV_MODE = "dev";
 
-    String STATIC_RESOURCE_PATH = "/static";
-
     String USER_ID = "user_id";
 
     String OPEN_ID = "openid";

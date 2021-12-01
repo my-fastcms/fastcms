@@ -121,15 +121,8 @@ public class Article implements Serializable {
     @TableField(exist = false)
     String url;
 
-    @TableField(exist = false)
-    private String thumbUrl;
-
     public String getUrl() {
         return StringUtils.isBlank(getOutLink()) ? "/a/" + getId() : getOutLink();
-    }
-
-    public String getThumbUrl() {
-        return "/static/" + getThumbnail();
     }
 
     public Long getId() {
@@ -266,10 +259,6 @@ public class Article implements Serializable {
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public void setThumbUrl(String thumbUrl) {
-        this.thumbUrl = thumbUrl;
     }
 
     public List<String> getArticleCategory() {

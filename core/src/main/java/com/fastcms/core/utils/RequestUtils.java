@@ -31,10 +31,6 @@ import javax.servlet.http.HttpServletRequest;
  */
 public abstract class RequestUtils {
 
-//	public static Long getUserId() {
-//		FastcmsUserDetails userDetails = (FastcmsUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//	}
-
 	public static boolean isAjaxRequest(HttpServletRequest request) {
 		String header = request.getHeader("X-Requested-With");
 		return "XMLHttpRequest".equalsIgnoreCase(header);

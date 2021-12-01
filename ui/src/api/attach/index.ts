@@ -5,10 +5,11 @@ import request from '/@/utils/request';
  * @param params 
  * @returns 
  */
-export function getAttachList() {
+export function getAttachList(params: object) {
 	return request({
 		url: '/admin/attachment/list',
-		method: 'get'
+		method: 'get',
+		params: params
 	});
 }
 

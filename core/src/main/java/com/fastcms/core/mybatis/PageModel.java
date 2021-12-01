@@ -12,19 +12,19 @@ public class PageModel implements Serializable {
     /**
      * 页码
      */
-    Long page = 1l;
+    Long pageNum = 1l;
 
     /**
      * 每页条数
      */
     Long pageSize = 10l;
 
-    public Long getPage() {
-        return page;
+    public Long getPageNum() {
+        return pageNum;
     }
 
-    public void setPage(Long page) {
-        this.page = page;
+    public void setPageNum(Long pageNum) {
+        this.pageNum = pageNum;
     }
 
     public Long getPageSize() {
@@ -36,6 +36,6 @@ public class PageModel implements Serializable {
     }
 
     public Page toPage() {
-        return new Page(getPage() == null ? 1l : getPage(), getPageSize() == null ? 10l : getPageSize());
+        return new Page(getPageNum() == null ? 1l : getPageNum(), getPageSize() == null ? 10l : getPageSize());
     }
 }

@@ -77,7 +77,7 @@ export default {
 		});
 
 		const initTableData = () => {
-			getAttachList().then((res) => {
+			getAttachList(state.tableData.param).then((res) => {
 				state.tableData.data = res.data.records;
 				state.tableData.total = res.data.total;
 			});
@@ -106,10 +106,12 @@ export default {
 		// 分页点击
 		const onHandleSizeChange = (val: number) => {
 			state.tableData.param.pageSize = val;
+			initTableData();
 		};
 		// 分页点击
 		const onHandleCurrentChange = (val: number) => {
 			state.tableData.param.pageNum = val;
+			initTableData();
 		};
 		return {
 			detailRef,

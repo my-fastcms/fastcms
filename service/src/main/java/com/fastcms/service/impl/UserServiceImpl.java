@@ -2,7 +2,6 @@ package com.fastcms.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.fastcms.aspect.Log;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.entity.User;
@@ -41,7 +40,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     private RoleMapper roleMapper;
 
     @Override
-    @Log
     public void updateUserLoginTime(Long userId) {
         User user = getById(userId);
         if(user != null) {

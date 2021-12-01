@@ -110,7 +110,7 @@ public class Attachment implements Serializable {
     }
 
     public String getPath() {
-        return "http://localhost:8080/static" + getFilePath();
+        return "http://localhost:8080" + getFilePath();
     }
 
     public String getFileSize() {

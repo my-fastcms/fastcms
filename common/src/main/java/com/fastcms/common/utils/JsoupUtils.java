@@ -50,7 +50,6 @@ public abstract class JsoupUtils {
 			Element element = iterator.next();
 			String src = element.attr(attrName);
 			if(!src.startsWith("http")) {
-				//src = FastcmsConfig.FILE_DOMAIN_URL.replace("/static", "") + src;
 				element.attr(attrName, src);
 			}
 		}

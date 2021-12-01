@@ -52,21 +52,6 @@ public class FastcmsConfig implements WebMvcConfigurer {
     @Autowired
     private TemplateService templateService;
 
-    @Value("${spring.jackson.date-format:yyyy-MM-dd HH:mm:ss}")
-    private String pattern;
-
-    // localDateTime 序列化器
-    @Bean
-    public LocalDateTimeSerializer localDateTimeSerializer() {
-        return new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(pattern));
-    }
-
-    // localDateTime 反序列化器
-    @Bean
-    public LocalDateTimeDeserializer localDateTimeDeserializer() {
-        return new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(pattern));
-    }
-
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
@@ -80,7 +65,7 @@ public class FastcmsConfig implements WebMvcConfigurer {
             locations.add(ResourceUtils.FILE_URL_PREFIX + templateDir + template.getPath() + "/static/");
         }
 
-        registry.addResourceHandler("/static/**").addResourceLocations(locations.toArray(new String[]{}));
+        registry.addResourceHandler("/**").addResourceLocations(locations.toArray(new String[]{}));
     }
 
     @Bean
@@ -94,6 +79,19 @@ public class FastcmsConfig implements WebMvcConfigurer {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
+    }
+
+    @Value("${spring.jackson.date-format:yyyy-MM-dd HH:mm:ss}")
+    private String pattern;
+
+    @Bean
+    public LocalDateTimeSerializer localDateTimeSerializer() {
+        return new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(pattern));
+    }
+
+    @Bean
+    public LocalDateTimeDeserializer localDateTimeDeserializer() {
+        return new LocalDateTimeDeserializer(DateTimeFormatter.ofPattern(pattern));
     }
 
     @Bean

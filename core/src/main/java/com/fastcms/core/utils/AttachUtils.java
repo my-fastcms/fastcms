@@ -13,8 +13,11 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * 附件工具类
- * wjun_java@163.com
+ * @author： wjun_java@163.com
+ * @date： 2021/2/17
+ * @description：
+ * @modifiedBy：
+ * @version: 1.0
  */
 public abstract class AttachUtils {
 
@@ -33,6 +36,15 @@ public abstract class AttachUtils {
             return Integer.parseInt(config);
         } catch (NumberFormatException e) {
             return 0;
+        }
+    }
+
+    public static Boolean enableWaterMark() {
+        String enableWaterMark = ConfigUtils.getConfig(FastcmsConstants.ATTACH_ENABLE_WATERMARK);
+        try {
+            return Boolean.parseBoolean(enableWaterMark);
+        } catch (NumberFormatException e) {
+            return false;
         }
     }
 

@@ -58,8 +58,13 @@
 							</el-col> -->
 							<el-col class="mb20">
 								<el-form-item label="水印图片">
+									<el-image
+										style="width: 100px; height: 100px"
+										:src="ruleForm.waterMarkFile"
+										:fit="fit"></el-image>
+								</el-form-item>
+								<el-form-item>
 									<el-link type="primary" @click="onAttachDialogOpen">选择图片</el-link>
-									<!-- <el-input v-model="ruleForm.waterMarkFile"></el-input> -->
 								</el-form-item>
 							</el-col>
 						</el-row>
@@ -72,7 +77,7 @@
 				</el-card>
 			</el-col>
 		</el-row>
-		<AttachDialog ref="attachDialogRef" />
+		<AttachDialog ref="attachDialogRef" @attachHandler="getSelectAttach"/>
 	</div>
 </template>
 
@@ -91,6 +96,7 @@ export default {
 		const attachDialogRef = ref();
 		const { proxy } = getCurrentInstance() as any;
 		const state = reactive({
+			fit: "fill",
 			posOptions: [{
 				value: 'leftup',
 				label: '左上'
@@ -130,8 +136,8 @@ export default {
 		const currentTime = computed(() => {
 			return formatAxis(new Date());
 		});
-		const onSubmit = () => {
 
+		const onSubmit = () => {
 			proxy.$refs['myRefForm'].validate((valid: any) => {
 				if (valid) {
 					let params = qs.stringify(state.ruleForm, {arrayFormat: 'repeat'});
@@ -142,12 +148,17 @@ export default {
 					})
 				}
 			});
+		};
 
+		//获取弹出框选中的附件
+		const getSelectAttach = (value) => {
+			console.log("getSelectAttach:" + value[0].path);
+			state.ruleForm.waterMarkFile = value[0].path;
 		};
 
 		//打开附件弹出框
 		const onAttachDialogOpen = () => {
-			attachDialogRef.value.openDialog();
+			attachDialogRef.value.openDialog(1);
 		};
 
 		onMounted(() => {
@@ -163,6 +174,7 @@ export default {
 		});
 
 		return {
+			getSelectAttach,
 			attachDialogRef,
 			currentTime,
 			onSubmit,

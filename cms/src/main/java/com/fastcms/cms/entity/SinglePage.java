@@ -119,15 +119,8 @@ public class SinglePage implements Serializable {
     @TableField(exist = false)
     private String url;
 
-    @TableField(exist = false)
-    private String thumbUrl;
-
     public String getUrl() {
         return StringUtils.isBlank(getOutLink()) ? "/p/" + getId() : getOutLink();
-    }
-
-    public String getThumbUrl() {
-        return "/static/" + getThumbnail();
     }
 
     public Long getId() {
@@ -270,7 +263,4 @@ public class SinglePage implements Serializable {
         this.url = url;
     }
 
-    public void setThumbUrl(String thumbUrl) {
-        this.thumbUrl = thumbUrl;
-    }
 }

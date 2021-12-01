@@ -18,14 +18,16 @@
 			<el-card shadow="hover">
 				<div v-if="tableData.data.length > 0">
 					<el-row :gutter="15">
-						<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb15" v-for="(v, k) in tableData.data" :key="k" @click="onTableItemClick(v)">
-							<el-card :body-style="{ padding: '0px' }">
-								<img :src="v.path" class="image">
-								<div style="padding: 14px;">
-									<el-checkbox :label="v.path" @change="handleCheckChange"><span>{{ v.fileName }}</span></el-checkbox>
-								</div>
-							</el-card>
-						</el-col>
+						<el-checkbox-group :max="max" v-model="checkedObjs">
+							<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb15" v-for="(v, k) in tableData.data" :key="k" @click="onTableItemClick(v)">
+								<el-card :body-style="{ padding: '0px' }">
+									<img :src="v.path" class="image">
+									<div style="padding: 14px;">
+										<el-checkbox :label="v"><span>{{ v.fileName }}</span></el-checkbox>
+									</div>
+								</el-card>
+							</el-col>
+						</el-checkbox-group>
 					</el-row>
 				</div>
 				<el-empty v-else description="暂无数据"></el-empty>
@@ -60,15 +62,18 @@ import { getAttachList } from '/@/api/attach/index';
 import { ElMessage } from 'element-plus';
 import { Session } from '/@/utils/storage';
 export default {
+	emits: ["attachHandler"],
 	name: 'attachDialog',
-	setup() {
+	setup(prop, ctx) {
 		const state = reactive({
 			isShowDialog: false,
 			queryParams: {},
 			showSearch: true,
+			max: 1,
 			limit: 3,
 			uploadUrl: import.meta.env.VITE_API_URL + "/admin/attachment/upload",
 			headers: {"Authorization": Session.get('token')},
+			checkedObjs: [],	//选中的图片元素
 			tableData: {
 				data: [],
 				total: 99,
@@ -80,12 +85,14 @@ export default {
 			},
 		});
 
-		const openDialog = () => {
+		const openDialog = (max) => {
 			state.isShowDialog = true;
+			state.max = max;
 		};
 		// 关闭弹窗
 		const closeDialog = () => {
 			state.isShowDialog = false;
+			state.max = 1;
 		};
 
 		const initTableData = () => {
@@ -123,15 +130,11 @@ export default {
 		const onHandleCurrentChange = (val: number) => {
 			state.tableData.param.pageNum = val;
 		};
-		//checkbox
-		const handleCheckChange = (val) => {
-			console.log("val:" + val);
-			for(key in val) {
-				console.log("key:" + key + ",val:" + val[key]);
-			}
-		};
+		
 		const onSubmit = () => {
-			console.log("=======onSubmit==");
+			//把选中的附件传递给父组件
+			ctx.emit("attachHandler", state.checkedObjs);
+			closeDialog();
 		};
 
 		return {
@@ -145,7 +148,6 @@ export default {
 			onHandleUploadError,
 			uploadSuccess,
 			onSubmit,
-			handleCheckChange,
 			...toRefs(state),
 		};
 	},

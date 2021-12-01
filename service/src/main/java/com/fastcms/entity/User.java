@@ -1,7 +1,6 @@
 package com.fastcms.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
-import com.fastcms.common.constants.FastcmsConstants;
 import org.apache.commons.lang.StringUtils;
 
 import javax.validation.constraints.NotBlank;
@@ -123,8 +122,8 @@ public class User implements Serializable {
     }
 
     public String getAvatar() {
-        if(StringUtils.isBlank(getHeadImg())) return FastcmsConstants.STATIC_RESOURCE_PATH + "/img/default.jpg";
-        return getHeadImg().startsWith("http") ? getHeadImg() : FastcmsConstants.STATIC_RESOURCE_PATH + getHeadImg();
+        if(StringUtils.isBlank(getHeadImg())) return "/img/default.jpg";
+        return getHeadImg().startsWith("http") ? getHeadImg() : getHeadImg();
     }
 
     public enum SourceType {

@@ -21,7 +21,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.entity.ArticleCategory;
-import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.utils.JsoupUtils;
 
 import java.io.Serializable;
@@ -196,7 +195,6 @@ public interface IArticleService extends IService<Article> {
     class ArticleInfoVo extends Article {
         String author;
         String headImg;
-        String headImgUrl;
         String contentHtmlView;
         List<ArticleCategory> categoryList;
 
@@ -216,10 +214,6 @@ public interface IArticleService extends IService<Article> {
             this.headImg = headImg;
         }
 
-        public void setHeadImgUrl(String headImgUrl) {
-            this.headImgUrl = headImgUrl;
-        }
-
         public void setContentHtmlView(String contentHtmlView) {
             this.contentHtmlView = contentHtmlView;
         }
@@ -230,10 +224,6 @@ public interface IArticleService extends IService<Article> {
 
         public void setCategoryList(List<ArticleCategory> categoryList) {
             this.categoryList = categoryList;
-        }
-
-        public String getHeadImgUrl() {
-            return FastcmsConstants.STATIC_RESOURCE_PATH + getHeadImg();
         }
 
         public String getContentHtmlView() {

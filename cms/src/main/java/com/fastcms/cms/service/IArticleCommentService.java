@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.cms.entity.ArticleComment;
-import com.fastcms.common.constants.FastcmsConstants;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -142,9 +141,6 @@ public interface IArticleCommentService extends IService<ArticleComment> {
 			this.replyCommentList = replyCommentList;
 		}
 
-		public String getAuthorAvatarUrl() {
-			return FastcmsConstants.STATIC_RESOURCE_PATH + authorAvatar;
-		}
 	}
 
 
