@@ -2,7 +2,7 @@ package com.fastcms.core.watermark;
 
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.core.utils.AttachUtils;
-import com.fastcms.core.utils.ConfigUtils;
+import com.fastcms.utils.ConfigUtils;
 import com.fastcms.entity.Attachment;
 import org.apache.commons.lang.StringUtils;
 

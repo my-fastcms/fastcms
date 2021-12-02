@@ -27,6 +27,11 @@ export default {
 		templateEdit: '编辑',
 		templateMenu: '菜单',
 		templateSet: '设置',
+		setting: '设置',
+		websiteSet: '网站',
+		connectionSet: '通信',
+		loginSet: '登录注册',
+		searchSet: '搜索'
 	},
 	staticRoutes: {
 		signIn: '登录',

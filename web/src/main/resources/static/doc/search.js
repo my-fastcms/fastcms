@@ -91,6 +91,12 @@ api[1].list[2].list.push({
     url: 'http://127.0.0.1:8080/fastcms/api/admin/config/save',
     desc: '保存配置',
 });
+api[1].list[2].list.push({
+    order: '2',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/config/list',
+    desc: '获取配置',
+});
 api[1].list.push({
     alias: 'MenuController',
     order: '4',
@@ -359,35 +365,41 @@ api[4].list[0].list.push({
 api[4].list[0].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/article/{articleId}',
-    desc: '文章详情',
-});
-api[4].list[0].list.push({
-    order: '4',
-    deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/article/category/save',
     desc: '保存分类',
 });
 api[4].list[0].list.push({
+    order: '4',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/article/get/{articleId}',
+    desc: '文章详情',
+});
+api[4].list[0].list.push({
     order: '5',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/article/delete/{articleId}',
+    desc: '删除文章',
+});
+api[4].list[0].list.push({
+    order: '6',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/article/category/list',
     desc: '分类列表',
 });
 api[4].list[0].list.push({
-    order: '6',
+    order: '7',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/article/category/delete/{categoryId}',
     desc: '删除分类',
 });
 api[4].list[0].list.push({
-    order: '7',
+    order: '8',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/article/comment/save',
     desc: '保存评论',
 });
 api[4].list[0].list.push({
-    order: '8',
+    order: '9',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/article/comment/delete/{commentId}',
     desc: '删除评论',

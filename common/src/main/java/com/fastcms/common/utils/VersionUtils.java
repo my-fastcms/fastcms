@@ -39,10 +39,10 @@ public class VersionUtils {
      */
     public static final String VERSION_PLACEHOLDER = "${project.version}";
     
-    private static final String NACOS_VERSION_FILE = "fastcms-version.txt";
+    private static final String FASTCMS_VERSION_FILE = "fastcms-version.txt";
     
     static {
-        try (InputStream in = VersionUtils.class.getClassLoader().getResourceAsStream(NACOS_VERSION_FILE)) {
+        try (InputStream in = VersionUtils.class.getClassLoader().getResourceAsStream(FASTCMS_VERSION_FILE)) {
             Properties props = new Properties();
             props.load(in);
             String val = props.getProperty("version");

@@ -834,54 +834,6 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 				],
 			},
 			{
-				path: '/visualizing',
-				name: 'visualizingIndex',
-				component: () => import('/@/layout/routerView/parent.vue'),
-				redirect: '/visualizing/visualizingLinkDemo1',
-				meta: {
-					title: 'message.router.visualizingIndex',
-					isLink: '',
-					isHide: false,
-					isKeepAlive: true,
-					isAffix: false,
-					isIframe: false,
-					auth: ['admin'],
-					icon: 'el-icon-data-line',
-				},
-				children: [
-					{
-						path: '/visualizing/visualizingLinkDemo1',
-						name: 'visualizingLinkDemo1',
-						component: () => import('/@/layout/routerView/link.vue'),
-						meta: {
-							title: 'message.router.visualizingLinkDemo1',
-							isLink: `${import.meta.env.VITE_API_URL}#/visualizingDemo1`,
-							isHide: false,
-							isKeepAlive: false,
-							isAffix: false,
-							isIframe: false,
-							auth: ['admin'],
-							icon: 'iconfont icon-caozuo-wailian',
-						},
-					},
-					{
-						path: '/visualizing/visualizingLinkDemo2',
-						name: 'visualizingLinkDemo2',
-						component: () => import('/@/layout/routerView/link.vue'),
-						meta: {
-							title: 'message.router.visualizingLinkDemo2',
-							isLink: `${import.meta.env.VITE_API_URL}#/visualizingDemo2`,
-							isHide: false,
-							isKeepAlive: false,
-							isAffix: false,
-							isIframe: false,
-							auth: ['admin'],
-							icon: 'iconfont icon-caozuo-wailian',
-						},
-					},
-				],
-			},
-			{
 				path: '/chart',
 				name: 'chartIndex',
 				component: () => import('/@/views/chart/index.vue'),
@@ -988,26 +940,6 @@ export const staticRoutes: Array<RouteRecordRaw> = [
 		component: () => import('/@/views/error/401.vue'),
 		meta: {
 			title: 'message.staticRoutes.noPower',
-		},
-	},
-	/**
-	 * 提示：写在这里的为全屏界面，不建议写在这里
-	 * 请写在 `dynamicRoutes` 路由数组中
-	 */
-	{
-		path: '/visualizingDemo1',
-		name: 'visualizingDemo1',
-		component: () => import('/@/views/visualizing/demo1.vue'),
-		meta: {
-			title: 'message.router.visualizingLinkDemo1',
-		},
-	},
-	{
-		path: '/visualizingDemo2',
-		name: 'visualizingDemo2',
-		component: () => import('/@/views/visualizing/demo2.vue'),
-		meta: {
-			title: 'message.router.visualizingLinkDemo2',
 		},
 	},
 ];

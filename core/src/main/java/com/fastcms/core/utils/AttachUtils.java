@@ -2,6 +2,7 @@ package com.fastcms.core.utils;
 
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.utils.FileUtils;
+import com.fastcms.utils.ConfigUtils;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
 import org.apache.commons.lang.StringUtils;
@@ -11,6 +12,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
 
 /**
  * @author： wjun_java@163.com
@@ -45,6 +50,35 @@ public abstract class AttachUtils {
             return Boolean.parseBoolean(enableWaterMark);
         } catch (NumberFormatException e) {
             return false;
+        }
+    }
+
+    /**
+     * 获取服务器ip地址
+     * @return
+     */
+    public static String getInternetIp() {
+        try{
+            final String INTRANET_IP = InetAddress.getLocalHost().getHostAddress();
+            Enumeration<NetworkInterface> networks = NetworkInterface.getNetworkInterfaces();
+            InetAddress ip;
+            Enumeration<InetAddress> addrs;
+            while (networks.hasMoreElements()) {
+                addrs = networks.nextElement().getInetAddresses();
+                while (addrs.hasMoreElements()) {
+                    ip = addrs.nextElement();
+                    if (ip != null
+                            && ip instanceof Inet4Address
+                            && ip.isSiteLocalAddress()
+                            && !ip.getHostAddress().equals(INTRANET_IP)) {
+                        return ip.getHostAddress();
+                    }
+                }
+            }
+            // 如果没有外网IP，就返回内网IP
+            return INTRANET_IP;
+        } catch(Exception e) {
+            return "127.0.0.1";
         }
     }
 

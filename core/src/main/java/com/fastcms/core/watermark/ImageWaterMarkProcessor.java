@@ -3,7 +3,7 @@ package com.fastcms.core.watermark;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.utils.ImageUtils;
 import com.fastcms.core.utils.AttachUtils;
-import com.fastcms.core.utils.ConfigUtils;
+import com.fastcms.utils.ConfigUtils;
 import com.fastcms.core.utils.DirUtils;
 import com.fastcms.entity.Attachment;
 import org.springframework.stereotype.Service;

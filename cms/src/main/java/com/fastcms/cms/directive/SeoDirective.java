@@ -20,12 +20,10 @@ import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.entity.SinglePage;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.core.directive.BaseFunction;
-import com.fastcms.entity.Config;
-import com.fastcms.service.IConfigService;
+import com.fastcms.utils.ConfigUtils;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateModelException;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,9 +39,6 @@ import java.util.List;
 @Component("seoTag")
 public class SeoDirective extends BaseFunction {
 
-	@Autowired
-	private IConfigService configService;
-
 	@Override
 	public Object exec(List arguments) throws TemplateModelException {
 
@@ -58,7 +53,7 @@ public class SeoDirective extends BaseFunction {
 				return singlePage.getSeoKeywords();
 			}
 
-			if(FastcmsConstants.WEBSITE_SUB_TITLE_KEY.equals(key.trim())) {
+			if(FastcmsConstants.WEBSITE_SEO.equals(key.trim())) {
 				return singlePage.getSeoDescription();
 			}
 		}
@@ -69,13 +64,12 @@ public class SeoDirective extends BaseFunction {
 				return article.getSeoKeywords();
 			}
 
-			if(FastcmsConstants.WEBSITE_SUB_TITLE_KEY.equals(key.trim())) {
+			if(FastcmsConstants.WEBSITE_SEO.equals(key.trim())) {
 				return article.getSeoDescription();
 			}
 		}
 
-		Config config = configService.findByKey(key);
-		return config == null ? "" : config.getValue();
+		return ConfigUtils.getConfig(key);
 	}
 
 }

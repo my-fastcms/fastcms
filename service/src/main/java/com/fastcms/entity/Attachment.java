@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.utils.ConfigUtils;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -110,7 +112,7 @@ public class Attachment implements Serializable {
     }
 
     public String getPath() {
-        return "http://localhost:8080" + getFilePath();
+        return ConfigUtils.getConfig(FastcmsConstants.ATTACH_FILE_DOMAIN) + getFilePath();
     }
 
     public String getFileSize() {

@@ -57,17 +57,6 @@ public interface FastcmsConstants {
     String TEMPLATE_ENABLE_ID = "enable_template_id";
 
     /**
-     * 系统模块id值
-     */
-    String SYSTEM_MODULE_ID = "system-core";
-    String PLUGIN_MODULE_ID = "module-plugin";
-
-    String PERMISSION_MODULE = "module";
-    String PERMISSION_MENU = "menu";
-    String PERMISSION_TAB = "tab";
-    String PERMISSION_OPTION = "option";
-
-    /**
      * 附件设置相关
      */
     //附件域名
@@ -91,12 +80,20 @@ public interface FastcmsConstants {
      * 系统配置相关key
      */
     String WEBSITE_TITLE_KEY = "website_title";
-    String WEBSITE_SUB_TITLE_KEY = "website_sub_title";
+    String WEBSITE_SEO = "website_seo";
     String WEBSITE_NAME = "website_name";
     String WEBSITE_DOMAIN = "website_domain";
+    String WEBSITE_ADMIN_MOBILE = "website_admin_mobile";
+    String WEBSITE_ADMIN_WECHAT = "website_admin_wechat";
+    String WEBSITE_ADMIN_QQ = "website_admin_qq";
+    String WEBSITE_ADMIN_EMAIL = "website_admin_email";
+    String WEBSITE_CASE_NUM = "website_case_num";
+    String WEBSITE_COPYRIGHT = "website_copyright";
 
     /**
+     * ================
      * 微信配置相关
+     * ================
      */
 
     /**
@@ -149,5 +146,16 @@ public interface FastcmsConstants {
      * 微信支付签名类型
      */
     String WECHAT_PAY_SIGN_TYPE = "wechat_pay_sign_type";
+
+    /**
+     * ================
+     * Server info 相关
+     * ================
+     */
+
+    //服务器ip地址
+    String SERVER_IP = "serverIp";
+    //服务器端口
+    String SERVER_PORT = "serverPort";
 
 }

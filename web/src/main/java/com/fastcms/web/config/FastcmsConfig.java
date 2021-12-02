@@ -16,14 +16,20 @@
  */
 package com.fastcms.web.config;
 
+import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.core.template.Template;
 import com.fastcms.core.template.TemplateService;
+import com.fastcms.core.utils.AttachUtils;
 import com.fastcms.core.utils.DirUtils;
+import com.fastcms.service.IConfigService;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.boot.web.context.WebServerInitializedEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.ResourceUtils;
@@ -47,7 +53,10 @@ import java.util.List;
  * @version: 1.0
  */
 @Configuration
-public class FastcmsConfig implements WebMvcConfigurer {
+public class FastcmsConfig implements WebMvcConfigurer, ApplicationListener<WebServerInitializedEvent> {
+
+    @Autowired
+    private IConfigService configService;
 
     @Autowired
     private TemplateService templateService;
@@ -102,6 +111,19 @@ public class FastcmsConfig implements WebMvcConfigurer {
             jacksonObjectMapperBuilder.deserializerByType(LocalDateTime.class,localDateTimeDeserializer());
             jacksonObjectMapperBuilder.simpleDateFormat(pattern);
         };
+    }
+
+    @Override
+    public void onApplicationEvent(WebServerInitializedEvent event) {
+        if(StringUtils.isBlank(configService.getValue(FastcmsConstants.SERVER_IP))) {
+            configService.saveConfig(FastcmsConstants.SERVER_IP, AttachUtils.getInternetIp());
+        }
+        if(StringUtils.isBlank(configService.getValue(FastcmsConstants.SERVER_PORT))) {
+            configService.saveConfig(FastcmsConstants.SERVER_PORT, String.valueOf(event.getWebServer().getPort()));
+        }
+        if(StringUtils.isBlank(configService.getValue(FastcmsConstants.WEBSITE_DOMAIN))) {
+            configService.saveConfig(FastcmsConstants.WEBSITE_DOMAIN, "http://" + configService.getValue(FastcmsConstants.SERVER_IP) + ":" + configService.getValue(FastcmsConstants.SERVER_PORT));
+        }
     }
 
 }
