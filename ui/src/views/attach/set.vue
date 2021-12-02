@@ -65,6 +65,7 @@
 								</el-form-item>
 								<el-form-item>
 									<el-link type="primary" @click="onAttachDialogOpen">选择图片</el-link>
+									<div class="sub-title">上传水印图片请先关闭水印功能</div>
 								</el-form-item>
 							</el-col>
 						</el-row>
@@ -152,7 +153,6 @@ export default {
 
 		//获取弹出框选中的附件
 		const getSelectAttach = (value) => {
-			console.log("getSelectAttach:" + value[0].path);
 			state.ruleForm.waterMarkFile = value[0].path;
 		};
 

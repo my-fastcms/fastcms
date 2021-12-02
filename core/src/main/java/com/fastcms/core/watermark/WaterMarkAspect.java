@@ -1,8 +1,8 @@
 package com.fastcms.core.watermark;
 
 import com.fastcms.core.utils.AttachUtils;
-import com.fastcms.utils.SpringContextHolder;
 import com.fastcms.entity.Attachment;
+import com.fastcms.utils.SpringContextHolder;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -25,7 +25,7 @@ import java.util.Map;
 public class WaterMarkAspect {
 
     @Around("execution(* com.fastcms.service.IAttachmentService.saveBatch(..))")
-    public Object addWaterMark(ProceedingJoinPoint joinPoint) {
+    public Boolean addWaterMark(ProceedingJoinPoint joinPoint) {
 
         if(AttachUtils.enableWaterMark()) {
             Map<String, WaterMarkProcessor> waterMarkProcessorMap = SpringContextHolder.getApplicationContext().getBeansOfType(WaterMarkProcessor.class);
@@ -44,10 +44,10 @@ public class WaterMarkAspect {
         }
 
         try {
-            return joinPoint.proceed();
+            return (Boolean) joinPoint.proceed();
         } catch (Throwable throwable) {
             throwable.printStackTrace();
-            return null;
+            return false;
         }
     }
 

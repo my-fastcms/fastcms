@@ -54,6 +54,19 @@ public abstract class AttachUtils {
     }
 
     /**
+     * 获取水印透明度
+     * @return
+     */
+    public static Integer getDiaphaneity() {
+        String config = ConfigUtils.getConfig(FastcmsConstants.ATTACH_DIAPHANEITY);
+        try {
+            return Integer.parseInt(config);
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
+    /**
      * 获取服务器ip地址
      * @return
      */
@@ -112,12 +125,32 @@ public abstract class AttachUtils {
      * @throws IOException
      */
     public static final String addWaterMark(File file, BufferedImage waterImage) throws IOException {
+
+        String config = ConfigUtils.getConfig(FastcmsConstants.ATTACH_WATERMARK_POS);
+        Positions positions = Positions.BOTTOM_RIGHT;
+        switch (config) {
+            case "leftup":
+                positions = Positions.TOP_LEFT;
+                break;
+            case "rightup":
+                positions = Positions.TOP_RIGHT;
+                break;
+            case "middle":
+                positions = Positions.CENTER;
+                break;
+            case "leftdown":
+                positions = Positions.BOTTOM_LEFT;
+                break;
+            case "rightdown":
+                positions = Positions.BOTTOM_RIGHT;
+                break;
+        }
         Thumbnails.Builder<File> fileBuilder = Thumbnails.of(file)
                 .scale(1)
-                .watermark(Positions.BOTTOM_RIGHT, waterImage, 0.25f).outputQuality(0.8f);
-        String filePath = DirUtils.getUploadDir() +  FileUtils.newFileName(file.getName());
-        fileBuilder.toFile(filePath);
-        return filePath;
+                .watermark(positions, waterImage, (float) getDiaphaneity()/100).outputQuality(0.8f);
+        String filePath = FileUtils.newFileName(file.getName());
+        fileBuilder.toFile(DirUtils.getUploadDir() + filePath);
+        return filePath.replace("\\", "/");
     }
 
     /**

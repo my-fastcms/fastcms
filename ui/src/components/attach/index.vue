@@ -120,7 +120,7 @@ export default {
 
 		// 当前列表项点击
 		const onTableItemClick = (v: object) => {
-			
+			console.log(v);
 		};
 		// 分页点击
 		const onHandleSizeChange = (val: number) => {

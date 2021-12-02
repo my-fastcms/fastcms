@@ -25,12 +25,12 @@
                 </el-col>
                 <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                     <el-form-item label="SEO关键词" prop="seoKeywords">
-                        <el-input v-model="ruleForm.seoKeywords" placeholder="请输入seo关键词" clearable></el-input>
+                        <el-input type="textarea" :rows="2" v-model="ruleForm.seoKeywords" placeholder="请输入seo关键词" clearable></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                     <el-form-item label="SEO描述" prop="seoDescription">
-                        <el-input v-model="ruleForm.seoDescription" placeholder="请输入SEO描述" clearable></el-input>
+                        <el-input type="textarea" :rows="2" v-model="ruleForm.seoDescription" placeholder="请输入SEO描述" clearable></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
