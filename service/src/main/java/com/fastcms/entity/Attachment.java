@@ -112,7 +112,7 @@ public class Attachment implements Serializable {
     }
 
     public String getPath() {
-        return ConfigUtils.getConfig(FastcmsConstants.ATTACH_FILE_DOMAIN) + getFilePath();
+        return ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + getFilePath();
     }
 
     public String getFileSize() {
