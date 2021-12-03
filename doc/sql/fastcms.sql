@@ -111,8 +111,8 @@ CREATE TABLE `attachment` (
 DROP TABLE IF EXISTS `config`;
 CREATE TABLE `config` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `key` varchar(255) DEFAULT NULL COMMENT '配置key键值',
-  `value` varchar(255) DEFAULT NULL COMMENT '配置值',
+  `key` varchar(32) DEFAULT NULL COMMENT '配置key键值',
+  `value` text DEFAULT NULL COMMENT '配置值',
   PRIMARY KEY (`id`),
   KEY `key` (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统配置表';

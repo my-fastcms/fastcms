@@ -1,6 +1,5 @@
 #!/bin/sh
 
-# linux、mac上打包的脚本
 mvn clean install -Dmaven.test.skip=true
 
 # del fastcms-dist
