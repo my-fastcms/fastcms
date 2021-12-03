@@ -126,7 +126,7 @@ public class AttachmentController {
     }
 
     /**
-     * 修改附件名称以及描述
+     * 修改附件
      * @param attachId      附件id
      * @param fileName      附件名称
      * @param fileDesc      附件描述
@@ -199,7 +199,7 @@ public class AttachmentController {
     }
 
     /**
-     * 在编辑器中上传附件
+     * 上传附件(编辑器)
      * @param file
      * @return
      */
@@ -210,7 +210,7 @@ public class AttachmentController {
     }
 
     /**
-     * 弹出框中上传附件
+     * 上传附件(浏览)
      * @param file
      * @return
      */

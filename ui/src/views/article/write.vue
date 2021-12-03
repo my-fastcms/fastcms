@@ -10,7 +10,7 @@
                 </el-col>
                 <el-col class="mb20">
                     <el-form-item label="文章详情" prop="contentHtml">
-                        <ckeditor :editor="editor" v-model="ruleForm.contentHtml" :config="editorConfig" class="ck-content"></ckeditor>
+                        <ckeditor :editor="editor" v-model="ruleForm.contentHtml" :config="editorConfig" @ready="onEditorReady" class="ck-content"></ckeditor>
                     </el-form-item>
                 </el-col>
                 <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -108,16 +108,17 @@
 
 <script lang="ts">
 import { toRefs, reactive, getCurrentInstance, onMounted } from 'vue';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { ElMessage } from 'element-plus';
 import { useRoute } from 'vue-router';
 import { addArticle, getArticleCategoryList, getArticle } from '/@/api/article/index';
 import qs from 'qs';
 
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import "@ckeditor/ckeditor5-build-classic/build/translations/zh-cn";
+
 export default {
 	name: 'articleWrite',
     components: {
-        // Use the <ckeditor> component in this view.
         ckeditor: ClassicEditor.component
     },
 	setup() {
@@ -135,14 +136,9 @@ export default {
             },
 			editor: ClassicEditor,
             editorConfig: {
-                //toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote' ],
-                heading: {
-                    options: [
-                       // { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
-                       // { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
-                       // { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' }
-                    ]
-                }
+                // plugins: [InsertImage],
+                // toolbar: [ 'bold', 'italic', 'insertImage' ],
+                language: "zh-cn"
             },
             rules: {
 				"title": { required: true, message: '请输入文章标题', trigger: 'blur' },
@@ -197,10 +193,15 @@ export default {
             }
         });
 
+        const onEditorReady = (editor) => {
+            console.log("====editor:" + editor);
+        };
+
 		return {
             onSubmit,
             getCategoryList,
             getArticleInfo,
+            onEditorReady,
 			...toRefs(state),
 		};
 	},

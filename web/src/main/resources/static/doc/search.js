@@ -52,7 +52,7 @@ api[1].list[1].list.push({
     order: '3',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/update/{attachId}',
-    desc: '修改附件名称以及描述',
+    desc: '修改附件',
 });
 api[1].list[1].list.push({
     order: '4',
@@ -70,13 +70,13 @@ api[1].list[1].list.push({
     order: '6',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/upload/ckeditor',
-    desc: '在编辑器中上传附件',
+    desc: '上传附件(编辑器)',
 });
 api[1].list[1].list.push({
     order: '7',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/upload/cKeditor/browse',
-    desc: '弹出框中上传附件',
+    desc: '上传附件(浏览)',
 });
 api[1].list.push({
     alias: 'ConfigController',

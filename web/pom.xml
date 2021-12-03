@@ -74,7 +74,7 @@
                     <classifier>exec</classifier>
                     <fork>true</fork>
                     <addResources>true</addResources>
-                    <mainClass>com.fastcms.web.fastcms</mainClass>
+                    <mainClass>com.fastcms.web.Fastcms</mainClass>
                 </configuration>
                 <executions>
                     <execution>
