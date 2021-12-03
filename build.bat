@@ -8,13 +8,14 @@ rmdir .dist /s /q
 
 REM create fastcms-dist
 mkdir .dist
+mkdir .dist\config
 mkdir .dist\plugins
 mkdir .dist\upload
 mkdir .dist\htmls
 
 REM copy main program
 xcopy web\target\fastcms-web-*-exec.jar .dist /s /i
-xcopy web\src\main\resources\application-prod.yml .dist /s
+xcopy web\src\main\resources\application-prod.yml .dist\config /s
 
 REM copy htmls
 xcopy web\src\main\resources\htmls .dist\htmls /s /i
@@ -26,5 +27,4 @@ cd .dist
 
 REM run main
 rename fastcms-web-*-exec.jar fastcms-start.jar
-rename application-prod.yml application.yml
 
