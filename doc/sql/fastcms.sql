@@ -417,7 +417,7 @@ CREATE TABLE `user_tag_relation` (
 
 
 INSERT INTO `role` (`id`, `role_name`, `role_desc`, `created`, `updated`, `active`) VALUES ('1', '超级管理员', '超级管理员角色是系统内置角色，拥有系统最大权限', NOW(), NOW(), 1);
-INSERT INTO `user` (`id`, `nick_name`, `password`, `salt`, `created`, `updated`) VALUES ('1', 'admin', '$2a$10$sw5ryl9SLUiaJ9jAZgmp8eW29rEVvPJEx1vwz4v7on9DuLQOdHfZC', '1622734716287', NOW(), NOW());
+INSERT INTO `user` (`id`, `user_name`, `nick_name`, `password`, `salt`, `created`, `updated`) VALUES ('1', 'admin', 'admin', '$2a$10$Lpudyy6BI./H9UJc9eIPjuflK4g.A.CnwCb1qgE2PGbWyjv2yDfbq', '1622734716287', NOW(), NOW());
 INSERT INTO `user_role` (`user_id`, `role_id`) VALUES ('1', '1');
 
 INSERT INTO `permission`(`id`, `parent_id`, `name`, `path`, `component`, `title`, `icon`, `is_link`, `is_hide`, `is_keep_alive`, `is_affix`, `is_iframe`, `sort_num`, `category`, `created`, `updated`) VALUES (1, 0, 'home', '/home', 'home/index', 'message.router.home', 'iconfont icon-shouye', 0, 0, 1, 1, 0, 999, 'admin', '2021-10-31 23:48:10', NULL);
