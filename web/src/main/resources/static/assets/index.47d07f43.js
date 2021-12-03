@@ -1,0 +1,1 @@
+import{c as e}from"./index.4a6e935a.js";function r(t){return e({url:"/admin/attachment/list",method:"get",params:t})}function u(t){return e({url:"/admin/attachment/get/"+t,method:"get"})}function c(t,a){return e({url:"/admin/attachment/update/"+t,method:"post",params:a})}function d(t){return e({url:"/admin/attachment/delete/"+t,method:"post"})}export{u as a,d,r as g,c as u};
