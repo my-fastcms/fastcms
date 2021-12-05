@@ -112,9 +112,7 @@ import { ElMessage } from 'element-plus';
 import { useRoute } from 'vue-router';
 import { addArticle, getArticleCategoryList, getArticle } from '/@/api/article/index';
 import qs from 'qs';
-
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import "@ckeditor/ckeditor5-build-classic/build/translations/zh-cn";
 
 export default {
 	name: 'articleWrite',
@@ -136,9 +134,25 @@ export default {
             },
 			editor: ClassicEditor,
             editorConfig: {
-                // plugins: [InsertImage],
-                // toolbar: [ 'bold', 'italic', 'insertImage' ],
-                language: "zh-cn"
+                toolbar: [
+                    'heading',
+                    'bold',
+                    'italic',
+                    'link',
+                    'undo',
+                    'redo',
+                    'ckfinder',
+                    'imageUpload',
+                ],
+                ckfinder: {
+                    openerMethod: 'modal',
+                    options: {
+                        resourceType: 'Images',
+                        language: 'zh-cn'
+                    },
+                    // Upload the images to the server using the CKFinder QuickUpload command.
+                    uploadUrl: 'http://localhost:8084/ckfinder/connector?command=QuickUpload&type=Files&responseType=json',
+                }
             },
             rules: {
 				"title": { required: true, message: '请输入文章标题', trigger: 'blur' },
@@ -194,7 +208,12 @@ export default {
         });
 
         const onEditorReady = (editor) => {
-            console.log("====editor:" + editor);
+            console.log(editor);
+            
+            ClassicEditor.builtinPlugins.map(element => {
+                console.log("element:" + element.pluginName);
+            });;
+
         };
 
 		return {

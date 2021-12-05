@@ -46,6 +46,7 @@ const viteConfig: UserConfig = {
 		__VUE_I18N_FULL_INSTALL__: JSON.stringify(false),
 		__INTLIFY_PROD_DEVTOOLS__: JSON.stringify(false),
 	},
+	
 };
 
 export default viteConfig;

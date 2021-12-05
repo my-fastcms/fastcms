@@ -1,5 +1,5 @@
 {
-	"name": "vue-next-admin",
+	"name": "fastcms",
 	"version": "1.1.2",
 	"description": "vue3 vite next admin template",
 	"author": "lyt_20201208",
@@ -23,9 +23,11 @@
 		"jsplumb": "^2.15.6",
 		"mitt": "^3.0.0",
 		"nprogress": "^0.2.0",
+		"postcss-loader": "^3.0.0",
 		"print-js": "^1.6.0",
 		"qrcodejs2-fixes": "^0.0.2",
 		"qs": "^6.10.1",
+		"raw-loader": "^0.5.1",
 		"screenfull": "^5.1.0",
 		"sortablejs": "^1.14.0",
 		"splitpanes": "^3.0.4",
@@ -35,12 +37,9 @@
 		"vue-i18n": "^9.1.9",
 		"vue-router": "^4.0.12",
 		"vue-web-screen-shot": "^1.2.0",
-		"vuex": "^4.0.2",
-		"wangeditor": "^4.7.8"
+		"vuex": "^4.0.2"
 	},
 	"devDependencies": {
-		"@ckeditor/ckeditor5-build-classic": "^31.0.0",
-		"@ckeditor/ckeditor5-vue": "^2.0.1",
 		"@types/axios": "^0.14.0",
 		"@types/clipboard": "^2.0.1",
 		"@types/node": "^16.11.0",
@@ -68,7 +67,7 @@
 		"not dead"
 	],
 	"bugs": {
-		"url": "https://gitee.com/lyt-top/vue-next-admin/issues"
+		"url": "https://gitee.com/dianbuapp_admin/fastcms.git/issues"
 	},
 	"engines": {
 		"node": ">=12.0.0",
@@ -80,11 +79,10 @@
 		"vuejs/vue-next",
 		"element-ui",
 		"element-plus",
-		"vue-next-admin",
-		"next-admin"
+		"fastcms"
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://gitee.com/lyt-top/vue-next-admin.git"
+		"url": "https://gitee.com/dianbuapp_admin/fastcms.git"
 	}
 }
