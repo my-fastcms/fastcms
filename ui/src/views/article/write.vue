@@ -69,7 +69,7 @@
                             allow-create
                             default-first-option
                             placeholder="请选择文章分类">
-                            <el-option v-for="item in categories" :key="item.id" :label="item.title" :value="item.id"></el-option>
+                            <el-option v-for="item in categories" :key="item.id" :label="item.title" :value="item.title"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -83,7 +83,7 @@
                             allow-create
                             default-first-option
                             placeholder="请选择文章标签">
-                            <el-option v-for="item in tags" :key="item.id" :label="item.title" :value="item.id"></el-option>
+                            <el-option v-for="item in tags" :key="item.id" :label="item.title" :value="item.title"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -113,6 +113,7 @@ import { useRoute } from 'vue-router';
 import { addArticle, getArticleCategoryList, getArticle } from '/@/api/article/index';
 import qs from 'qs';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import FastcmsUploader from './FastcmsUploader';
 
 export default {
 	name: 'articleWrite',
@@ -134,25 +135,7 @@ export default {
             },
 			editor: ClassicEditor,
             editorConfig: {
-                toolbar: [
-                    'heading',
-                    'bold',
-                    'italic',
-                    'link',
-                    'undo',
-                    'redo',
-                    'ckfinder',
-                    'imageUpload',
-                ],
-                ckfinder: {
-                    openerMethod: 'modal',
-                    options: {
-                        resourceType: 'Images',
-                        language: 'zh-cn'
-                    },
-                    // Upload the images to the server using the CKFinder QuickUpload command.
-                    uploadUrl: 'http://localhost:8084/ckfinder/connector?command=QuickUpload&type=Files&responseType=json',
-                }
+                
             },
             rules: {
 				"title": { required: true, message: '请输入文章标题', trigger: 'blur' },
@@ -213,6 +196,10 @@ export default {
             ClassicEditor.builtinPlugins.map(element => {
                 console.log("element:" + element.pluginName);
             });;
+
+            editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
+                return new FastcmsUploader(loader);
+            };
 
         };
 

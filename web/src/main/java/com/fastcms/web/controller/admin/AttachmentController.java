@@ -78,51 +78,52 @@ public class AttachmentController {
     @ExceptionHandler(value = MultipartException.class)
     public Object upload(@RequestParam("files") MultipartFile files[]) {
 
-        List<String> errorFiles = new ArrayList<>();
-
-        if(files != null && files.length>0) {
-            List<Attachment> attachmentList = new ArrayList<>();
-            for(MultipartFile file : files) {
-                String newFilePath = FileUtils.newFileName(file.getOriginalFilename());
-                File uploadFile = new File(DirUtils.getUploadDir(), newFilePath);
-
-                if(AttachUtils.getImageMaxSize() > 0) {
-                    long fileSize = uploadFile.length(); //文件大小超过限制大小不上传
-                    if(fileSize > 1024 * 1024 * AttachUtils.getImageMaxSize()) {
-                        uploadFile.delete();
-                        errorFiles.add(file.getOriginalFilename());
-                        continue;
-                    }
-                }
-
-                try {
-                    if (!uploadFile.getParentFile().exists()) {
-                        uploadFile.getParentFile().mkdirs();
-                    }
-                    file.transferTo(uploadFile);
-                    Attachment attachment = new Attachment();
-                    attachment.setFileName(file.getOriginalFilename());
-                    attachment.setFilePath(newFilePath.replace("\\", "/"));
-                    attachmentList.add(attachment);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    if(uploadFile != null) {
-                        uploadFile.delete();
-                    }
-                    errorFiles.add(file.getOriginalFilename());
-                }
-            }
-
-            if(!attachmentList.isEmpty()) {
-                attachmentService.saveBatch(attachmentList);
-            }
-
+        if(files == null || files.length <= 0) {
+            return RestResultUtils.failed("请选择上传文件");
         }
 
-        return errorFiles.isEmpty() ?
-                RestResultUtils.success() :
-                RestResultUtils.failed(errorFiles.stream().collect(Collectors.joining(",")).concat(",以上文件上传失败"));
+        List<String> errorFiles = new ArrayList<>();
 
+        List<Attachment> attachmentList = new ArrayList<>();
+        for(MultipartFile file : files) {
+            String newFilePath = FileUtils.newFileName(file.getOriginalFilename());
+            File uploadFile = new File(DirUtils.getUploadDir(), newFilePath);
+
+            if(AttachUtils.getImageMaxSize() > 0) {
+                long fileSize = uploadFile.length(); //文件大小超过限制大小不上传
+                if(fileSize > 1024 * 1024 * AttachUtils.getImageMaxSize()) {
+                    uploadFile.delete();
+                    errorFiles.add(file.getOriginalFilename());
+                    continue;
+                }
+            }
+
+            try {
+                if (!uploadFile.getParentFile().exists()) {
+                    uploadFile.getParentFile().mkdirs();
+                }
+                file.transferTo(uploadFile);
+                Attachment attachment = new Attachment();
+                attachment.setFileName(file.getOriginalFilename());
+                attachment.setFilePath(newFilePath.replace("\\", "/"));
+                attachmentList.add(attachment);
+            } catch (IOException e) {
+                e.printStackTrace();
+                if(uploadFile != null) {
+                    uploadFile.delete();
+                }
+                errorFiles.add(file.getOriginalFilename());
+            }
+        }
+
+        if(!attachmentList.isEmpty()) {
+            attachmentService.saveBatch(attachmentList);
+        }
+        Map<String, String> result = new HashMap<>();
+        result.put("urls", attachmentList.stream().map(Attachment::getPath).collect(Collectors.joining()));
+        return errorFiles.isEmpty() ?
+                RestResultUtils.success(result) :
+                RestResultUtils.failed(errorFiles.stream().collect(Collectors.joining(",")).concat(",以上文件上传失败"));
     }
 
     /**
