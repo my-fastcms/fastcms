@@ -5,18 +5,14 @@
             <el-row :gutter="35">
                 <el-col :sm="5" class="mb20">
                     <div class="tree-container">
-                        <el-card shadow="hover" header="模板树">
+                        <el-card shadow="hover" header="模板文件树">
                             <div v-loading="treeLoading">
-                                <el-tree :data="treeTableData" show-checkbox node-key="id" ref="treeTable" :props="treeDefaultProps" @check="onCheckTree">
-                                    <template #default="{ node, data }">
-                                        <span class="tree-custom-node">
-                                            <span style="flex: 1">{{ node.label }}</span>
-                                            <span v-if="data.isShow" style="flex: 1; display: flex">
-                                                <span type="text" size="mini" style="flex: 1">{{ data.label1 }}</span>
-                                                <span type="text" size="mini" style="flex: 1">{{ data.label2 }}</span>
-                                            </span>
-                                        </span>
-                                    </template>
+                                <el-tree :data="treeTableData" 
+                                    :default-expand-all="true" 
+                                    node-key="id" 
+                                    :props="treeDefaultProps" 
+                                    style="height: 550px;overflow: auto" 
+                                    ref="treeTable">
                                 </el-tree>
                             </div>
                         </el-card>
@@ -41,7 +37,7 @@
 import { toRefs, reactive, getCurrentInstance, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRoute } from 'vue-router';
-import { addArticle, getArticleCategoryList, getArticle } from '/@/api/article/index';
+import { getTemplateFileTree } from '/@/api/template/index';
 import qs from 'qs';
 import { VAceEditor } from 'vue3-ace-editor';
 import 'ace-builds/src-noconflict/mode-text';
@@ -54,48 +50,18 @@ export default {
         VAceEditor
     },
 	setup() {
-        const route = useRoute();
         const { proxy } = getCurrentInstance() as any;
 		const state = reactive({
             treeLoading: false,
 			treeTableData: [],
+            treeDefaultProps: {
+				children: 'children',
+				label: 'label',
+			},
             content: '',
             params: {},
             categories: [],
             tags: [],
-            tableData: {
-				data: [
-					{
-						date: '2016-05-02',
-						name: '1号实验室',
-					},
-					{
-						date: '2016-05-04',
-						name: '2号实验室',
-						address: '温度30℃',
-					},
-					{
-						date: '2016-05-01',
-						name: '3号实验室',
-						address: '湿度57%RH',
-					},
-                    {
-						date: '2016-05-022016-05-02',
-						name: '1号实验室',
-						address: '烟感2.1%OBS/M',
-					},
-					{
-						date: '2016-05-042016-05-02',
-						name: '2号实验室',
-						address: '温度30℃',
-					},
-					{
-						date: '2016-05-01',
-						name: '3号实验室',
-						address: '湿度57%RH',
-					},
-				],
-			},
             ruleForm: {
                 title: '',
                 commentEnable: 1,
@@ -113,56 +79,39 @@ export default {
 			},
 		});
 
-        //获取文章分类跟标签
-        const getCategoryList = () => {
-            getArticleCategoryList().then((res) => {
-                res.data.forEach(item => {
-                    if(item.type == 'tag') {
-                        state.tags.push(item);
-                    }else if(item.type == 'category') {
-                        state.categories.push(item);
-                    }
-                })
+        //
+        const getFileTree = () => {
+            getTemplateFileTree().then((res) => {
+                state.treeTableData = res.data;
             })
         }
 
         const onSubmit = () => {
             proxy.$refs['myRefForm'].validate((valid: any) => {
 				if (valid) {
-					let params = qs.stringify(state.ruleForm, {arrayFormat: 'repeat'});
-					addArticle(params).then((res) => {
-                        state.ruleForm.id = res;
-						ElMessage.success("保存成功");
-					}).catch((res) => {
-						ElMessage({showClose: true, message: res.message ? res.message : '系统错误' , type: 'error'});
-					})
+					// let params = qs.stringify(state.ruleForm, {arrayFormat: 'repeat'});
+					
 				}
 			});
         };
 
-        const getArticleInfo = (id: string) => {
-            getArticle(id).then((res) => {
-                state.ruleForm = res.data;
-            })
-        }
+        // const getArticleInfo = (id: string) => {
+        //     getArticle(id).then((res) => {
+        //         state.ruleForm = res.data;
+        //     })
+        // }
 
         const editorInit = () => {
             console.log("====editorInit");
         }
 
         onMounted(() => {
-            state.params = route;
-            getCategoryList();
-            let articleId = state.params.query.id;
-            if(articleId) {
-                getArticleInfo(articleId);
-            }
+            getFileTree();
         });
 
 		return {
             onSubmit,
-            getCategoryList,
-            getArticleInfo,
+            getFileTree,
             editorInit,
 			...toRefs(state),
 		};

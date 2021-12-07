@@ -26,10 +26,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * @author： wjun_java@163.com
@@ -177,17 +174,15 @@ public abstract class FileUtils {
     }
 
     public static List<String> loopFiles(List<String> list, File fileDir) {
+        list.add(fileDir.getPath());
         if (fileDir.isDirectory()) {
-            File fileList[] = fileDir.listFiles();
-            for (int i = 0; i < fileList.length; i++) {
-                if (fileList[i].isDirectory()) {
-                    loopFiles(list, new File(fileList[i].getPath()));
+            Arrays.stream(fileDir.listFiles()).forEach(item -> {
+                if(item.isDirectory()) {
+                    loopFiles(list, new File(item.getPath()));
                 } else {
-                    list.add(fileList[i].getPath());
+                    list.add(item.getPath());
                 }
-            }
-        }else {
-            list.add(fileDir.getPath());
+            });
         }
         return list;
     }

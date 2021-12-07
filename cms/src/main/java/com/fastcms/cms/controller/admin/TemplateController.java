@@ -23,6 +23,7 @@ import com.fastcms.cms.service.IMenuService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.common.model.TreeNode;
 import com.fastcms.common.utils.FileUtils;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.core.template.Template;
@@ -42,6 +43,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -143,17 +145,34 @@ public class TemplateController {
     /**
      * 获取模板文件树
      * @return
-     * @throws IOException
      */
     @RequestMapping("files/tree")
-    public Object tree() throws IOException {
-
+    public Object tree() {
         Template currTemplate = templateService.getCurrTemplate();
         if(currTemplate == null) {
             return RestResultUtils.failed("模板不存在");
         }
 
-        return RestResultUtils.success();
+        return RestResultUtils.success(loopFiles(new ArrayList<>(), currTemplate.getTemplatePath().toFile()));
+    }
+
+    private List<TreeNode> loopFiles(List<TreeNode> treeNodeList, File fileDir) {
+        TreeNode treeNode = new TreeNode(fileDir.getName());
+        treeNodeList.add(treeNode);
+        if(fileDir.isDirectory()) {
+            if(fileDir.listFiles() != null && fileDir.listFiles().length >0) {
+                List<TreeNode> children = new ArrayList<>();
+                Arrays.stream(fileDir.listFiles()).forEach(item -> {
+                    if(item.isFile()) {
+                        children.add(new TreeNode(item.getName()));
+                        treeNode.setChildren(children);
+                    }else {
+                        loopFiles(treeNode.getChildren(), new File(item.getPath()));
+                    }
+                });
+            }
+        }
+        return treeNodeList;
     }
 
     /**
