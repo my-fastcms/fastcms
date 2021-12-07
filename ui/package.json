@@ -1,9 +1,12 @@
 {
 	"name": "fastcms",
-	"version": "1.1.2",
-	"description": "vue3 vite next admin template",
-	"author": "lyt_20201208",
-	"license": "MIT",
+	"version": "0.0.1",
+	"description": "fastcms admin",
+	"author": "wjun_java@163.com",
+	"license": "apache",
+	"workspaces": [
+		"packages/*"
+	],
 	"scripts": {
 		"dev": "vite",
 		"build": "vite build",
