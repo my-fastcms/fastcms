@@ -54,8 +54,3 @@ cnpm run build
 - 在本地删除一个分支：`git branch -d newBranch`
 - 在 github 远程端删除一个分支：`git push origin :newBranch (分支名前的冒号代表删除)`
 - 注意删除远程分支后，如果有对应的本地分支，本地分支并不会同步删除！
-
-#### 💌 支持作者
-
-如果觉得框架不错，或者已经在使用了，希望你可以去 <a target="_blank" href="https://github.com/lyt-Top/vue-next-admin">Github</a> 或者
-<a target="_blank" href="https://gitee.com/lyt-top/vue-next-admin">Gitee</a> 帮我点个 ⭐ Star，这将是对我极大的鼓励与支持。
