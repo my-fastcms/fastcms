@@ -1,6 +1,7 @@
 package com.fastcms.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.fastcms.common.model.TreeNode;
 import com.fastcms.entity.Role;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public interface IRoleService extends IService<Role> {
      * @param roleId
      * @return
      */
-    List<IPermissionService.TreeNode> getRolePermission(Long roleId);
+    List<TreeNode> getRolePermission(Long roleId);
 
     /**
      * 保存用户角色

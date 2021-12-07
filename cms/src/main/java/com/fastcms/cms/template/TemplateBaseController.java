@@ -40,7 +40,7 @@ public class TemplateBaseController {
 
 	protected String getTemplatePath() {
 		Template template = getTemplate();
-		return template == null ? "/fastcms/" : template.getPath();
+		return template == null ? "/fastcms/" : template.getPathName();
 	}
 
 }

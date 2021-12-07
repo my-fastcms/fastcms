@@ -20,6 +20,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.common.model.RouterNode;
 import com.fastcms.entity.Permission;
 import com.fastcms.service.IPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,7 @@ public class MenuController {
 	 * @return
 	 */
 	@GetMapping("list")
-	public RestResult<List<IPermissionService.PermissionNode>> list() {
+	public RestResult<List<RouterNode>> list() {
 		return RestResultUtils.success(permissionService.getPermissions());
 	}
 

@@ -21,10 +21,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.common.model.TreeNode;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.entity.Role;
-import com.fastcms.service.IPermissionService;
 import com.fastcms.service.IRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -105,7 +105,7 @@ public class RoleController {
      * @return
      */
     @GetMapping("{roleId}/permissions")
-    public RestResult<List<IPermissionService.TreeNode>> getPermissionList(@PathVariable("roleId") Long roleId) {
+    public RestResult<List<TreeNode>> getPermissionList(@PathVariable("roleId") Long roleId) {
         return RestResultUtils.success(roleService.getRolePermission(roleId));
     }
 

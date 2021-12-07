@@ -27,12 +27,45 @@ import java.nio.file.Path;
  * @version: 1.0
  */
 public class Template implements Serializable {
+
+    /**
+     * 模板id
+     * 示例值      www.xjd2020.com
+     */
     String id;
+
+    /**
+     * 模板名称
+     */
     String name;
-    String path;
+
+    /**
+     * 模板路径
+     * path示范值              /fastcms/
+     * 根路径示范值             /htmls/
+     * 那么模板文件路径          /htmls/fastcms
+     */
+    String pathName;
+
+    /**
+     * 模板版本
+     */
     String version;
+
+    /**
+     * 模板提供者
+     */
     String provider;
+
+    /**
+     * 模板描述
+     */
     String description;
+
+    /**
+     * 模板根路径绝对路径
+     * 示范值: D:\\htmls\\fastcms
+     */
     Path templatePath;
 
     public String getId() {
@@ -51,12 +84,12 @@ public class Template implements Serializable {
         this.name = name;
     }
 
-    public String getPath() {
-        return path;
+    public String getPathName() {
+        return pathName;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setPathName(String pathName) {
+        this.pathName = pathName;
     }
 
     public String getVersion() {
@@ -90,4 +123,5 @@ public class Template implements Serializable {
     public void setTemplatePath(Path templatePath) {
         this.templatePath = templatePath;
     }
+
 }

@@ -3,6 +3,7 @@ package com.fastcms.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fastcms.auth.AuthUtils;
 import com.fastcms.cache.CacheConfig;
+import com.fastcms.common.model.RouterNode;
 import com.fastcms.entity.Permission;
 import com.fastcms.mapper.PermissionMapper;
 import com.fastcms.service.IPermissionService;
@@ -26,7 +27,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     private CacheManager cacheManager;
 
     @Override
-    public List<PermissionNode> getPermissions() {
+    public List<RouterNode> getPermissions() {
         List<Permission> permissionList = list();
         if(!AuthUtils.isAdmin()) {
             permissionList = getBaseMapper().getPermissionByUserId(AuthUtils.getUserId());
@@ -34,24 +35,24 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
         return getPermissionNodeList(permissionList);
     }
 
-    List<PermissionNode> getPermissionNodeList(List<Permission> permissionList) {
-        List<PermissionNode> permissionNodeList = new ArrayList<>();
+    List<RouterNode> getPermissionNodeList(List<Permission> permissionList) {
+        List<RouterNode> permissionNodeList = new ArrayList<>();
         permissionList.forEach(item -> permissionNodeList.add(getPermissionNode(item)));
-        List<PermissionNode> parents = permissionNodeList.stream().filter(item -> item.getParentId() == 0).collect(Collectors.toList());
+        List<RouterNode> parents = permissionNodeList.stream().filter(item -> item.getParentId() == 0).collect(Collectors.toList());
         parents.forEach(item -> getChildren(item, permissionNodeList));
-        return parents.stream().sorted(Comparator.comparing(PermissionNode::getMenuSort).reversed()).collect(Collectors.toList());
+        return parents.stream().sorted(Comparator.comparing(RouterNode::getMenuSort).reversed()).collect(Collectors.toList());
     }
 
-    void getChildren(PermissionNode permissionNode, List<PermissionNode> menuNodeList) {
-        List<PermissionNode> childrenNodeList = menuNodeList.stream().filter(item -> Objects.equals(item.getParentId(), permissionNode.getId())).collect(Collectors.toList());
+    void getChildren(RouterNode permissionNode, List<RouterNode> menuNodeList) {
+        List<RouterNode> childrenNodeList = menuNodeList.stream().filter(item -> Objects.equals(item.getParentId(), permissionNode.getId())).collect(Collectors.toList());
         if(childrenNodeList != null && !childrenNodeList.isEmpty()) {
             permissionNode.setChildren(childrenNodeList);
             childrenNodeList.forEach(item -> getChildren(item, menuNodeList));
         }
     }
 
-    private PermissionNode getPermissionNode(Permission permission) {
-        PermissionNode permissionNode = new PermissionNode(permission.getId(), permission.getParentId(), permission.getName(), permission.getPath(), permission.getComponent(),
+    private RouterNode getPermissionNode(Permission permission) {
+        RouterNode permissionNode = new RouterNode(permission.getId(), permission.getParentId(), permission.getName(), permission.getPath(), permission.getComponent(),
                 permission.getIsLink(), permission.getSortNum(), permission.getTitle(), permission.getIcon(),
                 permission.getIsHide(), permission.getIsKeepAlive(), permission.getIsAffix(),
                 permission.getIsIframe(), Arrays.asList("admin"), null);
@@ -60,12 +61,12 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
 
     @Override
     @Cacheable(value = CacheConfig.ROLE_PERMISSION_CACHE_NAME, key = "#roleId")
-    public List<PermissionNode> getPermissionByRoleId(Long roleId) {
+    public List<RouterNode> getPermissionByRoleId(Long roleId) {
         return null;
     }
 
     @Override
-    public List<PermissionNode> getPermissionByUserId(Long userId) {
+    public List<RouterNode> getPermissionByUserId(Long userId) {
         List<Permission> permissionList = getBaseMapper().getPermissionByUserId(userId);
         return getPermissionNodeList(permissionList);
     }

@@ -31,15 +31,12 @@ import com.fastcms.core.utils.DirUtils;
 import com.fastcms.service.IConfigService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -144,76 +141,19 @@ public class TemplateController {
     }
 
     /**
-     * 编辑模板
-     * @param fileName
-     * @param dirName
-     * @param model
+     * 获取模板文件树
      * @return
      * @throws IOException
      */
-    @RequestMapping("edit")
-    public String edit(@RequestParam(name = "fileName", required = false) String fileName,
-                       @RequestParam(name = "dirName", required = false) String dirName,
-                       Model model) throws IOException {
+    @RequestMapping("files/tree")
+    public Object tree() throws IOException {
 
         Template currTemplate = templateService.getCurrTemplate();
         if(currTemplate == null) {
-            model.addAttribute(FILES_ATTR, new ArrayList<>());
-            return TEMPLATE_EDIT_VIEW;
+            return RestResultUtils.failed("模板不存在");
         }
 
-        model.addAttribute("templatePath", currTemplate.getPath());
-
-        Path templatePath = currTemplate.getTemplatePath();
-
-        if(StringUtils.isNotBlank(dirName)) {
-
-            if(dirName.contains("..")) {
-                dirName = "";
-            }
-
-            templatePath = Paths.get(templatePath.toString().concat("/" + dirName));
-
-            String currDir = dirName.endsWith("/") ? dirName : dirName + "/";
-            model.addAttribute(CURR_DIR_ATTR, currDir);
-            int dotPos = StringUtils.lastOrdinalIndexOf(currDir, "/", 2);
-            String parentDir;
-            if(dotPos > 0) {
-                parentDir = currDir.substring(0, dotPos + 1);
-                model.addAttribute(PARENT_DIR_ATTR, parentDir);
-            }
-        }
-
-        Stream<Path> list = Files.list(templatePath);
-        List<Path> files = list.collect(Collectors.toList());
-        List<Path> dirList = listPathDirs(files);
-        List<Path> fileList = listPathFiles(files);
-
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Path path : fileList) {
-            stringBuilder.append(path.getFileName()).append(",");
-        }
-        model.addAttribute("strFiles", stringBuilder.toString());
-
-        model.addAttribute(DIRS_ATTR, dirList);
-        model.addAttribute(FILES_ATTR, fileList);
-
-        if(StringUtils.isNotBlank(fileName) && fileName.contains("..")) {
-            fileName = "index.html";
-        }
-
-        Path currFile = getCurrFile(fileList, fileName);
-
-        if(currFile == null && !fileList.isEmpty()) {
-            currFile = fileList.get(0);
-        }
-
-        if(currFile != null) {
-            model.addAttribute("currFileName", currFile.getFileName());
-            model.addAttribute("fileContent", FileUtils.escapeHtml(FileCopyUtils.copyToString(new FileReader(currFile.toFile()))));
-        }
-
-        return TEMPLATE_EDIT_VIEW;
+        return RestResultUtils.success();
     }
 
     /**
@@ -285,6 +225,10 @@ public class TemplateController {
         if(currTemplate == null) {
             return RestResultUtils.failed("没有找到模板");
         }
+        if(files == null || files.length <=0) {
+            return RestResultUtils.failed("请选择需要上传的模板文件");
+        }
+
         Path templatePath = currTemplate.getTemplatePath();
 
         if(StringUtils.isNotBlank(dirName)) {
@@ -296,35 +240,31 @@ public class TemplateController {
 
         List<String> errorFiles = new ArrayList<>();
 
-        if(files != null && files.length>0) {
+        for(MultipartFile file : files) {
 
-            for(MultipartFile file : files) {
-
-                if(FileUtils.isNotAllowFile(file.getOriginalFilename())) {
-                   continue;
-                }
-
-                File uploadFile = new File(templatePath.toString(), file.getOriginalFilename());
-                try {
-                    if (!uploadFile.getParentFile().exists()) {
-                        uploadFile.getParentFile().mkdirs();
-                    }
-                    file.transferTo(uploadFile);
-                    long fileSize = uploadFile.length();
-                    if(fileSize > 1024 * 1024 * 5) {
-                        uploadFile.delete();
-                        errorFiles.add(file.getOriginalFilename());
-                        continue;
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    if(uploadFile != null) {
-                        uploadFile.delete();
-                    }
-                    errorFiles.add(file.getOriginalFilename());
-                }
+            if(FileUtils.isNotAllowFile(file.getOriginalFilename())) {
+                continue;
             }
 
+            File uploadFile = new File(templatePath.toString(), file.getOriginalFilename());
+            try {
+                if (!uploadFile.getParentFile().exists()) {
+                    uploadFile.getParentFile().mkdirs();
+                }
+                file.transferTo(uploadFile);
+                long fileSize = uploadFile.length();
+                if(fileSize > 1024 * 1024 * 5) {
+                    uploadFile.delete();
+                    errorFiles.add(file.getOriginalFilename());
+                    continue;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                if(uploadFile != null) {
+                    uploadFile.delete();
+                }
+                errorFiles.add(file.getOriginalFilename());
+            }
         }
 
         return errorFiles.isEmpty() ? RestResultUtils.success()
@@ -380,9 +320,6 @@ public class TemplateController {
      */
     @RequestMapping("menu/get/{menuId}")
     public RestResult<Menu> getMenu(@PathVariable("menuId") Long menuId) {
-//        QueryWrapper queryWrapper = new QueryWrapper();
-//        queryWrapper.eq("status", "show");
-//        model.addAttribute("menus", menuService.list(queryWrapper));
         return RestResultUtils.success(menuService.getById(menuId));
     }
 

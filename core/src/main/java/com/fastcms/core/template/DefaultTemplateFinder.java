@@ -88,7 +88,7 @@ public class DefaultTemplateFinder implements TemplateFinder {
 		Template template = new Template();
 		template.setId(properties.getProperty(TEMPLATE_ID));
 		template.setName(properties.getProperty(TEMPLATE_NAME));
-		template.setPath(properties.getProperty(TEMPLATE_PATH));
+		template.setPathName(properties.getProperty(TEMPLATE_PATH));
 		template.setVersion(properties.getProperty(TEMPLATE_VERSION));
 		template.setProvider(properties.getProperty(TEMPLATE_PROVIDER));
 		template.setDescription(properties.getProperty(TEMPLATE_DESCRIPTION));

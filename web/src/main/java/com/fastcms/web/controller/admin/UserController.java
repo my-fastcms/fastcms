@@ -22,6 +22,7 @@ import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.common.model.RouterNode;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.entity.Role;
 import com.fastcms.entity.User;
@@ -88,7 +89,7 @@ public class UserController {
      * @return
      */
     @GetMapping("menus")
-    public RestResult<List<IPermissionService.PermissionNode>> getMenus() {
+    public RestResult<List<RouterNode>> getMenus() {
         return RestResultUtils.success(permissionService.getPermissions());
     }
 

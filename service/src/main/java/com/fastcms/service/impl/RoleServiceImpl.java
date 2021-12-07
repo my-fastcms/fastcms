@@ -2,6 +2,7 @@ package com.fastcms.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fastcms.cache.CacheConfig;
+import com.fastcms.common.model.TreeNode;
 import com.fastcms.entity.Role;
 import com.fastcms.mapper.RoleMapper;
 import com.fastcms.service.IPermissionService;
@@ -32,24 +33,24 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     }
 
     @Override
-    public List<IPermissionService.TreeNode> getRolePermission(Long roleId) {
+    public List<TreeNode> getRolePermission(Long roleId) {
         List<IPermissionService.RolePermission> permissionList = getBaseMapper().getRolePermission(roleId);
 
-        List<IPermissionService.TreeNode> treeNodeList = new ArrayList<>();
+        List<TreeNode> treeNodeList = new ArrayList<>();
         permissionList.forEach(item -> {
-            IPermissionService.TreeNode treeNode = new IPermissionService.TreeNode(item.getId(), item.getParentId(), item.getTitle(), item.getIsHide());
+            TreeNode treeNode = new TreeNode(item.getId(), item.getParentId(), item.getTitle(), item.getIsHide());
             treeNode.setChecked(item.getRoleId() != null);
             treeNodeList.add(treeNode);
         });
 
         //递归组装children
-        List<IPermissionService.TreeNode> parentNodeList = treeNodeList.stream().filter(item -> item.getParentId() == 0).collect(Collectors.toList());
+        List<TreeNode> parentNodeList = treeNodeList.stream().filter(item -> item.getParentId() == 0).collect(Collectors.toList());
         parentNodeList.forEach(item -> getChildren(item, treeNodeList));
         return parentNodeList;
     }
 
-    void getChildren(IPermissionService.TreeNode treeNode, List<IPermissionService.TreeNode> treeNodeList) {
-        List<IPermissionService.TreeNode> childrenNodeList = treeNodeList.stream().filter(item -> Objects.equals(item.getParentId(), treeNode.getId())).collect(Collectors.toList());
+    void getChildren(TreeNode treeNode, List<TreeNode> treeNodeList) {
+        List<TreeNode> childrenNodeList = treeNodeList.stream().filter(item -> Objects.equals(item.getParentId(), treeNode.getId())).collect(Collectors.toList());
         if(childrenNodeList != null && !childrenNodeList.isEmpty()) {
             treeNode.setChildren(childrenNodeList);
             childrenNodeList.forEach(item -> getChildren(item, treeNodeList));

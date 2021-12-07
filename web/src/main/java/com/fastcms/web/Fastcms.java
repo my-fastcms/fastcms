@@ -14,4 +14,5 @@ public class Fastcms {
         SpringApplication.run(Fastcms.class, args);
     }
 
+
 }

@@ -176,4 +176,20 @@ public abstract class FileUtils {
         return destDir + File.separator + name;
     }
 
+    public static List<String> loopFiles(List<String> list, File fileDir) {
+        if (fileDir.isDirectory()) {
+            File fileList[] = fileDir.listFiles();
+            for (int i = 0; i < fileList.length; i++) {
+                if (fileList[i].isDirectory()) {
+                    loopFiles(list, new File(fileList[i].getPath()));
+                } else {
+                    list.add(fileList[i].getPath());
+                }
+            }
+        }else {
+            list.add(fileDir.getPath());
+        }
+        return list;
+    }
+
 }

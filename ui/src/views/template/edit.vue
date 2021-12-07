@@ -4,10 +4,23 @@
         <el-form :model="ruleForm" size="small" label-width="100px" :rules="rules" ref="myRefForm">
             <el-row :gutter="35">
                 <el-col :sm="5" class="mb20">
-                    <el-table :data="tableData.data" style="width: 100%">
-						<el-table-column prop="name"></el-table-column>
-                        <el-table-column>删除</el-table-column>
-					</el-table>
+                    <div class="tree-container">
+                        <el-card shadow="hover" header="模板树">
+                            <div v-loading="treeLoading">
+                                <el-tree :data="treeTableData" show-checkbox node-key="id" ref="treeTable" :props="treeDefaultProps" @check="onCheckTree">
+                                    <template #default="{ node, data }">
+                                        <span class="tree-custom-node">
+                                            <span style="flex: 1">{{ node.label }}</span>
+                                            <span v-if="data.isShow" style="flex: 1; display: flex">
+                                                <span type="text" size="mini" style="flex: 1">{{ data.label1 }}</span>
+                                                <span type="text" size="mini" style="flex: 1">{{ data.label2 }}</span>
+                                            </span>
+                                        </span>
+                                    </template>
+                                </el-tree>
+                            </div>
+                        </el-card>
+                    </div>
                 </el-col>
                 <el-col :sm="7" class="mb20">
                     <v-ace-editor
@@ -44,6 +57,8 @@ export default {
         const route = useRoute();
         const { proxy } = getCurrentInstance() as any;
 		const state = reactive({
+            treeLoading: false,
+			treeTableData: [],
             content: '',
             params: {},
             categories: [],
