@@ -12,7 +12,10 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -36,8 +39,7 @@ public class PermissionServiceImpl extends ServiceImpl<PermissionMapper, Permiss
     }
 
     List<RouterNode> getPermissionNodeList(List<Permission> permissionList) {
-        List<RouterNode> permissionNodeList = new ArrayList<>();
-        permissionList.forEach(item -> permissionNodeList.add(getPermissionNode(item)));
+        List<RouterNode> permissionNodeList = permissionList.stream().map(item -> getPermissionNode(item)).collect(Collectors.toList());
         List<RouterNode> parents = permissionNodeList.stream().filter(item -> item.getParentId() == 0).collect(Collectors.toList());
         parents.forEach(item -> getChildren(item, permissionNodeList));
         return parents.stream().sorted(Comparator.comparing(RouterNode::getMenuSort).reversed()).collect(Collectors.toList());

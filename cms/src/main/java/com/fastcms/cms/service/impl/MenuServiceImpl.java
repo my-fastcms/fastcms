@@ -1,6 +1,6 @@
 package com.fastcms.cms.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fastcms.cms.entity.Menu;
 import com.fastcms.cms.mapper.MenuMapper;
@@ -8,7 +8,6 @@ import com.fastcms.cms.service.IMenuService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -25,21 +24,12 @@ import java.util.stream.Collectors;
 @Service
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IMenuService {
 
-	public static final String WEB_SITE_MENU = "web_site_menu";
-
 	@Override
 	public List<MenuNode> getMenus() {
-		QueryWrapper queryWrapper = new QueryWrapper();
-		queryWrapper.eq("status", Menu.STATUS_SHOW);
-		List<Menu> menus = list(queryWrapper);
-
-		List<MenuNode> menuNodeList = new ArrayList<>();
-		menus.forEach(item -> menuNodeList.add(getMenuNode(item)));
-
+		List<Menu> menus = list(Wrappers.<Menu>lambdaQuery().eq(Menu::getStatus, Menu.STATUS_SHOW));
+		List<MenuNode> menuNodeList = menus.stream().map(item -> getMenuNode(item)).collect(Collectors.toList());;
 		List<MenuNode> parentMenuList = menuNodeList.stream().filter(item -> item.getParentId() == null).collect(Collectors.toList());
-
 		parentMenuList.forEach(item -> getChildren(item, menuNodeList));
-
 		return parentMenuList.stream().sorted(Comparator.comparing(MenuNode::getSortNum)).collect(Collectors.toList());
 	}
 

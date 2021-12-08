@@ -1,7 +1,6 @@
 package com.fastcms.common.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -92,7 +91,7 @@ public class TreeNode implements Serializable {
     }
 
     public List<TreeNode> getChildren() {
-        return children == null ? new ArrayList<>() : children;
+        return children;
     }
 
     public void setChildren(List<TreeNode> children) {
