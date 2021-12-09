@@ -86,6 +86,11 @@ public interface TemplateService {
         @JsonIgnore
         private String path;
 
+        /**
+         * 文件相对路径，去掉盘符路径
+         */
+        private String filePath;
+
         public FileTreeNode(Path path) {
             super(path.getFileName().toString(), Files.isDirectory(path) ? 0 : 1);
             this.parent = path.getParent().toString();
@@ -106,6 +111,14 @@ public interface TemplateService {
 
         public void setPath(String path) {
             this.path = path;
+        }
+
+        public String getFilePath() {
+            return filePath;
+        }
+
+        public void setFilePath(String filePath) {
+            this.filePath = filePath;
         }
 
     }

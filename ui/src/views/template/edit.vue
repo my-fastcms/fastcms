@@ -8,9 +8,10 @@
                         <el-card shadow="hover" header="模板文件树">
                             <div v-loading="treeLoading">
                                 <el-tree :data="treeTableData" 
-                                    :default-expand-all="true" 
-                                    node-key="id" 
+                                    :default-expand-all="false" 
+                                    node-key="filePath" 
                                     :props="treeDefaultProps" 
+                                    @node-click="onNodeClick"
                                     style="height: 550px;overflow: auto" 
                                     ref="treeTable">
                                 </el-tree>
@@ -37,7 +38,7 @@
 import { toRefs, reactive, getCurrentInstance, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRoute } from 'vue-router';
-import { getTemplateFileTree } from '/@/api/template/index';
+import { getTemplateFileTree, getTemplateFile } from '/@/api/template/index';
 import qs from 'qs';
 import { VAceEditor } from 'vue3-ace-editor';
 import 'ace-builds/src-noconflict/mode-text';
@@ -57,6 +58,7 @@ export default {
             treeDefaultProps: {
 				children: 'children',
 				label: 'label',
+                filePath: 'filePath'
 			},
             content: '',
             params: {},
@@ -95,11 +97,14 @@ export default {
 			});
         };
 
-        // const getArticleInfo = (id: string) => {
-        //     getArticle(id).then((res) => {
-        //         state.ruleForm = res.data;
-        //     })
-        // }
+        const onNodeClick = (node: any) => {
+            console.log(node.label + ",filePath:" + node.filePath);
+            if(node.children == null) {
+                getTemplateFile(node.filePath).then((res) => {
+                    state.content = res.data.fileContent;
+                }) 
+            }
+        }
 
         const editorInit = () => {
             console.log("====editorInit");
@@ -112,6 +117,7 @@ export default {
 		return {
             onSubmit,
             getFileTree,
+            onNodeClick,
             editorInit,
 			...toRefs(state),
 		};

@@ -18,7 +18,6 @@ package com.fastcms.core.template;
 
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
-import com.fastcms.common.exception.FastcmsRuntimeException;
 import com.fastcms.common.model.TreeNode;
 import com.fastcms.common.model.TreeNodeConvert;
 import com.fastcms.common.utils.FileUtils;
@@ -162,18 +161,17 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
         initialize();
     }
 
-
     @Override
     public T convert2Node(Object object) {
-        return (T) (FileTreeNode) object;
+        Template currTemplate = getCurrTemplate();
+        FileTreeNode fileTreeNode = (FileTreeNode) object;
+        fileTreeNode.setFilePath(fileTreeNode.getPath().substring(fileTreeNode.getPath().lastIndexOf(currTemplate.getPathName().replace("/", ""))).replaceAll("\\\\", "/"));
+        return (T) fileTreeNode;
     }
 
     @Override
     public boolean isParent(T node) {
-        Template template = getCurrTemplate();
-        if (template == null) throw new FastcmsRuntimeException(FastcmsException.SERVER_ERROR, "template not found");
-        FileTreeNode parentNode = (FileTreeNode) node;
-        return parentNode.getPath().equals(template.getTemplatePath().toString());
+        return ((FileTreeNode) node).getPath().equals(getCurrTemplate().getTemplatePath().toString());
     }
 
     @Override

@@ -31,18 +31,22 @@ import com.fastcms.core.utils.DirUtils;
 import com.fastcms.service.IConfigService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -138,7 +142,7 @@ public class TemplateController {
      * 获取模板文件树
      * @return
      */
-    @RequestMapping("files/tree/list")
+    @GetMapping("files/tree/list")
     public Object treeList() {
         Template currTemplate = templateService.getCurrTemplate();
         if(currTemplate == null) {
@@ -150,6 +154,42 @@ public class TemplateController {
         } catch (Exception e) {
             return RestResultUtils.failed(e.getMessage());
         }
+    }
+
+    /**
+     * 获取文件内容
+     * @param filePath
+     * @return
+     */
+    @GetMapping("files/get/{filePath}")
+    public Object getFileContent(@PathVariable("filePath") String filePath) {
+
+        if(StringUtils.isBlank(filePath) || filePath.contains("..")) {
+            return RestResultUtils.failed("文件不存在");
+        }
+
+        Template currTemplate = templateService.getCurrTemplate();
+        if(currTemplate == null) {
+            return RestResultUtils.failed("未找到目标模板");
+        }
+
+        Path templatePath = currTemplate.getTemplatePath();
+
+        Path file = Paths.get(templatePath.toString().concat("/" + filePath));
+        if(Files.isDirectory(file)) {
+            return RestResultUtils.failed("请指定一个文件");
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        if(file != null) {
+            result.put("currFileName", file.getFileName());
+            try {
+                result.put("fileContent", FileUtils.escapeHtml(FileCopyUtils.copyToString(new FileReader(file.toFile()))));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return RestResultUtils.success(result);
     }
 
     /**

@@ -11,3 +11,15 @@ export function getTemplateFileTree() {
 		method: 'get'
 	});
 }
+
+/**
+ * 获取文件内容
+ * @param filePath 
+ * @returns 
+ */
+export function getTemplateFile(filePath: string) {
+	return request({
+		url: '/admin/template/files/get/' + filePath,
+		method: 'get'
+	});
+}
