@@ -12,7 +12,7 @@
                                     node-key="filePath" 
                                     :props="treeDefaultProps" 
                                     @node-click="onNodeClick"
-                                    style="height: 550px;overflow: auto" 
+                                    style="height: 550px;overflow: auto;" 
                                     ref="treeTable">
                                 </el-tree>
                             </div>
@@ -25,7 +25,8 @@
                             lang="html"
                             theme="chrome"
                             @init="editorInit"
-                            style="height: 550px" />
+                            :options="aceOptions"
+                            style="height: 550px;width: 1200px;overflow-x: auto;" />
                 </el-col>
             </el-row>    
         </el-form>
@@ -61,6 +62,11 @@ export default {
                 filePath: 'filePath'
 			},
             content: '',
+            aceOptions: {
+                enableBasicAutocompletion: true,
+                enableSnippets: true,
+                enableLiveAutocompletion: false
+            },
             params: {},
             categories: [],
             tags: [],

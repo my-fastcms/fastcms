@@ -161,8 +161,8 @@ public class TemplateController {
      * @param filePath
      * @return
      */
-    @GetMapping("files/get/{filePath}")
-    public Object getFileContent(@PathVariable("filePath") String filePath) {
+    @GetMapping("files/get")
+    public Object getFileContent(@RequestParam("filePath") String filePath) {
 
         if(StringUtils.isBlank(filePath) || filePath.contains("..")) {
             return RestResultUtils.failed("文件不存在");
@@ -175,16 +175,19 @@ public class TemplateController {
 
         Path templatePath = currTemplate.getTemplatePath();
 
-        Path file = Paths.get(templatePath.toString().concat("/" + filePath));
+        Path file = Paths.get(templatePath.toString().concat(filePath.substring(currTemplate.getPathName().length())));
         if(Files.isDirectory(file)) {
             return RestResultUtils.failed("请指定一个文件");
         }
 
+        if(!Files.exists(file)) {
+            return RestResultUtils.failed("文件不存在");
+        }
+
         Map<String, Object> result = new HashMap<>();
         if(file != null) {
-            result.put("currFileName", file.getFileName());
             try {
-                result.put("fileContent", FileUtils.escapeHtml(FileCopyUtils.copyToString(new FileReader(file.toFile()))));
+                result.put("fileContent", FileCopyUtils.copyToString(new FileReader(file.toFile())));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -381,10 +384,6 @@ public class TemplateController {
 
     List<Path> listPathFiles(List<Path> files) {
         return files.stream().filter(item -> item.toFile().isFile() && !item.getFileName().toString().endsWith(".properties")).collect(Collectors.toList());
-    }
-
-    List<Path> listPathDirs(List<Path> files) {
-        return files.stream().filter(item -> item.toFile().isDirectory()).collect(Collectors.toList());
     }
 
     Path getCurrFile(List<Path> files, String fileName) {

@@ -19,7 +19,7 @@ export function getTemplateFileTree() {
  */
 export function getTemplateFile(filePath: string) {
 	return request({
-		url: '/admin/template/files/get/' + filePath,
+		url: '/admin/template/files/get?filePath=' + filePath,
 		method: 'get'
 	});
 }

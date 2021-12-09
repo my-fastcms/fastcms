@@ -46,6 +46,13 @@ public class Template implements Serializable {
      * 根路径示范值             /htmls/
      * 那么模板文件路径          /htmls/fastcms
      */
+    String path;
+
+    /**
+     * 模板路径名称
+     * 去掉模板路径前后斜杠
+     * 示例值                  fastcms
+     */
     String pathName;
 
     /**
@@ -85,12 +92,12 @@ public class Template implements Serializable {
         this.name = name;
     }
 
-    public String getPathName() {
-        return pathName;
+    public String getPath() {
+        return path;
     }
 
-    public void setPathName(String pathName) {
-        this.pathName = pathName;
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public String getVersion() {
@@ -123,6 +130,10 @@ public class Template implements Serializable {
 
     public void setTemplatePath(Path templatePath) {
         this.templatePath = templatePath;
+    }
+
+    public String getPathName() {
+        return this.getPath().replaceAll("/", "");
     }
 
 }

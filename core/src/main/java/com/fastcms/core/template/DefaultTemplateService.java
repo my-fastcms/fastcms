@@ -165,7 +165,7 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
     public T convert2Node(Object object) {
         Template currTemplate = getCurrTemplate();
         FileTreeNode fileTreeNode = (FileTreeNode) object;
-        fileTreeNode.setFilePath(fileTreeNode.getPath().substring(fileTreeNode.getPath().lastIndexOf(currTemplate.getPathName().replace("/", ""))).replaceAll("\\\\", "/"));
+        fileTreeNode.setFilePath(fileTreeNode.getPath().substring(fileTreeNode.getPath().lastIndexOf(currTemplate.getPathName())).replaceAll("\\\\", "/"));
         return (T) fileTreeNode;
     }
 

@@ -71,7 +71,7 @@ public class FastcmsConfig implements WebMvcConfigurer, ApplicationListener<WebS
         locations.add("classpath:/static/");
         locations.add(ResourceUtils.FILE_URL_PREFIX + uploadDir);
         for (Template template : templateService.getTemplateList()) {
-            locations.add(ResourceUtils.FILE_URL_PREFIX + templateDir + template.getPathName() + "/static/");
+            locations.add(ResourceUtils.FILE_URL_PREFIX + templateDir + template.getPath() + "/static/");
         }
 
         registry.addResourceHandler("/**").addResourceLocations(locations.toArray(new String[]{}));
