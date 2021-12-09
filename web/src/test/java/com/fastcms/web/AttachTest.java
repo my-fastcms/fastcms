@@ -1,6 +1,7 @@
 package com.fastcms.web;
 
 import com.fastcms.common.model.TreeNode;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.io.file.CountingPathVisitor;
 import org.apache.commons.io.file.SimplePathVisitor;
 import org.junit.jupiter.api.Test;
@@ -35,12 +36,23 @@ public class AttachTest {
 
     @Test
     public void testWalk() throws IOException {
-        List<FileTreeNode> treeNodeList = Files.walk(rootPath).filter(item -> !item.getParent().toString().contains("fonts"))
-                .map(item -> new FileTreeNode(item.getParent().toString(), item.getFileName().toString())).collect(Collectors.toList());
+        List<FileTreeNode> treeNodeList = Files.walk(rootPath).filter(item -> !item.toString().endsWith(".properties"))
+                .map(item -> new FileTreeNode(item))
+                .sorted(Comparator.comparing(FileTreeNode::getSortNum)).collect(Collectors.toList());
+
+        getChildren(treeNodeList.get(0), treeNodeList);
 
         System.out.println(treeNodeList.size());
         System.out.println(rootPath.toString());
 
+    }
+
+    void getChildren(FileTreeNode fileTreeNode, List<FileTreeNode> fileTreeNodeList) {
+        List<TreeNode> childrenNodeList = fileTreeNodeList.stream().filter(item -> Objects.equals(item.getParent(), fileTreeNode.getPath())).collect(Collectors.toList());
+        if(childrenNodeList != null && !childrenNodeList.isEmpty()) {
+            fileTreeNode.setChildren(childrenNodeList);
+            childrenNodeList.forEach(item -> getChildren((FileTreeNode) item, fileTreeNodeList));
+        }
     }
 
     @Test
@@ -69,13 +81,13 @@ public class AttachTest {
         @Override
         public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
             System.out.println("====postVisitDirectory:" + dir);
-            fileTreeNodeMap.put(dir.toString(), new FileTreeNode(dir.toString(), dir.getFileName().toString()));
+            fileTreeNodeMap.put(dir.toString(), new FileTreeNode(dir));
             FileTreeNode fileTreeNode = fileTreeNodeMap.get(dir.getParent().toString());
             if (fileTreeNode != null) {
                 if(fileTreeNode.getChildren() == null) {
                     fileTreeNode.setChildren(new ArrayList<>());
                 }
-                fileTreeNode.getChildren().add(new FileTreeNode(dir.getParent().toString(), dir.getFileName().toString()));
+                fileTreeNode.getChildren().add(new FileTreeNode(dir));
             }
             return super.postVisitDirectory(dir, exc);
         }
@@ -93,7 +105,7 @@ public class AttachTest {
                 if(fileTreeNode.getChildren() == null) {
                     fileTreeNode.setChildren(new ArrayList<>());
                 }
-                fileTreeNode.getChildren().add(new FileTreeNode(file.getParent().toString(), file.getFileName().toString()));
+                fileTreeNode.getChildren().add(new FileTreeNode(file));
             }
         }
 
@@ -101,11 +113,32 @@ public class AttachTest {
 
     class FileTreeNode extends TreeNode {
 
+        @JsonIgnore
         private String parent;
 
-        public FileTreeNode(String parent, String label) {
-            super(label);
+        @JsonIgnore
+        private String path;
+
+        public FileTreeNode(Path path) {
+            super(path.getFileName().toString(), Files.isDirectory(path) ? 0 : 1);
+            this.parent = path.getParent().toString();
+            this.path = path.toString();
+        }
+
+        public String getParent() {
+            return parent;
+        }
+
+        public void setParent(String parent) {
             this.parent = parent;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public void setPath(String path) {
+            this.path = path;
         }
 
     }

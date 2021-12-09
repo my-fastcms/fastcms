@@ -7,7 +7,7 @@ import request from '/@/utils/request';
  */
 export function getTemplateFileTree() {
 	return request({
-		url: '/admin/template/files/tree',
+		url: '/admin/template/files/tree/list',
 		method: 'get'
 	});
 }

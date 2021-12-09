@@ -16,7 +16,13 @@
  */
 package com.fastcms.core.template;
 
+import com.fastcms.common.model.TreeNode;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 /**
@@ -65,5 +71,43 @@ public interface TemplateService {
      * @throws Exception
      */
     void unInstall(String templateId) throws Exception;
+
+    /**
+     * 获取模板对应的文件目录树
+     * @return
+     */
+    List<FileTreeNode> getTemplateTreeFiles() throws IOException;
+
+    class FileTreeNode extends TreeNode {
+
+        @JsonIgnore
+        private String parent;
+
+        @JsonIgnore
+        private String path;
+
+        public FileTreeNode(Path path) {
+            super(path.getFileName().toString(), Files.isDirectory(path) ? 0 : 1);
+            this.parent = path.getParent().toString();
+            this.path = path.toString();
+        }
+
+        public String getParent() {
+            return parent;
+        }
+
+        public void setParent(String parent) {
+            this.parent = parent;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public void setPath(String path) {
+            this.path = path;
+        }
+
+    }
 
 }

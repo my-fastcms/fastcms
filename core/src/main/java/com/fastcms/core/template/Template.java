@@ -30,7 +30,8 @@ public class Template implements Serializable {
 
     /**
      * 模板id
-     * 示例值      www.xjd2020.com
+     * 示例值
+     * www.xjd2020.com
      */
     String id;
 

@@ -18,6 +18,9 @@ package com.fastcms.core.template;
 
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
+import com.fastcms.common.exception.FastcmsRuntimeException;
+import com.fastcms.common.model.TreeNode;
+import com.fastcms.common.model.TreeNodeConvert;
 import com.fastcms.common.utils.FileUtils;
 import com.fastcms.core.utils.DirUtils;
 import com.fastcms.entity.Config;
@@ -32,12 +35,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author： wjun_java@163.com
@@ -47,7 +46,7 @@ import java.util.stream.Stream;
  * @version: 1.0
  */
 @Service
-public class DefaultTemplateService implements TemplateService, InitializingBean {
+public class DefaultTemplateService<T extends TreeNode> implements TemplateService, InitializingBean, TreeNodeConvert<T> {
 
     private String templateDir = "./htmls";
 
@@ -80,16 +79,12 @@ public class DefaultTemplateService implements TemplateService, InitializingBean
         }
 
         try {
-            Stream<Path> list = Files.list(rootPath);
-
-            List<Path> collect = list.collect(Collectors.toList());
+            List<Path> collect = Files.list(rootPath).collect(Collectors.toList());
             collect.forEach(item -> {
                 if(Files.isDirectory(item)){
                     Template template = templateFinder.find(item);
                     if(template != null) {
-                        if(templateMap.keySet().contains(template.getId()))
-                            throw new RuntimeException(String.format("template id {} is exist", template.getId()));
-                        templateMap.put(template.getId(), template);
+                        templateMap.putIfAbsent(template.getId(), template);
                     }
                 }
             });
@@ -151,8 +146,39 @@ public class DefaultTemplateService implements TemplateService, InitializingBean
     }
 
     @Override
+    public List<FileTreeNode> getTemplateTreeFiles() throws IOException {
+
+        Template currTemplate = getCurrTemplate();
+        if(currTemplate == null) return null;
+
+        List<FileTreeNode> treeNodeList = Files.walk(currTemplate.getTemplatePath()).filter(item -> !item.toString().endsWith(".properties"))
+                .map(item -> new FileTreeNode(item))
+                .sorted(Comparator.comparing(FileTreeNode::getSortNum)).collect(Collectors.toList());
+        return (List<FileTreeNode>) getTreeNodeList(treeNodeList);
+    }
+
+    @Override
     public void afterPropertiesSet() throws Exception {
         initialize();
+    }
+
+
+    @Override
+    public T convert2Node(Object object) {
+        return (T) (FileTreeNode) object;
+    }
+
+    @Override
+    public boolean isParent(T node) {
+        Template template = getCurrTemplate();
+        if (template == null) throw new FastcmsRuntimeException(FastcmsException.SERVER_ERROR, "template not found");
+        FileTreeNode parentNode = (FileTreeNode) node;
+        return parentNode.getPath().equals(template.getTemplatePath().toString());
+    }
+
+    @Override
+    public boolean accept(T node1, T node2) {
+        return Objects.equals(((FileTreeNode)node1).getParent(), ((FileTreeNode)node2).getPath());
     }
 
 }

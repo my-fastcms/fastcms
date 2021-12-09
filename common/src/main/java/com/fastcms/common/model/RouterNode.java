@@ -7,16 +7,8 @@ import java.util.List;
  * wjun_java@163.com
  * 对应element ui router
  */
-public class RouterNode implements Serializable {
+public class RouterNode extends TreeNode implements Serializable {
 
-    /**
-     * id
-     */
-    private Long id;
-    /**
-     * 上级id
-     */
-    private Long parentId;
     /**
      * 名称
      */
@@ -41,15 +33,10 @@ public class RouterNode implements Serializable {
      * 元数据
      */
     private Meta meta;
-    /**
-     * 子节点集合
-     */
-    private List<RouterNode> children;
 
     public RouterNode(Long id, Long parentId, String name, String path, String component, Boolean isLink, Integer menuSort,
-                          String title, String icon, Boolean isHide, Boolean isKeepAlive, Boolean isAffix, Boolean isIframe, List<String> auth, List<RouterNode> children) {
-        this.id = id;
-        this.parentId = parentId;
+                          String title, String icon, Boolean isHide, Boolean isKeepAlive, Boolean isAffix, Boolean isIframe, List<String> auth) {
+        super(id, parentId);
         this.name = name;
         this.path = path;
         this.component = component;
@@ -57,7 +44,6 @@ public class RouterNode implements Serializable {
         this.menuSort = menuSort;
         Meta meta = new Meta(title, icon, isHide, isKeepAlive, isAffix, isIframe, auth);
         this.meta = meta;
-        this.children = children;
     }
 
     public static class Meta implements Serializable {
@@ -157,22 +143,6 @@ public class RouterNode implements Serializable {
         }
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
-    }
-
     public String getName() {
         return name;
     }
@@ -219,14 +189,6 @@ public class RouterNode implements Serializable {
 
     public void setMeta(Meta meta) {
         this.meta = meta;
-    }
-
-    public List<RouterNode> getChildren() {
-        return children;
-    }
-
-    public void setChildren(List<RouterNode> children) {
-        this.children = children;
     }
 
 }

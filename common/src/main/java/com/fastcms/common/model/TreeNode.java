@@ -7,7 +7,7 @@ import java.util.List;
  * element-ui-tree
  * wjun_java@163.com
  */
-public class TreeNode implements Serializable {
+public class TreeNode<T extends TreeNode> implements Serializable {
 
     /**
      * id
@@ -30,25 +30,43 @@ public class TreeNode implements Serializable {
      */
     private Boolean isChecked;
 
-    public TreeNode(Long id, Long parentId, String label, Boolean isShow) {
-        this.id = id;
-        this.parentId = parentId;
-        this.label = label;
-        this.isShow = isShow;
-    }
-
-    public TreeNode(Long id, Long parentId, String label) {
-        this(id, parentId, label, true);
-    }
-
-    public TreeNode(String label) {
-        this(null, null, label, true);
-    }
+    /**
+     * 排序
+     */
+    private int sortNum;
 
     /**
      * 子节点集合
      */
-    List<TreeNode> children;
+    List<T> children;
+
+    public TreeNode(Long id, Long parentId, String label, Boolean isShow, int sortNum) {
+        this.id = id;
+        this.parentId = parentId;
+        this.label = label;
+        this.isShow = isShow;
+        this.sortNum = sortNum;
+    }
+
+    public TreeNode(Long id, Long parentId, String label, Boolean isShow) {
+        this(id, parentId, label, isShow, 0);
+    }
+
+    public TreeNode(Long id, Long parentId, String label) {
+        this(id, parentId, label, true, 0);
+    }
+
+    public TreeNode(Long id, Long parentId) {
+        this(id, parentId, null);
+    }
+
+    public TreeNode(String label, int sortNum) {
+        this(null, null, label, true, sortNum);
+    }
+
+    public TreeNode(String label) {
+        this(null, null, label, true, 0);
+    }
 
     public Long getId() {
         return id;
@@ -90,11 +108,19 @@ public class TreeNode implements Serializable {
         isChecked = checked;
     }
 
-    public List<TreeNode> getChildren() {
+    public int getSortNum() {
+        return sortNum;
+    }
+
+    public void setSortNum(int sortNum) {
+        this.sortNum = sortNum;
+    }
+
+    public List<T> getChildren() {
         return children;
     }
 
-    public void setChildren(List<TreeNode> children) {
+    public void setChildren(List<T> children) {
         this.children = children;
     }
 

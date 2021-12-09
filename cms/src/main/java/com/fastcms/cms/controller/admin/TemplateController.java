@@ -23,7 +23,6 @@ import com.fastcms.cms.service.IMenuService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.common.model.TreeNode;
 import com.fastcms.common.utils.FileUtils;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.core.template.Template;
@@ -43,7 +42,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -59,12 +57,6 @@ import java.util.stream.Stream;
 @RestController
 @RequestMapping(FastcmsConstants.ADMIN_MAPPING + "/template")
 public class TemplateController {
-
-    private static final String FILES_ATTR = "files";
-    private static final String DIRS_ATTR = "dirs";
-    private static final String CURR_DIR_ATTR = "currDir";
-    private static final String PARENT_DIR_ATTR = "parentDir";
-    private static final String TEMPLATE_EDIT_VIEW = "admin/template/edit";
 
     @Autowired
     private TemplateService templateService;
@@ -146,33 +138,18 @@ public class TemplateController {
      * 获取模板文件树
      * @return
      */
-    @RequestMapping("files/tree")
-    public Object tree() {
+    @RequestMapping("files/tree/list")
+    public Object treeList() {
         Template currTemplate = templateService.getCurrTemplate();
         if(currTemplate == null) {
             return RestResultUtils.failed("模板不存在");
         }
 
-        return RestResultUtils.success(loopFiles(new ArrayList<>(), currTemplate.getTemplatePath().toFile()));
-    }
-
-    private List<TreeNode> loopFiles(List<TreeNode> treeNodeList, File fileDir) {
-        TreeNode treeNode = new TreeNode(fileDir.getName());
-        treeNodeList.add(treeNode);
-        if(fileDir.isDirectory()) {
-            if(fileDir.listFiles() != null && fileDir.listFiles().length >0) {
-                List<TreeNode> children = new ArrayList<>();
-                Arrays.stream(fileDir.listFiles()).forEach(item -> {
-                    if(item.isFile()) {
-                        children.add(new TreeNode(item.getName()));
-                        treeNode.setChildren(children);
-                    }else {
-                        loopFiles(treeNode.getChildren(), new File(item.getPath()));
-                    }
-                });
-            }
+        try {
+            return RestResultUtils.success(templateService.getTemplateTreeFiles());
+        } catch (Exception e) {
+            return RestResultUtils.failed(e.getMessage());
         }
-        return treeNodeList;
     }
 
     /**
