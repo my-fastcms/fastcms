@@ -125,7 +125,7 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
 
     @Override
     public void install(File file) throws Exception {
-        FileUtils.unzip(file.toPath().toString(), DirUtils.getTemplateDir());
+        FileUtils.unzip(file.toPath(), DirUtils.getTemplateDir());
         initialize();
     }
 
@@ -137,7 +137,7 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
         }
 
         Template currTemplate = getCurrTemplate();
-        if(currTemplate != null && currTemplate.getId().equals(templateId)) {
+        if(currTemplate != null && templateId.equals(currTemplate.getId())) {
             throw new FastcmsException(FastcmsException.CLIENT_INVALID_PARAM, "正在使用中的模板不能卸载");
         }
         org.apache.commons.io.FileUtils.deleteDirectory(template.getTemplatePath().toFile());

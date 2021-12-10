@@ -24,6 +24,7 @@ import org.apache.commons.lang.StringUtils;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -140,8 +141,8 @@ public abstract class FileUtils {
         }
     }
 
-    public static void unzip(String zipFileName, String destDir) {
-        try (InputStream fis = Files.newInputStream(Paths.get(zipFileName));
+    public static void unzip(Path path, String destDir) {
+        try (InputStream fis = Files.newInputStream(path);
              InputStream bis = new BufferedInputStream(fis);
              ArchiveInputStream ais = new ZipArchiveInputStream(bis)) {
 
@@ -170,6 +171,10 @@ public abstract class FileUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void unzip(String zipFileName, String destDir) {
+        unzip(Paths.get(zipFileName), destDir);
     }
 
     private static String filename(String destDir, String name) {

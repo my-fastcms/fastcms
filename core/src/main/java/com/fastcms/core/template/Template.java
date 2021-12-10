@@ -16,6 +16,8 @@
  */
 package com.fastcms.core.template;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.nio.file.Path;
 
@@ -74,6 +76,7 @@ public class Template implements Serializable {
      * 模板根路径绝对路径
      * 示范值: D:\\htmls\\fastcms
      */
+    @JsonIgnore
     Path templatePath;
 
     public String getId() {

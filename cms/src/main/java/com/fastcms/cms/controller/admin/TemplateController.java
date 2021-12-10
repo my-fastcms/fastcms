@@ -43,12 +43,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 模板管理
@@ -98,12 +94,12 @@ public class TemplateController {
     public Object install(@RequestParam("file") MultipartFile file) {
 
         String fileName = file.getOriginalFilename();
-        String suffixName = fileName.substring(fileName.lastIndexOf(".") + 1);
+        String suffixName = fileName.substring(fileName.lastIndexOf("."));
         //检查文件格式是否合法
         if(StringUtils.isEmpty(suffixName)) {
             return RestResultUtils.failed("文件格式不合格，请上传zip文件");
         }
-        if(!"zip".equalsIgnoreCase(suffixName)) {
+        if(!".zip".equalsIgnoreCase(suffixName)) {
             return RestResultUtils.failed("文件格式不合格，请上传zip文件");
         }
 
@@ -126,8 +122,8 @@ public class TemplateController {
      * @param templateId    模板id
      * @return
      */
-    @PostMapping("unInstall")
-    public Object unInstall(@RequestParam("templateId") String templateId) {
+    @PostMapping("unInstall/{templateId}")
+    public Object unInstall(@PathVariable("templateId") String templateId) {
 
         try {
             templateService.unInstall(templateId);
@@ -173,9 +169,16 @@ public class TemplateController {
             return RestResultUtils.failed("未找到目标模板");
         }
 
-        Path templatePath = currTemplate.getTemplatePath();
+        String suffix = filePath.substring(filePath.lastIndexOf("."));
+        if(StringUtils.isBlank(suffix)) {
+            return RestResultUtils.failed("文件后缀不能为空");
+        }
 
-        Path file = Paths.get(templatePath.toString().concat(filePath.substring(currTemplate.getPathName().length())));
+        if(!Arrays.asList(".html", ".js", ".css", ".txt").contains(suffix)) {
+            return RestResultUtils.failed("文件不支持编辑");
+        }
+
+        Path file = getFilePath(filePath);
         if(Files.isDirectory(file)) {
             return RestResultUtils.failed("请指定一个文件");
         }
@@ -208,33 +211,27 @@ public class TemplateController {
 
     /**
      * 保存模板
-     * @param dirName
-     * @param fileName
-     * @param fileContent
+     * @param filePath          文件
+     * @param fileContent       文件内容
      * @return
      * @throws IOException
      */
-    @PostMapping("save")
-    public Object save(String dirName, String fileName, String fileContent) throws IOException {
+    @PostMapping("file/save")
+    public Object save(@RequestParam("filePath") String filePath, @RequestParam("fileContent") String fileContent) {
+        if(StringUtils.isBlank(filePath) || filePath.contains("..")) {
+            return RestResultUtils.failed("没有找到模板");
+        }
+
+        if(StringUtils.isBlank(fileContent)) {
+            return RestResultUtils.failed("文件内容不能为空");
+        }
+
         Template currTemplate = templateService.getCurrTemplate();
         if(currTemplate == null) {
             return RestResultUtils.failed("没有找到模板");
         }
-        Path templatePath = currTemplate.getTemplatePath();
 
-        if(StringUtils.isNotBlank(dirName)) {
-            if(dirName.contains("..")) dirName = "";
-            templatePath = Paths.get(templatePath.toString().concat("/" + dirName));
-        }
-
-        if(StringUtils.isNotBlank(fileName) && fileName.contains("..")) {
-            return RestResultUtils.failed("没有找到模板");
-        }
-
-        Stream<Path> list = Files.list(templatePath);
-        List<Path> files = listPathFiles(list.collect(Collectors.toList()));
-
-        Path currFile = getCurrFile(files, fileName);
+        Path currFile = getFilePath(filePath);
 
         if(currFile == null) {
             return RestResultUtils.failed("文件不存在");
@@ -256,25 +253,26 @@ public class TemplateController {
      * @param files
      * @return
      */
-    @PostMapping("upload")
+    @PostMapping("files/upload")
     @ExceptionHandler(value = MultipartException.class)
     public Object upload(String dirName, @RequestParam("files") MultipartFile files[]) {
+
+        if(StringUtils.isBlank(dirName) || dirName.contains("..")) {
+            return RestResultUtils.failed("请选择上传目录");
+        }
 
         Template currTemplate = templateService.getCurrTemplate();
         if(currTemplate == null) {
             return RestResultUtils.failed("没有找到模板");
         }
+
         if(files == null || files.length <=0) {
             return RestResultUtils.failed("请选择需要上传的模板文件");
         }
 
-        Path templatePath = currTemplate.getTemplatePath();
-
-        if(StringUtils.isNotBlank(dirName)) {
-            if(dirName.contains("..")) {
-                return RestResultUtils.failed("目录不存在");
-            }
-            templatePath = Paths.get(templatePath.toString().concat("/" + dirName));
+        Path templatePath = getFilePath(dirName);
+        if(templatePath == null || !Files.exists(templatePath)) {
+            return RestResultUtils.failed("目录不存在");
         }
 
         List<String> errorFiles = new ArrayList<>();
@@ -315,8 +313,8 @@ public class TemplateController {
      * @param filePath
      * @return
      */
-    @PostMapping("file/delete/{filePath}")
-    public Object delFile(@PathVariable("filePath") String filePath) {
+    @PostMapping("file/delete")
+    public Object delFile(@RequestParam("filePath") String filePath) {
 
         if(StringUtils.isBlank(filePath)) {
             return RestResultUtils.failed("文件路径为空");
@@ -330,9 +328,14 @@ public class TemplateController {
         if(currTemplate == null) {
             return RestResultUtils.failed("没有找到模板");
         }
-        Path templatePath = currTemplate.getTemplatePath();
         try {
-            Paths.get(templatePath.toString() + File.separator + filePath).toFile().delete();
+            Path templateFilePath = getFilePath(filePath);
+
+            if(Files.isDirectory(templateFilePath)) {
+                return RestResultUtils.failed("不可删除文件目录");
+            }
+
+            templateFilePath.toFile().delete();
             return RestResultUtils.success();
         } catch (Exception e) {
             e.printStackTrace();
@@ -382,17 +385,9 @@ public class TemplateController {
         return RestResultUtils.success(menuService.removeById(menuId));
     }
 
-    List<Path> listPathFiles(List<Path> files) {
-        return files.stream().filter(item -> item.toFile().isFile() && !item.getFileName().toString().endsWith(".properties")).collect(Collectors.toList());
-    }
-
-    Path getCurrFile(List<Path> files, String fileName) {
-        for (Path file : files) {
-            if(file.getFileName().toString().equals(fileName)){
-                return file;
-            }
-        }
-        return null;
+    Path getFilePath(String filePath) {
+        Template currTemplate = templateService.getCurrTemplate();
+        return Paths.get(currTemplate.getTemplatePath().toString().concat(filePath.substring(currTemplate.getPathName().length())));
     }
 
 }
