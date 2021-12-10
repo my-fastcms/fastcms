@@ -89,3 +89,14 @@ export function delTemplateFile(filePath: string) {
 		method: 'post'
 	});
 }
+
+/**
+ * 获取网站模板菜单
+ * @returns 
+ */
+export function getTemplateMenuList() {
+	return request({
+		url: "/admin/template/menu/list",
+		method: 'get'
+	});
+}
