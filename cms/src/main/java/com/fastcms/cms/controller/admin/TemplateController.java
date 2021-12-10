@@ -16,15 +16,13 @@
  */
 package com.fastcms.cms.controller.admin;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.fastcms.cms.entity.Menu;
 import com.fastcms.cms.service.IMenuService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.FileUtils;
-import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.core.template.Template;
 import com.fastcms.core.template.TemplateService;
 import com.fastcms.core.utils.DirUtils;
@@ -43,7 +41,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -96,11 +96,8 @@ public class TemplateController {
         String fileName = file.getOriginalFilename();
         String suffixName = fileName.substring(fileName.lastIndexOf("."));
         //检查文件格式是否合法
-        if(StringUtils.isEmpty(suffixName)) {
-            return RestResultUtils.failed("文件格式不合格，请上传zip文件");
-        }
-        if(!".zip".equalsIgnoreCase(suffixName)) {
-            return RestResultUtils.failed("文件格式不合格，请上传zip文件");
+        if(StringUtils.isEmpty(suffixName) || !".zip".equalsIgnoreCase(suffixName)) {
+            return RestResultUtils.failed("请上传zip文件");
         }
 
         File uploadFile = new File(DirUtils.getTemplateDir(), file.getOriginalFilename());
@@ -160,42 +157,39 @@ public class TemplateController {
     @GetMapping("files/get")
     public Object getFileContent(@RequestParam("filePath") String filePath) {
 
-        if(StringUtils.isBlank(filePath) || filePath.contains("..")) {
+        if (StringUtils.isBlank(filePath) || filePath.contains("..")) {
             return RestResultUtils.failed("文件不存在");
         }
 
         Template currTemplate = templateService.getCurrTemplate();
-        if(currTemplate == null) {
+        if (currTemplate == null) {
             return RestResultUtils.failed("未找到目标模板");
         }
 
         String suffix = filePath.substring(filePath.lastIndexOf("."));
-        if(StringUtils.isBlank(suffix)) {
+        if (StringUtils.isBlank(suffix)) {
             return RestResultUtils.failed("文件后缀不能为空");
         }
 
-        if(!Arrays.asList(".html", ".js", ".css", ".txt").contains(suffix)) {
+        if (!Arrays.asList(".html", ".js", ".css", ".txt").contains(suffix)) {
             return RestResultUtils.failed("文件不支持编辑");
         }
 
         Path file = getFilePath(filePath);
-        if(Files.isDirectory(file)) {
+        if (Files.isDirectory(file)) {
             return RestResultUtils.failed("请指定一个文件");
         }
 
-        if(!Files.exists(file)) {
+        if (!Files.exists(file)) {
             return RestResultUtils.failed("文件不存在");
         }
 
-        Map<String, Object> result = new HashMap<>();
-        if(file != null) {
-            try {
-                result.put("fileContent", FileCopyUtils.copyToString(new FileReader(file.toFile())));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            return RestResultUtils.success(FileCopyUtils.copyToString(new FileReader(file.toFile())));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RestResultUtils.failed(e.getMessage());
         }
-        return RestResultUtils.success(result);
     }
 
     /**
@@ -345,14 +339,11 @@ public class TemplateController {
 
     /**
      * 菜单列表
-     * @param page
      * @return
      */
     @RequestMapping("menu/list")
-    public RestResult<Page<Menu>> menuList(PageModel page) {
-        QueryWrapper queryWrapper = new QueryWrapper();
-        Page<Menu> pageData = menuService.page(page.toPage(), queryWrapper);
-        return RestResultUtils.success(pageData);
+    public RestResult<List<IMenuService.MenuNode> > menuList() {
+        return RestResultUtils.success(menuService.getMenus());
     }
 
     /**
@@ -382,6 +373,12 @@ public class TemplateController {
      */
     @PostMapping("menu/delete/{menuId}")
     public RestResult<Boolean> doDeleteMenu(@PathVariable("menuId") Long menuId) {
+
+        List<Menu> list = menuService.list(Wrappers.<Menu>lambdaQuery().eq(Menu::getParentId, menuId));
+        if(list != null && !list.isEmpty()) {
+            return RestResultUtils.failed("请先删除该菜单的子菜单");
+        }
+
         return RestResultUtils.success(menuService.removeById(menuId));
     }
 

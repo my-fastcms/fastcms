@@ -29,28 +29,6 @@
 			</el-col>
 		</el-row>
 		<el-row :gutter="15">
-			<el-col :xs="24" :sm="14" :md="14" :lg="16" :xl="16" class="mb15">
-				<el-card shadow="hover" :header="$t('message.card.title1')">
-					<div style="height: 200px" ref="homeLaboratoryRef"></div>
-				</el-card>
-			</el-col>
-			<el-col :xs="24" :sm="10" :md="10" :lg="8" :xl="8">
-				<el-card shadow="hover" :header="$t('message.card.title2')">
-					<div class="home-monitor">
-						<div class="flex-warp">
-							<div class="flex-warp-item" v-for="(v, k) in environmentList" :key="k">
-								<div class="flex-warp-item-box">
-									<i :class="v.icon" :style="{ color: v.iconColor }"></i>
-									<span class="pl5">{{ v.label }}</span>
-									<div class="mt10">{{ v.value }}</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</el-card>
-			</el-col>
-		</el-row>
-		<el-row :gutter="15">
 			<el-col :xs="24" :sm="14" :md="14" :lg="16" :xl="16" class="home-warning-media">
 				<el-card shadow="hover" :header="$t('message.card.title3')" class="home-warning-card">
 					<el-table :data="tableData.data" style="width: 100%" stripe>
@@ -85,19 +63,11 @@
 				</el-card>
 			</el-col>
 		</el-row>
-		<el-row>
-			<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mt15">
-				<el-card shadow="hover" :header="$t('message.card.title5')">
-					<div style="height: 200px" ref="homeOvertimeRef"></div>
-				</el-card>
-			</el-col>
-		</el-row>
 	</div>
 </template>
 
 <script lang="ts">
 import { toRefs, reactive, onMounted, nextTick, computed, getCurrentInstance, watch, onActivated } from 'vue';
-import * as echarts from 'echarts';
 import { CountUp } from 'countup.js';
 import { formatAxis } from '/@/utils/formatTime';
 import { useStore } from '/@/store/index';
@@ -151,144 +121,7 @@ export default {
 				new CountUp('tipNum3', Math.random() * 1000).start();
 			});
 		};
-		// 商品销售情
-		const initHomeLaboratory = () => {
-			const myChart = echarts.init(proxy.$refs.homeLaboratoryRef);
-			const option = {
-				grid: {
-					top: 50,
-					right: 20,
-					bottom: 30,
-					left: 30,
-				},
-				tooltip: {
-					trigger: 'axis',
-				},
-				legend: {
-					data: ['预购队列', '最新成交价'],
-					right: 13,
-				},
-				color: [
-					'#63caff',
-					'#49beff',
-					'#03387a',
-					'#03387a',
-					'#03387a',
-					'#6c93ee',
-					'#a9abff',
-					'#f7a23f',
-					'#27bae7',
-					'#ff6d9d',
-					'#cb79ff',
-					'#f95b5a',
-					'#ccaf27',
-					'#38b99c',
-					'#93d0ff',
-					'#bd74e0',
-					'#fd77da',
-					'#dea700',
-				],
-				xAxis: {
-					data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-				},
-				yAxis: [
-					{
-						type: 'value',
-						name: '价格',
-					},
-				],
-				series: [
-					{
-						name: '预购队列',
-						type: 'bar',
-						data: [200, 85, 112, 275, 305, 415, 441, 405, 275, 305, 415, 441],
-						itemStyle: {
-							barBorderRadius: [4, 4, 0, 0],
-							color: {
-								x: 0,
-								y: 0,
-								x2: 0,
-								y2: 1,
-								type: 'linear',
-								global: false,
-								colorStops: [
-									{
-										offset: 0,
-										color: '#0b9eff',
-									},
-									{
-										offset: 1,
-										color: '#63caff',
-									},
-								],
-							},
-						},
-					},
-					{
-						name: '最新成交价',
-						type: 'line',
-						data: [50, 85, 22, 155, 170, 25, 224, 245, 285, 300, 415, 641],
-						itemStyle: {
-							color: '#febb50',
-						},
-					},
-				],
-			};
-			myChart.setOption(option);
-			state.myCharts.push(myChart);
-		};
-		// 履约超时预警
-		const initHomeOvertime = () => {
-			const myChart = echarts.init(proxy.$refs.homeOvertimeRef);
-			const option = {
-				grid: {
-					top: 50,
-					right: 20,
-					bottom: 30,
-					left: 30,
-				},
-				tooltip: {
-					trigger: 'axis',
-				},
-				legend: {
-					data: ['订单数量', '超时数量', '在线数量', '预警数量'],
-					right: 13,
-				},
-				xAxis: {
-					data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-				},
-				yAxis: [
-					{
-						type: 'value',
-						name: '数量',
-					},
-				],
-				series: [
-					{
-						name: '订单数量',
-						type: 'bar',
-						data: [5, 20, 36, 10, 10, 20, 11, 13, 10, 9, 17, 19],
-					},
-					{
-						name: '超时数量',
-						type: 'bar',
-						data: [15, 12, 26, 15, 11, 16, 31, 13, 5, 16, 13, 15],
-					},
-					{
-						name: '在线数量',
-						type: 'line',
-						data: [15, 20, 16, 20, 30, 8, 16, 19, 12, 18, 19, 14],
-					},
-					{
-						name: '预警数量',
-						type: 'line',
-						data: [10, 10, 13, 12, 15, 18, 19, 10, 12, 15, 11, 17],
-					},
-				],
-			};
-			myChart.setOption(option);
-			state.myCharts.push(myChart);
-		};
+		
 		// 批量设置 echarts resize
 		const initEchartsResizeFun = () => {
 			nextTick(() => {
@@ -304,8 +137,6 @@ export default {
 		// 页面加载时
 		onMounted(() => {
 			initNumCountUp();
-			initHomeLaboratory();
-			initHomeOvertime();
 			initEchartsResize();
 		});
 		// 由于页面缓存原因，keep-alive

@@ -79,6 +79,8 @@ public class Template implements Serializable {
     @JsonIgnore
     Path templatePath;
 
+    private Boolean active = false;
+
     public String getId() {
         return id;
     }
@@ -139,4 +141,11 @@ public class Template implements Serializable {
         return this.getPath().replaceAll("/", "");
     }
 
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 }

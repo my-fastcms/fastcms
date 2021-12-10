@@ -24,6 +24,7 @@ import com.fastcms.common.utils.FileUtils;
 import com.fastcms.core.utils.DirUtils;
 import com.fastcms.entity.Config;
 import com.fastcms.service.IConfigService;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -49,7 +50,7 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
 
     private String templateDir = "./htmls";
 
-    private Map<String, Template> templateMap = new HashMap<>();
+    private Map<String, Template> templateMap = Collections.synchronizedMap(new HashMap<>());
 
     @Autowired
     private Environment environment;
@@ -66,19 +67,9 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
     @Override
     public void initialize() {
         templateMap.clear();
-        String[] activeProfiles = environment.getActiveProfiles();
-        String profile = activeProfiles == null || activeProfiles.length <=0 ? FastcmsConstants.DEV_MODE : activeProfiles[0];
-
-        Path rootPath;
-        if(FastcmsConstants.DEV_MODE.equals(profile)) {
-            String path = getClass().getResource("/").getPath() + templateDir;
-            rootPath = Paths.get(path.substring(1));
-        }else {
-            rootPath = Paths.get(DirUtils.getTemplateDir());
-        }
 
         try {
-            List<Path> collect = Files.list(rootPath).collect(Collectors.toList());
+            List<Path> collect = Files.list(getTemplateRootPath()).collect(Collectors.toList());
             collect.forEach(item -> {
                 if(Files.isDirectory(item)){
                     Template template = templateFinder.find(item);
@@ -120,14 +111,50 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
 
     @Override
     public List<Template> getTemplateList() {
-        return new ArrayList<>(templateMap.values());
+        ArrayList<Template> templates = new ArrayList<>(templateMap.values());
+        templates.forEach(item -> {
+            if(item.getId().equals(getCurrTemplate().getId())) {
+                item.setActive(true);
+            }else {
+                item.setActive(false);
+            }
+        });
+        return templates;
     }
 
     @Override
     public void install(File file) throws Exception {
+        String name = file.getName();
+        name = name.substring(0, name.lastIndexOf("."));
+        final String path = "/".concat(name).concat("/");
+
+        if(checkPath(path)) {
+            throw new RuntimeException("模板[" + path + "]已存在");
+        }
+
         FileUtils.unzip(file.toPath(), DirUtils.getTemplateDir());
+
+        //check properties
+        String templatePath = getTemplateRootPath().toString().concat(path);
+        Template template = templateFinder.find(Paths.get(templatePath));
+        if (template == null || StringUtils.isBlank(template.getId()) || StringUtils.isBlank(template.getPath())) {
+            //上传的zip文件包不符合规范 删除
+            org.apache.commons.io.FileUtils.deleteDirectory(Paths.get(templatePath).toFile());
+            throw new RuntimeException("模板[" + path + "]缺少必要文件或者属性");
+        }
+
         initialize();
     }
+
+    boolean checkPath(String uploadPath) {
+        for (Template template : getTemplateList()) {
+            if(template.getPath().equals(uploadPath)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     @Override
     public void unInstall(String templateId) throws Exception {
@@ -177,6 +204,20 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
     @Override
     public boolean accept(T node1, T node2) {
         return Objects.equals(((FileTreeNode)node1).getParent(), ((FileTreeNode)node2).getPath());
+    }
+
+    Path getTemplateRootPath() {
+        String[] activeProfiles = environment.getActiveProfiles();
+        String profile = activeProfiles == null || activeProfiles.length <=0 ? FastcmsConstants.DEV_MODE : activeProfiles[0];
+
+        Path rootPath;
+        if(FastcmsConstants.DEV_MODE.equals(profile)) {
+            String path = getClass().getResource("/").getPath() + templateDir;
+            rootPath = Paths.get(path.substring(1));
+        }else {
+            rootPath = Paths.get(DirUtils.getTemplateDir());
+        }
+        return rootPath;
     }
 
 }

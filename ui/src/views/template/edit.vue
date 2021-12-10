@@ -150,7 +150,7 @@ export default {
             if(node.children == null) {
                 state.currEditFile = node.filePath;
                 getTemplateFile(node.filePath).then((res: any) => {
-                    state.content = res.data.fileContent;
+                    state.content = res.data;
                 }).catch((res) => {
                     ElMessage.error(res.message);
                 }) 

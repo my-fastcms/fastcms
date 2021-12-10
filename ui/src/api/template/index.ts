@@ -32,6 +32,16 @@ export function unInstallTemplate(templateId: string) {
 }
 
 /**
+ * 启用模板
+ */
+export function enableTemplate(templateId: string) {
+	return request({
+		url: '/admin/template/enable/' + templateId,
+		method: 'post'
+	});
+}
+
+/**
  * 文件树形结构
  * @param params 
  * @returns 

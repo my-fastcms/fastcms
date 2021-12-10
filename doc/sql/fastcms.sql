@@ -124,7 +124,7 @@ CREATE TABLE `config` (
 DROP TABLE IF EXISTS `menu`;
 CREATE TABLE `menu` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `parent_id` bigint(20) DEFAULT NULL,
+  `parent_id` bigint(20) DEFAULT '0',
   `user_id` bigint(20) DEFAULT NULL,
   `menu_name` varchar(32) DEFAULT NULL,
   `menu_url` varchar(255) DEFAULT NULL,

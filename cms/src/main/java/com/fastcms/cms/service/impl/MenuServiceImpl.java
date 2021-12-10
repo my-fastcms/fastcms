@@ -14,10 +14,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * <p>
  * 网站菜单表 服务实现类
- * </p>
- *
  * @author wjun_java@163.com
  * @since 2021-05-27
  */
@@ -28,7 +25,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 	public List<MenuNode> getMenus() {
 		List<Menu> menus = list(Wrappers.<Menu>lambdaQuery().eq(Menu::getStatus, Menu.STATUS_SHOW));
 		List<MenuNode> menuNodeList = menus.stream().map(item -> getMenuNode(item)).collect(Collectors.toList());;
-		List<MenuNode> parentMenuList = menuNodeList.stream().filter(item -> item.getParentId() == null).collect(Collectors.toList());
+		List<MenuNode> parentMenuList = menuNodeList.stream().filter(item -> item.getParentId() == 0).collect(Collectors.toList());
 		parentMenuList.forEach(item -> getChildren(item, menuNodeList));
 		return parentMenuList.stream().sorted(Comparator.comparing(MenuNode::getSortNum)).collect(Collectors.toList());
 	}
