@@ -14,7 +14,7 @@ export default {
 		attachSet: '设置',
 		article: '文章',
 		articleManager: '文章管理',
-		articleWrite: '新建文章',
+		articleSet: '设置',
 		articleCategory: '分类',
 		articleComment: '评论',
 		page: '页面',

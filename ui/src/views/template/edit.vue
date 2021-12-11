@@ -65,6 +65,7 @@ import 'ace-builds/src-noconflict/mode-html';
 import 'ace-builds/src-noconflict/mode-javascript';
 import 'ace-builds/src-noconflict/mode-css';
 import 'ace-builds/src-noconflict/theme-chrome';
+import qs from 'qs';
 
 export default {
 	name: 'templateEdit',
@@ -112,7 +113,7 @@ export default {
                 return;
             }
 
-            saveTemplateFile({"filePath": state.currEditFile, "fileContent": state.content}).then(() => {
+            saveTemplateFile(qs.stringify({"filePath": state.currEditFile, "fileContent": state.content})).then(() => {
                 ElMessage.success("保存成功");
             }).catch((res) => {
                 ElMessage.error(res.message);

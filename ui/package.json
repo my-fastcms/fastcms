@@ -14,8 +14,17 @@
 		"lint-fix": "eslint --fix --ext .js --ext .jsx --ext .vue src/"
 	},
 	"dependencies": {
-		"@ckeditor/ckeditor5-build-classic": "^31.0.0",
-		"@ckeditor/ckeditor5-vue": "^2.0.1",
+		"@ckeditor/ckeditor5-alignment": "^31.1.0",
+		"@ckeditor/ckeditor5-basic-styles": "^31.1.0",
+		"@ckeditor/ckeditor5-build-classic": "^31.1.0",
+		"@ckeditor/ckeditor5-core": "^31.1.0",
+		"@ckeditor/ckeditor5-editor-classic": "^31.1.0",
+		"@ckeditor/ckeditor5-essentials": "^31.1.0",
+		"@ckeditor/ckeditor5-image": "^31.1.0",
+		"@ckeditor/ckeditor5-paragraph": "^31.1.0",
+		"@ckeditor/ckeditor5-ui": "^31.1.0",
+		"@ckeditor/ckeditor5-utils": "^31.1.0",
+		"@ckeditor/ckeditor5-widget": "^31.1.0",
 		"axios": "^0.23.0",
 		"countup.js": "^2.0.8",
 		"cropperjs": "^1.5.12",
@@ -44,6 +53,7 @@
 		"vuex": "^4.0.2"
 	},
 	"devDependencies": {
+		"@ckeditor/ckeditor5-inspector": "^2.3.0",
 		"@types/axios": "^0.14.0",
 		"@types/clipboard": "^2.0.1",
 		"@types/node": "^16.11.0",

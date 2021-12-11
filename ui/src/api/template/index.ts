@@ -70,11 +70,11 @@ export function getTemplateFile(filePath: string) {
  * @param params 
  * @returns 
  */
-export function saveTemplateFile(params: object) {
+export function saveTemplateFile(params: string) {
 	return request({
 		url: "/admin/template/file/save",
 		method: 'post',
-		params: params
+		data: params
 	});
 }
 
