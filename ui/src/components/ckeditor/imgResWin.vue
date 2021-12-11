@@ -57,7 +57,7 @@
 </template>
 
 <script lang="ts">
-import {toRefs, ref, reactive, onMounted } from "vue";
+import {toRefs, reactive, onMounted } from "vue";
 import { getAttachList } from '/@/api/attach/index';
 import { ElMessage } from 'element-plus';
 import { Session } from '/@/utils/storage';
@@ -65,12 +65,12 @@ import insertImage from "./imgPlugin/insertImage";
 import connect from "./imgPlugin/connect";
 
 export default {
-  emits: ["attachHandler"],
-	name: 'ckeditorAttachDialog',
+//   emits: ["attachHandler"],
+  name: 'ckeditorAttachDialog',
   setup(props, ctx) {
     
     const state = reactive({
-			isShowDialog: connect.showWinControl,
+			isShowDialog: false,
 			queryParams: {},
 			showSearch: true,
 			max: 1,
@@ -89,29 +89,6 @@ export default {
 			},
 		});
 
-    let selectedIndex = ref(1);
-    let changeSelect = function(index) {
-      selectedIndex.value = index;
-    }
-    let imgList = reactive([]);
-    // onMounted(() => {
-    //   const mockData = [{
-    //     src: "https://img0.baidu.com/it/u=2089938236,2600489549&fm=26&fmt=auto",
-    //   },{
-    //     src: "https://img2.baidu.com/it/u=2840876380,2046257499&fm=26&fmt=auto",
-    //   },{
-    //     src: "https://img2.baidu.com/it/u=3745443056,3700782634&fm=26&fmt=auto",
-    //   }];
-    //   // 模拟请求数据
-    //   setTimeout(() => {
-    //     imgList.push(...mockData);
-    //   }, 2000);
-    // });
-    const confirm = function() {
-      insertImage(connect.editorObj.model, imgList[selectedIndex.value]);
-      //emit("update:show", false);
-    }    
-
 		const openDialog = (max) => {
 			state.isShowDialog = true;
 			state.max = max;
@@ -123,7 +100,7 @@ export default {
 		};
 
 		const initTableData = () => {
-			getAttachList().then((res) => {
+			getAttachList(state.tableData.param).then((res) => {
 				state.tableData.data = res.data.records;
 				state.tableData.total = res.data.total;
 			});
@@ -159,79 +136,58 @@ export default {
 		};
 		
 		const onSubmit = () => {
+			let selectData: any= [];
 			//把选中的附件传递给父组件
-			ctx.emit("attachHandler", state.checkedObjs);
+			state.checkedObjs.forEach(item => selectData.push({src: item.path}));
+			selectData.forEach(item => insertImage(connect.editorObj.model, item));
 			closeDialog();
 		};
 
     return {
-      openDialog,
-			closeDialog,
-			initTableData,
-			onTableItemClick,
-			onHandleSizeChange,
-			onHandleCurrentChange,
-			onHandleExceed,
-			onHandleUploadError,
-			uploadSuccess,
-			onSubmit,
-      selectedIndex,
-      changeSelect,
-      imgList,
-      confirm,
-      ...toRefs(state),
+    	openDialog,
+	  	closeDialog,
+	  	initTableData,
+		onTableItemClick,
+		onHandleSizeChange,
+		onHandleCurrentChange,
+		onHandleExceed,
+		onHandleUploadError,
+		uploadSuccess,
+		onSubmit,
+      	confirm,
+      	...toRefs(state),
     }
   }
 };
 </script>
 
-<style scoped>
-  .imgResWin {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.6);
-    z-index: 50;
-  }
-  .imgResWinCon {
-    position: absolute;
-    top: 100px;
-    left: 100px;
-    right: 100px;
-    bottom: 100px;
-    background-color: #fff;
-    padding: 50px;
-  }
-  .imgResWinConImgs:after {
-    content: "";
-    display: block;
-    clear: both;
-  }
-  .imgResWinConImgs > div {
-    margin: 0 50px 50px 0;
-    width: 200px;
-    height: 150px;
-    cursor: pointer;
-    float: left;
-  }
-  .selected {
-    outline: #409eff 10px solid;
-  }
-  .imgResWinConImgs img {
-    height: 100%;
+<style scoped lang="scss">
+.upload-btn {
+	padding-bottom: 10px;
+}
+.bottom {
+    margin-top: 13px;
+    line-height: 12px;
+}
+
+.button {
+	padding: 0;
+	float: right;
+}
+
+.image {
     width: 100%;
-  }
-  .confirm {
-    margin-top: 100px;
-    background-color: #409eff;
-    font-size: 20px;
-    padding: 15px 20px;
-    border-radius: 6px;
-    text-align: center;
-    display: inline-block;
-    cursor: pointer;
-    color: #fff;
-  }
+	height: 200px;
+    display: block;
+}
+
+.clearfix:before,
+.clearfix:after {
+    display: table;
+    content: "";
+}
+  
+.clearfix:after {
+	clear: both
+}
 </style>

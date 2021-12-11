@@ -96,7 +96,7 @@ export default {
 		};
 
 		const initTableData = () => {
-			getAttachList().then((res) => {
+			getAttachList(state.tableData.param).then((res) => {
 				state.tableData.data = res.data.records;
 				state.tableData.total = res.data.total;
 			});

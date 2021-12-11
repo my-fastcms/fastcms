@@ -1,4 +1,4 @@
 export default {
     editorObj: null,
-    showWinControl: false
+    dialogObj: null
 }

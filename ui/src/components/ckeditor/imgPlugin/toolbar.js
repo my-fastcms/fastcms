@@ -26,8 +26,8 @@ export default class ImgToolbarUI extends Plugin {
             view.bind("isOn", "isEnabled").to(command, "value", "isEnabled");
             // 点击按钮时触发相应命令
             this.listenTo(view, "execute", () => {
-                console.log("======execute image view click")
-                connect.showWinControl.value = true;
+                console.log("======execute image view click");
+                connect.dialogObj.openDialog(5);
             });
             return view;
         });
