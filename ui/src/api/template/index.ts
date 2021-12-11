@@ -100,3 +100,24 @@ export function getTemplateMenuList() {
 		method: 'get'
 	});
 }
+
+/**
+ * 删除网站模板菜单
+ */
+export function delTemplateMenu(menuId: string) {
+	return request({
+		url: "/admin/template/menu/delete/" + menuId,
+		method: 'post'
+	});
+}
+
+/**
+ * 保存菜单数据
+ */
+export function saveTemplateMenu(params: object) {
+	return request({
+		url: "/admin/template/menu/save",
+		method: 'post',
+		params: params
+	});
+}

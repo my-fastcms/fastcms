@@ -3,7 +3,7 @@ export default {
 	router: {
 		home: 'home',
 		system: 'system',
-		systemMenu: 'systemMenu',
+		systemMenu: 'systemRouter',
 		systemUser: 'systemUser',
 		systemRole: 'systemRole',
 		plguin: 'plugin',

@@ -47,7 +47,9 @@
                 <@menuTag>
                     <#if data?? &&(data?size>0)>
                         <#list data as item>
-                            <li><a href="${item.menuUrl!}" target="${item.target!"_self"}">${item.menuName!}</a></li>
+                            <li>
+                                <a href="${item.menuUrl!}" target="${item.target!"_self"}">${item.menuName!}</a>
+                            </li>
                         </#list>
                     </#if>
                 </@menuTag>
@@ -65,6 +67,28 @@
     </div>
 </footer>
 </#macro>
+
+<#macro menuChildren children>
+<#if children?? && children?size gt 0>
+<ul class="nav nav-treeview">
+    <#list children as child>
+    <li class="nav-item">
+        <a href="${child.menuUrl!'#'}" class="nav-link">
+            <p>${child.menuName!}
+                <#if child.hasChildren>
+                <i class="fas fa-angle-left right"></i>
+            </#if>
+            </p>
+        </a>
+        <#if child.children?? && child.children?size gt 0>
+        <@menuChildren children=child.children></@menuChildren>
+</#if>
+</li>
+</#list>
+</ul>
+</#if>
+</#macro>
+
 <#macro script>
 <script src="/js/jquery.1.10.js"></script>
 <script src="/js/bootstrap.min.js"></script>

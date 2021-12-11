@@ -122,7 +122,8 @@ public class FastcmsConfig implements WebMvcConfigurer, ApplicationListener<WebS
             configService.saveConfig(FastcmsConstants.SERVER_PORT, String.valueOf(event.getWebServer().getPort()));
         }
         if(StringUtils.isBlank(configService.getValue(FastcmsConstants.WEBSITE_DOMAIN))) {
-            configService.saveConfig(FastcmsConstants.WEBSITE_DOMAIN, "http://" + configService.getValue(FastcmsConstants.SERVER_IP) + ":" + configService.getValue(FastcmsConstants.SERVER_PORT));
+            configService.saveConfig(FastcmsConstants.WEBSITE_DOMAIN,
+                    "http://" + configService.getValue(FastcmsConstants.SERVER_IP) + ":" + configService.getValue(FastcmsConstants.SERVER_PORT));
         }
     }
 

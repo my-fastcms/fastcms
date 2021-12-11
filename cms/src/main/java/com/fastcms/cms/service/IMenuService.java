@@ -2,6 +2,7 @@ package com.fastcms.cms.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.cms.entity.Menu;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 import java.util.List;
@@ -19,6 +20,7 @@ public interface IMenuService extends IService<Menu> {
 	List<MenuNode> getMenus();
 
 	class MenuNode extends Menu implements Serializable {
+		@JsonIgnore
 		boolean hasChildren = false;
 		List<MenuNode> children;
 		public boolean getHasChildren() {

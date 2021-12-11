@@ -1,6 +1,6 @@
 <template>
 	<div class="system-menu-container">
-		<el-dialog title="新增菜单" v-model="isShowDialog" width="769px">
+		<el-dialog title="新增路由" v-model="isShowDialog" width="769px">
 			<el-form :model="ruleForm" size="small" label-width="80px" :rules="rules" ref="myRefForm">
 				<el-row :gutter="35">
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -80,8 +80,8 @@
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="菜单排序">
-							<el-input v-model="ruleForm.menuSort" placeholder="菜单排序" clearable></el-input>
+						<el-form-item label="排序">
+							<el-input v-model="ruleForm.menuSort" type="number" placeholder="请输入排序" clearable></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>

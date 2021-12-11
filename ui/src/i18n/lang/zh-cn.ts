@@ -3,7 +3,7 @@ export default {
 	router: {
 		home: '首页',
 		system: '权限',
-		systemMenu: '菜单管理',
+		systemMenu: '路由管理',
 		systemUser: '用户管理',
 		systemRole: '角色管理',
 		plugin: '插件',

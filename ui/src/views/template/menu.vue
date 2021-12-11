@@ -2,50 +2,11 @@
 	<div class="system-menu-container">
 		<el-card shadow="hover">
 			<el-button @click="onOpenAddMenu" class="mt15" size="small" type="primary" icon="iconfont icon-shuxingtu">新建菜单</el-button>
-			<el-table :data="menuTableData" stripe style="width: 100%" row-key="path" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
-				<el-table-column label="菜单名称" show-overflow-tooltip>
-					<template #default="scope">
-						<i :class="scope.row.meta.icon"></i>
-						<span class="ml10">{{ $t(scope.row.meta.title) }}</span>
-					</template>
-				</el-table-column>
-				<el-table-column prop="name" label="路由名称" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="path" label="路由地址" show-overflow-tooltip></el-table-column>
-				<el-table-column label="组件地址" show-overflow-tooltip>
-					<template #default="scope">
-						<span>{{ scope.row.component }}</span>
-					</template>
-				</el-table-column>
-				<el-table-column label="隐藏" show-overflow-tooltip width="70">
-					<template #default="scope">
-						<span v-if="scope.row.meta.isHide" class="color-primary">是</span>
-						<span v-else class="color-info">否</span>
-					</template>
-				</el-table-column>
-				<el-table-column label="缓存" show-overflow-tooltip width="70">
-					<template #default="scope">
-						<span v-if="scope.row.meta.isKeepAlive" class="color-primary">是</span>
-						<span v-else class="color-info">否</span>
-					</template>
-				</el-table-column>
-				<el-table-column label="固定" show-overflow-tooltip width="70">
-					<template #default="scope">
-						<span v-if="scope.row.meta.isAffix" class="color-primary">是</span>
-						<span v-else class="color-info">否</span>
-					</template>
-				</el-table-column>
-				<el-table-column label="外链" show-overflow-tooltip width="70">
-					<template #default="scope">
-						<span v-if="scope.row.meta.isLink && !scope.row.meta.isIframe" class="color-primary">是</span>
-						<span v-else class="color-info">否</span>
-					</template>
-				</el-table-column>
-				<el-table-column label="iframe" show-overflow-tooltip width="70">
-					<template #default="scope">
-						<span v-if="scope.row.meta.isLink && scope.row.meta.isIframe" class="color-primary">是</span>
-						<span v-else class="color-info">否</span>
-					</template>
-				</el-table-column>
+			<el-table :data="menuTableData" stripe style="width: 100%" row-key="menuUrl" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
+				<el-table-column prop="menuName" label="名称" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="menuUrl" label="跳转地址" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="sortNum" label="排序" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="target" label="打开方式" show-overflow-tooltip></el-table-column>
 				<el-table-column label="操作" show-overflow-tooltip width="125">
 					<template #default="scope">
 						<el-button size="mini" type="text" @click="onOpenAddMenu(scope.row)">新增</el-button>
@@ -63,10 +24,9 @@
 <script lang="ts">
 import { ref, toRefs, reactive, computed, onMounted } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
-import { getTemplateMenuList } from '/@/api/template/index';
-import { initBackEndControlRoutes } from '/@/router/backEnd';
-import AddMenu from '/@/views/system/menu/component/addMenu.vue';
-import EditMenu from '/@/views/system/menu/component/editMenu.vue';
+import { getTemplateMenuList, delTemplateMenu } from '/@/api/template/index';
+import AddMenu from '/@/views/template/component/addMenu.vue';
+import EditMenu from '/@/views/template/component/editMenu.vue';
 
 export default {
 	name: 'systemMenu',
@@ -91,16 +51,15 @@ export default {
 		};
 		// 删除当前行
 		const onTabelRowDel = (row: any) => {
-			ElMessageBox.confirm('此操作将永久删除路由, 是否继续?', '提示', {
+			ElMessageBox.confirm('此操作将永久删除菜单, 是否继续?', '提示', {
 				confirmButtonText: '删除',
 				cancelButtonText: '取消',
 				type: 'warning',
 			}).then(() => {
 				console.log(row);
-				delMenu(row.id).then(() => {
+				delTemplateMenu(row.id).then(() => {
 					ElMessage.success("删除成功");
 					loadMenuList();
-					initBackEndControlRoutes();
 				}).catch((res) => {
 					ElMessage.error(res.message);
 				});
