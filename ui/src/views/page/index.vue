@@ -1,8 +1,8 @@
 <template>
-	<div class="article-container">
+	<div>
 		<el-card shadow="hover">
-			<div class="article-search mb15">
-				<el-button class="mt15" size="small" @click="addArticle()" type="primary" icon="iconfont icon-shuxingtu">新建文章</el-button>
+			<div class="mb15">
+				<el-button class="mt15" size="small" @click="addArticle()" type="primary" icon="iconfont icon-shuxingtu">新建页面</el-button>
 				<el-input size="small" placeholder="请输入文章标题" prefix-icon="el-icon-search" style="max-width: 180px" class="ml10"></el-input>
 				<el-button size="small" type="primary" class="ml10">查询</el-button>
 			</div>
@@ -43,7 +43,7 @@ import { toRefs, reactive, onMounted } from 'vue';
 import { getArticleList, delArticle } from '/@/api/article/index';
 import { useRouter } from 'vue-router';
 export default {
-	name: 'articleManager',
+	name: 'pageManager',
 	setup() {
 		const state = reactive({
 			tableData: {
@@ -85,7 +85,7 @@ export default {
 
         const onRowUpdate = (row: object) => {
             router.push({ 
-                path: '/article/write',
+                path: '/page/write',
                 query: { id: row.id }
             });
         }
@@ -99,7 +99,7 @@ export default {
 			state.tableData.param.pageNum = val;
 		};
         const addArticle = () => {
-            router.push({ path: '/article/write'});
+            router.push({ path: '/page/write'});
         };
 		// 页面加载时
 		onMounted(() => {
@@ -119,14 +119,4 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.article-container {
-	.article-search {
-		text-align: right;
-	}
-	.article-photo {
-		width: 40px;
-		height: 40px;
-		border-radius: 100%;
-	}
-}
 </style>

@@ -10,7 +10,7 @@
                 </el-col>
                 <el-col class="mb20">
                     <el-form-item label="文章详情" prop="contentHtml">
-                        <ckeditor :editor="editor" v-model="ruleForm.contentHtml" :config="editorConfig" @ready="onEditorReady" class="ck-content"></ckeditor>
+                        
                     </el-form-item>
                 </el-col>
                 <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -112,13 +112,11 @@ import { ElMessage } from 'element-plus';
 import { useRoute } from 'vue-router';
 import { addArticle, getArticleCategoryList, getArticle } from '/@/api/article/index';
 import qs from 'qs';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import FastcmsUploader from './FastcmsUploader';
 
 export default {
-	name: 'articleWrite',
+	name: 'pageWrite',
     components: {
-        ckeditor: ClassicEditor.component
+        
     },
 	setup() {
         const route = useRoute();
@@ -132,10 +130,6 @@ export default {
                 commentEnable: 1,
                 contentHtml: '',
                 status: 'publish'
-            },
-			editor: ClassicEditor,
-            editorConfig: {
-                
             },
             rules: {
 				"title": { required: true, message: '请输入文章标题', trigger: 'blur' },
@@ -190,25 +184,11 @@ export default {
             }
         });
 
-        const onEditorReady = (editor) => {
-            console.log(editor);
-            
-            ClassicEditor.builtinPlugins.map(element => {
-                console.log("element:" + element.pluginName);
-            });;
-
-            editor.plugins.get("FileRepository").createUploadAdapter = (loader) => {
-                return new FastcmsUploader(loader);
-            };
-
-        };
-
 		return {
             onSubmit,
             getCategoryList,
             getArticleInfo,
-            onEditorReady,
-			...toRefs(state),
+        	...toRefs(state),
 		};
 	},
 };
