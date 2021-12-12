@@ -34,22 +34,20 @@
 			>
 			</el-pagination>
 		</el-card>
-		<WriteArticle ref="writeArticleRef" @reloadTable="initTableData"/>
 	</div>
 </template>
 
 <script lang="ts">
 import { ElMessageBox, ElMessage } from 'element-plus';
-import { toRefs, ref, reactive, onMounted } from 'vue';
+import { toRefs, reactive, onMounted } from 'vue';
 import { getArticleList, delArticle } from '/@/api/article/index';
-import WriteArticle from '/@/views/article/write.vue';
+import { useRouter } from 'vue-router';
 
 export default {
 	name: 'articleManager',
-	components: { WriteArticle },
 	setup() {
 
-		const writeArticleRef = ref();
+		const router = useRouter();
 
 		const state = reactive({
 			tableData: {
@@ -89,7 +87,10 @@ export default {
 		};
 
         const onRowUpdate = (row: object) => {
-            writeArticleRef.value.openDialog(row);
+            router.push({ 
+                path: '/article/write',
+                query: { id: row.id }
+            });
         }
 
 		// 分页改变
@@ -101,14 +102,13 @@ export default {
 			state.tableData.param.pageNum = val;
 		};
         const addArticle = () => {
-			writeArticleRef.value.openDialog();
+			router.push({ path: '/article/write'});
         };
 		// 页面加载时
 		onMounted(() => {
 			initTableData();
 		});
 		return {
-			writeArticleRef,
             addArticle,
             onRowUpdate,
 			onRowDel,
