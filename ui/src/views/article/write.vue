@@ -11,7 +11,7 @@
                     </el-col>
                     <el-col class="mb20">
                         <el-form-item label="文章详情" prop="contentHtml">
-                            <ckeditor></ckeditor>
+                            <ckeditor v-model="ruleForm.contentHtml"></ckeditor>
                         </el-form-item>
                     </el-col>
                     <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">

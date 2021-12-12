@@ -18,6 +18,7 @@ import ImageCaption from '@ckeditor/ckeditor5-image/src/imagecaption';
 import ImageStyle from '@ckeditor/ckeditor5-image/src/imagestyle';
 import ImageToolbar from '@ckeditor/ckeditor5-image/src/imagetoolbar';
 import ImageUpload from '@ckeditor/ckeditor5-image/src/imageupload';
+import ImageResize from '@ckeditor/ckeditor5-image/src/imageresize';
 import Indent from '@ckeditor/ckeditor5-indent/src/indent';
 import Link from '@ckeditor/ckeditor5-link/src/link';
 import List from '@ckeditor/ckeditor5-list/src/list';
@@ -36,6 +37,11 @@ import ImgCustom from './imgPlugin/main';
 import imgResWin from "./imgResWin.vue";
 
 export default defineComponent({
+  props: {
+    modelValue: {
+      type: String
+    }
+  },
   components: {
     imgResWin
   },
@@ -61,6 +67,7 @@ export default defineComponent({
                 ImageStyle,
                 ImageToolbar,
                 ImageUpload,
+                ImageResize,
                 Indent,
                 Link,
                 List,
@@ -71,26 +78,43 @@ export default defineComponent({
                 TableToolbar,
                 TextTransformation,
                 ImgCustom
-              ],
+            ],
             toolbar: [
-              'heading',
-              '|',
-              'bold',
-              'italic',
-              'link',
-              'bulletedList',
-              'numberedList',
-              '|',
-              'outdent',
-              'indent',
-              '|',
-               ImgCustom.pluginName,
-              'blockQuote',
-              'insertTable',
-              'mediaEmbed',
-              'undo',
-              'redo',
+                'heading',
+                '|',
+                'bold',
+                'italic',
+                'link',
+                'bulletedList',
+                'numberedList',
+                '|',
+                'outdent',
+                'indent',
+                '|',
+                ImgCustom.pluginName,
+                'blockQuote',
+                'insertTable',
+                'mediaEmbed',
+                'undo',
+                'redo',
+            ],
+            image: {
+              toolbar: [
+                'imageStyle:inline',
+                'imageStyle:block',
+                'imageStyle:side',
+                '|',
+                'toggleImageCaption',
+                'imageTextAlternative'
               ]
+            },
+            table: {
+              contentToolbar: [
+                'tableColumn',
+                'tableRow',
+                'mergeTableCells'
+              ]
+            },
           })
       .then(editor => {
         CKEditorInspector.attach(editor);
@@ -107,7 +131,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div id="imgEditor"></div>
+  <div id="imgEditor" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)"></div>
   <imgResWin ref="attachDialog"/>
 </template>
 
