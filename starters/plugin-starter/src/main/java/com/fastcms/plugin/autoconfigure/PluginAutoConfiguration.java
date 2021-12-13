@@ -1,11 +1,19 @@
 package com.fastcms.plugin.autoconfigure;
 
+import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.plugin.FastcmsPluginManager;
+import org.pf4j.AbstractPluginManager;
 import org.pf4j.DefaultPluginManager;
+import org.pf4j.RuntimeMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * @author： wjun_java@163.com
@@ -19,13 +27,30 @@ import org.springframework.core.env.Environment;
 @EnableConfigurationProperties(PluginProperties.class)
 public class PluginAutoConfiguration {
 
+    @Autowired
+    Environment environment;
+
     private final PluginProperties properties;
 
     public PluginAutoConfiguration(PluginProperties properties) {
         this.properties = properties;
     }
 
-    @Autowired
-    Environment environment;
+
+    @Bean
+    public FastcmsPluginManager pluginManager() {
+
+        String[] activeProfiles = environment.getActiveProfiles();
+
+        String profile = activeProfiles == null || activeProfiles.length <=0 ? FastcmsConstants.DEV_MODE : activeProfiles[0];
+
+        if(FastcmsConstants.DEV_MODE.equals(profile)) {
+            System.setProperty(AbstractPluginManager.MODE_PROPERTY_NAME, RuntimeMode.DEVELOPMENT.toString());
+        }
+
+        Path pluginPath = Paths.get(properties.getPath());
+        FastcmsPluginManager fastcmsPluginManager = new FastcmsPluginManager(pluginPath);
+        return fastcmsPluginManager;
+    }
 
 }

@@ -17,9 +17,14 @@
 package com.fastcms.web.controller.admin;
 
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.utils.DirUtils;
+import com.fastcms.plugin.PluginManagerService;
 import org.apache.commons.lang.StringUtils;
+import org.pf4j.PluginManager;
+import org.pf4j.PluginWrapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,6 +32,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * 插件管理
@@ -40,8 +47,20 @@ import java.io.File;
 @RequestMapping(FastcmsConstants.ADMIN_MAPPING + "/plugin")
 public class PluginController {
 
-//    @Autowired
-//    private PluginManagerService pluginService;
+    @Autowired
+    private PluginManager pluginManager;
+
+    @Autowired
+    private PluginManagerService pluginService;
+
+    /**
+     * 插件列表
+     * @return
+     */
+    @RequestMapping("list")
+    public RestResult<List<PluginWrapper>> list() {
+        return RestResultUtils.success(pluginManager.getPlugins());
+    }
 
     /**
      * 上传插件
@@ -52,19 +71,19 @@ public class PluginController {
     public Object install(@RequestParam("file") MultipartFile file) {
 
         String fileName = file.getOriginalFilename();
-        String suffixName = fileName.substring(fileName.lastIndexOf(".") + 1);
+        String suffixName = fileName.substring(fileName.lastIndexOf("."));
         //检查文件格式是否合法
         if(StringUtils.isEmpty(suffixName)) {
             return RestResultUtils.failed("文件格式不合格，请上传jar或zip文件");
         }
-        if(!"jar".equalsIgnoreCase(suffixName) && !"zip".equalsIgnoreCase(suffixName)) {
+        if(!".jar".equalsIgnoreCase(suffixName) && !".zip".equalsIgnoreCase(suffixName)) {
             return RestResultUtils.failed("文件格式不合格，请上传jar或zip文件");
         }
 
         File uploadFile = new File(DirUtils.getPluginDir(), file.getOriginalFilename());
         try {
             file.transferTo(uploadFile);
-//            pluginService.installPlugin(Paths.get(uploadFile.getPath()));
+            pluginService.installPlugin(Paths.get(uploadFile.getPath()));
             return RestResultUtils.success();
         } catch (Exception e) {
             e.printStackTrace();
@@ -84,7 +103,7 @@ public class PluginController {
     public Object unInstall(@RequestParam(name = "pluginId") String pluginId) {
 
         try {
-//            pluginService.unInstallPlugin(pluginId);
+            pluginService.unInstallPlugin(pluginId);
             return RestResultUtils.success();
         } catch (Exception e) {
             e.printStackTrace();
