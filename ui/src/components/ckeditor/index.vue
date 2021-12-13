@@ -1,5 +1,5 @@
 <script lang="ts">
-import {defineComponent, onMounted, ref} from "vue";
+import {defineComponent, onMounted, ref, watch} from "vue";
 
 import connect from "./imgPlugin/connect";
 
@@ -45,10 +45,11 @@ export default defineComponent({
   components: {
     imgResWin
   },
-  setup() {
+  setup(props, {emit}) {
     let attachDialog = ref();
+    let editorExample: { setData: (arg0: string | undefined) => any; } | null = null;
     onMounted(() => {
-      connect.dialogObj = attachDialog.value;
+      connect.dialogObj = attachDialog.value;``
       ClassicEditor
           .create(document.querySelector('#imgEditor'), {
             plugins: [
@@ -116,13 +117,22 @@ export default defineComponent({
               ]
             },
           })
-      .then(editor => {
+      .then((editor: any) => {
+        editorExample = editor;
+        editor.setData(props.modelValue);
+        editor.model.document.on("change", function() {
+          emit("update:modelValue", editor.getData());
+        });
         CKEditorInspector.attach(editor);
       })
-      .catch(error => {
+      .catch((error: any) => {
         console.log(error);
       });
     });
+    // 暂定注释掉看后期需求
+    // watch(() => props.modelValue, val => {
+    //   editorExample && editorExample.setData(val);
+    // })
     return {
       attachDialog
     }
@@ -131,8 +141,8 @@ export default defineComponent({
 </script>
 
 <template>
-  <div id="imgEditor" :value="modelValue" @input="$emit('update:modelValue', $event.target.value)"></div>
-  <imgResWin ref="attachDialog"/>
+  <div id="imgEditor"></div>
+  <imgResWin ref="attachDialog" />
 </template>
 
 <style></style>

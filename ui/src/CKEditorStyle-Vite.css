@@ -9,8 +9,8 @@
 
 .ck.ck-reset, .ck.ck-reset_all, .ck.ck-reset_all * {
     box-sizing: border-box;
-    width: auto;
-    height: auto;
+    width: XXX !important;
+    height: XXX !important;
     position: static
 }
 
@@ -190,6 +190,10 @@
     height: var(--ck-icon-size);
     font-size: .8333350694em;
     will-change: transform
+}
+.ck-button__icon {
+    width: var(--ck-icon-size) !important;
+    height: var(--ck-icon-size) !important;
 }
 
 .ck.ck-icon, .ck.ck-icon * {
@@ -3241,7 +3245,7 @@
 }
 
 .ck .ck-insert-table-dropdown__grid {
-    width: calc(var(--ck-insert-table-dropdown-box-width) * 10 + var(--ck-insert-table-dropdown-box-margin) * 20 + var(--ck-insert-table-dropdown-padding) * 2);
+    width: calc(var(--ck-insert-table-dropdown-box-width) * 10 + var(--ck-insert-table-dropdown-box-margin) * 20 + var(--ck-insert-table-dropdown-padding) * 2) !important;
     padding: var(--ck-insert-table-dropdown-padding) var(--ck-insert-table-dropdown-padding) 0
 }
 
@@ -3250,8 +3254,8 @@
 }
 
 .ck .ck-insert-table-dropdown-grid-box {
-    width: var(--ck-insert-table-dropdown-box-width);
-    height: var(--ck-insert-table-dropdown-box-height);
+    width: var(--ck-insert-table-dropdown-box-width) !important;
+    height: var(--ck-insert-table-dropdown-box-height) !important;
     margin: var(--ck-insert-table-dropdown-box-margin);
     border: 1px solid var(--ck-color-base-border);
     border-radius: 1px
