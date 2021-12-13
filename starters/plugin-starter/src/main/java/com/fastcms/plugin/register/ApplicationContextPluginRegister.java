@@ -17,6 +17,7 @@
 package com.fastcms.plugin.register;
 
 import com.fastcms.plugin.PluginApplicationContextHolder;
+import org.springframework.stereotype.Component;
 
 /**
  * @author： wjun_java@163.com
@@ -25,6 +26,7 @@ import com.fastcms.plugin.PluginApplicationContextHolder;
  * @modifiedBy：
  * @version: 1.0
  */
+@Component
 public class ApplicationContextPluginRegister implements PluginRegister {
 
 	@Override
@@ -47,4 +49,8 @@ public class ApplicationContextPluginRegister implements PluginRegister {
 		pluginRegistryWrapper.getPluginApplicationContext().close();
 	}
 
+	@Override
+	public int getOrder() {
+		return 4;
+	}
 }

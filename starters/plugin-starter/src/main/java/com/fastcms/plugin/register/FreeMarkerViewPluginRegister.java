@@ -21,6 +21,7 @@ import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.stereotype.Component;
 import org.springframework.ui.freemarker.SpringTemplateLoader;
 
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ import java.util.List;
  * @modifiedBy：
  * @version: 1.0
  */
+@Component
 public class FreeMarkerViewPluginRegister extends AbstractPluginRegister implements PluginRegister {
 
 	@Override
@@ -68,4 +70,8 @@ public class FreeMarkerViewPluginRegister extends AbstractPluginRegister impleme
 
 	}
 
+	@Override
+	public int getOrder() {
+		return 6;
+	}
 }

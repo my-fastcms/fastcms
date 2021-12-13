@@ -16,6 +16,8 @@
  */
 package com.fastcms.plugin.register;
 
+import org.springframework.stereotype.Component;
+
 /**
  * @author： wjun_java@163.com
  * @date： 2021/5/9
@@ -23,6 +25,7 @@ package com.fastcms.plugin.register;
  * @modifiedBy：
  * @version: 1.0
  */
+@Component
 public class DirectivePluginRegister extends AbstractPluginRegister implements PluginRegister {
 
 	@Override
@@ -39,4 +42,8 @@ public class DirectivePluginRegister extends AbstractPluginRegister implements P
 
 	}
 
+	@Override
+	public int getOrder() {
+		return 7;
+	}
 }

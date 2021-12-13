@@ -22,7 +22,9 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author： wjun_java@163.com
@@ -39,14 +41,13 @@ public class CompoundPluginRegister implements PluginRegister, ApplicationContex
 
 	@Override
 	public void initialize() throws Exception {
-		pluginRegisterList.add(new ResourceLoaderPluginRegister());
-		pluginRegisterList.add(new ClassPluginRegister());
-		pluginRegisterList.add(new MapperPluginRegister());
-		pluginRegisterList.add(new ApplicationContextPluginRegister());
-		pluginRegisterList.add(new ControllerPluginRegister(this.applicationContext));
-		pluginRegisterList.add(new FreeMarkerViewPluginRegister());
-		pluginRegisterList.add(new DirectivePluginRegister());
-		pluginRegisterList.add(new InterceptorPluginRegister(this.applicationContext));
+
+		Map<String, PluginRegister> pluginRegisterMap = applicationContext.getBeansOfType(PluginRegister.class);
+		pluginRegisterMap.values().stream().sorted(Comparator.comparing(PluginRegister::getOrder)).forEach(item -> {
+			if(item instanceof CompoundPluginRegister == false) {
+				pluginRegisterList.add(item);
+			}
+		});
 
 		for (PluginRegister pluginRegister : pluginRegisterList) {
 			pluginRegister.initialize();
@@ -76,4 +77,10 @@ public class CompoundPluginRegister implements PluginRegister, ApplicationContex
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.applicationContext = applicationContext;
 	}
+
+	@Override
+	public int getOrder() {
+		return 0;
+	}
+
 }

@@ -27,6 +27,7 @@ import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.core.NestedIOException;
 import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 
 import java.util.Arrays;
@@ -40,6 +41,7 @@ import java.util.stream.Collectors;
  * @modifiedBy：
  * @version: 1.0
  */
+@Component
 public class MapperPluginRegister extends AbstractPluginRegister implements PluginRegister {
 
 	@Override
@@ -102,4 +104,8 @@ public class MapperPluginRegister extends AbstractPluginRegister implements Plug
 		}
 	}
 
+	@Override
+	public int getOrder() {
+		return 3;
+	}
 }

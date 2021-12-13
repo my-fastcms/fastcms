@@ -16,6 +16,8 @@
  */
 package com.fastcms.plugin.register;
 
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +29,7 @@ import java.util.stream.Collectors;
  * @modifiedBy：
  * @version: 1.0
  */
+@Component
 public class ClassPluginRegister extends AbstractPluginRegister implements PluginRegister {
 
 	@Override
@@ -59,4 +62,8 @@ public class ClassPluginRegister extends AbstractPluginRegister implements Plugi
 		}
 	}
 
+	@Override
+	public int getOrder() {
+		return 2;
+	}
 }

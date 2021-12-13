@@ -16,7 +16,10 @@
  */
 package com.fastcms.plugin.register;
 
+import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,17 +39,14 @@ import java.util.List;
  * @modifiedBy：
  * @version: 1.0
  */
-public class ControllerPluginRegister extends AbstractPluginRegister {
+@Component
+public class ControllerPluginRegister extends AbstractPluginRegister implements ApplicationContextAware {
 
 	RequestMappingHandlerMapping requestMappingHandlerMapping;
 
 	ApplicationContext applicationContext;
 
 	Method getMappingForMethod;
-
-	public ControllerPluginRegister (ApplicationContext applicationContext) {
-		this.applicationContext = applicationContext;
-	}
 
 	@Override
 	public void initialize() throws Exception {
@@ -96,4 +96,13 @@ public class ControllerPluginRegister extends AbstractPluginRegister {
 		return requestMappingInfoList;
 	}
 
+	@Override
+	public int getOrder() {
+		return 5;
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
+	}
 }

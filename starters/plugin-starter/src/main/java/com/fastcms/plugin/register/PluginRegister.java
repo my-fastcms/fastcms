@@ -16,6 +16,8 @@
  */
 package com.fastcms.plugin.register;
 
+import org.springframework.core.Ordered;
+
 /**
  * @author： wjun_java@163.com
  * @date： 2021/4/26
@@ -23,7 +25,7 @@ package com.fastcms.plugin.register;
  * @modifiedBy：
  * @version: 1.0
  */
-public interface PluginRegister {
+public interface PluginRegister extends Ordered {
 
     /**
      * 插件组件初始化

@@ -16,7 +16,10 @@
  */
 package com.fastcms.plugin.register;
 
+import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.handler.AbstractHandlerMapping;
@@ -33,15 +36,12 @@ import java.util.stream.Collectors;
  * @modifiedBy：
  * @version: 1.0
  */
-public class InterceptorPluginRegister extends AbstractPluginRegister implements PluginRegister {
+@Component
+public class InterceptorPluginRegister extends AbstractPluginRegister implements PluginRegister, ApplicationContextAware {
 
 	AbstractHandlerMapping handlerMapping;
 	List<HandlerInterceptor> handlerInterceptorList;
 	ApplicationContext applicationContext;
-
-	public InterceptorPluginRegister(ApplicationContext applicationContext) {
-		this.applicationContext = applicationContext;
-	}
 
 	@Override
 	public void initialize() throws Exception {
@@ -75,4 +75,13 @@ public class InterceptorPluginRegister extends AbstractPluginRegister implements
 		return pluginRegistryWrapper.getClassList().stream().filter(item -> HandlerInterceptor.class.isAssignableFrom(item)).collect(Collectors.toList());
 	}
 
+	@Override
+	public int getOrder() {
+		return 8;
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
+	}
 }

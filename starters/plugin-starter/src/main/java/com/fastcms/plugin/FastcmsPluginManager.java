@@ -16,7 +16,7 @@
  */
 package com.fastcms.plugin;
 
-import com.fastcms.plugin.register.PluginRegister;
+import com.fastcms.plugin.register.CompoundPluginRegister;
 import com.fastcms.plugin.register.PluginRegistryWrapper;
 import org.pf4j.DefaultPluginManager;
 import org.pf4j.PluginWrapper;
@@ -42,7 +42,7 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
     private ApplicationContext applicationContext;
 
     @Autowired
-    PluginRegister pluginRegister;
+    CompoundPluginRegister compoundPluginRegister;
 
     public FastcmsPluginManager(Path... pluginsRoots) {
         super(pluginsRoots);
@@ -52,13 +52,13 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
     public void installPlugin(Path path) throws Exception {
         String pluginId = loadPlugin(path);
         startPlugin(pluginId);
-        pluginRegister.registry(new PluginRegistryWrapper(getPlugin(pluginId), applicationContext));
+        compoundPluginRegister.registry(new PluginRegistryWrapper(getPlugin(pluginId), applicationContext));
     }
 
     @Override
     public void unInstallPlugin(String pluginId) throws Exception {
         PluginWrapper pluginWrapper = getPlugin(pluginId);
-        pluginRegister.unRegistry(new PluginRegistryWrapper(pluginWrapper, applicationContext));
+        compoundPluginRegister.unRegistry(new PluginRegistryWrapper(pluginWrapper, applicationContext));
         stopPlugin(pluginId);
         unloadPlugin(pluginId, false);
         //Files.deleteIfExists(pluginWrapper.getPluginPath());
@@ -69,9 +69,9 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
     public void initPlugins() throws Exception {
         loadPlugins();
         startPlugins();
-        pluginRegister.initialize();
+        compoundPluginRegister.initialize();
         for (PluginWrapper startedPlugin : getPlugins()) {
-            pluginRegister.registry(new PluginRegistryWrapper(startedPlugin, applicationContext));
+            compoundPluginRegister.registry(new PluginRegistryWrapper(startedPlugin, applicationContext));
         }
     }
 

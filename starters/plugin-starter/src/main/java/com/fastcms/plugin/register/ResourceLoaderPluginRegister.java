@@ -22,6 +22,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.type.classreading.CachingMetadataReaderFactory;
 import org.springframework.core.type.classreading.MetadataReader;
+import org.springframework.stereotype.Component;
 import org.springframework.util.ClassUtils;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ import java.util.List;
  * @modifiedBy：
  * @version: 1.0
  */
+@Component
 public class ResourceLoaderPluginRegister extends AbstractPluginRegister implements PluginRegister {
 
 	@Override
@@ -73,4 +75,8 @@ public class ResourceLoaderPluginRegister extends AbstractPluginRegister impleme
 		registry(pluginRegistryWrapper);
 	}
 
+	@Override
+	public int getOrder() {
+		return 1;
+	}
 }
