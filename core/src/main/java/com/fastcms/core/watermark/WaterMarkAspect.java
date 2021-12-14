@@ -6,6 +6,8 @@ import com.fastcms.utils.SpringContextHolder;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import java.util.Comparator;
@@ -22,13 +24,14 @@ import java.util.Map;
  */
 @Aspect
 @Component
-public class WaterMarkAspect {
+public class WaterMarkAspect implements ApplicationListener<ApplicationStartedEvent> {
+
+    Map<String, WaterMarkProcessor> waterMarkProcessorMap;
 
     @Around("execution(* com.fastcms.service.IAttachmentService.saveBatch(..))")
     public Boolean addWaterMark(ProceedingJoinPoint joinPoint) {
 
         if(AttachUtils.enableWaterMark()) {
-            Map<String, WaterMarkProcessor> waterMarkProcessorMap = SpringContextHolder.getApplicationContext().getBeansOfType(WaterMarkProcessor.class);
             if(waterMarkProcessorMap.values().size() > 0) {
                 Object[] args = joinPoint.getArgs();
                 if(args != null && args.length ==1) {
@@ -49,6 +52,11 @@ public class WaterMarkAspect {
             throwable.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public void onApplicationEvent(ApplicationStartedEvent event) {
+        waterMarkProcessorMap = SpringContextHolder.getApplicationContext().getBeansOfType(WaterMarkProcessor.class);
     }
 
 }
