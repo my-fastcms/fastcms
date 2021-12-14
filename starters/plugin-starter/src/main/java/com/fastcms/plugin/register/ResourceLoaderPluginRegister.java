@@ -71,8 +71,7 @@ public class ResourceLoaderPluginRegister extends AbstractPluginRegister impleme
 
 	@Override
 	public void unRegistry(PluginRegistryWrapper pluginRegistryWrapper) throws Exception {
-		//卸载的插件的时候也需要重新加载插件资源
-		registry(pluginRegistryWrapper);
+
 	}
 
 	@Override

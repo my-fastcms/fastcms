@@ -175,6 +175,7 @@ export default {
         const getArticleInfo = (id: string) => {
             getArticle(id).then((res) => {
                 state.ruleForm = res.data;
+                console.log("contentHtml:" + state.ruleForm.contentHtml);
             })
         }
 
@@ -185,11 +186,9 @@ export default {
         onMounted(() => {
             state.params = route;
             getCategoryList();
-            if(state.row && state.row != null) {
-                let articleId = state.row.id;
-                if(articleId) {
-                    getArticleInfo(articleId);
-                }
+            let articleId = state.params.query.id;
+            if(articleId) {
+                getArticleInfo(articleId);
             }
         });
 
