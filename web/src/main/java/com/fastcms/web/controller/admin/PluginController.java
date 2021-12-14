@@ -19,16 +19,14 @@ package com.fastcms.web.controller.admin;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.core.utils.DirUtils;
 import com.fastcms.plugin.PluginManagerService;
 import org.apache.commons.lang.StringUtils;
 import org.pf4j.PluginManager;
 import org.pf4j.PluginWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -57,9 +55,10 @@ public class PluginController {
      * 插件列表
      * @return
      */
-    @RequestMapping("list")
-    public RestResult<List<PluginWrapper>> list() {
-        return RestResultUtils.success(pluginManager.getPlugins());
+    @GetMapping("list")
+    public RestResult<List<PluginWrapper>> list(PageModel pageModel) {
+        List<PluginWrapper> plugins = pluginManager.getPlugins();
+        return RestResultUtils.success(plugins);
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.fastcms.cms.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fastcms.cms.entity.SinglePage;
@@ -9,9 +10,7 @@ import com.fastcms.cms.service.ISinglePageService;
 import org.springframework.stereotype.Service;
 
 /**
- * <p>
- * 单页表 服务实现类
- * </p>
+ * 单页服务实现类
  *
  * @author wjun_java@163.com
  * @since 2021-05-25
@@ -21,9 +20,7 @@ public class SinglePageServiceImpl extends ServiceImpl<SinglePageMapper, SingleP
 
 	@Override
 	public SinglePage getPageByPath(String path) {
-		QueryWrapper queryWrapper = new QueryWrapper();
-		queryWrapper.eq("path", path);
-		return getOne(queryWrapper);
+		return getOne(Wrappers.<SinglePage>lambdaQuery().eq(SinglePage::getPath, path));
 	}
 
 	@Override

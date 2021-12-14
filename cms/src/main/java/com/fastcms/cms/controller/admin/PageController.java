@@ -17,6 +17,7 @@
 package com.fastcms.cms.controller.admin;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.cms.entity.SinglePage;
 import com.fastcms.cms.entity.SinglePageComment;
@@ -25,6 +26,7 @@ import com.fastcms.cms.service.ISinglePageService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.mybatis.PageModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -54,8 +56,11 @@ public class PageController {
 	 * @return
 	 */
 	@GetMapping("list")
-	public RestResult<Page<ISinglePageService.SinglePageVo>> list(PageModel page) {
-		QueryWrapper<SinglePage> queryWrapper = new QueryWrapper();
+	public RestResult<Page<ISinglePageService.SinglePageVo>> list(PageModel page,
+																  @RequestParam(name = "title", required = false) String title,
+																  @RequestParam(name = "status", required = false) String status) {
+		QueryWrapper queryWrapper = Wrappers.query().like(StrUtils.isNotBlank(title), "a.title", status)
+				.eq(StrUtils.isNotBlank(status), "a.status", status);
 		return RestResultUtils.success(singlePageService.pageSinglePage(page.toPage(), queryWrapper));
 	}
 
@@ -72,6 +77,27 @@ public class PageController {
 		} catch (Exception e) {
 			return RestResultUtils.failed(e.getMessage());
 		}
+	}
+
+	/**
+	 * 单页详情
+	 * @param id
+	 * @return
+	 */
+	@GetMapping("get/{id}")
+	public RestResult<SinglePage> getPage(@PathVariable("id") String id) {
+		return RestResultUtils.success(singlePageService.getById(id));
+	}
+
+	/**
+	 * 删除单页
+	 * @param id
+	 * @return
+	 */
+	@PostMapping("delete/{id}")
+	public Object delPage(@PathVariable("id") String id) {
+		singlePageService.removeById(id);
+		return RestResultUtils.success();
 	}
 
 	/**

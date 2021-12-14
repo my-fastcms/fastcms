@@ -2,8 +2,8 @@
 	<div>
 		<el-card shadow="hover">
 			<div class="mb15">
-				<el-button class="mt15" size="small" @click="addArticle()" type="primary" icon="iconfont icon-shuxingtu">新建页面</el-button>
-				<el-input size="small" placeholder="请输入文章标题" prefix-icon="el-icon-search" style="max-width: 180px" class="ml10"></el-input>
+				<el-button class="mt15" size="small" @click="addPage()" type="primary" icon="iconfont icon-shuxingtu">新建页面</el-button>
+				<el-input size="small" placeholder="请输入标题" prefix-icon="el-icon-search" style="max-width: 180px" class="ml10"></el-input>
 				<el-button size="small" type="primary" class="ml10">查询</el-button>
 			</div>
 			<el-table :data="tableData.data" stripe style="width: 100%">
@@ -40,7 +40,7 @@
 <script lang="ts">
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { toRefs, reactive, onMounted } from 'vue';
-import { getArticleList, delArticle } from '/@/api/article/index';
+import { getPageList, delPage } from '/@/api/page/index';
 import { useRouter } from 'vue-router';
 export default {
 	name: 'pageManager',
@@ -60,7 +60,7 @@ export default {
         const router = useRouter();
 		// 初始化表格数据
 		const initTableData = () => {
-			getArticleList(state.tableData.param).then((res) => {
+			getPageList(state.tableData.param).then((res) => {
 				state.tableData.data = res.data.records;
 				state.tableData.total = res.data.total;
 			}).catch(() => {
@@ -68,12 +68,12 @@ export default {
 		};
 		// 当前行删除
 		const onRowDel = (row: object) => {
-			ElMessageBox.confirm('此操作将永久删除文章, 是否继续?', '提示', {
+			ElMessageBox.confirm('此操作将永久删除页面, 是否继续?', '提示', {
 				confirmButtonText: '删除',
 				cancelButtonText: '取消',
 				type: 'warning',
 			}).then(() => {
-				delArticle(row.id).then(() => {
+				delPage(row.id).then(() => {
 					ElMessage.success("删除成功");
 					initTableData();
 				}).catch((res) => {
@@ -98,7 +98,7 @@ export default {
 		const onHandleCurrentChange = (val: number) => {
 			state.tableData.param.pageNum = val;
 		};
-        const addArticle = () => {
+        const addPage = () => {
             router.push({ path: '/page/write'});
         };
 		// 页面加载时
@@ -106,7 +106,7 @@ export default {
 			initTableData();
 		});
 		return {
-            addArticle,
+            addPage,
             onRowUpdate,
 			onRowDel,
 			onHandleSizeChange,

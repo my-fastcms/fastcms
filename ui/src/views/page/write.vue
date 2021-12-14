@@ -5,12 +5,12 @@
             <el-row :gutter="35">
                 <el-col class="mb20">
                     <el-form-item label="标题" prop="title">
-                        <el-input v-model="ruleForm.title" placeholder="请输入文章标题" clearable></el-input>
+                        <el-input v-model="ruleForm.title" placeholder="请输入页面标题" clearable></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col class="mb20">
-                    <el-form-item label="文章详情" prop="contentHtml">
-                        
+                    <el-form-item label="页面详情" prop="contentHtml">
+                        <ckeditor v-model="ruleForm.contentHtml"></ckeditor>
                     </el-form-item>
                 </el-col>
                 <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -19,7 +19,7 @@
                     </el-form-item>
                 </el-col>
                 <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                    <el-form-item label="文章摘要" prop="summary">
+                    <el-form-item label="页面摘要" prop="summary">
                         <el-input v-model="ruleForm.summary" placeholder="请输入文章摘要" clearable></el-input>
                     </el-form-item>
                 </el-col>
@@ -59,34 +59,6 @@
                         </el-switch>
                     </el-form-item>
                 </el-col>
-                <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                    <el-form-item label="分类" prop="categories">
-                        <el-select
-                            v-model="ruleForm.articleCategory"
-                            class="w100"
-                            multiple
-                            filterable
-                            allow-create
-                            default-first-option
-                            placeholder="请选择文章分类">
-                            <el-option v-for="item in categories" :key="item.id" :label="item.title" :value="item.title"></el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                    <el-form-item label="标签" prop="tags">
-                        <el-select
-                            v-model="ruleForm.articleTag"
-                            class="w100"
-                            multiple
-                            filterable
-                            allow-create
-                            default-first-option
-                            placeholder="请选择文章标签">
-                            <el-option v-for="item in tags" :key="item.id" :label="item.title" :value="item.title"></el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
                 <el-col class="mb20">
                     <el-form-item label="状态" prop="status">
                         <el-select v-model="ruleForm.status" placeholder="请选择状态" clearable class="w100">
@@ -110,13 +82,14 @@
 import { toRefs, reactive, getCurrentInstance, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRoute } from 'vue-router';
-import { addArticle, getArticleCategoryList, getArticle } from '/@/api/article/index';
+import { addPage, getPage } from '/@/api/page/index';
 import qs from 'qs';
+import CKEditor from "/@/components/ckeditor/index.vue";
 
 export default {
 	name: 'pageWrite',
     components: {
-        
+        ckeditor: CKEditor
     },
 	setup() {
         const route = useRoute();
@@ -142,24 +115,11 @@ export default {
 			},
 		});
 
-        //获取文章分类跟标签
-        const getCategoryList = () => {
-            getArticleCategoryList().then((res) => {
-                res.data.forEach(item => {
-                    if(item.type == 'tag') {
-                        state.tags.push(item);
-                    }else if(item.type == 'category') {
-                        state.categories.push(item);
-                    }
-                })
-            })
-        }
-
         const onSubmit = () => {
             proxy.$refs['myRefForm'].validate((valid: any) => {
 				if (valid) {
 					let params = qs.stringify(state.ruleForm, {arrayFormat: 'repeat'});
-					addArticle(params).then((res) => {
+					addPage(params).then((res) => {
                         state.ruleForm.id = res;
 						ElMessage.success("保存成功");
 					}).catch((res) => {
@@ -169,25 +129,23 @@ export default {
 			});
         };
 
-        const getArticleInfo = (id: string) => {
-            getArticle(id).then((res) => {
+        const getPageInfo = (id: string) => {
+            getPage(id).then((res) => {
                 state.ruleForm = res.data;
             })
         }
 
         onMounted(() => {
             state.params = route;
-            getCategoryList();
             let articleId = state.params.query.id;
             if(articleId) {
-                getArticleInfo(articleId);
+                getPageInfo(articleId);
             }
         });
 
 		return {
             onSubmit,
-            getCategoryList,
-            getArticleInfo,
+            getPageInfo,
         	...toRefs(state),
 		};
 	},

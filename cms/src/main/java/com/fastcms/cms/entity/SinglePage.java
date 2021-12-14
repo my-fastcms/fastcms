@@ -102,7 +102,7 @@ public class SinglePage implements Serializable {
     /**
      * 是否开启评论
      */
-    private Integer commentEnable = 0;
+    private Boolean commentEnable = true;
 
     /**
      * 创建日期
@@ -235,11 +235,11 @@ public class SinglePage implements Serializable {
         this.viewCount = viewCount;
     }
 
-    public Integer getCommentEnable() {
+    public Boolean getCommentEnable() {
         return commentEnable;
     }
 
-    public void setCommentEnable(Integer commentEnable) {
+    public void setCommentEnable(Boolean commentEnable) {
         this.commentEnable = commentEnable;
     }
 
