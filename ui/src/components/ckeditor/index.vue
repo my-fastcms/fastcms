@@ -48,8 +48,9 @@ export default defineComponent({
   setup(props, {emit}) {
     let attachDialog = ref();
     let editorExample: { setData: (arg0: string | undefined) => any; } | null = null;
+    let isPrint = false;
     onMounted(() => {
-      connect.dialogObj = attachDialog.value;``
+      connect.dialogObj = attachDialog.value;
       ClassicEditor
           .create(document.querySelector('#imgEditor'), {
             plugins: [
@@ -121,6 +122,7 @@ export default defineComponent({
         editorExample = editor;
         editor.setData(props.modelValue);
         editor.model.document.on("change", function() {
+          isPrint = true;
           emit("update:modelValue", editor.getData());
         });
         CKEditorInspector.attach(editor);
@@ -129,10 +131,10 @@ export default defineComponent({
         console.log(error);
       });
     });
-    // 暂定注释掉看后期需求
-    // watch(() => props.modelValue, val => {
-    //   editorExample && editorExample.setData(val);
-    // })
+    watch(() => props.modelValue, val => {
+      if (isPrint) return isPrint = false;
+      editorExample && editorExample.setData(val);
+    })
     return {
       attachDialog
     }
