@@ -19,6 +19,7 @@ package com.fastcms.plugin;
 import org.pf4j.Plugin;
 import org.pf4j.PluginWrapper;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 
 /**
  * @author： wjun_java@163.com
@@ -29,33 +30,28 @@ import org.springframework.context.ApplicationContext;
  */
 public abstract class PluginBase extends Plugin {
 
-    protected ApplicationContext mainApplicationContext;
+    private ApplicationContext applicationContext;
 
     public PluginBase(PluginWrapper wrapper) {
         super(wrapper);
-        FastcmsPluginManager fastcmsPluginManager = (FastcmsPluginManager) getWrapper().getPluginManager();
-        this.mainApplicationContext = fastcmsPluginManager.getApplicationContext();
     }
 
-    protected ApplicationContext getMainApplicationContext() {
-        return mainApplicationContext;
-    }
+    public final ApplicationContext getApplicationContext() {
+        if (applicationContext == null) {
+            applicationContext = createApplicationContext();
+        }
 
-    @Override
-    public void start() {
-        super.start();
-        PluginContextHolder.put(getWrapper().getPluginId(), getWrapper());
+        return applicationContext;
     }
 
     @Override
     public void stop() {
-        super.stop();
-        PluginContextHolder.remove(getWrapper().getPluginId());
+        // close applicationContext
+        if ((applicationContext != null) && (applicationContext instanceof ConfigurableApplicationContext)) {
+            ((ConfigurableApplicationContext) applicationContext).close();
+        }
     }
 
-    @Override
-    public void delete() {
-        super.delete();
-    }
+    protected abstract ApplicationContext createApplicationContext();
 
 }

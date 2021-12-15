@@ -21,7 +21,9 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.entity.ArticleCategory;
+import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.utils.JsoupUtils;
+import com.fastcms.utils.ConfigUtils;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -187,7 +189,7 @@ public interface IArticleService extends IService<Article> {
         }
 
         public String getUrl() {
-            return "/a/" + getId();
+            return ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + "/a/" + getId();
         }
 
     }

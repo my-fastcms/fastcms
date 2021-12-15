@@ -16,19 +16,24 @@
  */
 package com.fastcms.plugin;
 
-import com.fastcms.plugin.register.CompoundPluginRegister;
-import com.fastcms.plugin.register.PluginRegistryWrapper;
+import com.fastcms.plugin.extension.ExtensionsInjector;
+import com.fastcms.plugin.extension.FastcmsSpringExtensionFactory;
+import org.apache.commons.io.FileUtils;
 import org.pf4j.DefaultPluginManager;
+import org.pf4j.ExtensionFactory;
 import org.pf4j.PluginWrapper;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationListener;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author： wjun_java@163.com
@@ -41,38 +46,82 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
 
     private ApplicationContext applicationContext;
 
-    @Autowired
-    CompoundPluginRegister compoundPluginRegister;
-
     public FastcmsPluginManager(Path... pluginsRoots) {
         super(pluginsRoots);
     }
 
     @Override
+    protected ExtensionFactory createExtensionFactory() {
+        return new FastcmsSpringExtensionFactory(this);
+    }
+
+    @Override
     public void installPlugin(Path path) throws Exception {
+        if(isDevelopment()) throw new Exception("开发环境不允许安装");
         String pluginId = loadPlugin(path);
         startPlugin(pluginId);
-        compoundPluginRegister.registry(new PluginRegistryWrapper(getPlugin(pluginId), applicationContext));
     }
 
     @Override
     public void unInstallPlugin(String pluginId) throws Exception {
-        PluginWrapper pluginWrapper = getPlugin(pluginId);
-        compoundPluginRegister.unRegistry(new PluginRegistryWrapper(pluginWrapper, applicationContext));
-        stopPlugin(pluginId);
-        unloadPlugin(pluginId, false);
-        //Files.deleteIfExists(pluginWrapper.getPluginPath());
-        //FileUtils.forceDelete(pluginWrapper.getPluginPath().toFile());
+        if(isDevelopment()) throw new Exception("开发环境不允许卸载");
+        try {
+            PluginWrapper plugin = getPlugin(pluginId);
+            Path pluginPath = plugin.getPluginPath();
+
+            stopPlugin(pluginId);
+            unloadPlugin(pluginId, false);
+
+            FileUtils.forceDeleteOnExit(pluginPath.toFile());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception(e.getMessage());
+        }
     }
 
     @Override
     public void initPlugins() throws Exception {
         loadPlugins();
         startPlugins();
-        compoundPluginRegister.initialize();
-        for (PluginWrapper startedPlugin : getPlugins()) {
-            compoundPluginRegister.registry(new PluginRegistryWrapper(startedPlugin, applicationContext));
+
+        AbstractAutowireCapableBeanFactory beanFactory = (AbstractAutowireCapableBeanFactory) applicationContext.getAutowireCapableBeanFactory();
+        ExtensionsInjector extensionsInjector = new ExtensionsInjector(this, beanFactory);
+        extensionsInjector.injectExtensions();
+    }
+
+    @Override
+    public PluginResult getPluginList(int pageNum, int pageSize, String pluginId, String provider) {
+        List<PluginWrapper> plugins = getPlugins();
+        if(plugins == null || plugins.size() <=0) {
+            return new PluginResult(0, new ArrayList<>());
         }
+
+        Integer count = plugins.size();     // 记录总数
+        Integer pageCount;                  // 总页数
+        if (count % pageSize == 0) {
+            pageCount = count / pageSize;
+        } else {
+            pageCount = count / pageSize + 1;
+        }
+
+        int fromIndex;  // 开始索引
+        int toIndex;    // 结束索引
+
+        if (pageNum != pageCount) {
+            fromIndex = (pageNum - 1) * pageSize;
+            toIndex = fromIndex + pageSize;
+        } else {
+            fromIndex = (pageNum - 1) * pageSize;
+            toIndex = count;
+        }
+
+        List<PluginWrapper> wrapperList = plugins.subList(fromIndex, toIndex);
+
+        List<PluginVo> pluginVoList = wrapperList.stream().map(item -> new PluginVo(item.getPluginId(), item.getDescriptor().getPluginClass(),
+                item.getDescriptor().getVersion(), item.getDescriptor().getProvider(), item.getDescriptor().getPluginDescription(),
+                "", item.getPluginState().name())).collect(Collectors.toList());
+        return new PluginResult(count, pluginVoList);
     }
 
     @Override
@@ -97,4 +146,5 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
             e.printStackTrace();
         }
     }
+
 }

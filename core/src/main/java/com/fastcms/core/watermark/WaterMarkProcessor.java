@@ -24,6 +24,6 @@ public interface WaterMarkProcessor extends Ordered {
      * @param attachment
      * @return
      */
-    Boolean isMatch(Attachment attachment);
+    boolean isMatch(Attachment attachment);
 
 }

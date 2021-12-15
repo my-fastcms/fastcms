@@ -11,5 +11,66 @@
 
     <artifactId>hello-world-plugin</artifactId>
 
+    <properties>
+        <plugin.id>hello-world-plugin</plugin.id>
+        <plugin.class>com.fastcms.hello.HelloPlugin</plugin.class>
+        <plugin.version>0.0.1</plugin.version>
+        <plugin.provider>wjun_java@163.com</plugin.provider>
+        <plugin.description>hello, fastcms plugin world</plugin.description>
+        <plugin.dependencies />
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.fastcms</groupId>
+            <artifactId>fastcms-core</artifactId>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- DOESN'T WORK WITH MAVEN 3 (I defined the plugin metadata in properties section)
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0-alpha-2</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>plugin.properties</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            -->
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Plugin-Id>${plugin.id}</Plugin-Id>
+                            <Plugin-Class>${plugin.class}</Plugin-Class>
+                            <Plugin-Version>${plugin.version}</Plugin-Version>
+                            <Plugin-Provider>${plugin.provider}</Plugin-Provider>
+                            <Plugin-description>${plugin.description}</Plugin-description>
+                            <Plugin-Dependencies>${plugin.dependencies}</Plugin-Dependencies>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
 
 </project>

@@ -13,14 +13,20 @@
                         <ckeditor v-model="ruleForm.contentHtml"></ckeditor>
                     </el-form-item>
                 </el-col>
-                <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+                <el-col class="mb20">
                     <el-form-item label="缩略图" prop="thumbnail">
-                        <el-input v-model="ruleForm.thumbnail" placeholder="请选择缩略图" clearable></el-input>
+                        <el-image
+                            style="width: 100px; height: 100px"
+                            :src="ruleForm.thumbnail"
+                            :fit="fit"></el-image>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-link type="primary" @click="onAttachDialogOpen">选择图片</el-link>
                     </el-form-item>
                 </el-col>
-                <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+                <el-col class="mb20">
                     <el-form-item label="文章摘要" prop="summary">
-                        <el-input v-model="ruleForm.summary" placeholder="请输入文章摘要" clearable></el-input>
+                        <el-input v-model="ruleForm.summary" type="textarea" :rows="2" placeholder="请输入文章摘要" clearable></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -103,13 +109,15 @@
             </el-row>
         </el-form>
     </el-card>
+    <AttachDialog ref="attachDialogRef" @attachHandler="getSelectAttach"/>
 </div>
 </template>
 
 <script lang="ts">
-import { toRefs, reactive, getCurrentInstance, onMounted } from 'vue';
+import { toRefs, ref, reactive, getCurrentInstance, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRoute } from 'vue-router';
+import AttachDialog from '/@/components/attach/index.vue';
 import { addArticle, getArticleCategoryList, getArticle } from '/@/api/article/index';
 import qs from 'qs';
 import CKEditor from "/@/components/ckeditor/index.vue";
@@ -117,12 +125,15 @@ import CKEditor from "/@/components/ckeditor/index.vue";
 export default {
 	name: 'articleWrite',
     components: {
+        AttachDialog,
         ckeditor: CKEditor
     },
 	setup(props, ctx) {
+        const attachDialogRef = ref();
         const route = useRoute();
         const { proxy } = getCurrentInstance() as any;
 		const state = reactive({
+            fit: "fill",
             row: null,
             isShowDialog: false,
             params: {},
@@ -175,13 +186,22 @@ export default {
         const getArticleInfo = (id: string) => {
             getArticle(id).then((res) => {
                 state.ruleForm = res.data;
-                console.log("contentHtml:" + state.ruleForm.contentHtml);
             })
         }
 
         const onEditorReady = (editor) => {
             console.log(editor);
         };
+
+        //打开附件弹出框
+		const onAttachDialogOpen = () => {
+			attachDialogRef.value.openDialog(1);
+		};
+
+        //获取弹出框选中的附件
+		const getSelectAttach = (value) => {
+			state.ruleForm.thumbnail = value[0].path;
+		};
 
         onMounted(() => {
             state.params = route;
@@ -193,7 +213,10 @@ export default {
         });
 
 		return {
+            attachDialogRef,
             onSubmit,
+            onAttachDialogOpen,
+            getSelectAttach,
             getCategoryList,
             getArticleInfo,
             onEditorReady,

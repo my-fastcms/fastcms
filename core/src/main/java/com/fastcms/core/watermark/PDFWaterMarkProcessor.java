@@ -20,7 +20,7 @@ public class PDFWaterMarkProcessor extends AbstractWaterMarkProcessor {
     }
 
     @Override
-    public Boolean isMatch(Attachment attachment) {
+    public boolean isMatch(Attachment attachment) {
         return false;
     }
 

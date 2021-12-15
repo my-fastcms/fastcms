@@ -37,7 +37,7 @@ public class ImageWaterMarkProcessor extends AbstractWaterMarkProcessor {
     }
 
     @Override
-    public Boolean isMatch(Attachment attachment) {
+    public boolean isMatch(Attachment attachment) {
         return ImageUtils.isImageExtName(attachment.getFileName());
     }
 

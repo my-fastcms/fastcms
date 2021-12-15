@@ -16,22 +16,21 @@
  */
 package com.fastcms.web.controller.admin;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.common.utils.FileUtils;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.core.utils.DirUtils;
 import com.fastcms.plugin.PluginManagerService;
 import org.apache.commons.lang.StringUtils;
-import org.pf4j.PluginManager;
-import org.pf4j.PluginWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.nio.file.Paths;
-import java.util.List;
 
 /**
  * 插件管理
@@ -46,19 +45,19 @@ import java.util.List;
 public class PluginController {
 
     @Autowired
-    private PluginManager pluginManager;
-
-    @Autowired
     private PluginManagerService pluginService;
 
     /**
      * 插件列表
+     * @param pluginId  插件id
+     * @param provider  插件作者
      * @return
      */
     @GetMapping("list")
-    public RestResult<List<PluginWrapper>> list(PageModel pageModel) {
-        List<PluginWrapper> plugins = pluginManager.getPlugins();
-        return RestResultUtils.success(plugins);
+    public RestResult<Page<PluginManagerService.PluginVo>> list(PageModel page, String pluginId, String provider) {
+        PluginManagerService.PluginResult pluginResult = pluginService.getPluginList(page.getPageNum().intValue(), page.getPageSize().intValue(), pluginId, provider);
+        return RestResultUtils.success(new Page<PluginManagerService.PluginVo>(page.getPageNum(), page.getPageSize(), pluginResult.getTotal())
+                .setRecords(pluginResult.getPluginVoList()));
     }
 
     /**
@@ -69,8 +68,8 @@ public class PluginController {
     @PostMapping("install")
     public Object install(@RequestParam("file") MultipartFile file) {
 
-        String fileName = file.getOriginalFilename();
-        String suffixName = fileName.substring(fileName.lastIndexOf("."));
+        String suffixName = FileUtils.getSuffix(file.getOriginalFilename());
+
         //检查文件格式是否合法
         if(StringUtils.isEmpty(suffixName)) {
             return RestResultUtils.failed("文件格式不合格，请上传jar或zip文件");
@@ -98,8 +97,8 @@ public class PluginController {
      * @param pluginId  插件id
      * @return
      */
-    @PostMapping("unInstall")
-    public Object unInstall(@RequestParam(name = "pluginId") String pluginId) {
+    @PostMapping("unInstall/{pluginId}")
+    public Object unInstall(@PathVariable(name = "pluginId") String pluginId) {
 
         try {
             pluginService.unInstallPlugin(pluginId);

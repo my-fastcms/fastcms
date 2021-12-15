@@ -53,7 +53,7 @@ import java.util.List;
  * @version: 1.0
  */
 @Configuration
-public class FastcmsConfig implements WebMvcConfigurer, ApplicationListener<WebServerInitializedEvent> {
+public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListener<WebServerInitializedEvent> {
 
     @Autowired
     private IConfigService configService;

@@ -2,6 +2,7 @@ package com.fastcms.core.watermark;
 
 import com.fastcms.core.utils.AttachUtils;
 import com.fastcms.entity.Attachment;
+import com.fastcms.plugin.FastcmsPluginManager;
 import com.fastcms.utils.SpringContextHolder;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -10,9 +11,7 @@ import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 附件水印处理切面
@@ -26,17 +25,17 @@ import java.util.Map;
 @Component
 public class WaterMarkAspect implements ApplicationListener<ApplicationStartedEvent> {
 
-    Map<String, WaterMarkProcessor> waterMarkProcessorMap;
+    List<WaterMarkProcessor> waterMarkProcessorList;
 
     @Around("execution(* com.fastcms.service.IAttachmentService.saveBatch(..))")
     public Boolean addWaterMark(ProceedingJoinPoint joinPoint) {
 
         if(AttachUtils.enableWaterMark()) {
-            if(waterMarkProcessorMap.values().size() > 0) {
+            if(waterMarkProcessorList !=null && waterMarkProcessorList.size() > 0) {
                 Object[] args = joinPoint.getArgs();
                 if(args != null && args.length ==1) {
                     List<Attachment> attachmentList = (List<Attachment>) args[0];
-                    attachmentList.forEach(item -> waterMarkProcessorMap.values().stream().sorted(Comparator.comparing(WaterMarkProcessor::getOrder)).forEach(processor -> {
+                    attachmentList.forEach(item -> waterMarkProcessorList.stream().sorted(Comparator.comparing(WaterMarkProcessor::getOrder)).forEach(processor -> {
                         if(processor.isMatch(item)) {
                             processor.process(item);
                             return;
@@ -56,7 +55,14 @@ public class WaterMarkAspect implements ApplicationListener<ApplicationStartedEv
 
     @Override
     public void onApplicationEvent(ApplicationStartedEvent event) {
-        waterMarkProcessorMap = SpringContextHolder.getApplicationContext().getBeansOfType(WaterMarkProcessor.class);
+        Map<String, WaterMarkProcessor> waterMarkProcessorMap = SpringContextHolder.getApplicationContext().getBeansOfType(WaterMarkProcessor.class);
+        waterMarkProcessorList = Collections.synchronizedList(new ArrayList<>());
+        waterMarkProcessorList.addAll(waterMarkProcessorMap.values());
+
+        //添加插件扩展
+        List<WaterMarkProcessor> extensions = SpringContextHolder.getBean(FastcmsPluginManager.class).getExtensions(WaterMarkProcessor.class);
+        waterMarkProcessorList.addAll(extensions);
+
     }
 
 }

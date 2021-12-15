@@ -8,7 +8,12 @@
 			</div>
 			<el-table :data="tableData.data" stripe style="width: 100%">
 				<el-table-column prop="id" label="ID" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="title" label="标题" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="title" label="标题" show-overflow-tooltip>
+					<template #default="scope">
+					<a :href="scope.row.url" target="_blank">
+						{{scope.row.title}}
+					</a></template>
+				</el-table-column>
 				<el-table-column prop="author" label="作者" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="status" label="状态" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="viewCount" label="浏览次数" show-overflow-tooltip></el-table-column>

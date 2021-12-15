@@ -16,6 +16,7 @@
  */
 package com.fastcms.cms.controller.admin;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -86,7 +87,10 @@ public class PageController {
 	 */
 	@GetMapping("get/{id}")
 	public RestResult<SinglePage> getPage(@PathVariable("id") String id) {
-		return RestResultUtils.success(singlePageService.getById(id));
+		LambdaQueryWrapper<SinglePage> wrapper = Wrappers.<SinglePage>lambdaQuery()
+				.select(SinglePage.class, info -> !info.getColumn().equals("created") && !info.getColumn().equals("updated") && !info.getColumn().equals("version"))
+				.eq(SinglePage::getId, id);
+		return RestResultUtils.success(singlePageService.getOne(wrapper));
 	}
 
 	/**

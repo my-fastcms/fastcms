@@ -9,18 +9,29 @@
                     </el-form-item>
                 </el-col>
                 <el-col class="mb20">
+                    <el-form-item label="访问路径" prop="path">
+                        <el-input v-model="ruleForm.path" placeholder="请输入页面访问路径" clearable></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col class="mb20">
                     <el-form-item label="页面详情" prop="contentHtml">
                         <ckeditor v-model="ruleForm.contentHtml"></ckeditor>
                     </el-form-item>
                 </el-col>
-                <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+                <el-col class="mb20">
                     <el-form-item label="缩略图" prop="thumbnail">
-                        <el-input v-model="ruleForm.thumbnail" placeholder="请选择缩略图" clearable></el-input>
+                        <el-image
+                            style="width: 100px; height: 100px"
+                            :src="ruleForm.thumbnail"
+                            :fit="fit"></el-image>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-link type="primary" @click="onAttachDialogOpen">选择图片</el-link>
                     </el-form-item>
                 </el-col>
-                <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+                <el-col class="mb20">
                     <el-form-item label="页面摘要" prop="summary">
-                        <el-input v-model="ruleForm.summary" placeholder="请输入文章摘要" clearable></el-input>
+                        <el-input v-model="ruleForm.summary" type="textarea" :rows="2" placeholder="请输入文章摘要" clearable></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -31,16 +42,6 @@
                 <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                     <el-form-item label="SEO描述" prop="seoDescription">
                         <el-input type="textarea" :rows="2" v-model="ruleForm.seoDescription" placeholder="请输入SEO描述" clearable></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                    <el-form-item label="排序" prop="sortNum">
-                        <el-input v-model="ruleForm.sortNum" placeholder="请输入排序序号" clearable></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-                    <el-form-item label="外链" prop="outLink">
-                        <el-input v-model="ruleForm.outLink" placeholder="请输入外链" clearable></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -75,13 +76,15 @@
             </el-row>
         </el-form>
     </el-card>
+    <AttachDialog ref="attachDialogRef" @attachHandler="getSelectAttach"/>
 </div>
 </template>
 
 <script lang="ts">
-import { toRefs, reactive, getCurrentInstance, onMounted } from 'vue';
+import { toRefs, ref, reactive, getCurrentInstance, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRoute } from 'vue-router';
+import AttachDialog from '/@/components/attach/index.vue';
 import { addPage, getPage } from '/@/api/page/index';
 import qs from 'qs';
 import CKEditor from "/@/components/ckeditor/index.vue";
@@ -89,26 +92,27 @@ import CKEditor from "/@/components/ckeditor/index.vue";
 export default {
 	name: 'pageWrite',
     components: {
+        AttachDialog,
         ckeditor: CKEditor
     },
 	setup() {
+        const attachDialogRef = ref();
         const route = useRoute();
         const { proxy } = getCurrentInstance() as any;
 		const state = reactive({
+            fit: "fill",
             params: {},
-            categories: [],
-            tags: [],
             ruleForm: {
                 title: '',
+                path: '',
                 commentEnable: 1,
                 contentHtml: '',
                 status: 'publish'
             },
             rules: {
-				"title": { required: true, message: '请输入文章标题', trigger: 'blur' },
-                "contentHtml": { required: true, message: '请输入文章详情', trigger: 'blur' },
-                "thumbnail": { required: true, message: '请选择缩略图', trigger: 'blur' },
-                "summary": { required: true, message: '请输入文章摘要', trigger: 'blur' },
+				"title": { required: true, message: '请输入页面标题', trigger: 'blur' },
+                "path": { required: true, message: '请输入页面访问路径', trigger: 'blur' },
+                "contentHtml": { required: true, message: '请输入页面详情', trigger: 'blur' },
                 "seoKeywords": { required: true, message: '请输入SEO关键词', trigger: 'blur' },
                 "seoDescription": { required: true, message: '请输入SEO描述', trigger: 'blur' },
                 "status": { required: true, message: '请选择发布状态', trigger: 'blur' },
@@ -135,16 +139,29 @@ export default {
             })
         }
 
+        //打开附件弹出框
+		const onAttachDialogOpen = () => {
+			attachDialogRef.value.openDialog(1);
+		};
+
+        //获取弹出框选中的附件
+		const getSelectAttach = (value) => {
+			state.ruleForm.thumbnail = value[0].path;
+		};
+
         onMounted(() => {
             state.params = route;
-            let articleId = state.params.query.id;
-            if(articleId) {
-                getPageInfo(articleId);
+            let pageId = state.params.query.id;
+            if(pageId) {
+                getPageInfo(pageId);
             }
         });
 
 		return {
+            attachDialogRef,
             onSubmit,
+            onAttachDialogOpen,
+            getSelectAttach,
             getPageInfo,
         	...toRefs(state),
 		};

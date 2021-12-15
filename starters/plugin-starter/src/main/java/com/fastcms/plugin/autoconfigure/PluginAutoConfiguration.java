@@ -36,21 +36,21 @@ public class PluginAutoConfiguration {
         this.properties = properties;
     }
 
-
     @Bean
     public FastcmsPluginManager pluginManager() {
 
-        String[] activeProfiles = environment.getActiveProfiles();
-
-        String profile = activeProfiles == null || activeProfiles.length <=0 ? FastcmsConstants.DEV_MODE : activeProfiles[0];
-
-        if(FastcmsConstants.DEV_MODE.equals(profile)) {
+        if(FastcmsConstants.DEV_MODE.equals(getProfile())) {
             System.setProperty(AbstractPluginManager.MODE_PROPERTY_NAME, RuntimeMode.DEVELOPMENT.toString());
         }
 
         Path pluginPath = Paths.get(properties.getPath());
         FastcmsPluginManager fastcmsPluginManager = new FastcmsPluginManager(pluginPath);
         return fastcmsPluginManager;
+    }
+
+    String getProfile() {
+        String[] activeProfiles = environment.getActiveProfiles();
+        return activeProfiles == null || activeProfiles.length <=0 ? FastcmsConstants.DEV_MODE : activeProfiles[0];
     }
 
 }

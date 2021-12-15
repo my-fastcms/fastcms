@@ -16,7 +16,9 @@
  */
 package com.fastcms.plugin;
 
+import java.io.Serializable;
 import java.nio.file.Path;
+import java.util.List;
 
 /**
  * @author： wjun_java@163.com
@@ -46,5 +48,117 @@ public interface PluginManagerService {
 	 * @throws Exception
 	 */
 	void initPlugins() throws Exception;
+
+	/**
+	 * 分页查询插件列表
+	 * @param pageNum
+	 * @param pageSize
+	 * @param pluginId	插件id
+	 * @param provider	插件提供者
+	 * @return
+	 */
+	PluginResult getPluginList(int pageNum, int pageSize, String pluginId, String provider);
+
+	class PluginResult implements Serializable {
+		private Integer total;
+		private List<PluginVo> pluginVoList;
+
+		public PluginResult(Integer total, List<PluginVo> pluginVoList) {
+			this.total = total;
+			this.pluginVoList = pluginVoList;
+		}
+
+		public Integer getTotal() {
+			return total;
+		}
+
+		public void setTotal(Integer total) {
+			this.total = total;
+		}
+
+		public List<PluginVo> getPluginVoList() {
+			return pluginVoList;
+		}
+
+		public void setPluginVoList(List<PluginVo> pluginVoList) {
+			this.pluginVoList = pluginVoList;
+		}
+	}
+
+	class PluginVo implements Serializable {
+		private String pluginId;
+		private String pluginClass;
+		private String version;
+		private String provider;
+		private String description;
+		private String dependencies;
+		private String pluginState;
+
+		public PluginVo(String pluginId, String pluginClass, String version, String provider, String description, String dependencies, String pluginState) {
+			this.pluginId = pluginId;
+			this.pluginClass = pluginClass;
+			this.version = version;
+			this.provider = provider;
+			this.description = description;
+			this.dependencies = dependencies;
+			this.pluginState = pluginState;
+		}
+
+		public String getPluginId() {
+			return pluginId;
+		}
+
+		public void setPluginId(String pluginId) {
+			this.pluginId = pluginId;
+		}
+
+		public String getPluginClass() {
+			return pluginClass;
+		}
+
+		public void setPluginClass(String pluginClass) {
+			this.pluginClass = pluginClass;
+		}
+
+		public String getVersion() {
+			return version;
+		}
+
+		public void setVersion(String version) {
+			this.version = version;
+		}
+
+		public String getProvider() {
+			return provider;
+		}
+
+		public void setProvider(String provider) {
+			this.provider = provider;
+		}
+
+		public String getDescription() {
+			return description;
+		}
+
+		public void setDescription(String description) {
+			this.description = description;
+		}
+
+		public String getDependencies() {
+			return dependencies;
+		}
+
+		public void setDependencies(String dependencies) {
+			this.dependencies = dependencies;
+		}
+
+		public String getPluginState() {
+			return pluginState;
+		}
+
+		public void setPluginState(String pluginState) {
+			this.pluginState = pluginState;
+		}
+	}
 
 }

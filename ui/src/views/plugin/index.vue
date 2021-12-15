@@ -2,20 +2,27 @@
 	<div>
 		<el-card shadow="hover">
 			<div class="mb15">
-				<el-button class="mt15" size="small" type="primary" icon="iconfont icon-shuxingtu">安装插件</el-button>
-				<el-input size="small" placeholder="请插件标题" prefix-icon="el-icon-search" style="max-width: 180px" class="ml10"></el-input>
-				<el-button size="small" type="primary" class="ml10">查询</el-button>
+				<el-upload 
+					:action="uploadUrl"
+					name="file"
+					:headers="headers"
+					:show-file-list="false"
+					:on-success="uploadSuccess"
+					:on-error="onHandleUploadError"
+					:on-exceed="onHandleExceed"
+					accept=".jar">
+					<el-button class="mt15" size="small" type="primary" icon="iconfont icon-shuxingtu">安装插件</el-button>
+				</el-upload>
 			</div>
 			<el-table :data="tableData.data" stripe style="width: 100%">
-				<el-table-column prop="id" label="ID" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="title" label="插件名称" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="author" label="作者" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="status" label="状态" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="viewCount" label="浏览次数" show-overflow-tooltip></el-table-column>
-                <el-table-column prop="created" label="创建时间" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="pluginId" label="ID" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="pluginClass" label="插件名称" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="provider" label="作者" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="pluginState" label="状态" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="description" label="描述" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="path" label="操作" width="90">
 					<template #default="scope">
-						<el-button v-if="scope.row.id != 1" size="mini" type="text" @click="onRowUnInstall(scope.row)">卸载</el-button>
+						<el-button size="mini" type="text" @click="onRowUnInstall(scope.row)">卸载</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -40,10 +47,14 @@
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { toRefs, reactive, onMounted } from 'vue';
 import { getPluginList, unInstallPlugin } from '/@/api/plugin/index';
+import { Session } from '/@/utils/storage';
 export default {
 	name: 'pluginManager',
 	setup() {
 		const state = reactive({
+			limit: 1,
+			uploadUrl: import.meta.env.VITE_API_URL + "/admin/plugin/install",
+			headers: {"Authorization": Session.get('token')},
 			tableData: {
 				data: [],
 				total: 0,
@@ -69,7 +80,7 @@ export default {
 				cancelButtonText: '取消',
 				type: 'warning',
 			}).then(() => {
-				unInstallPlugin(row.id).then(() => {
+				unInstallPlugin(row.pluginId).then(() => {
 					ElMessage.success("卸载成功");
 					initTableData();
 				}).catch((res) => {
@@ -87,6 +98,22 @@ export default {
 		const onHandleCurrentChange = (val: number) => {
 			state.tableData.param.pageNum = val;
 		};
+
+		const uploadSuccess = (res :any) => {
+			if(res.code == 200) {
+				ElMessage.success("安装成功");
+				initTableData();
+			}else {
+				ElMessage.error(res.message);
+			}
+		}
+		const onHandleUploadError = (error: any) => {
+			ElMessage.error("安装失败," + error);
+		}
+		const onHandleExceed = () => {
+
+		}
+
 		// 页面加载时
 		onMounted(() => {
 			initTableData();
@@ -96,6 +123,9 @@ export default {
 			onHandleSizeChange,
 			onHandleCurrentChange,
 			initTableData,
+			uploadSuccess,
+			onHandleUploadError,
+			onHandleExceed,
 			...toRefs(state),
 		};
 	},

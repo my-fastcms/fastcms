@@ -1,6 +1,8 @@
 package com.fastcms.cms.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.utils.ConfigUtils;
 import org.apache.commons.lang.StringUtils;
 
 import javax.validation.constraints.NotBlank;
@@ -122,7 +124,7 @@ public class Article implements Serializable {
     String url;
 
     public String getUrl() {
-        return StringUtils.isBlank(getOutLink()) ? "/a/" + getId() : getOutLink();
+        return StringUtils.isBlank(getOutLink()) ? ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + "/a/" + getId() : getOutLink();
     }
 
     public Long getId() {

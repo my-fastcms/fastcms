@@ -8,9 +8,9 @@
 						<div class="home-card-first-right ml15">
 							<div class="flex-margin">
 								<div class="home-card-first-right-title">
-									{{ currentTime }}，{{ getUserInfos.userName === '' ? 'test' : getUserInfos.userName }}！
+									{{ currentTime }}，{{ getUserInfos.username === '' ? 'test' : getUserInfos.username }}！
 								</div>
-								<div class="home-card-first-right-msg mt5">{{ getUserInfos.userName === 'admin' ? '超级管理' : '普通用户' }}</div>
+								<div class="home-card-first-right-msg mt5">{{ getUserInfos.username === 'admin' ? '超级管理' : '普通用户' }}</div>
 							</div>
 						</div>
 					</div>
