@@ -45,11 +45,12 @@ public abstract class AbstractCodeGen extends AutoGenerator {
     abstract void setSystemTemplateConfig();
     abstract String getMapperXmlOutputDir();
     abstract String getModelName();
+    abstract String[] getTableNames();
 
     protected StrategyConfig setStrategyConfig() {
         // 策略配置
         StrategyConfig strategy = new StrategyConfig();
-        strategy.setInclude("user", "role", "permission" , "config", "attachment", "user_tag", "user_openid", "payment_record");
+        strategy.setInclude(getTableNames());
         strategy.setNaming(NamingStrategy.underline_to_camel);
         strategy.setColumnNaming(NamingStrategy.underline_to_camel);
         strategy.setEntityLombokModel(false);

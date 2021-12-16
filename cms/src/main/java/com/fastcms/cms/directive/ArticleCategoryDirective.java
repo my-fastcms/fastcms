@@ -16,7 +16,6 @@
  */
 package com.fastcms.cms.directive;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.fastcms.cms.entity.ArticleCategory;
 import com.fastcms.cms.service.IArticleCategoryService;
 import com.fastcms.core.directive.BaseDirective;
@@ -24,7 +23,6 @@ import freemarker.core.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,11 +46,6 @@ public class ArticleCategoryDirective extends BaseDirective {
 		Long categoryId = getLong(ARTICLE_CATEGORY_ID, params, 0l);
 
 		ArticleCategory articleCategory = articleCategoryService.getById(categoryId);
-
-		if(articleCategory != null) {
-			List<ArticleCategory> children = articleCategoryService.list(Wrappers.<ArticleCategory>lambdaQuery().eq(ArticleCategory::getParentId, categoryId));
-			articleCategory.setChildren(children);
-		}
 
 		return articleCategory;
 	}

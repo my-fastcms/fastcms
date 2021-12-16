@@ -1,21 +1,16 @@
 <template>
 	<div class="system-menu-container">
-		<el-dialog title="新增菜单" v-model="isShowDialog" width="769px">
+		<el-dialog title="新增分类" v-model="isShowDialog" width="769px">
 			<el-form :model="ruleForm" size="small" label-width="80px" :rules="rules" ref="myRefForm">
 				<el-row :gutter="35">
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="菜单名称" prop="menuName">
-							<el-input v-model="ruleForm.menuName" placeholder="请输入菜单名称" clearable></el-input>
+						<el-form-item label="分类名称" prop="title">
+							<el-input v-model="ruleForm.title" placeholder="请输入分类名称" clearable></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="菜单" prop="menuIcon">
-							<IconSelector placeholder="请输入菜单图标" v-model="ruleForm.menuIcon" />
-						</el-form-item>
-					</el-col>
-					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="菜单地址" prop="menuUrl">
-							<el-input v-model="ruleForm.menuUrl" placeholder="请输入菜单地址" clearable></el-input>
+						<el-form-item label="分类图标" prop="icon">
+							<IconSelector placeholder="请输入分类图标" v-model="ruleForm.icon" />
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -24,11 +19,8 @@
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="打开方式">
-							<el-select v-model="ruleForm.target" placeholder="请选择打开方式" clearable class="w100">
-								<el-option label="本窗口" value="_self"></el-option>
-								<el-option label="新开窗口" value="_blank"></el-option>
-							</el-select>
+						<el-form-item label="页面风格" prop="suffix">
+							<el-input v-model="ruleForm.suffix" placeholder="请输入页面风格" clearable></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -47,10 +39,10 @@
 import { reactive, toRefs, getCurrentInstance } from 'vue';
 import { ElMessage } from 'element-plus';
 import IconSelector from '/@/components/iconSelector/index.vue';
-import { saveTemplateMenu } from '/@/api/template/index';
+import { addArticleCategory } from '/@/api/article/index';
 
 export default {
-	name: 'templateAddMenu',
+	name: 'articleAddCategory',
 	components: { IconSelector },
 	setup(props, ctx) {
 		const { proxy } = getCurrentInstance() as any;
@@ -59,15 +51,13 @@ export default {
 			ruleForm: {
 				id: '',
 				parentId: '',
-				menuName: '', 
-				menuUrl: '',
-				menuIcon: '', 
+				title: '', 
+				suffix: '', 
+				icon: '',
 				sortNum: '',
-				target: '_self',
 			},
 			rules: {
-				"menuName": { required: true, message: '请输入菜单名称', trigger: 'blur' },
-				"menuUrl": { required: true, message: '请输入菜单地址', trigger: 'blur' },
+				"title": { required: true, message: '请输入分类名称', trigger: 'blur' },
 			},
 		});
 		// 打开弹窗
@@ -95,7 +85,7 @@ export default {
 
 			proxy.$refs['myRefForm'].validate((valid: any) => {
 				if (valid) {
-					saveTemplateMenu(state.ruleForm).then(() => {
+					addArticleCategory(state.ruleForm).then(() => {
 						closeDialog(); // 关闭弹窗
 						// 刷新菜单，未进行后端接口测试
 						initForm();
@@ -110,10 +100,11 @@ export default {
 
 		// 表单初始化，方法：`resetFields()` 无法使用
 		const initForm = () => {
-			state.ruleForm.menuName = '';
-			state.ruleForm.menuUrl = '';
-			state.ruleForm.menuIcon = '';
-			state.ruleForm.target = '';
+			state.ruleForm.id = '',
+			state.ruleForm.parentId = '';
+			state.ruleForm.title = '';
+			state.ruleForm.icon = '';
+			state.ruleForm.suffix = '';
 			state.ruleForm.sortNum = '';
 		};
 		return {

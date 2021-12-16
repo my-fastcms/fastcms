@@ -49,7 +49,7 @@ import IconSelector from '/@/components/iconSelector/index.vue';
 import { ElMessage } from 'element-plus';
 import { saveTemplateMenu } from '/@/api/template/index';
 export default {
-	name: 'systemEditMenu',
+	name: 'templateEditMenu',
 	components: { IconSelector },
 	setup(props, ctx) {
 		const { proxy } = getCurrentInstance() as any;

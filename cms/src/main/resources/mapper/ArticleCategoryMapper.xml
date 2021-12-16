@@ -14,8 +14,4 @@
         </if>
     </select>
 
-    <select id="pageArticleCategory" resultType="com.fastcms.cms.service.IArticleCategoryService$ArticleCategoryVo">
-        select a.*, u.nick_name as createdUser from article_category a left join `user` u on a.user_id = u.id
-    </select>
-
 </mapper>

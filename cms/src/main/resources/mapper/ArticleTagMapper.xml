@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastcms.cms.mapper.ArticleTagMapper">
+
+    <delete id="deleteRelationByTagId">
+        delete from article_tag_relation where tag_id = #{articleTagId}
+    </delete>
+
+    <select id="getArticleTagListByArticleId" resultType="com.fastcms.cms.entity.ArticleTag">
+        select ac.* from article_tag_relation acr join article_tag ac on acr.tag_id = ac.id
+        where acr.article_id = #{articleId}
+    </select>
+
+</mapper>

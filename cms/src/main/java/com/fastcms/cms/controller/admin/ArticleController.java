@@ -16,16 +16,18 @@
  */
 package com.fastcms.cms.controller.admin;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fastcms.auth.AuthUtils;
 import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.entity.ArticleCategory;
 import com.fastcms.cms.entity.ArticleComment;
+import com.fastcms.cms.entity.ArticleTag;
 import com.fastcms.cms.service.IArticleCategoryService;
 import com.fastcms.cms.service.IArticleCommentService;
 import com.fastcms.cms.service.IArticleService;
+import com.fastcms.cms.service.IArticleTagService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
@@ -36,7 +38,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 文章管理
@@ -52,6 +53,9 @@ public class ArticleController {
 
     @Autowired
     private IArticleService articleService;
+
+    @Autowired
+    private IArticleTagService articleTagService;
 
     @Autowired
     private IArticleCategoryService articleCategoryService;
@@ -101,30 +105,13 @@ public class ArticleController {
     }
 
     /**
-     * 保存分类
-     * @param articleCategory
-     * @return
-     */
-    @PostMapping("category/save")
-    public RestResult<Boolean> saveCategory(ArticleCategory articleCategory) {
-        return RestResultUtils.success(articleCategoryService.saveOrUpdate(articleCategory));
-    }
-
-    /**
      * 文章详情
      * @param articleId 文章id
      * @return
      */
     @GetMapping("get/{articleId}")
     public RestResult<Article> getArticle(@PathVariable("articleId") Long articleId) {
-        LambdaQueryWrapper<Article> wrapper = Wrappers.<Article>lambdaQuery()
-                .select(Article.class, info -> !info.getColumn().equals("created") && !info.getColumn().equals("updated") && !info.getColumn().equals("version"))
-                .eq(Article::getId, articleId);
-        Article article = articleService.getOne(wrapper);
-        List<ArticleCategory> articleCategoryList = articleCategoryService.getArticleCategoryListByArticleId(articleId);
-        article.setArticleCategory(articleCategoryList.stream().filter(item -> item.getType().equals(ArticleCategory.CATEGORY_TYPE)).map(ArticleCategory::getTitle).collect(Collectors.toList()));
-        article.setArticleTag(articleCategoryList.stream().filter(item -> item.getType().equals(ArticleCategory.TAG_TYPE)).map(ArticleCategory::getTitle).collect(Collectors.toList()));
-        return RestResultUtils.success(article);
+        return RestResultUtils.success(articleService.getArticle(articleId));
     }
 
     /**
@@ -139,13 +126,23 @@ public class ArticleController {
     }
 
     /**
+     * 保存分类
+     * @param articleCategory
+     * @return
+     */
+    @PostMapping("category/save")
+    public RestResult<Boolean> saveCategory(@Validated ArticleCategory articleCategory) {
+        return RestResultUtils.success(articleCategoryService.saveOrUpdate(articleCategory));
+    }
+
+    /**
      * 分类列表
-     * @description     包括标签，不分页
+     * @description
      * @return
      */
     @GetMapping("category/list")
-    public RestResult<List<ArticleCategory>> listCategory() {
-        return RestResultUtils.success(articleCategoryService.list());
+    public RestResult<List<IArticleCategoryService.CategoryTreeNode>> listCategory() {
+        return RestResultUtils.success(articleCategoryService.getCategoryList(AuthUtils.getUserId()));
     }
 
     /**
@@ -155,8 +152,24 @@ public class ArticleController {
      */
     @PostMapping("category/delete/{categoryId}")
     public Object deleteCategory(@PathVariable("categoryId") Long categoryId) {
+
+        List<ArticleCategory> categoryList = articleCategoryService.list(Wrappers.<ArticleCategory>lambdaQuery().eq(ArticleCategory::getParentId, categoryId));
+        if(categoryList != null && categoryList.size() >0) {
+            return RestResultUtils.failed("请先删除子节点分类");
+        }
+
         articleCategoryService.deleteByCategoryId(categoryId);
         return RestResultUtils.success();
+    }
+
+    /**
+     * 标签列表
+     * @description
+     * @return
+     */
+    @GetMapping("tag/list")
+    public RestResult<List<ArticleTag>> listTags() {
+        return RestResultUtils.success(articleTagService.list());
     }
 
     /**

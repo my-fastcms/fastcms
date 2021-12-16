@@ -69,7 +69,7 @@ public class ArticleApi {
 	 */
 	@RequestMapping("/detail/{articleId}")
 	public RestResult<IArticleService.ArticleInfoVo> detail(@PathVariable("articleId") Long articleId) {
-		IArticleService.ArticleInfoVo articleInfo = articleService.getArticleById(articleId);
+		IArticleService.ArticleInfoVo articleInfo = articleService.getArticleDetail(articleId);
 		return RestResultUtils.success(articleInfo);
 	}
 

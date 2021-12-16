@@ -8,10 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * <p>
- * 网站菜单表 服务类
- * </p>
- *
+ * 网站菜单服务类
  * @author wjun_java@163.com
  * @since 2021-05-27
  */

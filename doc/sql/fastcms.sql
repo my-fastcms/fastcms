@@ -48,10 +48,11 @@ DROP TABLE IF EXISTS `article_category`;
 CREATE TABLE `article_category` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) DEFAULT NULL,
-  `parent_id` bigint(20) DEFAULT NULL COMMENT '上级分类id',
+  `parent_id` bigint(20) DEFAULT '0' COMMENT '上级分类id',
   `title` varchar(255) NOT NULL,
   `type` varchar(32) DEFAULT NULL,
   `sort_num` int(11) DEFAULT '0',
+  `icon` varchar(255) DEFAULT NULL,
   `suffix` varchar(32) DEFAULT NULL COMMENT '页面后缀',
   `created` datetime DEFAULT NULL,
   `updated` datetime DEFAULT NULL,

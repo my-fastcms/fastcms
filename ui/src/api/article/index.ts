@@ -65,12 +65,44 @@ export function delArticle(id: string) {
 }
 
 /**
- * 获取文章分类，包括标签列表，不分页
+ * 新增文章分类
+ */
+export function addArticleCategory(params: object) {
+	return request({
+		url: '/admin/article/category/save',
+		method: 'post',
+		params: params,
+	});
+}
+
+/**
+ * 获取文章分类列表
  * @returns 
  */
-export function getArticleCategoryList() {
+ export function getArticleCategoryList() {
 	return request({
 		url: '/admin/article/category/list',
+		method: 'get'
+	});
+}
+
+/**
+ * 删除文章分类
+ */
+export function delArticleCategory(categoryId: string) {
+	return request({
+		url: '/admin/article/category/delete/' + categoryId,
+		method: 'post'
+	});
+}
+
+/**
+ * 获取文章标签列表
+ * @returns 
+ */
+ export function getArticleTagList() {
+	return request({
+		url: '/admin/article/tag/list',
 		method: 'get'
 	});
 }

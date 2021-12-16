@@ -37,9 +37,13 @@ import java.util.List;
  */
 public interface ArticleMapper extends BaseMapper<Article> {
 
-	void deleteRelationByArticleId(Long articleId);
+	void deleteCategoryRelationByArticleId(Long articleId);
+
+	void deleteTagRelationByArticleId(Long articleId);
 
 	void saveArticleCategoryRelation(@Param("articleId") Long articleId, @Param("articleCategoryIdList") List<Long> articleCategoryIdList);
+
+	void saveArticleTagRelation(@Param("articleId") Long articleId, @Param("articleTagIdList") List<Long> articleTagIdList);
 
 	@DataPermission("a")
 	Page<IArticleService.ArticleVo> pageArticle(Page pageParam, @Param(Constants.WRAPPER) QueryWrapper queryWrapper);

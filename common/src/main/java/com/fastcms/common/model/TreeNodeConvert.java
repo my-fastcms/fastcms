@@ -6,7 +6,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * wangjun
+ * wjun_java@163.com
  * TreeNode转换器
  */
 public interface TreeNodeConvert<T extends TreeNode> {

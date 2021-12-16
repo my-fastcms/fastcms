@@ -79,7 +79,7 @@ public class TemplateIndexController extends TemplateBaseController {
 
     @RequestMapping("a/{id}")
     public String article(@PathVariable("id") Long id, Model model) {
-        IArticleService.ArticleInfoVo article = articleService.getArticleById(id);
+        IArticleService.ArticleInfoVo article = articleService.getArticleDetail(id);
         model.addAttribute("article", article);
 
         String view = getTemplatePath() + DEFAULT_ARTICLE_VIEW;

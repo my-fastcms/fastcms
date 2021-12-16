@@ -1,41 +1,31 @@
 package com.fastcms.cms.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fastcms.cms.entity.ArticleCategory;
 import com.fastcms.cms.mapper.ArticleCategoryMapper;
 import com.fastcms.cms.service.IArticleCategoryService;
+import com.fastcms.common.model.TreeNode;
+import com.fastcms.common.model.TreeNodeConvert;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 
 /**
- * <p>
- *  服务实现类
- * </p>
- *
+ * 文章分类服务实现类
  * @author wjun_java@163.com
  * @since 2021-05-23
  */
 @Service
-public class ArticleCategoryServiceImpl extends ServiceImpl<ArticleCategoryMapper, ArticleCategory> implements IArticleCategoryService {
+public class ArticleCategoryServiceImpl<T extends TreeNode> extends ServiceImpl<ArticleCategoryMapper, ArticleCategory> implements IArticleCategoryService, TreeNodeConvert<T> {
 
 	@Override
-	public List<ArticleCategory> getCategoryList(Long userId) {
-		QueryWrapper queryWrapper = new QueryWrapper();
-		queryWrapper.eq("user_id", userId);
-		queryWrapper.eq("type", ArticleCategory.CATEGORY_TYPE);
-		return list(queryWrapper);
-	}
-
-	@Override
-	public List<ArticleCategory> getTagList(Long userId) {
-		QueryWrapper queryWrapper = new QueryWrapper();
-		queryWrapper.eq("user_id", userId);
-		queryWrapper.eq("type", ArticleCategory.TAG_TYPE);
-		return list(queryWrapper);
+	public List<CategoryTreeNode> getCategoryList(Long userId) {
+		List<ArticleCategory> articleCategoryList = list(Wrappers.<ArticleCategory>lambdaQuery().eq(ArticleCategory::getUserId, userId).eq(ArticleCategory::getType, ArticleCategory.CATEGORY_TYPE));
+		articleCategoryList.sort(Comparator.comparing(ArticleCategory::getSortNum));
+		return (List<CategoryTreeNode>) getTreeNodeList(articleCategoryList);
 	}
 
 	@Override
@@ -51,14 +41,9 @@ public class ArticleCategoryServiceImpl extends ServiceImpl<ArticleCategoryMappe
 	}
 
 	@Override
-	public List<ArticleCategory> getArticleTagListByArticleId(Long articleId) {
-		return getBaseMapper().getArticleCategoryListByArticleId(articleId, ArticleCategory.TAG_TYPE);
+	public T convert2Node(Object object) {
+		ArticleCategory articleCategory = (ArticleCategory) object;
+		return (T) new CategoryTreeNode(articleCategory.getId(), articleCategory.getParentId(), articleCategory.getTitle(), articleCategory.getIcon(), articleCategory.getSuffix(), articleCategory.getCreated(), articleCategory.getSortNum());
 	}
-
-	@Override
-	public Page<ArticleCategoryVo> pageArticleCategory(Page pageParam, QueryWrapper queryWrapper) {
-		return getBaseMapper().pageArticleCategory(pageParam, queryWrapper);
-	}
-
 
 }

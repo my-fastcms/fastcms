@@ -9,79 +9,31 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- *  文章分类
+ * 文章标签
  * @author wjun_java@163.com
- * @since 2021-05-23
+ * @since 2021-12-16
  */
-public class ArticleCategory implements Serializable {
+public class ArticleTag implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public static final String CATEGORY_TYPE = "category";
-
-    /**
-     * id
-     */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    /**
-     * 创建人
-     */
     @TableField(fill = FieldFill.INSERT)
     private Long userId;
 
-    /**
-     * 上级分类
-     */
-    private Long parentId;
+    private String tagName;
 
-    /**
-     * 分类标题
-     */
-    private String title;
+    private String type;
 
-    /**
-     * 类型
-     */
-    private String type = "category";
-
-    /**
-     * 排序
-     */
     private Integer sortNum;
 
-    /**
-     * 分类图标
-     */
-    private String icon;
-
-    /**
-     * 访问标识
-     */
-    private String suffix;
-
-    /**
-     * 创建时间
-     */
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime created;
 
-    /**
-     * 修改时间
-     */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updated;
-
-    /**
-     * 分类访问地址
-     */
-    @TableField(exist = false)
-    private String url;
-
-    public String getUrl() {
-        return "/a/c/" + getId();
-    }
 
     public Long getId() {
         return id;
@@ -90,7 +42,6 @@ public class ArticleCategory implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-
     public Long getUserId() {
         return userId;
     }
@@ -98,23 +49,13 @@ public class ArticleCategory implements Serializable {
     public void setUserId(Long userId) {
         this.userId = userId;
     }
-
-    public Long getParentId() {
-        return parentId;
+    public String getTagName() {
+        return tagName;
     }
 
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
+    public void setTagName(String tagName) {
+        this.tagName = tagName;
     }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getType() {
         return type;
     }
@@ -122,7 +63,6 @@ public class ArticleCategory implements Serializable {
     public void setType(String type) {
         this.type = type;
     }
-
     public Integer getSortNum() {
         return sortNum;
     }
@@ -130,23 +70,6 @@ public class ArticleCategory implements Serializable {
     public void setSortNum(Integer sortNum) {
         this.sortNum = sortNum;
     }
-
-    public String getIcon() {
-        return icon;
-    }
-
-    public void setIcon(String icon) {
-        this.icon = icon;
-    }
-
-    public String getSuffix() {
-        return suffix;
-    }
-
-    public void setSuffix(String suffix) {
-        this.suffix = suffix;
-    }
-
     public LocalDateTime getCreated() {
         return created;
     }
@@ -154,7 +77,6 @@ public class ArticleCategory implements Serializable {
     public void setCreated(LocalDateTime created) {
         this.created = created;
     }
-
     public LocalDateTime getUpdated() {
         return updated;
     }
@@ -163,8 +85,16 @@ public class ArticleCategory implements Serializable {
         this.updated = updated;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    @Override
+    public String toString() {
+        return "ArticleTag{" +
+            "id=" + id +
+            ", userId=" + userId +
+            ", tagName=" + tagName +
+            ", type=" + type +
+            ", sortNum=" + sortNum +
+            ", created=" + created +
+            ", updated=" + updated +
+        "}";
     }
-
 }

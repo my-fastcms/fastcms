@@ -16,6 +16,9 @@
  */
 package com.fastcms.codegen;
 
+import com.baomidou.mybatisplus.generator.config.GlobalConfig;
+import com.baomidou.mybatisplus.generator.config.TemplateConfig;
+
 /**
  * @author： wjun_java@163.com
  * @date： 2021/4/21
@@ -23,21 +26,30 @@ package com.fastcms.codegen;
  * @modifiedBy：
  * @version: 1.0
  */
-public class CmsPluginCodeGen extends PluginCodeGen {
+public class CmsCodeGen extends AbstractCodeGen {
 
 	@Override
-	String getPluginPath() {
-		return "fastcms-cms-plugin";
+	void setSystemGlobalConfig() {
+		GlobalConfig gc = new GlobalConfig();
+		String projectPath = System.getProperty("user.dir") + "/cms";
+		gc.setOutputDir(projectPath + "/src/main/java");
+		gc.setAuthor("wjun_java@163.com");
+		gc.setOpen(false);
+		setGlobalConfig(gc);
 	}
 
 	@Override
-	String[] getPluginTableNames() {
-		return new String[] {"article", "article_category", "article_comment", "single_page", "single_page_comment", "menu"};
+	void setSystemTemplateConfig() {
+		// 配置模板
+		TemplateConfig templateConfig = new TemplateConfig();
+		templateConfig.setController(null);
+		templateConfig.setXml(null);
+		setTemplate(templateConfig);
 	}
 
 	@Override
 	String getMapperXmlOutputDir() {
-		return System.getProperty("user.dir") + PLUGIN_DIR + getPluginPath();
+		return System.getProperty("user.dir") + "/cms";
 	}
 
 	@Override
@@ -45,8 +57,15 @@ public class CmsPluginCodeGen extends PluginCodeGen {
 		return "cms";
 	}
 
+	@Override
+	String[] getTableNames() {
+		return new String[] {"article", "article_category", "article_tag", "article_comment", "single_page", "single_page_comment", "menu"};
+	}
+
 	public static void main(String[] args) throws Exception {
-		new CmsPluginCodeGen().genCode();
+		CmsCodeGen systemServiceGen = new CmsCodeGen();
+		systemServiceGen.genModel();
+		systemServiceGen.genService();
 	}
 
 }

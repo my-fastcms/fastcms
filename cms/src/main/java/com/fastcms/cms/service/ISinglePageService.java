@@ -6,10 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.cms.entity.SinglePage;
 import com.fastcms.core.mybatis.DataPermission;
 /**
- * <p>
- * 单页表 服务类
- * </p>
- *
+ * 单页服务类
  * @author wjun_java@163.com
  * @since 2021-05-25
  */

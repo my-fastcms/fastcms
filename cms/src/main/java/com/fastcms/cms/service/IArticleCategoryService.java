@@ -1,17 +1,14 @@
 package com.fastcms.cms.service;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.cms.entity.ArticleCategory;
+import com.fastcms.common.model.TreeNode;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * <p>
- *  服务类
- * </p>
- *
+ * 文章分类服务类
  * @author wjun_java@163.com
  * @since 2021-05-23
  */
@@ -22,14 +19,7 @@ public interface IArticleCategoryService extends IService<ArticleCategory> {
 	 * @param userId
 	 * @return
 	 */
-	List<ArticleCategory> getCategoryList(Long userId);
-
-	/**
-	 * 获取用户标签激活
-	 * @param userId
-	 * @return
-	 */
-	List<ArticleCategory> getTagList(Long userId);
+	List<CategoryTreeNode> getCategoryList(Long userId);
 
 	/**
 	 * 删除分类
@@ -45,29 +35,70 @@ public interface IArticleCategoryService extends IService<ArticleCategory> {
 	List<ArticleCategory> getArticleCategoryListByArticleId(Long articleId);
 
 	/**
-	 * 获取文章已设置的标签
-	 * @param articleId
-	 * @return
+	 * 分类vo
 	 */
-	List<ArticleCategory> getArticleTagListByArticleId(Long articleId);
+	class CategoryTreeNode extends TreeNode {
 
-	/**
-	 * 分页查询文章分类列表
-	 * @param pageParam
-	 * @param queryWrapper
-	 * @return
-	 */
-	Page<IArticleCategoryService.ArticleCategoryVo> pageArticleCategory(Page pageParam, QueryWrapper queryWrapper);
+		/**
+		 * 分类标题
+		 */
+		private String title;
 
-	class ArticleCategoryVo extends ArticleCategory {
-		String createdUser;
+		/**
+		 * 访问标识
+		 */
+		private String suffix;
 
-		public String getCreatedUser() {
-			return createdUser;
+		/**
+		 * 菜单图标
+		 */
+		private String icon;
+
+		/**
+		 * 创建时间
+		 */
+		private LocalDateTime created;
+
+		public CategoryTreeNode(Long id, Long parentId, String title, String icon, String suffix, LocalDateTime created, int sortNum) {
+			super(id, parentId, title);
+			this.setSortNum(sortNum);
+			this.title = title;
+			this.icon = icon;
+			this.suffix = suffix;
+			this.created = created;
 		}
 
-		public void setCreatedUser(String createdUser) {
-			this.createdUser = createdUser;
+
+		public String getTitle() {
+			return title;
+		}
+
+		public void setTitle(String title) {
+			this.title = title;
+		}
+
+		public String getSuffix() {
+			return suffix;
+		}
+
+		public void setSuffix(String suffix) {
+			this.suffix = suffix;
+		}
+
+		public String getIcon() {
+			return icon;
+		}
+
+		public void setIcon(String icon) {
+			this.icon = icon;
+		}
+
+		public LocalDateTime getCreated() {
+			return created;
+		}
+
+		public void setCreated(LocalDateTime created) {
+			this.created = created;
 		}
 	}
 

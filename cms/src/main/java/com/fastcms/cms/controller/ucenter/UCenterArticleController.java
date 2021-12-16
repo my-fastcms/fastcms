@@ -63,7 +63,7 @@ public class UCenterArticleController {
 	}
 
 	/**
-	 * 保存评论
+	 * 保存文章
 	 * @param article
 	 * @return
 	 */

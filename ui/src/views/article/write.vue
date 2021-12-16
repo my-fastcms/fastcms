@@ -41,7 +41,7 @@
                 </el-col>
                 <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                     <el-form-item label="排序" prop="sortNum">
-                        <el-input v-model="ruleForm.sortNum" placeholder="请输入排序序号" clearable></el-input>
+                        <el-input v-model="ruleForm.sortNum" type="number" placeholder="请输入排序序号" clearable></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -67,16 +67,7 @@
                 </el-col>
                 <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                     <el-form-item label="分类" prop="categories">
-                        <el-select
-                            v-model="ruleForm.articleCategory"
-                            class="w100"
-                            multiple
-                            filterable
-                            allow-create
-                            default-first-option
-                            placeholder="请选择文章分类">
-                            <el-option v-for="item in categories" :key="item.id" :label="item.title" :value="item.title"></el-option>
-                        </el-select>
+                        <el-cascader ref="categoryCascader" v-model="ruleForm.articleCategory" :options="categories" :props="{ multiple: true, label: 'label', value: 'id', children: 'children' }" collapse-tags clearable />
                     </el-form-item>
                 </el-col>
                 <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -89,7 +80,7 @@
                             allow-create
                             default-first-option
                             placeholder="请选择文章标签">
-                            <el-option v-for="item in tags" :key="item.id" :label="item.title" :value="item.title"></el-option>
+                            <el-option v-for="item in tags" :key="item.id" :label="item.tagName" :value="item.tagName"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
@@ -118,7 +109,7 @@ import { toRefs, ref, reactive, getCurrentInstance, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRoute } from 'vue-router';
 import AttachDialog from '/@/components/attach/index.vue';
-import { addArticle, getArticleCategoryList, getArticle } from '/@/api/article/index';
+import { addArticle, getArticle, getArticleCategoryList, getArticleTagList } from '/@/api/article/index';
 import qs from 'qs';
 import CKEditor from "/@/components/ckeditor/index.vue";
 
@@ -130,6 +121,7 @@ export default {
     },
 	setup(props, ctx) {
         const attachDialogRef = ref();
+        const categoryCascaderRef = ref();
         const route = useRoute();
         const { proxy } = getCurrentInstance() as any;
 		const state = reactive({
@@ -159,22 +151,25 @@ export default {
         //获取文章分类跟标签
         const getCategoryList = () => {
             getArticleCategoryList().then((res) => {
+                state.categories = res.data;
+            })
+            getArticleTagList().then(res => {
                 res.data.forEach(item => {
-                    if(item.type == 'tag') {
-                        state.tags.push(item);
-                    }else if(item.type == 'category') {
-                        state.categories.push(item);
-                    }
-                })
+                     state.tags.push(item);
+                });
             })
         }
 
         const onSubmit = () => {
             proxy.$refs['myRefForm'].validate((valid: any) => {
 				if (valid) {
+                    // categoryCascaderRef.value.getCheckedNodes(true).map(item => {
+                    //     state.ruleForm.articleCategory.push(item.value);
+                    // });
+                    console.log("========test:");
 					let params = qs.stringify(state.ruleForm, {arrayFormat: 'repeat'});
 					addArticle(params).then((res) => {
-                        state.ruleForm.id = res;
+                        state.ruleForm.id = res.data;
 						ElMessage.success("保存成功");
 					}).catch((res) => {
 						ElMessage({showClose: true, message: res.message ? res.message : '系统错误' , type: 'error'});
@@ -214,6 +209,7 @@ export default {
 
 		return {
             attachDialogRef,
+            categoryCascaderRef,
             onSubmit,
             onAttachDialogOpen,
             getSelectAttach,

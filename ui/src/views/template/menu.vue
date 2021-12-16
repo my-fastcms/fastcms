@@ -29,7 +29,7 @@ import AddMenu from '/@/views/template/component/addMenu.vue';
 import EditMenu from '/@/views/template/component/editMenu.vue';
 
 export default {
-	name: 'systemMenu',
+	name: 'templateMenu',
 	components: { AddMenu, EditMenu },
 	setup() {
 		const addMenuRef = ref();

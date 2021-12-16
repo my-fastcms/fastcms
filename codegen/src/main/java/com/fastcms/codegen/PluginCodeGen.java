@@ -17,7 +17,6 @@
 package com.fastcms.codegen;
 
 import com.baomidou.mybatisplus.generator.config.GlobalConfig;
-import com.baomidou.mybatisplus.generator.config.StrategyConfig;
 import com.baomidou.mybatisplus.generator.config.TemplateConfig;
 
 /**
@@ -30,15 +29,6 @@ import com.baomidou.mybatisplus.generator.config.TemplateConfig;
 public abstract class PluginCodeGen extends AbstractCodeGen {
 
     protected static final String PLUGIN_DIR = "./plugins/";
-
-    @Override
-    protected StrategyConfig setStrategyConfig() {
-        StrategyConfig strategyConfig = super.setStrategyConfig();
-        strategyConfig.getInclude().clear();
-        strategyConfig.setInclude(getPluginTableNames());
-        //数据库表名
-        return strategyConfig;
-    }
 
     @Override
     void setSystemGlobalConfig() {
@@ -61,8 +51,6 @@ public abstract class PluginCodeGen extends AbstractCodeGen {
     }
 
     abstract String getPluginPath();
-
-    abstract String[] getPluginTableNames();
 
     void genCode() throws Exception {
         genModel();

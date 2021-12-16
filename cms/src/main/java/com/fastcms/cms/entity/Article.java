@@ -9,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 文章
@@ -114,9 +115,15 @@ public class Article implements Serializable {
     @Version
     private Integer version;
 
+    /**
+     * 分类id集合
+     */
     @TableField(exist = false)
-    List<String> articleCategory;
+    Set<Long> articleCategory;
 
+    /**
+     * 标签名称集合
+     */
     @TableField(exist = false)
     List<String> articleTag;
 
@@ -263,11 +270,11 @@ public class Article implements Serializable {
         this.version = version;
     }
 
-    public List<String> getArticleCategory() {
+    public Set<Long> getArticleCategory() {
         return articleCategory;
     }
 
-    public void setArticleCategory(List<String> articleCategory) {
+    public void setArticleCategory(Set<Long> articleCategory) {
         this.articleCategory = articleCategory;
     }
 

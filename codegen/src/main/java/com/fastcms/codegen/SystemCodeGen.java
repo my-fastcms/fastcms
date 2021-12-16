@@ -28,10 +28,6 @@ import com.baomidou.mybatisplus.generator.config.TemplateConfig;
  */
 public class SystemCodeGen extends AbstractCodeGen {
 
-    public SystemCodeGen(){
-        super();
-    }
-
     @Override
     void setSystemGlobalConfig() {
         GlobalConfig gc = new GlobalConfig();
@@ -59,6 +55,11 @@ public class SystemCodeGen extends AbstractCodeGen {
     @Override
     protected String getModelName() {
         return null;
+    }
+
+    @Override
+    String[] getTableNames() {
+        return new String[] { "user", "role", "permission" , "config", "attachment", "user_tag", "user_openid", "payment_record" };
     }
 
     public static void main(String[] args) throws Exception {

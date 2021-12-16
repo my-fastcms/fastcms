@@ -13,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * <p>
- *  服务实现类
- * </p>
- *
+ * 文章评论服务实现类
  * @author wjun_java@163.com
  * @since 2021-05-23
  */

@@ -41,7 +41,7 @@ public class ArticleDirective extends BaseDirective {
 
 	@Override
 	public Object doExecute(Environment env, Map params) {
-		return articleService.getArticleById(getLong(PARAM_ARTICLE_ID, params, 0l));
+		return articleService.getArticleDetail(getLong(PARAM_ARTICLE_ID, params, 0l));
 	}
 
 }

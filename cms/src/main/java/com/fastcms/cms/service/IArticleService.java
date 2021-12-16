@@ -21,6 +21,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.entity.ArticleCategory;
+import com.fastcms.cms.entity.ArticleTag;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.utils.JsoupUtils;
 import com.fastcms.utils.ConfigUtils;
@@ -46,6 +47,13 @@ public interface IArticleService extends IService<Article> {
     void saveArticle(Article article) throws Exception;
 
     /**
+     * 获取文章
+     * @param articleId
+     * @return
+     */
+    Article getArticle(Long articleId);
+
+    /**
      * 分页查询文章列表数据
      * @param pageParam
      * @param queryWrapper
@@ -58,7 +66,7 @@ public interface IArticleService extends IService<Article> {
      * @param id
      * @return
      */
-    ArticleInfoVo getArticleById(Long id);
+    ArticleInfoVo getArticleDetail(Long id);
 
     /**
      * 网站获取文章分页列表
@@ -119,6 +127,10 @@ public interface IArticleService extends IService<Article> {
          * 文章所属分类
          */
         List<ArticleCategory> categoryList;
+        /**
+         * 文章所属标签
+         */
+        List<ArticleTag> tagList;
 
         public Long getId() {
             return id;
@@ -188,6 +200,14 @@ public interface IArticleService extends IService<Article> {
             this.categoryList = categoryList;
         }
 
+        public List<ArticleTag> getTagList() {
+            return tagList;
+        }
+
+        public void setTagList(List<ArticleTag> tagList) {
+            this.tagList = tagList;
+        }
+
         public String getUrl() {
             return ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + "/a/" + getId();
         }
@@ -199,6 +219,7 @@ public interface IArticleService extends IService<Article> {
         String headImg;
         String contentHtmlView;
         List<ArticleCategory> categoryList;
+        List<ArticleTag> tagList;
 
         public String getAuthor() {
             return author;
@@ -226,6 +247,14 @@ public interface IArticleService extends IService<Article> {
 
         public void setCategoryList(List<ArticleCategory> categoryList) {
             this.categoryList = categoryList;
+        }
+
+        public List<ArticleTag> getTagList() {
+            return tagList;
+        }
+
+        public void setTagList(List<ArticleTag> tagList) {
+            this.tagList = tagList;
         }
 
         public String getContentHtmlView() {

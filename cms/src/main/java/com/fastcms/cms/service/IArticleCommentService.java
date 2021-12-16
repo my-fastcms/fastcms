@@ -10,10 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * <p>
- *  服务类
- * </p>
- *
+ * 文章评论服务类
  * @author wjun_java@163.com
  * @since 2021-05-23
  */

@@ -16,15 +16,18 @@
  */
 package com.fastcms.cms.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.entity.ArticleCategory;
+import com.fastcms.cms.entity.ArticleTag;
 import com.fastcms.cms.mapper.ArticleMapper;
 import com.fastcms.cms.service.IArticleCategoryService;
 import com.fastcms.cms.service.IArticleService;
+import com.fastcms.cms.service.IArticleTagService;
 import com.fastcms.cms.task.ArticleViewCountUpdateTask;
 import com.fastcms.common.exception.FastcmsException;
 import org.apache.commons.lang.StringUtils;
@@ -47,6 +50,9 @@ import java.util.stream.Collectors;
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements IArticleService {
 
     @Autowired
+    private IArticleTagService articleTagService;
+
+    @Autowired
     private IArticleCategoryService articleCategoryService;
 
     @Override
@@ -60,35 +66,54 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         }
 
         //删除文章分类以及标签
-        getBaseMapper().deleteRelationByArticleId(article.getId());
+        getBaseMapper().deleteCategoryRelationByArticleId(article.getId());
+        getBaseMapper().deleteTagRelationByArticleId(article.getId());
 
-        final List<String> articleCategoryList = article.getArticleCategory();
+        final List<Long> articleCategoryList = new ArrayList<>(article.getArticleCategory());
         if(articleCategoryList != null && articleCategoryList.size()>0) {
             //插入新的分类
-            processCategoryOrTag(article.getId(), articleCategoryList, ArticleCategory.CATEGORY_TYPE);
+            getBaseMapper().saveArticleCategoryRelation(article.getId(), articleCategoryList);
         }
 
         final List<String> articleTagList = article.getArticleTag();
         if(articleTagList != null && articleTagList.size()>0) {
             //插入新的标签
-            processCategoryOrTag(article.getId(), articleTagList, ArticleCategory.TAG_TYPE);
+            processTag(article.getId(), articleTagList);
         }
 
     }
 
-    void processCategoryOrTag(Long articleId, List<String> processList, String type) {
+    @Override
+    public Article getArticle(Long articleId) {
+        LambdaQueryWrapper<Article> wrapper = Wrappers.<Article>lambdaQuery()
+                .select(Article.class, info -> !info.getColumn().equals("created") && !info.getColumn().equals("updated") && !info.getColumn().equals("version"))
+                .eq(Article::getId, articleId);
+        Article article = getOne(wrapper);
+
+        if(article != null) {
+            List<ArticleCategory> articleCategoryList = articleCategoryService.getArticleCategoryListByArticleId(articleId);
+            article.setArticleCategory(articleCategoryList.stream().filter(item -> item.getType().equals(ArticleCategory.CATEGORY_TYPE)).map(ArticleCategory::getId).collect(Collectors.toSet()));
+
+            List<ArticleTag> articleTagList = articleTagService.getArticleTagListByArticleId(articleId);
+            article.setArticleTag(articleTagList.stream().map(ArticleTag::getTagName).collect(Collectors.toList()));
+        }
+
+        return article;
+    }
+
+    void processTag(Long articleId, List<String> processList) {
         if(processList != null && processList.size()>0) {
-            List<ArticleCategory> articleCategoryList = new ArrayList<>();
+            List<ArticleTag> articleTagList = new ArrayList<>();
             //插入新的标签
             for (String tag : processList) {
                 if(StringUtils.isNotBlank(tag)) {
-                    articleCategoryList.add(findByTitle(tag, type));
+                    articleTagList.add(articleTagService.getByName(tag));
                 }
             }
 
-            if(!articleCategoryList.isEmpty()) {
-                articleCategoryService.saveBatch(articleCategoryList.stream().filter(item -> item.getId() == null).collect(Collectors.toList()));
-                getBaseMapper().saveArticleCategoryRelation(articleId, articleCategoryList.stream().map(ArticleCategory::getId).collect(Collectors.toList()));
+            if(!articleTagList.isEmpty()) {
+                articleTagService.saveBatch(articleTagList.stream().filter(item -> item.getId() == null).collect(Collectors.toList()));
+                getBaseMapper().saveArticleTagRelation(articleId, articleTagList.stream().map(ArticleTag::getId).collect(Collectors.toList()));
             }
 
         }
@@ -100,7 +125,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
-    public ArticleInfoVo getArticleById(Long id) {
+    public ArticleInfoVo getArticleDetail(Long id) {
         ArticleViewCountUpdateTask.recordCount(id);
         return getBaseMapper().getArticleById(id);
     }
@@ -118,16 +143,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public void updateViewCount(Long id, Long count) {
         getBaseMapper().updateViewCount(id, count);
-    }
-
-    ArticleCategory findByTitle(String title, String type) {
-        ArticleCategory one = articleCategoryService.getOne(Wrappers.<ArticleCategory>lambdaQuery().eq(ArticleCategory::getTitle, title.trim()).eq(ArticleCategory::getType, type));
-        if(one == null) {
-            one = new ArticleCategory();
-            one.setTitle(title);
-            one.setType(type);
-        }
-        return one;
     }
 
 }

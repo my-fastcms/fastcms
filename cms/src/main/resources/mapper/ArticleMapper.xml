@@ -10,6 +10,7 @@
         <result column="created" jdbcType="OTHER" property="created" typeHandler="org.apache.ibatis.type.LocalDateTimeTypeHandler"/>
         <result column="nick_name" jdbcType="VARCHAR" property="author"/>
         <collection property="categoryList" ofType="com.fastcms.cms.entity.ArticleCategory" column="id" select="getArticleCategoriesByArticleId"/>
+        <collection property="tagList" ofType="com.fastcms.cms.entity.ArticleTag" column="id" select="getArticleTagsByArticleId"/>
     </resultMap>
 
     <resultMap type="com.fastcms.cms.service.IArticleService$ArticleInfoVo" id="ArticleInfoToResult">
@@ -18,6 +19,7 @@
         <result column="nick_name" jdbcType="VARCHAR" property="author"/>
         <result column="head_img" jdbcType="VARCHAR" property="headImg"/>
         <collection property="categoryList" ofType="com.fastcms.cms.entity.ArticleCategory" column="id" select="getArticleCategoriesByArticleId"/>
+        <collection property="tagList" ofType="com.fastcms.cms.entity.ArticleTag" column="id" select="getArticleTagsByArticleId"/>
     </resultMap>
 
     <insert id="saveArticleCategoryRelation">
@@ -27,12 +29,23 @@
         </foreach>
     </insert>
 
+    <insert id="saveArticleTagRelation">
+        insert into article_tag_relation (article_id, tag_id) values
+        <foreach collection="articleTagIdList" item="articleTagId" separator=",">
+            (#{articleId}, #{articleTagId})
+        </foreach>
+    </insert>
+
     <update id="updateViewCount">
         update article set view_count = view_count + #{count} where id = #{id}
     </update>
 
-    <delete id="deleteRelationByArticleId">
-        delete from article_category_relation where article_id = #{articleId}
+    <delete id="deleteCategoryRelationByArticleId">
+        delete from article_category_relation where article_id = #{articleId};
+    </delete>
+
+    <delete id="deleteTagRelationByArticleId">
+        delete from article_tag_relation where article_id = #{articleId};
     </delete>
 
     <select id="pageArticle" resultMap="ArticleToResult">
@@ -40,11 +53,17 @@
         u.nick_name from article a
         LEFT JOIN `user` u on a.user_id = u.id
         LEFT JOIN article_category_relation acr on acr.article_id = a.id
+        LEFT JOIN article_tag_relation atr on atr.article_id = a.id
         ${ew.customSqlSegment}
     </select>
 
     <select id="getArticleCategoriesByArticleId" resultType="com.fastcms.cms.entity.ArticleCategory">
         select ac.* from article_category_relation acr join article_category ac on acr.category_id = ac.id
+        where acr.article_id = #{articleId}
+    </select>
+
+    <select id="getArticleTagsByArticleId" resultType="com.fastcms.cms.entity.ArticleTag">
+        select ac.* from article_tag_relation acr join article_tag ac on acr.tag_id = ac.id
         where acr.article_id = #{articleId}
     </select>
 
