@@ -17,6 +17,8 @@
 package com.fastcms.web.config;
 
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.core.directive.BaseDirective;
+import com.fastcms.core.template.FastcmsTemplateFreeMarkerConfig;
 import com.fastcms.core.template.Template;
 import com.fastcms.core.template.TemplateService;
 import com.fastcms.core.utils.AttachUtils;
@@ -25,6 +27,7 @@ import com.fastcms.service.IConfigService;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
@@ -44,6 +47,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author： wjun_java@163.com
@@ -60,6 +64,12 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
 
     @Autowired
     private TemplateService templateService;
+
+    @Autowired
+    private freemarker.template.Configuration configuration;
+
+    @Autowired
+    private FastcmsTemplateFreeMarkerConfig fastcmsTemplateFreeMarkerConfig;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -115,6 +125,23 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
 
     @Override
     public void onApplicationEvent(WebServerInitializedEvent event) {
+
+        try {
+            initServerInfo(event);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        //注册freemarker自定义标签
+        Map<String, BaseDirective> matchingBeans = BeanFactoryUtils.beansOfTypeIncludingAncestors(event.getApplicationContext(), BaseDirective.class, true, false);
+        matchingBeans.keySet().forEach(item -> {
+            configuration.setSharedVariable(item, matchingBeans.get(item));
+            fastcmsTemplateFreeMarkerConfig.getConfiguration().setSharedVariable(item, matchingBeans.get(item));
+        });
+
+    }
+
+    void initServerInfo(WebServerInitializedEvent event) throws Exception {
         if(StringUtils.isBlank(configService.getValue(FastcmsConstants.SERVER_IP))) {
             configService.saveConfig(FastcmsConstants.SERVER_IP, AttachUtils.getInternetIp());
         }
