@@ -71,8 +71,8 @@ export const activitiesList = [
 	{
 		time1: '今天',
 		time2: '12:20:30',
-		title: '更名',
-		label: '正式更名为 vue-next-admin',
+		title: '命名',
+		label: '正式命名为 fastcms',
 	},
 	{
 		time1: '02-17',

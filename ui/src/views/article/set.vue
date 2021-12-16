@@ -53,7 +53,7 @@
 </template>
 
 <script lang="ts">
-import { toRefs, ref, reactive, computed, getCurrentInstance, onMounted } from 'vue';
+import { toRefs, reactive, computed, getCurrentInstance, onMounted } from 'vue';
 import { formatAxis } from '/@/utils/formatTime';
 import { ElMessage } from 'element-plus';
 import qs from 'qs';
@@ -63,7 +63,6 @@ export default {
 	name: 'attachSet',
 	components: { },
 	setup() {
-		const attachDialogRef = ref();
 		const { proxy } = getCurrentInstance() as any;
 		const state = reactive({
 			fit: "fill",
