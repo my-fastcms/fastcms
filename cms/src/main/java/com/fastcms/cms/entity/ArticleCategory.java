@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.utils.ConfigUtils;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -80,7 +82,7 @@ public class ArticleCategory implements Serializable {
     private String url;
 
     public String getUrl() {
-        return "/a/c/" + getId();
+        return ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + "/a/c/" + getId();
     }
 
     public Long getId() {

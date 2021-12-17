@@ -45,7 +45,7 @@ public interface IArticleCategoryService extends IService<ArticleCategory> {
 		private String title;
 
 		/**
-		 * 访问标识
+		 * 模板标识
 		 */
 		private String suffix;
 
@@ -59,13 +59,19 @@ public interface IArticleCategoryService extends IService<ArticleCategory> {
 		 */
 		private LocalDateTime created;
 
-		public CategoryTreeNode(Long id, Long parentId, String title, String icon, String suffix, LocalDateTime created, int sortNum) {
-			super(id, parentId, title);
-			this.setSortNum(sortNum);
-			this.title = title;
-			this.icon = icon;
-			this.suffix = suffix;
-			this.created = created;
+		/**
+		 * 分类url
+		 */
+		private String url;
+
+		public CategoryTreeNode(ArticleCategory articleCategory) {
+			super(articleCategory.getId(), articleCategory.getParentId(), articleCategory.getTitle());
+			this.setSortNum(articleCategory.getSortNum());
+			this.title = articleCategory.getTitle();
+			this.icon = articleCategory.getIcon();
+			this.suffix = articleCategory.getSuffix();
+			this.created = articleCategory.getCreated();
+			this.url = articleCategory.getUrl();
 		}
 
 
@@ -100,6 +106,15 @@ public interface IArticleCategoryService extends IService<ArticleCategory> {
 		public void setCreated(LocalDateTime created) {
 			this.created = created;
 		}
+
+		public String getUrl() {
+			return url;
+		}
+
+		public void setUrl(String url) {
+			this.url = url;
+		}
+
 	}
 
 }

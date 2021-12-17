@@ -106,3 +106,38 @@ export function delArticleCategory(categoryId: string) {
 		method: 'get'
 	});
 }
+
+/**
+ * 获取文章评论列表
+ * @returns 
+ */
+ export function getArticleCommentList(params: object) {
+	return request({
+		url: '/admin/article/comment/list',
+		method: 'get',
+		params: params
+	});
+}
+
+/**
+ * 修改文章评论
+ */
+export function updateArticleComment(params: object) {
+	return request({
+		url: '/admin/article/comment/save',
+		method: 'post',
+		params: params,
+	});
+}
+
+/**
+ * 删除文章评论
+ */
+ export function delArticleComment(commentId: string) {
+	return request({
+		url: '/admin/article/comment/delete/' + commentId,
+		method: 'post'
+	});
+}
+
+

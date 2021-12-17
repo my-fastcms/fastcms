@@ -3,7 +3,7 @@
 <mapper namespace="com.fastcms.cms.mapper.SinglePageMapper">
 
     <select id="pageSinglePage" resultType="com.fastcms.cms.service.ISinglePageService$SinglePageVo">
-        select p.*, u.nick_name as createdUser from single_page p left join `user` u on p.user_id = u.id
+        select p.*, u.user_name as author from single_page p left join `user` u on p.user_id = u.id
     </select>
 
 </mapper>

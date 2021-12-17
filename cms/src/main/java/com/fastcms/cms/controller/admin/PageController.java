@@ -18,6 +18,7 @@ package com.fastcms.cms.controller.admin;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.cms.entity.SinglePage;
@@ -32,6 +33,8 @@ import com.fastcms.core.mybatis.PageModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 页面管理
@@ -105,6 +108,22 @@ public class PageController {
 	}
 
 	/**
+	 * 评论列表
+	 * @param page
+	 * @param author
+	 * @param content
+	 * @return
+	 */
+	@GetMapping("comment/list")
+	public Object getCommentList(PageModel page, String author, String content, Boolean isParent) {
+		QueryWrapper<Object> queryWrapper = Wrappers.query().eq(StringUtils.isNotBlank(author), "u.user_name", author)
+				.eq(isParent != null && isParent == true, "spc.parentId", 0)
+				.likeLeft(StringUtils.isNotBlank(content), "spc.content", content)
+				.orderByDesc("spc.created");
+		return RestResultUtils.success(singlePageCommentService.pageSinglePageComment(page.toPage(), queryWrapper));
+	}
+
+	/**
 	 * 保存评论
 	 * @param singlePageComment
 	 * @return
@@ -122,6 +141,10 @@ public class PageController {
 	 */
 	@PostMapping("comment/delete/{commentId}")
 	public RestResult<Boolean> deleteComment(@PathVariable("commentId") Long commentId) {
+		List<SinglePageComment> articleCommentList = singlePageCommentService.list(Wrappers.<SinglePageComment>lambdaQuery().eq(SinglePageComment::getParentId, commentId));
+		if(articleCommentList != null && articleCommentList.size() >0) {
+			return RestResultUtils.failed("该评论有回复内容，请先删除");
+		}
 		return RestResultUtils.success(singlePageCommentService.removeById(commentId));
 	}
 

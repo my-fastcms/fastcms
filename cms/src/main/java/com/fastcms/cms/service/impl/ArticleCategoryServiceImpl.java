@@ -43,7 +43,7 @@ public class ArticleCategoryServiceImpl<T extends TreeNode> extends ServiceImpl<
 	@Override
 	public T convert2Node(Object object) {
 		ArticleCategory articleCategory = (ArticleCategory) object;
-		return (T) new CategoryTreeNode(articleCategory.getId(), articleCategory.getParentId(), articleCategory.getTitle(), articleCategory.getIcon(), articleCategory.getSuffix(), articleCategory.getCreated(), articleCategory.getSortNum());
+		return (T) new CategoryTreeNode(articleCategory);
 	}
 
 }

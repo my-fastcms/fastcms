@@ -3,7 +3,12 @@
 		<el-card shadow="hover">
 			<el-button @click="onOpenAddCategory" class="mt15" size="small" type="primary" icon="iconfont icon-shuxingtu">新建分类</el-button>
 			<el-table :data="menuTableData" stripe style="width: 100%" row-key="id" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
-				<el-table-column prop="title" label="名称" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="title" label="名称" show-overflow-tooltip>
+					<template #default="scope">
+					<a :href="scope.row.url" target="_blank">
+						{{scope.row.title}}
+					</a></template>
+				</el-table-column>
 				<el-table-column prop="sortNum" label="排序" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="suffix" label="页面风格" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="created" label="创建时间" show-overflow-tooltip></el-table-column>

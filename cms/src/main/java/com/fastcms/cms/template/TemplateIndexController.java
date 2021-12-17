@@ -17,6 +17,7 @@
 package com.fastcms.cms.template;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.entity.ArticleCategory;
@@ -71,7 +72,7 @@ public class TemplateIndexController extends TemplateBaseController {
 
         String view = getTemplatePath() + DEFAULT_PAGE_VIEW;
         if(singlePage != null && StringUtils.isNotBlank(singlePage.getSuffix())) {
-            view = view + singlePage.getSuffix();
+            view = view.concat(singlePage.getSuffix());
         }
 
         return view;
@@ -84,7 +85,7 @@ public class TemplateIndexController extends TemplateBaseController {
 
         String view = getTemplatePath() + DEFAULT_ARTICLE_VIEW;
         if(article != null && StringUtils.isNotBlank(article.getSuffix())) {
-            view = view + "_" + article.getSuffix();
+            view = view.concat("_").concat(article.getSuffix());
         }
 
         return view;
@@ -95,9 +96,8 @@ public class TemplateIndexController extends TemplateBaseController {
                            @RequestParam(name = "page", required = false, defaultValue = "1") int pageNo,
                            @RequestParam(name = "pageSize", required = false, defaultValue = "15") int pageSize,
                            Model model) {
-        QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("acr.category_id", id);
-        queryWrapper.eq("a.status", Article.STATUS_PUBLISH);
+
+        QueryWrapper<Object> queryWrapper = Wrappers.query().eq("acr.category_id", id).eq("a.status", Article.STATUS_PUBLISH);
         Page<IArticleService.ArticleVo> articleVoPage = articleService.pageArticleByCategoryId(new Page(pageNo, pageSize), queryWrapper);
         model.addAttribute("articleVoPage", articleVoPage);
 
@@ -107,7 +107,7 @@ public class TemplateIndexController extends TemplateBaseController {
         String view = getTemplatePath() + DEFAULT_ARTICLE_LIST_VIEW;
 
         if(articleCategory != null && StringUtils.isNotBlank(articleCategory.getSuffix())) {
-            view = view + "_" + articleCategory.getSuffix();
+            view = view.concat("_").concat(articleCategory.getSuffix());
         }
 
         return view;

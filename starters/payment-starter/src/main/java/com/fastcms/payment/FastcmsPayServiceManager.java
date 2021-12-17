@@ -44,7 +44,6 @@ public class FastcmsPayServiceManager implements PayServiceManager {
 	@Autowired
 	private PayConfigStorageService payConfigStorageService;
 
-
 	@Override
 	public boolean verify(String platform, Map<String, Object> params) {
 		return payConfigStorageService.getConfig(platform).getPayService().verify(params);

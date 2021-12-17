@@ -1,8 +1,8 @@
 package com.fastcms.core.watermark;
 
 import com.fastcms.core.utils.AttachUtils;
+import com.fastcms.core.utils.PluginUtils;
 import com.fastcms.entity.Attachment;
-import com.fastcms.plugin.FastcmsPluginManager;
 import com.fastcms.utils.SpringContextHolder;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -60,7 +60,7 @@ public class WaterMarkAspect implements ApplicationListener<ApplicationStartedEv
         waterMarkProcessorList.addAll(waterMarkProcessorMap.values());
 
         //添加插件扩展
-        List<WaterMarkProcessor> extensions = SpringContextHolder.getBean(FastcmsPluginManager.class).getExtensions(WaterMarkProcessor.class);
+        List<WaterMarkProcessor> extensions = PluginUtils.getExtensions(WaterMarkProcessor.class);
         waterMarkProcessorList.addAll(extensions);
 
     }

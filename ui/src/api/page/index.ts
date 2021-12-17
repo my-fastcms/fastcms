@@ -63,3 +63,36 @@ export function delPage(id: string) {
 		method: 'post'
 	});
 }
+
+/**
+ * 获取页面评论列表
+ * @returns 
+ */
+ export function getPageCommentList(params: object) {
+	return request({
+		url: '/admin/page/comment/list',
+		method: 'get',
+		params: params
+	});
+}
+
+/**
+ * 修改页面评论
+ */
+export function updatePageComment(params: object) {
+	return request({
+		url: '/admin/page/comment/save',
+		method: 'post',
+		params: params,
+	});
+}
+
+/**
+ * 删除页面评论
+ */
+ export function delPageComment(commentId: string) {
+	return request({
+		url: '/admin/page/comment/delete/' + commentId,
+		method: 'post'
+	});
+}

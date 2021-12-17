@@ -23,6 +23,7 @@ public interface ISinglePageCommentService extends IService<SinglePageComment> {
 		String author;
 		String content;
 		String parentComment;
+		String status;
 		LocalDateTime created;
 
 		public Long getId() {
@@ -63,6 +64,14 @@ public interface ISinglePageCommentService extends IService<SinglePageComment> {
 
 		public void setParentComment(String parentComment) {
 			this.parentComment = parentComment;
+		}
+
+		public String getStatus() {
+			return status;
+		}
+
+		public void setStatus(String status) {
+			this.status = status;
 		}
 
 		public LocalDateTime getCreated() {

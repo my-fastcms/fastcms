@@ -46,10 +46,8 @@
                 </el-col>
                 <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                     <el-form-item label="模板" prop="suffix">
-                        <el-select v-model="ruleForm.suffix" placeholder="请选择模板" clearable class="w100">
-                            <el-option label="template1" value="template1"></el-option>
-                            <el-option label="template2" value="template2"></el-option>
-                        </el-select>
+                        <el-input v-model="ruleForm.suffix" placeholder="请输入页面模板后缀" clearable></el-input>
+                        <div class="sub-title">结合网站模板使用，不正确填写，访问页面会出现404</div>
                     </el-form-item>
                 </el-col>
                 <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">

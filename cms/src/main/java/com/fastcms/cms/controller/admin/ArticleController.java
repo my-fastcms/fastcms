@@ -17,6 +17,7 @@
 package com.fastcms.cms.controller.admin;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.auth.AuthUtils;
@@ -173,6 +174,22 @@ public class ArticleController {
     }
 
     /**
+     * 评论列表
+     * @param page
+     * @param author
+     * @param content
+     * @return
+     */
+    @GetMapping("comment/list")
+    public Object getCommentList(PageModel page, String author, String content, Boolean isParent) {
+        QueryWrapper<Object> queryWrapper = Wrappers.query().eq(StringUtils.isNotBlank(author), "u.user_name", author)
+                .eq(isParent != null && isParent == true, "ac.parentId", 0)
+                .likeLeft(StringUtils.isNotBlank(content), "ac.content", content)
+                .orderByDesc("ac.created");
+        return RestResultUtils.success(articleCommentService.pageArticleComment(page.toPage(), queryWrapper));
+    }
+
+    /**
      * 保存评论
      * @param articleComment
      * @return
@@ -189,6 +206,10 @@ public class ArticleController {
      */
     @PostMapping("comment/delete/{commentId}")
     public Object doDeleteComment(@PathVariable("commentId") Long commentId) {
+        List<ArticleComment> articleCommentList = articleCommentService.list(Wrappers.<ArticleComment>lambdaQuery().eq(ArticleComment::getParentId, commentId));
+        if(articleCommentList != null && articleCommentList.size() >0) {
+            return RestResultUtils.failed("该评论有回复内容，请先删除");
+        }
         articleCommentService.removeById(commentId);
         return RestResultUtils.success();
     }

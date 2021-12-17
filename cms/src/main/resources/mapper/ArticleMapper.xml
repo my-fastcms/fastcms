@@ -8,7 +8,7 @@
         <result column="view_count" jdbcType="INTEGER" property="viewCount"/>
         <result column="status" jdbcType="VARCHAR" property="status"/>
         <result column="created" jdbcType="OTHER" property="created" typeHandler="org.apache.ibatis.type.LocalDateTimeTypeHandler"/>
-        <result column="nick_name" jdbcType="VARCHAR" property="author"/>
+        <result column="user_name" jdbcType="VARCHAR" property="author"/>
         <collection property="categoryList" ofType="com.fastcms.cms.entity.ArticleCategory" column="id" select="getArticleCategoriesByArticleId"/>
         <collection property="tagList" ofType="com.fastcms.cms.entity.ArticleTag" column="id" select="getArticleTagsByArticleId"/>
     </resultMap>
@@ -16,7 +16,7 @@
     <resultMap type="com.fastcms.cms.service.IArticleService$ArticleInfoVo" id="ArticleInfoToResult">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="created" jdbcType="OTHER" property="created" typeHandler="org.apache.ibatis.type.LocalDateTimeTypeHandler"/>
-        <result column="nick_name" jdbcType="VARCHAR" property="author"/>
+        <result column="user_name" jdbcType="VARCHAR" property="author"/>
         <result column="head_img" jdbcType="VARCHAR" property="headImg"/>
         <collection property="categoryList" ofType="com.fastcms.cms.entity.ArticleCategory" column="id" select="getArticleCategoriesByArticleId"/>
         <collection property="tagList" ofType="com.fastcms.cms.entity.ArticleTag" column="id" select="getArticleTagsByArticleId"/>
@@ -50,7 +50,7 @@
 
     <select id="pageArticle" resultMap="ArticleToResult">
         select distinct a.id, a.title, a.status, a.created, a.view_count, a.thumbnail,
-        u.nick_name from article a
+        u.user_name from article a
         LEFT JOIN `user` u on a.user_id = u.id
         LEFT JOIN article_category_relation acr on acr.article_id = a.id
         LEFT JOIN article_tag_relation atr on atr.article_id = a.id
@@ -69,20 +69,20 @@
 
     <select id="getArticleById" resultMap="ArticleInfoToResult">
         select a.*,
-        u.nick_name, u.head_img from article a
+        u.user_name, u.head_img from article a
         LEFT JOIN `user` u on a.user_id = u.id
         where a.id = #{id}
     </select>
 
     <select id="pageArticleByCategoryId" resultType="com.fastcms.cms.service.IArticleService$ArticleVo">
-        select DISTINCT a.id, a.title, a.status, a.created, a.view_count, a.thumbnail, u.nick_name as author from article_category_relation acr
+        select DISTINCT a.id, a.title, a.status, a.created, a.view_count, a.thumbnail, u.user_name as author from article_category_relation acr
         join article a on acr.article_id = a.id
         LEFT JOIN `user` u on a.user_id = u.id
         ${ew.customSqlSegment}
     </select>
 
     <select id="getArticleListByCategoryId" resultType="com.fastcms.cms.service.IArticleService$ArticleVo">
-        select a.id, a.title, a.status, a.created, a.view_count, a.thumbnail, u.nick_name as author from article_category_relation acr
+        select a.id, a.title, a.status, a.created, a.view_count, a.thumbnail, u.user_name as author from article_category_relation acr
         join article a on acr.article_id = a.id
         LEFT JOIN `user` u on a.user_id = u.id
         ${ew.customSqlSegment}

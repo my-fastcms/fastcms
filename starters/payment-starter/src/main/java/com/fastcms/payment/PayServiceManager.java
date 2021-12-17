@@ -24,8 +24,6 @@ import com.egzosn.pay.common.bean.RefundResult;
 import com.egzosn.pay.common.bean.TransferOrder;
 import com.fastcms.payment.config.FastcmsPayOrder;
 import com.fastcms.payment.config.FastcmsQueryOrder;
-import com.fastcms.payment.config.FastcmsPayOrder;
-import com.fastcms.payment.config.FastcmsQueryOrder;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -70,6 +70,29 @@ CREATE TABLE `article_category_relation` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- ----------------------------
+-- Table structure for article_tag
+-- ----------------------------
+CREATE TABLE `article_tag` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) DEFAULT NULL,
+  `tag_name` varchar(255) NOT NULL,
+  `type` varchar(32) DEFAULT NULL,
+  `sort_num` int(11) DEFAULT '0',
+  `created` datetime DEFAULT NULL,
+  `updated` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Table structure for article_tag_relation
+-- ----------------------------
+CREATE TABLE `article_tag_relation` (
+  `article_id` bigint(20) NOT NULL,
+  `tag_id` bigint(20) NOT NULL,
+  PRIMARY KEY (`article_id`,`tag_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
 -- Table structure for article_comment
 -- ----------------------------
 DROP TABLE IF EXISTS `article_comment`;

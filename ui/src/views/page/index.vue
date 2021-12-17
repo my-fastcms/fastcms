@@ -21,7 +21,7 @@
 				<el-table-column prop="path" label="操作" width="90">
 					<template #default="scope">
 						<el-button size="mini" type="text" @click="onRowUpdate(scope.row)">修改</el-button>
-						<el-button v-if="scope.row.id != 1" size="mini" type="text" @click="onRowDel(scope.row)">删除</el-button>
+						<el-button size="mini" type="text" @click="onRowDel(scope.row)">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>

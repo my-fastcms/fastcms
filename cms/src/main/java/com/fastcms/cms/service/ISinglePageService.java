@@ -33,14 +33,14 @@ public interface ISinglePageService extends IService<SinglePage> {
 		/**
 		 * 创建者
 		 */
-		String createdUser;
+		String author;
 
-		public String getCreatedUser() {
-			return createdUser;
+		public String getAuthor() {
+			return author;
 		}
 
-		public void setCreatedUser(String createdUser) {
-			this.createdUser = createdUser;
+		public void setAuthor(String author) {
+			this.author = author;
 		}
 	}
 

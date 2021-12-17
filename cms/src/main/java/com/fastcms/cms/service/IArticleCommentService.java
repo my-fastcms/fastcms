@@ -65,6 +65,11 @@ public interface IArticleCommentService extends IService<ArticleComment> {
 		 * 回复内容
 		 */
 		String parentComment;
+
+		/**
+		 * 状态
+		 */
+		String status;
 		/**
 		 * 创建者
 		 */
@@ -120,6 +125,14 @@ public interface IArticleCommentService extends IService<ArticleComment> {
 
 		public void setParentComment(String parentComment) {
 			this.parentComment = parentComment;
+		}
+
+		public String getStatus() {
+			return status;
+		}
+
+		public void setStatus(String status) {
+			this.status = status;
 		}
 
 		public LocalDateTime getCreated() {
