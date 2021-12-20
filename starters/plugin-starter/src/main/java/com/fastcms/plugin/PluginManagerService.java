@@ -16,9 +16,12 @@
  */
 package com.fastcms.plugin;
 
+import org.pf4j.PluginWrapper;
+
 import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author： wjun_java@163.com
@@ -94,14 +97,14 @@ public interface PluginManagerService {
 		private String dependencies;
 		private String pluginState;
 
-		public PluginVo(String pluginId, String pluginClass, String version, String provider, String description, String dependencies, String pluginState) {
-			this.pluginId = pluginId;
-			this.pluginClass = pluginClass;
-			this.version = version;
-			this.provider = provider;
-			this.description = description;
-			this.dependencies = dependencies;
-			this.pluginState = pluginState;
+		public PluginVo(PluginWrapper pluginWrapper) {
+			this.pluginId = pluginWrapper.getPluginId();
+			this.pluginClass = pluginWrapper.getDescriptor().getPluginClass();
+			this.version = pluginWrapper.getDescriptor().getVersion();
+			this.provider = pluginWrapper.getDescriptor().getProvider();
+			this.description = pluginWrapper.getDescriptor().getPluginDescription();
+			this.dependencies = pluginWrapper.getDescriptor().getDependencies().stream().map(dependency -> dependency.getPluginId()).collect(Collectors.joining());
+			this.pluginState = pluginWrapper.getPluginState().name();
 		}
 
 		public String getPluginId() {

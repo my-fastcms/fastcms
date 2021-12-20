@@ -13,7 +13,7 @@
     <name>fastcms-payment-starter-${project.version}</name>
 
     <properties>
-        <pay-java.version>2.14.1</pay-java.version>
+        <pay-java.version>2.14.3-b2</pay-java.version>
     </properties>
 
     <dependencies>

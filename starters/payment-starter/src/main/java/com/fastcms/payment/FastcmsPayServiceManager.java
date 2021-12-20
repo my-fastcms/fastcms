@@ -18,12 +18,10 @@ package com.fastcms.payment;
 
 import com.egzosn.pay.common.api.PayService;
 import com.egzosn.pay.common.bean.*;
-import com.fastcms.payment.config.FastcmsPayOrder;
-import com.fastcms.payment.config.FastcmsQueryOrder;
-import com.fastcms.payment.config.PaymentPlatformConfig;
-import com.fastcms.payment.config.FastcmsPayOrder;
-import com.fastcms.payment.config.FastcmsQueryOrder;
+import com.fastcms.payment.bean.FastcmsPayOrder;
+import com.fastcms.payment.bean.FastcmsQueryOrder;
 import com.fastcms.payment.config.PayConfigStorageService;
+import com.fastcms.payment.config.PaymentPlatformConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.imageio.ImageIO;
@@ -46,12 +44,18 @@ public class FastcmsPayServiceManager implements PayServiceManager {
 
 	@Override
 	public boolean verify(String platform, Map<String, Object> params) {
-		return payConfigStorageService.getConfig(platform).getPayService().verify(params);
+		return payConfigStorageService.getConfig(platform).getPayService().verify(new NoticeParams(params));
 	}
 
 	@Override
 	public Map<String, Object> getParameter2Map(String platform, Map<String, String[]> parameterMap, InputStream is) {
-		return payConfigStorageService.getConfig(platform).getPayService().getParameter2Map(parameterMap, is);
+		return getNoticeParams(platform, new DefaultNoticeRequest( parameterMap, is)).getBody();
+	}
+
+	@Override
+	public NoticeParams getNoticeParams(String platform, NoticeRequest request) {
+		PaymentPlatformConfig config = payConfigStorageService.getConfig(platform);
+		return config.getPayService().getNoticeParams(request);
 	}
 
 	@Override
@@ -106,21 +110,29 @@ public class FastcmsPayServiceManager implements PayServiceManager {
 
 	@Override
 	public String payBack(String platform, Map<String, String[]> parameterMap, InputStream is) throws IOException {
+		return payBack(platform, new DefaultNoticeRequest(parameterMap, is));
+	}
+
+	@Override
+	public String payBack(String platform, NoticeRequest request) {
 		PaymentPlatformConfig config = payConfigStorageService.getConfig(platform);
 		PayService payService = config.getPayService();
-		return payService.payBack(parameterMap, is).toMessage();
+		return payService.payBack(request).toMessage();
 	}
 
 	@Override
 	public Map<String, Object> query(FastcmsPayOrder order) {
 		PaymentPlatformConfig config = payConfigStorageService.getConfig(order.getPlatform());
-		return config.getPayService().query(order.getTradeNo(), order.getOutTradeNo());
+		return config.getPayService().query(order);
 	}
 
 	@Override
 	public Map<String, Object> close(FastcmsPayOrder order) {
 		PaymentPlatformConfig config = payConfigStorageService.getConfig(order.getPlatform());
-		return config.getPayService().close(order.getTradeNo(), order.getOutTradeNo());
+		final FastcmsQueryOrder queryOrder = new FastcmsQueryOrder();
+		queryOrder.setTradeNo(order.getTradeNo());
+		queryOrder.setOutTradeNo(order.getOutTradeNo());
+		return config.getPayService().close(queryOrder);
 	}
 
 	@Override

@@ -25,6 +25,8 @@ import com.egzosn.pay.common.bean.TransactionType;
 import com.egzosn.pay.common.http.HttpConfigStorage;
 import com.fastcms.payment.handler.AliPayMessageHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -35,8 +37,10 @@ import org.springframework.context.annotation.Configuration;
  * @modifiedBy：
  * @version: 1.0
  */
-@Configuration(value = AliPaymentPlatform.platformName, proxyBeanMethods = false)
-public class AliPaymentPlatform implements PaymentPlatform {
+@Configuration(AliPaymentPlatform.platformName)
+@ConditionalOnClass(name = {"com.egzosn.pay.wx.api.WxPayConfigStorage"})
+@ConditionalOnMissingBean(AliPaymentPlatform.class)
+public class AliPaymentPlatform extends AliPayConfigStorage implements PaymentPlatform {
 
     public static final String platformName = "aliPay";
 

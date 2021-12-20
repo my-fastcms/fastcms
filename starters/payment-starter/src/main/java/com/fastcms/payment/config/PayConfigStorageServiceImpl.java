@@ -45,6 +45,7 @@ public class PayConfigStorageServiceImpl implements PayConfigStorageService, Ini
 
 		//微信支付配置
 		WxPayConfig wxConfig = new WxPayConfig();
+
 //		wxConfig.setAppId(configService.getValue(fastcmsConstants.WECHAT_MINI_APP_ID));
 //		wxConfig.setMchId(configService.getValue(fastcmsConstants.WECHAT_MCH_ID));
 //		wxConfig.setNotifyUrl(configService.getValue(fastcmsConstants.WEBSITE_DOMAIN) + "/payback/" + wxConfig.getPayType());

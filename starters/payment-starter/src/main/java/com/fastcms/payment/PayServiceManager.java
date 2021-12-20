@@ -18,12 +18,9 @@ package com.fastcms.payment;
 
 import com.egzosn.pay.common.api.PayMessageInterceptor;
 import com.egzosn.pay.common.api.PayService;
-import com.egzosn.pay.common.bean.PayMessage;
-import com.egzosn.pay.common.bean.RefundOrder;
-import com.egzosn.pay.common.bean.RefundResult;
-import com.egzosn.pay.common.bean.TransferOrder;
-import com.fastcms.payment.config.FastcmsPayOrder;
-import com.fastcms.payment.config.FastcmsQueryOrder;
+import com.egzosn.pay.common.bean.*;
+import com.fastcms.payment.bean.FastcmsPayOrder;
+import com.fastcms.payment.bean.FastcmsQueryOrder;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -58,6 +55,15 @@ public interface PayServiceManager {
      * @return 获得回调的请求参数
      */
     Map<String, Object> getParameter2Map(String platform, Map<String, String[]> parameterMap, InputStream is);
+
+    /**
+     * 将请求参数或者请求流转化为 Map
+     *
+     * @param detailsId 商户列表id
+     * @param request   通知请求
+     * @return 获得回调的请求参数
+     */
+    NoticeParams getNoticeParams(String detailsId, NoticeRequest request);
 
     /**
      * 跳到支付页面
@@ -128,6 +134,21 @@ public interface PayServiceManager {
      *                     如果未设置 {@link com.egzosn.pay.common.api.PayMessageHandler} 那么会使用默认的 {@link com.egzosn.pay.common.api.DefaultPayMessageHandler}
      */
     String payBack(String platform, Map<String, String[]> parameterMap, InputStream is) throws IOException;
+
+    /**
+     * 支付回调地址
+     * 方式二
+     *
+     * @param platform  商户支付平台类型
+     * @param request   请求参数
+     * @return 支付是否成功
+     *                     拦截器相关增加， 详情查看{@link com.egzosn.pay.common.api.PayService#addPayMessageInterceptor(PayMessageInterceptor)}
+     *                     <p>
+     *                     业务处理在对应的PayMessageHandler里面处理，在哪里设置PayMessageHandler，详情查看{@link com.egzosn.pay.common.api.PayService#setPayMessageHandler(com.egzosn.pay.common.api.PayMessageHandler)}
+     *                     </p>
+     *                     如果未设置 {@link com.egzosn.pay.common.api.PayMessageHandler} 那么会使用默认的 {@link com.egzosn.pay.common.api.DefaultPayMessageHandler}
+     */
+    String payBack(String platform, NoticeRequest request);
 
     /**
      * 查询

@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.payment.config;
+package com.fastcms.payment.bean;
 
 import com.egzosn.pay.common.bean.PayOrder;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -27,7 +28,7 @@ import java.math.BigDecimal;
  * @modifiedBy：
  * @version: 1.0
  */
-public class FastcmsPayOrder extends PayOrder {
+public class FastcmsPayOrder extends PayOrder implements Serializable {
 
 	/**
 	 *	支付平台

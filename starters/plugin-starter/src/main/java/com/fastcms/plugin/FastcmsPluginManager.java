@@ -118,9 +118,7 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
 
         List<PluginWrapper> wrapperList = plugins.subList(fromIndex, toIndex);
 
-        List<PluginVo> pluginVoList = wrapperList.stream().map(item -> new PluginVo(item.getPluginId(), item.getDescriptor().getPluginClass(),
-                item.getDescriptor().getVersion(), item.getDescriptor().getProvider(), item.getDescriptor().getPluginDescription(),
-                "", item.getPluginState().name())).collect(Collectors.toList());
+        List<PluginVo> pluginVoList = wrapperList.stream().map(item -> new PluginVo(item)).collect(Collectors.toList());
         return new PluginResult(count, pluginVoList);
     }
 

@@ -41,7 +41,7 @@ public class WxPayConfig extends WxPayConfigStorage implements PaymentPlatformCo
     /**
      * 支付平台
      */
-    private PaymentPlatform platform ;
+    private PaymentPlatform platform;
 
     /**
      * HTTP请求配置

@@ -36,12 +36,12 @@ import java.util.List;
  * @version: 1.0
  */
 @Configuration
-@ImportAutoConfiguration({AliPaymentPlatform.class, UnionPaymentPlatform.class, WxPaymentPlatform.class})
+@ImportAutoConfiguration({ AliPaymentPlatform.class, UnionPaymentPlatform.class, WxPaymentPlatform.class, WxV3PaymentPlatform.class, WxV3ProfitSharingPlatform.class, WxV3CombinePaymentPlatform.class })
 public class PaymentAutoConfiguration {
 
 	@Autowired
 	@Order
-	public void loadPaymentPlatforms(List<PaymentPlatform> platforms){
+	public void loadPaymentPlatforms(List<PaymentPlatform> platforms) {
 		for (PaymentPlatform platform : platforms) {
 			PaymentPlatforms.loadPaymentPlatform(platform);
 		}

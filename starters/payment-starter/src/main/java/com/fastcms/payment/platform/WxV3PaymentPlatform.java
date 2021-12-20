@@ -1,52 +1,31 @@
-/**
- * Copyright (c) 广州小橘灯信息科技有限公司 2016-2017, wjun_java@163.com.
- * <p>
- * Licensed under the GNU Lesser General Public License (LGPL) ,Version 3.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * <p>
- * http://www.gnu.org/licenses/lgpl-3.0.txt
- * http://www.xjd2020.com
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.fastcms.payment.platform;
 
 import com.egzosn.pay.common.api.PayConfigStorage;
 import com.egzosn.pay.common.api.PayService;
 import com.egzosn.pay.common.bean.TransactionType;
 import com.egzosn.pay.common.http.HttpConfigStorage;
-import com.egzosn.pay.wx.api.WxPayConfigStorage;
-import com.egzosn.pay.wx.api.WxPayService;
-import com.egzosn.pay.wx.bean.WxTransactionType;
-import com.fastcms.payment.handler.WxPayMessageHandler;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.egzosn.pay.wx.v3.api.WxPayConfigStorage;
+import com.egzosn.pay.wx.v3.api.WxPayService;
+import com.egzosn.pay.wx.v3.bean.WxTransactionType;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * 微信支付平台
- * @author： wjun_java@163.com
- * @date： 2021/6/21
- * @description：
- * @modifiedBy：
- * @version: 1.0
+ * 微信V3支付平台
+ *
+ * @author egan
+ * <pre>
+ * email egan@egzosn.com
+ * date  2021/10/7.
+ * </pre>
  */
-@Configuration(value = WxPaymentPlatform.platformName)
-@ConditionalOnClass(name = {"com.egzosn.pay.wx.api.WxPayConfigStorage"})
-@ConditionalOnMissingBean(WxPaymentPlatform.class)
-public class WxPaymentPlatform extends WxPayConfigStorage implements PaymentPlatform {
+@Configuration(WxV3PaymentPlatform.platformName)
+@ConditionalOnMissingBean(WxV3PaymentPlatform.class)
+@ConditionalOnClass(name = {"com.egzosn.pay.wx.v3.api.WxPayConfigStorage"})
+public class WxV3PaymentPlatform extends WxPayConfigStorage implements PaymentPlatform {
 
-    public static final String platformName = "wxPay";
-
-    @Autowired
-    private WxPayMessageHandler wxPayMessageHandler;
+    public static final String platformName = "wxV3Pay";
 
     /**
      * 获取商户平台
@@ -81,7 +60,6 @@ public class WxPaymentPlatform extends WxPayConfigStorage implements PaymentPlat
         if (payConfigStorage instanceof WxPayConfigStorage) {
             WxPayService wxPayService = new WxPayService((WxPayConfigStorage) payConfigStorage);
             wxPayService.setRequestTemplateConfigStorage(httpConfigStorage);
-            wxPayService.setPayMessageHandler(wxPayMessageHandler);
             return wxPayService;
         }
         WxPayConfigStorage configStorage = new WxPayConfigStorage();
@@ -89,7 +67,7 @@ public class WxPaymentPlatform extends WxPayConfigStorage implements PaymentPlat
         configStorage.setAppId(payConfigStorage.getAppId());
         configStorage.setMchId(payConfigStorage.getPid());
         configStorage.setAttach(payConfigStorage.getAttach());
-        configStorage.setKeyPrivate(payConfigStorage.getKeyPrivate());
+        configStorage.setV3ApiKey(payConfigStorage.getKeyPrivate());
         configStorage.setKeyPublic(payConfigStorage.getKeyPublic());
         configStorage.setNotifyUrl(payConfigStorage.getNotifyUrl());
         configStorage.setReturnUrl(payConfigStorage.getReturnUrl());
@@ -99,8 +77,6 @@ public class WxPaymentPlatform extends WxPayConfigStorage implements PaymentPlat
 
         WxPayService wxPayService = new WxPayService(configStorage);
         wxPayService.setRequestTemplateConfigStorage(httpConfigStorage);
-
-        wxPayService.setPayMessageHandler(wxPayMessageHandler);
         return wxPayService;
     }
 
@@ -109,11 +85,5 @@ public class WxPaymentPlatform extends WxPayConfigStorage implements PaymentPlat
         return WxTransactionType.valueOf(name);
     }
 
-    @Bean
-    public PayService wxPayService() {
-        WxPayService wxPayService = new WxPayService(this);
-        wxPayService.setPayMessageHandler(wxPayMessageHandler);
-        return wxPayService;
-    }
 
 }

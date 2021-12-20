@@ -7,6 +7,7 @@ import org.pf4j.DefaultPluginManager;
 import org.pf4j.RuntimeMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,6 +38,7 @@ public class PluginAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(FastcmsPluginManager.class)
     public FastcmsPluginManager pluginManager() {
 
         if(FastcmsConstants.DEV_MODE.equals(getProfile())) {

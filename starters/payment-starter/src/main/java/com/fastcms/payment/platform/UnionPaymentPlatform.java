@@ -25,6 +25,9 @@ import com.egzosn.pay.union.api.UnionPayService;
 import com.egzosn.pay.union.bean.UnionTransactionType;
 import com.fastcms.payment.handler.UnionPayMessageHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -35,8 +38,10 @@ import org.springframework.context.annotation.Configuration;
  * @modifiedBy：
  * @version: 1.0
  */
-@Configuration(value = UnionPaymentPlatform.platformName, proxyBeanMethods = false)
-public class UnionPaymentPlatform implements PaymentPlatform {
+@Configuration(value = UnionPaymentPlatform.platformName)
+@ConditionalOnClass(name = {"com.egzosn.pay.wx.api.WxPayConfigStorage"})
+@ConditionalOnMissingBean(UnionPaymentPlatform.class)
+public class UnionPaymentPlatform extends UnionPayConfigStorage implements PaymentPlatform {
 
     public static final String platformName = "unionPay";
 
@@ -94,6 +99,13 @@ public class UnionPaymentPlatform implements PaymentPlatform {
         PayService payService = getPayService(payConfigStorage);
         payService.setRequestTemplateConfigStorage(httpConfigStorage);
         return payService;
+    }
+
+    @Bean
+    public PayService wxPayService() {
+        UnionPayService unionPayService = new UnionPayService(this);
+//        wxPayService.setPayMessageHandler(wxPayMessageHandler);
+        return unionPayService;
     }
 
     @Override
