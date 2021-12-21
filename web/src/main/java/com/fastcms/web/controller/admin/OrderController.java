@@ -2,6 +2,7 @@ package com.fastcms.web.controller.admin;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
@@ -35,10 +36,10 @@ public class OrderController {
      * @return
      */
     @GetMapping("list")
-    public Object list(PageModel page,
-                       @RequestParam(name = "orderSn", required = false) String orderSn,
-                       @RequestParam(name = "title", required = false) String title,
-                       @RequestParam(name = "status", required = false) String status) {
+    public RestResult<Page<IOrderService.OrderVo>> list(PageModel page,
+                                                        @RequestParam(name = "orderSn", required = false) String orderSn,
+                                                        @RequestParam(name = "title", required = false) String title,
+                                                        @RequestParam(name = "status", required = false) String status) {
         QueryWrapper queryWrapper = Wrappers.query().eq(StrUtils.isNotBlank(orderSn), "o.order_sn", orderSn)
                 .eq(StrUtils.isNotBlank(status), "o.pay_status", status)
                 .like(StrUtils.isNotBlank(title), "o.order_title", title)
