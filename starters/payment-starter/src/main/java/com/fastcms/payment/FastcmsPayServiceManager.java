@@ -20,8 +20,6 @@ import com.egzosn.pay.common.api.PayService;
 import com.egzosn.pay.common.bean.*;
 import com.fastcms.payment.bean.FastcmsPayOrder;
 import com.fastcms.payment.bean.FastcmsQueryOrder;
-import com.fastcms.payment.config.PayConfigStorageService;
-import com.fastcms.payment.config.PaymentPlatformConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.imageio.ImageIO;
@@ -40,11 +38,11 @@ import java.util.Map;
 public class FastcmsPayServiceManager implements PayServiceManager {
 
 	@Autowired
-	private PayConfigStorageService payConfigStorageService;
+	private PaymentPlatformService paymentPlatformService;
 
 	@Override
 	public boolean verify(String platform, Map<String, Object> params) {
-		return payConfigStorageService.getConfig(platform).getPayService().verify(new NoticeParams(params));
+		return paymentPlatformService.getPlatform(platform).getPayService().verify(new NoticeParams(params));
 	}
 
 	@Override
@@ -54,58 +52,57 @@ public class FastcmsPayServiceManager implements PayServiceManager {
 
 	@Override
 	public NoticeParams getNoticeParams(String platform, NoticeRequest request) {
-		PaymentPlatformConfig config = payConfigStorageService.getConfig(platform);
-		return config.getPayService().getNoticeParams(request);
+		return paymentPlatformService.getPlatform(platform).getPayService().getNoticeParams(request);
 	}
 
 	@Override
 	public String toPay(FastcmsPayOrder payOrder) {
-		PaymentPlatformConfig config = payConfigStorageService.getConfig(payOrder.getPlatform());
-		payOrder.setTransactionType(config.getPaymentPlatform().getTransactionType(payOrder.getWayTrade()));
-		PayService payService = config.getPayService();
+		PaymentPlatform paymentPlatform = paymentPlatformService.getPlatform(payOrder.getPlatform());
+		payOrder.setTransactionType(paymentPlatform.getTransactionType(payOrder.getWayTrade()));
+		PayService payService = paymentPlatform.getPayService();
 		Map<String, Object> orderInfo = payService.orderInfo(payOrder);
 		return payService.buildRequest(orderInfo, MethodType.POST);
 	}
 
 	@Override
 	public Map<String, Object> app(FastcmsPayOrder payOrder) {
-		PaymentPlatformConfig config = payConfigStorageService.getConfig(payOrder.getPlatform());
-		payOrder.setTransactionType(config.getPaymentPlatform().getTransactionType(payOrder.getWayTrade()));
-		PayService payService = config.getPayService();
+		PaymentPlatform paymentPlatform = paymentPlatformService.getPlatform(payOrder.getPlatform());
+		payOrder.setTransactionType(paymentPlatform.getTransactionType(payOrder.getWayTrade()));
+		PayService payService = paymentPlatform.getPayService();
 		return payService.app(payOrder);
 	}
 
 	@Override
 	public Map<String, Object> getOrderInfo(FastcmsPayOrder payOrder) {
-		PaymentPlatformConfig config = payConfigStorageService.getConfig(payOrder.getPlatform());
-		payOrder.setTransactionType(config.getPaymentPlatform().getTransactionType(payOrder.getWayTrade()));
-		PayService payService = config.getPayService();
+		PaymentPlatform paymentPlatform = paymentPlatformService.getPlatform(payOrder.getPlatform());
+		payOrder.setTransactionType(paymentPlatform.getTransactionType(payOrder.getWayTrade()));
+		PayService payService = paymentPlatform.getPayService();
 		Map<String, Object> orderInfo = payService.orderInfo(payOrder);
 		return orderInfo;
 	}
 
 	@Override
 	public Map<String, Object> microPay(FastcmsPayOrder payOrder) {
-		PaymentPlatformConfig config = payConfigStorageService.getConfig(payOrder.getPlatform());
-		payOrder.setTransactionType(config.getPaymentPlatform().getTransactionType(payOrder.getWayTrade()));
-		Map<String, Object> params = config.getPayService().microPay(payOrder);
+		PaymentPlatform paymentPlatform = paymentPlatformService.getPlatform(payOrder.getPlatform());
+		payOrder.setTransactionType(paymentPlatform.getTransactionType(payOrder.getWayTrade()));
+		Map<String, Object> params = paymentPlatform.getPayService().microPay(payOrder);
 		return params;
 	}
 
 	@Override
 	public byte[] toQrPay(FastcmsPayOrder payOrder) throws IOException {
-		PaymentPlatformConfig config = payConfigStorageService.getConfig(payOrder.getPlatform());
-		payOrder.setTransactionType(config.getPaymentPlatform().getTransactionType(payOrder.getWayTrade()));
+		PaymentPlatform paymentPlatform = paymentPlatformService.getPlatform(payOrder.getPlatform());
+		payOrder.setTransactionType(paymentPlatform.getTransactionType(payOrder.getWayTrade()));
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ImageIO.write(config.getPayService().genQrPay(payOrder), "JPEG", baos);
+		ImageIO.write(paymentPlatform.getPayService().genQrPay(payOrder), "JPEG", baos);
 		return baos.toByteArray();
 	}
 
 	@Override
 	public String getQrPay(FastcmsPayOrder payOrder) {
-		PaymentPlatformConfig config = payConfigStorageService.getConfig(payOrder.getPlatform());
-		payOrder.setTransactionType(config.getPaymentPlatform().getTransactionType(payOrder.getWayTrade()));
-		return config.getPayService().getQrPay(payOrder);
+		PaymentPlatform paymentPlatform = paymentPlatformService.getPlatform(payOrder.getPlatform());
+		payOrder.setTransactionType(paymentPlatform.getTransactionType(payOrder.getWayTrade()));
+		return paymentPlatform.getPayService().getQrPay(payOrder);
 	}
 
 	@Override
@@ -115,65 +112,55 @@ public class FastcmsPayServiceManager implements PayServiceManager {
 
 	@Override
 	public String payBack(String platform, NoticeRequest request) {
-		PaymentPlatformConfig config = payConfigStorageService.getConfig(platform);
-		PayService payService = config.getPayService();
-		return payService.payBack(request).toMessage();
+		return paymentPlatformService.getPlatform(platform).getPayService().payBack(request).toMessage();
 	}
 
 	@Override
 	public Map<String, Object> query(FastcmsPayOrder order) {
-		PaymentPlatformConfig config = payConfigStorageService.getConfig(order.getPlatform());
-		return config.getPayService().query(order);
+		return paymentPlatformService.getPlatform(order.getPlatform()).getPayService().query(order);
 	}
 
 	@Override
 	public Map<String, Object> close(FastcmsPayOrder order) {
-		PaymentPlatformConfig config = payConfigStorageService.getConfig(order.getPlatform());
+		PaymentPlatform paymentPlatform = paymentPlatformService.getPlatform(order.getPlatform());
 		final FastcmsQueryOrder queryOrder = new FastcmsQueryOrder();
 		queryOrder.setTradeNo(order.getTradeNo());
 		queryOrder.setOutTradeNo(order.getOutTradeNo());
-		return config.getPayService().close(queryOrder);
+		return paymentPlatform.getPayService().close(queryOrder);
 	}
 
 	@Override
 	public RefundResult refund(String platform, RefundOrder order) {
-		PaymentPlatformConfig config = payConfigStorageService.getConfig(platform);
-		return config.getPayService().refund(order);
+		return paymentPlatformService.getPlatform(platform).getPayService().refund(order);
 	}
 
 	@Override
 	public Map<String, Object> refundQuery(String platform, RefundOrder order) {
-		PaymentPlatformConfig config = payConfigStorageService.getConfig(platform);
-		return config.getPayService().refundquery(order);
+		return paymentPlatformService.getPlatform(platform).getPayService().refundquery(order);
 	}
 
 	@Override
 	public Map<String, Object> downloadBill(FastcmsQueryOrder order) {
-		PaymentPlatformConfig config = payConfigStorageService.getConfig(order.getPlatform());
-		return config.getPayService().downloadBill(order.getBillDate(), order.getBillType());
+		return paymentPlatformService.getPlatform(order.getPlatform()).getPayService().downloadBill(order.getBillDate(), order.getBillType());
 	}
 
 	@Override
 	public Map<String, Object> transfer(String platform, TransferOrder order) {
-		PaymentPlatformConfig config = payConfigStorageService.getConfig(platform);
-		return config.getPayService().transfer(order);
+		return paymentPlatformService.getPlatform(platform).getPayService().transfer(order);
 	}
 
 	@Override
 	public Map<String, Object> transferQuery(String platform, String outNo, String tradeNo) {
-		PaymentPlatformConfig config = payConfigStorageService.getConfig(platform);
-		return config.getPayService().transferQuery(outNo, tradeNo);
+		return paymentPlatformService.getPlatform(platform).getPayService().transferQuery(outNo, tradeNo);
 	}
 
 	@Override
 	public PayMessage createMessage(String platform, Map<String, Object> message) {
-		PaymentPlatformConfig config = payConfigStorageService.getConfig(platform);
-		return config.getPayService().createMessage(message);
+		return paymentPlatformService.getPlatform(platform).getPayService().createMessage(message);
 	}
 
 	@Override
 	public <T extends PayService> T cast(String platform, Class<T> payServiceClass) {
-		PaymentPlatformConfig config = payConfigStorageService.getConfig(platform);
-		return (T) config.getPayService();
+		return (T) paymentPlatformService.getPlatform(platform).getPayService();
 	}
 }

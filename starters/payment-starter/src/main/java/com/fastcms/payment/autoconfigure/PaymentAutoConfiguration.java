@@ -14,30 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.payment.handler;
+package com.fastcms.payment.autoconfigure;
 
-import com.egzosn.pay.ali.api.AliPayService;
-import com.egzosn.pay.ali.bean.AliPayMessage;
-import com.egzosn.pay.common.api.PayMessageHandler;
-import com.egzosn.pay.common.bean.PayOutMessage;
-import com.egzosn.pay.common.exception.PayErrorException;
-import org.springframework.stereotype.Component;
-
-import java.util.Map;
+import com.egzosn.pay.common.api.PayService;
+import com.fastcms.payment.FastcmsPayServiceManager;
+import com.fastcms.payment.PayServiceManager;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
+ * 支付服务自动装配类
  * @author： wjun_java@163.com
- * @date： 2021/6/22
+ * @date： 2021/6/21
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-@Component
-public class UnionPayMessageHandler implements PayMessageHandler<AliPayMessage, AliPayService> {
+@Configuration
+@ConditionalOnClass(PayService.class)
+public class PaymentAutoConfiguration {
 
-	@Override
-	public PayOutMessage handle(AliPayMessage payMessage, Map<String, Object> context, AliPayService payService) throws PayErrorException {
-		return null;
+	@Bean
+	public PayServiceManager payServiceManager(){
+		return new FastcmsPayServiceManager();
 	}
 
 }

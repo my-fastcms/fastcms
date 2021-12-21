@@ -14,16 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.payment.config;
+package com.fastcms.payment;
 
-import com.egzosn.pay.common.api.PayConfigStorage;
 import com.egzosn.pay.common.api.PayService;
+import com.egzosn.pay.common.bean.BasePayType;
 import com.egzosn.pay.common.http.HttpConfigStorage;
-import com.fastcms.payment.platform.PaymentPlatform;
 
-import java.io.Serializable;
+/**
+ * 支付平台
+ * @author： wjun_java@163.com
+ * @date： 2021/6/21
+ * @description：
+ * @modifiedBy：
+ * @version: 1.0
+ */
+public interface PaymentPlatform<S extends PayService> extends BasePayType {
 
-public interface PaymentPlatformConfig<S extends PayService> extends PayConfigStorage, Serializable {
+    /**
+     * 获取商户平台
+     * @return 商户平台
+     */
+    String getPlatform();
 
     /**
      * 获取支付平台对应的支付服务
@@ -32,15 +43,10 @@ public interface PaymentPlatformConfig<S extends PayService> extends PayConfigSt
     S getPayService();
 
     /**
-     * 获取支付平台
-     * @return 支付平台
+     * 获取支付平台对应的支付服务
+     * @param httpConfigStorage 网络配置
+     * @return 支付服务
      */
-    PaymentPlatform getPaymentPlatform();
-
-    /**
-     * 获取HTTP请求配置
-     * @return HTTP请求配置
-     */
-    HttpConfigStorage getHttpConfigStorage();
+    S getPayService(HttpConfigStorage httpConfigStorage);
 
 }

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.payment.config;
+package com.fastcms.payment;
 
 /**
  * @author： wjun_java@163.com
@@ -23,10 +23,8 @@ package com.fastcms.payment.config;
  * @modifiedBy：
  * @version: 1.0
  */
-public interface PayConfigStorageService {
+public interface PaymentPlatformService {
 
-	PaymentPlatformConfig getConfig(String platform);
-
-	void initConfigStorageMap();
+	PaymentPlatform getPlatform(String platform);
 
 }

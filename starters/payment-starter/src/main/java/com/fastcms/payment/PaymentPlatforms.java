@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.payment.platform;
+package com.fastcms.payment;
 
 import com.egzosn.pay.common.bean.TransactionType;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,8 +32,7 @@ import java.util.Map;
  */
 public final class PaymentPlatforms {
 
-    private static final Map<String, PaymentPlatform> PAYMENT_PLATFORMS = new HashMap<>();
-
+    private static final Map<String, PaymentPlatform> PAYMENT_PLATFORMS = Collections.synchronizedMap(new HashMap<>());
 
     /**
      * 加载支付平台

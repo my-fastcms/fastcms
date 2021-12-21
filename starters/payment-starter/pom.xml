@@ -20,31 +20,7 @@
 
         <dependency>
             <groupId>com.egzosn</groupId>
-            <artifactId>pay-java-ali</artifactId>
-            <version>${pay-java.version}</version>
-            <exclusions>
-                <exclusion>
-                    <artifactId>log4j</artifactId>
-                    <groupId>log4j</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>com.egzosn</groupId>
             <artifactId>pay-java-wx</artifactId>
-            <version>${pay-java.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.egzosn</groupId>
-            <artifactId>pay-java-paypal</artifactId>
-            <version>${pay-java.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.egzosn</groupId>
-            <artifactId>pay-java-union</artifactId>
             <version>${pay-java.version}</version>
         </dependency>
 

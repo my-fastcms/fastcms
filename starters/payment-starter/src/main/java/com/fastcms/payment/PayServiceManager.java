@@ -59,11 +59,11 @@ public interface PayServiceManager {
     /**
      * 将请求参数或者请求流转化为 Map
      *
-     * @param detailsId 商户列表id
+     * @param platform  商户支付平台类型
      * @param request   通知请求
      * @return 获得回调的请求参数
      */
-    NoticeParams getNoticeParams(String detailsId, NoticeRequest request);
+    NoticeParams getNoticeParams(String platform, NoticeRequest request);
 
     /**
      * 跳到支付页面

@@ -14,15 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.payment.handler;
+package com.fastcms.core.payment;
 
 import com.egzosn.pay.common.api.PayMessageHandler;
 import com.egzosn.pay.common.api.PayService;
 import com.egzosn.pay.common.bean.PayOutMessage;
 import com.egzosn.pay.common.exception.PayErrorException;
 import com.egzosn.pay.wx.bean.WxPayMessage;
-import com.fastcms.payment.listener.PaymentSuccessListenerManager;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -37,9 +35,6 @@ import java.util.Map;
  */
 @Component
 public class WxPayMessageHandler implements PayMessageHandler<WxPayMessage, PayService> {
-
-	@Autowired
-	private PaymentSuccessListenerManager paymentSuccessListenerManager;
 
 	@Override
 	public PayOutMessage handle(WxPayMessage payMessage, Map<String, Object> context, PayService payService) throws PayErrorException {
