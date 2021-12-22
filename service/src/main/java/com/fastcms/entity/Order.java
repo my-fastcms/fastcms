@@ -8,10 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * <p>
- * 订单表
- * </p>
- *
+ * 订单
  * @author wjun_java@163.com
  * @since 2021-12-21
  */

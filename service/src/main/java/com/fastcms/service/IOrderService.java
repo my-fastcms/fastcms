@@ -28,10 +28,6 @@ public interface IOrderService extends IService<Order> {
 
     PaymentRecord preparePaymentRecord(Order order, String openid, String ip);
 
-    OrderCountVo getUCenterOrderCount(Long userId);
-
-    Page<Order> pageOrderOfApi(Page pageParam, QueryWrapper queryWrapper);
-
     OrderVo getOrderDetail(Long orderId);
 
     class OrderVo extends Order {
@@ -149,10 +145,25 @@ public interface IOrderService extends IService<Order> {
         }
     }
 
+    /**
+     * 创建订单
+     */
     class CreateOrderParam implements Serializable {
+        /**
+         * 用户id
+         */
         Long userId;
+        /**
+         * 订单产品
+         */
         List<ProductParam> products;
+        /**
+         * 收货地址
+         */
         Long addressId;
+        /**
+         * 买家留言
+         */
         String buyerMsg;
 
         public Long getUserId() {
@@ -188,10 +199,32 @@ public interface IOrderService extends IService<Order> {
         }
     }
 
+    /**
+     * 产品
+     */
     class ProductParam implements Serializable {
+        /**
+         * 产品id
+         */
         Long id;
+        /**
+         * 产品类型
+         */
+        String type;
+        /**
+         * 产品数量
+         */
         Long num;
+        /**
+         * 产品sku
+         */
         String sku;
+
+        public ProductParam(Long id, String type, Long num) {
+            this.id = id;
+            this.type = type;
+            this.num = num;
+        }
 
         public Long getId() {
             return id;
@@ -199,6 +232,14 @@ public interface IOrderService extends IService<Order> {
 
         public void setId(Long id) {
             this.id = id;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
         }
 
         public Long getNum() {

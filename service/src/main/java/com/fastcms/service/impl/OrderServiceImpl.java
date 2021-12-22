@@ -13,9 +13,11 @@ import com.fastcms.mapper.OrderMapper;
 import com.fastcms.service.IOrderItemService;
 import com.fastcms.service.IOrderService;
 import com.fastcms.service.IPaymentRecordService;
+import com.fastcms.utils.SpringContextHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ClassUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -56,19 +58,32 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
         if(createOrderParam.getUserId() == null) throw new FastcmsException(FastcmsException.INVALID_PARAM, "user id is null");
 
-        //订单项
-        List<OrderItem> orderItemList = new ArrayList<>();
-
         List<ProductParam> products = createOrderParam.getProducts();
         if(products == null || products.size()<=0) {
             throw new FastcmsException(FastcmsException.INVALID_PARAM, "未找到需购买商品项");
         }
+
+        //check product type
+        for (ProductParam item : products) {
+            try{
+                Class<?> aClass = ClassUtils.forName(item.getType(), ClassUtils.getDefaultClassLoader());
+                SpringContextHolder.getBean(aClass);
+            } catch (Exception e) {
+                throw new FastcmsException(FastcmsException.INVALID_PARAM, "商品类型解析出错");
+            }
+        }
+
+        //订单项
+        List<OrderItem> orderItemList = new ArrayList<>();
 
 //        Product firstProduct = null; //第一个商品名称作为订单标题
         for (ProductParam item : products) {
 //            if(firstProduct == null) {
 //                firstProduct = productService.getById(item.getId());
 //            }
+
+
+
             Long num = item.getNum();
 //            BigDecimal productPrice = getProductPrice(item); //获取商品单价
 //            BigDecimal postageAmount = postageTemplateService.getPostageAmount(item, address.getAddress());
@@ -137,17 +152,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
             updateById(order);
         }
         return paymentRecord;
-    }
-
-    @Override
-    public OrderCountVo getUCenterOrderCount(Long userId) {
-        return getBaseMapper().getUCenterOrderCount(userId);
-    }
-
-    @Override
-    public Page<Order> pageOrderOfApi(Page pageParam, QueryWrapper queryWrapper) {
-        Page<Order> orderPage = getBaseMapper().pageOrderOfApi(pageParam, queryWrapper);
-        return orderPage;
     }
 
     @Override

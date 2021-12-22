@@ -6,10 +6,7 @@ import java.time.LocalDateTime;
 import java.io.Serializable;
 
 /**
- * <p>
- * 发票信息表
- * </p>
- *
+ * 发票信息
  * @author wjun_java@163.com
  * @since 2021-12-21
  */

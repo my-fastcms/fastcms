@@ -19,9 +19,7 @@ package com.fastcms.plugin;
 import com.fastcms.plugin.extension.ExtensionsInjector;
 import com.fastcms.plugin.extension.FastcmsSpringExtensionFactory;
 import org.apache.commons.io.FileUtils;
-import org.pf4j.DefaultPluginManager;
-import org.pf4j.ExtensionFactory;
-import org.pf4j.PluginWrapper;
+import org.pf4j.*;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory;
@@ -53,6 +51,14 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
     @Override
     protected ExtensionFactory createExtensionFactory() {
         return new FastcmsSpringExtensionFactory(this);
+    }
+
+    @Override
+    protected ExtensionFinder createExtensionFinder() {
+        DefaultExtensionFinder extensionFinder = new DefaultExtensionFinder(this);
+        addPluginStateListener(extensionFinder);
+
+        return extensionFinder;
     }
 
     @Override
@@ -97,16 +103,20 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
             return new PluginResult(0, new ArrayList<>());
         }
 
-        Integer count = plugins.size();     // 记录总数
-        Integer pageCount;                  // 总页数
+        // 记录总数
+        Integer count = plugins.size();
+        // 总页数
+        Integer pageCount;
         if (count % pageSize == 0) {
             pageCount = count / pageSize;
         } else {
             pageCount = count / pageSize + 1;
         }
 
-        int fromIndex;  // 开始索引
-        int toIndex;    // 结束索引
+        // 开始索引
+        int fromIndex;
+        // 结束索引
+        int toIndex;
 
         if (pageNum != pageCount) {
             fromIndex = (pageNum - 1) * pageSize;

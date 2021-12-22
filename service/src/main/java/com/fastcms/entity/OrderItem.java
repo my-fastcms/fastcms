@@ -7,10 +7,7 @@ import java.time.LocalDateTime;
 import java.io.Serializable;
 
 /**
- * <p>
- * 订单明细表
- * </p>
- *
+ * 订单明细
  * @author wjun_java@163.com
  * @since 2021-12-21
  */
@@ -40,6 +37,11 @@ public class OrderItem implements Serializable {
      * 产品id
      */
     private Long productId;
+
+    /**
+     * 产品类型
+     */
+    private String productType;
 
     /**
      * 产品数量
@@ -135,6 +137,14 @@ public class OrderItem implements Serializable {
 
     public void setCreated(LocalDateTime created) {
         this.created = created;
+    }
+
+    public String getProductType() {
+        return productType;
+    }
+
+    public void setProductType(String productType) {
+        this.productType = productType;
     }
 
     @Override

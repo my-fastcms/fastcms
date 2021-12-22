@@ -226,6 +226,7 @@ CREATE TABLE `order_item` (
   `order_sn` varchar(64) DEFAULT NULL COMMENT '订单号',
   `seller_id` bigint(20) DEFAULT NULL COMMENT '卖家id',
   `product_id` bigint(20) DEFAULT NULL COMMENT '产品id',
+  `product_type` varchar(64) DEFAULT NULL COMMENT '产品类型',
   `product_count` int(11) DEFAULT NULL COMMENT '产品数量',
   `postage_cost` decimal(10,2) DEFAULT NULL COMMENT '邮费',
   `total_amount` decimal(10,2) DEFAULT NULL COMMENT '具体金额 = 产品价格+运费+其他价格',
