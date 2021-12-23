@@ -60,7 +60,7 @@
 				<el-dropdown-menu>
 					<el-dropdown-item command="/home">{{ $t('message.user.dropdown1') }}</el-dropdown-item>
 					<el-dropdown-item command="wareHouse">{{ $t('message.user.dropdown6') }}</el-dropdown-item>
-					<el-dropdown-item command="/personal">{{ $t('message.user.dropdown2') }}</el-dropdown-item>
+					<el-dropdown-item @click="userCenter">{{ $t('message.user.dropdown2') }}</el-dropdown-item>
 					<el-dropdown-item divided command="logOut">{{ $t('message.user.dropdown5') }}</el-dropdown-item>
 				</el-dropdown-menu>
 			</template>
@@ -230,6 +230,12 @@ export default {
 					break;
 			}
 		};
+    // 个人中心
+    const userCenter = () => {
+      router.push({
+        path: "/center"
+      })
+    };
 		// 页面加载时
 		onMounted(() => {
 			if (Local.get('themeConfig')) {
@@ -248,6 +254,7 @@ export default {
 			searchRef,
 			layoutUserFlexNum,
 			...toRefs(state),
+      userCenter
 		};
 	},
 };

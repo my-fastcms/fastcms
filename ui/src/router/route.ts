@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from 'vue-router';
+import { centerRoute } from "/@/router/center";
 
 /**
  * 路由meta对象参数说明
@@ -91,7 +92,7 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 				},
 			},
 		],
-	},
+	}
 ];
 
 /**
@@ -123,5 +124,7 @@ export const staticRoutes: Array<RouteRecordRaw> = [
 		meta: {
 			title: 'message.staticRoutes.noPower',
 		},
-	}
+	},
+	// 个人中心
+	...centerRoute
 ];

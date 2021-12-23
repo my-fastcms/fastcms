@@ -9,7 +9,7 @@ import { globalComponentSize } from '/@/utils/componentSize';
 import ElementPlus from 'element-plus';
 import 'element-plus/dist/index.css';
 import '/@/theme/index.scss';
-import "./CKEditorStyle-Vite.css";
+import "./theme/ck-vite.css";
 import mitt from 'mitt';
 import screenShort from 'vue-web-screen-shot';
 import VueGridLayout from 'vue-grid-layout';
@@ -25,5 +25,6 @@ app
 	.mount('#app');
 
 app.config.globalProperties.mittBus = mitt();
+console.log(app);
 
 directive(app);
