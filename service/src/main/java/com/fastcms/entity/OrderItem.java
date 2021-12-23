@@ -1,10 +1,13 @@
 package com.fastcms.entity;
 
-import java.math.BigDecimal;
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.time.LocalDateTime;
+
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * 订单明细
@@ -61,11 +64,13 @@ public class OrderItem implements Serializable {
     /**
      * 修改时间
      */
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updated;
 
     /**
      * 创建时间
      */
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime created;
 
     public Long getId() {

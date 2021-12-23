@@ -16,11 +16,12 @@
  */
 package com.fastcms.plugin;
 
-import com.fastcms.plugin.extension.ExtensionsInjector;
 import com.fastcms.plugin.extension.FastcmsSpringExtensionFactory;
 import com.fastcms.plugin.register.CompoundPluginRegister;
 import org.apache.commons.io.FileUtils;
-import org.pf4j.*;
+import org.pf4j.DefaultPluginManager;
+import org.pf4j.ExtensionFactory;
+import org.pf4j.PluginWrapper;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
@@ -57,17 +58,11 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
     }
 
     @Override
-    protected ExtensionFinder createExtensionFinder() {
-        DefaultExtensionFinder extensionFinder = new DefaultExtensionFinder(this);
-        addPluginStateListener(extensionFinder);
-        return extensionFinder;
-    }
-
-    @Override
     public void installPlugin(Path path) throws Exception {
         if(isDevelopment()) throw new Exception("开发环境不允许安装");
         String pluginId = loadPlugin(path);
         startPlugin(pluginId);
+        pluginRegister.registry(pluginId);
     }
 
     @Override
@@ -77,6 +72,7 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
             PluginWrapper plugin = getPlugin(pluginId);
             Path pluginPath = plugin.getPluginPath();
 
+            pluginRegister.unRegistry(pluginId);
             stopPlugin(pluginId);
             unloadPlugin(pluginId, false);
 
@@ -92,9 +88,6 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
     public void initPlugins() throws Exception {
         loadPlugins();
         startPlugins();
-
-        ExtensionsInjector extensionsInjector = new ExtensionsInjector(this);
-        extensionsInjector.injectExtensions();
 
         getStartedPlugins().forEach(item -> {
             try {
