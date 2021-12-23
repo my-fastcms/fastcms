@@ -88,13 +88,37 @@ public interface PluginManagerService {
 		}
 	}
 
+	/**
+	 * 插件
+	 */
 	class PluginVo implements Serializable {
+		/**
+		 * 插件id
+		 */
 		private String pluginId;
+		/**
+		 * 插件主类
+		 */
 		private String pluginClass;
+		/**
+		 * 插件版本
+		 */
 		private String version;
+		/**
+		 * 插件提供者
+		 */
 		private String provider;
+		/**
+		 * 插件描述
+		 */
 		private String description;
+		/**
+		 * 插件依赖
+		 */
 		private String dependencies;
+		/**
+		 * 插件状态
+		 */
 		private String pluginState;
 
 		public PluginVo(PluginWrapper pluginWrapper) {

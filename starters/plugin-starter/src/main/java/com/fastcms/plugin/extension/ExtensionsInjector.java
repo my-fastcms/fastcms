@@ -21,9 +21,9 @@ public class ExtensionsInjector {
     protected final FastcmsPluginManager fastcmsPluginManager;
     protected final AbstractAutowireCapableBeanFactory beanFactory;
 
-    public ExtensionsInjector(FastcmsPluginManager springPluginManager, AbstractAutowireCapableBeanFactory beanFactory) {
-        this.fastcmsPluginManager = springPluginManager;
-        this.beanFactory = beanFactory;
+    public ExtensionsInjector(FastcmsPluginManager fastcmsPluginManager) {
+        this.fastcmsPluginManager = fastcmsPluginManager;
+        this.beanFactory = (AbstractAutowireCapableBeanFactory) this.fastcmsPluginManager.getApplicationContext().getAutowireCapableBeanFactory();
     }
 
     public void injectExtensions() {
@@ -42,6 +42,7 @@ public class ExtensionsInjector {
         // add extensions for each started plugin
         List<PluginWrapper> startedPlugins = fastcmsPluginManager.getStartedPlugins();
         for (PluginWrapper plugin : startedPlugins) {
+
             log.debug("Registering extensions of the plugin '{}' as beans", plugin.getPluginId());
             extensionClassNames = fastcmsPluginManager.getExtensionClassNames(plugin.getPluginId());
             for (String extensionClassName : extensionClassNames) {

@@ -1,4 +1,4 @@
-package com.fastcms.plugin.register;
+package com.fastcms.plugin;
 
 /**
  * wjun_java@163.com
@@ -11,12 +11,12 @@ public interface PluginRegister {
      * 安装时注册插件组件
      * @param pluginId
      */
-    void registry(String pluginId);
+    void registry(String pluginId) throws Exception;
 
     /**
      * 卸载时取消插件组件注册
      * @param pluginId
      */
-    void unRegistry(String pluginId);
+    void unRegistry(String pluginId) throws Exception;
 
 }

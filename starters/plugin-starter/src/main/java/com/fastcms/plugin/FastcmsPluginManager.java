@@ -18,11 +18,11 @@ package com.fastcms.plugin;
 
 import com.fastcms.plugin.extension.ExtensionsInjector;
 import com.fastcms.plugin.extension.FastcmsSpringExtensionFactory;
+import com.fastcms.plugin.register.CompoundPluginRegister;
 import org.apache.commons.io.FileUtils;
 import org.pf4j.*;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * fastcms插件管理器
  * @author： wjun_java@163.com
  * @date： 2021/4/21
  * @description：
@@ -43,6 +44,8 @@ import java.util.stream.Collectors;
 public class FastcmsPluginManager extends DefaultPluginManager implements PluginManagerService, ApplicationContextAware, InitializingBean, ApplicationListener<ApplicationStartedEvent> {
 
     private ApplicationContext applicationContext;
+
+    private PluginRegister pluginRegister;
 
     public FastcmsPluginManager(Path... pluginsRoots) {
         super(pluginsRoots);
@@ -57,7 +60,6 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
     protected ExtensionFinder createExtensionFinder() {
         DefaultExtensionFinder extensionFinder = new DefaultExtensionFinder(this);
         addPluginStateListener(extensionFinder);
-
         return extensionFinder;
     }
 
@@ -91,9 +93,17 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
         loadPlugins();
         startPlugins();
 
-        AbstractAutowireCapableBeanFactory beanFactory = (AbstractAutowireCapableBeanFactory) applicationContext.getAutowireCapableBeanFactory();
-        ExtensionsInjector extensionsInjector = new ExtensionsInjector(this, beanFactory);
+        ExtensionsInjector extensionsInjector = new ExtensionsInjector(this);
         extensionsInjector.injectExtensions();
+
+        getStartedPlugins().forEach(item -> {
+            try {
+                pluginRegister.registry(item.getPluginId());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
     }
 
     @Override
@@ -134,7 +144,7 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
 
     @Override
     public void afterPropertiesSet() throws Exception {
-
+        pluginRegister = new CompoundPluginRegister(this);
     }
 
     @Override
