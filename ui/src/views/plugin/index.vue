@@ -22,6 +22,7 @@
 				<el-table-column prop="description" label="描述" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="path" label="操作" width="90">
 					<template #default="scope">
+						<el-button size="mini" type="text" @click="onRowConfig(scope.row)">配置</el-button>
 						<el-button size="mini" type="text" @click="onRowUnInstall(scope.row)">卸载</el-button>
 					</template>
 				</el-table-column>
@@ -40,18 +41,30 @@
 			>
 			</el-pagination>
 		</el-card>
+  
+		<el-dialog
+			title="插件配置"
+			fullscreen
+			:model-value="dialogVisible"
+			:before-close="handleClose"
+		>
+			<iframe :src="pluginConfigUrl" frameborder="0" width="100%" height="100%"></iframe>
+		</el-dialog>
+
 	</div>
 </template>
 
 <script lang="ts">
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { toRefs, reactive, onMounted } from 'vue';
-import { getPluginList, unInstallPlugin } from '/@/api/plugin/index';
+import { getPluginList, unInstallPlugin, getPluginConfigUrl } from '/@/api/plugin/index';
 import { Session } from '/@/utils/storage';
 export default {
 	name: 'pluginManager',
 	setup() {
 		const state = reactive({
+			dialogVisible: false,
+			pluginConfigUrl: '',
 			limit: 1,
 			uploadUrl: import.meta.env.VITE_API_URL + "/admin/plugin/install",
 			headers: {"Authorization": Session.get('token')},
@@ -90,6 +103,20 @@ export default {
 			.catch(() => {});
 		};
 
+		const onRowConfig = (row: object) => {
+			getPluginConfigUrl(row.pluginId).then((res) => {
+				state.pluginConfigUrl = res.data;
+				state.dialogVisible = true;
+			}).catch(() => {
+				ElMessage.error("插件不支持配置");
+			})
+			
+		};
+
+		const handleClose = () => {
+			state.dialogVisible = false;
+		};
+
 		// 分页改变
 		const onHandleSizeChange = (val: number) => {
 			state.tableData.param.pageSize = val;
@@ -119,6 +146,8 @@ export default {
 			initTableData();
 		});
 		return {
+			handleClose,
+			onRowConfig,
 			onRowUnInstall,
 			onHandleSizeChange,
 			onHandleCurrentChange,

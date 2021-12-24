@@ -1,4 +1,4 @@
-package com.fastcms.core.watermark;
+package com.fastcms.core.attach;
 
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.core.utils.AttachUtils;

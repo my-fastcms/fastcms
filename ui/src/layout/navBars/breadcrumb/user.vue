@@ -165,7 +165,7 @@ export default {
 					})
 					.catch(() => {});
 			} else if (path === 'wareHouse') {
-				window.open('https://gitee.com/dianbuapp_admin/fastcms.git');
+				window.open('https://gitee.com/xjd2020/fastcms.git');
 			} else {
 				router.push(path);
 			}

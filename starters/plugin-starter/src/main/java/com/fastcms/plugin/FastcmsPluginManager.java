@@ -136,6 +136,11 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
     }
 
     @Override
+    public FastcmsPluginManager getPluginManager() {
+        return this;
+    }
+
+    @Override
     public void afterPropertiesSet() throws Exception {
         pluginRegister = new CompoundPluginRegister(this);
     }

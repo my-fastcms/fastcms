@@ -30,6 +30,8 @@ import org.springframework.context.ConfigurableApplicationContext;
  */
 public abstract class PluginBase extends Plugin {
 
+    public abstract String getConfigUrl();
+
     private ApplicationContext applicationContext;
 
     public PluginBase(PluginWrapper wrapper) {

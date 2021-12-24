@@ -116,6 +116,11 @@ public class Article implements Serializable {
     private Integer version;
 
     /**
+     * json格式扩展字段
+     */
+    private String jsonExt;
+
+    /**
      * 分类id集合
      */
     @TableField(exist = false)
@@ -268,6 +273,14 @@ public class Article implements Serializable {
 
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    public String getJsonExt() {
+        return jsonExt;
+    }
+
+    public void setJsonExt(String jsonExt) {
+        this.jsonExt = jsonExt;
     }
 
     public Set<Long> getArticleCategory() {

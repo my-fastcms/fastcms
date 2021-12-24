@@ -95,7 +95,7 @@
 		"not dead"
 	],
 	"bugs": {
-		"url": "https://gitee.com/dianbuapp_admin/fastcms.git/issues"
+		"url": "https://gitee.com/xjd2020/fastcms.git/issues"
 	},
 	"engines": {
 		"node": ">=12.0.0",
@@ -111,6 +111,6 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://gitee.com/dianbuapp_admin/fastcms.git"
+		"url": "https://gitee.com/xjd2020/fastcms.git"
 	}
 }

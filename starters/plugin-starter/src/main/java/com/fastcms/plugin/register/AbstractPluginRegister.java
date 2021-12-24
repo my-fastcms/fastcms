@@ -4,6 +4,7 @@ import com.fastcms.plugin.FastcmsPluginManager;
 import com.fastcms.plugin.PluginBase;
 import com.fastcms.plugin.PluginRegister;
 import com.fastcms.plugin.UnLoad;
+import org.pf4j.Plugin;
 import org.pf4j.PluginWrapper;
 import org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory;
 import org.springframework.core.io.Resource;
@@ -48,8 +49,9 @@ public abstract class AbstractPluginRegister implements PluginRegister {
             if(resource.isReadable()) {
                 MetadataReader metadataReader = new CachingMetadataReaderFactory().getMetadataReader(resource);
                 Class clazz = pluginWrapper.getPluginClassLoader().loadClass(metadataReader.getAnnotationMetadata().getClassName());
-                if(clazz.getAnnotation(UnLoad.class) != null) continue;
-                if(!PluginBase.class.isAssignableFrom(clazz))
+                if(!PluginBase.class.isAssignableFrom(clazz)
+                    && !Plugin.class.isAssignableFrom(clazz)
+                    && clazz.getAnnotation(UnLoad.class) == null)
                     classList.add(clazz);
             }
         }

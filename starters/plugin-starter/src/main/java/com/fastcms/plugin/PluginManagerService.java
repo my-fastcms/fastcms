@@ -62,8 +62,23 @@ public interface PluginManagerService {
 	 */
 	PluginResult getPluginList(int pageNum, int pageSize, String pluginId, String provider);
 
+	/**
+	 * 获取插件管理器
+	 * @return
+	 */
+	FastcmsPluginManager getPluginManager();
+
+	/**
+	 * 插件分页Vo
+	 */
 	class PluginResult implements Serializable {
+		/**
+		 * 总条数
+		 */
 		private Integer total;
+		/**
+		 * 插件集合
+		 */
 		private List<PluginVo> pluginVoList;
 
 		public PluginResult(Integer total, List<PluginVo> pluginVoList) {

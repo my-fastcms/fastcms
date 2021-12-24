@@ -51,3 +51,15 @@ export function startPlugin(pluginId: string) {
 		method: 'post'
 	});
 }
+
+/**
+ * 获取插件配置url
+ * @param params 
+ * @returns 
+ */
+export function getPluginConfigUrl(pluginId: string) {
+	return request({
+		url: '/admin/plugin/config/url/' + pluginId,
+		method: 'get'
+	});
+}

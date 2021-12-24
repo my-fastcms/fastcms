@@ -133,11 +133,7 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
         }
 
         //注册freemarker自定义标签
-        Map<String, BaseDirective> matchingBeans = BeanFactoryUtils.beansOfTypeIncludingAncestors(event.getApplicationContext(), BaseDirective.class, true, false);
-        matchingBeans.keySet().forEach(item -> {
-            configuration.setSharedVariable(item, matchingBeans.get(item));
-            fastcmsTemplateFreeMarkerConfig.getConfiguration().setSharedVariable(item, matchingBeans.get(item));
-        });
+        registerFreemarkerDirective(event);
 
     }
 
@@ -152,6 +148,14 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
             configService.saveConfig(FastcmsConstants.WEBSITE_DOMAIN,
                     "http://" + configService.getValue(FastcmsConstants.SERVER_IP) + ":" + configService.getValue(FastcmsConstants.SERVER_PORT));
         }
+    }
+
+    void registerFreemarkerDirective(WebServerInitializedEvent event) {
+        Map<String, BaseDirective> matchingBeans = BeanFactoryUtils.beansOfTypeIncludingAncestors(event.getApplicationContext(), BaseDirective.class, true, false);
+        matchingBeans.keySet().forEach(item -> {
+            configuration.setSharedVariable(item, matchingBeans.get(item));
+            fastcmsTemplateFreeMarkerConfig.getConfiguration().setSharedVariable(item, matchingBeans.get(item));
+        });
     }
 
 }

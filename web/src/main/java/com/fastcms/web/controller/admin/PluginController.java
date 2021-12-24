@@ -23,8 +23,10 @@ import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.FileUtils;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.core.utils.DirUtils;
+import com.fastcms.plugin.PluginBase;
 import com.fastcms.plugin.PluginManagerService;
 import org.apache.commons.lang.StringUtils;
+import org.pf4j.Plugin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -108,6 +110,21 @@ public class PluginController {
             return RestResultUtils.failed(e.getMessage());
         }
 
+    }
+
+    /**
+     * 获取插件配置界面地址
+     * @param pluginId
+     * @return
+     */
+    @GetMapping("config/url/{pluginId}")
+    public RestResult<String> getPluginConfigUrl(@PathVariable("pluginId") String pluginId) {
+        Plugin plugin = pluginService.getPluginManager().getPlugin(pluginId).getPlugin();
+        if(plugin instanceof PluginBase) {
+            PluginBase pluginBase = (PluginBase) plugin;
+            return RestResultUtils.success(pluginBase.getConfigUrl());
+        }
+        return RestResultUtils.failed();
     }
 
 }
