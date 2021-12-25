@@ -61,8 +61,8 @@ public abstract class AbstractPluginRegister implements PluginRegister {
 
     protected void destroyBean(Class<?> aClass) {
         FastcmsSpringExtensionFactory extensionFactory = (FastcmsSpringExtensionFactory) pluginManger.getExtensionFactory();
-        beanFactory.destroyBean(extensionFactory.create(aClass));
         extensionFactory.destroy(aClass);
+        beanFactory.destroySingleton(aClass.getName());
     }
 
 }
