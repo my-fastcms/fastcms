@@ -10,6 +10,8 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * wjun_java@163.com
@@ -50,6 +52,25 @@ public class ControllerRegister extends AbstractPluginRegister {
 
     @Override
     public void unRegistry(String pluginId) throws Exception {
-
+        for (RequestMappingInfo requestMappingInfo : getRequestMappingInfo(pluginId)) {
+            requestMappingHandlerMapping.unregisterMapping(requestMappingInfo);
+        }
     }
+
+    List<RequestMappingInfo> getRequestMappingInfo(String pluginId) throws Exception {
+        List<RequestMappingInfo> requestMappingInfoList = new ArrayList<>();
+        for (Class<?> aClass : getPluginClasses(pluginId)) {
+            Controller annotation = aClass.getAnnotation(Controller.class);
+            if (annotation != null) {
+                Method[] methods = aClass.getMethods();
+                for (Method method : methods) {
+                    RequestMappingInfo requestMappingInfo = (RequestMappingInfo) getMappingForMethod.invoke(requestMappingHandlerMapping, method, aClass);
+                    requestMappingInfoList.add(requestMappingInfo);
+                }
+                destroyBean(aClass);
+            }
+        }
+        return requestMappingInfoList;
+    }
+
 }

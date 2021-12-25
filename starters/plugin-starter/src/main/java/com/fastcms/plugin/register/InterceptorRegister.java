@@ -9,6 +9,7 @@ import org.springframework.web.servlet.handler.MappedInterceptor;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * wjun_java@163.com
@@ -46,6 +47,22 @@ public class InterceptorRegister extends AbstractPluginRegister {
 
     @Override
     public void unRegistry(String pluginId) throws Exception {
+
+        for (Class<?> aClass : getPluginClasses(pluginId)) {
+            InterceptPath interceptPaths = aClass.getAnnotation(InterceptPath.class);
+            if(interceptPaths != null && interceptPaths.value() != null) {
+                for (HandlerInterceptor handlerInterceptor : handlerInterceptorList) {
+                    if(handlerInterceptor instanceof MappedInterceptor) {
+                        MappedInterceptor mappedInterceptor = (MappedInterceptor) handlerInterceptor;
+                        if(Objects.equals(pluginManger.getExtensionFactory().create(aClass), mappedInterceptor.getInterceptor())) {
+                            handlerInterceptorList.remove(handlerInterceptor);
+                            destroyBean(aClass);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
 
     }
 

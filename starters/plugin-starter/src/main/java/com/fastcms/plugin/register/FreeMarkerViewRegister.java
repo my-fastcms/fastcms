@@ -27,7 +27,7 @@ public class FreeMarkerViewRegister extends AbstractPluginRegister {
         templateLoaders.add(classTemplateLoader);
         templateLoaders.add(new SpringTemplateLoader(new DefaultResourceLoader(getPlugin(pluginId).getPlugin().getClass().getClassLoader()), "classpath:/templates/"));
 
-        PluginFreeMarkerConfig pluginFreeMarkerConfig = pluginManger.getApplicationContext().getBean(PluginFreeMarkerConfig.class);
+        PluginFreeMarkerConfig pluginFreeMarkerConfig = beanFactory.getBean(PluginFreeMarkerConfig.class);
 
         if(pluginFreeMarkerConfig.getConfiguration().getTemplateLoader() instanceof MultiTemplateLoader) {
             MultiTemplateLoader templateLoader = (MultiTemplateLoader) pluginFreeMarkerConfig.getConfiguration().getTemplateLoader();

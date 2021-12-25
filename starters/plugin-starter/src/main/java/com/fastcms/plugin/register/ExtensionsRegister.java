@@ -21,11 +21,9 @@ public class ExtensionsRegister extends AbstractPluginRegister {
 
     @Override
     public void registry(String pluginId) throws Exception {
-        Set<String> extensionClassNames = pluginManger.getExtensionClassNames(pluginId);
-        for (String extensionClassName : extensionClassNames) {
+        for (String extensionClassName : getExtensionClassNames(pluginId)) {
             try {
-                Class<?> extensionClass = pluginManger.getPlugin(pluginId).getPluginClassLoader().loadClass(extensionClassName);
-                registerExtension(extensionClass);
+                registerExtension(getPluginExtensionClass(pluginId, extensionClassName));
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -34,10 +32,24 @@ public class ExtensionsRegister extends AbstractPluginRegister {
 
     @Override
     public void unRegistry(String pluginId) throws Exception {
-
+        for (String extensionClassName : getExtensionClassNames(pluginId)) {
+            try {
+                unRegisterExtension(getPluginExtensionClass(pluginId, extensionClassName));
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    protected void registerExtension(Class<?> extensionClass) {
+    Set<String> getExtensionClassNames(String pluginId) {
+        return pluginManger.getExtensionClassNames(pluginId);
+    }
+
+    Class<?> getPluginExtensionClass(String pluginId, String extensionClassName) throws ClassNotFoundException {
+        return pluginManger.getPlugin(pluginId).getPluginClassLoader().loadClass(extensionClassName);
+    }
+
+    private void registerExtension(Class<?> extensionClass) {
         Map<String, ?> extensionBeanMap = pluginManger.getApplicationContext().getBeansOfType(extensionClass);
         if (extensionBeanMap.isEmpty()) {
             Object extension = pluginManger.getExtensionFactory().create(extensionClass);
@@ -45,6 +57,10 @@ public class ExtensionsRegister extends AbstractPluginRegister {
         } else {
             log.info("Bean registeration aborted! Extension '{}' already existed as bean!", extensionClass.getName());
         }
+    }
+
+    private void unRegisterExtension(Class<?> extensionClass) {
+        destroyBean(extensionClass);
     }
 
 }

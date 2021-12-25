@@ -2,15 +2,12 @@ package com.fastcms.plugin.extension;
 
 import org.pf4j.PluginManager;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * wjun_java@163.com
  */
-public class FastcmsSpringExtensionFactory extends SpringExtensionFactory {
+public class FastcmsSpringExtensionFactory extends SpringExtensionFactory implements FastcmsExtensionFactory {
 
     private final List<String> extensionClassNames;
 
@@ -29,7 +26,7 @@ public class FastcmsSpringExtensionFactory extends SpringExtensionFactory {
 
         this.extensionClassNames = Arrays.asList(extensionClassNames);
 
-        cache = new HashMap<>(); // simple cache implementation
+        cache = Collections.synchronizedMap(new HashMap<>()); // simple cache implementation
     }
 
     @Override
@@ -46,5 +43,13 @@ public class FastcmsSpringExtensionFactory extends SpringExtensionFactory {
         }
 
         return extension;
+    }
+
+    @Override
+    public void destroy(Class<?> extensionClass) {
+        String extensionClassName = extensionClass.getName();
+        if(cache.containsKey(extensionClassName)) {
+            cache.remove(extensionClassName);
+        }
     }
 }

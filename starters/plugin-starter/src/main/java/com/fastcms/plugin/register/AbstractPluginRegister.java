@@ -4,6 +4,7 @@ import com.fastcms.plugin.FastcmsPluginManager;
 import com.fastcms.plugin.PluginBase;
 import com.fastcms.plugin.PluginRegister;
 import com.fastcms.plugin.UnLoad;
+import com.fastcms.plugin.extension.FastcmsSpringExtensionFactory;
 import org.pf4j.Plugin;
 import org.pf4j.PluginWrapper;
 import org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory;
@@ -56,6 +57,12 @@ public abstract class AbstractPluginRegister implements PluginRegister {
             }
         }
         return classList;
+    }
+
+    protected void destroyBean(Class<?> aClass) {
+        FastcmsSpringExtensionFactory extensionFactory = (FastcmsSpringExtensionFactory) pluginManger.getExtensionFactory();
+        beanFactory.destroyBean(extensionFactory.create(aClass));
+        extensionFactory.destroy(aClass);
     }
 
 }

@@ -18,7 +18,6 @@ package com.fastcms.plugin;
 
 import com.fastcms.plugin.extension.FastcmsSpringExtensionFactory;
 import com.fastcms.plugin.register.CompoundPluginRegister;
-import org.apache.commons.io.FileUtils;
 import org.pf4j.DefaultPluginManager;
 import org.pf4j.ExtensionFactory;
 import org.pf4j.PluginWrapper;
@@ -69,15 +68,12 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
     public void unInstallPlugin(String pluginId) throws Exception {
         if(isDevelopment()) throw new Exception("开发环境不允许卸载");
         try {
-            PluginWrapper plugin = getPlugin(pluginId);
-            Path pluginPath = plugin.getPluginPath();
-
+//            PluginWrapper plugin = getPlugin(pluginId);
+//            Path pluginPath = plugin.getPluginPath();
             pluginRegister.unRegistry(pluginId);
-            stopPlugin(pluginId);
-            unloadPlugin(pluginId, false);
-
-            FileUtils.forceDeleteOnExit(pluginPath.toFile());
-
+//            stopPlugin(pluginId);
+//            unloadPlugin(pluginId, false);
+            deletePlugin(pluginId);
         } catch (Exception e) {
             e.printStackTrace();
             throw new Exception(e.getMessage());

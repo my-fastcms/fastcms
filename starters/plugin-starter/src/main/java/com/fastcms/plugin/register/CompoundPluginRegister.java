@@ -13,10 +13,11 @@ import java.util.List;
  */
 public class CompoundPluginRegister extends AbstractPluginRegister implements PluginRegister {
 
-    List<PluginRegister> registerList = Collections.synchronizedList(new ArrayList<>());
+    List<PluginRegister> registerList;
 
     public CompoundPluginRegister(FastcmsPluginManager pluginManger) {
         super(pluginManger);
+        registerList = Collections.synchronizedList(new ArrayList<>());
         addRegister(new ExtensionsRegister(pluginManger));
         addRegister(new ControllerRegister(pluginManger));
         addRegister(new InterceptorRegister(pluginManger));

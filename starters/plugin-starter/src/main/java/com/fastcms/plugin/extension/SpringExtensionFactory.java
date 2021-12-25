@@ -197,4 +197,5 @@ public class SpringExtensionFactory implements ExtensionFactory {
     private <T> String nameOf(final Class<T> clazz) {
         return clazz.getName();
     }
+
 }
