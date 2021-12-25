@@ -34,6 +34,6 @@ build/
 .vscode/
 
 /fastcms-web/src/main/resources/htmls/xjd2020/
-/fastcms-web/src/main/resources/htmls/static/doc/
+/fastcms-web/src/main/resources/static/doc/
 /**/.flattened-pom.xml
 /.flattened-pom.xml
