@@ -33,7 +33,7 @@ build/
 ### VS Code ###
 .vscode/
 
-/fastcms-web/src/main/resources/htmls/gangqi/
 /fastcms-web/src/main/resources/htmls/xjd2020/
+/fastcms-web/src/main/resources/htmls/static/doc/
 /**/.flattened-pom.xml
 /.flattened-pom.xml

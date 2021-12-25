@@ -66,18 +66,6 @@ api[1].list[1].list.push({
     url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/delete/{attachId}',
     desc: '删除附件',
 });
-api[1].list[1].list.push({
-    order: '6',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/upload/ckeditor',
-    desc: '上传附件(编辑器)',
-});
-api[1].list[1].list.push({
-    order: '7',
-    deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/attachment/upload/cKeditor/browse',
-    desc: '上传附件(浏览)',
-});
 api[1].list.push({
     alias: 'ConfigController',
     order: '3',
@@ -123,68 +111,93 @@ api[1].list[3].list.push({
     desc: '删除菜单',
 });
 api[1].list.push({
-    alias: 'PluginController',
+    alias: 'OrderController',
     order: '5',
+    link: '订单管理',
+    desc: '订单管理',
+    list: []
+})
+api[1].list[4].list.push({
+    order: '1',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/order/list',
+    desc: '订单列表',
+});
+api[1].list[4].list.push({
+    order: '2',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/order/detail/{orderId}',
+    desc: '订单详情',
+});
+api[1].list.push({
+    alias: 'PluginController',
+    order: '6',
     link: '插件管理',
     desc: '插件管理',
     list: []
 })
-api[1].list[4].list.push({
+api[1].list[5].list.push({
     order: '1',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/plugin/list',
     desc: '插件列表',
 });
-api[1].list[4].list.push({
+api[1].list[5].list.push({
     order: '2',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/plugin/install',
     desc: '上传插件',
 });
-api[1].list[4].list.push({
+api[1].list[5].list.push({
     order: '3',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/plugin/unInstall/{pluginId}',
     desc: '卸载插件',
 });
+api[1].list[5].list.push({
+    order: '4',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/plugin/config/url/{pluginId}',
+    desc: '获取插件配置界面地址',
+});
 api[1].list.push({
     alias: 'RoleController',
-    order: '6',
+    order: '7',
     link: '角色管理',
     desc: '角色管理',
     list: []
 })
-api[1].list[5].list.push({
+api[1].list[6].list.push({
     order: '1',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/role/list',
     desc: '角色列表',
 });
-api[1].list[5].list.push({
+api[1].list[6].list.push({
     order: '2',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/role/save',
     desc: '保存角色',
 });
-api[1].list[5].list.push({
+api[1].list[6].list.push({
     order: '3',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/role/delete/{roleId}',
     desc: '删除角色',
 });
-api[1].list[5].list.push({
+api[1].list[6].list.push({
     order: '4',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/role/list/select',
     desc: '获取角色列表，不分页',
 });
-api[1].list[5].list.push({
+api[1].list[6].list.push({
     order: '5',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/role/{roleId}/permissions',
     desc: '获取角色权限列表',
 });
-api[1].list[5].list.push({
+api[1].list[6].list.push({
     order: '6',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/role/{roleId}/permissions/save',
@@ -192,48 +205,48 @@ api[1].list[5].list.push({
 });
 api[1].list.push({
     alias: 'UserController',
-    order: '7',
+    order: '8',
     link: '用户管理',
     desc: '用户管理',
     list: []
 })
-api[1].list[6].list.push({
+api[1].list[7].list.push({
     order: '1',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/user/list',
     desc: '用户列表',
 });
-api[1].list[6].list.push({
+api[1].list[7].list.push({
     order: '2',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/user/menus',
     desc: '获取用户菜单',
 });
-api[1].list[6].list.push({
+api[1].list[7].list.push({
     order: '3',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/user/save',
     desc: '保存用户信息',
 });
-api[1].list[6].list.push({
+api[1].list[7].list.push({
     order: '4',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/user/{userId}/get',
     desc: '获取用户详细信息',
 });
-api[1].list[6].list.push({
+api[1].list[7].list.push({
     order: '5',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/user/delete/{userId}',
     desc: '编辑用户信息',
 });
-api[1].list[6].list.push({
+api[1].list[7].list.push({
     order: '6',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/user/{userId}/roles/save/',
     desc: '分配角色',
 });
-api[1].list[6].list.push({
+api[1].list[7].list.push({
     order: '7',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/user/{userId}/tags/save',
@@ -371,20 +384,20 @@ api[4].list[0].list.push({
 api[4].list[0].list.push({
     order: '3',
     deprecated: 'false',
-    url: 'http://127.0.0.1:8080/fastcms/api/admin/article/category/save',
-    desc: '保存分类',
-});
-api[4].list[0].list.push({
-    order: '4',
-    deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/article/get/{articleId}',
     desc: '文章详情',
 });
 api[4].list[0].list.push({
-    order: '5',
+    order: '4',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/article/delete/{articleId}',
     desc: '删除文章',
+});
+api[4].list[0].list.push({
+    order: '5',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/article/category/save',
+    desc: '保存分类',
 });
 api[4].list[0].list.push({
     order: '6',
@@ -401,11 +414,23 @@ api[4].list[0].list.push({
 api[4].list[0].list.push({
     order: '8',
     deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/article/tag/list',
+    desc: '标签列表',
+});
+api[4].list[0].list.push({
+    order: '9',
+    deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/article/comment/list',
+    desc: '评论列表',
+});
+api[4].list[0].list.push({
+    order: '10',
+    deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/article/comment/save',
     desc: '保存评论',
 });
 api[4].list[0].list.push({
-    order: '9',
+    order: '11',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/article/comment/delete/{commentId}',
     desc: '删除评论',
@@ -444,11 +469,17 @@ api[4].list[1].list.push({
 api[4].list[1].list.push({
     order: '5',
     deprecated: 'false',
+    url: 'http://127.0.0.1:8080/fastcms/api/admin/page/comment/list',
+    desc: '评论列表',
+});
+api[4].list[1].list.push({
+    order: '6',
+    deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/page/comment/save',
     desc: '保存评论',
 });
 api[4].list[1].list.push({
-    order: '6',
+    order: '7',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/admin/page/comment/delete/{commentId}',
     desc: '删除评论',
@@ -622,7 +653,7 @@ api[6].list[0].list.push({
     order: '2',
     deprecated: 'false',
     url: 'http://127.0.0.1:8080/fastcms/api/ucenter/article/save',
-    desc: '保存评论',
+    desc: '保存文章',
 });
 document.onkeydown = keyDownSearch;
 function keyDownSearch(e) {
