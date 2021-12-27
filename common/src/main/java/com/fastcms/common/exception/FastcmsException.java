@@ -172,7 +172,7 @@ public class FastcmsException extends Exception {
 	public static final int RESOURCE_NOT_FOUND = -404;
 
 	/**
-	 * http client error code, ome exceptions that occurred when the use the Nacos RestTemplate and Nacos
+	 * http client error code, ome exceptions that occurred when the use the Fastcms RestTemplate and Fastcms
 	 * AsyncRestTemplate.
 	 */
 	public static final int HTTP_CLIENT_ERROR_CODE = -500;

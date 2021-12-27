@@ -34,6 +34,9 @@ fastcms:
         seconds: 18000
       secret-key: SecretKey012345678901234567890123456789012345678901234567890123456789
 
+logging:
+  config: classpath:META-INF/logback/fastcms.xml
+
 
 
 
