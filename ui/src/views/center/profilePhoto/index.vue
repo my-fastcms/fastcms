@@ -1,7 +1,5 @@
 <template>
-  <div style="padding: 30px;text-align: center">
-    <el-color-picker show-alpha />
-  </div>
+  <div>头像</div>
 </template>
 
 <script>

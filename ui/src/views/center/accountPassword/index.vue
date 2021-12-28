@@ -1,7 +1,5 @@
 <template>
-  <div style="padding: 30px;text-align: center">
-    <el-color-picker show-alpha />
-  </div>
+  <div>账号密码</div>
 </template>
 
 <script>

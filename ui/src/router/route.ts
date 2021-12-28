@@ -126,5 +126,5 @@ export const staticRoutes: Array<RouteRecordRaw> = [
 		},
 	},
 	// 个人中心
-	...centerRoute
+	centerRoute
 ];
