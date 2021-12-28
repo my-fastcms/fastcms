@@ -35,6 +35,9 @@ fastcms:
 logging:
   config: classpath:META-INF/logback/fastcms.xml
 
-
-
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
 

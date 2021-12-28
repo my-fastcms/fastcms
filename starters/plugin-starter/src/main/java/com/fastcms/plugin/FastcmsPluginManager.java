@@ -59,7 +59,7 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
     @Override
     public void installPlugin(Path path) throws Exception {
         if(isDevelopment()) throw new Exception("开发环境不允许安装");
-        String pluginId = loadPlugin(path);
+        final String pluginId = loadPlugin(path);
         startPlugin(pluginId);
         pluginRegister.registry(pluginId);
     }
@@ -68,11 +68,7 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
     public void unInstallPlugin(String pluginId) throws Exception {
         if(isDevelopment()) throw new Exception("开发环境不允许卸载");
         try {
-//            PluginWrapper plugin = getPlugin(pluginId);
-//            Path pluginPath = plugin.getPluginPath();
             pluginRegister.unRegistry(pluginId);
-//            stopPlugin(pluginId);
-//            unloadPlugin(pluginId, false);
             deletePlugin(pluginId);
         } catch (Exception e) {
             e.printStackTrace();
@@ -103,7 +99,7 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
         }
 
         // 记录总数
-        Integer count = plugins.size();
+        final Integer count = plugins.size();
         // 总页数
         Integer pageCount;
         if (count % pageSize == 0) {

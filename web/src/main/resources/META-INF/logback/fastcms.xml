@@ -107,4 +107,14 @@
         <level value="INFO"/>
     </logger>
 
+    <logger name="com.fastcms.cms">
+        <appender-ref ref="CONSOLE"/>
+        <level value="INFO"/>
+    </logger>
+
+    <logger name="com.fastcms.service">
+        <appender-ref ref="CONSOLE"/>
+        <level value="INFO"/>
+    </logger>
+
 </configuration>
