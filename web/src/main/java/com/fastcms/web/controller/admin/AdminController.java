@@ -21,7 +21,7 @@ import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.captcha.FastcmsCaptcha;
 import com.fastcms.core.captcha.FastcmsCaptchaService;
-import com.fastcms.web.security.AccessException;
+import com.fastcms.common.exception.AccessException;
 import com.fastcms.web.security.AuthManager;
 import com.fastcms.web.security.FastcmsUser;
 import org.springframework.beans.factory.annotation.Autowired;

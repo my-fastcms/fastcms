@@ -87,6 +87,7 @@ public class ArticleController {
 
         Page<IArticleService.ArticleVo> pageData = articleService.pageArticle(page.toPage(), queryWrapper);
 
+        int a = 1/0;
         return RestResultUtils.success(pageData);
     }
 

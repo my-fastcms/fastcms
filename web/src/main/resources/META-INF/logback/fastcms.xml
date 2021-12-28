@@ -20,7 +20,7 @@
 
 <configuration>
     
-    <springProperty scope="context" name="logPath" source="fastcms.logs.path" defaultValue="${user.home}/fastcms/logs"/>
+    <springProperty scope="context" name="logPath" source="log.path" defaultValue="${user.home}/fastcms/logs"/>
     
     <property name="LOG_HOME" value="${logPath}"/>
     
@@ -49,13 +49,60 @@
             <charset>UTF-8</charset>
         </encoder>
     </appender>
-    
+
+    <springProfile name="dev">
+        <logger name="org.springframework">
+            <appender-ref ref="CONSOLE"/>
+            <level value="INFO"/>
+        </logger>
+        <logger name="org.apache.catalina.startup.DigesterFactory">
+            <appender-ref ref="CONSOLE"/>
+            <level value="INFO"/>
+        </logger>
+        <logger name="org.apache.catalina.util.LifecycleBase">
+            <appender-ref ref="CONSOLE"/>
+            <level value="ERROR"/>
+        </logger>
+        <logger name="org.apache.coyote.http11.Http11NioProtocol">
+            <appender-ref ref="CONSOLE"/>
+            <level value="WARN"/>
+        </logger>
+        <logger name="org.apache.tomcat.util.net.NioSelectorPool">
+            <appender-ref ref="CONSOLE"/>
+            <level value="WARN"/>
+        </logger>
+    </springProfile>
+
+    <springProfile name="prod">
+        <logger name="org.apache.catalina.startup.DigesterFactory">
+            <appender-ref ref="CONSOLE"/>
+            <level value="INFO"/>
+        </logger>
+        <logger name="org.apache.catalina.util.LifecycleBase">
+            <appender-ref ref="CONSOLE"/>
+            <level value="ERROR"/>
+        </logger>
+        <logger name="org.apache.coyote.http11.Http11NioProtocol">
+            <appender-ref ref="CONSOLE"/>
+            <level value="WARN"/>
+        </logger>
+        <logger name="org.apache.tomcat.util.net.NioSelectorPool">
+            <appender-ref ref="CONSOLE"/>
+            <level value="WARN"/>
+        </logger>
+    </springProfile>
+
     <root>
         <level value="INFO"/>
         <appender-ref ref="rootFile"/>
     </root>
 
     <logger name="com.fastcms.web">
+        <appender-ref ref="CONSOLE"/>
+        <level value="INFO"/>
+    </logger>
+
+    <logger name="com.fastcms.core">
         <appender-ref ref="CONSOLE"/>
         <level value="INFO"/>
     </logger>

@@ -1,7 +1,7 @@
 package com.fastcms.core.utils;
 
 import com.fastcms.plugin.FastcmsPluginManager;
-import com.fastcms.utils.SpringContextHolder;
+import com.fastcms.utils.ApplicationUtils;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public final class PluginUtils {
      * @return
      */
     public static  <T>List<T> getExtensions(Class<T> type) {
-        return SpringContextHolder.getBean(FastcmsPluginManager.class).getExtensions(type);
+        return ApplicationUtils.getBean(FastcmsPluginManager.class).getExtensions(type);
     }
 
 }

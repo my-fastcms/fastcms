@@ -49,6 +49,21 @@
             <artifactId>easy-captcha</artifactId>
         </dependency>
 
+        <!--   micrometer  start   -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-influx</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-elastic</artifactId>
+        </dependency>
+        <!--   micrometer end    -->
+
     </dependencies>
 
 </project>

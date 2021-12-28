@@ -1,5 +1,6 @@
 package com.fastcms.web.security;
 
+import com.fastcms.common.exception.AccessException;
 import com.fastcms.entity.Permission;
 import com.fastcms.entity.User;
 

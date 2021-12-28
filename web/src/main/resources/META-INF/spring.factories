@@ -1,6 +1,3 @@
-# Application Context Initializers
-# org.springframework.context.ApplicationContextInitializer=\
-# com.fastcms.web.WebInitializer
-
+# Application Run Listener
  org.springframework.boot.SpringApplicationRunListener=\
- com.fastcms.core.listener.FastcmsApplicationRunListener
+  com.fastcms.core.listener.FastcmsApplicationRunListener

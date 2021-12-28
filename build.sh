@@ -11,6 +11,7 @@ mkdir dist/config
 mkdir dist/plugins
 mkdir dist/upload
 mkdir dist/htmls
+mkdir dist/logs
 
 # copy main program and config
 cp web/target/fastcms-web-*-exec.jar dist

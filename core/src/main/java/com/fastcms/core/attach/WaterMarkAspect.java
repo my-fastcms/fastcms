@@ -3,7 +3,7 @@ package com.fastcms.core.attach;
 import com.fastcms.core.utils.AttachUtils;
 import com.fastcms.core.utils.PluginUtils;
 import com.fastcms.entity.Attachment;
-import com.fastcms.utils.SpringContextHolder;
+import com.fastcms.utils.ApplicationUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -55,7 +55,7 @@ public class WaterMarkAspect implements ApplicationListener<ApplicationStartedEv
 
     @Override
     public void onApplicationEvent(ApplicationStartedEvent event) {
-        Map<String, WaterMarkProcessor> waterMarkProcessorMap = SpringContextHolder.getApplicationContext().getBeansOfType(WaterMarkProcessor.class);
+        Map<String, WaterMarkProcessor> waterMarkProcessorMap = ApplicationUtils.getApplicationContext().getBeansOfType(WaterMarkProcessor.class);
         waterMarkProcessorList = Collections.synchronizedList(new ArrayList<>());
         waterMarkProcessorList.addAll(waterMarkProcessorMap.values());
 

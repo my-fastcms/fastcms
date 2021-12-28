@@ -27,6 +27,8 @@ import com.fastcms.service.IConfigService;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -58,6 +60,8 @@ import java.util.Map;
  */
 @Configuration
 public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListener<WebServerInitializedEvent> {
+
+    private static final Logger log = LoggerFactory.getLogger(FastcmsConfiguration.class);
 
     @Autowired
     private IConfigService configService;
@@ -131,6 +135,8 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        log.info("console:" + configService.getValue(FastcmsConstants.WEBSITE_DOMAIN) + "/fastcms");
 
         //注册freemarker自定义标签
         registerFreemarkerDirective(event);

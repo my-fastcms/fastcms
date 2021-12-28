@@ -29,7 +29,7 @@ import com.fastcms.service.IConfigService;
 public final class ConfigUtils {
 
 	public static String getConfig(String key) {
-		return SpringContextHolder.getApplicationContext().getBean(IConfigService.class).getValue(key);
+		return ApplicationUtils.getApplicationContext().getBean(IConfigService.class).getValue(key);
 	}
 
 }

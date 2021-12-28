@@ -13,7 +13,7 @@ import com.fastcms.mapper.OrderMapper;
 import com.fastcms.service.IOrderItemService;
 import com.fastcms.service.IOrderService;
 import com.fastcms.service.IPaymentRecordService;
-import com.fastcms.utils.SpringContextHolder;
+import com.fastcms.utils.ApplicationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,7 +67,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         for (ProductParam item : products) {
             try{
                 Class<?> aClass = ClassUtils.forName(item.getType(), ClassUtils.getDefaultClassLoader());
-                SpringContextHolder.getBean(aClass);
+                ApplicationUtils.getBean(aClass);
             } catch (Exception e) {
                 throw new FastcmsException(FastcmsException.INVALID_PARAM, "商品类型解析出错");
             }

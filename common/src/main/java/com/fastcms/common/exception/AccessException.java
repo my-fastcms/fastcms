@@ -14,9 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.web.security;
-
-import com.fastcms.common.exception.FastcmsException;
+package com.fastcms.common.exception;
 
 /**
  * 授权异常

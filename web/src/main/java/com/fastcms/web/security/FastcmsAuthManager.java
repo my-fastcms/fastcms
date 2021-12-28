@@ -17,6 +17,7 @@
 package com.fastcms.web.security;
 
 import com.fastcms.auth.FastcmsUserDetails;
+import com.fastcms.common.exception.AccessException;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.core.captcha.FastcmsCaptchaService;
 import com.fastcms.entity.Permission;

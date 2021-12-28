@@ -12,6 +12,7 @@ mkdir .dist\config
 mkdir .dist\plugins
 mkdir .dist\upload
 mkdir .dist\htmls
+mkdir .dist\logs
 
 REM copy main program
 xcopy web\target\fastcms-web-*-exec.jar .dist /s /i
