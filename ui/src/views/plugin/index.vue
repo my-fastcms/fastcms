@@ -48,7 +48,7 @@
 			:model-value="dialogVisible"
 			:before-close="handleClose"
 		>
-			<iframe :src="pluginConfigUrl" frameborder="0" width="100%" height="100%"></iframe>
+			<iframe :src="pluginConfigUrl" frameborder="0" style="width:100%;height:600px"></iframe>
 		</el-dialog>
 
 	</div>
