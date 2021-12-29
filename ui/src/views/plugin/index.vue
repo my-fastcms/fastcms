@@ -48,7 +48,7 @@
 			:model-value="dialogVisible"
 			:before-close="handleClose"
 		>
-			<iframe :src="pluginConfigUrl" frameborder="0" style="width:100%;height:600px"></iframe>
+			<iframe :src="pluginConfigUrl" frameborder="0" style="width:100%;height:600px" ref="iframe"></iframe>
 		</el-dialog>
 
 	</div>
@@ -56,12 +56,13 @@
 
 <script lang="ts">
 import { ElMessageBox, ElMessage } from 'element-plus';
-import { toRefs, reactive, onMounted } from 'vue';
+import { toRefs, ref, reactive, onMounted } from 'vue';
 import { getPluginList, unInstallPlugin, getPluginConfigUrl } from '/@/api/plugin/index';
 import { Session } from '/@/utils/storage';
 export default {
 	name: 'pluginManager',
 	setup() {
+		const iframe = ref<any>();
 		const state = reactive({
 			dialogVisible: false,
 			pluginConfigUrl: '',
@@ -107,7 +108,9 @@ export default {
 			getPluginConfigUrl(row.pluginId).then((res) => {
 				state.pluginConfigUrl = res.data;
 				state.dialogVisible = true;
-			}).catch(() => {
+				iframe.value.postMessage(Session.get('token'));
+			}).catch((e) => {
+				console.log(e);
 				ElMessage.error("插件不支持配置");
 			})
 			

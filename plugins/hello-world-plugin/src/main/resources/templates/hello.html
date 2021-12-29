@@ -37,7 +37,14 @@
 
 <@layout.script>
     <script>
+
+        function getToken(data) {
+            console.log("======token:" + data);
+        }
+
         $(function () {
+            getToken();
+
             submitForm({
                 username: { required: true},
                 email: { required: true},
