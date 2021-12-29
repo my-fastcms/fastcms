@@ -37,14 +37,7 @@
 
 <@layout.script>
     <script>
-
-        function getToken(data) {
-            console.log("======token:" + data);
-        }
-
         $(function () {
-            getToken();
-
             submitForm({
                 username: { required: true},
                 email: { required: true},
@@ -56,9 +49,7 @@
             var params = new Array();
             params.push("username");
             params.push("email");
-
             getConfigFormData(params);
-
         });
     </script>
 </@layout.script>

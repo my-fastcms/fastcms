@@ -62,7 +62,6 @@ import { Session } from '/@/utils/storage';
 export default {
 	name: 'pluginManager',
 	setup() {
-		const iframe = ref<any>();
 		const state = reactive({
 			dialogVisible: false,
 			pluginConfigUrl: '',
@@ -106,9 +105,8 @@ export default {
 
 		const onRowConfig = (row: object) => {
 			getPluginConfigUrl(row.pluginId).then((res) => {
-				state.pluginConfigUrl = res.data;
+				state.pluginConfigUrl = res.data + "?token=" + Session.get('token');
 				state.dialogVisible = true;
-				iframe.value.postMessage(Session.get('token'));
 			}).catch((e) => {
 				console.log(e);
 				ElMessage.error("插件不支持配置");

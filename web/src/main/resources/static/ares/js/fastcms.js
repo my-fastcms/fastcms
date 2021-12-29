@@ -39,6 +39,9 @@ function submitForm(rules, messages, callback, beforeRequest) {
                 processData: false,
                 contentType: false,
                 data: formData,
+                beforeSend: function( xhr ) {
+                    xhr.setRequestHeader("Authorization", token);
+                },
                 success: function (data) {
                     if(data.code != 200){
                         alertError(data.message, function () {
@@ -91,12 +94,15 @@ function getConfigFormData(params) {
         data: requestParam,
         beforeSend: function( xhr ) {
             xhr.setRequestHeader('X-Requested-With', {toString: function(){ return ''; }});
+            xhr.setRequestHeader("Authorization", token);
         },
         success: function (data) {
             if(data.code != 200){
                 alertError(data.message, function () {});
             }else {
-                alertSuccess("操作成功", function () {});
+                params.forEach(function (id) {
+                    $("#"+id).val(data.id);
+                })
             }
         },
         error: function (xhr, ajaxOptions, thrownError) {
