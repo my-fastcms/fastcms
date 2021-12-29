@@ -22,7 +22,7 @@ public abstract class DirUtils {
     }
 
     public static void injectTemplateDir(String templateDir) {
-        DirUtils.templateDir = pluginDir;
+        DirUtils.templateDir = templateDir;
     }
 
     public static String getUploadDir() {

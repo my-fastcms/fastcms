@@ -71,7 +71,7 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
         try {
             List<Path> collect = Files.list(getTemplateRootPath()).collect(Collectors.toList());
             collect.forEach(item -> {
-                if(Files.isDirectory(item)){
+                if(Files.isDirectory(item)) {
                     Template template = templateFinder.find(item);
                     if(template != null) {
                         templateMap.putIfAbsent(template.getId(), template);
