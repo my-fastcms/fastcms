@@ -45,6 +45,13 @@
                 username: {required: "请输入用户名"},
                 email: {required: "请输入密码"},
             })
+
+            var params = new Array();
+            params.push("username");
+            params.push("email");
+
+            getConfigFormData(params);
+
         });
     </script>
 </@layout.script>

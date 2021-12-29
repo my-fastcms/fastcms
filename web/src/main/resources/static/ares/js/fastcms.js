@@ -40,7 +40,7 @@ function submitForm(rules, messages, callback, beforeRequest) {
                 contentType: false,
                 data: formData,
                 success: function (data) {
-                    if(data.code == 0){
+                    if(data.code != 200){
                         alertError(data.message, function () {
                             if(callback) callback(data)
                         });
@@ -68,6 +68,49 @@ function submitForm(rules, messages, callback, beforeRequest) {
     });
 }
 
+function getConfigFormData(params) {
+    //configKeys=website_title&configKeys=website_name&configKeys=website_domain
+    var requestParam = "";
+    params.forEach(function(v, i){
+        console.log("===v:" + v + ",i:" + i);
+        if(i ==0) {
+            requestParam = "configKeys=" + v;
+        }else{
+            requestParam += "&configKeys=" + v;
+        }
+    })
+
+    $.ajax({
+        url: "/fastcms/api/admin/config/list",
+        type: "post",
+        //不使用缓存
+        cache: false,
+        //发送不想转换的的信息
+        processData: false,
+        contentType: "application/x-www-form-urlencoded",
+        data: requestParam,
+        beforeSend: function( xhr ) {
+            xhr.setRequestHeader('X-Requested-With', {toString: function(){ return ''; }});
+        },
+        success: function (data) {
+            if(data.code != 200){
+                alertError(data.message, function () {});
+            }else {
+                alertSuccess("操作成功", function () {});
+            }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            if(xhr.status==403) {
+                alert("403 forbid")
+            }
+        },
+        complete: function (resp) {
+
+        }
+    });
+
+}
+
 function ajaxGet(url, okFunction, failFunction) {
     if (url == null || "" == url) {
         alert("url 不能为空 ");
@@ -83,7 +126,7 @@ function ajaxGet(url, okFunction, failFunction) {
     };
 
     $.get(url, function (result) {
-        if (result.code == 1) {
+        if (result.code == 200) {
             okFunction(result);
         } else {
             failFunction(result);
@@ -106,12 +149,12 @@ function ajaxPost(url, data, okFunction, failFunction) {
     };
 
     $.post(url, data,function (result) {
-        if (result.code == 1) {
+        if (result.code == 200) {
             okFunction(result);
         } else {
             failFunction(result);
         }
-    });
+    }, "json");
 }
 
 function alertWarn(message) {
