@@ -19,12 +19,15 @@ package com.fastcms.web.controller.admin;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.FileUtils;
+import com.fastcms.core.attach.FileServerManager;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.core.utils.AttachUtils;
 import com.fastcms.core.utils.DirUtils;
+import com.fastcms.core.utils.PluginUtils;
 import com.fastcms.entity.Attachment;
 import com.fastcms.service.IAttachmentService;
 import org.apache.commons.lang3.StringUtils;
@@ -121,6 +124,20 @@ public class AttachmentController {
         }
         Map<String, String> result = new HashMap<>();
         result.put("urls", attachmentList.stream().map(Attachment::getPath).collect(Collectors.joining()));
+
+        if(!attachmentList.isEmpty()) {
+            List<FileServerManager> extensions = PluginUtils.getExtensions(FileServerManager.class);
+            attachmentList.forEach(item -> {
+                for (FileServerManager extension : extensions) {
+                    try {
+                        extension.uploadFile(new File(DirUtils.getUploadDir() + item.getFilePath()));
+                    } catch (FastcmsException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+
         return errorFiles.isEmpty() ?
                 RestResultUtils.success(result) :
                 RestResultUtils.failed(errorFiles.stream().collect(Collectors.joining(",")).concat(",以上文件上传失败"));
@@ -193,6 +210,15 @@ public class AttachmentController {
             File file = new File(DirUtils.getUploadDir() + attachment.getFilePath());
             if(file.exists() && file.isFile()) {
                 file.delete();
+
+                List<FileServerManager> extensions = PluginUtils.getExtensions(FileServerManager.class);
+                for (FileServerManager extension : extensions) {
+                    try {
+                        extension.deleteFile(attachment.getFilePath());
+                    } catch (FastcmsException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
 

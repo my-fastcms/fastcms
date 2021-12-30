@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.utils.ConfigUtils;
 
 import java.io.Serializable;
@@ -112,7 +113,11 @@ public class Attachment implements Serializable {
     }
 
     public String getPath() {
-        return ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + getFilePath();
+        String fileDomain = ConfigUtils.getConfig(FastcmsConstants.ATTACH_FILE_DOMAIN);
+        if(StrUtils.isBlank(fileDomain)) {
+            fileDomain = ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN);
+        }
+        return fileDomain + getFilePath();
     }
 
     public String getFileSize() {
@@ -135,4 +140,7 @@ public class Attachment implements Serializable {
             ", updated=" + updated +
         "}";
     }
+
+
+
 }

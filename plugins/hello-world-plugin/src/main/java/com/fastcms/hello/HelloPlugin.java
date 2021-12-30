@@ -14,7 +14,7 @@ public class HelloPlugin extends PluginBase {
 
     @Override
     public String getConfigUrl() {
-        return ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + "/hello";
+        return ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + FastcmsConstants.PLUGIN_MAPPING + "/hello";
     }
 
     public HelloPlugin(PluginWrapper wrapper) {

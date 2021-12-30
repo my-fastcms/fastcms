@@ -1,5 +1,6 @@
 package com.fastcms.hello;
 
+import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResultUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * wjun_java@163.com
  */
 @Controller
-@RequestMapping("hello")
+@RequestMapping(FastcmsConstants.PLUGIN_MAPPING + "/hello")
 public class HelloController {
 
     @GetMapping

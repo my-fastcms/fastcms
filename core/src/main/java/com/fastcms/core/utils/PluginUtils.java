@@ -19,7 +19,15 @@ public final class PluginUtils {
      * @return
      */
     public static  <T>List<T> getExtensions(Class<T> type) {
-        return ApplicationUtils.getBean(FastcmsPluginManager.class).getExtensions(type);
+        return getPluginManager().getExtensions(type);
+    }
+
+    /**
+     * 获取系统插件管理器
+     * @return
+     */
+    public static FastcmsPluginManager getPluginManager() {
+        return ApplicationUtils.getBean(FastcmsPluginManager.class);
     }
 
 }
