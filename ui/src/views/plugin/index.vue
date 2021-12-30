@@ -1,6 +1,7 @@
 <template>
 	<div>
 		<el-card shadow="hover">
+      <iframe src="public/testIframe.html" ref="iframeRef" />
 			<div class="mb15">
 				<el-upload 
 					:action="uploadUrl"
@@ -142,8 +143,17 @@ export default {
 
 		}
 
+    const iframeRef = ref<HTMLElement | null>(null); // iframe ref
 		// 页面加载时
 		onMounted(() => {
+      const iframe = iframeRef.value;
+      if(iframe && iframe.tagName.toUpperCase() === "IFRAME") {
+        const postData = "testTokenString";
+        iframe.contentWindow.onload = function() {
+          iframe.contentWindow.document.getElementById("token").innerText = postData;
+          iframe.contentWindow.getToken(postData);
+        }
+      }
 			initTableData();
 		});
 		return {
@@ -156,6 +166,7 @@ export default {
 			uploadSuccess,
 			onHandleUploadError,
 			onHandleExceed,
+      iframeRef,
 			...toRefs(state),
 		};
 	},
