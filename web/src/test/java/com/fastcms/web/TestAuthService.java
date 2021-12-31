@@ -32,7 +32,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  * @version: 1.0
  */
 @SpringBootTest
-public class TestUserService {
+public class TestAuthService {
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;

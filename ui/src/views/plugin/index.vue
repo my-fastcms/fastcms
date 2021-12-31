@@ -11,7 +11,7 @@
 					:on-success="uploadSuccess"
 					:on-error="onHandleUploadError"
 					:on-exceed="onHandleExceed"
-					accept=".jar">
+					accept=".jar,.zip">
 					<el-button class="mt15" size="small" type="primary" icon="iconfont icon-shuxingtu">安装插件</el-button>
 				</el-upload>
 			</div>
@@ -116,8 +116,8 @@ export default {
 		const onRowConfig = () => {
 		  if (!currentConfigRow) return;
       getPluginConfigUrl(currentConfigRow.pluginId).then((res) => {
-				// state.pluginConfigUrl = res.data + "?token=" + Session.get('token');
-				state.pluginConfigUrl = "public/testIframe.html";
+				state.pluginConfigUrl = res.data + "?token=" + Session.get('token');
+				// state.pluginConfigUrl = "public/testIframe.html";
 
 				const iframe = iframeRef.value;
 				let tagName = iframe.tagName.toUpperCase();
