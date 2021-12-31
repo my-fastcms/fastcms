@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<el-card shadow="hover">
-      <iframe src="public/testIframe.html" ref="iframeRef" />
+      		<!-- <iframe src="public/testIframe.html" ref="iframeRef" /> -->
 			<div class="mb15">
 				<el-upload 
 					:action="uploadUrl"
@@ -49,7 +49,7 @@
 			:model-value="dialogVisible"
 			:before-close="handleClose"
 		>
-			<iframe :src="pluginConfigUrl" frameborder="0" style="width:100%;height:600px" ref="iframe"></iframe>
+			<iframe :src="pluginConfigUrl" frameborder="0" style="width:100%;height:600px" ref="iframeRef"></iframe>
 		</el-dialog>
 
 	</div>
@@ -63,6 +63,7 @@ import { Session } from '/@/utils/storage';
 export default {
 	name: 'pluginManager',
 	setup() {
+		const iframeRef = ref<HTMLElement | null>(null); // iframe ref
 		const state = reactive({
 			dialogVisible: false,
 			pluginConfigUrl: '',
@@ -108,6 +109,19 @@ export default {
 			getPluginConfigUrl(row.pluginId).then((res) => {
 				state.pluginConfigUrl = res.data + "?token=" + Session.get('token');
 				state.dialogVisible = true;
+
+				const iframe = iframeRef.value;
+				let tagName = iframe.tagName.toUpperCase();
+				console.log("==========before iframe:" + tagName);
+				if(iframe && iframe.tagName.toUpperCase() === "IFRAME") {
+					console.log("==========iframe");
+					const postData = "testTokenString";
+					iframe.contentWindow.onload = function() {
+						iframe.contentWindow.document.getElementById("token").innerText = postData;
+						iframe.contentWindow.getToken(postData);
+					}
+				}
+
 			}).catch((e) => {
 				console.log(e);
 				ElMessage.error("插件不支持配置");
@@ -143,18 +157,9 @@ export default {
 
 		}
 
-    const iframeRef = ref<HTMLElement | null>(null); // iframe ref
-		// 页面加载时
+    	// 页面加载时
 		onMounted(() => {
-      const iframe = iframeRef.value;
-      if(iframe && iframe.tagName.toUpperCase() === "IFRAME") {
-        const postData = "testTokenString";
-        iframe.contentWindow.onload = function() {
-          iframe.contentWindow.document.getElementById("token").innerText = postData;
-          iframe.contentWindow.getToken(postData);
-        }
-      }
-			initTableData();
+      		initTableData();
 		});
 		return {
 			handleClose,
@@ -166,7 +171,7 @@ export default {
 			uploadSuccess,
 			onHandleUploadError,
 			onHandleExceed,
-      iframeRef,
+      		iframeRef,
 			...toRefs(state),
 		};
 	},

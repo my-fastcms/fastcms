@@ -23,7 +23,12 @@
 </div>
 </#macro>
 <#macro script>
-    <script>var token = "${token}";</script>
+    <script>
+        var token = "${token}";
+        window.getToken = function(token) {
+            console.log("hello world iframe log:", token);
+        }
+    </script>
     <script src="/ares/js/jquery.min.js"></script>
     <script src="/ares/js/toastr/toastr.min.js"></script>
     <script src="/ares/js/jquery.form.min.js"></script>

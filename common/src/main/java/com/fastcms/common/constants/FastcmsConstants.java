@@ -33,7 +33,7 @@ public interface FastcmsConstants {
 
     String UCENTER_MAPPING = API_PREFIX_MAPPING + "/ucenter";
 
-    String PLUGIN_MAPPING = "plugin";
+    String PLUGIN_MAPPING = "/plugin";
 
     String DEV_MODE = "dev";
 
