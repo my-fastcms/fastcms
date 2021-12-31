@@ -19,7 +19,6 @@ package com.fastcms.web.controller.admin;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.constants.FastcmsConstants;
-import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.FileUtils;
@@ -131,7 +130,7 @@ public class AttachmentController {
                 for (FileServerManager extension : extensions) {
                     try {
                         extension.uploadFile(new File(DirUtils.getUploadDir() + item.getFilePath()));
-                    } catch (FastcmsException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -215,7 +214,7 @@ public class AttachmentController {
                 for (FileServerManager extension : extensions) {
                     try {
                         extension.deleteFile(attachment.getFilePath());
-                    } catch (FastcmsException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
