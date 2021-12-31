@@ -3,7 +3,7 @@
 		<el-card shadow="hover">
       		<!-- <iframe src="public/testIframe.html" ref="iframeRef" /> -->
 			<div class="mb15">
-				<el-upload 
+				<el-upload
 					:action="uploadUrl"
 					name="file"
 					:headers="headers"
@@ -23,7 +23,7 @@
 				<el-table-column prop="description" label="描述" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="path" label="操作" width="90">
 					<template #default="scope">
-						<el-button size="mini" type="text" @click="onRowConfig(scope.row)">配置</el-button>
+						<el-button size="mini" type="text" @click="beforeOnRowConfig(scope.row)">配置</el-button>
 						<el-button size="mini" type="text" @click="onRowUnInstall(scope.row)">卸载</el-button>
 					</template>
 				</el-table-column>
@@ -42,12 +42,13 @@
 			>
 			</el-pagination>
 		</el-card>
-  
+
 		<el-dialog
 			title="插件配置"
 			fullscreen
 			:model-value="dialogVisible"
 			:before-close="handleClose"
+      @opened="onRowConfig"
 		>
 			<iframe :src="pluginConfigUrl" frameborder="0" style="width:100%;height:600px" ref="iframeRef"></iframe>
 		</el-dialog>
@@ -56,10 +57,11 @@
 </template>
 
 <script lang="ts">
-import { ElMessageBox, ElMessage } from 'element-plus';
-import { toRefs, ref, reactive, onMounted } from 'vue';
-import { getPluginList, unInstallPlugin, getPluginConfigUrl } from '/@/api/plugin/index';
-import { Session } from '/@/utils/storage';
+import {ElMessage, ElMessageBox} from 'element-plus';
+import {onMounted, reactive, ref, toRefs} from 'vue';
+import {getPluginConfigUrl, getPluginList, unInstallPlugin} from '/@/api/plugin/index';
+import {Session} from '/@/utils/storage';
+
 export default {
 	name: 'pluginManager',
 	setup() {
@@ -88,7 +90,7 @@ export default {
 			}).catch(() => {
 			})
 		};
-		
+
 		const onRowUnInstall = (row: object) => {
 			ElMessageBox.confirm('此操作将卸载插件, 是否继续?', '提示', {
 				confirmButtonText: '卸载',
@@ -105,10 +107,17 @@ export default {
 			.catch(() => {});
 		};
 
-		const onRowConfig = (row: object) => {
-			getPluginConfigUrl(row.pluginId).then((res) => {
-				state.pluginConfigUrl = res.data + "?token=" + Session.get('token');
-				state.dialogVisible = true;
+		let currentConfigRow: object | null = null;
+		const beforeOnRowConfig = (row: object) => {
+      currentConfigRow = row;
+      state.dialogVisible = true;
+    };
+
+		const onRowConfig = () => {
+		  if (!currentConfigRow) return;
+      getPluginConfigUrl(currentConfigRow.pluginId).then((res) => {
+				// state.pluginConfigUrl = res.data + "?token=" + Session.get('token');
+				state.pluginConfigUrl = "public/testIframe.html";
 
 				const iframe = iframeRef.value;
 				let tagName = iframe.tagName.toUpperCase();
@@ -116,7 +125,9 @@ export default {
 				if(iframe && iframe.tagName.toUpperCase() === "IFRAME") {
 					console.log("==========iframe");
 					const postData = "testTokenString";
-					iframe.contentWindow.onload = function() {
+          console.log(iframe);
+					iframe.onload = function() {
+            console.log("loaded");
 						iframe.contentWindow.document.getElementById("token").innerText = postData;
 						iframe.contentWindow.getToken(postData);
 					}
@@ -126,7 +137,7 @@ export default {
 				console.log(e);
 				ElMessage.error("插件不支持配置");
 			})
-			
+
 		};
 
 		const handleClose = () => {
@@ -163,6 +174,7 @@ export default {
 		});
 		return {
 			handleClose,
+      beforeOnRowConfig,
 			onRowConfig,
 			onRowUnInstall,
 			onHandleSizeChange,
