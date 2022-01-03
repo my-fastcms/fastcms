@@ -2201,7 +2201,7 @@
 }
 
 .ck .ck-widget.ck-widget_selected, .ck .ck-widget.ck-widget_selected:hover {
-    outline: var(--ck-widget-outline-thickness) solid var(--ck-color-focus-border)
+    outline: var(--ck-widget-outline-thickness) solid var(--ck-color-focus-border) !important;
 }
 
 .ck .ck-widget:hover {
@@ -2393,8 +2393,8 @@
     top: 0
 }
 
-.ck-focused .ck-widget_with-resizer.ck-widget_selected > .ck-widget__resizer {
-    display: block
+.ck-focused .ck-widget_with-resizer.ck-widget_selected > .ck-widget__resizer, .ck-widget_selected .ck-widget__resizer {
+    display: block !important;
 }
 
 .ck .ck-widget__resizer__handle {
@@ -2421,8 +2421,8 @@
 }
 
 .ck .ck-widget__resizer__handle {
-    width: var(--ck-resizer-size);
-    height: var(--ck-resizer-size);
+    width: var(--ck-resizer-size) !important;
+    height: var(--ck-resizer-size) !important;
     background: var(--ck-color-focus-border);
     border: var(--ck-resizer-border-width) solid #fff;
     border-radius: var(--ck-resizer-border-radius)

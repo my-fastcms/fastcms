@@ -3,6 +3,9 @@ import { resolve } from 'path';
 import type { UserConfig } from 'vite';
 import { loadEnv } from './src/utils/viteBuild';
 import CKEditorSvgLoader from "./CKEditorSvgLoader";
+import postcssPartialImport from "postcss-partial-import";
+import postcssMixins from "postcss-mixins";
+import postcssNesting from "postcss-nesting";
 
 const pathResolve = (dir: string): any => {
 	return resolve(__dirname, '.', dir);
@@ -17,6 +20,11 @@ const alias: Record<string, string> = {
 
 const viteConfig: UserConfig = {
 	plugins: [vue(), CKEditorSvgLoader()],
+	css: {
+		postcss:{
+			plugins: [postcssPartialImport, postcssMixins, postcssNesting]
+		}
+	},
 	root: process.cwd(),
 	resolve: { alias },
 	base: process.env.NODE_ENV === 'production' ? VITE_PUBLIC_PATH : './',
