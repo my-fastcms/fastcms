@@ -122,7 +122,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user = new User();
         user.setUserName(username);
         user.setPassword(passwordEncoder.encode(password));
-        user.setSource(User.SourceType.WEB_REGISTER.name());
+        user.setSource(User.SourceType.WEB_REGISTER.name().toLowerCase());
         save(user);
         return true;
     }

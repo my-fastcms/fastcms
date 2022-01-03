@@ -102,6 +102,7 @@ public class ArticleController {
             articleService.saveArticle(article);
             return RestResultUtils.success(article.getId());
         } catch (Exception e) {
+            e.printStackTrace();
             return RestResultUtils.failed(e.getMessage());
         }
     }

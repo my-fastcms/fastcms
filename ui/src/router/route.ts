@@ -159,7 +159,7 @@ export const userCenterRoutes: Array<RouteRecordRaw> = [
 					isAffix: false,
 					isIframe: false,
 					auth: ['admin', 'test'],
-					icon: 'el-icon-picture-outline',
+					icon: 'iconfont icon-caidan',
 				},
 			},
 
@@ -190,7 +190,7 @@ export const userCenterRoutes: Array<RouteRecordRaw> = [
 					isAffix: false,
 					isIframe: false,
 					auth: ['admin', 'test'],
-					icon: 'iconfont icon-shouye',
+					icon: 'el-icon-picture-outline',
 				},
 			},
 			{

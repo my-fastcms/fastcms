@@ -16,13 +16,15 @@
  */
 package com.fastcms.cms.controller.ucenter;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.service.IArticleService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.mybatis.PageModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -57,7 +59,8 @@ public class UCenterArticleController {
 	public RestResult<Page<Article>> list(PageModel page,
 										  @RequestParam(name = "title", required = false) String title,
 										  @RequestParam(name = "status", required = false) String status) {
-		QueryWrapper queryWrapper = new QueryWrapper();
+		LambdaQueryWrapper<Article> queryWrapper = Wrappers.<Article>lambdaQuery().like(StrUtils.isNotBlank(title), Article::getTitle, title)
+				.eq(StrUtils.isNotBlank(status), Article::getStatus, status);
 		Page<Article> pageData = articleService.page(page.toPage(), queryWrapper);
 		return RestResultUtils.success(pageData);
 	}

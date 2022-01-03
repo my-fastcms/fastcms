@@ -13,7 +13,7 @@
                 <div class="mb-3">
                     <label for="username">Username</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+                        <input type="text" class="form-control" id="hello_username" name="hello_username" placeholder="Username" required>
                         <div class="invalid-feedback" style="width: 100%;">
                             Your username is required.
                         </div>
@@ -22,7 +22,7 @@
 
                 <div class="mb-3">
                     <label for="email">Email <span class="text-muted">(Optional)</span></label>
-                    <input type="email" class="form-control" id="email" name="email" placeholder="you@example.com">
+                    <input type="email" class="form-control" id="hello_email" name="hello_email" placeholder="you@example.com">
                     <div class="invalid-feedback">
                         Please enter a valid email address for shipping updates.
                     </div>
@@ -47,8 +47,8 @@
             })
 
             var params = new Array();
-            params.push("username");
-            params.push("email");
+            params.push("hello_username");
+            params.push("hello_email");
             getConfigFormData(params);
         });
     </script>

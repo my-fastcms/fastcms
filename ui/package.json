@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "fastcms admin",
   "author": "wjun_java@163.com",
-  "license": "apache",
+  "license": "LGPL-3.0",
   "workspaces": [
     "packages/*"
   ],

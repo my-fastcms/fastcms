@@ -69,10 +69,12 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         getBaseMapper().deleteCategoryRelationByArticleId(article.getId());
         getBaseMapper().deleteTagRelationByArticleId(article.getId());
 
-        final List<Long> articleCategoryList = new ArrayList<>(article.getArticleCategory());
-        if(articleCategoryList != null && articleCategoryList.size()>0) {
-            //插入新的分类
-            getBaseMapper().saveArticleCategoryRelation(article.getId(), articleCategoryList);
+        if(article.getArticleCategory() != null) {
+            final List<Long> articleCategoryList = new ArrayList<>(article.getArticleCategory());
+            if(articleCategoryList != null && articleCategoryList.size()>0) {
+                //插入新的分类
+                getBaseMapper().saveArticleCategoryRelation(article.getId(), articleCategoryList);
+            }
         }
 
         final List<String> articleTagList = article.getArticleTag();
