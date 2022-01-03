@@ -1,5 +1,4 @@
 import { RouteRecordRaw } from 'vue-router';
-import { centerRoute } from "/@/router/center";
 
 /**
  * 路由meta对象参数说明
@@ -46,51 +45,6 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 					icon: 'iconfont icon-shouye',
 				},
 			},
-			{
-				path: '/chart',
-				name: 'chartIndex',
-				component: () => import('/@/views/chart/index.vue'),
-				meta: {
-					title: 'message.router.chartIndex',
-					isLink: '',
-					isHide: false,
-					isKeepAlive: true,
-					isAffix: false,
-					isIframe: false,
-					auth: ['admin', 'test'],
-					icon: 'iconfont icon-ico_shuju',
-				},
-			},
-			{
-				path: '/personal',
-				name: 'personal',
-				component: () => import('/@/views/personal/index.vue'),
-				meta: {
-					title: 'message.router.personal',
-					isLink: '',
-					isHide: false,
-					isKeepAlive: true,
-					isAffix: false,
-					isIframe: false,
-					auth: ['admin', 'test'],
-					icon: 'iconfont icon-gerenzhongxin',
-				},
-			},
-			{
-				path: '/tools',
-				name: 'tools',
-				component: () => import('/@/views/tools/index.vue'),
-				meta: {
-					title: 'message.router.tools',
-					isLink: '',
-					isHide: false,
-					isKeepAlive: true,
-					isAffix: false,
-					isIframe: false,
-					auth: ['admin', 'test'],
-					icon: 'iconfont icon-gongju',
-				},
-			},
 		],
 	}
 ];
@@ -110,6 +64,14 @@ export const staticRoutes: Array<RouteRecordRaw> = [
 		},
 	},
 	{
+		path: '/register',
+		name: 'register',
+		component: () => import('/@/views/register/index.vue'),
+		meta: {
+			title: 'message.staticRoutes.register',
+		},
+	},
+	{
 		path: '/404',
 		name: 'notFound',
 		component: () => import('/@/views/error/404.vue'),
@@ -125,6 +87,66 @@ export const staticRoutes: Array<RouteRecordRaw> = [
 			title: 'message.staticRoutes.noPower',
 		},
 	},
-	// 个人中心
-	centerRoute
+];
+
+/**
+ * 个人中心静态路由
+ */
+export const userCenterRoutes: Array<RouteRecordRaw> = [
+	{
+		path: '/',
+		name: '/',
+		component: () => import('/@/layout/index.vue'),
+		redirect: '/home',
+		meta: {
+			isKeepAlive: true,
+		},
+		children: [
+			{
+				path: '/home',
+				name: 'home',
+				component: () => import('/@/views/personal/index.vue'),
+				meta: {
+					title: 'message.router.home',
+					isLink: '',
+					isHide: false,
+					isKeepAlive: true,
+					isAffix: true,
+					isIframe: false,
+					auth: ['admin', 'test'],
+					icon: 'iconfont icon-shouye',
+				},
+			},
+			{
+				path: '/article/index',
+				name: 'articleManager',
+				component: () => import('/@/views/article/index.vue'),
+				meta: {
+					title: 'message.centerRoutes.articleManager',
+					isLink: '',
+					isHide: false,
+					isKeepAlive: true,
+					isAffix: false,
+					isIframe: false,
+					auth: ['admin', 'test'],
+					icon: 'iconfont icon-shouye',
+				},
+			},
+			{
+				path: '/attach/index',
+				name: 'attachManager',
+				component: () => import('/@/views/attach/index.vue'),
+				meta: {
+					title: 'message.centerRoutes.attachManager',
+					isLink: '',
+					isHide: false,
+					isKeepAlive: true,
+					isAffix: false,
+					isIframe: false,
+					auth: ['admin', 'test'],
+					icon: 'iconfont icon-shouye',
+				},
+			}
+		],
+	}
 ];

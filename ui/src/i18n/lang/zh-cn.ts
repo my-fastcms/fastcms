@@ -36,8 +36,14 @@ export default {
 	},
 	staticRoutes: {
 		signIn: '登录',
+		register: '注册',
 		notFound: '找不到此页面',
 		noPower: '没有权限',
+	},
+	centerRoutes: {
+		attachManager: '我的附件',
+		articleManager: '我的文章',
+
 	},
 	user: {
 		title0: '组件大小',

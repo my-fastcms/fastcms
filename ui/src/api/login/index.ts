@@ -36,3 +36,17 @@ export function getCaptcha() {
 		method: 'get'
 	});
 }
+
+/**
+ * 用户注册
+ * @param params 
+ * @returns 
+ */
+export function register(params :string) {
+	return request({
+		url: '/admin/register',
+		method: 'post',
+		data: params,
+		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+	});
+}

@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * wjun_java@163.com
  */
-@InterceptPath({ "/hello/**" })
+@InterceptPath({ "/plugin/hello/**" })
 public class HelloInterceptor implements HandlerInterceptor {
 
     private static final Logger log = LoggerFactory.getLogger(HelloInterceptor.class);

@@ -1,7 +1,7 @@
 import { store } from '/@/store/index';
 import { Session } from '/@/utils/storage';
 import { NextLoading } from '/@/utils/loading';
-import { setAddRoute, setFilterMenuAndCacheTagsViewRoutes } from '/@/router/index';
+import { setAddFrontRoute, setFrontFilterMenuAndCacheTagsViewRoutes } from '/@/router/index';
 
 /**
  * 前端控制路由：初始化方法，防止刷新时路由丢失
@@ -18,7 +18,7 @@ export async function initFrontEndControlRoutes() {
 	// 触发初始化用户信息
 	store.dispatch('userInfos/setUserInfos');
 	// 添加动态路由
-	await setAddRoute();
+	await setAddFrontRoute();
 	// 设置递归过滤有权限的路由到 vuex routesList 中（已处理成多级嵌套路由）及缓存多级嵌套数组处理后的一维数组
-	setFilterMenuAndCacheTagsViewRoutes();
+	setFrontFilterMenuAndCacheTagsViewRoutes();
 }

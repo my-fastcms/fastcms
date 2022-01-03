@@ -13,7 +13,7 @@ service.interceptors.request.use(
 	(config) => {
 		// 在发送请求之前做些什么 token
 		if (Session.get('token')) {
-			config.headers.common['Authorization'] = `${Session.get('token')}`;
+			config.headers.common['Authorization'] = `Bearer ${Session.get('token')}`;
 		}
 		if (Session.get('ClientId')) {
 			config.headers.common['ClientId'] = `${Session.get('ClientId')}`;

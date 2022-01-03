@@ -17,11 +17,13 @@
 package com.fastcms.web.controller.admin;
 
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.exception.AccessException;
+import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.captcha.FastcmsCaptcha;
 import com.fastcms.core.captcha.FastcmsCaptchaService;
-import com.fastcms.common.exception.AccessException;
+import com.fastcms.service.IUserService;
 import com.fastcms.web.security.AuthManager;
 import com.fastcms.web.security.FastcmsUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,9 @@ public class AdminController {
     @Autowired
     private FastcmsCaptchaService fastcmsCaptchaService;
 
+    @Autowired
+    private IUserService userService;
+
     /**
      * 登录
      * @param username  账号|admin
@@ -63,6 +68,31 @@ public class AdminController {
             return RestResultUtils.failed(e.getMessage());
         }
 
+    }
+
+    /**
+     * 注册
+     * @param username
+     * @param password
+     * @param repeatPassword
+     * @param code
+     * @return
+     */
+    @PostMapping("register")
+    public RestResult<Boolean> register(@RequestParam String username,
+                                        @RequestParam String password,
+                                        @RequestParam String repeatPassword,
+                                        @RequestParam String code) {
+
+        if(!fastcmsCaptchaService.checkCaptcha(code)) {
+            return RestResultUtils.failed("验证码错误");
+        }
+
+        try {
+            return RestResultUtils.success(userService.register(username, password, repeatPassword));
+        } catch (FastcmsException e) {
+            return RestResultUtils.failed(e.getMessage());
+        }
     }
 
     /**

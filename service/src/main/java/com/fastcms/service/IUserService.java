@@ -47,4 +47,13 @@ public interface IUserService extends IService<User> {
      */
     Boolean deleteUser(Long userId);
 
+    /**
+     * 用户注册
+     * @param username
+     * @param password
+     * @param repeatPassword
+     * @return
+     */
+    Boolean register(String username, String password, String repeatPassword) throws FastcmsException;
+
 }

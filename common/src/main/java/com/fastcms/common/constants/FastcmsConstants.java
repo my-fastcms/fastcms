@@ -29,11 +29,11 @@ public interface FastcmsConstants {
 
     String ADMIN_MAPPING = API_PREFIX_MAPPING + "/admin";
 
-    String API_MAPPING = API_PREFIX_MAPPING + "/api";
+    String API_MAPPING = API_PREFIX_MAPPING + "/app";
 
     String UCENTER_MAPPING = API_PREFIX_MAPPING + "/ucenter";
 
-    String PLUGIN_MAPPING = "/plugin";
+    String PLUGIN_MAPPING = "/fastcms/plugin";
 
     String DEV_MODE = "dev";
 
@@ -154,7 +154,6 @@ public interface FastcmsConstants {
      * Server info 相关
      * ================
      */
-
     //服务器ip地址
     String SERVER_IP = "serverIp";
     //服务器端口

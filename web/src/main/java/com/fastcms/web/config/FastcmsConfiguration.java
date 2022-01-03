@@ -18,6 +18,7 @@ package com.fastcms.web.config;
 
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.core.directive.BaseDirective;
+import com.fastcms.core.interceptor.PluginInterceptor;
 import com.fastcms.core.template.FastcmsTemplateFreeMarkerConfig;
 import com.fastcms.core.template.Template;
 import com.fastcms.core.template.TemplateService;
@@ -27,8 +28,6 @@ import com.fastcms.service.IConfigService;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,6 +40,7 @@ import org.springframework.util.ResourceUtils;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -60,8 +60,6 @@ import java.util.Map;
  */
 @Configuration
 public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListener<WebServerInitializedEvent> {
-
-    private static final Logger log = LoggerFactory.getLogger(FastcmsConfiguration.class);
 
     @Autowired
     private IConfigService configService;
@@ -89,6 +87,11 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
         }
 
         registry.addResourceHandler("/**").addResourceLocations(locations.toArray(new String[]{}));
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new PluginInterceptor()).addPathPatterns("/fastcms/plugin/**");
     }
 
     @Bean
@@ -135,8 +138,6 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        log.info("console:" + configService.getValue(FastcmsConstants.WEBSITE_DOMAIN) + "/fastcms");
 
         //注册freemarker自定义标签
         registerFreemarkerDirective(event);

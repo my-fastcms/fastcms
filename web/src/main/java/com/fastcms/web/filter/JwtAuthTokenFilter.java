@@ -16,7 +16,6 @@
  */
 package com.fastcms.web.filter;
 
-import com.fastcms.web.security.FastcmsAuthConfig;
 import com.fastcms.web.security.JwtTokenManager;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.apache.commons.lang.StringUtils;
@@ -41,6 +40,10 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
 
     private static final String TOKEN_PREFIX = "Bearer ";
 
+    public static final String ACCESSTOKEN = "accessToken";
+
+    public static final String AUTHORIZATION_HEADER = "Authorization";
+
     private final JwtTokenManager tokenManager;
 
     public JwtAuthTokenFilter(JwtTokenManager tokenManager) {
@@ -61,6 +64,7 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
             } catch (ExpiredJwtException e) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
             } catch (Exception e) {
+                e.printStackTrace();
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Server failed," + e.getMessage());
             }
         } else {
@@ -69,11 +73,17 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
     }
 
     private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(FastcmsAuthConfig.AUTHORIZATION_HEADER);
-        if (StringUtils.isNotBlank(bearerToken) && bearerToken.startsWith(TOKEN_PREFIX)) {
-            return bearerToken.substring(TOKEN_PREFIX.length());
+        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+        if (StringUtils.isNotBlank(bearerToken)) {
+            return bearerToken.startsWith(TOKEN_PREFIX) ? bearerToken.substring(TOKEN_PREFIX.length()) : bearerToken;
         }
-        return bearerToken;
+
+        final String token = request.getParameter(ACCESSTOKEN);
+        if (StringUtils.isNotBlank(token)) {
+            return token;
+        }
+
+        return null;
     }
 
 }

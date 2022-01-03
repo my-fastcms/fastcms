@@ -57,11 +57,19 @@ public class FastcmsUser implements Serializable {
 	 */
 	private String headImg;
 
-	public FastcmsUser(String username, String token, long tokenTtl, boolean superAdmin) {
+	/**
+	 * 是否拥有角色权限
+	 * 有角色权限登录默认进入后台管理
+	 * 否则进入个人中心
+	 */
+	private boolean hasRole;
+
+	public FastcmsUser(String username, String token, long tokenTtl, boolean superAdmin, boolean hasRole) {
 		this.username = username;
 		this.token = token;
 		this.tokenTtl = tokenTtl;
 		this.superAdmin = superAdmin;
+		this.hasRole = hasRole;
 	}
 
 	public String getToken() {
@@ -110,5 +118,13 @@ public class FastcmsUser implements Serializable {
 
 	public void setHeadImg(String headImg) {
 		this.headImg = headImg;
+	}
+
+	public boolean isHasRole() {
+		return hasRole;
+	}
+
+	public void setHasRole(boolean hasRole) {
+		this.hasRole = hasRole;
 	}
 }

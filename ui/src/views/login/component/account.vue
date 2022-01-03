@@ -139,34 +139,15 @@ export default defineComponent({
 
 		const doLogin = async(res) => {
 			state.loading.signIn = true;
-			let defaultAuthPageList: Array<string> = ['admin'];
-			let defaultAuthBtnList: Array<string> = ['btn.add', 'btn.del', 'btn.edit', 'btn.link'];
-			// admin 页面权限标识，对应路由 meta.auth，用于控制路由的显示/隐藏
-			// let adminAuthPageList: Array<string> = ['admin'];
-			// admin 按钮权限标识
-			// let adminAuthBtnList: Array<string> = ['btn.add', 'btn.del', 'btn.edit', 'btn.link'];
-			// test 页面权限标识，对应路由 meta.auth，用于控制路由的显示/隐藏
-			// let testAuthPageList: Array<string> = ['test'];
-			// test 按钮权限标识
-			// let testAuthBtnList: Array<string> = ['btn.add', 'btn.link'];
-			// 不同用户模拟不同的用户权限
-			// if (state.myForm.username === 'admin') {
-			// 	defaultAuthPageList = adminAuthPageList;
-			// 	defaultAuthBtnList = adminAuthBtnList;
-			// } else {
-			// 	defaultAuthPageList = testAuthPageList;
-			// 	defaultAuthBtnList = testAuthBtnList;
-			// }
-			// 用户信息模拟数据
+			//let defaultAuthPageList: Array<string> = ['admin'];
+			//let defaultAuthBtnList: Array<string> = ['btn.add', 'btn.del', 'btn.edit', 'btn.link'];
 			const userInfos = {
 				username: res.data.username,
-				photo:
-					state.myForm.username === 'admin'
-						? 'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1813762643,1914315241&fm=26&gp=0.jpg'
-						: 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=317673774,2961727727&fm=26&gp=0.jpg',
+				photo: res.data.headImg === null ? '/header.jpg' : res.data.headImg,
 				time: new Date().getTime(),
-				authPageList: defaultAuthPageList,
-				authBtnList: defaultAuthBtnList,
+				hasRole: res.data.hasRole,
+				//authPageList: defaultAuthPageList,
+				//authBtnList: defaultAuthBtnList,
 			};
 			// 存储 token 到浏览器缓存
 			Session.set('token', res.data.token);
@@ -180,11 +161,17 @@ export default defineComponent({
 				await initFrontEndControlRoutes();
 				signInSuccess();
 			} else {
-				// 模拟后端控制路由，isRequestRoutes 为 true，则开启后端控制路由
-				// 添加完动态路由，再进行 router 跳转，否则可能报错 No match found for location with path "/"
-				await initBackEndControlRoutes();
-				// 执行完 initBackEndControlRoutes，再执行 signInSuccess
-				signInSuccess();
+				if(res.data.hasRole === true) {
+					// 模拟后端控制路由，isRequestRoutes 为 true，则开启后端控制路由
+					// 添加完动态路由，再进行 router 跳转，否则可能报错 No match found for location with path "/"
+					await initBackEndControlRoutes();
+					signInSuccess();
+					
+				} else {
+					// 前端控制路由，2、请注意执行顺序
+					await initFrontEndControlRoutes();
+					signInSuccess();
+				}
 			}
 		}
 
@@ -201,7 +188,13 @@ export default defineComponent({
 					query: Object.keys(route.query?.params).length > 0 ? JSON.parse(route.query?.params) : '',
 				});
 			} else {
-				router.push('/');
+				const hasRole = Session.get("userInfo").hasRole;
+				if(hasRole == false) {
+					console.log("==========to personal")
+					router.push("/home");
+				} else {
+					router.push('/');
+				}
 			}
 			// 登录成功提示
 			setTimeout(() => {

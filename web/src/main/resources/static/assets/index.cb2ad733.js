@@ -1,1 +1,0 @@
-import{B as i}from"./index.1733e4c9.js";function o(t){return i({url:"/admin/config/save",data:t,method:"post"})}function e(t){return i({url:"/admin/config/list",data:t,method:"post"})}export{e as g,o as s};

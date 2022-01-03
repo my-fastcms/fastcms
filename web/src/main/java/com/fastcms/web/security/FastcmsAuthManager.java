@@ -55,7 +55,7 @@ public class FastcmsAuthManager implements AuthManager {
     public FastcmsUser login(String username, String password, String code) throws AccessException {
 
         if(!fastcmsCaptchaService.checkCaptcha(code)) {
-            throw new AccessException(500, "验证码错误");
+            throw new AccessException(FastcmsException.INVALID_PARAM, "验证码错误");
         }
 
         try {
@@ -65,7 +65,7 @@ public class FastcmsAuthManager implements AuthManager {
             FastcmsUserDetails principal = (FastcmsUserDetails) authenticate.getPrincipal();
             String token = tokenManager.createToken(principal.getUserId(), authenticate.getName(), principal.getAuthorities());
 
-            return new FastcmsUser(authenticate.getName(), token, authConfigs.getTokenValidityInSeconds(), principal.isAdmin());
+            return new FastcmsUser(authenticate.getName(), token, authConfigs.getTokenValidityInSeconds(), principal.isAdmin(), principal.hasRole());
 
         } catch (AuthenticationException e) {
             throw new AccessException(FastcmsException.NO_RIGHT, e.getMessage());

@@ -30,8 +30,8 @@ export async function initBackEndControlRoutes() {
 	// 触发初始化用户信息
 	store.dispatch('userInfos/setUserInfos');
 	// 获取路由菜单数据
-	const res = await getBackEndControlRoutes();
-
+	const res:any = await getBackEndControlRoutes();
+	if(res.data.length<=0) return false;
 	// 存储接口原始路由（未处理component），根据需求选择使用
 	store.dispatch('requestOldRoutes/setBackEndControlRoutes', JSON.parse(JSON.stringify(res.data)));
 	// 处理路由（component），替换 dynamicRoutes（/@/router/route）第一个顶级 children 的路由

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.entity.User;
 import com.fastcms.entity.UserTag;
 import com.fastcms.mapper.RoleMapper;
@@ -58,6 +59,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if(StringUtils.isBlank(userParam.getPassword())) {
             throw new Exception("请输入旧密码");
         }
+
+        if(!user.getPassword().equals(passwordEncoder.encode(userParam.getPassword()))) {
+            throw new Exception("旧密码输入错误");
+        }
+
         updateById(user);
     }
 
@@ -97,6 +103,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public Boolean deleteUser(Long userId) {
         roleMapper.deleteRoleByUserId(userId);
         removeById(userId);
+        return true;
+    }
+
+    @Override
+    public Boolean register(String username, String password, String repeatPassword) throws FastcmsException {
+        if(StrUtils.isBlank(username) || StrUtils.isBlank(password) || StrUtils.isBlank(repeatPassword)) {
+            throw new FastcmsException(FastcmsException.INVALID_PARAM, "请输入完成注册数据");
+        }
+
+        if(!repeatPassword.equals(password)) {
+            throw new FastcmsException(FastcmsException.INVALID_PARAM, "两次密码输入不一致");
+        }
+
+        User user = getOne(Wrappers.<User>lambdaQuery().eq(User::getUserName, username));
+        if(user != null) throw new FastcmsException(FastcmsException.INVALID_PARAM, "账号已存在");
+
+        user = new User();
+        user.setUserName(username);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setSource(User.SourceType.WEB_REGISTER.name());
+        save(user);
         return true;
     }
 

@@ -5,8 +5,9 @@ export default {
 		two2: '手机号登录',
 	},
 	link: {
-		one3: '第三方登录',
+		one3: '新用户注册',
 		two4: '友情链接',
+		two5: '已有账号?现在登录',
 	},
 	copyright: {
 		one5: '版权所有：广州小橘灯信息科技有限公司',
@@ -16,7 +17,9 @@ export default {
 		accountPlaceholder1: '用户名',
 		accountPlaceholder2: '密码',
 		accountPlaceholder3: '请输入验证码',
+		accountPlaceholder4: '确认密码',
 		accountBtnText: '登 录',
+		accountRegistBtnText: '注 册',
 	},
 	mobile: {
 		placeholder1: '请输入手机号',
@@ -25,4 +28,5 @@ export default {
 		btnText: '登 录',
 	},
 	signInText: '欢迎回来！',
+	registerInText: '注册成功，即将跳到登录页...',
 };

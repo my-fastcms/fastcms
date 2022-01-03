@@ -20,10 +20,6 @@ import org.springframework.web.cors.CorsUtils;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class FastcmsAuthConfig extends WebSecurityConfigurerAdapter {
 
-    public static final String AUTHORIZATION_HEADER = "Authorization";
-
-    public static final String TOKEN_PREFIX = "Bearer ";
-
     @Autowired
     private JwtTokenManager tokenManager;
 

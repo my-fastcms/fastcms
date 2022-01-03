@@ -10,7 +10,7 @@
 								<div class="home-card-first-right-title">
 									{{ currentTime }}，{{ getUserInfos.username === '' ? 'test' : getUserInfos.username }}！
 								</div>
-								<div class="home-card-first-right-msg mt5">{{ getUserInfos.username === 'admin' ? '超级管理' : '普通用户' }}</div>
+								<div class="home-card-first-right-msg mt5">{{ getUserInfos.username === 'admin' ? '超级管理' : '' }}</div>
 							</div>
 						</div>
 					</div>
@@ -34,7 +34,6 @@
 					<el-table :data="tableData.data" style="width: 100%" stripe>
 						<el-table-column prop="date" :label="$t('message.table.th1')"></el-table-column>
 						<el-table-column prop="name" :label="$t('message.table.th2')"></el-table-column>
-						<el-table-column prop="address" :label="$t('message.table.th3')"></el-table-column>
 					</el-table>
 				</el-card>
 			</el-col>

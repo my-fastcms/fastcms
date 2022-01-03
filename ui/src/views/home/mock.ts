@@ -4,27 +4,27 @@
  */
 export const topCardItemList = [
 	{
-		title: '今日访问人数',
+		title: '今日新增文章',
 		titleNum: '123',
-		tip: '在场人数',
+		tip: '文章总数',
 		tipNum: '911',
 		color: '#F95959',
 		iconColor: '#F86C6B',
 		icon: 'iconfont icon-jinridaiban',
 	},
 	{
-		title: '实验室总数',
+		title: '今日新增订单',
 		titleNum: '123',
-		tip: '使用中',
+		tip: '订单总数',
 		tipNum: '611',
 		color: '#8595F4',
 		iconColor: '#92A1F4',
 		icon: 'iconfont icon-AIshiyanshi',
 	},
 	{
-		title: '申请人数（月）',
+		title: '今日浏览量',
 		titleNum: '123',
-		tip: '通过人数',
+		tip: '总浏览量',
 		tipNum: '911',
 		color: '#FEBB50',
 		iconColor: '#FDC566',

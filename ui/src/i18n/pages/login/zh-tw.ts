@@ -17,6 +17,7 @@ export default {
 		accountPlaceholder2: '密碼',
 		accountPlaceholder3: '請輸入驗證碼',
 		accountBtnText: '登入',
+		accountRegistBtnText: '注册',
 	},
 	mobile: {
 		placeholder1: '請輸入手機號',

@@ -109,28 +109,25 @@ export default {
 
 		let currentConfigRow: object | null = null;
 		const beforeOnRowConfig = (row: object) => {
-      currentConfigRow = row;
-      state.dialogVisible = true;
+      	currentConfigRow = row;
+      	state.dialogVisible = true;
     };
 
 		const onRowConfig = () => {
 		  if (!currentConfigRow) return;
-      getPluginConfigUrl(currentConfigRow.pluginId).then((res) => {
-				state.pluginConfigUrl = res.data + "?token=" + Session.get('token');
+      		getPluginConfigUrl(currentConfigRow.pluginId).then((res) => {
+				state.pluginConfigUrl = res.data + "?accessToken=" + Session.get('token');
 				// state.pluginConfigUrl = "public/testIframe.html";
 
 				const iframe = iframeRef.value;
-				let tagName = iframe.tagName.toUpperCase();
-				console.log("==========before iframe:" + tagName);
 				if(iframe && iframe.tagName.toUpperCase() === "IFRAME") {
-					console.log("==========iframe");
-					const postData = "testTokenString";
-          console.log(iframe);
-					iframe.onload = function() {
-            console.log("loaded");
-						iframe.contentWindow.document.getElementById("token").innerText = postData;
-						iframe.contentWindow.getToken(postData);
-					}
+					// const postData = "testTokenString";
+          
+		  			// iframe.postMessage({cmd:'sendToken', params:{token: postData}}, '*');
+					// iframe.onload = function() {
+          			// 	iframe.contentWindow.document.getElementById("token").innerText = postData;
+					// 	iframe.contentWindow.getToken(postData);
+					// }
 				}
 
 			}).catch((e) => {
@@ -174,7 +171,7 @@ export default {
 		});
 		return {
 			handleClose,
-      beforeOnRowConfig,
+      		beforeOnRowConfig,
 			onRowConfig,
 			onRowUnInstall,
 			onHandleSizeChange,

@@ -21,10 +21,10 @@
 						</el-tab-pane>
 						-->
 					</el-tabs>
-					<!-- <div class="mt10">
-						<el-button type="text" size="small">{{ $t('message.link.one3') }}</el-button>
-						<el-button type="text" size="small">{{ $t('message.link.two4') }}</el-button>
-					</div> -->
+					<div class="mt10">
+						<el-button type="text" size="small" @click="toRegister">{{ $t('message.link.one3') }}</el-button>
+						<!-- <el-button type="text" size="small">{{ $t('message.link.two4') }}</el-button> -->
+					</div>
 				</div>
 				<Scan v-else />
 				<!--
@@ -48,11 +48,14 @@ import Account from '/@/views/login/component/account.vue';
 import Mobile from '/@/views/login/component/mobile.vue';
 import Scan from '/@/views/login/component/scan.vue';
 import { useStore } from '/@/store/index';
+import { useRouter } from 'vue-router';
+
 export default {
 	name: 'login',
 	components: { Account, Mobile, Scan },
 	setup() {
 		const store = useStore();
+		const router = useRouter();
 		const state = reactive({
 			tabsActiveName: 'account',
 			isTabPaneShow: true,
@@ -66,8 +69,12 @@ export default {
 		const onTabsClick = () => {
 			state.isTabPaneShow = !state.isTabPaneShow;
 		};
+		const toRegister = () => {
+			router.push('/register');
+		}
 
 		return {
+			toRegister,
 			onTabsClick,
 			getThemeConfig,
 			...toRefs(state),

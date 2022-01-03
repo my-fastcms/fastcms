@@ -4,7 +4,7 @@ import 'nprogress/nprogress.css';
 import { store } from '/@/store/index.ts';
 import { Session } from '/@/utils/storage';
 import { NextLoading } from '/@/utils/loading';
-import { staticRoutes, dynamicRoutes } from '/@/router/route';
+import { staticRoutes, dynamicRoutes, userCenterRoutes } from '/@/router/route';
 import { initFrontEndControlRoutes } from '/@/router/frontEnd';
 import { initBackEndControlRoutes } from '/@/router/backEnd';
 
@@ -87,6 +87,16 @@ export function setCacheTagsViewRoutes() {
 }
 
 /**
+ * 设置前端路由
+ */
+export function setFrontCacheTagsViewRoutes() {
+	// 获取有权限的路由，否则 tagsView、菜单搜索中无权限的路由也将显示
+	let authsRoutes = setFilterHasAuthMenu(userCenterRoutes, store.state.userInfos.userInfos.authPageList);
+	// 添加到 vuex setTagsViewRoutes 中
+	store.dispatch('tagsViewRoutes/setTagsViewRoutes', formatTwoStageRoutes(formatFlatteningRoutes(authsRoutes))[0].children);
+}
+
+/**
  * 判断路由 `meta.auth` 中是否包含当前登录用户权限字段
  * @param auths 用户权限标识，在 userInfos（用户信息）的 authPageList（登录页登录时缓存到浏览器）数组
  * @param route 当前循环时的路由项
@@ -107,10 +117,11 @@ export function setFilterHasAuthMenu(routes: any, auth: any) {
 	const menu: any = [];
 	routes.forEach((route: any) => {
 		const item = { ...route };
-		if (hasAuth(auth, item)) {
-			if (item.children) item.children = setFilterHasAuthMenu(item.children, auth);
-			menu.push(item);
-		}
+		// if (hasAuth(auth, item)) {
+		// 	if (item.children) item.children = setFilterHasAuthMenu(item.children, auth);
+		// 	menu.push(item);
+		// }
+		menu.push(item);
 	});
 	return menu;
 }
@@ -126,6 +137,15 @@ export function setFilterMenuAndCacheTagsViewRoutes() {
 }
 
 /**
+ * 设置前端静态路由
+ * 个人中心路由
+ */
+export function setFrontFilterMenuAndCacheTagsViewRoutes() {
+	store.dispatch('routesList/setRoutesList', setFilterHasAuthMenu(userCenterRoutes[0].children, store.state.userInfos.userInfos.authPageList));
+	setFrontCacheTagsViewRoutes();
+}
+
+/**
  * 获取当前用户权限标识去比对路由表（未处理成多级嵌套路由）
  * @description 这里主要用于动态路由的添加，router.addRoute
  * @link 参考：https://next.router.vuejs.org/zh/api/#addroute
@@ -135,13 +155,14 @@ export function setFilterMenuAndCacheTagsViewRoutes() {
 export function setFilterRoute(chil: any) {
 	let filterRoute: any = [];
 	chil.forEach((route: any) => {
-		if (route.meta.auth) {
-			route.meta.auth.forEach((metaAuth: any) => {
-				store.state.userInfos.userInfos.authPageList.forEach((auth: any) => {
-					if (metaAuth === auth) filterRoute.push({ ...route });
-				});
-			});
-		}
+		filterRoute.push({ ...route })
+		// if (route.meta.auth) {
+			// route.meta.auth.forEach((metaAuth: any) => {
+			// 	store.state.userInfos.userInfos.authPageList.forEach((auth: any) => {
+			// 		if (metaAuth === auth) filterRoute.push({ ...route });
+			// 	});
+			// });
+		// }
 	});
 	return filterRoute;
 }
@@ -157,6 +178,12 @@ export function setFilterRouteEnd() {
 	return filterRouteEnd;
 }
 
+export function setFilterFrontRouteEnd() {
+	let filterRouteEnd: any = formatTwoStageRoutes(formatFlatteningRoutes(userCenterRoutes));
+	filterRouteEnd[0].children = [...setFilterRoute(filterRouteEnd[0].children), { ...pathMatch }];
+	return filterRouteEnd;
+}
+
 /**
  * 添加动态路由
  * @method router.addRoute
@@ -165,6 +192,13 @@ export function setFilterRouteEnd() {
  */
 export function setAddRoute() {
 	setFilterRouteEnd().forEach((route: RouteRecordRaw) => {
+		const routeName: any = route.name;
+		if (!router.hasRoute(routeName)) router.addRoute(route);
+	});
+}
+
+export function setAddFrontRoute() {
+	setFilterFrontRouteEnd().forEach((route: RouteRecordRaw) => {
 		const routeName: any = route.name;
 		if (!router.hasRoute(routeName)) router.addRoute(route);
 	});
@@ -183,6 +217,13 @@ export function resetRoute() {
 	});
 }
 
+export function resetFrontRoute() {
+	setFilterFrontRouteEnd().forEach((route: RouteRecordRaw) => {
+		const routeName: any = route.name;
+		router.hasRoute(routeName) && router.removeRoute(routeName);
+	});
+}
+
 // isRequestRoutes 为 true，则开启后端控制路由，路径：`/src/store/modules/themeConfig.ts`
 const { isRequestRoutes } = store.state.themeConfig.themeConfig;
 // 前端控制路由：初始化方法，防止刷新时路由丢失
@@ -193,27 +234,45 @@ router.beforeEach(async (to, from, next) => {
 	NProgress.configure({ showSpinner: false });
 	if (to.meta.title) NProgress.start();
 	const token = Session.get('token');
-	if (to.path === '/login' && !token) {
+	if ((to.path === '/login' || to.path ==='/register') && !token) {
 		next();
 		NProgress.done();
 	} else {
 		if (!token) {
 			next(`/login?redirect=${to.path}&params=${JSON.stringify(to.query ? to.query : to.params)}`);
 			Session.clear();
-			resetRoute();
+			const hasRole = Session.get("userInfo").hasRole;
+			if(hasRole == false) {
+				resetFrontRoute();
+			} else {
+				resetRoute();
+			}
 			NProgress.done();
 		} else if (token && to.path === '/login') {
-			next('/home');
-			NProgress.done();
+			const hasRole = Session.get("userInfo").hasRole;
+			if(hasRole == false) {
+				next('/personal');
+				NProgress.done();
+			} else {
+				next('/home');
+				NProgress.done();
+			}
 		} else {
 			if (store.state.routesList.routesList.length === 0) {
-				if (isRequestRoutes) {
-					// 后端控制路由：路由数据初始化，防止刷新时丢失
-					await initBackEndControlRoutes();
-					// 动态添加路由：防止非首页刷新时跳转回首页的问题
-					// 确保 addRoute() 时动态添加的路由已经被完全加载上去
+				const hasRole = Session.get("userInfo").hasRole;
+				if(hasRole == false) {
+					await initFrontEndControlRoutes();
 					next({ ...to, replace: true });
+				} else{
+					if (isRequestRoutes) {
+						// 后端控制路由：路由数据初始化，防止刷新时丢失
+						await initBackEndControlRoutes();
+						// 动态添加路由：防止非首页刷新时跳转回首页的问题
+						// 确保 addRoute() 时动态添加的路由已经被完全加载上去
+						next({ ...to, replace: true });
+					}
 				}
+				
 			} else {
 				next();
 			}

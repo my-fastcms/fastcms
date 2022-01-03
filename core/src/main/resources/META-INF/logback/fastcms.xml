@@ -71,19 +71,7 @@
             <appender-ref ref="CONSOLE"/>
             <level value="WARN"/>
         </logger>
-        <logger name="com.fastcms.web">
-            <appender-ref ref="CONSOLE"/>
-            <level value="INFO"/>
-        </logger>
-        <logger name="com.fastcms.core">
-            <appender-ref ref="CONSOLE"/>
-            <level value="INFO"/>
-        </logger>
-        <logger name="com.fastcms.cms">
-            <appender-ref ref="CONSOLE"/>
-            <level value="INFO"/>
-        </logger>
-        <logger name="com.fastcms.service">
+        <logger name="com.fastcms">
             <appender-ref ref="CONSOLE"/>
             <level value="INFO"/>
         </logger>
@@ -114,19 +102,7 @@
             <appender-ref ref="CONSOLE"/>
             <level value="WARN"/>
         </logger>
-        <logger name="com.fastcms.web">
-            <appender-ref ref="rootFile"/>
-            <level value="ERROR"/>
-        </logger>
-        <logger name="com.fastcms.core">
-            <appender-ref ref="rootFile"/>
-            <level value="ERROR"/>
-        </logger>
-        <logger name="com.fastcms.cms">
-            <appender-ref ref="rootFile"/>
-            <level value="ERROR"/>
-        </logger>
-        <logger name="com.fastcms.service">
+        <logger name="com.fastcms">
             <appender-ref ref="rootFile"/>
             <level value="ERROR"/>
         </logger>

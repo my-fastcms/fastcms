@@ -1,0 +1,1 @@
+import{_ as e}from"./index.5eb239a7.js";import{m as r,D as n}from"./vendor.a9aef9fe.js";const o={name:"centerHome"};function a(t,s,c,f,m,p){return n(),r("div",null,"\u4F1A\u5458")}var i=e(o,[["render",a]]);export{i as default};

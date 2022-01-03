@@ -54,4 +54,8 @@ public class FastcmsUserDetails extends User {
 		return collect != null && !collect.isEmpty();
 	}
 
+	public Boolean hasRole() {
+		return getAuthorities().size() > 0;
+	}
+
 }

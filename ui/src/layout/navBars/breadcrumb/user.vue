@@ -59,7 +59,7 @@
 			<template #dropdown>
 				<el-dropdown-menu>
 					<el-dropdown-item command="/home">{{ $t('message.user.dropdown1') }}</el-dropdown-item>
-					<el-dropdown-item command="wareHouse">{{ $t('message.user.dropdown6') }}</el-dropdown-item>
+					<el-dropdown-item command="/wareHouse">{{ $t('message.user.dropdown6') }}</el-dropdown-item>
 					<el-dropdown-item @click="userCenter">{{ $t('message.user.dropdown2') }}</el-dropdown-item>
 					<el-dropdown-item divided command="logOut">{{ $t('message.user.dropdown5') }}</el-dropdown-item>
 				</el-dropdown-menu>
@@ -75,7 +75,7 @@ import { useRouter } from 'vue-router';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import screenfull from 'screenfull';
 import { useI18n } from 'vue-i18n';
-import { resetRoute } from '/@/router/index';
+import { resetRoute, resetFrontRoute } from '/@/router/index';
 import { useStore } from '/@/store/index';
 import { useTitle } from '/@/utils/setWebTitle';
 import { Session, Local } from '/@/utils/storage';
@@ -158,13 +158,14 @@ export default {
 					.then(() => {
 						Session.clear(); // 清除缓存/token等
 						resetRoute(); // 删除/重置路由
+						resetFrontRoute();
 						router.push('/login');
 						setTimeout(() => {
 							ElMessage.success(t('message.user.logOutSuccess'));
 						}, 300);
 					})
 					.catch(() => {});
-			} else if (path === 'wareHouse') {
+			} else if (path === '/wareHouse') {
 				window.open('https://gitee.com/xjd2020/fastcms.git');
 			} else {
 				router.push(path);
@@ -232,9 +233,14 @@ export default {
 		};
     // 个人中心
     const userCenter = () => {
-      router.push({
-        path: "/center"
-      })
+    //   router.push({
+    //     path: "/center"
+    //   })
+		const { href } = router.resolve({
+			path: '/center'
+		});
+		window.open(href, "_blank");
+
     };
 		// 页面加载时
 		onMounted(() => {
