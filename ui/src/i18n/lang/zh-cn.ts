@@ -43,7 +43,10 @@ export default {
 	centerRoutes: {
 		attachManager: '我的附件',
 		articleManager: '我的文章',
-
+		collectManager: '我的收藏',
+		commentManager: '我的评论',
+		orderManager: '我的订单',
+		articleWrite: '我要投稿',
 	},
 	user: {
 		title0: '组件大小',

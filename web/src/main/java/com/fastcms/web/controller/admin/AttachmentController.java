@@ -18,6 +18,7 @@ package com.fastcms.web.controller.admin;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fastcms.auth.AuthUtils;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
@@ -66,7 +67,7 @@ public class AttachmentController {
      */
     @RequestMapping("list")
     public RestResult<Page<Attachment>> list(PageModel page, @RequestParam(value = "fileName", required = false) String fileName) {
-        Page<Attachment> pageData = attachmentService.page(page.toPage(), Wrappers.<Attachment>lambdaQuery().like(StringUtils.isNotBlank(fileName), Attachment::getFileName, fileName)
+        Page<Attachment> pageData = attachmentService.page(page.toPage(), Wrappers.<Attachment>lambdaQuery().eq(!AuthUtils.isAdmin(), Attachment::getUserId, AuthUtils.getUserId()).like(StringUtils.isNotBlank(fileName), Attachment::getFileName, fileName)
                 .orderByDesc(Attachment::getCreated));
         return RestResultUtils.success(pageData);
     }

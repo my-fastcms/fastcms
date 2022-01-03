@@ -188,13 +188,7 @@ export default defineComponent({
 					query: Object.keys(route.query?.params).length > 0 ? JSON.parse(route.query?.params) : '',
 				});
 			} else {
-				const hasRole = Session.get("userInfo").hasRole;
-				if(hasRole == false) {
-					console.log("==========to personal")
-					router.push("/home");
-				} else {
-					router.push('/');
-				}
+				router.push('/');
 			}
 			// 登录成功提示
 			setTimeout(() => {

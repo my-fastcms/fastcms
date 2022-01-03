@@ -129,7 +129,53 @@ export const userCenterRoutes: Array<RouteRecordRaw> = [
 					isAffix: false,
 					isIframe: false,
 					auth: ['admin', 'test'],
-					icon: 'iconfont icon-shouye',
+					icon: 'el-icon-s-fold',
+				},
+			},
+			{
+				path: '/attach/index',
+				name: 'attachManager',
+				component: () => import('/@/views/attach/index.vue'),
+				meta: {
+					title: 'message.centerRoutes.commentManager',
+					isLink: '',
+					isHide: false,
+					isKeepAlive: true,
+					isAffix: false,
+					isIframe: false,
+					auth: ['admin', 'test'],
+					icon: 'el-icon-chat-dot-square',
+				},
+			},
+			{
+				path: '/attach/index',
+				name: 'attachManager',
+				component: () => import('/@/views/attach/index.vue'),
+				meta: {
+					title: 'message.centerRoutes.collectManager',
+					isLink: '',
+					isHide: false,
+					isKeepAlive: true,
+					isAffix: false,
+					isIframe: false,
+					auth: ['admin', 'test'],
+					icon: 'el-icon-picture-outline',
+				},
+			},
+
+			{
+				path: '/attach/index',
+				name: 'attachManager',
+				component: () => import('/@/views/attach/index.vue'),
+				meta: {
+					title: 'message.centerRoutes.orderManager',
+					isLink: '',
+					isHide: false,
+					isKeepAlive: true,
+					isAffix: false,
+					isIframe: false,
+					auth: ['admin', 'test'],
+					icon: 'el-icon-s-shop',
 				},
 			},
 			{
@@ -146,7 +192,22 @@ export const userCenterRoutes: Array<RouteRecordRaw> = [
 					auth: ['admin', 'test'],
 					icon: 'iconfont icon-shouye',
 				},
-			}
+			},
+			{
+				path: '/article/write',
+				name: 'articleWrite',
+				component: () => import('/@/views/article/write.vue'),
+				meta: {
+					title: 'message.centerRoutes.articleWrite',
+					isLink: '',
+					isHide: false,
+					isKeepAlive: true,
+					isAffix: false,
+					isIframe: false,
+					auth: ['admin', 'test'],
+					icon: 'el-icon-edit',
+				},
+			},
 		],
 	}
 ];
