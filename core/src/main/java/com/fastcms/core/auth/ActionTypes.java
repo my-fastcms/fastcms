@@ -14,9 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.aspect;
 
-import java.lang.annotation.*;
+package com.fastcms.core.auth;
 
 /**
  * @author： wjun_java@163.com
@@ -25,8 +24,24 @@ import java.lang.annotation.*;
  * @modifiedBy：
  * @version: 1.0
  */
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Log {
+public enum ActionTypes {
+    /**
+     * Read.
+     */
+    READ("r"),
+    /**
+     * Write.
+     */
+    WRITE("w");
+    
+    private String action;
+    
+    ActionTypes(String action) {
+        this.action = action;
+    }
+    
+    @Override
+    public String toString() {
+        return action;
+    }
 }

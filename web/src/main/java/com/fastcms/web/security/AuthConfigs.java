@@ -30,9 +30,15 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AuthConfigs {
 
+	/**
+	 * jwt secretKey
+	 */
 	@Value("${fastcms.auth.token.secret-key:}")
 	private String secretKey;
 
+	/**
+	 * jwt token validity seconds
+	 */
 	@Value("${fastcms.auth.token.expire.seconds:18000}")
 	private long tokenValidityInSeconds;
 
@@ -41,6 +47,12 @@ public class AuthConfigs {
 	public long getTokenValidityInSeconds() {
 		return tokenValidityInSeconds;
 	}
+
+	/**
+	 * 是否开启授权白名单
+	 */
+	@Value("${fastcms.auth.enable.userAgentAuthWhite:false}")
+	private boolean enableUserAgentAuthWhite;
 
 	public byte[] getSecretKeyBytes() {
 		if (secretKeyBytes == null) {

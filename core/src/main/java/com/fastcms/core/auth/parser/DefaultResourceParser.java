@@ -14,9 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.aspect;
 
-import java.lang.annotation.*;
+package com.fastcms.core.auth.parser;
+
+import com.fastcms.common.utils.StrUtils;
 
 /**
  * @author： wjun_java@163.com
@@ -25,8 +26,10 @@ import java.lang.annotation.*;
  * @modifiedBy：
  * @version: 1.0
  */
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Log {
+public class DefaultResourceParser implements ResourceParser {
+    
+    @Override
+    public String parseName(Object request) {
+        return StrUtils.EMPTY;
+    }
 }

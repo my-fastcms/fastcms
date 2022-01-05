@@ -17,6 +17,13 @@
 package com.fastcms.web.controller.api;
 
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.model.RestResult;
+import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.entity.User;
+import com.fastcms.service.IUserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,5 +38,47 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(FastcmsConstants.API_MAPPING + "/user")
 public class UserApi {
+
+    @Autowired
+    private IUserService userService;
+
+    /**
+     * 保存用户信息
+     * @param user
+     * @return
+     */
+    @PostMapping("save")
+    public RestResult<Boolean> save(@Validated User user) {
+        return RestResultUtils.success(userService.updateById(user));
+    }
+
+    /**
+     * 修改密码
+     * @param user
+     * @return
+     */
+    @PostMapping("password/update")
+    public Object updatePwd(User user) {
+        try {
+            userService.updateUserPassword(user);
+            return RestResultUtils.success();
+        } catch (Exception e) {
+            return RestResultUtils.failed(e.getMessage());
+        }
+    }
+
+    /**
+     * 保存头像
+     * @param path
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     * @return
+     */
+    @PostMapping("avatar/save")
+    public Object saveAvatar(String path, int x, int y, int w, int h) {
+        return RestResultUtils.success();
+    }
 
 }

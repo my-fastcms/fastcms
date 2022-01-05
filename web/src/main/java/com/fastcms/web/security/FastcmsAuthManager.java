@@ -16,12 +16,13 @@
  */
 package com.fastcms.web.security;
 
-import com.fastcms.auth.FastcmsUserDetails;
+import com.fastcms.core.auth.AuthPermissionService;
+import com.fastcms.core.auth.FastcmsUserDetails;
+import com.fastcms.core.auth.model.Permission;
+import com.fastcms.core.auth.model.User;
 import com.fastcms.common.exception.AccessException;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.core.captcha.FastcmsCaptchaService;
-import com.fastcms.entity.Permission;
-import com.fastcms.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -51,6 +52,9 @@ public class FastcmsAuthManager implements AuthManager {
     @Autowired
     private FastcmsCaptchaService fastcmsCaptchaService;
 
+    @Autowired
+    private AuthPermissionService userService;
+
     @Override
     public FastcmsUser login(String username, String password, String code) throws AccessException {
 
@@ -74,7 +78,8 @@ public class FastcmsAuthManager implements AuthManager {
 
     @Override
     public void auth(Permission permission, User user) throws AccessException {
-
+        if(!userService.hasPermission(user, permission))
+            throw new AccessException(FastcmsException.NO_RIGHT, "没有访问权限");
     }
 
 }

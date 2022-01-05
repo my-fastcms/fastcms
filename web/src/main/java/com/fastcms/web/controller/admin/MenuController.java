@@ -21,6 +21,10 @@ import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.model.RouterNode;
+import com.fastcms.core.auth.ActionTypes;
+import com.fastcms.core.auth.AuthConstants;
+import com.fastcms.core.auth.AuthUtils;
+import com.fastcms.core.auth.Secured;
 import com.fastcms.entity.Permission;
 import com.fastcms.service.IPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +53,9 @@ public class MenuController {
 	 * @return
 	 */
 	@GetMapping("list")
+	@Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "menus", action = ActionTypes.READ)
 	public RestResult<List<RouterNode>> list() {
-		return RestResultUtils.success(permissionService.getPermissions());
+		return RestResultUtils.success(permissionService.getPermissions(AuthUtils.getUserId()));
 	}
 
 	/**
@@ -59,6 +64,7 @@ public class MenuController {
 	 * @return
 	 */
 	@PostMapping("save")
+	@Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "menus", action = ActionTypes.WRITE)
 	public RestResult<Boolean> save(@Validated Permission permission) {
 		return RestResultUtils.success(permissionService.saveOrUpdate(permission));
 	}
@@ -69,7 +75,8 @@ public class MenuController {
 	 * @return
 	 */
 	@PostMapping("delete/{menuId}")
-	public RestResult<Object> del(@PathVariable("menuId") Long menuId) {
+	@Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "menus", action = ActionTypes.WRITE)
+	public RestResult<Object> delMenu(@PathVariable("menuId") Long menuId) {
 		List<Permission> list = permissionService.list(Wrappers.<Permission>lambdaQuery().eq(Permission::getParentId, menuId));
 		if(list != null && list.size()>0) {
 			return RestResultUtils.failed("请先删除子菜单");

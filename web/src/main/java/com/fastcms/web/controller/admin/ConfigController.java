@@ -19,6 +19,9 @@ package com.fastcms.web.controller.admin;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.core.auth.ActionTypes;
+import com.fastcms.core.auth.AuthConstants;
+import com.fastcms.core.auth.Secured;
 import com.fastcms.entity.Config;
 import com.fastcms.service.IConfigService;
 import org.apache.commons.lang.StringUtils;
@@ -54,6 +57,7 @@ public class ConfigController {
 	 * @return
 	 */
 	@PostMapping("save")
+	@Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "configs", action = ActionTypes.WRITE)
 	public RestResult<Boolean> save(HttpServletRequest request) {
 
 		Map<String, String[]> parameterMap = request.getParameterMap();

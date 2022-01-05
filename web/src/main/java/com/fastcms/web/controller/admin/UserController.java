@@ -23,6 +23,10 @@ import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.model.RouterNode;
+import com.fastcms.core.auth.ActionTypes;
+import com.fastcms.core.auth.AuthConstants;
+import com.fastcms.core.auth.AuthUtils;
+import com.fastcms.core.auth.Secured;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.entity.Role;
 import com.fastcms.entity.User;
@@ -71,6 +75,7 @@ public class UserController {
      * @return
      */
     @GetMapping("list")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "users", action = ActionTypes.READ)
     public RestResult<Page<User>> list(PageModel page,
                                        @RequestParam(name = "username", required = false) String username,
                                        @RequestParam(name = "phone", required = false) String phone,
@@ -89,8 +94,9 @@ public class UserController {
      * @return
      */
     @GetMapping("menus")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "users", action = ActionTypes.READ)
     public RestResult<List<RouterNode>> getMenus() {
-        return RestResultUtils.success(permissionService.getPermissions());
+        return RestResultUtils.success(permissionService.getPermissions(AuthUtils.getUserId()));
     }
 
     /**
@@ -99,6 +105,7 @@ public class UserController {
      * @return
      */
     @PostMapping("save")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "users", action = ActionTypes.WRITE)
     public RestResult<Boolean> save(@Validated User user) {
         try {
             return RestResultUtils.success(userService.saveUser(user));
@@ -113,6 +120,7 @@ public class UserController {
      * @return
      */
     @GetMapping("{userId}/get")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "users", action = ActionTypes.READ)
     public RestResult<User> getUserInfo(@PathVariable("userId") Long userId) {
         User user = userService.getById(userId);
         user.setRoleList(roleService.getUserRoleList(userId).stream().map(Role::getId).collect(Collectors.toList()));
@@ -125,6 +133,7 @@ public class UserController {
      * @return
      */
     @PostMapping("delete/{userId}")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "users", action = ActionTypes.WRITE)
     public RestResult<Boolean> del(@PathVariable("userId") Long userId) {
         if(FastcmsConstants.ADMIN_USER_ID == userId) {
             return RestResultUtils.failed("超级管理员不可删除");
@@ -139,6 +148,7 @@ public class UserController {
      * @return
      */
     @PostMapping("{userId}/roles/save/")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "users", action = ActionTypes.WRITE)
     public Object saveUserRoles(@PathVariable("userId") Long userId, @RequestParam("roleIds[]") List<Long> roleIds) {
         if(userId != null && Objects.equals(userId, FastcmsConstants.ADMIN_USER_ID)) {
             return RestResultUtils.failed("admin不允许修改权限");
@@ -154,6 +164,7 @@ public class UserController {
      * @return
      */
     @PostMapping("{userId}/tags/save")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "users", action = ActionTypes.WRITE)
     public Object saveUserTags(@PathVariable("userId") Long userId, @RequestParam("tagIds[]") List<Long> tagIds) {
         userTagService.saveUserTagRelation(userId, tagIds);
         return RestResultUtils.success();

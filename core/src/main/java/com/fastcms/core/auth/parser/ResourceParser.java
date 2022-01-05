@@ -14,9 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.aspect;
 
-import java.lang.annotation.*;
+package com.fastcms.core.auth.parser;
 
 /**
  * @author： wjun_java@163.com
@@ -25,8 +24,14 @@ import java.lang.annotation.*;
  * @modifiedBy：
  * @version: 1.0
  */
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Log {
+public interface ResourceParser {
+    
+    /**
+     * Parse a unique name of the resource from the request.
+     *
+     * @param request where we can find the resource info. Given it may vary from Http request to gRPC request, we use a
+     *                Object type for future accommodation.
+     * @return resource name
+     */
+    String parseName(Object request);
 }

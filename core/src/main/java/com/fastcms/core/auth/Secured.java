@@ -14,9 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.aspect;
 
-import java.lang.annotation.*;
+package com.fastcms.core.auth;
+
+import com.fastcms.core.auth.parser.DefaultResourceParser;
+import com.fastcms.core.auth.parser.ResourceParser;
+import com.fastcms.common.utils.StrUtils;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * @author： wjun_java@163.com
@@ -25,8 +31,27 @@ import java.lang.annotation.*;
  * @modifiedBy：
  * @version: 1.0
  */
-@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Log {
+public @interface Secured {
+    
+    /**
+     * The action type of the request.
+     *
+     * @return action type, default READ
+     */
+    ActionTypes action() default ActionTypes.READ;
+    
+    /**
+     * The name of resource related to the request.
+     *
+     * @return resource name
+     */
+    String resource() default StrUtils.EMPTY;
+    
+    /**
+     * Resource name parser. Should have lower priority than resource().
+     *
+     * @return class type of resource parser
+     */
+    Class<? extends ResourceParser> parser() default DefaultResourceParser.class;
 }

@@ -19,6 +19,7 @@
 		<commons.lang.version>2.6</commons.lang.version>
 		<commons-io.version>2.7</commons-io.version>
 		<easy-captcha.version>1.6.2</easy-captcha.version>
+		<reflections.version>0.9.11</reflections.version>
 		<jsoup.version>1.11.3</jsoup.version>
 		<jjwt.version>0.11.2</jjwt.version>
 
@@ -165,6 +166,11 @@
 				<groupId>com.github.whvcse</groupId>
 				<artifactId>easy-captcha</artifactId>
 				<version>${easy-captcha.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.reflections</groupId>
+				<artifactId>reflections</artifactId>
+				<version>${reflections.version}</version>
 			</dependency>
 
 		</dependencies>

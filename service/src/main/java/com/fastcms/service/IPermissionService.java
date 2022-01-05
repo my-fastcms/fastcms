@@ -16,9 +16,9 @@ public interface IPermissionService extends IService<Permission> {
 
     /**
      * 获取系统权限列表
-     * @return
+     * @return userId
      */
-    List<RouterNode> getPermissions();
+    List<RouterNode> getPermissions(Long userId);
 
     /**
      * 获取角色对应的权限

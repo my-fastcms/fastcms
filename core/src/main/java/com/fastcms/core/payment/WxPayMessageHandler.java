@@ -21,6 +21,9 @@ import com.egzosn.pay.common.api.PayService;
 import com.egzosn.pay.common.bean.PayOutMessage;
 import com.egzosn.pay.common.exception.PayErrorException;
 import com.egzosn.pay.wx.bean.WxPayMessage;
+import com.fastcms.entity.PaymentRecord;
+import com.fastcms.service.IPaymentRecordService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -36,19 +39,22 @@ import java.util.Map;
 @Component
 public class WxPayMessageHandler implements PayMessageHandler<WxPayMessage, PayService> {
 
+	@Autowired
+	private IPaymentRecordService paymentRecordService;
+
 	@Override
 	public PayOutMessage handle(WxPayMessage payMessage, Map<String, Object> context, PayService payService) throws PayErrorException {
 		//交易状态
 		if ("SUCCESS".equals(payMessage.getPayMessage().get("result_code"))) {
-//			/////这里进行成功的处理
-//			PaymentRecord paymentRecord = paymentRecordService.getPaymentRecordByTrxNo(payMessage.getOutTradeNo());
-//			if(paymentRecord != null) {
-//				paymentRecord.setThirdpartyTransactionId(payMessage.getTransactionId());
-//				paymentRecord.setThirdpartyAppid(payMessage.getAppid());
-//				paymentRecord.setThirdpartyMchId(payMessage.getMchId());
-//				paymentRecord.setThirdpartyType(WxPaymentPlatform.platformName);
-//				paymentSuccessListenerManager.notifySuccess(paymentRecord);
-//			}
+			/////这里进行成功的处理
+			PaymentRecord paymentRecord = paymentRecordService.getPaymentRecordByTrxNo(payMessage.getOutTradeNo());
+			if(paymentRecord != null) {
+				paymentRecord.setThirdpartyTransactionId(payMessage.getTransactionId());
+				paymentRecord.setThirdpartyAppid(payMessage.getAppid());
+				paymentRecord.setThirdpartyMchId(payMessage.getMchId());
+				paymentRecord.setThirdpartyType(WxPaymentPlatform.platformName);
+				// 对订单进行处理
+			}
 			return payService.getPayOutMessage("SUCCESS", "OK");
 		}
 

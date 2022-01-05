@@ -18,8 +18,8 @@ package com.fastcms.core.mybatis;
 
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.plugins.handler.DataPermissionHandler;
-import com.fastcms.auth.AuthUtils;
-import com.fastcms.auth.FastcmsUserDetails;
+import com.fastcms.core.auth.AuthUtils;
+import com.fastcms.core.auth.FastcmsUserDetails;
 import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.LongValue;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;

@@ -17,7 +17,7 @@
 package com.fastcms.core.mybatis;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import com.fastcms.auth.AuthUtils;
+import com.fastcms.core.auth.AuthUtils;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.stereotype.Component;
 

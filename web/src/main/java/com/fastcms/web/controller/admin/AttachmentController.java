@@ -18,7 +18,7 @@ package com.fastcms.web.controller.admin;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.fastcms.auth.AuthUtils;
+import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;

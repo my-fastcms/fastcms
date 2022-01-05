@@ -26,10 +26,8 @@ import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.mybatis.PageModel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 文章接口
@@ -71,6 +69,39 @@ public class ArticleApi {
 	public RestResult<IArticleService.ArticleInfoVo> detail(@PathVariable("articleId") Long articleId) {
 		IArticleService.ArticleInfoVo articleInfo = articleService.getArticleDetail(articleId);
 		return RestResultUtils.success(articleInfo);
+	}
+
+	/**
+	 * 保存文章
+	 * @param article
+	 * @return
+	 */
+	@PostMapping("save")
+	public Object save(@Validated Article article) {
+		try {
+			if(article.getId() == null) {
+				article.setStatus(Article.STATUS_AUDIT);
+			}
+			articleService.saveArticle(article);
+			return RestResultUtils.success();
+		} catch (Exception e) {
+			return RestResultUtils.failed(e.getMessage());
+		}
+	}
+
+	/**
+	 * 删除文章
+	 * @param articleId
+	 * @return
+	 */
+	@PostMapping("delete/{articleId}")
+	public Object delete(@PathVariable("articleId") Long articleId) {
+		try {
+			articleService.removeById(articleId);
+			return RestResultUtils.success();
+		} catch (Exception e) {
+			return RestResultUtils.failed(e.getMessage());
+		}
 	}
 
 }

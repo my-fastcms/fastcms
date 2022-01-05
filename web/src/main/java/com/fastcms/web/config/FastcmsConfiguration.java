@@ -17,6 +17,7 @@
 package com.fastcms.web.config;
 
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.core.auth.ControllerMethodsCache;
 import com.fastcms.core.directive.BaseDirective;
 import com.fastcms.core.interceptor.PluginInterceptor;
 import com.fastcms.core.template.FastcmsTemplateFreeMarkerConfig;
@@ -72,6 +73,9 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
 
     @Autowired
     private FastcmsTemplateFreeMarkerConfig fastcmsTemplateFreeMarkerConfig;
+
+    @Autowired
+    private ControllerMethodsCache methodsCache;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -132,6 +136,9 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
 
     @Override
     public void onApplicationEvent(WebServerInitializedEvent event) {
+
+        methodsCache.initClassMethod("com.fastcms.cms.controller.admin");
+        methodsCache.initClassMethod("com.fastcms.web.controller.admin");
 
         try {
             initServerInfo(event);

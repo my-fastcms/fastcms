@@ -22,6 +22,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
+ * 对所有 /fastcms/plugin/**的请求进行拦截，
+ * 把用户token传递给plugin controller
  * @author： wjun_java@163.com
  * @date： 2022/1/1
  * @description：

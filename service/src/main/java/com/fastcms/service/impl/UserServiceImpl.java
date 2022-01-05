@@ -37,9 +37,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private RoleMapper roleMapper;
-
     @Override
     public void updateUserLoginTime(Long userId) {
         User user = getById(userId);
@@ -101,7 +98,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     @Transactional
     public Boolean deleteUser(Long userId) {
-        roleMapper.deleteRoleByUserId(userId);
+        ((RoleMapper) roleService.getBaseMapper()).deleteRoleByUserId(userId);
         removeById(userId);
         return true;
     }

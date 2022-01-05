@@ -1,8 +1,8 @@
 package com.fastcms.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.fastcms.auth.AuthUtils;
 import com.fastcms.cache.CacheConfig;
+import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RouterNode;
 import com.fastcms.common.model.TreeNode;
 import com.fastcms.common.model.TreeNodeConvert;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  *  权限服务实现类
@@ -29,11 +30,15 @@ public class PermissionServiceImpl<T extends TreeNode> extends ServiceImpl<Permi
     private CacheManager cacheManager;
 
     @Override
-    public List<RouterNode> getPermissions() {
-        List<Permission> permissionList = list();
-        if(!AuthUtils.isAdmin()) {
-            permissionList = getBaseMapper().getPermissionByUserId(AuthUtils.getUserId());
+    public List<RouterNode> getPermissions(Long userId) {
+
+        List<Permission> permissionList;
+        if(Objects.equals(FastcmsConstants.ADMIN_USER_ID, userId)) {
+            permissionList = list();
+        } else {
+            permissionList = getBaseMapper().getPermissionByUserId(userId);
         }
+
         return (List<RouterNode>) getPermissionNodeList(permissionList);
     }
 

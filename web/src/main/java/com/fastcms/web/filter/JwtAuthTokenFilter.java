@@ -40,7 +40,7 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
 
     private static final String TOKEN_PREFIX = "Bearer ";
 
-    public static final String ACCESSTOKEN = "accessToken";
+    public static final String ACCESS_TOKEN = "accessToken";
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
@@ -78,7 +78,7 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
             return bearerToken.startsWith(TOKEN_PREFIX) ? bearerToken.substring(TOKEN_PREFIX.length()) : bearerToken;
         }
 
-        final String token = request.getParameter(ACCESSTOKEN);
+        final String token = request.getParameter(ACCESS_TOKEN);
         if (StringUtils.isNotBlank(token)) {
             return token;
         }

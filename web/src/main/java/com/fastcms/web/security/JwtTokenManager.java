@@ -16,7 +16,7 @@
  */
 package com.fastcms.web.security;
 
-import com.fastcms.auth.FastcmsUserDetails;
+import com.fastcms.core.auth.FastcmsUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

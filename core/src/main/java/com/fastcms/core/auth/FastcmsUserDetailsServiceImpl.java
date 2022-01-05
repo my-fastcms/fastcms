@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.auth;
+package com.fastcms.core.auth;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.fastcms.entity.Role;

@@ -14,9 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.aspect;
 
-import java.lang.annotation.*;
+package com.fastcms.core.auth.model;
+
+import java.io.Serializable;
 
 /**
  * @author： wjun_java@163.com
@@ -25,8 +26,35 @@ import java.lang.annotation.*;
  * @modifiedBy：
  * @version: 1.0
  */
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Log {
+public class User implements Serializable {
+    
+    private static final long serialVersionUID = -8002966873087151367L;
+
+    public User(Long userId, String userName) {
+        this.userId = userId;
+        this.userName = userName;
+    }
+
+    private Long userId;
+
+    /**
+     * Unique string representing user.
+     */
+    private String userName;
+    
+    public String getUserName() {
+        return userName;
+    }
+    
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 }

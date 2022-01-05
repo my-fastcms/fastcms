@@ -17,8 +17,28 @@
 package com.fastcms.web.filter;
 
 
+import com.fastcms.common.exception.AccessException;
+import com.fastcms.common.exception.FastcmsException;
+import com.fastcms.common.utils.StrUtils;
+import com.fastcms.core.auth.AuthUtils;
+import com.fastcms.core.auth.ControllerMethodsCache;
+import com.fastcms.core.auth.Secured;
+import com.fastcms.core.auth.model.Permission;
+import com.fastcms.core.auth.model.User;
+import com.fastcms.core.auth.parser.ResourceParser;
+import com.fastcms.core.utils.ExceptionUtil;
+import com.fastcms.web.security.AuthManager;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author： wjun_java@163.com
@@ -29,10 +49,75 @@ import java.io.IOException;
  */
 public class AuthFilter implements Filter {
 
+    private Log log = LogFactory.getLog(AuthFilter.class.getName());
+
+    @Autowired
+    private AuthManager authManager;
+
+    @Autowired
+    private ControllerMethodsCache methodsCache;
+
+    private Map<Class<? extends ResourceParser>, ResourceParser> parserInstance = new ConcurrentHashMap<>();
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        chain.doFilter(request, response);
+
+        HttpServletRequest req = (HttpServletRequest) request;
+        HttpServletResponse resp = (HttpServletResponse) response;
+
+        try {
+
+            Method method = methodsCache.getMethod(req);
+
+            if (method == null) {
+                chain.doFilter(request, response);
+                return;
+            }
+
+            if (method.isAnnotationPresent(Secured.class)) {
+
+                if (log.isDebugEnabled()) {
+                    log.debug("auth start, request: "+ req.getMethod() + ", " + req.getRequestURI());
+                }
+
+                Secured secured = method.getAnnotation(Secured.class);
+                String action = secured.action().toString();
+                String resource = secured.resource();
+
+                if (StrUtils.isBlank(resource)) {
+                    ResourceParser parser = getResourceParser(secured.parser());
+                    resource = parser.parseName(req);
+                }
+
+                if (StrUtils.isBlank(resource)) {
+                    // deny if we don't find any resource:
+                    throw new AccessException(FastcmsException.NO_RIGHT, "resource name invalid!");
+                }
+
+                authManager.auth(new Permission(resource, action), new User(AuthUtils.getUserId(), AuthUtils.getUsername()));
+
+            }
+
+            chain.doFilter(request, response);
+        } catch (AccessException e) {
+            resp.sendError(HttpServletResponse.SC_FORBIDDEN, e.getErrMsg());
+        } catch (IllegalArgumentException e) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, ExceptionUtil.getAllExceptionMsg(e));
+        } catch (Exception e) {
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Server failed," + e.getMessage());
+        }
+
+    }
+
+    private ResourceParser getResourceParser(Class<? extends ResourceParser> parseClass)
+            throws IllegalAccessException, InstantiationException {
+        ResourceParser parser = parserInstance.get(parseClass);
+        if (parser == null) {
+            parser = parseClass.newInstance();
+            parserInstance.put(parseClass, parser);
+        }
+        return parser;
     }
 
 }

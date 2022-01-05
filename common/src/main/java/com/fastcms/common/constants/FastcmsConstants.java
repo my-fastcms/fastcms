@@ -29,9 +29,7 @@ public interface FastcmsConstants {
 
     String ADMIN_MAPPING = API_PREFIX_MAPPING + "/admin";
 
-    String API_MAPPING = API_PREFIX_MAPPING + "/app";
-
-    String UCENTER_MAPPING = API_PREFIX_MAPPING + "/ucenter";
+    String API_MAPPING = API_PREFIX_MAPPING + "/client";
 
     String PLUGIN_MAPPING = "/fastcms/plugin";
 

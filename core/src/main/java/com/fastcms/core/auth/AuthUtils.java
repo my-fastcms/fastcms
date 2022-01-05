@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.aspect;
+package com.fastcms.core.auth;
 
-import java.lang.annotation.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * @author： wjun_java@163.com
@@ -25,8 +25,24 @@ import java.lang.annotation.*;
  * @modifiedBy：
  * @version: 1.0
  */
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Log {
+public final class AuthUtils {
+
+    private AuthUtils() {}
+
+    public static Long getUserId() {
+        return getUser().getUserId();
+    }
+
+    public static String getUsername() {
+        return getUser().getUsername();
+    }
+
+    public static FastcmsUserDetails getUser() {
+        return (FastcmsUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    public static Boolean isAdmin() {
+        return getUser().isAdmin();
+    }
+
 }

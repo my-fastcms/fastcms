@@ -14,9 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.aspect;
 
-import java.lang.annotation.*;
+package com.fastcms.core.auth.model;
+
+import java.io.Serializable;
 
 /**
  * @author： wjun_java@163.com
@@ -25,8 +26,33 @@ import java.lang.annotation.*;
  * @modifiedBy：
  * @version: 1.0
  */
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-public @interface Log {
+public class Resource implements Serializable {
+    
+    public static final String SPLITTER = ":";
+    
+    public static final String ANY = "*";
+    
+    private static final long serialVersionUID = 925971662931204553L;
+    
+    /**
+     * The unique key of resource.
+     */
+    private String key;
+    
+    public Resource(String key) {
+        this.key = key;
+    }
+    
+    public String getKey() {
+        return key;
+    }
+    
+    public String parseName() {
+        return key.substring(0, key.lastIndexOf(SPLITTER));
+    }
+    
+    @Override
+    public String toString() {
+        return "Resource{" + "key='" + key + '\'' + '}';
+    }
 }

@@ -7,6 +7,7 @@ import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.StrUtils;
+import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.service.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,7 @@ public class OrderController {
                                                         @RequestParam(name = "title", required = false) String title,
                                                         @RequestParam(name = "status", required = false) String status) {
         QueryWrapper queryWrapper = Wrappers.query().eq(StrUtils.isNotBlank(orderSn), "o.order_sn", orderSn)
+                .eq(!AuthUtils.isAdmin(), "o.user_id", AuthUtils.getUserId())
                 .eq(StrUtils.isNotBlank(status), "o.pay_status", status)
                 .like(StrUtils.isNotBlank(title), "o.order_title", title)
                 .orderByDesc("o.created");
