@@ -50,7 +50,7 @@ public class ArticleApi {
 	 * @param categoryId  	分类id
 	 * @return
 	 */
-	@RequestMapping("/list")
+	@RequestMapping("list")
 	public RestResult<Page<IArticleService.ArticleVo>> list(PageModel page,
 															@RequestParam(name = "categoryId", required = false) Long categoryId) {
 
@@ -65,7 +65,7 @@ public class ArticleApi {
 	 * @param articleId 文章id
 	 * @return
 	 */
-	@RequestMapping("/detail/{articleId}")
+	@RequestMapping("detail/{articleId}")
 	public RestResult<IArticleService.ArticleInfoVo> detail(@PathVariable("articleId") Long articleId) {
 		IArticleService.ArticleInfoVo articleInfo = articleService.getArticleDetail(articleId);
 		return RestResultUtils.success(articleInfo);

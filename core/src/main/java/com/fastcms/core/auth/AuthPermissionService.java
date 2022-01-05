@@ -31,15 +31,26 @@ public class AuthPermissionService {
             return true;
         }
 
-        //没有角色授权，不可访问管理后台api
+        //加载用户角色权限
         List<Role> userRoleList = roleService.getUserRoleList(user.getUserId());
+
+        //访问系统admin资源需要管理员角色
         if(permission.getResource().contains(FastcmsConstants.ADMIN_MAPPING) && CollectionUtils.isEmpty(userRoleList)) {
             return false;
         }
 
         if(CollectionUtils.isNotEmpty(userRoleList)) {
+
+            for (Role role : userRoleList) {
+                //检查是否拥有超级管理员权限
+                if(Objects.equals(FastcmsConstants.ADMIN_ROLE_ID, role.getId())) {
+                    return true;
+                }
+            }
+
             //需要检查角色资源权限
             return true;
+
         }
 
         return false;

@@ -20,7 +20,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.entity.ArticleCategory;
 import com.fastcms.cms.entity.ArticleComment;
@@ -33,6 +32,10 @@ import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.StrUtils;
+import com.fastcms.core.auth.ActionTypes;
+import com.fastcms.core.auth.AuthConstants;
+import com.fastcms.core.auth.AuthUtils;
+import com.fastcms.core.auth.Secured;
 import com.fastcms.core.mybatis.PageModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -74,6 +77,7 @@ public class ArticleController {
      * @return
      */
     @RequestMapping("list")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.READ)
     public RestResult<Page<IArticleService.ArticleVo>> list(PageModel page,
                                                             @RequestParam(name = "title", required = false) String title,
                                                             @RequestParam(name = "status", required = false) String status,
@@ -97,6 +101,7 @@ public class ArticleController {
      * @return
      */
     @PostMapping("save")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.WRITE)
     public RestResult<Long> save(@Validated Article article) {
         try {
             articleService.saveArticle(article);
@@ -113,6 +118,7 @@ public class ArticleController {
      * @return
      */
     @GetMapping("get/{articleId}")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.READ)
     public RestResult<Article> getArticle(@PathVariable("articleId") Long articleId) {
         return RestResultUtils.success(articleService.getArticle(articleId));
     }
@@ -123,6 +129,7 @@ public class ArticleController {
      * @return
      */
     @PostMapping("delete/{articleId}")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.WRITE)
     public Object deleteArticle(@PathVariable("articleId") Long articleId) {
         articleService.removeById(articleId);
         return RestResultUtils.success();
@@ -134,6 +141,7 @@ public class ArticleController {
      * @return
      */
     @PostMapping("category/save")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.WRITE)
     public RestResult<Boolean> saveCategory(@Validated ArticleCategory articleCategory) {
         return RestResultUtils.success(articleCategoryService.saveOrUpdate(articleCategory));
     }
@@ -144,6 +152,7 @@ public class ArticleController {
      * @return
      */
     @GetMapping("category/list")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.READ)
     public RestResult<List<IArticleCategoryService.CategoryTreeNode>> listCategory() {
         return RestResultUtils.success(articleCategoryService.getCategoryList(AuthUtils.getUserId()));
     }
@@ -154,6 +163,7 @@ public class ArticleController {
      * @return
      */
     @PostMapping("category/delete/{categoryId}")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.WRITE)
     public Object deleteCategory(@PathVariable("categoryId") Long categoryId) {
 
         List<ArticleCategory> categoryList = articleCategoryService.list(Wrappers.<ArticleCategory>lambdaQuery().eq(ArticleCategory::getParentId, categoryId));
@@ -171,6 +181,7 @@ public class ArticleController {
      * @return
      */
     @GetMapping("tag/list")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.READ)
     public RestResult<List<ArticleTag>> listTags() {
         return RestResultUtils.success(articleTagService.list());
     }
@@ -183,6 +194,7 @@ public class ArticleController {
      * @return
      */
     @GetMapping("comment/list")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.READ)
     public Object getCommentList(PageModel page, String author, String content, Boolean isParent) {
         QueryWrapper<Object> queryWrapper = Wrappers.query().eq(StringUtils.isNotBlank(author), "u.user_name", author)
                 .eq(isParent != null && isParent == true, "ac.parentId", 0)
@@ -197,6 +209,7 @@ public class ArticleController {
      * @return
      */
     @PostMapping("comment/save")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.WRITE)
     public RestResult<Boolean> saveComment(@Validated ArticleComment articleComment) {
         return RestResultUtils.success(articleCommentService.saveOrUpdate(articleComment));
     }
@@ -207,6 +220,7 @@ public class ArticleController {
      * @return
      */
     @PostMapping("comment/delete/{commentId}")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.WRITE)
     public Object doDeleteComment(@PathVariable("commentId") Long commentId) {
         List<ArticleComment> articleCommentList = articleCommentService.list(Wrappers.<ArticleComment>lambdaQuery().eq(ArticleComment::getParentId, commentId));
         if(articleCommentList != null && articleCommentList.size() >0) {
