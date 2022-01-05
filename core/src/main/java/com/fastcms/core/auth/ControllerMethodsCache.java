@@ -38,6 +38,8 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import static com.fastcms.core.auth.AuthConstants.REQUEST_PATH_SEPARATOR;
+
 /**
  * Method cache.
  *
@@ -52,8 +54,6 @@ public class ControllerMethodsCache {
     private ConcurrentMap<RequestMappingInfo, Method> methods = new ConcurrentHashMap<>();
     
     private final ConcurrentMap<String, List<RequestMappingInfo>> urlLookup = new ConcurrentHashMap<>();
-
-    String REQUEST_PATH_SEPARATOR = "-->";
 
     public Method getMethod(HttpServletRequest request) {
         String path = getPath(request);
@@ -163,6 +163,7 @@ public class ControllerMethodsCache {
         final PutMapping putMapping = method.getAnnotation(PutMapping.class);
         final DeleteMapping deleteMapping = method.getAnnotation(DeleteMapping.class);
         final PatchMapping patchMapping = method.getAnnotation(PatchMapping.class);
+        final RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
         
         if (getMapping != null) {
             put(RequestMethod.GET, classPath, getMapping.value(), getMapping.params(), method);
@@ -182,6 +183,10 @@ public class ControllerMethodsCache {
         
         if (patchMapping != null) {
             put(RequestMethod.PATCH, classPath, patchMapping.value(), patchMapping.params(), method);
+        }
+
+        if(requestMapping != null) {
+            put(requestMapping.method()[0], classPath, requestMapping.value(), requestMapping.params(), method);
         }
         
     }

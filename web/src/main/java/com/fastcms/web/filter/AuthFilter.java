@@ -91,7 +91,6 @@ public class AuthFilter implements Filter {
                 }
 
                 if (StrUtils.isBlank(resource)) {
-                    // deny if we don't find any resource:
                     throw new AccessException(FastcmsException.NO_RIGHT, "resource name invalid!");
                 }
 

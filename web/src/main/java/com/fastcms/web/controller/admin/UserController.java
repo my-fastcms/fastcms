@@ -147,7 +147,7 @@ public class UserController {
      * @param roleIds   角色集合
      * @return
      */
-    @PostMapping("{userId}/roles/save/")
+    @PostMapping("{userId}/roles/save")
     @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "users", action = ActionTypes.WRITE)
     public Object saveUserRoles(@PathVariable("userId") Long userId, @RequestParam("roleIds[]") List<Long> roleIds) {
         if(userId != null && Objects.equals(userId, FastcmsConstants.ADMIN_USER_ID)) {

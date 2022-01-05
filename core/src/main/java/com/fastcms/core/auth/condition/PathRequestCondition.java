@@ -17,6 +17,8 @@
 
 package com.fastcms.core.auth.condition;
 
+import com.fastcms.core.auth.AuthConstants;
+
 /**
  * @author： wjun_java@163.com
  * @date： 2021/4/10
@@ -26,8 +28,6 @@ package com.fastcms.core.auth.condition;
  */
 public class PathRequestCondition {
 
-    String REQUEST_PATH_SEPARATOR = "-->";
-
     private final PathExpression pathExpression;
     
     public PathRequestCondition(String pathExpression) {
@@ -35,7 +35,7 @@ public class PathRequestCondition {
     }
     
     private PathExpression parseExpressions(String pathExpression) {
-        String[] split = pathExpression.split(REQUEST_PATH_SEPARATOR);
+        String[] split = pathExpression.split(AuthConstants.REQUEST_PATH_SEPARATOR);
         String method = split[0];
         String path = split[1];
         return new PathExpression(method, path);
