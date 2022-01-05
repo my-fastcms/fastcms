@@ -149,7 +149,7 @@ public class ControllerMethodsCache {
                     requestMethods[0] = RequestMethod.GET;
                 }
                 for (String methodPath : requestMapping.value()) {
-                    String urlKey = requestMethods[0].name() + REQUEST_PATH_SEPARATOR + classPath + methodPath;
+                    String urlKey = requestMethods[0].name() + REQUEST_PATH_SEPARATOR + classPath + "/" + methodPath;
                     addUrlAndMethodRelation(urlKey, requestMapping.params(), method);
                 }
             }
@@ -163,8 +163,7 @@ public class ControllerMethodsCache {
         final PutMapping putMapping = method.getAnnotation(PutMapping.class);
         final DeleteMapping deleteMapping = method.getAnnotation(DeleteMapping.class);
         final PatchMapping patchMapping = method.getAnnotation(PatchMapping.class);
-        final RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
-        
+
         if (getMapping != null) {
             put(RequestMethod.GET, classPath, getMapping.value(), getMapping.params(), method);
         }
@@ -183,10 +182,6 @@ public class ControllerMethodsCache {
         
         if (patchMapping != null) {
             put(RequestMethod.PATCH, classPath, patchMapping.value(), patchMapping.params(), method);
-        }
-
-        if(requestMapping != null) {
-            put(requestMapping.method()[0], classPath, requestMapping.value(), requestMapping.params(), method);
         }
         
     }
@@ -212,7 +207,6 @@ public class ControllerMethodsCache {
         if (requestMappingInfos == null) {
             urlLookup.putIfAbsent(urlKey, new ArrayList<>());
             requestMappingInfos = urlLookup.get(urlKey);
-            // For issue #4701.
             String urlKeyBackup = urlKey + "/";
             urlLookup.putIfAbsent(urlKeyBackup, requestMappingInfos);
         }
