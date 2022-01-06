@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * api权限校验拦截器
  * @author： wjun_java@163.com
  * @date： 2022/1/6
  * @description：
@@ -55,35 +56,34 @@ public class AuthInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
-		if(handler instanceof HandlerMethod == false) return true;
+		if(handler instanceof HandlerMethod == false) {
+			return true;
+		}
+
+		HandlerMethod handlerMethod = (HandlerMethod) handler;
+		Method method = handlerMethod.getMethod();
+		if (!method.isAnnotationPresent(Secured.class)) {
+			return true;
+		}
+
+		if (log.isDebugEnabled()) {
+			log.debug("auth start, request: "+ request.getMethod() + ", " + request.getRequestURI());
+		}
 
 		try {
-			HandlerMethod handlerMethod = (HandlerMethod) handler;
-			Method method = handlerMethod.getMethod();
+			Secured secured = method.getAnnotation(Secured.class);
+			String action = secured.action().toString();
+			String resource = secured.resource();
 
-			if (method.isAnnotationPresent(Secured.class)) {
-
-				if (log.isDebugEnabled()) {
-					log.debug("auth start, request: "+ request.getMethod() + ", " + request.getRequestURI());
-				}
-
-				Secured secured = method.getAnnotation(Secured.class);
-				String action = secured.action().toString();
-				String resource = secured.resource();
-
-				if (StrUtils.isBlank(resource)) {
-					ResourceParser parser = getResourceParser(secured.parser());
-					resource = parser.parseName(request);
-				}
-
-				if (StrUtils.isBlank(resource)) {
-					throw new AccessException(FastcmsException.NO_RIGHT, "resource name invalid!");
-				}
-
-				authManager.auth(new Permission(resource, action), new User(AuthUtils.getUserId()));
-
+			if (StrUtils.isBlank(resource)) {
+				ResourceParser parser = getResourceParser(secured.parser());
+				resource = parser.parseName(request);
 			}
 
+			if (StrUtils.isBlank(resource)) {
+				throw new AccessException(FastcmsException.NO_RIGHT, "resource name invalid!");
+			}
+			authManager.auth(new Permission(resource, action), new User(AuthUtils.getUserId()));
 			return true;
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
@@ -92,8 +92,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
 	}
 
-	private ResourceParser getResourceParser(Class<? extends ResourceParser> parseClass)
-			throws IllegalAccessException, InstantiationException {
+	private ResourceParser getResourceParser(Class<? extends ResourceParser> parseClass) throws IllegalAccessException, InstantiationException {
 		ResourceParser parser = parserInstance.get(parseClass);
 		if (parser == null) {
 			parser = parseClass.newInstance();
