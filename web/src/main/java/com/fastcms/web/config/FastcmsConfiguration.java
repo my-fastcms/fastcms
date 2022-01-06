@@ -17,7 +17,6 @@
 package com.fastcms.web.config;
 
 import com.fastcms.common.constants.FastcmsConstants;
-import com.fastcms.core.auth.ControllerMethodsCache;
 import com.fastcms.core.directive.BaseDirective;
 import com.fastcms.core.interceptor.PluginInterceptor;
 import com.fastcms.core.template.FastcmsTemplateFreeMarkerConfig;
@@ -26,6 +25,7 @@ import com.fastcms.core.template.TemplateService;
 import com.fastcms.core.utils.AttachUtils;
 import com.fastcms.core.utils.DirUtils;
 import com.fastcms.service.IConfigService;
+import com.fastcms.web.filter.AuthInterceptor;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import org.apache.commons.lang.StringUtils;
@@ -74,9 +74,6 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
     @Autowired
     private FastcmsTemplateFreeMarkerConfig fastcmsTemplateFreeMarkerConfig;
 
-    @Autowired
-    private ControllerMethodsCache methodsCache;
-
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
@@ -96,6 +93,7 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new PluginInterceptor()).addPathPatterns("/fastcms/plugin/**");
+        registry.addInterceptor(new AuthInterceptor()).addPathPatterns("/**");
     }
 
     @Bean
@@ -136,9 +134,6 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
 
     @Override
     public void onApplicationEvent(WebServerInitializedEvent event) {
-
-        methodsCache.initClassMethod("com.fastcms.cms.controller.admin");
-        methodsCache.initClassMethod("com.fastcms.web.controller.admin");
 
         try {
             initServerInfo(event);

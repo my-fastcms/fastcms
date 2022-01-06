@@ -23,7 +23,6 @@ import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.entity.ArticleCategory;
 import com.fastcms.cms.entity.ArticleTag;
 import com.fastcms.common.constants.FastcmsConstants;
-import com.fastcms.common.utils.JsoupUtils;
 import com.fastcms.utils.ConfigUtils;
 
 import java.io.Serializable;
@@ -217,7 +216,6 @@ public interface IArticleService extends IService<Article> {
     class ArticleInfoVo extends Article {
         String author;
         String headImg;
-        String contentHtmlView;
         List<ArticleCategory> categoryList;
         List<ArticleTag> tagList;
 
@@ -237,10 +235,6 @@ public interface IArticleService extends IService<Article> {
             this.headImg = headImg;
         }
 
-        public void setContentHtmlView(String contentHtmlView) {
-            this.contentHtmlView = contentHtmlView;
-        }
-
         public List<ArticleCategory> getCategoryList() {
             return categoryList;
         }
@@ -257,9 +251,6 @@ public interface IArticleService extends IService<Article> {
             this.tagList = tagList;
         }
 
-        public String getContentHtmlView() {
-            return JsoupUtils.parse(contentHtmlView);
-        }
     }
 
 }

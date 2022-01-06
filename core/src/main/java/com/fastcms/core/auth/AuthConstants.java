@@ -6,6 +6,4 @@ public interface AuthConstants {
 
     String ADMIN_RESOURCE_NAME_PREFIX = FastcmsConstants.ADMIN_MAPPING + "/";
 
-    String REQUEST_PATH_SEPARATOR = "-->";
-
 }

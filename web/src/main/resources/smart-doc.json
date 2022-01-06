@@ -19,7 +19,7 @@
     "value":"token",
     "required": false,
     "since": "-",
-    "pathPatterns": "/fastcms/api/admin/**",
+    "pathPatterns": "/fastcms/api/admin/**,/fastcms/api/client/**",
     "excludePathPatterns":"/fastcms/api/admin/login"
   },{
     "name": "ClientId",

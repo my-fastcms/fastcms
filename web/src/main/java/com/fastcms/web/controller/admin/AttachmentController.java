@@ -18,12 +18,15 @@ package com.fastcms.web.controller.admin;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fastcms.core.auth.ActionTypes;
+import com.fastcms.core.auth.AuthConstants;
 import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.FileUtils;
 import com.fastcms.core.attach.FileServerManager;
+import com.fastcms.core.auth.Secured;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.core.utils.AttachUtils;
 import com.fastcms.core.utils.DirUtils;
@@ -66,6 +69,7 @@ public class AttachmentController {
      * @return
      */
     @RequestMapping("list")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "attaches", action = ActionTypes.WRITE)
     public RestResult<Page<Attachment>> list(PageModel page, @RequestParam(value = "fileName", required = false) String fileName) {
         Page<Attachment> pageData = attachmentService.page(page.toPage(), Wrappers.<Attachment>lambdaQuery().eq(!AuthUtils.isAdmin(), Attachment::getUserId, AuthUtils.getUserId()).like(StringUtils.isNotBlank(fileName), Attachment::getFileName, fileName)
                 .orderByDesc(Attachment::getCreated));
@@ -79,6 +83,7 @@ public class AttachmentController {
      */
     @PostMapping("upload")
     @ExceptionHandler(value = MultipartException.class)
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "attaches", action = ActionTypes.WRITE)
     public Object upload(@RequestParam("files") MultipartFile files[]) {
 
         if(files == null || files.length <= 0) {
@@ -151,6 +156,7 @@ public class AttachmentController {
      * @return
      */
     @PostMapping("update/{attachId}")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "attaches", action = ActionTypes.WRITE)
     public RestResult<Boolean> update(@PathVariable("attachId") Long attachId,
                                       @RequestParam("fileName") String fileName,
                                       @RequestParam(value = "fileDesc", required = false) String fileDesc) {
@@ -171,6 +177,7 @@ public class AttachmentController {
      * @return
      */
     @GetMapping("get/{attachId}")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "attaches", action = ActionTypes.READ)
     public RestResult<Attachment> detail(@PathVariable(name = "attachId") Long attachId) {
 
         Attachment attachment = attachmentService.getById(attachId);
@@ -201,6 +208,7 @@ public class AttachmentController {
      * @return
      */
     @PostMapping("delete/{attachId}")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "attaches", action = ActionTypes.WRITE)
     public Object delete(@PathVariable(name = "attachId") Long attachId) {
         Attachment attachment = attachmentService.getById(attachId);
         if(attachment == null) return RestResultUtils.failed("文件不存在");

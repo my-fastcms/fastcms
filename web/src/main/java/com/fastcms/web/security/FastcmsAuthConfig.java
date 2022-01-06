@@ -16,10 +16,8 @@
  */
 package com.fastcms.web.security;
 
-import com.fastcms.web.filter.AuthFilter;
 import com.fastcms.web.filter.JwtAuthTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
@@ -74,22 +72,6 @@ public class FastcmsAuthConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public FilterRegistrationBean authFilterRegistration() {
-        FilterRegistrationBean<AuthFilter> registration = new FilterRegistrationBean<>();
-        registration.setFilter(authFilter());
-        registration.addUrlPatterns("/*");
-        registration.setName("authFilter");
-        registration.setOrder(6);
-
-        return registration;
-    }
-
-    @Bean
-    public AuthFilter authFilter() {
-        return new AuthFilter();
     }
 
 }

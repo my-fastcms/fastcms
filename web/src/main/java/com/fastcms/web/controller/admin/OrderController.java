@@ -7,7 +7,10 @@ import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.StrUtils;
+import com.fastcms.core.auth.ActionTypes;
+import com.fastcms.core.auth.AuthConstants;
 import com.fastcms.core.auth.AuthUtils;
+import com.fastcms.core.auth.Secured;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.service.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +40,7 @@ public class OrderController {
      * @return
      */
     @GetMapping("list")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "orders", action = ActionTypes.READ)
     public RestResult<Page<IOrderService.OrderVo>> list(PageModel page,
                                                         @RequestParam(name = "orderSn", required = false) String orderSn,
                                                         @RequestParam(name = "title", required = false) String title,
@@ -55,6 +59,7 @@ public class OrderController {
      * @return
      */
     @GetMapping("detail/{orderId}")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "orders", action = ActionTypes.READ)
     public RestResult<IOrderService.OrderVo> detail(@PathVariable(name = "orderId") Long orderId) {
         return RestResultUtils.success(orderService.getOrderDetail(orderId));
     }

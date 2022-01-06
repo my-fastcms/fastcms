@@ -30,25 +30,11 @@ public class User implements Serializable {
     
     private static final long serialVersionUID = -8002966873087151367L;
 
-    public User(Long userId, String userName) {
+    public User(Long userId) {
         this.userId = userId;
-        this.userName = userName;
     }
 
     private Long userId;
-
-    /**
-     * Unique string representing user.
-     */
-    private String userName;
-    
-    public String getUserName() {
-        return userName;
-    }
-    
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
 
     public Long getUserId() {
         return userId;

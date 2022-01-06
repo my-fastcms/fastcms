@@ -32,11 +32,11 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class PluginInterceptor implements HandlerInterceptor {
 
-	static final String ACCESSTOKEN = "accessToken";
+	static final String ACCESS_TOKEN = "accessToken";
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		final String token = request.getParameter(ACCESSTOKEN);
+		final String token = request.getParameter(ACCESS_TOKEN);
 		request.setAttribute("token", token);
 		return true;
 	}
