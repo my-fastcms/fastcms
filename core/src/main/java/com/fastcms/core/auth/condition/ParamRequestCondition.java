@@ -109,8 +109,7 @@ public class ParamRequestCondition {
         
         @Override
         public String toString() {
-            return "ParamExpression{" + "name='" + name + '\'' + ", value='" + value + '\'' + ", isNegated=" + isNegated
-                    + '}';
+            return "ParamExpression{" + "name='" + name + '\'' + ", value='" + value + '\'' + ", isNegated=" + isNegated + '}';
         }
     }
 }

@@ -49,16 +49,16 @@ import static com.fastcms.core.auth.AuthConstants.REQUEST_PATH_SEPARATOR;
 @Component
 public class ControllerMethodsCache {
     
-    private static final Logger LOGGER = LoggerFactory.getLogger(ControllerMethodsCache.class);
+    private static final Logger logger = LoggerFactory.getLogger(ControllerMethodsCache.class);
     
     private ConcurrentMap<RequestMappingInfo, Method> methods = new ConcurrentHashMap<>();
     
     private final ConcurrentMap<String, List<RequestMappingInfo>> urlLookup = new ConcurrentHashMap<>();
 
     public Method getMethod(HttpServletRequest request) {
-        String path = getPath(request);
-        String httpMethod = request.getMethod();
-        String urlKey = httpMethod + REQUEST_PATH_SEPARATOR + path;
+        final String path = getPath(request);
+        final String httpMethod = request.getMethod();
+        final String urlKey = httpMethod + REQUEST_PATH_SEPARATOR + path;
         List<RequestMappingInfo> requestMappingInfos = urlLookup.get(urlKey);
         if (CollectionUtils.isEmpty(requestMappingInfos)) {
             return null;
@@ -74,9 +74,7 @@ public class ControllerMethodsCache {
             bestMatch = matchedInfo.get(0);
             RequestMappingInfo secondBestMatch = matchedInfo.get(1);
             if (comparator.compare(bestMatch, secondBestMatch) == 0) {
-                throw new IllegalStateException(
-                        "Ambiguous methods mapped for '" + request.getRequestURI() + "': {" + bestMatch + ", "
-                                + secondBestMatch + "}");
+                throw new IllegalStateException("Ambiguous methods mapped for '" + request.getRequestURI() + "': {" + bestMatch + ", " + secondBestMatch + "}");
             }
         }
         return methods.get(bestMatch);
@@ -86,17 +84,15 @@ public class ControllerMethodsCache {
         try {
             return new URI(request.getRequestURI()).getPath().substring(1);
         } catch (URISyntaxException e) {
-            LOGGER.error("parse request to path error", e);
+            logger.error("parse request to path error", e);
             throw new FastcmsRuntimeException(FastcmsException.NOT_FOUND, "Invalid URI");
         }
     }
     
-    private List<RequestMappingInfo> findMatchedInfo(List<RequestMappingInfo> requestMappingInfos,
-                                                     HttpServletRequest request) {
+    private List<RequestMappingInfo> findMatchedInfo(List<RequestMappingInfo> requestMappingInfos, HttpServletRequest request) {
         List<RequestMappingInfo> matchedInfo = new ArrayList<>();
         for (RequestMappingInfo requestMappingInfo : requestMappingInfos) {
-            ParamRequestCondition matchingCondition = requestMappingInfo.getParamRequestCondition()
-                    .getMatchingCondition(request);
+            ParamRequestCondition matchingCondition = requestMappingInfo.getParamRequestCondition().getMatchingCondition(request);
             if (matchingCondition != null) {
                 matchedInfo.add(requestMappingInfo);
             }
@@ -186,8 +182,7 @@ public class ControllerMethodsCache {
         
     }
     
-    private void put(RequestMethod requestMethod, String classPath, String[] requestPaths, String[] requestParams,
-                     Method method) {
+    private void put(RequestMethod requestMethod, String classPath, String[] requestPaths, String[] requestParams, Method method) {
         if (ArrayUtils.isEmpty(requestPaths)) {
             String urlKey = requestMethod.name() + REQUEST_PATH_SEPARATOR + classPath;
             addUrlAndMethodRelation(urlKey, requestParams, method);

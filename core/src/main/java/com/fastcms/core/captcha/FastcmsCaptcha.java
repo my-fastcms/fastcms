@@ -16,6 +16,8 @@
  */
 package com.fastcms.core.captcha;
 
+import java.io.Serializable;
+
 /**
  * @author： wjun_java@163.com
  * @date： 2021/11/14
@@ -23,7 +25,7 @@ package com.fastcms.core.captcha;
  * @modifiedBy：
  * @version: 1.0
  */
-public class FastcmsCaptcha {
+public class FastcmsCaptcha implements Serializable {
 
     /**
      * 验证码
