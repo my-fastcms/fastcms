@@ -105,7 +105,7 @@ export const userCenterRoutes: Array<RouteRecordRaw> = [
 			{
 				path: '/home',
 				name: 'home',
-				component: () => import('/@/views/personal/index.vue'),
+				component: () => import('/@/views/center/home/index.vue'),
 				meta: {
 					title: 'message.router.home',
 					isLink: '',
@@ -113,14 +113,13 @@ export const userCenterRoutes: Array<RouteRecordRaw> = [
 					isKeepAlive: true,
 					isAffix: true,
 					isIframe: false,
-					auth: ['admin', 'test'],
 					icon: 'iconfont icon-shouye',
 				},
 			},
 			{
 				path: '/article/index',
 				name: 'articleManager',
-				component: () => import('/@/views/article/index.vue'),
+				component: () => import('/@/views/center/article/index.vue'),
 				meta: {
 					title: 'message.centerRoutes.articleManager',
 					isLink: '',
@@ -128,14 +127,13 @@ export const userCenterRoutes: Array<RouteRecordRaw> = [
 					isKeepAlive: true,
 					isAffix: false,
 					isIframe: false,
-					auth: ['admin', 'test'],
 					icon: 'el-icon-s-fold',
 				},
 			},
 			{
-				path: '/attach/index',
-				name: 'attachManager',
-				component: () => import('/@/views/attach/index.vue'),
+				path: '/comment/index',
+				name: 'commentManager',
+				component: () => import('/@/views/center/comment/index.vue'),
 				meta: {
 					title: 'message.centerRoutes.commentManager',
 					isLink: '',
@@ -143,14 +141,13 @@ export const userCenterRoutes: Array<RouteRecordRaw> = [
 					isKeepAlive: true,
 					isAffix: false,
 					isIframe: false,
-					auth: ['admin', 'test'],
 					icon: 'el-icon-chat-dot-square',
 				},
 			},
 			{
-				path: '/attach/index',
-				name: 'attachManager',
-				component: () => import('/@/views/attach/index.vue'),
+				path: '/collect/index',
+				name: 'collectManager',
+				component: () => import('/@/views/center/collect/index.vue'),
 				meta: {
 					title: 'message.centerRoutes.collectManager',
 					isLink: '',
@@ -158,15 +155,14 @@ export const userCenterRoutes: Array<RouteRecordRaw> = [
 					isKeepAlive: true,
 					isAffix: false,
 					isIframe: false,
-					auth: ['admin', 'test'],
 					icon: 'iconfont icon-caidan',
 				},
 			},
 
 			{
-				path: '/attach/index',
-				name: 'attachManager',
-				component: () => import('/@/views/attach/index.vue'),
+				path: '/order/index',
+				name: 'orderManager',
+				component: () => import('/@/views/center/order/index.vue'),
 				meta: {
 					title: 'message.centerRoutes.orderManager',
 					isLink: '',
@@ -174,14 +170,13 @@ export const userCenterRoutes: Array<RouteRecordRaw> = [
 					isKeepAlive: true,
 					isAffix: false,
 					isIframe: false,
-					auth: ['admin', 'test'],
 					icon: 'el-icon-s-shop',
 				},
 			},
 			{
 				path: '/attach/index',
 				name: 'attachManager',
-				component: () => import('/@/views/attach/index.vue'),
+				component: () => import('/@/views/center/attach/index.vue'),
 				meta: {
 					title: 'message.centerRoutes.attachManager',
 					isLink: '',
@@ -189,14 +184,13 @@ export const userCenterRoutes: Array<RouteRecordRaw> = [
 					isKeepAlive: true,
 					isAffix: false,
 					isIframe: false,
-					auth: ['admin', 'test'],
 					icon: 'el-icon-picture-outline',
 				},
 			},
 			{
 				path: '/article/write',
 				name: 'articleWrite',
-				component: () => import('/@/views/article/write.vue'),
+				component: () => import('/@/views/center/article/write.vue'),
 				meta: {
 					title: 'message.centerRoutes.articleWrite',
 					isLink: '',

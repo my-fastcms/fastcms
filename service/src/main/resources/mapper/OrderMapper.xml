@@ -42,4 +42,8 @@
         ${ew.customSqlSegment}
     </select>
 
+    <select id="getOrderStatData" resultType="com.fastcms.service.IOrderService$OrderStatVo">
+        select count(1) as total_count, count(CASE WHEN DATE(updated) = CURDATE() THEN o.id ELSE NULL END) as today_count from `order` o where o.pay_status = 1
+    </select>
+
 </mapper>

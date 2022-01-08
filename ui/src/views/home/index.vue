@@ -8,7 +8,7 @@
 						<div class="home-card-first-right ml15">
 							<div class="flex-margin">
 								<div class="home-card-first-right-title">
-									{{ currentTime }}，{{ getUserInfos.username === '' ? 'test' : getUserInfos.username }}！
+									{{ currentTime }}，{{ getUserInfos.username === '' ? '游客' : getUserInfos.username }}！
 								</div>
 								<div class="home-card-first-right-msg mt5">{{ getUserInfos.username === 'admin' ? '超级管理' : '' }}</div>
 							</div>
@@ -31,9 +31,14 @@
 		<el-row :gutter="15">
 			<el-col :xs="24" :sm="14" :md="14" :lg="16" :xl="16" class="home-warning-media">
 				<el-card shadow="hover" :header="$t('message.card.title3')" class="home-warning-card">
-					<el-table :data="tableData.data" style="width: 100%" stripe>
-						<el-table-column prop="date" :label="$t('message.table.th1')"></el-table-column>
-						<el-table-column prop="name" :label="$t('message.table.th2')"></el-table-column>
+					<el-table :data="articleListData" style="width: 100%" stripe>
+						<el-table-column prop="title" min-width="80%" :label="$t('message.table.th1')">
+						<template #default="scope">
+							<a :href="scope.row.url" target="_blank">
+								{{scope.row.title}}
+							</a></template>
+						</el-table-column>
+						<el-table-column prop="viewCount" min-width="20%" :label="$t('message.table.th2')"></el-table-column>
 					</el-table>
 				</el-card>
 			</el-col>
@@ -70,7 +75,8 @@ import { toRefs, reactive, onMounted, nextTick, computed, getCurrentInstance, wa
 import { CountUp } from 'countup.js';
 import { formatAxis } from '/@/utils/formatTime';
 import { useStore } from '/@/store/index';
-import { topCardItemList, environmentList, activitiesList } from './mock';
+import { getIndexData } from '/@/api/home/index';
+import { topCardItemList, activitiesList } from './data';
 export default {
 	name: 'home',
 	setup() {
@@ -78,27 +84,8 @@ export default {
 		const store = useStore();
 		const state = reactive({
 			topCardItemList,
-			environmentList,
 			activitiesList,
-			tableData: {
-				data: [
-					{
-						date: '2016-05-02',
-						name: '1号实验室',
-						address: '烟感2.1%OBS/M',
-					},
-					{
-						date: '2016-05-04',
-						name: '2号实验室',
-						address: '温度30℃',
-					},
-					{
-						date: '2016-05-01',
-						name: '3号实验室',
-						address: '湿度57%RH',
-					},
-				],
-			},
+			articleListData: [],
 			myCharts: [],
 		});
 		// 获取用户信息 vuex
@@ -109,17 +96,6 @@ export default {
 		const currentTime = computed(() => {
 			return formatAxis(new Date());
 		});
-		// 初始化数字滚动
-		const initNumCountUp = () => {
-			nextTick(() => {
-				new CountUp('titleNum1', Math.random() * 10000).start();
-				new CountUp('titleNum2', Math.random() * 10000).start();
-				new CountUp('titleNum3', Math.random() * 10000).start();
-				new CountUp('tipNum1', Math.random() * 1000).start();
-				new CountUp('tipNum2', Math.random() * 1000).start();
-				new CountUp('tipNum3', Math.random() * 1000).start();
-			});
-		};
 		
 		// 批量设置 echarts resize
 		const initEchartsResizeFun = () => {
@@ -133,9 +109,23 @@ export default {
 		const initEchartsResize = () => {
 			window.addEventListener('resize', initEchartsResizeFun);
 		};
+
+		const getHomeData = () => {
+			getIndexData().then((res) => {
+				let articleStat = res.data.articleStatData;
+				let orderStat = res.data.orderStatData;
+				new CountUp('titleNum1', 0).update(articleStat.todayCount);
+				new CountUp('titleNum2', 0).update(articleStat.todayViewCount);
+				new CountUp('titleNum3', 0).update(orderStat.todayCount);
+				new CountUp('tipNum1', 0).update(articleStat.totalCount);
+				new CountUp('tipNum2', 0).update(articleStat.totalViewCount);
+				new CountUp('tipNum3', 0).update(orderStat);
+				state.articleListData = res.data.newArticleList;
+			});
+		}
 		// 页面加载时
 		onMounted(() => {
-			initNumCountUp();
+			getHomeData();
 			initEchartsResize();
 		});
 		// 由于页面缓存原因，keep-alive

@@ -2,7 +2,7 @@ package com.fastcms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.fastcms.entity.UserTag;
-import com.fastcms.service.IUserTagService;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -16,10 +16,10 @@ import java.util.List;
  */
 public interface UserTagMapper extends BaseMapper<UserTag> {
 
-	void saveUserTagRelation(Long userId, List<Long> tagIds);
+	void saveUserTagRelation(@Param("userId") Long userId, @Param("tagIds") List<Long> tagIds);
 
 	void deleteUserTagRelationByUserId(Long userId);
 
-	List<IUserTagService.UserTagVo> getTagListByUserId(Long userId);
+	List<UserTag> getTagListByUserId(Long userId);
 
 }

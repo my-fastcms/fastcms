@@ -7,13 +7,13 @@
 					<div class="personal-user">
 						<div class="personal-user-left">
 							<el-upload class="h100 personal-user-left-upload" action="https://jsonplaceholder.typicode.com/posts/" multiple :limit="1">
-								<img src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1813762643,1914315241&fm=26&gp=0.jpg" />
+								<img :src="getUserInfos.photo" />
 							</el-upload>
 						</div>
 						<div class="personal-user-right">
 							<el-row>
-								<el-col :span="24" class="personal-title mb18">{{ currentTime }}，admin，生活变的再糟糕，也不妨碍我变得更好！ </el-col>
-								<el-col :span="24">
+								<el-col :span="24" class="personal-title mb18">{{ currentTime }}，{{ getUserInfos.username }}，生活变的再糟糕，也不妨碍我变得更好！ </el-col>
+								<!-- <el-col :span="24">
 									<el-row>
 										<el-col :xs="24" :sm="8" class="personal-item mb6">
 											<div class="personal-item-label">昵称：</div>
@@ -24,8 +24,8 @@
 											<div class="personal-item-value">超级管理</div>
 										</el-col>
 									</el-row>
-								</el-col>
-								<el-col :span="24">
+								</el-col> -->
+								<!-- <el-col :span="24">
 									<el-row>
 										<el-col :xs="24" :sm="8" class="personal-item mb6">
 											<div class="personal-item-label">登录IP：</div>
@@ -36,7 +36,7 @@
 											<div class="personal-item-value">2021-02-05 18:47:26</div>
 										</el-col>
 									</el-row>
-								</el-col>
+								</el-col> -->
 							</el-row>
 						</div>
 					</div>
@@ -165,9 +165,11 @@
 import { toRefs, reactive, computed } from 'vue';
 import { formatAxis } from '/@/utils/formatTime';
 import { newsInfoList, recommendList } from './mock';
+import { useStore } from '/@/store/index';
 export default {
 	name: 'personal',
 	setup() {
+		const store = useStore();
 		const state = reactive({
 			newsInfoList,
 			recommendList,
@@ -184,7 +186,12 @@ export default {
 		const currentTime = computed(() => {
 			return formatAxis(new Date());
 		});
+		// 获取用户信息 vuex
+		const getUserInfos = computed(() => {
+			return store.state.userInfos.userInfos;
+		});
 		return {
+			getUserInfos,
 			currentTime,
 			...toRefs(state),
 		};
@@ -193,7 +200,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@import '../../theme/mixins/mixins.scss';
+@import '../../../theme/mixins/mixins.scss';
 .personal {
 	.personal-user {
 		height: 130px;

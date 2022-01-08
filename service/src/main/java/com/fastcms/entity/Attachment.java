@@ -20,6 +20,8 @@ public class Attachment implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    public static final String ATTACH_FILE_DOMAIN = "file_domain";
+
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
@@ -113,7 +115,7 @@ public class Attachment implements Serializable {
     }
 
     public String getPath() {
-        String fileDomain = ConfigUtils.getConfig(FastcmsConstants.ATTACH_FILE_DOMAIN);
+        String fileDomain = ConfigUtils.getConfig(ATTACH_FILE_DOMAIN);
         if(StrUtils.isBlank(fileDomain)) {
             fileDomain = ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN);
         }

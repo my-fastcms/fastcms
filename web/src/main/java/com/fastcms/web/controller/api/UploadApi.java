@@ -17,17 +17,14 @@
 package com.fastcms.web.controller.api;
 
 import com.fastcms.common.constants.FastcmsConstants;
-import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.common.utils.FileUtils;
-import com.fastcms.core.utils.DirUtils;
+import com.fastcms.core.utils.AttachUtils;
+import com.fastcms.service.IAttachmentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * 文件上传
@@ -41,34 +38,17 @@ import java.io.IOException;
 @RequestMapping(FastcmsConstants.API_MAPPING + "/upload")
 public class UploadApi {
 
+	@Autowired
+	private IAttachmentService attachmentService;
+
 	/**
 	 * 上传
-	 * @param file
+	 * @param files
 	 * @return
 	 */
 	@PostMapping
-	public Object upload(@RequestParam("file") MultipartFile file) {
-		String newFilePath = FileUtils.newFileName(file.getOriginalFilename());
-		File uploadFile = new File(DirUtils.getUploadDir(), newFilePath);
-		try {
-			if (!uploadFile.getParentFile().exists()) {
-				uploadFile.getParentFile().mkdirs();
-			}
-			file.transferTo(uploadFile);
-			long fileSize = uploadFile.length();
-			if(fileSize > 1024 * 1024 * 5) {
-				uploadFile.delete();
-				return RestResultUtils.failed("文件超过上传限制5MB");
-			}
-
-			return RestResultUtils.success(newFilePath.replace("\\", "/"));
-		} catch (IOException e) {
-			e.printStackTrace();
-			if(uploadFile != null) {
-				uploadFile.delete();
-			}
-			return RestResultUtils.failed(e.getMessage());
-		}
+	public Object upload(@RequestParam("files") MultipartFile files[]) {
+		return AttachUtils.upload(files, attachmentService);
 	}
 
 }

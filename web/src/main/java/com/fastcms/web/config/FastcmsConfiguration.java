@@ -93,7 +93,7 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new PluginInterceptor()).addPathPatterns("/fastcms/plugin/**");
-        registry.addInterceptor(new AuthInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(new AuthInterceptor()).addPathPatterns("/fastcms/api/**");
     }
 
     @Bean

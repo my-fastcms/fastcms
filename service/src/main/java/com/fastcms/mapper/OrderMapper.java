@@ -23,4 +23,6 @@ public interface OrderMapper extends BaseMapper<Order> {
 
     Page<Order> pageOrderOfApi(Page pageParam, @Param(Constants.WRAPPER) QueryWrapper queryWrapper);
 
+    IOrderService.OrderStatVo getOrderStatData();
+
 }

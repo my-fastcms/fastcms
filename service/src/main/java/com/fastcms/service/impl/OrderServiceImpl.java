@@ -9,11 +9,13 @@ import com.fastcms.common.utils.StrUtils;
 import com.fastcms.entity.Order;
 import com.fastcms.entity.OrderItem;
 import com.fastcms.entity.PaymentRecord;
+import com.fastcms.extension.IndexDataExtension;
 import com.fastcms.mapper.OrderMapper;
 import com.fastcms.service.IOrderItemService;
 import com.fastcms.service.IOrderService;
 import com.fastcms.service.IPaymentRecordService;
 import com.fastcms.utils.ApplicationUtils;
+import org.pf4j.Extension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +24,9 @@ import org.springframework.util.ClassUtils;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -33,7 +37,8 @@ import java.util.List;
  * @since 2021-12-21
  */
 @Service
-public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements IOrderService {
+@Extension
+public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements IOrderService, IndexDataExtension {
 
     private static final SnowFlake SNOW_FLAKE = new SnowFlake(1, 1);
 
@@ -160,4 +165,15 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         return orderDetail;
     }
 
+    @Override
+    public OrderStatVo getOrderStatData() {
+        return getBaseMapper().getOrderStatData();
+    }
+
+    @Override
+    public Map<String, Object> getData() {
+        Map<String, Object> result = new HashMap<>();
+        result.put("orderStatData", getOrderStatData());
+        return result;
+    }
 }

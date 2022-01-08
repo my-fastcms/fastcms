@@ -21,13 +21,22 @@ import com.fastcms.common.exception.AccessException;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.core.auth.ActionTypes;
+import com.fastcms.core.auth.AuthConstants;
+import com.fastcms.core.auth.Secured;
 import com.fastcms.core.captcha.FastcmsCaptcha;
 import com.fastcms.core.captcha.FastcmsCaptchaService;
+import com.fastcms.extension.IndexDataExtension;
+import com.fastcms.core.utils.PluginUtils;
 import com.fastcms.service.IUserService;
 import com.fastcms.web.security.AuthManager;
 import com.fastcms.web.security.FastcmsUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 登录授权
@@ -102,6 +111,24 @@ public class AdminController {
     @GetMapping("captcha")
     public RestResult<FastcmsCaptcha> captcha() {
         return RestResultUtils.success(fastcmsCaptchaService.getCaptcha());
+    }
+
+    /**
+     * 获取首页数据
+     * @return
+     */
+    @GetMapping("index/data")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "datas", action = ActionTypes.READ)
+    public Object getIndexData() {
+
+        final Map<String, Object> result = new HashMap<>();
+
+        List<IndexDataExtension> extensions = PluginUtils.getExtensions(IndexDataExtension.class);
+        for (IndexDataExtension extension : extensions) {
+            result.putAll(extension.getData());
+        }
+
+        return RestResultUtils.success(result);
     }
 
 }

@@ -26,6 +26,7 @@ import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.entity.User;
 import com.fastcms.service.IUserService;
+import com.fastcms.web.security.JwtTokenManager;
 import me.chanjar.weixin.common.session.WxSession;
 import me.chanjar.weixin.common.session.WxSessionManager;
 import org.apache.commons.lang.StringUtils;
@@ -56,7 +57,8 @@ public class WechatMiniUserApi {
 	@Autowired
 	private IUserService userService;
 
-	private String jwtSecret;
+	@Autowired
+	private JwtTokenManager tokenManager;
 
 	/**
 	 * code2session

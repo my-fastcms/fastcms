@@ -111,6 +111,12 @@ public class User implements Serializable {
     private String sourceStr;
 
     /**
+     * 标签名称集合
+     */
+    @TableField(exist = false)
+    List<String> tagList;
+
+    /**
      * 已分配角色列表
      */
     @TableField(exist = false)
@@ -271,6 +277,14 @@ public class User implements Serializable {
 
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    public List<String> getTagList() {
+        return tagList;
+    }
+
+    public void setTagList(List<String> tagList) {
+        this.tagList = tagList;
     }
 
     public List<Long> getRoleList() {

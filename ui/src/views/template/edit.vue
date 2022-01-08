@@ -14,7 +14,7 @@
             :on-error="onHandleUploadError"
             :before-upload="onBeforeUpload"
             :limit="limit">
-            <el-button size="small" type="primary">上传模板</el-button>
+            <el-button size="small" type="primary">上传模板文件</el-button>
             <div slot="tip" class="el-upload__tip" v-html="uploadParam.dirName"></div>
         </el-upload>
         <el-form size="small" label-width="100px" ref="myRefForm">

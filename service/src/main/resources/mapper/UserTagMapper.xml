@@ -13,8 +13,8 @@
         delete from user_tag_relation where user_id = #{userId}
     </delete>
 
-    <select id="getTagListByUserId" resultType="com.fastcms.service.IUserTagService$UserTagVo">
-        SELECT r.*, urs.user_id FROM user_tag r LEFT JOIN (select * from user_tag_relation ur where ur.user_id = #{userId}) urs on r.id = urs.tag_id
+    <select id="getTagListByUserId" resultType="com.fastcms.entity.UserTag">
+        SELECT r.*, urs.user_id FROM user_tag r JOIN (select * from user_tag_relation ur where ur.user_id = #{userId}) urs on r.id = urs.tag_id
     </select>
 
 </mapper>

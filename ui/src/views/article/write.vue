@@ -77,7 +77,7 @@
                             filterable
                             allow-create
                             default-first-option
-                            placeholder="请选择文章标签">
+                            placeholder="可直接输入标签名称">
                             <el-option v-for="item in tags" :key="item.id" :label="item.tagName" :value="item.tagName"></el-option>
                         </el-select>
                     </el-form-item>

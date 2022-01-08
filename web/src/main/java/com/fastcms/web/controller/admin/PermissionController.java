@@ -16,7 +16,6 @@
  */
 package com.fastcms.web.controller.admin;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
@@ -25,63 +24,37 @@ import com.fastcms.core.auth.ActionTypes;
 import com.fastcms.core.auth.AuthConstants;
 import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.auth.Secured;
-import com.fastcms.entity.Permission;
 import com.fastcms.service.IPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 /**
- * 菜单管理
+ * 获取登录用户相关权限信息
  * @author： wjun_java@163.com
- * @date： 2021/10/31
+ * @date： 2022/1/8
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
 @RestController
-@RequestMapping(FastcmsConstants.ADMIN_MAPPING + "/menu")
-public class MenuController {
+@RequestMapping(FastcmsConstants.ADMIN_MAPPING + "/permission")
+public class PermissionController {
 
 	@Autowired
 	private IPermissionService permissionService;
 
 	/**
-	 * 菜单列表
+	 * 获取用户菜单
 	 * @return
 	 */
-	@GetMapping("list")
-	@Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "menus", action = ActionTypes.READ)
-	public RestResult<List<RouterNode>> list() {
+	@GetMapping("menus")
+	@Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "permissions", action = ActionTypes.READ)
+	public RestResult<List<RouterNode>> getMenus() {
 		return RestResultUtils.success(permissionService.getPermissions(AuthUtils.getUserId()));
-	}
-
-	/**
-	 * 保存菜单
-	 * @param permission
-	 * @return
-	 */
-	@PostMapping("save")
-	@Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "menus", action = ActionTypes.WRITE)
-	public RestResult<Boolean> save(@Validated Permission permission) {
-		return RestResultUtils.success(permissionService.saveOrUpdate(permission));
-	}
-
-	/**
-	 * 删除菜单
-	 * @param menuId
-	 * @return
-	 */
-	@PostMapping("delete/{menuId}")
-	@Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "menus", action = ActionTypes.WRITE)
-	public RestResult<Object> delMenu(@PathVariable("menuId") Long menuId) {
-		List<Permission> list = permissionService.list(Wrappers.<Permission>lambdaQuery().eq(Permission::getParentId, menuId));
-		if(list != null && list.size()>0) {
-			return RestResultUtils.failed("请先删除子菜单");
-		}
-		return RestResultUtils.success(permissionService.removeById(menuId));
 	}
 
 }

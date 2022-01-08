@@ -1,6 +1,5 @@
 package com.fastcms.core.attach;
 
-import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.utils.ImageUtils;
 import com.fastcms.core.utils.AttachUtils;
 import com.fastcms.core.utils.DirUtils;
@@ -24,7 +23,7 @@ public class ImageWaterMarkProcessor extends AbstractWaterMarkProcessor {
 
     @Override
     protected void doProcess(Attachment attachment) {
-        String waterFile = ConfigUtils.getConfig(FastcmsConstants.ATTACH_WATERMARK_FILE);
+        String waterFile = ConfigUtils.getConfig(AttachUtils.ATTACH_WATERMARK_FILE);
         try {
             //水印图片存储路径会带上域名
             waterFile = waterFile.substring(waterFile.indexOf("/attachment"));

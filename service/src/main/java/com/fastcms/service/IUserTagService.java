@@ -14,18 +14,8 @@ public interface IUserTagService extends IService<UserTag> {
 
 	void saveUserTagRelation(Long userId, List<Long> tagIds);
 
-	List<UserTagVo> getTagListByUserId(Long userId);
+	UserTag getByName(String tagName);
 
-	class UserTagVo extends UserTag {
-		Long userId;
-
-		public Long getUserId() {
-			return userId;
-		}
-
-		public void setUserId(Long userId) {
-			this.userId = userId;
-		}
-	}
+	List<UserTag> getTagListByUserId(Long userId);
 
 }

@@ -16,7 +16,7 @@
  */
 package com.fastcms.cms.controller.api;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.fastcms.cms.entity.ArticleCategory;
 import com.fastcms.cms.service.IArticleCategoryService;
 import com.fastcms.common.constants.FastcmsConstants;
@@ -49,9 +49,10 @@ public class ArticleCategoryApi {
 	 */
 	@RequestMapping("list")
 	public RestResult<List<ArticleCategory>> list() {
-		QueryWrapper queryWrapper = new QueryWrapper();
-		queryWrapper.eq("type", ArticleCategory.CATEGORY_TYPE);
-		return RestResultUtils.success(articleCategoryService.list(queryWrapper));
+		return RestResultUtils.success(articleCategoryService.list(Wrappers.<ArticleCategory>lambdaQuery()
+				.eq(ArticleCategory::getType, ArticleCategory.CATEGORY_TYPE)
+				.orderByDesc(ArticleCategory::getSortNum)
+		));
 	}
 
 }

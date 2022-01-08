@@ -22,15 +22,13 @@ import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.common.model.RouterNode;
 import com.fastcms.core.auth.ActionTypes;
 import com.fastcms.core.auth.AuthConstants;
-import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.auth.Secured;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.entity.Role;
 import com.fastcms.entity.User;
-import com.fastcms.service.IPermissionService;
+import com.fastcms.entity.UserTag;
 import com.fastcms.service.IRoleService;
 import com.fastcms.service.IUserService;
 import com.fastcms.service.IUserTagService;
@@ -62,9 +60,6 @@ public class UserController {
     private IRoleService roleService;
 
     @Autowired
-    private IPermissionService permissionService;
-
-    @Autowired
     private IUserTagService userTagService;
 
     /**
@@ -81,22 +76,12 @@ public class UserController {
                                        @RequestParam(name = "phone", required = false) String phone,
                                        @RequestParam(name = "status", required = false) Integer status) {
         Page<User> pageData = userService.page(page.toPage(), Wrappers.<User>lambdaQuery()
-                .eq(StringUtils.isNotBlank(username), User::getUserName, username)
+                .like(StringUtils.isNotBlank(username), User::getUserName, username)
                 .eq(StringUtils.isNoneBlank(phone), User::getMobile, phone)
                 .eq(status != null, User::getStatus, status)
                 .select(User::getId, User::getUserName, User::getCreated, User::getSource, User::getEmail)
                 .orderByDesc(User::getCreated));
         return RestResultUtils.success(pageData);
-    }
-
-    /**
-     * 获取用户菜单
-     * @return
-     */
-    @GetMapping("menus")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "users", action = ActionTypes.READ)
-    public RestResult<List<RouterNode>> getMenus() {
-        return RestResultUtils.success(permissionService.getPermissions(AuthUtils.getUserId()));
     }
 
     /**
@@ -106,7 +91,7 @@ public class UserController {
      */
     @PostMapping("save")
     @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "users", action = ActionTypes.WRITE)
-    public RestResult<Boolean> save(@Validated User user) {
+    public RestResult<Long> save(@Validated User user) {
         try {
             return RestResultUtils.success(userService.saveUser(user));
         } catch (FastcmsException e) {
@@ -124,6 +109,7 @@ public class UserController {
     public RestResult<User> getUserInfo(@PathVariable("userId") Long userId) {
         User user = userService.getById(userId);
         user.setRoleList(roleService.getUserRoleList(userId).stream().map(Role::getId).collect(Collectors.toList()));
+        user.setTagList(userTagService.getTagListByUserId(userId).stream().map(UserTag::getTitle).collect(Collectors.toList()));
         return RestResultUtils.success(user);
     }
 
@@ -149,7 +135,7 @@ public class UserController {
      */
     @PostMapping("{userId}/roles/save")
     @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "users", action = ActionTypes.WRITE)
-    public Object saveUserRoles(@PathVariable("userId") Long userId, @RequestParam("roleIds[]") List<Long> roleIds) {
+    public Object saveUserRoles(@PathVariable("userId") Long userId, @RequestParam("roleIds") List<Long> roleIds) {
         if(userId != null && Objects.equals(userId, FastcmsConstants.ADMIN_USER_ID)) {
             return RestResultUtils.failed("admin不允许修改权限");
         }
@@ -165,9 +151,19 @@ public class UserController {
      */
     @PostMapping("{userId}/tags/save")
     @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "users", action = ActionTypes.WRITE)
-    public Object saveUserTags(@PathVariable("userId") Long userId, @RequestParam("tagIds[]") List<Long> tagIds) {
+    public Object saveUserTags(@PathVariable("userId") Long userId, @RequestParam("tagIds") List<Long> tagIds) {
         userTagService.saveUserTagRelation(userId, tagIds);
         return RestResultUtils.success();
+    }
+
+    /**
+     * 获取标签列表
+     * @return
+     */
+    @GetMapping("tag/list")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "users", action = ActionTypes.READ)
+    public RestResult<List<UserTag>> getTagList() {
+        return RestResultUtils.success(userTagService.list());
     }
 
 }

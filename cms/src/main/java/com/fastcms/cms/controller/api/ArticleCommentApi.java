@@ -49,8 +49,7 @@ public class ArticleCommentApi {
 	 * @return
 	 */
 	@RequestMapping("list")
-	public RestResult<Page<IArticleCommentService.ArticleCommentVo>> list(PageModel page,
-																		  Long articleId) {
+	public RestResult<Page<IArticleCommentService.ArticleCommentVo>> list(PageModel page, Long articleId) {
 		return RestResultUtils.success(articleCommentService.pageArticleCommentByArticleId(page.toPage(), articleId));
 	}
 
@@ -59,11 +58,10 @@ public class ArticleCommentApi {
 	 * @param articleId
 	 * @param commentId
 	 * @param context
-	 * @param captcha
 	 * @return
 	 */
 	@PostMapping("save")
-	public Object saveComment(Long articleId, Long commentId, String context, String captcha) {
+	public Object saveComment(Long articleId, Long commentId, String context) {
 
 		try {
 			articleCommentService.saveArticleComment(articleId, commentId, context);

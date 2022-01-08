@@ -89,6 +89,66 @@ public interface IArticleService extends IService<Article> {
      */
     void updateViewCount(Long id, Long count);
 
+    /**
+     * 获取文章统计数量
+     * @return
+     */
+    ArticleStatVo getArticleStatData();
+
+    /**
+     * 文章数量统计
+     */
+    class ArticleStatVo implements Serializable {
+        /**
+         * 文章总数
+         */
+        Long totalCount;
+        /**
+         * 当日文章总数
+         */
+        Long todayCount;
+        /**
+         * 文章总浏览量
+         */
+        Long totalViewCount;
+        /**
+         * 当日文章总浏览量
+         */
+        Long todayViewCount;
+
+        public Long getTotalCount() {
+            return totalCount;
+        }
+
+        public void setTotalCount(Long totalCount) {
+            this.totalCount = totalCount;
+        }
+
+        public Long getTodayCount() {
+            return todayCount;
+        }
+
+        public void setTodayCount(Long todayCount) {
+            this.todayCount = todayCount;
+        }
+
+        public Long getTotalViewCount() {
+            return totalViewCount;
+        }
+
+        public void setTotalViewCount(Long totalViewCount) {
+            this.totalViewCount = totalViewCount;
+        }
+
+        public Long getTodayViewCount() {
+            return todayViewCount;
+        }
+
+        public void setTodayViewCount(Long todayViewCount) {
+            this.todayViewCount = todayViewCount;
+        }
+    }
+
     class ArticleVo implements Serializable {
         /**
          * id

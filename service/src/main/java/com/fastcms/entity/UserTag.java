@@ -28,6 +28,7 @@ public class UserTag implements Serializable {
     /**
      * 标签描述
      */
+    @TableField("`desc`")
     private String desc;
 
     /**

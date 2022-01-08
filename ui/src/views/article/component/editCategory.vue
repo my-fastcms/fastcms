@@ -19,8 +19,9 @@
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="页面风格" prop="suffix">
-							<el-input v-model="ruleForm.suffix" placeholder="请输入页面风格" clearable></el-input>
+						<el-form-item label="模板" prop="suffix">
+							<el-input v-model="ruleForm.suffix" placeholder="请输入模板后缀名称" clearable></el-input>
+							<div class="sub-title">结合网站模板使用</div>
 						</el-form-item>
 					</el-col>
 				</el-row>

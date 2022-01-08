@@ -50,7 +50,21 @@
 						</el-form-item>
 					</el-col>
 					<el-col class="mb20">
-						<el-form-item label="角色分配">
+						<el-form-item label="用户标签">
+							<el-select
+								v-model="ruleForm.tagList"
+								class="w100"
+								multiple
+								filterable
+								allow-create
+								default-first-option
+								placeholder="可直接输入标签名称">
+								<el-option v-for="item in tags" :key="item.id" :label="item.title" :value="item.title"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col class="mb20">
+						<el-form-item label="分配角色">
 							<el-select v-model="ruleForm.roleList" multiple placeholder="请选择角色" clearable class="w100">
 								<el-option v-for="(item,index) in roleList" :key="index" :label="item.roleName" :value="item.id" />
 							</el-select>
@@ -71,7 +85,7 @@
 <script lang="ts">
 import { reactive, toRefs, getCurrentInstance, onMounted, onUpdated } from 'vue';
 import { ElMessage } from 'element-plus';
-import { saveUser, getUserInfo } from '/@/api/user/index';
+import { saveUser, getUserInfo, getTagList } from '/@/api/user/index';
 import { getRoleSelectList } from '/@/api/role/index';
 import qs from 'qs';
 
@@ -81,6 +95,7 @@ export default {
 		const { proxy } = getCurrentInstance() as any;
 		const state = reactive({
 			isShowDialog: false,
+			tags: [],
 			roleList: [],
 			ruleForm: {
 				id: null,
@@ -92,6 +107,7 @@ export default {
 				address: '',
 				sex: '1',
 				status: '1',
+				tagList:'',
 				roleList: '',
 			},
 			rules: {
@@ -140,6 +156,9 @@ export default {
 			}).catch((err) => {
 				console.log(err);
 			});
+			getTagList().then((res) => {
+				state.tags = res.data;
+			})
 		}
 
 		const getUser = () => {
@@ -154,6 +173,7 @@ export default {
 					state.ruleForm.address = res.data.address,
 					state.ruleForm.sex = res.data.sex + '',
 					state.ruleForm.status = res.data.status + '',
+					state.ruleForm.tagList = res.data.tagList,
 					state.ruleForm.roleList = res.data.roleList
 				})
 			}

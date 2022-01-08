@@ -67,8 +67,10 @@ public class PageController {
 	public RestResult<Page<ISinglePageService.SinglePageVo>> list(PageModel page,
 																  @RequestParam(name = "title", required = false) String title,
 																  @RequestParam(name = "status", required = false) String status) {
-		QueryWrapper queryWrapper = Wrappers.query().like(StrUtils.isNotBlank(title), "a.title", status)
-				.eq(StrUtils.isNotBlank(status), "a.status", status);
+		QueryWrapper queryWrapper = Wrappers.query()
+				.like(StrUtils.isNotBlank(title), "a.title", title)
+				.eq(StrUtils.isNotBlank(status), "a.status", status)
+				.ne("a.status", SinglePage.STATUS_DELETE);
 		return RestResultUtils.success(singlePageService.pageSinglePage(page.toPage(), queryWrapper));
 	}
 
@@ -110,7 +112,11 @@ public class PageController {
 	@PostMapping("delete/{id}")
 	@Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "pages", action = ActionTypes.WRITE)
 	public Object delPage(@PathVariable("id") String id) {
-		singlePageService.removeById(id);
+		SinglePage singlePage = singlePageService.getById(id);
+		if(singlePage != null) {
+			singlePage.setStatus(SinglePage.STATUS_DELETE);
+			singlePageService.updateById(singlePage);
+		}
 		return RestResultUtils.success();
 	}
 

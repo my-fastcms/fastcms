@@ -1,11 +1,15 @@
 package com.fastcms.core.utils;
 
-import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.FileUtils;
+import com.fastcms.core.attach.FileServerManager;
+import com.fastcms.entity.Attachment;
+import com.fastcms.service.IAttachmentService;
 import com.fastcms.utils.ConfigUtils;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -15,7 +19,9 @@ import java.io.IOException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
-import java.util.Enumeration;
+import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author： wjun_java@163.com
@@ -26,8 +32,48 @@ import java.util.Enumeration;
  */
 public abstract class AttachUtils {
 
+    /**
+     * 附件域名
+     */
+    public static final String ATTACH_FILE_DOMAIN = "file_domain";
+
+    /**
+     * 最大图片上传大小
+     */
+    public static final String ATTACH_IMAGE_MAXSIZE = "imageMaxSize";
+
+    /**
+     * 其他文件最大上传大小
+     */
+    public static final String ATTACH_OTHER_MAXSIZE = "otherMaxSize";
+
+    /**
+     * 是否开启图片水印
+     */
+    public static final String ATTACH_ENABLE_WATERMARK = "enableWatermark";
+
+    /**
+     * 水印位置
+     */
+    public static final String ATTACH_WATERMARK_POS = "waterMarkPos";
+
+    /**
+     * 水印透明度
+     */
+    public static final String ATTACH_DIAPHANEITY = "diaphaneity";
+
+    /**
+     * 水印图片
+     */
+    public static final String ATTACH_WATERMARK_FILE = "waterMarkFile";
+
+    /**
+     * 水印文字
+     */
+    public static final String ATTACH_WATERMARK_TXT = "waterMarkTxt";
+
     public static Integer getImageMaxSize() {
-        String config = ConfigUtils.getConfig(FastcmsConstants.ATTACH_IMAGE_MAXSIZE);
+        String config = ConfigUtils.getConfig(ATTACH_IMAGE_MAXSIZE);
         try {
             return Integer.parseInt(config);
         } catch (NumberFormatException e) {
@@ -36,7 +82,7 @@ public abstract class AttachUtils {
     }
 
     public static Integer getOtherMaxSize() {
-        String config = ConfigUtils.getConfig(FastcmsConstants.ATTACH_OTHER_MAXSIZE);
+        String config = ConfigUtils.getConfig(ATTACH_OTHER_MAXSIZE);
         try {
             return Integer.parseInt(config);
         } catch (NumberFormatException e) {
@@ -45,7 +91,7 @@ public abstract class AttachUtils {
     }
 
     public static Boolean enableWaterMark() {
-        String enableWaterMark = ConfigUtils.getConfig(FastcmsConstants.ATTACH_ENABLE_WATERMARK);
+        String enableWaterMark = ConfigUtils.getConfig(ATTACH_ENABLE_WATERMARK);
         try {
             return Boolean.parseBoolean(enableWaterMark);
         } catch (NumberFormatException e) {
@@ -58,7 +104,7 @@ public abstract class AttachUtils {
      * @return
      */
     public static Integer getDiaphaneity() {
-        String config = ConfigUtils.getConfig(FastcmsConstants.ATTACH_DIAPHANEITY);
+        String config = ConfigUtils.getConfig(ATTACH_DIAPHANEITY);
         try {
             return Integer.parseInt(config);
         } catch (NumberFormatException e) {
@@ -126,7 +172,7 @@ public abstract class AttachUtils {
      */
     public static final String addWaterMark(File file, BufferedImage waterImage) throws IOException {
 
-        String config = ConfigUtils.getConfig(FastcmsConstants.ATTACH_WATERMARK_POS);
+        String config = ConfigUtils.getConfig(ATTACH_WATERMARK_POS);
         Positions positions = Positions.BOTTOM_RIGHT;
         switch (config) {
             case "leftup":
@@ -180,6 +226,75 @@ public abstract class AttachUtils {
 
         g.dispose();
         return image;
+    }
+
+    /**
+     * 上传附件
+     * @param files
+     * @param attachmentService
+     * @return
+     */
+    public static Object upload(MultipartFile[] files, IAttachmentService attachmentService) {
+        if(files == null || files.length <= 0) {
+            return RestResultUtils.failed("请选择上传文件");
+        }
+
+        java.util.List<String> errorFiles = new ArrayList<>();
+
+        java.util.List<Attachment> attachmentList = new ArrayList<>();
+        for(MultipartFile file : files) {
+            String newFilePath = FileUtils.newFileName(file.getOriginalFilename());
+            File uploadFile = new File(DirUtils.getUploadDir(), newFilePath);
+
+            if(AttachUtils.getImageMaxSize() > 0) {
+                long fileSize = uploadFile.length(); //文件大小超过限制大小不上传
+                if(fileSize > 1024 * 1024 * AttachUtils.getImageMaxSize()) {
+                    uploadFile.delete();
+                    errorFiles.add(file.getOriginalFilename());
+                    continue;
+                }
+            }
+
+            try {
+                if (!uploadFile.getParentFile().exists()) {
+                    uploadFile.getParentFile().mkdirs();
+                }
+                file.transferTo(uploadFile);
+                Attachment attachment = new Attachment();
+                attachment.setFileName(file.getOriginalFilename());
+                attachment.setFilePath(newFilePath.replace("\\", "/"));
+                attachmentList.add(attachment);
+            } catch (IOException e) {
+                e.printStackTrace();
+                if(uploadFile != null) {
+                    uploadFile.delete();
+                }
+                errorFiles.add(file.getOriginalFilename());
+            }
+        }
+
+        if(!attachmentList.isEmpty()) {
+            attachmentService.saveBatch(attachmentList);
+        }
+        Map<String, String> result = new HashMap<>();
+        result.put("urls", attachmentList.stream().map(Attachment::getPath).collect(Collectors.joining()));
+
+        if(!attachmentList.isEmpty()) {
+            List<FileServerManager> extensions = PluginUtils.getExtensions(FileServerManager.class);
+            attachmentList.forEach(item -> {
+                for (FileServerManager extension : extensions) {
+                    try {
+                        extension.uploadFile(new File(DirUtils.getUploadDir() + item.getFilePath()));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+
+        return errorFiles.isEmpty() ?
+                RestResultUtils.success(result) :
+                RestResultUtils.failed(errorFiles.stream().collect(Collectors.joining(",")).concat(",以上文件上传失败"));
     }
 
 }

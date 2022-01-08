@@ -23,6 +23,7 @@ public class SinglePage implements Serializable {
 
     public static final String STATUS_PUBLISH = "publish";
     public static final String STATUS_DRAFT = "draft";
+    public static final String STATUS_DELETE = "delete";
 
     /**
      * 主键ID

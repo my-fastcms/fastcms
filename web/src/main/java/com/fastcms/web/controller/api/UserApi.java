@@ -19,6 +19,7 @@ package com.fastcms.web.controller.api;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.entity.User;
 import com.fastcms.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Objects;
 
 /**
  * 用户
@@ -49,6 +52,9 @@ public class UserApi {
      */
     @PostMapping("save")
     public RestResult<Boolean> save(@Validated User user) {
+        if(!Objects.equals(AuthUtils.getUserId(), user.getId())) {
+            return RestResultUtils.failed("只能修改自己信息");
+        }
         return RestResultUtils.success(userService.updateById(user));
     }
 
@@ -60,6 +66,11 @@ public class UserApi {
     @PostMapping("password/update")
     public Object updatePwd(User user) {
         try {
+
+            if(!Objects.equals(AuthUtils.getUserId(), user.getId())) {
+                return RestResultUtils.failed("只能修改自己的密码");
+            }
+
             userService.updateUserPassword(user);
             return RestResultUtils.success();
         } catch (Exception e) {

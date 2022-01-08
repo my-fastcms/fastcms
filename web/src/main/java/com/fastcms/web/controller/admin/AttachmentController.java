@@ -18,14 +18,13 @@ package com.fastcms.web.controller.admin;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.fastcms.core.auth.ActionTypes;
-import com.fastcms.core.auth.AuthConstants;
-import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.common.utils.FileUtils;
 import com.fastcms.core.attach.FileServerManager;
+import com.fastcms.core.auth.ActionTypes;
+import com.fastcms.core.auth.AuthConstants;
+import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.auth.Secured;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.core.utils.AttachUtils;
@@ -40,12 +39,7 @@ import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 附件管理
@@ -85,67 +79,7 @@ public class AttachmentController {
     @ExceptionHandler(value = MultipartException.class)
     @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "attaches", action = ActionTypes.WRITE)
     public Object upload(@RequestParam("files") MultipartFile files[]) {
-
-        if(files == null || files.length <= 0) {
-            return RestResultUtils.failed("请选择上传文件");
-        }
-
-        List<String> errorFiles = new ArrayList<>();
-
-        List<Attachment> attachmentList = new ArrayList<>();
-        for(MultipartFile file : files) {
-            String newFilePath = FileUtils.newFileName(file.getOriginalFilename());
-            File uploadFile = new File(DirUtils.getUploadDir(), newFilePath);
-
-            if(AttachUtils.getImageMaxSize() > 0) {
-                long fileSize = uploadFile.length(); //文件大小超过限制大小不上传
-                if(fileSize > 1024 * 1024 * AttachUtils.getImageMaxSize()) {
-                    uploadFile.delete();
-                    errorFiles.add(file.getOriginalFilename());
-                    continue;
-                }
-            }
-
-            try {
-                if (!uploadFile.getParentFile().exists()) {
-                    uploadFile.getParentFile().mkdirs();
-                }
-                file.transferTo(uploadFile);
-                Attachment attachment = new Attachment();
-                attachment.setFileName(file.getOriginalFilename());
-                attachment.setFilePath(newFilePath.replace("\\", "/"));
-                attachmentList.add(attachment);
-            } catch (IOException e) {
-                e.printStackTrace();
-                if(uploadFile != null) {
-                    uploadFile.delete();
-                }
-                errorFiles.add(file.getOriginalFilename());
-            }
-        }
-
-        if(!attachmentList.isEmpty()) {
-            attachmentService.saveBatch(attachmentList);
-        }
-        Map<String, String> result = new HashMap<>();
-        result.put("urls", attachmentList.stream().map(Attachment::getPath).collect(Collectors.joining()));
-
-        if(!attachmentList.isEmpty()) {
-            List<FileServerManager> extensions = PluginUtils.getExtensions(FileServerManager.class);
-            attachmentList.forEach(item -> {
-                for (FileServerManager extension : extensions) {
-                    try {
-                        extension.uploadFile(new File(DirUtils.getUploadDir() + item.getFilePath()));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        }
-
-        return errorFiles.isEmpty() ?
-                RestResultUtils.success(result) :
-                RestResultUtils.failed(errorFiles.stream().collect(Collectors.joining(",")).concat(",以上文件上传失败"));
+        return AttachUtils.upload(files, attachmentService);
     }
 
     /**

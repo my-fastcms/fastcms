@@ -88,4 +88,14 @@
         ${ew.customSqlSegment}
     </select>
 
+    <select id="getArticleStatData" resultType="com.fastcms.cms.service.IArticleService$ArticleStatVo">
+        SELECT
+        count(a.id) as total_count,
+        count(CASE WHEN DATE(updated) = CURDATE() THEN a.id ELSE NULL END) as today_count,
+        COALESCE(sum(a.view_count), 0) as total_view_count,
+        COALESCE(sum(CASE WHEN DATE(updated) = CURDATE() THEN a.view_count ELSE NULL END), 0) as today_view_count
+        from article a
+        where a.`status` = 'publish'
+    </select>
+
 </mapper>

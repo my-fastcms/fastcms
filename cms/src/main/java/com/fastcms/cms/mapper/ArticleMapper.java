@@ -58,4 +58,6 @@ public interface ArticleMapper extends BaseMapper<Article> {
 
 	void updateViewCount(@Param("id") Long id, @Param("count") Long count);
 
+	IArticleService.ArticleStatVo getArticleStatData();
+
 }

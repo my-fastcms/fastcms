@@ -7,7 +7,7 @@ import request from '/@/utils/request';
  */
 export function getUserMenus(params?: object) {
 	return request({
-		url: '/admin/user/menus',
+		url: '/admin/permission/menus',
 		method: 'get',
 		params,
 	});
@@ -20,7 +20,7 @@ export function getUserMenus(params?: object) {
  */
 export function getMenuList(params?: object) {
 	return request({
-		url: '/admin/menu/list',
+		url: '/admin/router/list',
 		method: 'get',
 		params,
 	});
@@ -33,7 +33,7 @@ export function getMenuList(params?: object) {
  */
 export function saveMenu(params?: object) {
 	return request({
-		url: '/admin/menu/save',
+		url: '/admin/router/save',
 		method: 'post',
 		params,
 	});
@@ -41,12 +41,12 @@ export function saveMenu(params?: object) {
 
 /**
  * 删除菜单数据
- * @param menuId 
+ * @param routerId 
  * @returns 
  */
-export function delMenu(menuId?: string) {
+export function delMenu(routerId?: string) {
 	return request({
-		url: '/admin/menu/delete/'+menuId,
+		url: '/admin/router/delete/'+routerId,
 		method: 'post'
 	});
 }

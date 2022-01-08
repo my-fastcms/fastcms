@@ -57,6 +57,22 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.fastcms</groupId>
+            <artifactId>fastcms-plugin-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fastcms</groupId>
+            <artifactId>fastcms-payment-starter</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fastcms</groupId>
+            <artifactId>fastcms-wechat-starter</artifactId>
+        </dependency>
+
     </dependencies>
 
 

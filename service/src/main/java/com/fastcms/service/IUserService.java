@@ -38,7 +38,7 @@ public interface IUserService extends IService<User> {
      * @param user
      * @return
      */
-    Boolean saveUser(User user) throws FastcmsException;
+    Long saveUser(User user) throws FastcmsException;
 
     /**
      * 删除用户

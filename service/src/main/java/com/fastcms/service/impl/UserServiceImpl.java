@@ -9,8 +9,10 @@ import com.fastcms.entity.User;
 import com.fastcms.entity.UserTag;
 import com.fastcms.mapper.RoleMapper;
 import com.fastcms.mapper.UserMapper;
+import com.fastcms.mapper.UserTagMapper;
 import com.fastcms.service.IRoleService;
 import com.fastcms.service.IUserService;
+import com.fastcms.service.IUserTagService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,7 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -33,6 +37,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Autowired
     private IRoleService roleService;
+
+    @Autowired
+    private IUserTagService userTagService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -71,7 +78,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     @Transactional
-    public Boolean saveUser(User user) throws FastcmsException {
+    public Long saveUser(User user) throws FastcmsException {
 
         if(user.getId() == null) {
             User one = getOne(Wrappers.<User>lambdaQuery().eq(User::getUserName, user.getUserName()));
@@ -92,13 +99,32 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         saveOrUpdate(user);
         roleService.saveUserRole(user.getId(), user.getRoleList());
-        return true;
+        processTag(user.getId(), user.getTagList());
+        return user.getId();
+    }
+
+    void processTag(Long userId, List<String> processList) {
+        List<UserTag> articleTagList = new ArrayList<>();
+        if(processList != null && processList.size()>0) {
+            //插入新的标签
+            for (String tag : processList) {
+                if(StringUtils.isNotBlank(tag)) {
+                    articleTagList.add(userTagService.getByName(tag));
+                }
+            }
+
+            if(!articleTagList.isEmpty()) {
+                userTagService.saveBatch(articleTagList.stream().filter(item -> item.getId() == null).collect(Collectors.toList()));
+            }
+        }
+        userTagService.saveUserTagRelation(userId, articleTagList.stream().map(UserTag::getId).collect(Collectors.toList()));
     }
 
     @Override
     @Transactional
     public Boolean deleteUser(Long userId) {
         ((RoleMapper) roleService.getBaseMapper()).deleteRoleByUserId(userId);
+        ((UserTagMapper) userTagService.getBaseMapper()).deleteUserTagRelationByUserId(userId);
         removeById(userId);
         return true;
     }

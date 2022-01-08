@@ -83,11 +83,13 @@ public class ArticleController {
                                                             @RequestParam(name = "status", required = false) String status,
                                                             @RequestParam(name = "categoryId", required = false) String categoryId,
                                                             @RequestParam(name = "tagId", required = false) String tagId) {
-        QueryWrapper<Object> queryWrapper = Wrappers.query().like(StrUtils.isNotBlank(title), "a.title", status)
+        QueryWrapper<Object> queryWrapper = Wrappers.query()
+                .like(StrUtils.isNotBlank(title), "a.title", title)
                 .eq(!AuthUtils.isAdmin(), "a.user_id", AuthUtils.getUserId())
                 .eq(StrUtils.isNotBlank(status), "a.status", status)
                 .eq(StrUtils.isNotBlank(categoryId), "acr.category_id", categoryId)
                 .eq(StrUtils.isNotBlank(tagId), "acr.category_id", tagId)
+                .ne("a.status", Article.STATUS_DELETE)
                 .orderByDesc("a.created");
 
         Page<IArticleService.ArticleVo> pageData = articleService.pageArticle(page.toPage(), queryWrapper);
@@ -131,7 +133,11 @@ public class ArticleController {
     @PostMapping("delete/{articleId}")
     @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.WRITE)
     public Object deleteArticle(@PathVariable("articleId") Long articleId) {
-        articleService.removeById(articleId);
+        Article article = articleService.getById(articleId);
+        if(article != null) {
+            article.setStatus(Article.STATUS_DELETE);
+            articleService.updateById(article);
+        }
         return RestResultUtils.success();
     }
 

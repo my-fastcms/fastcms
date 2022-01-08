@@ -30,13 +30,17 @@ import com.fastcms.cms.service.IArticleService;
 import com.fastcms.cms.service.IArticleTagService;
 import com.fastcms.cms.task.ArticleViewCountUpdateTask;
 import com.fastcms.common.exception.FastcmsException;
+import com.fastcms.extension.IndexDataExtension;
 import org.apache.commons.lang.StringUtils;
+import org.pf4j.Extension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -47,7 +51,8 @@ import java.util.stream.Collectors;
  * @version: 1.0
  */
 @Service
-public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements IArticleService {
+@Extension
+public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements IArticleService, IndexDataExtension {
 
     @Autowired
     private IArticleTagService articleTagService;
@@ -147,4 +152,25 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         getBaseMapper().updateViewCount(id, count);
     }
 
+    @Override
+    public ArticleStatVo getArticleStatData() {
+        return getBaseMapper().getArticleStatData();
+    }
+
+    @Override
+    public Map<String, Object> getData() {
+        Map<String, Object> result = new HashMap<>();
+        result.put("articleStatData", getArticleStatData());
+
+        LambdaQueryWrapper<Article> queryWrapper = Wrappers.<Article>lambdaQuery()
+                .eq(Article::getStatus, Article.STATUS_PUBLISH)
+                .orderByDesc(Article::getCreated)
+                .last("limit 0, 12")
+                .select(Article::getId, Article::getTitle, Article::getViewCount);
+
+        List<Article> articleList = list(queryWrapper);
+        result.put("newArticleList", articleList);
+
+        return result;
+    }
 }

@@ -24,10 +24,13 @@ import com.fastcms.cms.service.IArticleService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.mybatis.PageModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 /**
  * 文章接口
@@ -54,7 +57,9 @@ public class ArticleApi {
 	public RestResult<Page<IArticleService.ArticleVo>> list(PageModel page,
 															@RequestParam(name = "categoryId", required = false) Long categoryId) {
 
-		QueryWrapper queryWrapper = Wrappers.query().eq(categoryId != null,"acr.category_id", categoryId)
+		QueryWrapper queryWrapper = Wrappers.query()
+				.eq("a.user_id", AuthUtils.getUserId())
+				.eq(categoryId != null,"acr.category_id", categoryId)
 				.eq("a.status", Article.STATUS_PUBLISH);
 		Page<IArticleService.ArticleVo> articleVoPage = articleService.pageArticle(page.toPage(), queryWrapper);
 		return RestResultUtils.success(articleVoPage);
@@ -97,6 +102,15 @@ public class ArticleApi {
 	@PostMapping("delete/{articleId}")
 	public Object delete(@PathVariable("articleId") Long articleId) {
 		try {
+			Article article = articleService.getById(articleId);
+			if(article == null) {
+				return RestResultUtils.failed("文章不存在");
+			}
+
+			if(!Objects.equals(AuthUtils.getUserId(), article.getUserId())) {
+				return RestResultUtils.failed("只能删除自己的文章");
+			}
+
 			articleService.removeById(articleId);
 			return RestResultUtils.success();
 		} catch (Exception e) {

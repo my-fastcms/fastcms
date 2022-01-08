@@ -30,21 +30,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.fastcms</groupId>
-            <artifactId>fastcms-plugin-starter</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fastcms</groupId>
-            <artifactId>fastcms-payment-starter</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fastcms</groupId>
-            <artifactId>fastcms-wechat-starter</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.github.whvcse</groupId>
             <artifactId>easy-captcha</artifactId>
         </dependency>

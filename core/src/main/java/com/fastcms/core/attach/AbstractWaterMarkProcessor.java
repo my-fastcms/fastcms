@@ -23,7 +23,7 @@ public abstract class AbstractWaterMarkProcessor implements WaterMarkProcessor {
             return;
         }
 
-        String watermark = ConfigUtils.getConfig(FastcmsConstants.ATTACH_WATERMARK_FILE);
+        String watermark = ConfigUtils.getConfig(AttachUtils.ATTACH_WATERMARK_FILE);
         if(StringUtils.isBlank(watermark)) {
             return;
         }

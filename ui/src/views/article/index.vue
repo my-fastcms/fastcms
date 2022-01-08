@@ -3,8 +3,8 @@
 		<el-card shadow="hover">
 			<div class="mb15">
 				<el-button class="mt15" size="small" @click="addArticle()" type="primary" icon="iconfont icon-shuxingtu">新建文章</el-button>
-				<el-input size="small" placeholder="请输入文章标题" prefix-icon="el-icon-search" style="max-width: 180px" class="ml10"></el-input>
-				<el-button size="small" type="primary" class="ml10">查询</el-button>
+				<el-input size="small" v-model="tableData.param.title" placeholder="请输入文章标题" prefix-icon="el-icon-search" style="max-width: 180px" class="ml10"></el-input>
+				<el-button size="small" type="primary" class="ml10" @click="initTableData">查询</el-button>
 			</div>
 			<el-table :data="tableData.data" stripe style="width: 100%">
 				<el-table-column prop="id" label="ID" show-overflow-tooltip></el-table-column>
@@ -21,7 +21,7 @@
 				<el-table-column prop="path" label="操作" width="90">
 					<template #default="scope">
 						<el-button size="mini" type="text" @click="onRowUpdate(scope.row)">修改</el-button>
-						<el-button v-if="scope.row.id != 1" size="mini" type="text" @click="onRowDel(scope.row)">删除</el-button>
+						<el-button size="mini" type="text" @click="onRowDel(scope.row)">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>

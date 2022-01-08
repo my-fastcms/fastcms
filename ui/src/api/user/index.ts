@@ -50,3 +50,14 @@ export function getUserInfo(userId?: string) {
 		method: 'get',
 	});
 }
+
+/**
+ * 获取标签列表
+ * @returns 
+ */
+export function getTagList() {
+	return request({
+		url: '/admin/user/tag/list',
+		method: 'get',
+	});
+}

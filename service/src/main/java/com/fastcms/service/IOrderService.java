@@ -24,11 +24,52 @@ public interface IOrderService extends IService<Order> {
      */
     Page<OrderVo> pageOrder(Page pageParam, QueryWrapper queryWrapper);
 
+    /**
+     * 创建订单
+     * @param createOrderParam
+     * @return
+     * @throws Exception
+     */
     Long createOrder(CreateOrderParam createOrderParam) throws Exception;
 
     PaymentRecord preparePaymentRecord(Order order, String openid, String ip);
 
+    /**
+     * 订单详情
+     * @param orderId
+     * @return
+     */
     OrderVo getOrderDetail(Long orderId);
+
+    /**
+     * 获取订单统计数据
+     * @return
+     */
+    OrderStatVo getOrderStatData();
+
+    /**
+     * 订单统计
+     */
+    class OrderStatVo implements Serializable {
+        Long totalCount;
+        Long todayCount;
+
+        public Long getTotalCount() {
+            return totalCount;
+        }
+
+        public void setTotalCount(Long totalCount) {
+            this.totalCount = totalCount;
+        }
+
+        public Long getTodayCount() {
+            return todayCount;
+        }
+
+        public void setTodayCount(Long todayCount) {
+            this.todayCount = todayCount;
+        }
+    }
 
     class OrderVo extends Order {
 
