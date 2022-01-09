@@ -41,8 +41,8 @@ public abstract class PluginBase extends Plugin {
     public final ApplicationContext getApplicationContext() {
         if (applicationContext == null) {
             applicationContext = createApplicationContext();
+            PluginApplicationUtils.put(wrapper.getPluginId(), applicationContext);
         }
-
         return applicationContext;
     }
 

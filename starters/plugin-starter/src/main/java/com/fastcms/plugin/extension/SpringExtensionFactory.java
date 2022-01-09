@@ -1,3 +1,19 @@
+/**
+ * Copyright (c) 广州小橘灯信息科技有限公司 2016-2017, wjun_java@163.com.
+ * <p>
+ * Licensed under the GNU Lesser General Public License (LGPL) ,Version 3.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.gnu.org/licenses/lgpl-3.0.txt
+ * http://www.xjd2020.com
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.fastcms.plugin.extension;
 
 import com.fastcms.plugin.FastcmsPluginManager;
@@ -128,11 +144,7 @@ public class SpringExtensionFactory implements ExtensionFactory {
 
         final ApplicationContext applicationContext;
 
-        if (plugin instanceof PluginBase) {
-            log.debug("  Extension class ' " + nameOf(extensionClass) + "' belongs to spring-plugin '" + nameOf(plugin)
-                    + "' and will be autowired by using its application context.");
-            applicationContext = ((PluginBase) plugin).getApplicationContext();
-        } else if (this.pluginManager instanceof FastcmsPluginManager) {
+        if (this.pluginManager instanceof FastcmsPluginManager) {
             log.debug("  Extension class ' " + nameOf(extensionClass) + "' belongs to a non spring-plugin (or main application)" +
                     " '" + nameOf(plugin) + ", but the used PF4J plugin-manager is a spring-plugin-manager. Therefore" +
                     " the extension class will be autowired by using the managers application contexts");

@@ -16,26 +16,36 @@
  */
 package com.fastcms.hello;
 
-import com.fastcms.plugin.InterceptPath;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.servlet.HandlerInterceptor;
+import com.baomidou.mybatisplus.annotation.TableName;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.io.Serializable;
 
 /**
- * wjun_java@163.com
+ * @author： wjun_java@163.com
+ * @date： 2022/1/10
+ * @description：
+ * @modifiedBy：
+ * @version: 1.0
  */
-@InterceptPath({ "/**/plugin/hello/**" })
-public class HelloInterceptor implements HandlerInterceptor {
+@TableName("test")
+public class Hello implements Serializable {
 
-    private static final Logger log = LoggerFactory.getLogger(HelloInterceptor.class);
+	private int id;
+	private String name;
 
-    @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        System.out.println("=============>>>HelloInterceptor.preHandle");
-        return true;
-    }
+	public int getId() {
+		return id;
+	}
 
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 }

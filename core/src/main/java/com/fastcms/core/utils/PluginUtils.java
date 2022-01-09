@@ -12,6 +12,8 @@ public final class PluginUtils {
 
     private PluginUtils() {}
 
+
+
     /**
      * 获取插件扩展
      * @param type

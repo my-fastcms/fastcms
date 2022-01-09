@@ -1,5 +1,6 @@
 package com.fastcms.hello;
 
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -7,6 +8,9 @@ import org.springframework.context.annotation.Configuration;
  *
  */
 @Configuration
-public class HelloPluginConfiguration {
+public class HelloPluginConfiguration implements InitializingBean {
 
+	@Override
+	public void afterPropertiesSet() throws Exception {
+	}
 }

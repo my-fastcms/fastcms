@@ -14,40 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.plugin.autoconfigure;
+package com.fastcms.plugin;
 
-import org.pf4j.RuntimeMode;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.ApplicationContext;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author： wjun_java@163.com
- * @date： 2021/9/14
+ * @date： 2022/1/9
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-@ConfigurationProperties(prefix = PluginProperties.PLUGIN_PREFIX)
-public class PluginProperties {
+public final class PluginApplicationUtils {
 
-    public static final String PLUGIN_PREFIX = "plugin";
+	static final Map<String, ApplicationContext> map = Collections.synchronizedMap(new HashMap<>());
 
-    private String mode = RuntimeMode.DEVELOPMENT.name();
+	public static final void put(String pluginId, ApplicationContext applicationContext) {
+		map.putIfAbsent(pluginId, applicationContext);
+	}
 
-    private String path;
+	public static final ApplicationContext get(String pluginId) {
+		return map.get(pluginId);
+	}
 
-    public String getMode() {
-        return mode;
-    }
-
-    public void setMode(String mode) {
-        this.mode = mode;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
 }
