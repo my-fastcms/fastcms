@@ -41,4 +41,8 @@ public final class PluginApplicationUtils {
 		return map.get(pluginId);
 	}
 
+	public static final Object getBean(String pluginId, Class<?> clazz) {
+		return get(pluginId).getBean(clazz);
+	}
+
 }

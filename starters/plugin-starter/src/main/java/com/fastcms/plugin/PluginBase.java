@@ -16,6 +16,9 @@
  */
 package com.fastcms.plugin;
 
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.jdbc.ScriptRunner;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.pf4j.Plugin;
 import org.pf4j.PluginWrapper;
 import org.springframework.context.ApplicationContext;
@@ -30,6 +33,11 @@ import org.springframework.context.ConfigurableApplicationContext;
  */
 public abstract class PluginBase extends Plugin {
 
+    /**
+     * 插件配置界面地址
+     * 插件管理列表中，点击配置按钮会访问该地址，弹出插件配置界面
+     * @return
+     */
     public abstract String getConfigUrl();
 
     private ApplicationContext applicationContext;
@@ -41,9 +49,16 @@ public abstract class PluginBase extends Plugin {
     public final ApplicationContext getApplicationContext() {
         if (applicationContext == null) {
             applicationContext = createApplicationContext();
-            PluginApplicationUtils.put(wrapper.getPluginId(), applicationContext);
+            if(applicationContext != null) {
+                PluginApplicationUtils.put(wrapper.getPluginId(), applicationContext);
+            }
         }
         return applicationContext;
+    }
+
+    @Override
+    public void start() {
+        getApplicationContext();
     }
 
     @Override
@@ -54,6 +69,29 @@ public abstract class PluginBase extends Plugin {
         }
     }
 
-    protected abstract ApplicationContext createApplicationContext();
+    /**
+     * 由子类覆盖
+     * 一般在插件中需要实例化mapper的情况下需要构建插件的Spring容器
+     * 其他情况下直接返回空，使用主程序的Spring容器
+     * @return
+     */
+    protected ApplicationContext createApplicationContext() {
+        return null;
+    }
+
+    /**
+     * 插件中直接执行sql文件
+     * @param sqlFile
+     */
+    protected void runSqlFile(String sqlFile) {
+        try {
+            FastcmsPluginManager pluginManager = (FastcmsPluginManager) wrapper.getPluginManager();
+            SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) pluginManager.getApplicationContext().getBean("sqlSessionFactory");
+            ScriptRunner scriptRunner = new ScriptRunner(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection());
+            scriptRunner.runScript(Resources.getResourceAsReader(wrapper.getPluginClassLoader(), sqlFile));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

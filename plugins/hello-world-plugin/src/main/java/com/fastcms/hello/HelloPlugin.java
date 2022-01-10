@@ -16,13 +16,9 @@
  */
 package com.fastcms.hello;
 
-import com.fastcms.common.constants.FastcmsConstants;
-import com.fastcms.plugin.FastcmsPluginManager;
+import com.fastcms.core.utils.PluginUtils;
 import com.fastcms.plugin.PluginBase;
-import com.fastcms.utils.ConfigUtils;
 import org.pf4j.PluginWrapper;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
  * hello world plugin
@@ -32,33 +28,11 @@ public class HelloPlugin extends PluginBase {
 
     @Override
     public String getConfigUrl() {
-        return ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + FastcmsConstants.PLUGIN_MAPPING + "/hello";
+        return PluginUtils.getConfigUrlHost() + "/hello";
     }
 
     public HelloPlugin(PluginWrapper wrapper) {
         super(wrapper);
     }
 
-    @Override
-    protected ApplicationContext createApplicationContext() {
-        AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
-        applicationContext.register(HelloPluginConfiguration.class);
-        applicationContext.setParent(((FastcmsPluginManager) wrapper.getPluginManager()).getApplicationContext());
-        applicationContext.refresh();
-        return applicationContext;
-    }
-
-    @Override
-    public void start() {
-
-//        try {
-//            SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) ApplicationUtils.getBean("sqlSessionFactory");
-//            ScriptRunner scriptRunner = new ScriptRunner(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection());
-//            scriptRunner.runScript(Resources.getResourceAsReader(wrapper.getPluginClassLoader(),"hello-plugin.sql"));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-
-        getApplicationContext();
-    }
 }

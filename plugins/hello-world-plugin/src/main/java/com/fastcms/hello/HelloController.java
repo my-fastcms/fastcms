@@ -16,11 +16,9 @@
  */
 package com.fastcms.hello;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.utils.PluginUtils;
-import com.fastcms.plugin.PluginApplicationUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,15 +35,6 @@ public class HelloController {
 
     @GetMapping
     public String index() {
-
-        HelloPluginMapper mapper = PluginApplicationUtils.get("hello-world-plugin").getBean(HelloPluginMapper.class);
-
-        Hello test1 = new Hello();
-        test1.setName("test");
-        mapper.insert(test1);
-
-        List<Hello> tests = mapper.selectList(new QueryWrapper<>());
-        System.out.println(tests.size());
 
         List<HelloService> extensions = PluginUtils.getExtensions(HelloService.class);
         extensions.forEach(item -> item.sayHello());

@@ -18,7 +18,7 @@ package com.fastcms.plugin.register;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.fastcms.plugin.FastcmsPluginManager;
-import com.fastcms.plugin.PluginBase;
+import com.fastcms.plugin.PluginApplicationUtils;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.io.Resources;
@@ -28,6 +28,7 @@ import org.mybatis.spring.mapper.MapperFactoryBean;
 import org.pf4j.PluginWrapper;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.NestedIOException;
 import org.springframework.core.io.Resource;
@@ -39,6 +40,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * 把mybatis mapper注册到 插件Spring容器中
+ * 主程序通过 com.fastcms.plugin.PluginApplicationUtils获取插件容器，再获取mapper实列
+ * 由于mapper实例跟Service不是同一个Spring容器，所以不可以通过@Autowired注入mapper到service
  * @author： wjun_java@163.com
  * @date： 2022/1/9
  * @description：
@@ -54,11 +58,12 @@ public class MyBatisMapperRegister extends AbstractPluginRegister {
 	@Override
 	public void registry(String pluginId) throws Exception {
 
-		PluginWrapper pluginWrapper = pluginManger.getPlugin(pluginId);
-
 		List<Class<?>> mapperClassList = getPluginClasses(pluginId).stream().filter(clazz -> BaseMapper.class.isAssignableFrom(clazz)).collect(Collectors.toList());
 
 		if (mapperClassList.isEmpty()) return;
+
+		ApplicationContext applicationContext = PluginApplicationUtils.get(pluginId);
+		if(applicationContext == null) return;
 
 		//注册mapper
 		for (Class<?> mapperClass : mapperClassList) {
@@ -67,11 +72,11 @@ public class MyBatisMapperRegister extends AbstractPluginRegister {
 			definition.setBeanClass(MapperFactoryBean.class);
 			definition.getPropertyValues().add("addToConfig", true);
 			definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
-			((AnnotationConfigApplicationContext)((PluginBase) pluginWrapper.getPlugin()).getApplicationContext())
-					.registerBeanDefinition(mapperClass.getName(), definition);
+			//注册到插件Spring容器，而不是主程序Spring容器
+			((AnnotationConfigApplicationContext) applicationContext).registerBeanDefinition(mapperClass.getName(), definition);
 		}
 
-
+		PluginWrapper pluginWrapper = pluginManger.getPlugin(pluginId);
 		PathMatchingResourcePatternResolver pathMatchingResourcePatternResolver = new PathMatchingResourcePatternResolver(pluginWrapper.getPluginClassLoader());
 		Resource[] mapperXmlResources = pathMatchingResourcePatternResolver.getResources("classpath:/mapper/*Mapper.xml");
 
@@ -81,12 +86,9 @@ public class MyBatisMapperRegister extends AbstractPluginRegister {
 		try {
 			Resources.setDefaultClassLoader(pluginWrapper.getPluginClassLoader());
 			for (Resource mapperXmlResource : Arrays.asList(mapperXmlResources)) {
-				if(mapperXmlResource == null) continue;
-
-				if(mapperXmlResource.getFilename().endsWith("Mapper.xml")) {
+				if(mapperXmlResource != null && mapperXmlResource.getFilename().endsWith("Mapper.xml")) {
 					try {
-						XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(mapperXmlResource.getInputStream(),
-								configuration, mapperXmlResource.toString(), configuration.getSqlFragments());
+						XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(mapperXmlResource.getInputStream(), configuration, mapperXmlResource.toString(), configuration.getSqlFragments());
 						xmlMapperBuilder.parse();
 					} catch (Exception e) {
 						throw new NestedIOException("Failed to parse mapping resource: '" + mapperXmlResource + "'", e);
