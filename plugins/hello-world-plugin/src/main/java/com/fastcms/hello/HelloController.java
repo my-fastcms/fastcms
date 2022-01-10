@@ -19,6 +19,8 @@ package com.fastcms.hello;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.utils.PluginUtils;
+import com.fastcms.utils.ApplicationUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,8 +35,14 @@ import java.util.List;
 @RequestMapping(FastcmsConstants.PLUGIN_MAPPING + "/hello")
 public class HelloController {
 
+    @Autowired
+    private HelloService helloService;
+
     @GetMapping
     public String index() {
+
+        HelloPluginMapper bean = ApplicationUtils.getBean(HelloPluginMapper.class);
+        System.out.println(bean);
 
         List<HelloService> extensions = PluginUtils.getExtensions(HelloService.class);
         extensions.forEach(item -> item.sayHello());

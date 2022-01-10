@@ -23,6 +23,7 @@ import org.pf4j.Plugin;
 import org.pf4j.PluginWrapper;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.GenericApplicationContext;
 
 /**
  * @author： wjun_java@163.com
@@ -50,6 +51,7 @@ public abstract class PluginBase extends Plugin {
         if (applicationContext == null) {
             applicationContext = createApplicationContext();
             if(applicationContext != null) {
+                ((GenericApplicationContext) applicationContext).refresh();
                 PluginApplicationUtils.put(wrapper.getPluginId(), applicationContext);
             }
         }

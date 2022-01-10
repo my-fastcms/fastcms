@@ -18,7 +18,6 @@ package com.fastcms.plugin.register;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.fastcms.plugin.FastcmsPluginManager;
-import com.fastcms.plugin.PluginApplicationUtils;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.executor.ErrorContext;
 import org.apache.ibatis.io.Resources;
@@ -28,21 +27,18 @@ import org.mybatis.spring.mapper.MapperFactoryBean;
 import org.pf4j.PluginWrapper;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.NestedIOException;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.ClassUtils;
+import org.springframework.web.context.support.GenericWebApplicationContext;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 把mybatis mapper注册到 插件Spring容器中
- * 主程序通过 com.fastcms.plugin.PluginApplicationUtils获取插件容器，再获取mapper实列
- * 由于mapper实例跟Service不是同一个Spring容器，所以不可以通过@Autowired注入mapper到service
+ * 把mybatis mapper注册到 Spring容器中
  * @author： wjun_java@163.com
  * @date： 2022/1/9
  * @description：
@@ -58,22 +54,14 @@ public class MyBatisMapperRegister extends AbstractPluginRegister {
 	@Override
 	public void registry(String pluginId) throws Exception {
 
-		List<Class<?>> mapperClassList = getPluginClasses(pluginId).stream().filter(clazz -> BaseMapper.class.isAssignableFrom(clazz)).collect(Collectors.toList());
-
-		if (mapperClassList.isEmpty()) return;
-
-		ApplicationContext applicationContext = PluginApplicationUtils.get(pluginId);
-		if(applicationContext == null) return;
-
 		//注册mapper
-		for (Class<?> mapperClass : mapperClassList) {
+		for (Class<?> mapperClass : getMapperClassList(pluginId)) {
 			GenericBeanDefinition definition = new GenericBeanDefinition();
 			definition.getConstructorArgumentValues().addGenericArgumentValue(mapperClass);
 			definition.setBeanClass(MapperFactoryBean.class);
 			definition.getPropertyValues().add("addToConfig", true);
 			definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
-			//注册到插件Spring容器，而不是主程序Spring容器
-			((AnnotationConfigApplicationContext) applicationContext).registerBeanDefinition(mapperClass.getName(), definition);
+			((GenericWebApplicationContext) this.pluginManger.getApplicationContext()).registerBeanDefinition(mapperClass.getName(), definition);
 		}
 
 		PluginWrapper pluginWrapper = pluginManger.getPlugin(pluginId);
@@ -105,7 +93,15 @@ public class MyBatisMapperRegister extends AbstractPluginRegister {
 
 	@Override
 	public void unRegistry(String pluginId) throws Exception {
+		//注册mapper
+		for (Class<?> mapperClass : getMapperClassList(pluginId)) {
+			((GenericWebApplicationContext) this.pluginManger.getApplicationContext()).removeBeanDefinition(mapperClass.getName());
+		}
+	}
 
+
+	List<Class<?>> getMapperClassList(String pluginId) throws Exception {
+		return getPluginClasses(pluginId).stream().filter(clazz -> BaseMapper.class.isAssignableFrom(clazz)).collect(Collectors.toList());
 	}
 
 }

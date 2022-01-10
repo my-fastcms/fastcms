@@ -34,11 +34,13 @@ public class CompoundPluginRegister extends AbstractPluginRegister implements Pl
     public CompoundPluginRegister(FastcmsPluginManager pluginManger) {
         super(pluginManger);
         registerList = Collections.synchronizedList(new ArrayList<>());
+
+        addRegister(new MyBatisMapperRegister(pluginManger));
         addRegister(new ExtensionsRegister(pluginManger));
         addRegister(new ControllerRegister(pluginManger));
         addRegister(new InterceptorRegister(pluginManger));
         addRegister(new FreeMarkerViewRegister(pluginManger));
-        addRegister(new MyBatisMapperRegister(pluginManger));
+
     }
 
     @Override
