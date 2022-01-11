@@ -72,9 +72,9 @@ public abstract class PluginBase extends Plugin {
     }
 
     /**
-     * 由子类覆盖
-     * 一般在插件中需要实例化mapper的情况下需要构建插件的Spring容器
-     * 其他情况下直接返回空，使用主程序的Spring容器
+     * 由插件子类覆盖，用来创建插件自己的spring容器，独立与主程序Spring容器之外
+     * 特殊需求情况下需要构建插件的Spring容器
+     * 一般情况下直接返回空，使用主程序的Spring容器
      * @return
      */
     protected ApplicationContext createApplicationContext() {

@@ -24,14 +24,19 @@
         <module>hello-world-plugin</module>
     </modules>
 
-    <dependencies>
+    <dependencyManagement>
 
-        <dependency>
-            <groupId>com.fastcms</groupId>
-            <artifactId>fastcms-core</artifactId>
-        </dependency>
+        <dependencies>
 
-    </dependencies>
+            <dependency>
+                <groupId>com.fastcms</groupId>
+                <artifactId>fastcms-core</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+        </dependencies>
+
+    </dependencyManagement>
 
     <build>
         <plugins>

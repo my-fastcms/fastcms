@@ -81,13 +81,9 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
         loadPlugins();
         startPlugins();
 
-        getStartedPlugins().forEach(item -> {
-            try {
-                pluginRegister.registry(item.getPluginId());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+        for (PluginWrapper item : getStartedPlugins()) {
+            pluginRegister.registry(item.getPluginId());
+        }
 
     }
 
