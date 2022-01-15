@@ -4,29 +4,29 @@
  */
 export const newsInfoList: Array<object> = [
 	{
-		title: '[发布] 2021年02月28日发布基于 vue3.x + vite v1.0.0 版本',
+		title: '[重构] 2021年02月28日发布基于 Spring api doc 重构版本',
 		date: '02/28',
-		link: 'https://gitee.com/lyt-top/vue-next-admin',
+		link: 'https://gitee.com/xjd2020/fastcms.git',
 	},
 	{
-		title: '[发布] 2021年04月15日发布 vue2.x + webpack 重构版本',
+		title: '[重构] 2021年04月15日发布 SpringBoot Security 权限 重构版本',
 		date: '04/15',
-		link: 'https://gitee.com/lyt-top/vue-next-admin/tree/vue-prev-admin/',
+		link: 'https://www.xjd2020.com/fastcms',
 	},
 	{
-		title: '[重构] 2021年04月10日 重构 vue2.x + webpack v1.0.0 版本',
+		title: '[重构] 2021年04月10日 重构 SpringBoot Plugin 重构版本',
 		date: '04/10',
-		link: 'https://gitee.com/lyt-top/vue-next-admin/tree/vue-prev-admin/',
+		link: 'https://www.xjd2020.com/fastcms',
 	},
 	{
 		title: '[预览] 2020年12月08日，基于 vue3.x 版本后台模板的预览',
 		date: '12/08',
-		link: 'http://lyt-top.gitee.io/vue-next-admin-preview/#/login',
+		link: 'https://www.xjd2020.com/fastcms',
 	},
 	{
-		title: '[预览] 2020年11月15日，基于 vue2.x 版本后台模板的预览',
+		title: '[预览] 2020年11月15日，基于 SpringBoot前后端分离版本后台模板的预览',
 		date: '11/15',
-		link: 'https://lyt-top.gitee.io/vue-prev-admin-preview/#/login',
+		link: 'https://www.xjd2020.com/fastcms',
 	},
 ];
 

@@ -45,7 +45,7 @@ export default {
 		dropdownSmall: 'small',
 		dropdownMini: 'mini',
 		dropdown1: 'home page',
-		dropdown2: 'Personal Center',
+		dropdown2: 'Personal Info',
 		dropdown3: '404',
 		dropdown4: '401',
 		dropdown5: 'Log out',

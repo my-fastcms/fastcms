@@ -61,7 +61,7 @@ export default {
 		dropdownSmall: '小型',
 		dropdownMini: '超小',
 		dropdown1: '首页',
-		dropdown2: '个人中心',
+		dropdown2: '个人信息',
 		dropdown3: '404',
 		dropdown4: '401',
 		dropdown5: '退出登录',

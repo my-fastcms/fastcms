@@ -18,7 +18,7 @@ export function getUserList(params?: object) {
  * @param params 
  * @returns 
  */
-export function saveUser(params?: object) {
+export function saveUser(params?: string) {
 	return request({
 		url: '/admin/user/save',
 		method: 'post',
@@ -59,5 +59,19 @@ export function getTagList() {
 	return request({
 		url: '/admin/user/tag/list',
 		method: 'get',
+	});
+}
+
+/**
+ * 修改密码
+ * @param params 
+ * @returns 
+ */
+export function updatePassword(params?: string) {
+	return request({
+		url: '/admin/user/password/update',
+		method: 'post',
+		data: params,
+		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 	});
 }

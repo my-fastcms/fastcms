@@ -41,12 +41,24 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 					isKeepAlive: true,
 					isAffix: true,
 					isIframe: false,
-					auth: ['admin', 'test'],
 					icon: 'iconfont icon-shouye',
 				},
 			},
 		],
-	}
+	},
+	{
+		path: '/personal',
+		name: 'personal',
+		component: () => import('/@/views/personal/index.vue'),
+		meta: {
+			title: 'message.user.dropdown2',
+			isLink: '',
+			isHide: false,
+			isKeepAlive: true,
+			isAffix: false,
+			isIframe: false,
+		},
+	},
 ];
 
 /**
@@ -87,6 +99,7 @@ export const staticRoutes: Array<RouteRecordRaw> = [
 			title: 'message.staticRoutes.noPower',
 		},
 	},
+	
 ];
 
 /**
@@ -198,7 +211,6 @@ export const userCenterRoutes: Array<RouteRecordRaw> = [
 					isKeepAlive: true,
 					isAffix: false,
 					isIframe: false,
-					auth: ['admin', 'test'],
 					icon: 'el-icon-edit',
 				},
 			},
