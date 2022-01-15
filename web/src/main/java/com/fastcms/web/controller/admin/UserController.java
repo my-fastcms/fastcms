@@ -24,6 +24,7 @@ import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.auth.ActionTypes;
 import com.fastcms.core.auth.AuthConstants;
+import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.auth.Secured;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.entity.Role;
@@ -121,10 +122,11 @@ public class UserController {
     @PostMapping("delete/{userId}")
     @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "users", action = ActionTypes.WRITE)
     public RestResult<Boolean> del(@PathVariable("userId") Long userId) {
-        if(FastcmsConstants.ADMIN_USER_ID == userId) {
-            return RestResultUtils.failed("超级管理员不可删除");
+        try {
+            return RestResultUtils.success(userService.deleteUser(userId));
+        } catch (FastcmsException e) {
+            return RestResultUtils.failed(e.getMessage());
         }
-        return RestResultUtils.success(userService.deleteUser(userId));
     }
 
     /**
@@ -165,5 +167,23 @@ public class UserController {
     public RestResult<List<UserTag>> getTagList() {
         return RestResultUtils.success(userTagService.list());
     }
+
+    /**
+     * 修改密码
+     * @param updatePasswordParam
+     * @return
+     */
+    @PostMapping("password/update")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "users", action = ActionTypes.WRITE)
+    public Object updatePassword(@Validated IUserService.UpdatePasswordParam updatePasswordParam) {
+        try {
+            updatePasswordParam.setId(AuthUtils.getUserId());
+            userService.updateUserPassword(updatePasswordParam);
+            return RestResultUtils.success();
+        } catch (FastcmsException e) {
+            return RestResultUtils.failed(e.getMessage());
+        }
+    }
+
 
 }

@@ -16,19 +16,12 @@
  */
 package com.fastcms.codegen;
 
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
-import com.baomidou.mybatisplus.generator.AutoGenerator;
-import com.baomidou.mybatisplus.generator.InjectionConfig;
-import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
-import com.baomidou.mybatisplus.generator.config.FileOutConfig;
-import com.baomidou.mybatisplus.generator.config.PackageConfig;
-import com.baomidou.mybatisplus.generator.config.StrategyConfig;
-import com.baomidou.mybatisplus.generator.config.builder.ConfigBuilder;
-import com.baomidou.mybatisplus.generator.config.po.TableInfo;
-import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
+import com.baomidou.mybatisplus.generator.FastAutoGenerator;
+import com.baomidou.mybatisplus.generator.config.OutputFile;
+import com.baomidou.mybatisplus.generator.config.TemplateType;
+import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 
 /**
  * @author： wjun_java@163.com
@@ -37,96 +30,34 @@ import java.util.List;
  * @modifiedBy：
  * @version: 1.0
  */
-public abstract class AbstractCodeGen extends AutoGenerator {
+public abstract class AbstractCodeGen {
 
-    protected ConfigBuilder config;
+    final static String url = "jdbc:mysql://localhost:3306/fastcms?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai";
+    final static String username = "root";
+    final static String password = "root";
 
-    abstract void setSystemGlobalConfig();
-    abstract void setSystemTemplateConfig();
-    abstract String getMapperXmlOutputDir();
+    abstract String getOutputDir();
     abstract String getModelName();
     abstract String[] getTableNames();
 
-    protected StrategyConfig setStrategyConfig() {
-        // 策略配置
-        StrategyConfig strategy = new StrategyConfig();
-        strategy.setInclude(getTableNames());
-        strategy.setNaming(NamingStrategy.underline_to_camel);
-        strategy.setColumnNaming(NamingStrategy.underline_to_camel);
-        strategy.setEntityLombokModel(false);
-        strategy.setRestControllerStyle(true);
-        strategy.setControllerMappingHyphenStyle(true);
-        setStrategy(strategy);
-        return strategy;
-    }
-
-    protected AbstractCodeGen() {
-        setTemplateEngine(new SystemCodegenTemplateEngine());
-
-        // 全局配置
-        setSystemGlobalConfig();
-
-        // 数据源配置
-        DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://localhost:3306/fastcms?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai");
-        // dsc.setSchemaName("public");
-        dsc.setDriverName("com.mysql.cj.jdbc.Driver");
-        dsc.setUsername("root");
-        dsc.setPassword("root");
-        setDataSource(dsc);
-
-        // 包配置
-        PackageConfig pc = new PackageConfig();
-
-        if(getModelName() != null) {
-            pc.setModuleName(getModelName());
-        }
-
-//        pc.setXml(null);
-        pc.setParent("com.fastcms");
-        setPackageInfo(pc);
-
-        if(getMapperXmlOutputDir() != null) {
-            String templatePath = "/templates/mapper.xml.ftl";
-            injectionConfig = new InjectionConfig() {
-                @Override
-                public void initMap() {}
-            };
-            List<FileOutConfig> focList = new ArrayList<>();
-
-            // 自定义配置会被优先输出
-            focList.add(new FileOutConfig(templatePath) {
-                @Override
-                public String outputFile(TableInfo tableInfo) {
-                    // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
-                    return getMapperXmlOutputDir() + "/src/main/resources/mapper/"+ tableInfo.getEntityName() + "Mapper" + StringPool.DOT_XML;
-                }
-            });
-            injectionConfig.setFileOutConfigList(focList);
-            setCfg(injectionConfig);
-        }
-
-        setSystemTemplateConfig();
-
-        StrategyConfig strategyConfig = setStrategyConfig();
-
-        config = new ConfigBuilder(getPackageInfo(), getDataSource(), strategyConfig, getTemplate(), getGlobalConfig());
-        if (null != injectionConfig) {
-            injectionConfig.setConfig(config);
-        }
-        setConfig(config);
-
-        getTemplateEngine().init(this.pretreatmentConfigBuilder(config)).mkdirs();
-    }
-
-    public void genModel() throws Exception {
-        SystemCodegenTemplateEngine systemCodegenTemplateEngine = (SystemCodegenTemplateEngine) getTemplateEngine();
-        systemCodegenTemplateEngine.genModel();
-    }
-
-    public void genService() throws Exception {
-        SystemCodegenTemplateEngine systemCodegenTemplateEngine = (SystemCodegenTemplateEngine) getTemplateEngine();
-        systemCodegenTemplateEngine.genService();
+    protected void gen() {
+        FastAutoGenerator.create(url, username, password)
+                .globalConfig(builder -> {
+                    builder.author("wjun_java@163.com") // 设置作者
+                            .disableOpenDir()
+                            .outputDir(System.getProperty("user.dir") + getOutputDir() + "/src/main/java"); // 指定输出目录
+                })
+                .packageConfig(builder -> {
+                    builder.parent("com.fastcms") // 设置父包名
+                            .moduleName(getModelName())
+                            .pathInfo(Collections.singletonMap(OutputFile.mapperXml, System.getProperty("user.dir") + getOutputDir() + "/src/main/resources/mapper/")); // 设置mapperXml生成路径
+                })
+                .templateConfig(builder -> builder.disable(TemplateType.CONTROLLER))
+                .strategyConfig(builder -> {
+                    builder.addInclude(getTableNames()); // 设置需要生成的表名
+                })
+                .templateEngine(new FreemarkerTemplateEngine()) // 使用Freemarker引擎模板，默认的是Velocity引擎模板
+                .execute();
     }
 
 }

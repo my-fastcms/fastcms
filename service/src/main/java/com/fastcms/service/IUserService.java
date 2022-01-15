@@ -5,6 +5,7 @@ import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.entity.User;
 import com.fastcms.entity.UserTag;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -22,9 +23,9 @@ public interface IUserService extends IService<User> {
 
     /**
      * 修改用户密码
-     * @param user
+     * @param updatePasswordParam
      */
-    void updateUserPassword(User user) throws Exception;
+    void updateUserPassword(UpdatePasswordParam updatePasswordParam) throws FastcmsException;
 
     /**
      * 获取用户标签集合
@@ -45,7 +46,7 @@ public interface IUserService extends IService<User> {
      * @param userId
      * @return
      */
-    Boolean deleteUser(Long userId);
+    Boolean deleteUser(Long userId) throws FastcmsException;
 
     /**
      * 用户注册
@@ -55,5 +56,47 @@ public interface IUserService extends IService<User> {
      * @return
      */
     Boolean register(String username, String password, String repeatPassword) throws FastcmsException;
+
+    /**
+     * 修改用户密码
+     */
+    class UpdatePasswordParam implements Serializable {
+        /**
+         * 用户id
+         */
+        Long id;
+        /**
+         * 新密码
+         */
+        String password;
+        /**
+         * 旧密码
+         */
+        String confirmPassword;
+
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public void setPassword(String password) {
+            this.password = password;
+        }
+
+        public String getConfirmPassword() {
+            return confirmPassword;
+        }
+
+        public void setConfirmPassword(String confirmPassword) {
+            this.confirmPassword = confirmPassword;
+        }
+    }
 
 }

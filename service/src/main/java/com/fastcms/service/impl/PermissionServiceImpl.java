@@ -82,8 +82,7 @@ public class PermissionServiceImpl<T extends TreeNode> extends ServiceImpl<Permi
                 permission.getIsHide(),
                 permission.getIsKeepAlive(),
                 permission.getIsAffix(),
-                permission.getIsIframe(),
-                Arrays.asList("admin"));
+                permission.getIsIframe());
         return (T) permissionNode;
     }
 

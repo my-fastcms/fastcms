@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -54,19 +55,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public void updateUserPassword(User userParam) throws Exception {
-        User user = getById(userParam.getId());
+    public void updateUserPassword(UpdatePasswordParam updatePasswordParam) throws FastcmsException {
+
+        if(StringUtils.isBlank(updatePasswordParam.getPassword())) {
+            throw new FastcmsException(FastcmsException.INVALID_PARAM, "请输入新密码");
+        }
+
+        if(updatePasswordParam.getPassword().length()< 6) {
+            throw new FastcmsException(FastcmsException.INVALID_PARAM, "密码长度不能少于6位");
+        }
+
+        if(!updatePasswordParam.getPassword().equals(updatePasswordParam.getConfirmPassword())) {
+            throw new FastcmsException(FastcmsException.INVALID_PARAM, "两次密码输入不一致");
+        }
+
+        User user = getById(updatePasswordParam.getId());
         if(user == null) {
-            throw new Exception("用户不存在");
+            throw new FastcmsException(FastcmsException.INVALID_PARAM, "用户不存在");
         }
-
-        if(StringUtils.isBlank(userParam.getPassword())) {
-            throw new Exception("请输入旧密码");
-        }
-
-        if(!user.getPassword().equals(passwordEncoder.encode(userParam.getPassword()))) {
-            throw new Exception("旧密码输入错误");
-        }
+        user.setPassword(passwordEncoder.encode(updatePasswordParam.getPassword()));
 
         updateById(user);
     }
@@ -80,6 +87,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Transactional
     public Long saveUser(User user) throws FastcmsException {
 
+        if(user.getId() != null && Objects.equals(FastcmsConstants.ADMIN_USER_ID, user.getId())) {
+            throw new FastcmsException(FastcmsException.NO_RIGHT, "超级管理员不可修改");
+        }
+
         if(user.getId() == null) {
             User one = getOne(Wrappers.<User>lambdaQuery().eq(User::getUserName, user.getUserName()));
             if(one != null) throw new FastcmsException(FastcmsException.SERVER_ERROR, "账号已存在");
@@ -87,10 +98,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             if(StringUtils.isBlank(user.getPassword())) {
                 throw new FastcmsException(FastcmsException.SERVER_ERROR, "密码不能为空");
             }
-        } else{
-            if(user.getId() == FastcmsConstants.ADMIN_USER_ID) {
-                throw new FastcmsException(FastcmsException.NO_RIGHT, "超级管理员不可修改");
-            }
+        } else {
+            //登录账号不可修改
+            user.setUserName(null);
         }
 
         if(StringUtils.isNotBlank(user.getPassword())) {
@@ -122,7 +132,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     @Transactional
-    public Boolean deleteUser(Long userId) {
+    public Boolean deleteUser(Long userId) throws FastcmsException {
+        if(userId != null && Objects.equals(userId, FastcmsConstants.ADMIN_USER_ID)) {
+            throw new FastcmsException(FastcmsException.NO_RIGHT, "超级管理员不可删除");
+        }
         ((RoleMapper) roleService.getBaseMapper()).deleteRoleByUserId(userId);
         ((UserTagMapper) userTagService.getBaseMapper()).deleteUserTagRelationByUserId(userId);
         removeById(userId);

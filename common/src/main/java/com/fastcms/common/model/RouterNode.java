@@ -1,7 +1,6 @@
 package com.fastcms.common.model;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * wjun_java@163.com
@@ -35,14 +34,14 @@ public class RouterNode extends TreeNode implements Serializable {
     private Meta meta;
 
     public RouterNode(Long id, Long parentId, String name, String path, String component, Boolean isLink, Integer menuSort,
-                          String title, String icon, Boolean isHide, Boolean isKeepAlive, Boolean isAffix, Boolean isIframe, List<String> auth) {
+                          String title, String icon, Boolean isHide, Boolean isKeepAlive, Boolean isAffix, Boolean isIframe) {
         super(id, parentId);
         this.name = name;
         this.path = path;
         this.component = component;
         this.isLink = isLink;
         this.menuSort = menuSort;
-        Meta meta = new Meta(title, icon, isHide, isKeepAlive, isAffix, isIframe, auth);
+        Meta meta = new Meta(title, icon, isHide, isKeepAlive, isAffix, isIframe);
         this.meta = meta;
     }
 
@@ -71,19 +70,14 @@ public class RouterNode extends TreeNode implements Serializable {
          * 是否iframe
          */
         private Boolean isIframe;
-        /**
-         * 权限集合
-         */
-        private List<String> auth;
 
-        public Meta(String title, String icon, Boolean isHide, Boolean isKeepAlive, Boolean isAffix, Boolean isIframe, List<String> auth) {
+        public Meta(String title, String icon, Boolean isHide, Boolean isKeepAlive, Boolean isAffix, Boolean isIframe) {
             this.title = title;
             this.icon = icon;
             this.isHide = isHide;
             this.isKeepAlive = isKeepAlive;
             this.isAffix = isAffix;
             this.isIframe = isIframe;
-            this.auth = auth;
         }
 
         public String getTitle() {
@@ -134,13 +128,6 @@ public class RouterNode extends TreeNode implements Serializable {
             isIframe = iframe;
         }
 
-        public List<String> getAuth() {
-            return auth;
-        }
-
-        public void setAuth(List<String> auth) {
-            this.auth = auth;
-        }
     }
 
     public String getName() {

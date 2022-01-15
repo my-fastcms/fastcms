@@ -60,18 +60,14 @@ public class UserApi {
 
     /**
      * 修改密码
-     * @param user
+     * @param updatePasswordParam
      * @return
      */
     @PostMapping("password/update")
-    public Object updatePwd(User user) {
+    public Object updatePwd(@Validated IUserService.UpdatePasswordParam updatePasswordParam) {
         try {
-
-            if(!Objects.equals(AuthUtils.getUserId(), user.getId())) {
-                return RestResultUtils.failed("只能修改自己的密码");
-            }
-
-            userService.updateUserPassword(user);
+            updatePasswordParam.setId(AuthUtils.getUserId());
+            userService.updateUserPassword(updatePasswordParam);
             return RestResultUtils.success();
         } catch (Exception e) {
             return RestResultUtils.failed(e.getMessage());

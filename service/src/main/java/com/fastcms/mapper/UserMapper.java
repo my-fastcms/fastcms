@@ -3,6 +3,7 @@ package com.fastcms.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.fastcms.entity.User;
 import com.fastcms.entity.UserTag;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -16,6 +17,6 @@ import java.util.List;
  */
 public interface UserMapper extends BaseMapper<User> {
 
-	List<UserTag> getUserTagList(Long userId);
+	List<UserTag> getUserTagList(@Param("userId") Long userId);
 
 }

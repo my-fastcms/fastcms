@@ -16,9 +16,6 @@
  */
 package com.fastcms.codegen;
 
-import com.baomidou.mybatisplus.generator.config.GlobalConfig;
-import com.baomidou.mybatisplus.generator.config.TemplateConfig;
-
 /**
  * @author： wjun_java@163.com
  * @date： 2021/2/10
@@ -29,27 +26,8 @@ import com.baomidou.mybatisplus.generator.config.TemplateConfig;
 public class SystemCodeGen extends AbstractCodeGen {
 
     @Override
-    void setSystemGlobalConfig() {
-        GlobalConfig gc = new GlobalConfig();
-        String projectPath = System.getProperty("user.dir") + "/service";
-        gc.setOutputDir(projectPath + "/src/main/java");
-        gc.setAuthor("wjun_java@163.com");
-        gc.setOpen(false);
-        setGlobalConfig(gc);
-    }
-
-    @Override
-    void setSystemTemplateConfig() {
-        // 配置模板
-        TemplateConfig templateConfig = new TemplateConfig();
-        templateConfig.setController(null);
-        templateConfig.setXml(null);
-        setTemplate(templateConfig);
-    }
-
-    @Override
-    String getMapperXmlOutputDir() {
-        return System.getProperty("user.dir") + "/service";
+    String getOutputDir() {
+        return "/service";
     }
 
     @Override
@@ -64,8 +42,7 @@ public class SystemCodeGen extends AbstractCodeGen {
 
     public static void main(String[] args) throws Exception {
         SystemCodeGen systemServiceGen = new SystemCodeGen();
-        systemServiceGen.genModel();
-        systemServiceGen.genService();
+        systemServiceGen.gen();
     }
 
 }
