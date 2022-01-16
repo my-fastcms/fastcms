@@ -91,7 +91,6 @@ public class PluginController {
             pluginService.installPlugin(Paths.get(uploadFile.getPath()));
             return RestResultUtils.success();
         } catch (Exception e) {
-            e.printStackTrace();
             if(uploadFile != null) {
                 uploadFile.delete();
             }
@@ -112,7 +111,6 @@ public class PluginController {
             pluginService.unInstallPlugin(pluginId);
             return RestResultUtils.success();
         } catch (Exception e) {
-            e.printStackTrace();
             return RestResultUtils.failed(e.getMessage());
         }
 

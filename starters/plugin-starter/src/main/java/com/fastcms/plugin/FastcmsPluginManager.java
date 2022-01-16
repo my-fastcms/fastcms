@@ -16,10 +16,12 @@
  */
 package com.fastcms.plugin;
 
+import com.fastcms.plugin.extension.FastcmsExtensionFinder;
 import com.fastcms.plugin.extension.FastcmsSpringExtensionFactory;
 import com.fastcms.plugin.register.CompoundPluginRegister;
 import org.pf4j.DefaultPluginManager;
 import org.pf4j.ExtensionFactory;
+import org.pf4j.ExtensionFinder;
 import org.pf4j.PluginWrapper;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
@@ -49,6 +51,14 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
 
     public FastcmsPluginManager(Path... pluginsRoots) {
         super(pluginsRoots);
+    }
+
+    @Override
+    protected ExtensionFinder createExtensionFinder() {
+        FastcmsExtensionFinder extensionFinder = new FastcmsExtensionFinder(this);
+        addPluginStateListener(extensionFinder);
+
+        return extensionFinder;
     }
 
     @Override
@@ -109,7 +119,7 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
         // 结束索引
         int toIndex;
 
-        if (pageNum != pageCount) {
+        if (pageNum < pageCount) {
             fromIndex = (pageNum - 1) * pageSize;
             toIndex = fromIndex + pageSize;
         } else {

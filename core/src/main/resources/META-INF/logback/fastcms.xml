@@ -106,6 +106,10 @@
             <appender-ref ref="rootFile"/>
             <level value="ERROR"/>
         </logger>
+        <logger name="org.pf4j">
+            <appender-ref ref="rootFile"/>
+            <level value="DEBUG"/>
+        </logger>
     </springProfile>
 
     <root>
