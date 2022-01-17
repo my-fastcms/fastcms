@@ -50,12 +50,14 @@ export default defineComponent({
   },
   setup(props, {emit}) {
     let attachDialog = ref();
+    let ckeditorDom = ref();
     let editorExample: { setData: (arg0: string | undefined) => any; } | null = null;
     let isPrint = false;
     onMounted(() => {
       connect.dialogObj = attachDialog.value;
+      const ckeditorDiv = ckeditorDom.value;
       DecoupledEditor
-          .create(document.querySelector('#imgEditorContent'), {
+          .create(ckeditorDiv.querySelector('.CKEditorContent'), {
             plugins: [
                 Essentials,
                 UploadAdapter,
@@ -154,7 +156,7 @@ export default defineComponent({
             },
           })
       .then((editor: any) => {
-        document.querySelector("#imgEditorToolbar")?.appendChild( editor.ui.view.toolbar.element );
+        ckeditorDiv.querySelector(".CKEditorToolbar")?.appendChild( editor.ui.view.toolbar.element );
         editorExample = editor;
         editor.setData(props.modelValue);
         editor.model.document.on("change", function() {
@@ -172,6 +174,7 @@ export default defineComponent({
       editorExample && editorExample.setData(val);
     })
     return {
+      ckeditorDom,
       attachDialog
     }
   }
@@ -179,15 +182,17 @@ export default defineComponent({
 </script>
 
 <template>
-  <div id="imgEditor">
-    <div id="imgEditorToolbar"></div>
-    <div id="imgEditorContent" class="imgEditorContent"></div>
+  <div class="CKEditor" ref="ckeditorDom">
+    <div class="CKEditorBox">
+      <div class="CKEditorToolbar"></div>
+      <div class="CKEditorContent"></div>
+    </div>
+    <imgResWin ref="attachDialog" />
   </div>
-  <imgResWin ref="attachDialog" />
 </template>
 
 <style>
-  .ck.ck-content.imgEditorContent {
+  .ck.ck-content.CKEditorContent {
     border: #bbb 1px solid;
   }
 </style>
