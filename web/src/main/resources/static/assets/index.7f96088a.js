@@ -1,0 +1,1 @@
+import{s as e}from"./index.56ec5e99.js";function n(t){return e({url:"/admin/config/save",data:t,method:"post"})}function o(t){return e({url:"/admin/config/list",data:t,method:"post"})}export{o as g,n as s};
