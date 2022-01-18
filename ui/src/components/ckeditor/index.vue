@@ -156,7 +156,9 @@ export default defineComponent({
             },
           })
       .then((editor: any) => {
-        ckeditorDiv.querySelector(".CKEditorToolbar")?.appendChild( editor.ui.view.toolbar.element );
+        const toolbar = ckeditorDiv.querySelector(".CKEditorToolbar");
+        toolbar && (toolbar.innerHTML = "");
+        setTimeout(() => toolbar.appendChild( editor.ui.view.toolbar.element ), 0);
         editorExample = editor;
         editor.setData(props.modelValue);
         editor.model.document.on("change", function() {
