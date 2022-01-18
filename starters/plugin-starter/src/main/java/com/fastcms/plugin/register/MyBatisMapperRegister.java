@@ -95,6 +95,7 @@ public class MyBatisMapperRegister extends AbstractPluginRegister {
 	public void unRegistry(String pluginId) throws Exception {
 		//注册mapper
 		for (Class<?> mapperClass : getMapperClassList(pluginId)) {
+			((GenericWebApplicationContext) this.pluginManger.getApplicationContext()).removeBeanDefinition(mapperClass.getName());
 			destroyBean(mapperClass);
 		}
 	}
