@@ -90,10 +90,6 @@ public class FastcmsExtensionFinder implements ExtensionFinder, PluginStateListe
 		}
 	}
 
-	public FastcmsExtensionFinder addServiceProviderExtensionFinder() {
-		return add(new ServiceProviderExtensionFinder(pluginManager));
-	}
-
 	public FastcmsExtensionFinder add(ExtensionFinder finder) {
 		finders.add(finder);
 

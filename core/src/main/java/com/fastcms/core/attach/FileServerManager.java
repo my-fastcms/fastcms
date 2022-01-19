@@ -7,6 +7,7 @@ import java.io.File;
 /**
  * wjun_java@163.com
  * 文件服务器管理接口
+ * 阿里oss，Minio等文件服务器扩展接口
  */
 public interface FileServerManager extends ExtensionPoint {
 

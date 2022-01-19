@@ -19,13 +19,17 @@ package com.fastcms.plugin.extension;
 import org.pf4j.AbstractExtensionFinder;
 import org.pf4j.PluginManager;
 import org.pf4j.PluginWrapper;
+import org.pf4j.processor.ExtensionStorage;
 import org.pf4j.processor.LegacyExtensionStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -84,20 +88,13 @@ public class FastcmsLegacyExtensionFinder extends AbstractExtensionFinder {
 			try {
 				log.debug("Read '{}'", EXTENSIONS_RESOURCE);
 				ClassLoader pluginClassLoader = plugin.getPluginClassLoader();
-				URL resource = pluginClassLoader.getResource(EXTENSIONS_RESOURCE);
-				System.out.println(resource);
-
-				InputStream inputStream = resource.openStream();
-				System.out.println(inputStream);
-//				inputStream.close();
-//				collectExtensions(resource.openStream(), bucket);
-//				try (InputStream resourceStream = pluginClassLoader.getResourceAsStream(EXTENSIONS_RESOURCE)) {
-//					if (resourceStream == null) {
-//						log.debug("Cannot find '{}'", EXTENSIONS_RESOURCE);
-//					} else {
-//						collectExtensions(resourceStream, bucket);
-//					}
-//				}
+				try (InputStream resourceStream = pluginClassLoader.getResourceAsStream(EXTENSIONS_RESOURCE)) {
+					if (resourceStream == null) {
+						log.debug("Cannot find '{}'", EXTENSIONS_RESOURCE);
+					} else {
+						collectExtensions(resourceStream, bucket);
+					}
+				}
 
 				debugExtensions(bucket);
 
@@ -119,9 +116,9 @@ public class FastcmsLegacyExtensionFinder extends AbstractExtensionFinder {
 	}
 
 	private void collectExtensions(InputStream inputStream, Set<String> bucket) throws IOException {
-//		try (Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
-//			ExtensionStorage.read(reader, bucket);
-//		}
+		try (Reader reader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
+			ExtensionStorage.read(reader, bucket);
+		}
 	}
 
 }
