@@ -1,5 +1,6 @@
 package com.fastcms.core.attach;
 
+import com.fastcms.entity.Attachment;
 import org.pf4j.ExtensionPoint;
 
 import java.io.File;
@@ -13,22 +14,22 @@ public interface FileServerManager extends ExtensionPoint {
 
     /**
      * 上传文件到文件服务器
-     * @param file
+     * @param attachment
      */
-    void uploadFile(File file) throws Exception;
+    void uploadFile(Attachment attachment) throws Exception;
 
     /**
      * 删除文件服务器上面的文件
-     * @param filePath  文件相对路径
+     * @param attachment  文件相对路径
      */
-    void deleteFile(String filePath) throws Exception;
+    void deleteFile(Attachment attachment) throws Exception;
 
     /**
      * 从文件服务器下载文件
-     * @param filePath
+     * @param attachment
      * @return
      */
-    File downloadFile(String filePath) throws Exception;
+    File downloadFile(Attachment attachment) throws Exception;
 
     /**
      * 是否启用文件服务器

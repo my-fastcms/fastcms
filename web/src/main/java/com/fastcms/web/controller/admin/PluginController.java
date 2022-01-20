@@ -18,6 +18,7 @@ package com.fastcms.web.controller.admin;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.FileUtils;
@@ -91,6 +92,9 @@ public class PluginController {
             pluginService.installPlugin(Paths.get(uploadFile.getPath()));
             return RestResultUtils.success();
         } catch (Exception e) {
+            if(e instanceof FastcmsException == false) {
+                e.printStackTrace();
+            }
             if(uploadFile != null) {
                 uploadFile.delete();
             }
@@ -111,6 +115,9 @@ public class PluginController {
             pluginService.unInstallPlugin(pluginId);
             return RestResultUtils.success();
         } catch (Exception e) {
+            if(e instanceof FastcmsException == false) {
+                e.printStackTrace();
+            }
             return RestResultUtils.failed(e.getMessage());
         }
 

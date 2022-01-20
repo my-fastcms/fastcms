@@ -16,6 +16,7 @@
  */
 package com.fastcms.plugin;
 
+import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.plugin.extension.FastcmsSpringExtensionFactory;
 import com.fastcms.plugin.register.CompoundPluginRegister;
 import org.pf4j.DefaultPluginManager;
@@ -66,7 +67,7 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
 
     @Override
     public void installPlugin(Path path) throws Exception {
-        if(isDevelopment()) throw new Exception("开发环境不允许安装");
+        if(isDevelopment()) throw new FastcmsException(FastcmsException.NO_RIGHT, "开发环境不允许安装");
         final String pluginId = loadPlugin(path);
         startPlugin(pluginId);
         pluginRegister.registry(pluginId);
@@ -74,12 +75,11 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
 
     @Override
     public void unInstallPlugin(String pluginId) throws Exception {
-        if(isDevelopment()) throw new Exception("开发环境不允许卸载");
+        if(isDevelopment()) throw new FastcmsException(FastcmsException.NO_RIGHT, "开发环境不允许安装");
         try {
             pluginRegister.unRegistry(pluginId);
             deletePlugin(pluginId);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new Exception(e.getMessage());
         }
     }

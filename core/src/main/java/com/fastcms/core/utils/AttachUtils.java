@@ -284,7 +284,7 @@ public abstract class AttachUtils {
             attachmentList.forEach(item -> {
                 for (FileServerManager extension : extensions) {
                     try {
-                        extension.uploadFile(new File(DirUtils.getUploadDir() + item.getFilePath()));
+                        extension.uploadFile(item);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

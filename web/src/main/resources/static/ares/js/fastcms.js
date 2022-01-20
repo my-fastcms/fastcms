@@ -72,10 +72,8 @@ function submitForm(rules, messages, callback, beforeRequest) {
 }
 
 function getConfigFormData(params) {
-    //configKeys=website_title&configKeys=website_name&configKeys=website_domain
     var requestParam = "";
     params.forEach(function(v, i){
-        console.log("===v:" + v + ",i:" + i);
         if(i ==0) {
             requestParam = "configKeys=" + v;
         }else{
@@ -100,8 +98,8 @@ function getConfigFormData(params) {
             if(data.code != 200){
                 alertError(data.message, function () {});
             }else {
-                params.forEach(function (id) {
-                    $("#"+id).val(data.id);
+                data.data.forEach(function (obj, index) {
+                    $("#"+obj.key).val(obj.jsonValue);
                 })
             }
         },

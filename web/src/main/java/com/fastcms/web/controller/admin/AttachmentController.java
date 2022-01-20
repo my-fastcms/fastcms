@@ -156,7 +156,7 @@ public class AttachmentController {
                 List<FileServerManager> extensions = PluginUtils.getExtensions(FileServerManager.class);
                 for (FileServerManager extension : extensions) {
                     try {
-                        extension.deleteFile(attachment.getFilePath());
+                        extension.deleteFile(attachment);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
