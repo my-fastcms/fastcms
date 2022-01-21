@@ -97,4 +97,5 @@ public class ArticleTag implements Serializable {
             ", updated=" + updated +
         "}";
     }
+
 }

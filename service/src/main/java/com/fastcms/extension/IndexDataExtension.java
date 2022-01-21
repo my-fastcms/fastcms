@@ -14,6 +14,10 @@ import java.util.Map;
  */
 public interface IndexDataExtension extends ExtensionPoint {
 
+	/**
+	 * 获取需要展示到首页的数据
+	 * @return
+	 */
 	Map<String, Object> getData();
 
 }

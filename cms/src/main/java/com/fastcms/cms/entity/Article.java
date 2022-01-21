@@ -1,7 +1,9 @@
 package com.fastcms.cms.entity;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.annotation.*;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.utils.ConfigUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -9,6 +11,7 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -136,9 +139,8 @@ public class Article implements Serializable {
     @TableField(exist = false)
     String url;
 
-    public String getUrl() {
-        return StringUtils.isBlank(getOutLink()) ? ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + "/a/" + getId() : getOutLink();
-    }
+    @TableField(exist = false)
+    private Map<String, Object> extFields;
 
     public Long getId() {
         return id;
@@ -303,4 +305,20 @@ public class Article implements Serializable {
     public void setUrl(String url) {
         this.url = url;
     }
+
+    public String getUrl() {
+        return StringUtils.isBlank(getOutLink()) ? ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + "/a/" + getId() : getOutLink();
+    }
+
+    public Map<String, Object> getExtFields() {
+        if(StrUtils.isNotBlank(getJsonExt())) {
+            try {
+                return JSON.toJavaObject(JSON.parseObject(getJsonExt()), Map.class);
+            } catch (Exception e) {
+                return extFields;
+            }
+        }
+        return extFields;
+    }
+
 }

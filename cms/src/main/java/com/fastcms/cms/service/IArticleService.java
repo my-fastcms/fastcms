@@ -149,6 +149,9 @@ public interface IArticleService extends IService<Article> {
         }
     }
 
+    /**
+     * 文章
+     */
     class ArticleVo implements Serializable {
         /**
          * id
@@ -273,6 +276,9 @@ public interface IArticleService extends IService<Article> {
 
     }
 
+    /**
+     * 文章详情
+     */
     class ArticleInfoVo extends Article {
         String author;
         String headImg;

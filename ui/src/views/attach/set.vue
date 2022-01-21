@@ -7,6 +7,17 @@
 					
 					<el-form :model="ruleForm" :rules="rules" ref="myRefForm" size="small" label-width="150px" class="mt35 mb35">
                         
+						<div class="personal-edit-title mb15">文件服务器</div>
+
+						<el-row :gutter="35">
+							<el-col class="mb20">
+								<el-form-item label="域名设置" prop="imageMaxSize">
+									<el-input v-model="ruleForm.file_domain" placeholder="请输入文件服务器域名" clearable></el-input>
+								</el-form-item>
+							</el-col>
+						</el-row>
+
+
                         <div class="personal-edit-title mb15">文件大小限制</div>
 
 						<el-row :gutter="35">
@@ -115,6 +126,7 @@ export default {
 				label: '右下'
 			}],
 			ruleForm: {
+				file_domain: '',
 				imageMaxSize: 0,
 				otherMaxSize: 0,
 				enableWatermark: true,
@@ -129,7 +141,10 @@ export default {
 				],
 				"otherMaxSize":[
 					{required: true, message: '请输入允许上传其他文件大小最大值', trigger: 'blur'},
-				] 
+				],
+				"file_domain": [
+					{required: true, message: '请输入文件服务器域名', trigger: 'blur'},
+				]
 			}
 		});
 

@@ -34,10 +34,10 @@ CREATE TABLE `article` (
   `thumbnail` varchar(255) DEFAULT NULL COMMENT '文章缩略图',
   `status` varchar(32) DEFAULT NULL,
   `suffix` varchar(32) DEFAULT NULL COMMENT '页面后缀',
+  `json_ext` text COMMENT 'json格式的扩展字段',
   `created` datetime DEFAULT NULL,
   `updated` datetime DEFAULT NULL,
   `version` int(11) DEFAULT '0' COMMENT '乐观锁',
-  `json_ext` text COMMENT 'json格式的扩展字段',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
