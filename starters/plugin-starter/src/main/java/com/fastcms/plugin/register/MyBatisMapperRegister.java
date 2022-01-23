@@ -38,6 +38,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * 暂时不支持mybatis-plus service中的泛型写法
+ * 目前支持注入mapper，通过mapper接口操作数据库
  * 把mybatis mapper注册到 Spring容器中
  * @author： wjun_java@163.com
  * @date： 2022/1/9

@@ -86,7 +86,12 @@ public class ArticleApi {
 		try {
 			if(article.getId() == null) {
 				article.setStatus(Article.STATUS_AUDIT);
+			} else {
+				if(!Objects.equals(article.getUserId(), AuthUtils.getUserId())) {
+					return RestResultUtils.failed("只能修改自己的文章");
+				}
 			}
+
 			articleService.saveArticle(article);
 			return RestResultUtils.success();
 		} catch (Exception e) {

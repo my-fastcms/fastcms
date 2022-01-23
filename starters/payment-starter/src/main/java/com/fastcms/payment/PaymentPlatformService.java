@@ -25,6 +25,11 @@ package com.fastcms.payment;
  */
 public interface PaymentPlatformService {
 
+	/**
+	 * 获取支付平台
+	 * @param platform
+	 * @return
+	 */
 	PaymentPlatform getPlatform(String platform);
 
 }

@@ -38,5 +38,7 @@ public class HelloPlugin extends PluginBase {
     @Override
     public void start() {
         super.start();
+        runSqlFile("hello-plugin.sql");
     }
+
 }

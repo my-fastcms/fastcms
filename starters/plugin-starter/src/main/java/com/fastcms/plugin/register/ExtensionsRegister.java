@@ -17,10 +17,7 @@
 package com.fastcms.plugin.register;
 
 import com.fastcms.plugin.FastcmsPluginManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -28,8 +25,6 @@ import java.util.Set;
  * wjun_java@163.com
  */
 public class ExtensionsRegister extends AbstractPluginRegister {
-
-    private static final Logger log = LoggerFactory.getLogger(ExtensionsRegister.class);
 
     public ExtensionsRegister(FastcmsPluginManager pluginManger) {
         super(pluginManger);
@@ -66,13 +61,7 @@ public class ExtensionsRegister extends AbstractPluginRegister {
     }
 
     private void registerExtension(Class<?> extensionClass) {
-        Map<String, ?> extensionBeanMap = pluginManger.getApplicationContext().getBeansOfType(extensionClass);
-        if (extensionBeanMap.isEmpty()) {
-            Object extension = pluginManger.getExtensionFactory().create(extensionClass);
-            beanFactory.registerSingleton(extensionClass.getName(), extension);
-        } else {
-            log.info("Bean registeration aborted! Extension '{}' already existed as bean!", extensionClass.getName());
-        }
+        registryBean(extensionClass);
     }
 
     private void unRegisterExtension(Class<?> extensionClass) {

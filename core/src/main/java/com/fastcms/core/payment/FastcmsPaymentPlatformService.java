@@ -10,7 +10,6 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * wjun_java@163.com
@@ -27,9 +26,9 @@ public class FastcmsPaymentPlatformService implements PaymentPlatformService, Ap
     @Override
     public void onApplicationEvent(ApplicationStartedEvent event) {
         ApplicationContext applicationContext = event.getApplicationContext();
-        //扫描支付平台实现类并注册
-        Map<String, PaymentPlatform> waterMarkProcessorMap = applicationContext.getBeansOfType(PaymentPlatform.class);
-        waterMarkProcessorMap.values().forEach(item -> PaymentPlatforms.loadPaymentPlatform(item));
+//        //扫描支付平台实现类并注册
+//        Map<String, PaymentPlatform> waterMarkProcessorMap = applicationContext.getBeansOfType(PaymentPlatform.class);
+//        waterMarkProcessorMap.values().forEach(item -> PaymentPlatforms.loadPaymentPlatform(item));
 
         //添加插件扩展
         List<PaymentPlatform> extensions = applicationContext.getBean(FastcmsPluginManager.class).getExtensions(PaymentPlatform.class);

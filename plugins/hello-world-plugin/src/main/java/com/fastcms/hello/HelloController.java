@@ -38,6 +38,9 @@ public class HelloController {
     @Autowired
     private HelloService helloService;
 
+    @Autowired
+    private HelloComponent helloComponent;
+
     @GetMapping
     public String index() {
 

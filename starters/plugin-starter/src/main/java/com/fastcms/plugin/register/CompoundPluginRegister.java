@@ -36,6 +36,7 @@ public class CompoundPluginRegister extends AbstractPluginRegister implements Pl
         registerList = Collections.synchronizedList(new ArrayList<>());
 
         addRegister(new MyBatisMapperRegister(pluginManger));
+        addRegister(new ComponentRegister(pluginManger));
         addRegister(new ExtensionsRegister(pluginManger));
         addRegister(new ControllerRegister(pluginManger));
         addRegister(new InterceptorRegister(pluginManger));

@@ -26,7 +26,7 @@ import java.util.concurrent.*;
  *
  * <p>two check style ignore will be removed after issue#2856 finished.
  *
- * @author <a href="mailto:liaochuntao@live.com">liaochuntao</a>
+ * @author <a href="wjun_java@163.com">wangjun</a>
  */
 @SuppressWarnings({"PMD.ThreadPoolCreationRule", "checkstyle:overloadmethodsdeclarationorder",
         "checkstyle:missingjavadocmethod"})

@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Name thread factory.
  *
- * @author <a href="mailto:liaochuntao@live.com">liaochuntao</a>
+ * @author <a href="wjun_java@163.com">wangjun</a>
  */
 public class NameThreadFactory implements ThreadFactory {
     

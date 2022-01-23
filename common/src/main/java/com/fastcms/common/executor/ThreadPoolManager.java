@@ -28,13 +28,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * // TODO Access Metric.
  *
  * <p>For unified management of thread pool resources, the consumer can simply call the register method to {@link
  * com.fastcms.common.executor.ThreadPoolManager#register(String, String, ExecutorService)} the thread pool that needs to be included in the life
  * cycle management of the resource
  *
- * @author <a href="mailto:liaochuntao@live.com">liaochuntao</a>
+ * @author <a href="wjun_java@163.com">wangjun</a>
  */
 public final class ThreadPoolManager {
     

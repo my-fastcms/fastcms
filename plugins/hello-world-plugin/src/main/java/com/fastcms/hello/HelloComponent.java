@@ -14,32 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.payment.autoconfigure;
+package com.fastcms.hello;
 
-import com.egzosn.pay.common.api.PayService;
-import com.fastcms.payment.FastcmsPayServiceManager;
-import com.fastcms.payment.PayServiceManager;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 /**
- * 支付服务自动装配类
  * @author： wjun_java@163.com
- * @date： 2021/6/21
+ * @date： 2022/1/23
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-@Configuration
-@ConditionalOnClass(PayService.class)
-public class PaymentAutoConfiguration {
-
-	@Bean
-	@ConditionalOnMissingBean
-	public PayServiceManager payServiceManager(){
-		return new FastcmsPayServiceManager();
-	}
+@Component
+public class HelloComponent {
 
 }

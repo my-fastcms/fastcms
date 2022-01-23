@@ -72,63 +72,6 @@ public interface FastcmsConstants {
 
     /**
      * ================
-     * 微信配置相关
-     * ================
-     */
-
-    /**
-     * 小程序名称
-     */
-    String WECHAT_MINI_NAME = "wechat_mini_name";
-    /**
-     * 小程序appId
-     */
-    String WECHAT_MINI_APP_ID = "wechat_mini_app_id";
-    /**
-     * 小程序appSecret
-     */
-    String WECHAT_MINI_APP_SECRET = "wechat_mini_app_secret";
-
-    /**
-     * 公众号名称
-     */
-    String WECHAT_MP_NAME = "wechat_mp_name";
-    /**
-     * 公众号appId
-     */
-    String WECHAT_MP_APP_ID = "wechat_mp_app_id";
-    /**
-     * 公众号appSecret
-     */
-    String WECHAT_MP_APP_SECRET = "wechat_mp_app_secret";
-
-    /**
-     * 微信对公支付商户号
-     */
-    String WECHAT_MCH_ID = "wechat_mch_id";
-
-    /**
-     * 微信对公支付商户密钥
-     */
-    String WECHAT_MCH_SECRET = "wechat_mch_secret";
-
-    /**
-     * 异步支付回调地址
-     */
-    String WECHAT_PAY_NOTIFYURL = "wechat_pay_notifyUrl";
-
-    /**
-     * 同步回调地址，支付完成后展示的页面
-     */
-    String WECHAT_PAY_RETURNURL = "wechat_pay_returnUrl";
-
-    /**
-     * 微信支付签名类型
-     */
-    String WECHAT_PAY_SIGN_TYPE = "wechat_pay_sign_type";
-
-    /**
-     * ================
      * Server info 相关
      * ================
      */

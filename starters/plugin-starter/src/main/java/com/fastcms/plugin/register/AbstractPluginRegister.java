@@ -23,6 +23,8 @@ import com.fastcms.plugin.UnLoad;
 import com.fastcms.plugin.extension.FastcmsSpringExtensionFactory;
 import org.pf4j.Plugin;
 import org.pf4j.PluginWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -32,6 +34,7 @@ import org.springframework.util.ClassUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 插件抽象注册器
@@ -42,6 +45,8 @@ import java.util.List;
  * @version: 1.0
  */
 public abstract class AbstractPluginRegister implements PluginRegister {
+
+    private static final Logger log = LoggerFactory.getLogger(AbstractPluginRegister.class);
 
     protected final FastcmsPluginManager pluginManger;
     protected final AbstractAutowireCapableBeanFactory beanFactory;
@@ -79,6 +84,24 @@ public abstract class AbstractPluginRegister implements PluginRegister {
         return beanFactory.getBean(aClass);
     }
 
+    /**
+     * 往spring容器注册bean
+     * @param aClass
+     */
+    protected void registryBean(Class<?> aClass) {
+        Map<String, ?> extensionBeanMap = pluginManger.getApplicationContext().getBeansOfType(aClass);
+        if (extensionBeanMap.isEmpty()) {
+            Object extension = pluginManger.getExtensionFactory().create(aClass);
+            beanFactory.registerSingleton(aClass.getName(), extension);
+        } else {
+            log.info("Bean registeration aborted! Extension '{}' already existed as bean!", aClass.getName());
+        }
+    }
+
+    /**
+     * 销毁spring容器中bean实例
+     * @param aClass
+     */
     protected void destroyBean(Class<?> aClass) {
         FastcmsSpringExtensionFactory extensionFactory = (FastcmsSpringExtensionFactory) pluginManger.getExtensionFactory();
         extensionFactory.destroy(aClass);
