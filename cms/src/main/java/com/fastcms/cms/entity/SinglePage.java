@@ -63,23 +63,23 @@ public class SinglePage implements Serializable {
     /**
      * SEO关键字
      */
+    @NotBlank(message = "seo关键字不能为空")
     private String seoKeywords;
 
     /**
      * SEO描述信息
      */
+    @NotBlank(message = "seo描述信息不能为空")
     private String seoDescription;
 
     /**
      * 摘要
      */
-    @NotBlank(message = "页面摘要不能为空")
     private String summary;
 
     /**
      * 缩略图
      */
-    @NotBlank(message = "页面缩略图不能为空")
     private String thumbnail;
 
     /**

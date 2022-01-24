@@ -72,7 +72,7 @@ public class TemplateIndexController extends TemplateBaseController {
 
         String view = getTemplatePath() + DEFAULT_PAGE_VIEW;
         if(singlePage != null && StringUtils.isNotBlank(singlePage.getSuffix())) {
-            view = view.concat(singlePage.getSuffix());
+            view = view.concat("_").concat(singlePage.getSuffix());
         }
 
         return view;
