@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * 获取登录用户相关权限信息
+ * 用户权限
  * @author： wjun_java@163.com
  * @date： 2022/1/8
  * @description：

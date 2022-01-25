@@ -114,7 +114,7 @@ public class AdminController {
     }
 
     /**
-     * 获取首页数据
+     * 首页数据
      * @return
      */
     @GetMapping("index/data")

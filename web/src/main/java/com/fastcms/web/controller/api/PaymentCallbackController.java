@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 /**
+ * @ignore
  * 支付回调
  * @author： wjun_java@163.com
  * @date： 2021/6/22
