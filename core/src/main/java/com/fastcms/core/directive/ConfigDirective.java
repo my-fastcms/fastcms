@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * ${fastcmsConfig("xxx")!}
+ * ${config("xxx")!}
  *
  * @author： wjun_java@163.com
  * @date： 2021/5/28
@@ -34,7 +34,7 @@ import java.util.List;
  * @modifiedBy：
  * @version: 1.0
  */
-@Component("configTag")
+@Component("config")
 public class ConfigDirective extends BaseFunction {
 
 	@Autowired

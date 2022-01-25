@@ -99,7 +99,7 @@ function getConfigFormData(params) {
                 alertError(data.message, function () {});
             }else {
                 data.data.forEach(function (obj, index) {
-                    $("#"+obj.key).val(obj.jsonValue);
+                    $("#"+obj.key).val(obj.value);
                 })
             }
         },
