@@ -30,9 +30,9 @@
 	</properties>
 
 	<scm>
-		<url>git@gitee.com:dianbuapp_admin/fastcms.git</url>
-		<connection>scm:git@gitee.com:dianbuapp_admin/fastcms.git</connection>
-		<developerConnection>scm:git@gitee.com:dianbuapp_admin/fastcms.git</developerConnection>
+		<url>git@gitee.com:xjd2020/fastcms.git</url>
+		<connection>scm:git@gitee.com:xjd2020/fastcms.git</connection>
+		<developerConnection>scm:git@gitee.com:xjd2020/fastcms.git</developerConnection>
 		<tag>fastcms-${revision}</tag>
 	</scm>
 
@@ -55,7 +55,7 @@
 
 	<issueManagement>
 		<system>gitee</system>
-		<url>https://gitee.com/dianbuapp_admin/fastcms/issues</url>
+		<url>https://gitee.com/xjd2020/fastcms/issues</url>
 	</issueManagement>
 
 	<modules>

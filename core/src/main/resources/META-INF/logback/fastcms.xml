@@ -75,6 +75,10 @@
             <appender-ref ref="CONSOLE"/>
             <level value="INFO"/>
         </logger>
+        <logger name="freemarker.template">
+            <appender-ref ref="CONSOLE"/>
+            <level value="INFO"/>
+        </logger>
     </springProfile>
 
     <springProfile name="prod">

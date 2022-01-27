@@ -40,6 +40,8 @@ public abstract class StrUtils extends StringUtils {
 
 	private static final int INDEX_NOT_FOUND = -1;
 
+	public static final String UNDERLINE = "_";
+
 	public static final String COMMA = ",";
 
 	public static final String EMPTY = "";

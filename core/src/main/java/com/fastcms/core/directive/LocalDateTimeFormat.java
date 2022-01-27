@@ -16,8 +16,10 @@
  */
 package com.fastcms.core.directive;
 
+import com.fastcms.common.utils.StrUtils;
 import freemarker.core.Environment;
 import freemarker.ext.beans.StringModel;
+import freemarker.template.SimpleScalar;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -37,6 +39,8 @@ public class LocalDateTimeFormat extends BaseSubDirective {
 
 	static final String DEFAULT_DATA_TIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
+	static final String FORMAT_PATTERN = "format";
+
 	@Override
 	public Object doExecute(Environment env, Map params) {
 		StringModel time = null;
@@ -45,8 +49,23 @@ public class LocalDateTimeFormat extends BaseSubDirective {
 		} catch (Exception e) {
 			return "";
 		}
+
+		SimpleScalar format;
+		String formatStr = DEFAULT_DATA_TIME_PATTERN;
+		try {
+			format = (SimpleScalar) params.get(FORMAT_PATTERN);
+			if(format != null) {
+				formatStr = format.getAsString();
+				if(StrUtils.isBlank(formatStr)) {
+					formatStr = DEFAULT_DATA_TIME_PATTERN;
+				}
+			}
+		} catch (Exception e) {
+			formatStr = DEFAULT_DATA_TIME_PATTERN;
+		}
+
 		String asString = time.getAsString();
-		return StringUtils.isEmpty(asString) ? "" : LocalDateTime.parse(asString).format(DateTimeFormatter.ofPattern(DEFAULT_DATA_TIME_PATTERN));
+		return StringUtils.isEmpty(asString) ? "" : LocalDateTime.parse(asString).format(DateTimeFormatter.ofPattern(formatStr));
 	}
 
 }

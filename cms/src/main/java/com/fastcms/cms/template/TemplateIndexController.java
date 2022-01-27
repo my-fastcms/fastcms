@@ -25,6 +25,7 @@ import com.fastcms.cms.entity.SinglePage;
 import com.fastcms.cms.service.IArticleCategoryService;
 import com.fastcms.cms.service.IArticleService;
 import com.fastcms.cms.service.ISinglePageService;
+import com.fastcms.common.utils.StrUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,6 +44,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class TemplateIndexController extends TemplateBaseController {
 
+    static final String UNDERLINE = StrUtils.UNDERLINE;
     static final String INDEX = "index";
     static final String DEFAULT_PAGE_VIEW = "page";
     static final String DEFAULT_ARTICLE_VIEW = "article";
@@ -68,11 +70,14 @@ public class TemplateIndexController extends TemplateBaseController {
         if(singlePage == null) {
             singlePage = singlePageService.getById(path);
         }
-        model.addAttribute("singlePage", singlePage);
+
+        if(singlePage != null && SinglePage.STATUS_PUBLISH.equals(singlePage.getStatus())) {
+            model.addAttribute("singlePage", singlePage);
+        }
 
         String view = getTemplatePath() + DEFAULT_PAGE_VIEW;
         if(singlePage != null && StringUtils.isNotBlank(singlePage.getSuffix())) {
-            view = view.concat("_").concat(singlePage.getSuffix());
+            view = view.concat(UNDERLINE).concat(singlePage.getSuffix());
         }
 
         return view;
@@ -81,11 +86,14 @@ public class TemplateIndexController extends TemplateBaseController {
     @RequestMapping("a/{id}")
     public String article(@PathVariable("id") Long id, Model model) {
         IArticleService.ArticleInfoVo article = articleService.getArticleDetail(id);
-        model.addAttribute("article", article);
+
+        if(article != null && Article.STATUS_PUBLISH.equals(article.getStatus())) {
+            model.addAttribute("article", article);
+        }
 
         String view = getTemplatePath() + DEFAULT_ARTICLE_VIEW;
         if(article != null && StringUtils.isNotBlank(article.getSuffix())) {
-            view = view.concat("_").concat(article.getSuffix());
+            view = view.concat(UNDERLINE).concat(article.getSuffix());
         }
 
         return view;
@@ -107,7 +115,7 @@ public class TemplateIndexController extends TemplateBaseController {
         String view = getTemplatePath() + DEFAULT_ARTICLE_LIST_VIEW;
 
         if(articleCategory != null && StringUtils.isNotBlank(articleCategory.getSuffix())) {
-            view = view.concat("_").concat(articleCategory.getSuffix());
+            view = view.concat(UNDERLINE).concat(articleCategory.getSuffix());
         }
 
         return view;

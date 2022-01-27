@@ -49,6 +49,7 @@
                         <#list data as item>
                             <li>
                                 <a href="${item.menuUrl!}" target="${item.target!"_self"}">${item.menuName!}</a>
+                                <@menuChildren children=item.children!></@menuChildren>
                             </li>
                         </#list>
                     </#if>
