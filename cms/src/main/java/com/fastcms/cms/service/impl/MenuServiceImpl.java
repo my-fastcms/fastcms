@@ -34,6 +34,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements IM
 		List<MenuNode> childrenNodeList = menuNodeList.stream().filter(item -> Objects.equals(item.getParentId(), menuNode.getId())).collect(Collectors.toList());
 		if(childrenNodeList != null && !childrenNodeList.isEmpty()) {
 			menuNode.setChildren(childrenNodeList);
+			menuNode.setHasChildren(true);
 			childrenNodeList.forEach(item -> getChildren(item, menuNodeList));
 		}
 	}

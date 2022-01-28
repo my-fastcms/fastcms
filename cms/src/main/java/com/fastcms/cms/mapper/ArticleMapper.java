@@ -56,6 +56,8 @@ public interface ArticleMapper extends BaseMapper<Article> {
 
 	List<IArticleService.ArticleVo> getArticleListByCategoryId(@Param(Constants.WRAPPER) QueryWrapper queryWrapper);
 
+	List<IArticleService.ArticleVo> getArticleListByTagId(@Param(Constants.WRAPPER) QueryWrapper queryWrapper);
+
 	void updateViewCount(@Param("id") Long id, @Param("count") Long count);
 
 	IArticleService.ArticleStatVo getArticleStatData();

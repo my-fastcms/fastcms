@@ -33,25 +33,26 @@ import java.util.Map;
  * @modifiedBy：
  * @version: 1.0
  */
-@Component("categoryListTag")
+@Component("categoryList")
 public class ArticleCategoryListDirective extends BaseDirective {
 
 	static final String PARAM_TYPE = "type";
+	static final String PARAM_PARENT_ID = "parentId";
 
 	@Autowired
 	private IArticleCategoryService articleCategoryService;
 
 	@Override
 	public Object doExecute(Environment env, Map params) {
-		String type = getStr(PARAM_TYPE, params, ArticleCategory.CATEGORY_TYPE);
-		Integer count = getInt(PARAM_COUNT, params);
-		String orderBy = getStr(PARAM_ORDER_BY, params, "created");
+		final String type = getStr(PARAM_TYPE, params, ArticleCategory.CATEGORY_TYPE);
+		final Integer count = getInt(PARAM_COUNT, params, 10);
+		final String orderBy = getStr(PARAM_ORDER_BY, params, "created");
+		final Long parentId = getLong(PARAM_PARENT_ID, params, 0l);
 
 		QueryWrapper queryWrapper = new QueryWrapper();
+		queryWrapper.eq("parent_id", parentId);
 		queryWrapper.eq("type", type);
-		if(count != 0) {
-			queryWrapper.last("limit 0," + count);
-		}
+		queryWrapper.last("limit 0," + count);
 		queryWrapper.orderByDesc(orderBy);
 
 		return articleCategoryService.list(queryWrapper);

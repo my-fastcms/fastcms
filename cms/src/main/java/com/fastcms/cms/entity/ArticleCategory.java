@@ -64,6 +64,11 @@ public class ArticleCategory implements Serializable {
     private String suffix;
 
     /**
+     * 访问路径
+     */
+    private String path;
+
+    /**
      * 创建时间
      */
     @TableField(fill = FieldFill.INSERT)
@@ -151,6 +156,14 @@ public class ArticleCategory implements Serializable {
 
     public LocalDateTime getCreated() {
         return created;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public void setCreated(LocalDateTime created) {

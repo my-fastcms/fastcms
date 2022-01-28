@@ -20,8 +20,9 @@ public interface IMenuService extends IService<Menu> {
 		@JsonIgnore
 		boolean hasChildren = false;
 		List<MenuNode> children;
+
 		public boolean getHasChildren() {
-			return children != null && children.size()>0;
+			return hasChildren;
 		}
 
 		public boolean isHasChildren() {

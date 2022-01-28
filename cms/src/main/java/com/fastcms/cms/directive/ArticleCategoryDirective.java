@@ -32,7 +32,7 @@ import java.util.Map;
  * @modifiedBy：
  * @version: 1.0
  */
-@Component("categoryTag")
+@Component("category")
 public class ArticleCategoryDirective extends BaseDirective {
 
 	private static final String ARTICLE_CATEGORY_ID = "id";

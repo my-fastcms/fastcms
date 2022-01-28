@@ -55,6 +55,7 @@ CREATE TABLE `article_category` (
   `sort_num` int(11) DEFAULT '0',
   `icon` varchar(255) DEFAULT NULL,
   `suffix` varchar(32) DEFAULT NULL COMMENT '页面后缀',
+  `path` varchar(32) DEFAULT NULL COMMENT '访问路径',
   `created` datetime DEFAULT NULL,
   `updated` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)

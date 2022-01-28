@@ -14,14 +14,19 @@
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="排序" prop="sortNum">
-							<el-input type="number" v-model="ruleForm.sortNum" placeholder="排序" clearable></el-input>
+						<el-form-item label="访问路径" prop="path">
+							<el-input v-model="ruleForm.path" placeholder="请输入访问路径" clearable></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="模板" prop="suffix">
 							<el-input v-model="ruleForm.suffix" placeholder="请输入模板后缀名称" clearable></el-input>
 							<div class="sub-title">结合网站模板使用</div>
+						</el-form-item>
+					</el-col>
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+						<el-form-item label="排序" prop="sortNum">
+							<el-input type="number" v-model="ruleForm.sortNum" placeholder="排序" clearable></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -53,6 +58,7 @@ export default {
 				id: '',
 				parentId: '',
 				title: '', 
+				path: '',
 				suffix: '', 
 				icon: '',
 				sortNum: '',
@@ -106,6 +112,7 @@ export default {
 			state.ruleForm.title = '';
 			state.ruleForm.icon = '';
 			state.ruleForm.suffix = '';
+			state.ruleForm.path = '';
 			state.ruleForm.sortNum = '';
 		};
 		return {

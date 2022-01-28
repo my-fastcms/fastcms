@@ -33,7 +33,7 @@ import java.util.Map;
  * @modifiedBy：
  * @version: 1.0
  */
-@Component("commentPageTag")
+@Component("commentPage")
 public class ArticleCommentPageDirective extends BaseDirective {
 
 	private static final String PARAM_ARTICLE_ID = "articleId";

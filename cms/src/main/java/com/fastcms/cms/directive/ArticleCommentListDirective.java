@@ -29,7 +29,7 @@ import java.util.Map;
  * @modifiedBy：
  * @version: 1.0
  */
-@Component("commentListTag")
+@Component("commentList")
 public class ArticleCommentListDirective extends BaseDirective {
 
 	@Override

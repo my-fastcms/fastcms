@@ -105,12 +105,17 @@ public class TemplateIndexController extends TemplateBaseController {
                            @RequestParam(name = "pageSize", required = false, defaultValue = "15") int pageSize,
                            Model model) {
 
-        QueryWrapper<Object> queryWrapper = Wrappers.query().eq("acr.category_id", id).eq("a.status", Article.STATUS_PUBLISH);
-        Page<IArticleService.ArticleVo> articleVoPage = articleService.pageArticleByCategoryId(new Page(pageNo, pageSize), queryWrapper);
-        model.addAttribute("articleVoPage", articleVoPage);
-
         ArticleCategory articleCategory = articleCategoryService.getById(id);
-        model.addAttribute("category", articleCategory);
+        if(articleCategory == null) {
+            articleCategory = articleCategoryService.getOne(Wrappers.<ArticleCategory>lambdaQuery().eq(ArticleCategory::getPath, id), false);
+        }
+
+        if(articleCategory != null) {
+            model.addAttribute("category", articleCategory);
+            QueryWrapper<Object> queryWrapper = Wrappers.query().eq("acr.category_id", articleCategory.getId()).eq("a.status", Article.STATUS_PUBLISH);
+            Page<IArticleService.ArticleVo> articleVoPage = articleService.pageArticleByCategoryId(new Page(pageNo, pageSize), queryWrapper);
+            model.addAttribute("articleVoPage", articleVoPage);
+        }
 
         String view = getTemplatePath() + DEFAULT_ARTICLE_LIST_VIEW;
 

@@ -93,7 +93,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Override
     public Article getArticle(Long articleId) {
         LambdaQueryWrapper<Article> wrapper = Wrappers.<Article>lambdaQuery()
-                .select(Article.class, info -> !info.getColumn().equals("created") && !info.getColumn().equals("updated") && !info.getColumn().equals("version"))
+                .select(Article.class, info -> !info.getColumn().equals("created")
+                        && !info.getColumn().equals("updated")
+                        && !info.getColumn().equals("version")
+                        && !info.getColumn().equals("json_ext")
+                )
                 .eq(Article::getId, articleId);
         Article article = getOne(wrapper);
 
@@ -143,8 +147,21 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
-    public List<ArticleVo> getArticleListByCategoryId(QueryWrapper queryWrapper) {
+    public List<ArticleVo> getArticleListByCategoryId(Long categoryId, Integer count, String orderBy) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("acr.category_id", categoryId);
+        queryWrapper.last("limit 0," + count);
+        queryWrapper.orderByDesc(orderBy);
         return getBaseMapper().getArticleListByCategoryId(queryWrapper);
+    }
+
+    @Override
+    public List<ArticleVo> getArticleListByTagId(Long tagId, Integer count, String orderBy) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("acr.tag_id", tagId);
+        queryWrapper.last("limit 0," + count);
+        queryWrapper.orderByDesc(orderBy);
+        return getBaseMapper().getArticleListByTagId(queryWrapper);
     }
 
     @Override

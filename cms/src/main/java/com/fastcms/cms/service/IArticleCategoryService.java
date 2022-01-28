@@ -50,6 +50,11 @@ public interface IArticleCategoryService extends IService<ArticleCategory> {
 		private String suffix;
 
 		/**
+		 * 访问路径
+		 */
+		private String path;
+
+		/**
 		 * 菜单图标
 		 */
 		private String icon;
@@ -70,6 +75,7 @@ public interface IArticleCategoryService extends IService<ArticleCategory> {
 			this.title = articleCategory.getTitle();
 			this.icon = articleCategory.getIcon();
 			this.suffix = articleCategory.getSuffix();
+			this.path = articleCategory.getPath();
 			this.created = articleCategory.getCreated();
 			this.url = articleCategory.getUrl();
 		}
@@ -81,6 +87,14 @@ public interface IArticleCategoryService extends IService<ArticleCategory> {
 
 		public void setTitle(String title) {
 			this.title = title;
+		}
+
+		public String getPath() {
+			return path;
+		}
+
+		public void setPath(String path) {
+			this.path = path;
 		}
 
 		public String getSuffix() {

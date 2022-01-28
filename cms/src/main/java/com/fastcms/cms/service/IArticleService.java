@@ -77,10 +77,17 @@ public interface IArticleService extends IService<Article> {
 
     /**
      * 根据分类id查询文章列表
-     * @param queryWrapper
+     * @param categoryId
      * @return
      */
-    List<ArticleVo> getArticleListByCategoryId(QueryWrapper queryWrapper);
+    List<ArticleVo> getArticleListByCategoryId(Long categoryId, Integer count, String orderBy);
+
+    /**
+     * 根据标签id获取文章列表
+     * @param tagId
+     * @return
+     */
+    List<ArticleVo> getArticleListByTagId(Long tagId, Integer count, String orderBy);
 
     /**
      * 更新文章浏览数量
@@ -186,6 +193,10 @@ public interface IArticleService extends IService<Article> {
          */
         String thumbnail;
         /**
+         * 文章摘要
+         */
+        String summary;
+        /**
          * 文章所属分类
          */
         List<ArticleCategory> categoryList;
@@ -252,6 +263,14 @@ public interface IArticleService extends IService<Article> {
 
         public void setThumbnail(String thumbnail) {
             this.thumbnail = thumbnail;
+        }
+
+        public String getSummary() {
+            return summary;
+        }
+
+        public void setSummary(String summary) {
+            this.summary = summary;
         }
 
         public List<ArticleCategory> getCategoryList() {

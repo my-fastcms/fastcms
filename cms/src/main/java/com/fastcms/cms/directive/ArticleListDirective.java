@@ -43,23 +43,20 @@ public class ArticleListDirective extends BaseDirective {
 	@Override
 	public Object doExecute(Environment env, Map params) {
 
-		final Long categoryId = getLong(ARTICLE_CATEGORY_ID, params);
-		if(categoryId == null) {
-			return null;
+		final Long categoryId = getLong(ARTICLE_CATEGORY_ID, params, 0l);
+		final Integer count = getInt(PARAM_COUNT, params, 10);
+		String orderBy;
+		if(categoryId != 0) {
+			orderBy = getStr(PARAM_ORDER_BY, params, "a.created");
+			return articleService.getArticleListByCategoryId(categoryId, count, orderBy);
 		}
 
-		QueryWrapper queryWrapper = new QueryWrapper();
-		queryWrapper.eq("acr.category_id", categoryId);
+		orderBy = getStr(PARAM_ORDER_BY, params, "created");
+		QueryWrapper wrapper = new QueryWrapper();
+		wrapper.last("limit 0," + count);
+		wrapper.orderByDesc(orderBy);
 
-		final Integer count = getInt(PARAM_COUNT, params);
-		if(count != 0) {
-			queryWrapper.last("limit 0," + count);
-		}
-
-		final String orderBy = getStr(PARAM_ORDER_BY, params, "a.created");
-		queryWrapper.orderByDesc(orderBy);
-
-		return articleService.getArticleListByCategoryId(queryWrapper);
+		return articleService.list(wrapper);
 	}
 
 }
