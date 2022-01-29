@@ -16,6 +16,7 @@
  */
 package com.fastcms.web.filter;
 
+import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.web.security.JwtTokenManager;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.apache.commons.lang.StringUtils;
@@ -52,24 +53,31 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
-        String jwt = resolveToken(request);
+            throws IOException, ServletException {
 
-        if (StringUtils.isNotBlank(jwt) && SecurityContextHolder.getContext().getAuthentication() == null) {
-            try {
-                tokenManager.validateToken(jwt);
-                Authentication authentication = this.tokenManager.getAuthentication(jwt);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                filterChain.doFilter(request, response);
-            } catch (ExpiredJwtException e) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
-            } catch (Exception e) {
-                e.printStackTrace();
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Server failed," + e.getMessage());
+        if (request.getRequestURI().startsWith("/".concat(FastcmsConstants.API_PREFIX_MAPPING))) {
+
+            final String jwt = resolveToken(request);
+
+            if (StringUtils.isNotBlank(jwt) && SecurityContextHolder.getContext().getAuthentication() == null) {
+                try {
+                    tokenManager.validateToken(jwt);
+                    Authentication authentication = this.tokenManager.getAuthentication(jwt);
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    filterChain.doFilter(request, response);
+                } catch (ExpiredJwtException e) {
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Server failed," + e.getMessage());
+                }
+            } else {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "not auth");
             }
         } else {
             filterChain.doFilter(request, response);
         }
+
     }
 
     private String resolveToken(HttpServletRequest request) {

@@ -84,7 +84,7 @@ public class PageController {
 	public Object save(@Validated SinglePage singlePage) {
 		try {
 			singlePageService.saveOrUpdate(singlePage);
-			return RestResultUtils.success();
+			return RestResultUtils.success(singlePage.getId());
 		} catch (Exception e) {
 			return RestResultUtils.failed(e.getMessage());
 		}

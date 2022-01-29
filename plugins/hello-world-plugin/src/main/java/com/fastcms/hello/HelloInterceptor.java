@@ -34,7 +34,7 @@ public class HelloInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        System.out.println("=============>>>HelloInterceptor.preHandle");
+        log.info("=============>>>HelloInterceptor.preHandle");
         return true;
     }
 

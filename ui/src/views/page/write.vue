@@ -122,7 +122,7 @@ export default {
 				if (valid) {
 					let params = qs.stringify(state.ruleForm, {arrayFormat: 'repeat'});
 					addPage(params).then((res) => {
-                        state.ruleForm.id = res;
+                        state.ruleForm.id = res.data;
 						ElMessage.success("保存成功");
 					}).catch((res) => {
 						ElMessage({showClose: true, message: res.message ? res.message : '系统错误' , type: 'error'});
