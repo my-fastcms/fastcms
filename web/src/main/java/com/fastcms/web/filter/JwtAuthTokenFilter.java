@@ -55,7 +55,8 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
 
-        if (request.getRequestURI().startsWith("/".concat(FastcmsConstants.API_PREFIX_MAPPING))) {
+        if (request.getRequestURI().startsWith(FastcmsConstants.API_PREFIX_MAPPING)
+            || request.getRequestURI().startsWith(FastcmsConstants.PLUGIN_MAPPING)) {
 
             final String jwt = resolveToken(request);
 
@@ -68,7 +69,6 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
                 } catch (ExpiredJwtException e) {
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
                 } catch (Exception e) {
-                    e.printStackTrace();
                     response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Server failed," + e.getMessage());
                 }
             } else {

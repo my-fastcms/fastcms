@@ -8,6 +8,7 @@ import com.fastcms.cms.entity.ArticleComment;
 import com.fastcms.cms.mapper.ArticleCommentMapper;
 import com.fastcms.cms.service.IArticleCommentService;
 import com.fastcms.cms.service.IArticleService;
+import com.fastcms.common.exception.FastcmsException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,21 +35,21 @@ public class ArticleCommentServiceImpl extends ServiceImpl<ArticleCommentMapper,
 	}
 
 	@Override
-	public void saveArticleComment(Long articleId, Long commentId, String content) throws Exception {
+	public void saveArticleComment(Long articleId, Long commentId, String content) throws FastcmsException {
 		if(articleId == null) {
-			throw new Exception("文章id不能为空");
+			throw new FastcmsException(FastcmsException.INVALID_PARAM, "文章id不能为空");
 		}
 		if(StringUtils.isBlank(content)) {
-			throw new Exception("评论内容不能为空");
+			throw new FastcmsException(FastcmsException.INVALID_PARAM, "评论内容不能为空");
 		}
 
 		Article article = articleService.getById(articleId);
 		if(article == null) {
-			throw new Exception("文章不存在");
+			throw new FastcmsException(FastcmsException.INVALID_PARAM, "文章不存在");
 		}
 
 		if(!article.getCommentEnable()) {
-			throw new Exception("文章不允许评论");
+			throw new FastcmsException(FastcmsException.INVALID_PARAM, "文章不允许评论");
 		}
 
 		ArticleComment articleComment = new ArticleComment();

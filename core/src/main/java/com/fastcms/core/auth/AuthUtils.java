@@ -45,4 +45,8 @@ public final class AuthUtils {
         return getUser().isAdmin();
     }
 
+    public static Boolean isLogin() {
+        return getUser() != null;
+    }
+
 }

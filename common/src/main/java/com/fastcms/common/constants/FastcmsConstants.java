@@ -25,7 +25,7 @@ package com.fastcms.common.constants;
  */
 public interface FastcmsConstants {
 
-    String API_PREFIX_MAPPING = "fastcms/api";
+    String API_PREFIX_MAPPING = "/fastcms/api";
 
     String ADMIN_MAPPING = API_PREFIX_MAPPING + "/admin";
 

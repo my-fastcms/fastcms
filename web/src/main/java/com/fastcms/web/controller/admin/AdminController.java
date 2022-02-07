@@ -67,9 +67,9 @@ public class AdminController {
      * @return FastcmsUser
      */
     @PostMapping("login")
-    public RestResult<FastcmsUser> login(@RequestParam String username,
-                                    @RequestParam String password,
-                                    @RequestParam String code) {
+    public RestResult<FastcmsUser> login(@RequestParam("username") String username,
+                                    @RequestParam("password") String password,
+                                    @RequestParam(name = "code") String code) {
         try {
             FastcmsUser user = authManager.login(username, password, code);
             return RestResultUtils.success(user);

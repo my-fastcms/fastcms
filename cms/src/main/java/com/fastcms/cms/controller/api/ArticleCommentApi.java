@@ -19,6 +19,7 @@ package com.fastcms.cms.controller.api;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.cms.service.IArticleCommentService;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.mybatis.PageModel;
@@ -66,7 +67,7 @@ public class ArticleCommentApi {
 		try {
 			articleCommentService.saveArticleComment(articleId, commentId, context);
 			return RestResultUtils.success();
-		} catch (Exception e) {
+		} catch (FastcmsException e) {
 			return RestResultUtils.failed(e.getMessage());
 		}
 

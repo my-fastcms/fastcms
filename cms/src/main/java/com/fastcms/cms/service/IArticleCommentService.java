@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.cms.entity.ArticleComment;
+import com.fastcms.common.exception.FastcmsException;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -37,7 +38,7 @@ public interface IArticleCommentService extends IService<ArticleComment> {
 	 * @param commentId
 	 * @param content
 	 */
-	void saveArticleComment(Long articleId, Long commentId, String content) throws Exception;
+	void saveArticleComment(Long articleId, Long commentId, String content) throws FastcmsException;
 
 	class ArticleCommentVo implements Serializable {
 

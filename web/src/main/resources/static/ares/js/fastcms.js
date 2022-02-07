@@ -15,11 +15,6 @@ function submitForm(rules, messages, callback, beforeRequest) {
             $(element).removeClass('is-invalid');
         },
         submitHandler: function(form) {
-            if (typeof (CKEDITOR) != "undefined") {
-                for (instance in CKEDITOR.instances) {
-                    CKEDITOR.instances[instance].updateElement();
-                }
-            }
 
             if(beforeRequest) {
                 try {
@@ -58,8 +53,12 @@ function submitForm(rules, messages, callback, beforeRequest) {
                     }
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
-                    if(xhr.status==403) {
+                    if(xhr.status == 403) {
                         alert("403 forbid")
+                    } else if(xhr.status == 401) {
+                        alert("401 not login");
+                    } else {
+                        alert("unknow status");
                     }
                 },
                 complete: function (resp) {

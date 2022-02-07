@@ -55,7 +55,7 @@ public class FastcmsCaptchaService {
 		HttpServletRequest request = RequestUtils.getRequest();
 		SpecCaptcha specCaptcha = new SpecCaptcha(130, 48, 4);
 		final String verCode = specCaptcha.text().toLowerCase();
-		final String key = RequestUtils.getClientId(request) == null ? StrUtils.uuid() : RequestUtils.getClientId(request);
+		final String key = StrUtils.isEmpty(RequestUtils.getClientId(request)) ? StrUtils.uuid() : RequestUtils.getClientId(request);
 		cacheManager.getCache(WEB_LOGIN_CODE_CACHE_NAME).put(key, verCode);
 		return new FastcmsCaptcha(verCode, key, specCaptcha.toBase64());
 	}
