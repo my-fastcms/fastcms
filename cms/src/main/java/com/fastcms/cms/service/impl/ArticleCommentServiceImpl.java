@@ -30,8 +30,8 @@ public class ArticleCommentServiceImpl extends ServiceImpl<ArticleCommentMapper,
 	}
 
 	@Override
-	public Page<ArticleCommentVo> pageArticleCommentByArticleId(Page pageParam, Long articleId) {
-		return getBaseMapper().pageArticleCommentByArticleId(pageParam, articleId);
+	public Page<ArticleCommentVo> pageArticleCommentByArticleId(Page pageParam, Long articleId, Long userId) {
+		return getBaseMapper().pageArticleCommentByArticleId(pageParam, articleId, userId);
 	}
 
 	@Override

@@ -22,8 +22,8 @@ public interface ArticleCommentMapper extends BaseMapper<ArticleComment> {
 
 	Page<IArticleCommentService.ArticleCommentVo> pageArticleComment(Page pageParam, @Param(Constants.WRAPPER) QueryWrapper queryWrapper);
 
-	List<IArticleCommentService.ArticleCommentVo> getReplyCommentByParentId(Long commentId);
+	List<IArticleCommentService.ArticleCommentVo> getReplyCommentByParentId(@Param("commentId") Long commentId);
 
-	Page<IArticleCommentService.ArticleCommentVo> pageArticleCommentByArticleId(Page pageParam, Long articleId);
+	Page<IArticleCommentService.ArticleCommentVo> pageArticleCommentByArticleId(Page pageParam, @Param("articleId") Long articleId, @Param("userId") Long userId);
 
 }

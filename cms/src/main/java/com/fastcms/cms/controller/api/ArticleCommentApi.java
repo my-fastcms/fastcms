@@ -22,6 +22,7 @@ import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.mybatis.PageModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,7 +52,7 @@ public class ArticleCommentApi {
 	 */
 	@RequestMapping("list")
 	public RestResult<Page<IArticleCommentService.ArticleCommentVo>> list(PageModel page, Long articleId) {
-		return RestResultUtils.success(articleCommentService.pageArticleCommentByArticleId(page.toPage(), articleId));
+		return RestResultUtils.success(articleCommentService.pageArticleCommentByArticleId(page.toPage(), articleId, AuthUtils.getUserId()));
 	}
 
 	/**

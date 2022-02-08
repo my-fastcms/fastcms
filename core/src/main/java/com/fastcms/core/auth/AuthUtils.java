@@ -30,19 +30,21 @@ public final class AuthUtils {
     private AuthUtils() {}
 
     public static Long getUserId() {
-        return getUser().getUserId();
+        return getUser() == null ? null : getUser().getUserId();
     }
 
     public static String getUsername() {
-        return getUser().getUsername();
+        return getUser() == null ? null : getUser().getUsername();
     }
 
     public static FastcmsUserDetails getUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(principal == null) return null;
         return (FastcmsUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     public static Boolean isAdmin() {
-        return getUser().isAdmin();
+        return getUser() == null ? false : getUser().isAdmin();
     }
 
     public static Boolean isLogin() {

@@ -27,10 +27,11 @@ public interface IArticleCommentService extends IService<ArticleComment> {
 
 	/**
 	 * 分页查询具体某篇文章的评论列表
+	 * 自己的评论不管是否审核都可以看到
 	 * @param articleId
 	 * @return
 	 */
-	Page<ArticleCommentVo> pageArticleCommentByArticleId(Page pageParam, Long articleId);
+	Page<ArticleCommentVo> pageArticleCommentByArticleId(Page pageParam, Long articleId, Long userId);
 
 	/**
 	 * 发布文章评论
