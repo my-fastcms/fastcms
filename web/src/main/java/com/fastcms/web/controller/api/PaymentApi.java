@@ -21,6 +21,7 @@ import com.egzosn.pay.wx.bean.WxTransactionType;
 import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.service.IArticleService;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.payment.PayServiceManager;
 import com.fastcms.payment.bean.FastcmsPayOrder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * 支付
@@ -68,7 +68,7 @@ public class PaymentApi {
         BigDecimal price = new BigDecimal((String) article.getExtFields().get("price"));
         //获取对应的支付账户操作工具（可根据账户id）
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ImageIO.write(MatrixToImageWriter.writeInfoToJpgBuff(payServiceManager.getQrPay(new FastcmsPayOrder(platform, WxTransactionType.NATIVE.getType(), article.getTitle(), article.getSummary(), null == price ? BigDecimal.valueOf(0.01) : price, System.currentTimeMillis()+""))), "JPEG", baos);
+        ImageIO.write(MatrixToImageWriter.writeInfoToJpgBuff(payServiceManager.getQrPay(new FastcmsPayOrder(platform, WxTransactionType.NATIVE.getType(), article.getTitle(), article.getSummary(), null == price ? BigDecimal.valueOf(0.01) : price, StrUtils.uuid()))), "JPEG", baos);
         return baos.toByteArray();
     }
 
@@ -83,7 +83,7 @@ public class PaymentApi {
         //获取对应的支付账户操作工具（可根据账户id）
         Article article = articleService.getById(articleId);
         BigDecimal price = new BigDecimal((String) article.getExtFields().get("price"));
-        return payServiceManager.getQrPay(new FastcmsPayOrder(platform, WxTransactionType.NATIVE.getType(), article.getTitle(), article.getSummary(), null == price ? BigDecimal.valueOf(0.01) : price, System.currentTimeMillis()+""));
+        return payServiceManager.getQrPay(new FastcmsPayOrder(platform, WxTransactionType.NATIVE.getType(), article.getTitle(), article.getSummary(), null == price ? BigDecimal.valueOf(0.01) : price, StrUtils.uuid()));
     }
 
     /**
@@ -99,7 +99,7 @@ public class PaymentApi {
         Article article = articleService.getById(articleId);
         BigDecimal price = new BigDecimal((String) article.getExtFields().get("price"));
 
-        FastcmsPayOrder order = new FastcmsPayOrder(platform, WxTransactionType.JSAPI.getType(), article.getTitle(), article.getSummary(), null == price ? BigDecimal.valueOf(0.01) : price, System.currentTimeMillis()+"");
+        FastcmsPayOrder order = new FastcmsPayOrder(platform, WxTransactionType.JSAPI.getType(), article.getTitle(), article.getSummary(), null == price ? BigDecimal.valueOf(0.01) : price, StrUtils.uuid());
         order.setOpenid(openid);
 
         Map orderInfo = payServiceManager.getOrderInfo(order);
@@ -121,7 +121,7 @@ public class PaymentApi {
 
         Map<String, Object> data = new HashMap<>();
         data.put("code", 0);
-        FastcmsPayOrder order = new FastcmsPayOrder(platform, WxTransactionType.APP.getType(), article.getTitle(), article.getSummary(), price, UUID.randomUUID().toString().replace("-", ""));
+        FastcmsPayOrder order = new FastcmsPayOrder(platform, WxTransactionType.APP.getType(), article.getTitle(), article.getSummary(), price, StrUtils.uuid());
         data.put("orderInfo", payServiceManager.app(order));
         return data;
     }
@@ -141,7 +141,7 @@ public class PaymentApi {
 
         //获取对应的支付账户操作工具（可根据账户id）
         //条码付
-        FastcmsPayOrder order = new FastcmsPayOrder(platform, WxTransactionType.MICROPAY.getType(), article.getTitle(), article.getSummary(), null == price ? BigDecimal.valueOf(0.01) : price, UUID.randomUUID().toString().replace("-", ""));
+        FastcmsPayOrder order = new FastcmsPayOrder(platform, WxTransactionType.MICROPAY.getType(), article.getTitle(), article.getSummary(), null == price ? BigDecimal.valueOf(0.01) : price, StrUtils.uuid());
         //设置授权码，条码等
         order.setAuthCode(authCode);
         //支付结果
@@ -170,7 +170,7 @@ public class PaymentApi {
         BigDecimal price = new BigDecimal((String) article.getExtFields().get("price"));
 
         //获取对应的支付账户操作工具（可根据账户id）
-        FastcmsPayOrder order = new FastcmsPayOrder(platform, WxTransactionType.FACEPAY.getType(), article.getTitle(), article.getSummary(), null == price ? BigDecimal.valueOf(0.01) : price, UUID.randomUUID().toString().replace("-", ""));
+        FastcmsPayOrder order = new FastcmsPayOrder(platform, WxTransactionType.FACEPAY.getType(), article.getTitle(), article.getSummary(), null == price ? BigDecimal.valueOf(0.01) : price, StrUtils.uuid());
         //设置人脸凭证
         order.setAuthCode(authCode);
         //用户在商户 appid下的唯一标识

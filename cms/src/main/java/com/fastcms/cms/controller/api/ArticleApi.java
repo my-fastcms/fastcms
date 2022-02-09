@@ -24,12 +24,22 @@ import com.fastcms.cms.service.IArticleService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.common.utils.FileUtils;
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.mybatis.PageModel;
+import com.fastcms.core.utils.DirUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.Objects;
 
 /**
@@ -116,11 +126,58 @@ public class ArticleApi {
 				return RestResultUtils.failed("只能删除自己的文章");
 			}
 
-			articleService.removeById(articleId);
+			article.setStatus(Article.STATUS_DELETE);
+			articleService.updateById(article);
 			return RestResultUtils.success();
 		} catch (Exception e) {
 			return RestResultUtils.failed(e.getMessage());
 		}
+	}
+
+	/**
+	 * 下载附件
+	 * @param articleId
+	 * @param response
+	 */
+	@GetMapping("download/{articleId}")
+	public Object download(@PathVariable("articleId") Long articleId, HttpServletResponse response) throws IOException {
+		Article article = articleService.getById(articleId);
+		if(article == null || article.getExtFields() == null) {
+			return RestResultUtils.failed("附件不存在");
+		}
+
+		String path = (String) article.getExtFields().get("attach");
+		if(StrUtils.isBlank(path)) {
+			return RestResultUtils.failed("附件不存在");
+		}
+
+		path = DirUtils.getUploadDir().concat(path);
+
+		File file = new File(path);
+		if(!file.exists()) {
+			return RestResultUtils.failed("附件不存在");
+		}
+
+		InputStream inputStream = null;
+		try {
+			inputStream = new FileInputStream(path);
+			response.reset();
+			response.setContentType("application/octet-stream");
+			String filename = StrUtils.uuid() + FileUtils.getSuffix(path);
+			response.addHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(filename, "UTF-8"));
+			ServletOutputStream outputStream = response.getOutputStream();
+			byte[] b = new byte[1024];
+			int len;
+			while ((len = inputStream.read(b)) > 0) {
+				outputStream.write(b, 0, len);
+			}
+		} finally {
+			if(inputStream != null) {
+				inputStream.close();
+			}
+		}
+
+		return null;
 	}
 
 }

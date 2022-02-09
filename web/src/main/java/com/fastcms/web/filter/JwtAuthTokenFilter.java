@@ -88,7 +88,7 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
 
         final String token = request.getParameter(ACCESS_TOKEN);
         if (StringUtils.isNotBlank(token)) {
-            return token;
+            return token.startsWith(TOKEN_PREFIX) ? token.substring(TOKEN_PREFIX.length()) : token;
         }
 
         return null;
