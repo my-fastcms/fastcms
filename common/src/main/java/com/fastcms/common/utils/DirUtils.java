@@ -1,4 +1,4 @@
-package com.fastcms.core.utils;
+package com.fastcms.common.utils;
 
 /**
  * @author： wjun_java@163.com

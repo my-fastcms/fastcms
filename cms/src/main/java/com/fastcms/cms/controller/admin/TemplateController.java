@@ -28,7 +28,7 @@ import com.fastcms.core.auth.AuthConstants;
 import com.fastcms.core.auth.Secured;
 import com.fastcms.core.template.Template;
 import com.fastcms.core.template.TemplateService;
-import com.fastcms.core.utils.DirUtils;
+import com.fastcms.common.utils.DirUtils;
 import com.fastcms.service.IConfigService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

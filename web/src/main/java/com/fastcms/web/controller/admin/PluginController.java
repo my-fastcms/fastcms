@@ -26,7 +26,7 @@ import com.fastcms.core.auth.ActionTypes;
 import com.fastcms.core.auth.AuthConstants;
 import com.fastcms.core.auth.Secured;
 import com.fastcms.core.mybatis.PageModel;
-import com.fastcms.core.utils.DirUtils;
+import com.fastcms.common.utils.DirUtils;
 import com.fastcms.plugin.PluginBase;
 import com.fastcms.plugin.PluginManagerService;
 import org.apache.commons.lang.StringUtils;

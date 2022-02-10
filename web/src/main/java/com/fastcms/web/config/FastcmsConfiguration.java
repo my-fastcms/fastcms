@@ -23,7 +23,7 @@ import com.fastcms.core.template.FastcmsTemplateFreeMarkerConfig;
 import com.fastcms.core.template.Template;
 import com.fastcms.core.template.TemplateService;
 import com.fastcms.core.utils.AttachUtils;
-import com.fastcms.core.utils.DirUtils;
+import com.fastcms.common.utils.DirUtils;
 import com.fastcms.service.IConfigService;
 import com.fastcms.web.filter.AuthInterceptor;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;

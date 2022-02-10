@@ -2,7 +2,7 @@ package com.fastcms.core.attach;
 
 import com.fastcms.common.utils.ImageUtils;
 import com.fastcms.core.utils.AttachUtils;
-import com.fastcms.core.utils.DirUtils;
+import com.fastcms.common.utils.DirUtils;
 import com.fastcms.entity.Attachment;
 import com.fastcms.utils.ConfigUtils;
 import org.springframework.stereotype.Service;

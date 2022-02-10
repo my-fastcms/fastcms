@@ -24,11 +24,13 @@ import com.fastcms.cms.service.IArticleService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.common.utils.DirUtils;
 import com.fastcms.common.utils.FileUtils;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.mybatis.PageModel;
-import com.fastcms.core.utils.DirUtils;
+import com.fastcms.entity.PaymentRecord;
+import com.fastcms.service.IPaymentRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +41,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.Objects;
 
@@ -56,6 +59,9 @@ public class ArticleApi {
 
 	@Autowired
 	private IArticleService articleService;
+
+	@Autowired
+	private IPaymentRecordService paymentRecordService;
 
 	/**
 	 * 文章列表
@@ -156,6 +162,15 @@ public class ArticleApi {
 		File file = new File(path);
 		if(!file.exists()) {
 			return RestResultUtils.failed("附件不存在");
+		}
+
+		BigDecimal price = article.getPrice();
+		if(price != null && price.compareTo(BigDecimal.ZERO) ==1) {
+			//检查是否需要支付
+			PaymentRecord paymentRecord = paymentRecordService.getPaymentRecordByProductId(articleId);
+			if(paymentRecord == null || paymentRecord.getPayStatus() != 0) {
+				return RestResultUtils.failed(100500, "下载需要支付");
+			}
 		}
 
 		InputStream inputStream = null;

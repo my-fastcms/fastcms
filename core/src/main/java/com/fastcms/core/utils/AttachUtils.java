@@ -1,6 +1,7 @@
 package com.fastcms.core.utils;
 
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.common.utils.DirUtils;
 import com.fastcms.common.utils.FileUtils;
 import com.fastcms.core.attach.FileServerManager;
 import com.fastcms.entity.Attachment;

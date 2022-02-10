@@ -28,7 +28,7 @@ import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.auth.Secured;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.core.utils.AttachUtils;
-import com.fastcms.core.utils.DirUtils;
+import com.fastcms.common.utils.DirUtils;
 import com.fastcms.core.utils.PluginUtils;
 import com.fastcms.entity.Attachment;
 import com.fastcms.service.IAttachmentService;

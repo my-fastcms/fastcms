@@ -2,7 +2,7 @@ package com.fastcms.core.listener;
 
 import com.fastcms.common.utils.VersionUtils;
 import com.fastcms.core.utils.AttachUtils;
-import com.fastcms.core.utils.DirUtils;
+import com.fastcms.common.utils.DirUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ConfigurableBootstrapContext;

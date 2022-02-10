@@ -16,13 +16,15 @@
  */
 package com.fastcms.web.controller.api;
 
+import com.fastcms.cms.order.IFastcmsOrderService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.core.auth.AuthUtils;
-import com.fastcms.service.IOrderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,8 +40,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(FastcmsConstants.API_MAPPING + "/order")
 public class OrderApi {
 
+    private static final Logger LOG = LoggerFactory.getLogger(OrderApi.class);
+
     @Autowired
-    IOrderService orderService;
+    IFastcmsOrderService fastcmsOrderService;
 
     /**
      * 创建订单
@@ -47,13 +51,12 @@ public class OrderApi {
      * @return
      */
     @PostMapping("save")
-    public RestResult<Long> save(IOrderService.CreateOrderParam createOrderParam) {
+    public RestResult<Long> save(@RequestBody IFastcmsOrderService.CreateOrderParam createOrderParam) {
         try {
-            createOrderParam.setUserId(AuthUtils.getUserId());
-            Long orderId = orderService.createOrder(createOrderParam);
+            Long orderId = fastcmsOrderService.createOrder(createOrderParam);
             return RestResultUtils.success(orderId);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage());
             return RestResultUtils.failed(e.getMessage());
         }
     }

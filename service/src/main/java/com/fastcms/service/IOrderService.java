@@ -7,7 +7,6 @@ import com.fastcms.entity.Order;
 import com.fastcms.entity.PaymentRecord;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * 订单服务类
@@ -25,13 +24,11 @@ public interface IOrderService extends IService<Order> {
     Page<OrderVo> pageOrder(Page pageParam, QueryWrapper queryWrapper);
 
     /**
-     * 创建订单
-     * @param createOrderParam
+     * @param order
+     * @param openid
+     * @param ip
      * @return
-     * @throws Exception
      */
-    Long createOrder(CreateOrderParam createOrderParam) throws Exception;
-
     PaymentRecord preparePaymentRecord(Order order, String openid, String ip);
 
     /**
@@ -183,120 +180,6 @@ public interface IOrderService extends IService<Order> {
 
         public void setAfterSale(Integer afterSale) {
             this.afterSale = afterSale;
-        }
-    }
-
-    /**
-     * 创建订单
-     */
-    class CreateOrderParam implements Serializable {
-        /**
-         * 用户id
-         */
-        Long userId;
-        /**
-         * 订单产品
-         */
-        List<ProductParam> products;
-        /**
-         * 收货地址
-         */
-        Long addressId;
-        /**
-         * 买家留言
-         */
-        String buyerMsg;
-
-        public Long getUserId() {
-            return userId;
-        }
-
-        public void setUserId(Long userId) {
-            this.userId = userId;
-        }
-
-        public List<ProductParam> getProducts() {
-            return products;
-        }
-
-        public void setProducts(List<ProductParam> products) {
-            this.products = products;
-        }
-
-        public Long getAddressId() {
-            return addressId;
-        }
-
-        public void setAddressId(Long addressId) {
-            this.addressId = addressId;
-        }
-
-        public String getBuyerMsg() {
-            return buyerMsg;
-        }
-
-        public void setBuyerMsg(String buyerMsg) {
-            this.buyerMsg = buyerMsg;
-        }
-    }
-
-    /**
-     * 产品
-     */
-    class ProductParam implements Serializable {
-        /**
-         * 产品id
-         */
-        Long id;
-        /**
-         * 产品类型
-         */
-        String type;
-        /**
-         * 产品数量
-         */
-        Long num;
-        /**
-         * 产品sku
-         */
-        String sku;
-
-        public ProductParam(Long id, String type, Long num) {
-            this.id = id;
-            this.type = type;
-            this.num = num;
-        }
-
-        public Long getId() {
-            return id;
-        }
-
-        public void setId(Long id) {
-            this.id = id;
-        }
-
-        public String getType() {
-            return type;
-        }
-
-        public void setType(String type) {
-            this.type = type;
-        }
-
-        public Long getNum() {
-            return num;
-        }
-
-        public void setNum(Long num) {
-            this.num = num;
-        }
-
-        public String getSku() {
-            return sku;
-        }
-
-        public void setSku(String sku) {
-            this.sku = sku;
         }
     }
 

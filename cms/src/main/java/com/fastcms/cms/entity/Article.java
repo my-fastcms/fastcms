@@ -9,6 +9,7 @@ import org.apache.commons.lang.StringUtils;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -319,6 +320,12 @@ public class Article implements Serializable {
             }
         }
         return extFields;
+    }
+
+    public BigDecimal getPrice() {
+        if(getExtFields() == null || getExtFields().get("price") == null) return BigDecimal.ZERO;
+        Object price = getExtFields().get("price");
+        return new BigDecimal((String) price);
     }
 
 }

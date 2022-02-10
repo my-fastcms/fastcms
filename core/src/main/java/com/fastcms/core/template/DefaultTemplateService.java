@@ -21,7 +21,7 @@ import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.TreeNode;
 import com.fastcms.common.model.TreeNodeConvert;
 import com.fastcms.common.utils.FileUtils;
-import com.fastcms.core.utils.DirUtils;
+import com.fastcms.common.utils.DirUtils;
 import com.fastcms.entity.Config;
 import com.fastcms.service.IConfigService;
 import org.apache.commons.lang.StringUtils;

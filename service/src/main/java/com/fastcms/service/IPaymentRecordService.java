@@ -12,4 +12,6 @@ public interface IPaymentRecordService extends IService<PaymentRecord> {
 
 	PaymentRecord getPaymentRecordByTrxNo(String trxNo);
 
+	PaymentRecord getPaymentRecordByProductId(Long productId);
+
 }

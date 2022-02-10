@@ -1,6 +1,6 @@
 package com.fastcms.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fastcms.entity.PaymentRecord;
 import com.fastcms.mapper.PaymentRecordMapper;
@@ -17,8 +17,12 @@ public class PaymentRecordServiceImpl extends ServiceImpl<PaymentRecordMapper, P
 
 	@Override
 	public PaymentRecord getPaymentRecordByTrxNo(String trxNo) {
-		QueryWrapper queryWrapper = new QueryWrapper();
-		queryWrapper.eq("trx_no", trxNo);
-		return getOne(queryWrapper);
+		return getOne(Wrappers.<PaymentRecord>lambdaQuery().eq(PaymentRecord::getTrxNo, trxNo));
 	}
+
+	@Override
+	public PaymentRecord getPaymentRecordByProductId(Long productId) {
+		return getOne(Wrappers.<PaymentRecord>lambdaQuery().eq(PaymentRecord::getProductRelativeId, productId));
+	}
+
 }
