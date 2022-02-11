@@ -47,13 +47,13 @@ public class OrderApi {
 
     /**
      * 创建订单
-     * @param createOrderParam
+     * @param orderParam
      * @return
      */
     @PostMapping("save")
-    public RestResult<Long> save(@RequestBody IFastcmsOrderService.CreateOrderParam createOrderParam) {
+    public RestResult<Long> save(@RequestBody IFastcmsOrderService.CreateOrderParam orderParam) {
         try {
-            Long orderId = fastcmsOrderService.createOrder(createOrderParam);
+            Long orderId = fastcmsOrderService.createOrder(orderParam);
             return RestResultUtils.success(orderId);
         } catch (Exception e) {
             LOG.error(e.getMessage());

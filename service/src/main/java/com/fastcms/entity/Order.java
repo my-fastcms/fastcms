@@ -12,6 +12,7 @@ import java.util.List;
  * @author wjun_java@163.com
  * @since 2021-12-21
  */
+@TableName("`order`")
 public class Order implements Serializable {
 
     private static final long serialVersionUID = 1L;

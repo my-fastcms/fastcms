@@ -19,7 +19,6 @@ package com.fastcms.cms.order;
 import com.fastcms.common.exception.FastcmsException;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @author： wjun_java@163.com
@@ -45,7 +44,7 @@ public interface IFastcmsOrderService {
         /**
          * 订单产品
          */
-        List<ProductParam> products;
+        ProductParam[] products;
         /**
          * 收货地址
          */
@@ -55,11 +54,11 @@ public interface IFastcmsOrderService {
          */
         String buyerMsg;
 
-        public List<ProductParam> getProducts() {
+        public ProductParam[] getProducts() {
             return products;
         }
 
-        public void setProducts(List<ProductParam> products) {
+        public void setProducts(ProductParam[] products) {
             this.products = products;
         }
 
@@ -100,12 +99,6 @@ public interface IFastcmsOrderService {
          * 产品sku
          */
         String sku;
-
-        public ProductParam(Long id, String type, Long num) {
-            this.id = id;
-            this.type = type;
-            this.num = num;
-        }
 
         public Long getId() {
             return id;

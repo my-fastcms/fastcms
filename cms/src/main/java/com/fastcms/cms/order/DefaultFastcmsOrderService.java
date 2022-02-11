@@ -32,6 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -65,15 +66,17 @@ public class DefaultFastcmsOrderService implements IFastcmsOrderService {
 
         if (AuthUtils.getUserId() == null) throw new FastcmsException(FastcmsException.INVALID_PARAM, "下单人不能为空");
 
-        if(CollectionUtils.isEmpty(createOrderParam.getProducts())) throw new FastcmsException(FastcmsException.INVALID_PARAM, "articleId不能为空");
+        List<ProductParam> productParams = Arrays.asList(createOrderParam.getProducts());
 
-        Article article = articleService.getById(createOrderParam.getProducts().get(0).getId());
+        if(CollectionUtils.isEmpty(productParams)) throw new FastcmsException(FastcmsException.INVALID_PARAM, "articleId不能为空");
+
+        Article article = articleService.getById(productParams.get(0).getId());
         if(article == null) throw new FastcmsException(FastcmsException.SERVER_ERROR, "商品不存在");
 
         //订单项
         List<OrderItem> orderItemList = new ArrayList<>();
 
-        for (ProductParam item : createOrderParam.getProducts()) {
+        for (ProductParam item : productParams) {
             Long num = item.getNum();
             Article product = articleService.getById(item.getId());
 
