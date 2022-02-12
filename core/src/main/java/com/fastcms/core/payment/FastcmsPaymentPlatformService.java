@@ -37,7 +37,7 @@ public class FastcmsPaymentPlatformService implements PaymentPlatformService, Ap
     @Override
     public void onApplicationEvent(ApplicationStartedEvent event) {
         ApplicationContext applicationContext = event.getApplicationContext();
-//        //扫描支付平台实现类并注册
+        //扫描支付平台实现类并注册
         Map<String, PaymentPlatform> paymentPlatformMap = applicationContext.getBeansOfType(PaymentPlatform.class);
         paymentPlatformMap.values().forEach(item -> PaymentPlatforms.loadPaymentPlatform(item));
 
