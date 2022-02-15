@@ -21,15 +21,14 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.service.IArticleService;
+import com.fastcms.cms.utils.ArticleUtils;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.common.utils.DirUtils;
 import com.fastcms.common.utils.FileUtils;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.mybatis.PageModel;
-import com.fastcms.entity.PaymentRecord;
 import com.fastcms.service.IPaymentRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -148,28 +147,29 @@ public class ArticleApi {
 	@GetMapping("download/{articleId}")
 	public Object download(@PathVariable("articleId") Long articleId, HttpServletResponse response) throws IOException {
 		Article article = articleService.getById(articleId);
-		if(article == null || article.getExtFields() == null) {
-			return RestResultUtils.failed("附件不存在");
+		if(article == null) {
+			return RestResultUtils.failed("数据不存在");
 		}
 
-		String path = (String) article.getExtFields().get("attach");
+		String path = article.getAttach();
 		if(StrUtils.isBlank(path)) {
 			return RestResultUtils.failed("附件不存在");
 		}
-
-		path = DirUtils.getUploadDir().concat(path);
 
 		File file = new File(path);
 		if(!file.exists()) {
 			return RestResultUtils.failed("附件不存在");
 		}
 
-		BigDecimal price = article.getPrice();
-		if(price != null && price.compareTo(BigDecimal.ZERO) ==1) {
-			//检查是否需要支付
-			PaymentRecord paymentRecord = paymentRecordService.getPaymentRecordByProductId(articleId);
-			if(paymentRecord == null || paymentRecord.getPayStatus() != 0) {
-				return RestResultUtils.failed(100500, "下载需要支付");
+		//通过文章付费插件设置价格，以及是否开启付费
+		boolean enableNeedToPay = ArticleUtils.isEnableNeedToPay(article);
+		if(enableNeedToPay) {
+			BigDecimal price = article.getPrice();
+			if(price != null && price.compareTo(BigDecimal.ZERO) ==1) {
+				//检查是否需要支付
+				if(paymentRecordService.checkNeedPay(articleId)) {
+					return RestResultUtils.failed(100500, "需要先支付");
+				}
 			}
 		}
 

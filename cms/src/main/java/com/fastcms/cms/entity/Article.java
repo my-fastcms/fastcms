@@ -2,7 +2,9 @@ package com.fastcms.cms.entity;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.annotation.*;
+import com.fastcms.cms.utils.ArticleUtils;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.utils.DirUtils;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.utils.ConfigUtils;
 import org.apache.commons.lang.StringUtils;
@@ -323,9 +325,18 @@ public class Article implements Serializable {
     }
 
     public BigDecimal getPrice() {
-        if(getExtFields() == null || getExtFields().get("price") == null) return BigDecimal.ZERO;
-        Object price = getExtFields().get("price");
-        return new BigDecimal((String) price);
+        if(ArticleUtils.getFieldProperty(this, "price") == null) return BigDecimal.ZERO;
+        try {
+            return new BigDecimal((String) ArticleUtils.getFieldProperty(this, "price"));
+        } catch (NumberFormatException e) {
+            return BigDecimal.ZERO;
+        }
+
+    }
+
+    public String getAttach() {
+        return ArticleUtils.getFieldProperty(this, "attach") == null
+                ? "" : DirUtils.getUploadDir().concat((String) ArticleUtils.getFieldProperty(this, "attach"));
     }
 
 }
