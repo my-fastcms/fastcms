@@ -6,6 +6,7 @@ import com.fastcms.cms.utils.ArticleUtils;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.utils.DirUtils;
 import com.fastcms.common.utils.StrUtils;
+import com.fastcms.entity.Attachment;
 import com.fastcms.utils.ConfigUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -108,6 +109,11 @@ public class Article implements Serializable {
     private String suffix;
 
     /**
+     * 附件
+     */
+    private Long attachId;
+
+    /**
      * 创建时间
      */
     @TableField(fill = FieldFill.INSERT)
@@ -125,6 +131,7 @@ public class Article implements Serializable {
     /**
      * json格式扩展字段
      */
+    @TableField(updateStrategy = FieldStrategy.NOT_EMPTY)
     private String jsonExt;
 
     /**
@@ -139,9 +146,18 @@ public class Article implements Serializable {
     @TableField(exist = false)
     List<String> articleTag;
 
+    /**
+     * 附件
+     */
+    @TableField(exist = false)
+    Attachment attachment;
+
     @TableField(exist = false)
     String url;
 
+    /**
+     * 扩展字段
+     */
     @TableField(exist = false)
     private Map<String, Object> extFields;
 
@@ -257,6 +273,14 @@ public class Article implements Serializable {
         this.suffix = suffix;
     }
 
+    public Long getAttachId() {
+        return attachId;
+    }
+
+    public void setAttachId(Long attachId) {
+        this.attachId = attachId;
+    }
+
     public LocalDateTime getCreated() {
         return created;
     }
@@ -303,6 +327,14 @@ public class Article implements Serializable {
 
     public void setArticleTag(List<String> articleTag) {
         this.articleTag = articleTag;
+    }
+
+    public Attachment getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(Attachment attachment) {
+        this.attachment = attachment;
     }
 
     public void setUrl(String url) {

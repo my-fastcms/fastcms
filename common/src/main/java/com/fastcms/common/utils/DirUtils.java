@@ -9,8 +9,19 @@ package com.fastcms.common.utils;
  */
 public abstract class DirUtils {
 
+    /**
+     * 附件上传目录 目录以 "/" 结尾
+     */
     static String uploadDir;
+
+    /**
+     * 插件目录 目录以 "/" 结尾
+     */
     static String pluginDir;
+
+    /**
+     * 模板目录
+     */
     static String templateDir;
 
     public static void injectUploadDir(String uploadDir) {

@@ -21,7 +21,7 @@
                             :fit="fit"></el-image>
                     </el-form-item>
                     <el-form-item>
-                        <el-link type="primary" @click="onAttachDialogOpen">选择图片</el-link>
+                        <el-link type="primary" @click="onThumbnailDialogOpen">选择图片</el-link>
                     </el-form-item>
                 </el-col>
                 <el-col class="mb20">
@@ -82,7 +82,15 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <el-col class="mb20">
+                <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+                    <el-form-item label="附件" prop="attachTitle">
+                        <el-input v-model="ruleForm.attachTitle" readonly></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-link type="primary" @click="onAttachlDialogOpen">选择附件</el-link>
+                    </el-form-item>
+                </el-col>
+                <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                     <el-form-item label="状态" prop="status">
                         <el-select v-model="ruleForm.status" placeholder="请选择状态" clearable class="w100">
                             <el-option label="发布" value="publish"></el-option>
@@ -98,6 +106,7 @@
             </el-row>
         </el-form>
     </el-card>
+    <AttachDialog ref="thumbnailDialogRef" @attachHandler="getSelectThumbnail"/>
     <AttachDialog ref="attachDialogRef" @attachHandler="getSelectAttach"/>
 </div>
 </template>
@@ -118,6 +127,7 @@ export default {
         ckeditor: CKEditor
     },
 	setup(props, ctx) {
+        const thumbnailDialogRef = ref();
         const attachDialogRef = ref();
         const categoryCascaderRef = ref();
         const route = useRoute();
@@ -164,7 +174,6 @@ export default {
                     // categoryCascaderRef.value.getCheckedNodes(true).map(item => {
                     //     state.ruleForm.articleCategory.push(item.value);
                     // });
-                    console.log("========test:");
 					let params = qs.stringify(state.ruleForm, {arrayFormat: 'repeat'});
 					addArticle(params).then((res) => {
                         state.ruleForm.id = res.data;
@@ -179,6 +188,8 @@ export default {
         const getArticleInfo = (id: string) => {
             getArticle(id).then((res) => {
                 state.ruleForm = res.data;
+                state.ruleForm.attachId = res.data.attachment.id;
+                state.ruleForm.attachTitle = res.data.attachment.fileName;
             })
         }
 
@@ -186,14 +197,25 @@ export default {
             console.log(editor);
         };
 
+        //打开缩略图弹出框
+		const onThumbnailDialogOpen = () => {
+			thumbnailDialogRef.value.openDialog(1);
+		};
+
         //打开附件弹出框
-		const onAttachDialogOpen = () => {
+		const onAttachlDialogOpen = () => {
 			attachDialogRef.value.openDialog(1);
 		};
 
-        //获取弹出框选中的附件
-		const getSelectAttach = (value) => {
+        //获取弹出框选中的图片
+		const getSelectThumbnail = (value) => {
 			state.ruleForm.thumbnail = value[0].path;
+		};
+
+        //获取弹出框选中的附件
+        const getSelectAttach = (value) => {
+			state.ruleForm.attachId = value[0].id;
+            state.ruleForm.attachTitle = value[0].fileName;
 		};
 
         onMounted(() => {
@@ -206,10 +228,13 @@ export default {
         });
 
 		return {
+            thumbnailDialogRef,
             attachDialogRef,
             categoryCascaderRef,
             onSubmit,
-            onAttachDialogOpen,
+            onThumbnailDialogOpen,
+            onAttachlDialogOpen,
+            getSelectThumbnail,
             getSelectAttach,
             getCategoryList,
             getArticleInfo,

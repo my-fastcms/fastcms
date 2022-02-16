@@ -475,3 +475,9 @@ INSERT INTO `permission`(`id`, `parent_id`, `name`, `path`, `component`, `title`
 INSERT INTO `permission`(`id`, `parent_id`, `name`, `path`, `component`, `title`, `icon`, `is_link`, `is_hide`, `is_keep_alive`, `is_affix`, `is_iframe`, `sort_num`, `category`, `created`, `updated`) VALUES (26, 22, 'templateSet', '/template/set', 'template/set', 'message.router.templateSet', 'el-icon-setting', 0, 0, 0, 0, 0, 0, NULL, '2021-11-21 10:30:17', NULL);
 INSERT INTO `permission`(`id`, `parent_id`, `name`, `path`, `component`, `title`, `icon`, `is_link`, `is_hide`, `is_keep_alive`, `is_affix`, `is_iframe`, `sort_num`, `category`, `created`, `updated`) VALUES (27, 0, 'setting', '/setting', 'layout/routerView/parent', 'message.router.setting', 'el-icon-s-tools', 0, 0, 0, 0, 0, 0, NULL, '2021-12-02 14:28:36', '2021-12-02 14:29:32');
 INSERT INTO `permission`(`id`, `parent_id`, `name`, `path`, `component`, `title`, `icon`, `is_link`, `is_hide`, `is_keep_alive`, `is_affix`, `is_iframe`, `sort_num`, `category`, `created`, `updated`) VALUES (28, 27, 'websiteSet', '/setting/website', 'setting/website', 'message.router.websiteSet', 'el-icon-eleme', 0, 0, 0, 0, 0, 0, NULL, '2021-12-02 14:30:44', NULL);
+
+-- ----------------------------
+-- 表结构变更记录
+-- ----------------------------
+
+ALTER TABLE `article` ADD COLUMN `attach_id` bigint(20) DEFAULT NULL COMMENT '附件' AFTER `suffix`;

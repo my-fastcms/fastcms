@@ -31,6 +31,7 @@ import com.fastcms.cms.service.IArticleTagService;
 import com.fastcms.cms.task.ArticleViewCountUpdateTask;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.extension.IndexDataExtension;
+import com.fastcms.service.IAttachmentService;
 import org.apache.commons.lang.StringUtils;
 import org.pf4j.Extension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Autowired
     private IArticleCategoryService articleCategoryService;
+
+    @Autowired
+    private IAttachmentService attachmentService;
 
     @Override
     @Transactional
@@ -107,6 +111,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
             List<ArticleTag> articleTagList = articleTagService.getArticleTagListByArticleId(articleId);
             article.setArticleTag(articleTagList.stream().map(ArticleTag::getTagName).collect(Collectors.toList()));
+
+            article.setAttachment(attachmentService.getById(articleId));
         }
 
         return article;

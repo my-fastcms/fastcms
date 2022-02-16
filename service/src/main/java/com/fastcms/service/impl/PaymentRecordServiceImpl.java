@@ -30,9 +30,6 @@ public class PaymentRecordServiceImpl extends ServiceImpl<PaymentRecordMapper, P
 	@Override
 	public boolean checkNeedPay(Long articleId) {
 		List<PaymentRecord> paymentRecordList = getPaymentRecordByProductId(articleId);
-		if (paymentRecordList == null) {
-			return true;
-		}
 
 		for (PaymentRecord paymentRecord : paymentRecordList) {
 			//有成功支付的订单，无需再支付购买

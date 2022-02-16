@@ -177,4 +177,9 @@ public class FastcmsException extends Exception {
 	 */
 	public static final int HTTP_CLIENT_ERROR_CODE = -500;
 
+	/**
+	 * 文章需要支付状态
+	 */
+	public static final int ARTICLE_NEED_TO_PAY_CODE = 100500;
+
 }
