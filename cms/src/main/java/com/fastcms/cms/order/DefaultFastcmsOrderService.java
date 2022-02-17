@@ -16,8 +16,10 @@
  */
 package com.fastcms.cms.order;
 
+import com.egzosn.pay.common.bean.PayMessage;
 import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.service.IArticleService;
+import com.fastcms.cms.utils.ArticleUtils;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.utils.SnowFlake;
 import com.fastcms.core.auth.AuthUtils;
@@ -80,8 +82,8 @@ public class DefaultFastcmsOrderService implements IFastcmsOrderService {
             Long num = item.getNum();
             Article product = articleService.getById(item.getId());
 
-            if(product != null && Article.STATUS_PUBLISH.equals(product.getStatus()) && product.getExtFields().get("price") != null) {
-                BigDecimal productPrice = new BigDecimal((String) product.getExtFields().get("price"));
+            if(product != null && Article.STATUS_PUBLISH.equals(product.getStatus()) && ArticleUtils.getPrice(article) != null) {
+                BigDecimal productPrice = ArticleUtils.getPrice(article);
                 OrderItem orderItem = new OrderItem();
                 orderItem.setProductId(item.getId());
                 orderItem.setProductCount(num.intValue());
@@ -96,7 +98,6 @@ public class DefaultFastcmsOrderService implements IFastcmsOrderService {
         order.setUserId(AuthUtils.getUserId());
         order.setOrderSn(getOrderSN());
         order.setOrderAmount(orderItemList.stream().map(OrderItem::getTotalAmount).reduce(BigDecimal.ZERO, BigDecimal::add).setScale(2, BigDecimal.ROUND_HALF_UP));
-        order.setPayStatus(Order.STATUS_PAY_PRE);
         order.setBuyerMsg(createOrderParam.getBuyerMsg());
         order.setOrderTitle(article.getTitle());
 
@@ -105,6 +106,7 @@ public class DefaultFastcmsOrderService implements IFastcmsOrderService {
         //根据优惠券，会员价等，计算出最终订单需要支付金额
         order.setPayAmount(order.getOrderAmount());
 
+        order.setPayStatus(Order.STATUS_PAY_PRE);
         order.setTradeStatus(Order.TRADE_STATUS_TRADING);
         order.setStatus(Order.ORDER_STATUS_NORMAL);
         orderService.save(order);
@@ -117,6 +119,11 @@ public class DefaultFastcmsOrderService implements IFastcmsOrderService {
         orderItemService.saveBatch(orderItemList);
 
         return order.getId();
+    }
+
+    @Override
+    public void payBackOrder(PayMessage payMessage) throws FastcmsException {
+        throw new FastcmsException("Unsupported operation");
     }
 
 }

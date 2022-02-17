@@ -24,7 +24,6 @@ public class PaymentRecord implements Serializable {
     public static final String TRX_TYPE_RECHARGE = "recharge";      //用户充值
     public static final String TRX_TYPE_ORDER = "order";            //订单支付
     public static final String TRX_TYPE_MEMBER = "member";          //购买会员
-    public static final String TRX_TYPE_ARTICLE = "article";        //购买文章
 
     /**
      * id
@@ -74,7 +73,7 @@ public class PaymentRecord implements Serializable {
     private String orderFrom;
 
     /**
-     * 支付状态：1生成订单未支付（预支付）、 2支付失败
+     * 支付状态：0生成订单未支付（预支付）、1支付成功、 2支付失败
      */
     private Integer payStatus;
 

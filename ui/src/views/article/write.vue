@@ -17,7 +17,7 @@
                     <el-form-item label="缩略图" prop="thumbnail">
                         <el-image
                             style="width: 100px; height: 100px"
-                            :src="ruleForm.thumbnail"
+                            :src="ruleForm.thumbnailUrl"
                             :fit="fit"></el-image>
                     </el-form-item>
                     <el-form-item>
@@ -143,6 +143,13 @@ export default {
                 title: '',
                 commentEnable: 1,
                 contentHtml: '',
+                summary: '',
+                seoKeywords: '',
+                seoDescription: '',
+                outLink: '',
+                sortNum: 0,
+                thumbnail: '',
+                suffix: '',
                 status: 'publish'
             },
             rules: {
@@ -188,8 +195,6 @@ export default {
         const getArticleInfo = (id: string) => {
             getArticle(id).then((res) => {
                 state.ruleForm = res.data;
-                state.ruleForm.attachId = res.data.attachment.id;
-                state.ruleForm.attachTitle = res.data.attachment.fileName;
             })
         }
 
@@ -209,7 +214,8 @@ export default {
 
         //获取弹出框选中的图片
 		const getSelectThumbnail = (value) => {
-			state.ruleForm.thumbnail = value[0].path;
+			state.ruleForm.thumbnail = value[0].filePath;
+            state.ruleForm.thumbnailUrl = value[0].path;
 		};
 
         //获取弹出框选中的附件

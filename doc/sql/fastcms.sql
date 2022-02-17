@@ -253,7 +253,7 @@ CREATE TABLE `payment_record` (
   `payer_fee` decimal(20,6) DEFAULT '0.000000' COMMENT '付款方手续费',
   `order_ip` varchar(30) DEFAULT NULL COMMENT '下单ip(客户端ip,从网关中获取)',
   `order_from` varchar(30) DEFAULT NULL COMMENT '订单来源',
-  `pay_status` tinyint(2) DEFAULT NULL COMMENT '支付状态：1生成订单未支付（预支付）、 2支付失败',
+  `pay_status` tinyint(2) DEFAULT NULL COMMENT '支付状态：0生成订单未支付（预支付）、1支付成功、 2支付失败',
   `pay_type` varchar(50) DEFAULT NULL COMMENT '支付类型编号',
   `pay_bank_type` varchar(128) DEFAULT NULL COMMENT '支付银行类型',
   `pay_amount` decimal(20,6) DEFAULT '0.000000' COMMENT '订单金额',

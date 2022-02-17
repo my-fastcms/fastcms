@@ -89,6 +89,10 @@ public abstract class AttachUtils {
      */
     public static final String ATTACH_WATERMARK_TXT = "waterMarkTxt";
 
+    public static String getAttachFileDomain() {
+        return ConfigUtils.getConfig(ATTACH_FILE_DOMAIN);
+    }
+
     public static Integer getImageMaxSize() {
         String config = ConfigUtils.getConfig(ATTACH_IMAGE_MAXSIZE);
         try {

@@ -30,6 +30,7 @@ import com.fastcms.cms.service.IArticleService;
 import com.fastcms.cms.service.IArticleTagService;
 import com.fastcms.cms.task.ArticleViewCountUpdateTask;
 import com.fastcms.common.exception.FastcmsException;
+import com.fastcms.entity.Attachment;
 import com.fastcms.extension.IndexDataExtension;
 import com.fastcms.service.IAttachmentService;
 import org.apache.commons.lang.StringUtils;
@@ -112,7 +113,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             List<ArticleTag> articleTagList = articleTagService.getArticleTagListByArticleId(articleId);
             article.setArticleTag(articleTagList.stream().map(ArticleTag::getTagName).collect(Collectors.toList()));
 
-            article.setAttachment(attachmentService.getById(articleId));
+            Attachment attachment = attachmentService.getById(article.getAttachId());
+            if(attachment != null) {
+                article.setAttachId(attachment.getId());
+                article.setAttachTitle(attachment.getFileName());
+            }
         }
 
         return article;

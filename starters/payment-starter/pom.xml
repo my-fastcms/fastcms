@@ -20,7 +20,7 @@
 
         <dependency>
             <groupId>com.egzosn</groupId>
-            <artifactId>pay-java-wx</artifactId>
+            <artifactId>pay-java-common</artifactId>
             <version>${pay-java.version}</version>
         </dependency>
 

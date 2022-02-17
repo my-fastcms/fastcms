@@ -19,6 +19,8 @@ package com.fastcms.cms.utils;
 import com.fastcms.cms.entity.Article;
 import com.fastcms.utils.ConfigUtils;
 
+import java.math.BigDecimal;
+
 /**
  * @author： wjun_java@163.com
  * @date： 2022/2/15
@@ -39,6 +41,11 @@ public abstract class ArticleUtils {
      */
     public static final String ARTICLE_ENABLE_NEED_TO_PAY = "enableNeedToPay";
 
+    /**
+     * 文章价格
+     */
+    public static final String ARTICLE_PRICE = "price";
+
     public static boolean isEnableNeedToPay() {
         String config = ConfigUtils.getConfig(GLOBAL_ARTICLE_ENABLE_NEED_TO_PAY);
         try {
@@ -54,6 +61,15 @@ public abstract class ArticleUtils {
             return Boolean.parseBoolean((String) getFieldProperty(article, ARTICLE_ENABLE_NEED_TO_PAY));
         } catch (NumberFormatException e) {
             return false;
+        }
+    }
+
+    public static BigDecimal getPrice(Article article) {
+        Object fieldProperty = getFieldProperty(article, ARTICLE_PRICE);
+        try {
+            return fieldProperty == null ? BigDecimal.ZERO : new BigDecimal((String) fieldProperty);
+        } catch (NumberFormatException e) {
+            return BigDecimal.ZERO;
         }
     }
 

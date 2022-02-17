@@ -20,8 +20,8 @@ import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.TreeNode;
 import com.fastcms.common.model.TreeNodeConvert;
-import com.fastcms.common.utils.FileUtils;
 import com.fastcms.common.utils.DirUtils;
+import com.fastcms.common.utils.FileUtils;
 import com.fastcms.entity.Config;
 import com.fastcms.service.IConfigService;
 import org.apache.commons.lang.StringUtils;
@@ -114,7 +114,7 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
     public List<Template> getTemplateList() {
         ArrayList<Template> templates = new ArrayList<>(templateMap.values());
         templates.forEach(item -> {
-            if(item.getId().equals(getCurrTemplate().getId())) {
+            if(getCurrTemplate() != null && item.getId().equals(getCurrTemplate().getId())) {
                 item.setActive(true);
             }else {
                 item.setActive(false);

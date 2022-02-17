@@ -16,6 +16,7 @@
  */
 package com.fastcms.cms.order;
 
+import com.egzosn.pay.common.bean.PayMessage;
 import com.fastcms.common.exception.FastcmsException;
 
 import java.io.Serializable;
@@ -34,7 +35,16 @@ public interface IFastcmsOrderService {
      * @param createOrderParam 文章id集合
      * @return
      */
-    Long createOrder(CreateOrderParam createOrderParam) throws FastcmsException;
+    default Long createOrder(CreateOrderParam createOrderParam) throws FastcmsException {
+        return 0l;
+    }
+
+    /**
+     * 支付回调处理
+     * @param payMessage
+     * @throws FastcmsException
+     */
+    void payBackOrder(PayMessage payMessage) throws FastcmsException;
 
     /**
      * 创建订单

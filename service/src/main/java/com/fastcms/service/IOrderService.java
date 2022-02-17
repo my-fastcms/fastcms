@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.entity.Order;
-import com.fastcms.entity.PaymentRecord;
 
 import java.io.Serializable;
 
@@ -22,14 +21,6 @@ public interface IOrderService extends IService<Order> {
      * @return
      */
     Page<OrderVo> pageOrder(Page pageParam, QueryWrapper queryWrapper);
-
-    /**
-     * @param order
-     * @param openid
-     * @param ip
-     * @return
-     */
-    PaymentRecord preparePaymentRecord(Order order, String openid, String ip);
 
     /**
      * 订单详情

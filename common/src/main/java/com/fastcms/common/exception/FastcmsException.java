@@ -36,6 +36,10 @@ public class FastcmsException extends Exception {
 	public FastcmsException() {
 	}
 
+	public FastcmsException(final String errMsg) {
+		this.errMsg = errMsg;
+	}
+
 	public FastcmsException(final int errCode, final String errMsg) {
 		super(errMsg);
 		this.errCode = errCode;

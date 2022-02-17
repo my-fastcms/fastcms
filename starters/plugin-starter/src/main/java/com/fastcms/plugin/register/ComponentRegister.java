@@ -18,6 +18,7 @@ package com.fastcms.plugin.register;
 
 import com.fastcms.plugin.FastcmsPluginManager;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +56,12 @@ public class ComponentRegister extends AbstractPluginRegister {
 			if(annotation != null) {
 				classList.add(pluginClass);
 			}
+
+			Service service = pluginClass.getAnnotation(Service.class);
+			if(service != null) {
+				classList.add(pluginClass);
+			}
+
 		}
 		return classList;
 	}

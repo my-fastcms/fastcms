@@ -2,17 +2,14 @@ package com.fastcms.cms.entity;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.annotation.*;
-import com.fastcms.cms.utils.ArticleUtils;
 import com.fastcms.common.constants.FastcmsConstants;
-import com.fastcms.common.utils.DirUtils;
 import com.fastcms.common.utils.StrUtils;
-import com.fastcms.entity.Attachment;
+import com.fastcms.core.utils.AttachUtils;
 import com.fastcms.utils.ConfigUtils;
 import org.apache.commons.lang.StringUtils;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -114,6 +111,12 @@ public class Article implements Serializable {
     private Long attachId;
 
     /**
+     * 附件名称
+     */
+    @TableField(exist = false)
+    private String attachTitle;
+
+    /**
      * 创建时间
      */
     @TableField(fill = FieldFill.INSERT)
@@ -146,14 +149,14 @@ public class Article implements Serializable {
     @TableField(exist = false)
     List<String> articleTag;
 
-    /**
-     * 附件
-     */
-    @TableField(exist = false)
-    Attachment attachment;
-
     @TableField(exist = false)
     String url;
+
+    /**
+     * 缩略图全路径地址
+     */
+    @TableField(exist = false)
+    String thumbnailUrl;
 
     /**
      * 扩展字段
@@ -281,6 +284,14 @@ public class Article implements Serializable {
         this.attachId = attachId;
     }
 
+    public String getAttachTitle() {
+        return attachTitle;
+    }
+
+    public void setAttachTitle(String attachTitle) {
+        this.attachTitle = attachTitle;
+    }
+
     public LocalDateTime getCreated() {
         return created;
     }
@@ -329,20 +340,16 @@ public class Article implements Serializable {
         this.articleTag = articleTag;
     }
 
-    public Attachment getAttachment() {
-        return attachment;
-    }
-
-    public void setAttachment(Attachment attachment) {
-        this.attachment = attachment;
-    }
-
     public void setUrl(String url) {
         this.url = url;
     }
 
     public String getUrl() {
         return StringUtils.isBlank(getOutLink()) ? ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + "/a/" + getId() : getOutLink();
+    }
+
+    public String getThumbnailUrl() {
+        return AttachUtils.getAttachFileDomain() + getThumbnail();
     }
 
     public Map<String, Object> getExtFields() {
@@ -354,21 +361,6 @@ public class Article implements Serializable {
             }
         }
         return extFields;
-    }
-
-    public BigDecimal getPrice() {
-        if(ArticleUtils.getFieldProperty(this, "price") == null) return BigDecimal.ZERO;
-        try {
-            return new BigDecimal((String) ArticleUtils.getFieldProperty(this, "price"));
-        } catch (NumberFormatException e) {
-            return BigDecimal.ZERO;
-        }
-
-    }
-
-    public String getAttach() {
-        return ArticleUtils.getFieldProperty(this, "attach") == null
-                ? "" : DirUtils.getUploadDir().concat((String) ArticleUtils.getFieldProperty(this, "attach"));
     }
 
 }

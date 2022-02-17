@@ -176,7 +176,7 @@ public class ArticleApi {
 		//通过文章付费插件设置价格，以及是否开启付费
 		boolean enableNeedToPay = ArticleUtils.isEnableNeedToPay(article);
 		if(enableNeedToPay) {
-			BigDecimal price = article.getPrice();
+			BigDecimal price = ArticleUtils.getPrice(article);
 			if(price != null && price.compareTo(BigDecimal.ZERO) ==1) {
 				//检查是否需要支付
 				if(paymentRecordService.checkNeedPay(articleId)) {

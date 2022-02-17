@@ -13,13 +13,6 @@ import java.util.List;
 public interface IPaymentRecordService extends IService<PaymentRecord> {
 
 	/**
-	 * 根据订单流水号获取支付记录
-	 * @param trxNo
-	 * @return
-	 */
-	PaymentRecord getPaymentRecordByTrxNo(String trxNo);
-
-	/**
 	 * 获取商品对应的支付记录
 	 * @param productId
 	 * @return

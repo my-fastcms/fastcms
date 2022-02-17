@@ -17,7 +17,6 @@
 package com.fastcms.web.controller.api;
 
 import com.egzosn.pay.common.util.MatrixToImageWriter;
-import com.egzosn.pay.wx.bean.WxTransactionType;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.entity.Order;
 import com.fastcms.payment.PayServiceManager;
@@ -57,17 +56,18 @@ public class PaymentApi {
     /**
      * 扫码支付 | 返回图片流
      * @param platform 支付平台
+     * @param type     支付方式
      * @param orderId
      * @return
      * @throws IOException
      */
-    @RequestMapping(value = "{platform}/toQrPay.jpg", produces = "image/jpeg;charset=UTF-8")
-    public byte[] toQrPay(@PathVariable("platform") String platform, @RequestParam("orderId") Long orderId) throws IOException {
+    @RequestMapping(value = "{platform}/{type}/toQrPay.jpg", produces = "image/jpeg;charset=UTF-8")
+    public byte[] toQrPay(@PathVariable("platform") String platform, @PathVariable("type") String type, @RequestParam("orderId") Long orderId) throws IOException {
         Order order = orderService.getById(orderId);
         BigDecimal price = order.getPayAmount();
         //获取对应的支付账户操作工具（可根据账户id）
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        ImageIO.write(MatrixToImageWriter.writeInfoToJpgBuff(payServiceManager.getQrPay(new FastcmsPayOrder(platform, WxTransactionType.NATIVE.getType(), order.getOrderTitle(), order.getRemarks(), null == price ? BigDecimal.valueOf(0.01) : price, order.getOrderSn()))), "JPEG", outputStream);
+        ImageIO.write(MatrixToImageWriter.writeInfoToJpgBuff(payServiceManager.getQrPay(new FastcmsPayOrder(platform, type, order.getOrderTitle(), order.getRemarks(), null == price ? BigDecimal.valueOf(0.01) : price, order.getOrderSn()))), "JPEG", outputStream);
         return outputStream.toByteArray();
     }
 
@@ -77,12 +77,12 @@ public class PaymentApi {
      * @param orderId
      * @return
      */
-    @RequestMapping(value = "{platform}/getQrPay")
-    public String getQrPay(@PathVariable("platform") String platform, @RequestParam("orderId") Long orderId) {
+    @RequestMapping(value = "{platform}/{type}/getQrPay")
+    public String getQrPay(@PathVariable("platform") String platform, @PathVariable("type") String type, @RequestParam("orderId") Long orderId) {
         //获取对应的支付账户操作工具（可根据账户id）
         Order order = orderService.getById(orderId);
         BigDecimal price = order.getPayAmount();
-        return payServiceManager.getQrPay(new FastcmsPayOrder(platform, WxTransactionType.NATIVE.getType(), order.getOrderTitle(), order.getRemarks(), null == price ? BigDecimal.valueOf(0.01) : price, order.getOrderSn()));
+        return payServiceManager.getQrPay(new FastcmsPayOrder(platform, type, order.getOrderTitle(), order.getRemarks(), null == price ? BigDecimal.valueOf(0.01) : price, order.getOrderSn()));
     }
 
     /**
@@ -92,13 +92,13 @@ public class PaymentApi {
      * @param openid
      * @return
      */
-    @RequestMapping(value = "{platform}/jsapi" )
-    public Map toPay(@PathVariable("platform") String platform, @RequestParam("orderId") Long orderId, @RequestParam("openid") String openid) {
+    @RequestMapping(value = "{platform}/{type}/jsapi" )
+    public Map toPay(@PathVariable("platform") String platform, @PathVariable("type") String type, @RequestParam("orderId") Long orderId, @RequestParam("openid") String openid) {
 
         Order order = orderService.getById(orderId);
         BigDecimal price = order.getPayAmount();
 
-        FastcmsPayOrder fastcmsPayOrder = new FastcmsPayOrder(platform, WxTransactionType.JSAPI.getType(), order.getOrderTitle(), order.getRemarks(), null == price ? BigDecimal.valueOf(0.01) : price, order.getOrderSn());
+        FastcmsPayOrder fastcmsPayOrder = new FastcmsPayOrder(platform, type, order.getOrderTitle(), order.getRemarks(), null == price ? BigDecimal.valueOf(0.01) : price, order.getOrderSn());
         fastcmsPayOrder.setOpenid(openid);
 
         Map orderInfo = payServiceManager.getOrderInfo(fastcmsPayOrder);
@@ -113,14 +113,14 @@ public class PaymentApi {
      * @param orderId
      * @return
      */
-    @RequestMapping("{platform}/app")
-    public Map<String, Object> app(@PathVariable("platform") String platform, @RequestParam("orderId") Long orderId) {
+    @RequestMapping("{platform}/{type}/app")
+    public Map<String, Object> app(@PathVariable("platform") String platform, @PathVariable("type") String type, @RequestParam("orderId") Long orderId) {
         Order order = orderService.getById(orderId);
         BigDecimal price = order.getPayAmount();
 
         Map<String, Object> data = new HashMap<>();
         data.put("code", 0);
-        FastcmsPayOrder fastcmsPayOrder = new FastcmsPayOrder(platform, WxTransactionType.APP.getType(), order.getOrderTitle(), order.getRemarks(), price, order.getOrderSn());
+        FastcmsPayOrder fastcmsPayOrder = new FastcmsPayOrder(platform, type, order.getOrderTitle(), order.getRemarks(), price, order.getOrderSn());
         data.put("orderInfo", payServiceManager.app(fastcmsPayOrder));
         return data;
     }
@@ -132,15 +132,15 @@ public class PaymentApi {
      * @param authCode        授权码，条码等
      * @return 支付结果
      */
-    @RequestMapping(value = "{platform}/microPay")
-    public Map<String, Object> microPay(@PathVariable("platform") String platform, @RequestParam("orderId") Long orderId, @RequestParam("authCode") String authCode) {
+    @RequestMapping(value = "{platform}/{type}/microPay")
+    public Map<String, Object> microPay(@PathVariable("platform") String platform, @PathVariable("type") String type, @RequestParam("orderId") Long orderId, @RequestParam("authCode") String authCode) {
 
         Order order = orderService.getById(orderId);
         BigDecimal price = order.getPayAmount();
 
         //获取对应的支付账户操作工具（可根据账户id）
         //条码付
-        FastcmsPayOrder fastcmsPayOrder = new FastcmsPayOrder(platform, WxTransactionType.MICROPAY.getType(), order.getOrderTitle(), order.getRemarks(), null == price ? BigDecimal.valueOf(0.01) : price, order.getOrderSn());
+        FastcmsPayOrder fastcmsPayOrder = new FastcmsPayOrder(platform, type, order.getOrderTitle(), order.getRemarks(), null == price ? BigDecimal.valueOf(0.01) : price, order.getOrderSn());
         //设置授权码，条码等
         fastcmsPayOrder.setAuthCode(authCode);
         //支付结果
@@ -162,14 +162,14 @@ public class PaymentApi {
      * @param openid        用户在商户 appid下的唯一标识
      * @return 支付结果
      */
-    @RequestMapping(value = "{platform}/facePay")
-    public Map<String, Object> facePay(@PathVariable("platform") String platform, @RequestParam("orderId") Long orderId, @RequestParam("authCode") String authCode, @RequestParam("openid") String openid)  {
+    @RequestMapping(value = "{platform}/{type}/facePay")
+    public Map<String, Object> facePay(@PathVariable("platform") String platform, @PathVariable("type") String type, @RequestParam("orderId") Long orderId, @RequestParam("authCode") String authCode, @RequestParam("openid") String openid)  {
 
         Order order = orderService.getById(orderId);
         BigDecimal price = order.getPayAmount();
 
         //获取对应的支付账户操作工具（可根据账户id）
-        FastcmsPayOrder fastcmsPayOrder = new FastcmsPayOrder(platform, WxTransactionType.FACEPAY.getType(), order.getOrderTitle(), order.getRemarks(), null == price ? BigDecimal.valueOf(0.01) : price, order.getOrderSn());
+        FastcmsPayOrder fastcmsPayOrder = new FastcmsPayOrder(platform, type, order.getOrderTitle(), order.getRemarks(), null == price ? BigDecimal.valueOf(0.01) : price, order.getOrderSn());
         //设置人脸凭证
         fastcmsPayOrder.setAuthCode(authCode);
         //用户在商户 appid下的唯一标识
