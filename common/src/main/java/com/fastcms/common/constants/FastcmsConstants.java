@@ -39,7 +39,7 @@ public interface FastcmsConstants {
 
     String OPEN_ID = "openid";
 
-    String WEB_LOGIN_CODE_CACHE_NAME = "web_login_code";
+    String WEB_CODE_CACHE_NAME = "web_code_cache";
 
     /**
      * 内置超级管理员角色id值,不可变

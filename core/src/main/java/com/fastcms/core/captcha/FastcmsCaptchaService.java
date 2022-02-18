@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static com.fastcms.common.constants.FastcmsConstants.WEB_LOGIN_CODE_CACHE_NAME;
+import static com.fastcms.common.constants.FastcmsConstants.WEB_CODE_CACHE_NAME;
 
 /**
  * @author： wjun_java@163.com
@@ -43,10 +43,10 @@ public class FastcmsCaptchaService {
 
 	public boolean checkCaptcha(String code) {
 		final String codeKey = RequestUtils.getClientId(RequestUtils.getRequest());
-		Cache.ValueWrapper valueWrapper = cacheManager.getCache(WEB_LOGIN_CODE_CACHE_NAME).get(codeKey);
+		Cache.ValueWrapper valueWrapper = cacheManager.getCache(WEB_CODE_CACHE_NAME).get(codeKey);
 		String codeInMemory = StrUtils.isBlank (codeKey) ? "" : (valueWrapper == null) ? "" : (String) valueWrapper.get();
 		if(StrUtils.isNotBlank(codeKey)) {
-			cacheManager.getCache(WEB_LOGIN_CODE_CACHE_NAME).evict(codeKey);
+			cacheManager.getCache(WEB_CODE_CACHE_NAME).evict(codeKey);
 		}
 		return StrUtils.isNotBlank(code) && code.equalsIgnoreCase(codeInMemory);
 	}
@@ -56,7 +56,7 @@ public class FastcmsCaptchaService {
 		SpecCaptcha specCaptcha = new SpecCaptcha(130, 48, 4);
 		final String verCode = specCaptcha.text().toLowerCase();
 		final String key = StrUtils.isEmpty(RequestUtils.getClientId(request)) ? StrUtils.uuid() : RequestUtils.getClientId(request);
-		cacheManager.getCache(WEB_LOGIN_CODE_CACHE_NAME).put(key, verCode);
+		cacheManager.getCache(WEB_CODE_CACHE_NAME).put(key, verCode);
 		return new FastcmsCaptcha(verCode, key, specCaptcha.toBase64());
 	}
 

@@ -287,6 +287,6 @@
     <cache name="role_permissions" maxElementsInMemory="10000" eternal="false" timeToIdleSeconds="120" timeToLiveSeconds="600" overflowToDisk="true" />
     <cache name="user_menu_permissions" maxElementsInMemory="10000" eternal="false" timeToIdleSeconds="120" timeToLiveSeconds="600" overflowToDisk="true" />
     <cache name="web_site_menu" maxElementsInMemory="10000" eternal="false" timeToIdleSeconds="120" timeToLiveSeconds="600" overflowToDisk="true" />
-    <cache name="web_login_code" maxElementsInMemory="1000" eternal="false" timeToIdleSeconds="300" timeToLiveSeconds="300" overflowToDisk="true" />
+    <cache name="web_code_cache" maxElementsInMemory="1000" eternal="false" timeToIdleSeconds="300" timeToLiveSeconds="300" overflowToDisk="true" />
 
 </ehcache>

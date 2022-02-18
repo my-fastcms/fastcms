@@ -22,7 +22,7 @@
 						-->
 					</el-tabs>
 					<div class="mt10">
-						<el-button type="text" size="small" @click="toRegister">{{ $t('message.link.one3') }}</el-button>
+						<!-- <el-button type="text" size="small" @click="toRegister">{{ $t('message.link.one3') }}</el-button> -->
 						<!-- <el-button type="text" size="small">{{ $t('message.link.two4') }}</el-button> -->
 					</div>
 				</div>
