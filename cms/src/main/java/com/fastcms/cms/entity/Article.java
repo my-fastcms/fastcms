@@ -349,7 +349,7 @@ public class Article implements Serializable {
     }
 
     public String getThumbnailUrl() {
-        return AttachUtils.getAttachFileDomain() + getThumbnail();
+        return AttachUtils.getAttachFileDomain() == null ? getThumbnail() : AttachUtils.getAttachFileDomain() + getThumbnail();
     }
 
     public Map<String, Object> getExtFields() {

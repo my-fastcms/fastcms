@@ -20,13 +20,12 @@ import com.fastcms.cms.order.IFastcmsOrderService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.entity.Order;
+import com.fastcms.service.IOrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 订单
@@ -45,6 +44,9 @@ public class OrderApi {
     @Autowired
     IFastcmsOrderService fastcmsOrderService;
 
+    @Autowired
+    private IOrderService orderService;
+
     /**
      * 创建订单
      * @param orderParam
@@ -59,6 +61,20 @@ public class OrderApi {
             LOG.error(e.getMessage());
             return RestResultUtils.failed(e.getMessage());
         }
+    }
+
+    /**
+     * 检查订单支付状态
+     * @param orderId
+     * @return
+     */
+    @GetMapping("status/check/{orderId}")
+    public Object checkOrderPayStatus(@PathVariable("orderId") Long orderId) {
+        Order order = orderService.getById(orderId);
+        if(order != null && order.getPayStatus() == Order.STATUS_PAY_SUCCESS) {
+            return RestResultUtils.success("订单已支付");
+        }
+        return RestResultUtils.failed("订单未支付");
     }
 
 }
