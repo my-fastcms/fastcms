@@ -77,7 +77,6 @@ public class ArticleController {
      * @return
      */
     @RequestMapping("list")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.READ)
     public RestResult<Page<IArticleService.ArticleVo>> list(PageModel page,
                                                             @RequestParam(name = "title", required = false) String title,
                                                             @RequestParam(name = "status", required = false) String status,
@@ -120,7 +119,6 @@ public class ArticleController {
      * @return
      */
     @GetMapping("get/{articleId}")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.READ)
     public RestResult<Article> getArticle(@PathVariable("articleId") Long articleId) {
         return RestResultUtils.success(articleService.getArticle(articleId));
     }
@@ -158,7 +156,6 @@ public class ArticleController {
      * @return
      */
     @GetMapping("category/list")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.READ)
     public RestResult<List<IArticleCategoryService.CategoryTreeNode>> listCategory() {
         return RestResultUtils.success(articleCategoryService.getCategoryList(AuthUtils.getUserId()));
     }
@@ -187,7 +184,6 @@ public class ArticleController {
      * @return
      */
     @GetMapping("tag/list")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.READ)
     public RestResult<List<ArticleTag>> listTags() {
         return RestResultUtils.success(articleTagService.list());
     }

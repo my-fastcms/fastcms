@@ -16,21 +16,16 @@
  */
 package com.fastcms.cms.controller.api;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.service.IArticleService;
 import com.fastcms.cms.utils.ArticleUtils;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
-import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.DirUtils;
 import com.fastcms.common.utils.FileUtils;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.auth.AuthUtils;
-import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.entity.Attachment;
 import com.fastcms.service.IAttachmentService;
 import com.fastcms.service.IPaymentRecordService;
@@ -68,35 +63,6 @@ public class ArticleApi {
 
 	@Autowired
 	private IAttachmentService attachmentService;
-
-	/**
-	 * 文章列表
-	 * @param page
-	 * @param categoryId  	分类id
-	 * @return
-	 */
-	@RequestMapping("list")
-	public RestResult<Page<IArticleService.ArticleVo>> list(PageModel page,
-															@RequestParam(name = "categoryId", required = false) Long categoryId) {
-
-		QueryWrapper queryWrapper = Wrappers.query()
-				.eq("a.user_id", AuthUtils.getUserId())
-				.eq(categoryId != null,"acr.category_id", categoryId)
-				.eq("a.status", Article.STATUS_PUBLISH);
-		Page<IArticleService.ArticleVo> articleVoPage = articleService.pageArticle(page.toPage(), queryWrapper);
-		return RestResultUtils.success(articleVoPage);
-	}
-
-	/**
-	 * 文章详情
-	 * @param articleId 文章id
-	 * @return
-	 */
-	@RequestMapping("detail/{articleId}")
-	public RestResult<IArticleService.ArticleInfoVo> detail(@PathVariable("articleId") Long articleId) {
-		IArticleService.ArticleInfoVo articleInfo = articleService.getArticleDetail(articleId);
-		return RestResultUtils.success(articleInfo);
-	}
 
 	/**
 	 * 保存文章

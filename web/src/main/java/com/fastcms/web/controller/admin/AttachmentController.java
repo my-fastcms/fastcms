@@ -21,15 +21,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.core.attach.FileServerManager;
+import com.fastcms.common.utils.DirUtils;
 import com.fastcms.core.auth.ActionTypes;
 import com.fastcms.core.auth.AuthConstants;
 import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.auth.Secured;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.core.utils.AttachUtils;
-import com.fastcms.common.utils.DirUtils;
-import com.fastcms.core.utils.PluginUtils;
 import com.fastcms.entity.Attachment;
 import com.fastcms.service.IAttachmentService;
 import org.apache.commons.lang3.StringUtils;
@@ -39,7 +37,6 @@ import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.util.List;
 
 /**
  * 附件管理
@@ -63,9 +60,10 @@ public class AttachmentController {
      * @return
      */
     @RequestMapping("list")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "attaches", action = ActionTypes.WRITE)
     public RestResult<Page<Attachment>> list(PageModel page, @RequestParam(value = "fileName", required = false) String fileName) {
-        Page<Attachment> pageData = attachmentService.page(page.toPage(), Wrappers.<Attachment>lambdaQuery().eq(!AuthUtils.isAdmin(), Attachment::getUserId, AuthUtils.getUserId()).like(StringUtils.isNotBlank(fileName), Attachment::getFileName, fileName)
+        Page<Attachment> pageData = attachmentService.page(page.toPage(),
+                Wrappers.<Attachment>lambdaQuery().eq(!AuthUtils.isAdmin(), Attachment::getUserId, AuthUtils.getUserId())
+                        .like(StringUtils.isNotBlank(fileName), Attachment::getFileName, fileName)
                 .orderByDesc(Attachment::getCreated));
         return RestResultUtils.success(pageData);
     }
@@ -77,7 +75,6 @@ public class AttachmentController {
      */
     @PostMapping("upload")
     @ExceptionHandler(value = MultipartException.class)
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "attaches", action = ActionTypes.WRITE)
     public Object upload(@RequestParam("files") MultipartFile files[]) {
         return AttachUtils.upload(files, attachmentService);
     }
@@ -111,7 +108,6 @@ public class AttachmentController {
      * @return
      */
     @GetMapping("get/{attachId}")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "attaches", action = ActionTypes.READ)
     public RestResult<Attachment> detail(@PathVariable(name = "attachId") Long attachId) {
 
         Attachment attachment = attachmentService.getById(attachId);
@@ -146,25 +142,7 @@ public class AttachmentController {
     public Object delete(@PathVariable(name = "attachId") Long attachId) {
         Attachment attachment = attachmentService.getById(attachId);
         if(attachment == null) return RestResultUtils.failed("文件不存在");
-
-        if(attachmentService.removeById(attachment.getId())) {
-            //删除文件
-            File file = new File(DirUtils.getUploadDir() + attachment.getFilePath());
-            if(file.exists() && file.isFile()) {
-                file.delete();
-
-                List<FileServerManager> extensions = PluginUtils.getExtensions(FileServerManager.class);
-                for (FileServerManager extension : extensions) {
-                    try {
-                        extension.deleteFile(attachment);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-
-        return RestResultUtils.success();
+        return AttachUtils.deleteAttachment(attachment, attachmentService);
     }
 
 }

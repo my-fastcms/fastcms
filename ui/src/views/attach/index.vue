@@ -67,7 +67,7 @@ export default {
 			headers: {"Authorization": Session.get('token')},
 			tableData: {
 				data: [],
-				total: 99,
+				total: 0,
 				loading: false,
 				param: {
 					pageNum: 1,

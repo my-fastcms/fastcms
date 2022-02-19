@@ -81,7 +81,7 @@
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="菜单排序">
-							<el-input v-model="ruleForm.menuSort" type="number" placeholder="菜单排序" clearable></el-input>
+							<el-input v-model="ruleForm.sortNum" type="number" placeholder="菜单排序" clearable></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
@@ -120,7 +120,7 @@ export default {
 				path: '',
 				component: '', // 组件地址
 				// isLink: '', // 是否外链
-				menuSort: '', // 菜单排序
+				sortNum: 0, // 菜单排序
 				title: '', // 菜单名称
 				icon: '', // 菜单图标
 				isHide: '', // 是否隐藏
@@ -143,7 +143,7 @@ export default {
 			state.ruleForm.path = row.path;
 			state.ruleForm.component = row.component;
 			state.ruleForm.isLink = row.isLink ? 'true' : '';
-			state.ruleForm.menuSort = '';
+			state.ruleForm.sortNum = row.sortNum;
 			state.ruleForm.title = row.meta.title;
 			// 回显时，图标选择器有这个图标才可以回显，菜单中使用了阿里的、element plus的，二者不可共存
 			state.ruleForm.icon = row.meta.icon;
@@ -192,7 +192,7 @@ export default {
 			state.ruleForm.name = '';
 			state.ruleForm.component = '';
 			state.ruleForm.isLink = '';
-			state.ruleForm.menuSort = '';
+			state.ruleForm.sortNum = 0;
 			state.ruleForm.title = '';
 			state.ruleForm.icon = '';
 			state.ruleForm.isHide = '';

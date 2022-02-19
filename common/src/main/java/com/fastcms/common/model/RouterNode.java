@@ -25,22 +25,18 @@ public class RouterNode extends TreeNode implements Serializable {
      */
     private Boolean isLink;
     /**
-     * 排序
-     */
-    private Integer menuSort;
-    /**
      * 元数据
      */
     private Meta meta;
 
-    public RouterNode(Long id, Long parentId, String name, String path, String component, Boolean isLink, Integer menuSort,
+    public RouterNode(Long id, Long parentId, String name, String path, String component, Boolean isLink, Integer sortNum,
                           String title, String icon, Boolean isHide, Boolean isKeepAlive, Boolean isAffix, Boolean isIframe) {
         super(id, parentId);
         this.name = name;
         this.path = path;
         this.component = component;
         this.isLink = isLink;
-        this.menuSort = menuSort;
+        this.sortNum = sortNum;
         Meta meta = new Meta(title, icon, isHide, isKeepAlive, isAffix, isIframe);
         this.meta = meta;
     }
@@ -160,14 +156,6 @@ public class RouterNode extends TreeNode implements Serializable {
 
     public void setLink(Boolean link) {
         isLink = link;
-    }
-
-    public Integer getMenuSort() {
-        return menuSort;
-    }
-
-    public void setMenuSort(Integer menuSort) {
-        this.menuSort = menuSort;
     }
 
     public Meta getMeta() {

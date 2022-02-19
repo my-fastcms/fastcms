@@ -1,3 +1,19 @@
+/**
+ * Copyright (c) 广州小橘灯信息科技有限公司 2016-2017, wjun_java@163.com.
+ * <p>
+ * Licensed under the GNU Lesser General Public License (LGPL) ,Version 3.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.gnu.org/licenses/lgpl-3.0.txt
+ * http://www.xjd2020.com
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.fastcms.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
@@ -134,17 +150,11 @@ public class User implements Serializable {
 
     public enum SourceType {
 
-        //来自微信网页授权
         WX_WEB("wx_web_auth", "微信网页授权"),
-        //来自扫描微信公众号二维码
         WX_QRCODE("wx_qrcode", "扫描公众号二维码"),
-        //来自微信小程序
         WX_MINI_PROGRAM("wx_mini_program", "微信小程序"),
-        //来自小程序二维码
         WX_MINI_PROGRAM_QRCODE("wx_mini_program_qrcode", "扫描小程序二维码"),
-        //来自网页注册
         WEB_REGISTER("web_register", "网页注册"),
-        //来自管理员的后台创建
         ADMIN_CREATE("admin_create", "后台创建");
 
         SourceType(String key, String value) {

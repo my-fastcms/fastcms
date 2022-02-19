@@ -12,28 +12,28 @@ public class TreeNode<T extends TreeNode> implements Serializable {
     /**
      * id
      */
-    private Long id;
+    protected Long id;
     /**
      * 上级id
      */
-    private Long parentId;
+    protected Long parentId;
     /**
      * 名称
      */
-    private String label;
+    protected String label;
     /**
      * 是否显示
      */
-    private Boolean isShow;
+    protected Boolean isShow;
     /**
      * 是否被选中
      */
-    private Boolean isChecked;
+    protected Boolean isChecked;
 
     /**
      * 排序
      */
-    private int sortNum;
+    protected int sortNum;
 
     /**
      * 子节点集合

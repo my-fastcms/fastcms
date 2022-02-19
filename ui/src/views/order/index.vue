@@ -1,33 +1,25 @@
 <template>
 	<div class="list-adapt-container">
-		<el-upload 
-			class="upload-btn"
-			:action="uploadUrl"
-			name="files"
-			multiple
-			:headers="headers"
-			:show-file-list="false"
-			:on-success="uploadSuccess"
-			:on-exceed="onHandleExceed"
-			:on-error="onHandleUploadError"
-			:limit="limit">
-			<el-button size="small" type="primary">上传附件</el-button>
-		</el-upload>
-		
 		<el-card shadow="hover">
-			<div v-if="tableData.data.length > 0">
-				<el-row :gutter="15">
-					<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb15" v-for="(v, k) in tableData.data" :key="k" @click="onTableItemClick(v)">
-						<el-card :body-style="{ padding: '0px' }">
-							<img :src="v.path" :fit="fit" class="image">
-							<div style="padding: 14px;">
-								<span>{{ v.fileName }}</span>
-							</div>
-						</el-card>
-					</el-col>
-				</el-row>
+			<div class="mb15">
+				<el-input size="small" v-model="tableData.param.orderSn" placeholder="订单编号" style="max-width: 180px" class="ml10"></el-input>
+				<el-input size="small" v-model="tableData.param.title" placeholder="商品名称" style="max-width: 180px" class="ml10"></el-input>
+				<el-button size="small" type="primary" class="ml10" @click="initTableData">查询</el-button>
 			</div>
-			<el-empty v-else description="暂无数据"></el-empty>
+			<el-table :data="tableData.data" stripe style="width: 100%">
+				<el-table-column prop="id" label="ID" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="orderSn" label="订单编号" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="title" label="商品" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="totalAmount" label="金额" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="nickName" label="买家" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="statusStr" label="状态" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="created" label="创建时间" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="path" label="操作" width="90">
+					<template #default="scope">
+						<el-button size="mini" type="text" @click="onRowInfo(scope.row)">详情</el-button>
+					</template>
+				</el-table-column>
+			</el-table>
 			<template v-if="tableData.data.length > 0">
 				<el-pagination
 					style="text-align: right"
@@ -49,12 +41,10 @@
 
 <script lang="ts">
 import { toRefs, ref, reactive, onMounted } from 'vue';
-import { getAttachList } from '/@/api/attach/index';
-import { ElMessage } from 'element-plus';
-import { Session } from '/@/utils/storage';
-import Detail from '/@/views/center/attach/component/detail.vue';
+import { getOrderList } from '/@/api/order/index';
+import Detail from '/@/views/order/component/detail.vue';
 export default {
-	name: 'attachManager',
+	name: 'orderManager',
 	components: { Detail },
 	setup() {
 		const detailRef = ref();
@@ -62,9 +52,6 @@ export default {
 			fit: "fill",
 			queryParams: {},
 			showSearch: true,
-			limit: 3,
-			uploadUrl: import.meta.env.VITE_API_URL + "/admin/attachment/upload",
-			headers: {"Authorization": Session.get('token')},
 			tableData: {
 				data: [],
 				total: 0,
@@ -77,27 +64,19 @@ export default {
 		});
 
 		const initTableData = () => {
-			getAttachList(state.tableData.param).then((res) => {
+			getOrderList(state.tableData.param).then((res) => {
 				state.tableData.data = res.data.records;
 				state.tableData.total = res.data.total;
 			});
 		};
 
-		const uploadSuccess = () => {
-			initTableData();
-		}
-
-		const onHandleExceed = () => {
-			ElMessage.error("上传文件数量不能超过 "+state.limit+" 个!");
-		}
-		// 上传失败
-		const onHandleUploadError = () => {
-			ElMessage.error("上传失败");
-		}
-
 		onMounted(() => {
 			initTableData();
 		});
+
+		const onRowInfo = (row: object) => {
+			detailRef.value.openDialog(row.id);
+		};
 
 		// 当前列表项点击
 		const onTableItemClick = (v: object) => {
@@ -116,12 +95,10 @@ export default {
 		return {
 			detailRef,
 			initTableData,
+			onRowInfo,
 			onTableItemClick,
 			onHandleSizeChange,
 			onHandleCurrentChange,
-			onHandleExceed,
-			onHandleUploadError,
-			uploadSuccess,
 			...toRefs(state),
 		};
 	},

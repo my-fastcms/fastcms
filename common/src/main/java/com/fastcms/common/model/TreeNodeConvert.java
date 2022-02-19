@@ -27,7 +27,7 @@ public interface TreeNodeConvert<T extends TreeNode> {
         List<T> nodeList = dataList.stream().map(item -> convert2Node(item)).collect(Collectors.toList());
         List<T> parents = nodeList.stream().filter(item -> isParent(item)).collect(Collectors.toList());
         parents.forEach(item -> getChildrenNode(item, nodeList));
-        return parents.stream().collect(Collectors.toList());
+        return parents.stream().sorted(Comparator.comparing(T::getSortNum)).collect(Collectors.toList());
     }
 
     /**

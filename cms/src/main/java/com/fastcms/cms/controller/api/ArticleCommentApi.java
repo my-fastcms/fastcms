@@ -16,6 +16,9 @@
  */
 package com.fastcms.cms.controller.api;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.cms.service.IArticleCommentService;
 import com.fastcms.common.constants.FastcmsConstants;
@@ -25,6 +28,7 @@ import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.mybatis.PageModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,6 +47,23 @@ public class ArticleCommentApi {
 
 	@Autowired
 	IArticleCommentService articleCommentService;
+
+	/**
+	 * 评论列表
+	 * @param page
+	 * @param author
+	 * @param content
+	 * @return
+	 */
+	@GetMapping("list")
+	public Object getCommentList(PageModel page, String author, String content, Boolean isParent) {
+		QueryWrapper<Object> queryWrapper = Wrappers.query().eq(StringUtils.isNotBlank(author), "u.user_name", author)
+				.eq(isParent != null && isParent == true, "ac.parentId", 0)
+				.eq("a.user_id", AuthUtils.getUserId())
+				.likeLeft(StringUtils.isNotBlank(content), "ac.content", content)
+				.orderByDesc("ac.created");
+		return RestResultUtils.success(articleCommentService.pageArticleComment(page.toPage(), queryWrapper));
+	}
 
 	/**
 	 * 评论列表

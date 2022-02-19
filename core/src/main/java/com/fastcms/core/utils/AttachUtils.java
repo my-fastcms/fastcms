@@ -318,4 +318,25 @@ public abstract class AttachUtils {
                 RestResultUtils.failed(errorFiles.stream().collect(Collectors.joining(",")).concat(",以上文件上传失败"));
     }
 
+    public static Object deleteAttachment(Attachment attachment, IAttachmentService attachmentService) {
+        if(attachmentService.removeById(attachment.getId())) {
+            //删除文件
+            File file = new File(DirUtils.getUploadDir() + attachment.getFilePath());
+            if(file.exists() && file.isFile()) {
+                file.delete();
+
+                List<FileServerManager> extensions = PluginUtils.getExtensions(FileServerManager.class);
+                for (FileServerManager extension : extensions) {
+                    try {
+                        extension.deleteFile(attachment);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        return RestResultUtils.success();
+    }
+
 }

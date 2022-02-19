@@ -25,14 +25,16 @@ import java.util.Map;
 @Extension
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements IOrderService, IndexDataExtension {
 
+    final static String INDEX_ORDER_STAT_DATA_KEY = "orderStatData";
+
     @Override
-    public Page<OrderVo> pageOrder(Page pageParam, QueryWrapper queryWrapper) {
+    public Page<OrderListVo> pageOrder(Page pageParam, QueryWrapper queryWrapper) {
         return getBaseMapper().pageOrder(pageParam, queryWrapper);
     }
 
     @Override
-    public OrderVo getOrderDetail(Long orderId) {
-        OrderVo orderDetail = getBaseMapper().getOrderDetail(orderId);
+    public OrderDetailVo getOrderDetail(Long orderId) {
+        OrderDetailVo orderDetail = getBaseMapper().getOrderDetail(orderId);
         return orderDetail;
     }
 
@@ -44,7 +46,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Override
     public Map<String, Object> getData() {
         Map<String, Object> result = new HashMap<>();
-        result.put("orderStatData", getOrderStatData());
+        result.put(INDEX_ORDER_STAT_DATA_KEY, getOrderStatData());
         return result;
     }
+
 }

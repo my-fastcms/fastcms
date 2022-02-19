@@ -75,7 +75,6 @@
 				</el-card>
 			</el-col>
 		</el-row>
-		<AttachDialog ref="attachDialogRef" @attachHandler="getSelectAttach"/>
 	</div>
 </template>
 
@@ -85,13 +84,11 @@ import { formatAxis } from '/@/utils/formatTime';
 import { ElMessage } from 'element-plus';
 import qs from 'qs';
 import { saveConfig, getConfigList } from '/@/api/config/index';
-import AttachDialog from '/@/components/attach/index.vue';
 
 export default {
-	name: 'attachSet',
-	components: { AttachDialog },
+	name: 'websiteSet',
+	components: { },
 	setup() {
-		const attachDialogRef = ref();
 		const { proxy } = getCurrentInstance() as any;
 		const state = reactive({
 			fit: "fill",
@@ -138,17 +135,6 @@ export default {
 			});
 		};
 
-		//获取弹出框选中的附件
-		const getSelectAttach = (value) => {
-			console.log("getSelectAttach:" + value[0].path);
-			state.ruleForm.waterMarkFile = value[0].path;
-		};
-
-		//打开附件弹出框
-		const onAttachDialogOpen = () => {
-			attachDialogRef.value.openDialog(1);
-		};
-
 		onMounted(() => {
 			let paramKeys = new Array();
 			const keys: any[] = Object.keys(state.ruleForm);
@@ -162,11 +148,8 @@ export default {
 		});
 
 		return {
-			getSelectAttach,
-			attachDialogRef,
 			currentTime,
 			onSubmit,
-			onAttachDialogOpen,
 			...toRefs(state),
 		};
 	},

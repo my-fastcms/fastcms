@@ -7,39 +7,23 @@
 					
 					<el-form :model="ruleForm" :rules="rules" ref="myRefForm" size="small" label-width="150px" class="mt35 mb35">
                         
-                        <div class="personal-edit-title mb15">评论设置</div>
-
-						<el-row :gutter="35">
+                        <el-row :gutter="35">
+							<el-col class="mb20">
+								<el-form-item label="开启自动取消订单">
+									<el-switch
+										v-model="ruleForm.enableAutoCancelOrder"
+										active-color="#13ce66">
+									</el-switch>
+								</el-form-item>
+							</el-col>
 							
 							<el-col class="mb20">
-								<el-form-item label="是否开启评论功能">
-									<el-switch
-										v-model="ruleForm.enablePageComment"
-										active-color="#13ce66">
-									</el-switch>
-								</el-form-item>
-							</el-col>
-
-							<el-col class="mb20">
-								<el-form-item label="评论是否必须经过管理员审核">
-									<el-switch
-										v-model="ruleForm.enablePageCommentAdminVerify"
-										active-color="#13ce66">
-									</el-switch>
-								</el-form-item>
-							</el-col>
-
-							<el-col class="mb20">
-								<el-form-item label="启用评论验证码功能">
-									<el-switch
-										v-model="ruleForm.enablePageCommentVerifyCode"
-										active-color="#13ce66">
-									</el-switch>
+								<el-form-item label="未支付取消订单时间">
+									<el-input v-model="ruleForm.unPayOrderCancelTime" placeholder="请输入订单取消时间，单位分钟" onkeyup="value=value.replace(/[^\d]/g,'')" clearable></el-input>
 								</el-form-item>
 							</el-col>
 							
 						</el-row>
-
                         <el-col>
                             <el-form-item>
                                 <el-button type="primary"  @click="onSubmit" icon="el-icon-position">保 存</el-button>
@@ -60,19 +44,20 @@ import qs from 'qs';
 import { saveConfig, getConfigList } from '/@/api/config/index';
 
 export default {
-	name: 'pageSet',
+	name: 'orderSet',
 	components: { },
 	setup() {
 		const { proxy } = getCurrentInstance() as any;
 		const state = reactive({
 			fit: "fill",
 			ruleForm: {
-				enablePageComment: true,
-				enablePageCommentAdminVerify: false,
-				enablePageCommentVerifyCode: true,
+				enableAutoCancelOrder: false,
+                unPayOrderCancelTime: 0,
 			},
 			rules: {
-				
+				"unPayOrderCancelTime": [
+					{required: true, message: '请输入订单取消时间', trigger: 'blur'},
+				],
 			}
 		});
 

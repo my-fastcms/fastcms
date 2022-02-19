@@ -1,6 +1,7 @@
 package com.fastcms.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fastcms.service.IOrderService;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -30,12 +31,68 @@ public class Order implements Serializable {
     public static final int TRADE_STATUS_FINISHED = 8;              //交易结束
     public static final int TRADE_STATUS_CLOSED = 9;                //订单关闭
 
+    public enum TradeStatus {
+
+        TRADING(TRADE_STATUS_TRADING, "交易中"),
+        COMPLETED(TRADE_STATUS_COMPLETED, "交易完成（但是可以申请退款）"),
+        CANCEL(TRADE_STATUS_CANCEL, "取消交易"),
+        WX_MINI_PROGRAM_QRCODE(TRADE_STATUS_APPLY_FOR_REFUNDING, "申请退款"),
+        APPLY_FOR_REFUNDING(TRADE_STATUS_REFUSAL_REFUNDING, "拒绝退款"),
+        REFUNDING(TRADE_STATUS_REFUNDING, "退款中"),
+        REFUNDED(TRADE_STATUS_REFUNDED, "退款完成"),
+        FINISHED(TRADE_STATUS_FINISHED, "交易结束"),
+        CLOSED(TRADE_STATUS_CLOSED, "订单关闭");
+
+        TradeStatus(Integer key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        private final Integer key;
+        private final String value;
+
+        public static String getValue(Integer key) {
+            for (Order.TradeStatus s: values()) {
+                if (s.key == key) {
+                    return s.value;
+                }
+            }
+            return "";
+        }
+
+    }
+
     /**
      * payment 状态
      */
     public static final int STATUS_PAY_PRE = 0;     //未支付
     public static final int STATUS_PAY_SUCCESS = 1; //支付成功
     public static final int STATUS_PAY_FAILURE = 2; //支付失败
+
+    public enum PayStatus {
+
+        TRADING(STATUS_PAY_PRE, "未支付"),
+        COMPLETED(STATUS_PAY_SUCCESS, "支付成功"),
+        CLOSED(STATUS_PAY_FAILURE, "支付失败");
+
+        PayStatus(Integer key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        private final Integer key;
+        private final String value;
+
+        public static String getValue(Integer key) {
+            for (Order.PayStatus s: values()) {
+                if (s.key == key) {
+                    return s.value;
+                }
+            }
+            return "";
+        }
+
+    }
 
     /**
      * 发货状态（物流状态）
@@ -46,8 +103,35 @@ public class Order implements Serializable {
     public static final int DELIVERY_STATUS_FINISHED = 4;           //用户已收货
     public static final int DELIVERY_STATUS_NONEED = 5;             //无需发货
 
+    public enum DeliveryStatus {
+
+        UNDELIVERY(DELIVERY_STATUS_UNDELIVERY, "未发货"),
+        DELIVERIED(DELIVERY_STATUS_DELIVERIED, "已发货"),
+        NEED_RE_DELIVERY(DELIVERY_STATUS_NEED_RE_DELIVERY, "需要补发"),
+        FINISHED(DELIVERY_STATUS_FINISHED, "用户已收货"),
+        NONEED(DELIVERY_STATUS_NONEED, "无需发货");
+
+        DeliveryStatus(Integer key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        private final Integer key;
+        private final String value;
+
+        public static String getValue(Integer key) {
+            for (Order.DeliveryStatus s: values()) {
+                if (s.key == key) {
+                    return s.value;
+                }
+            }
+            return "";
+        }
+
+    }
+
     /**
-     * 发布开具状态
+     * 发票开具状态
      */
     public static final int INVOICE_STATUS_NOT_APPLY = 1;           //未申请发票
     public static final int INVOICE_STATUS_APPLYING = 2;            //发票申请中
@@ -55,11 +139,62 @@ public class Order implements Serializable {
     public static final int INVOICE_STATUS_WITHOUT = 4;              //无需开具发票
     public static final int INVOICE_STATUS_INVOICED = 5;            //发票已经开具
 
+    public enum InvoiceStatus {
+
+        NOT_APPLY(INVOICE_STATUS_NOT_APPLY, "未申请发票"),
+        APPLYING(INVOICE_STATUS_APPLYING, "发票申请中"),
+        INVOICING(INVOICE_STATUS_INVOICING, "发票开具中"),
+        WITHOUT(INVOICE_STATUS_WITHOUT, "无需开具发票"),
+        INVOICED(INVOICE_STATUS_INVOICED, "发票已经开具");
+
+        InvoiceStatus(Integer key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        private final Integer key;
+        private final String value;
+
+        public static String getValue(Integer key) {
+            for (Order.InvoiceStatus s: values()) {
+                if (s.key == key) {
+                    return s.value;
+                }
+            }
+            return "";
+        }
+
+    }
+
     /**
      * 订单删除状态
      */
     public static final int ORDER_STATUS_NORMAL = 1;           //正常状态
     public static final int ORDER_STATUS_DEL = 0;              //已经删除
+
+    public enum OrderStatus {
+
+        NORMAL(ORDER_STATUS_NORMAL, "正常"),
+        DELETE(ORDER_STATUS_DEL, "已删除");
+
+        OrderStatus(Integer key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        private final Integer key;
+        private final String value;
+
+        public static String getValue(Integer key) {
+            for (Order.OrderStatus s: values()) {
+                if (s.key == key) {
+                    return s.value;
+                }
+            }
+            return "";
+        }
+
+    }
 
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
@@ -91,11 +226,6 @@ public class Order implements Serializable {
      * 支付状态
      */
     private Integer payStatus;
-
-    /**
-     * 支付记录
-     */
-    private Long paymentId;
 
     /**
      * 发货情况
@@ -173,7 +303,7 @@ public class Order implements Serializable {
     private LocalDateTime updated;
 
     @TableField(exist = false)
-    List<OrderItem> orderItemList;
+    List<IOrderService.OrderItemVo> orderItemList;
 
     public Long getId() {
         return id;
@@ -221,16 +351,14 @@ public class Order implements Serializable {
         return payStatus;
     }
 
+    public String getPayStatusStr() {
+        return PayStatus.getValue(getPayStatus());
+    }
+
     public void setPayStatus(Integer payStatus) {
         this.payStatus = payStatus;
     }
-    public Long getPaymentId() {
-        return paymentId;
-    }
 
-    public void setPaymentId(Long paymentId) {
-        this.paymentId = paymentId;
-    }
     public Long getDeliveryId() {
         return deliveryId;
     }
@@ -240,6 +368,10 @@ public class Order implements Serializable {
     }
     public Integer getDeliveryStatus() {
         return deliveryStatus;
+    }
+
+    public String getDeliveryStatusStr() {
+        return DeliveryStatus.getValue(getDeliveryStatus());
     }
 
     public void setDeliveryStatus(Integer deliveryStatus) {
@@ -277,6 +409,10 @@ public class Order implements Serializable {
         return invoiceStatus;
     }
 
+    public String getInvoiceStatusStr() {
+        return InvoiceStatus.getValue(getInvoiceStatus());
+    }
+
     public void setInvoiceStatus(Integer invoiceStatus) {
         this.invoiceStatus = invoiceStatus;
     }
@@ -305,6 +441,10 @@ public class Order implements Serializable {
         return tradeStatus;
     }
 
+    public String getTradeStatusStr() {
+        return TradeStatus.getValue(getTradeStatus());
+    }
+
     public void setTradeStatus(Integer tradeStatus) {
         this.tradeStatus = tradeStatus;
     }
@@ -317,6 +457,10 @@ public class Order implements Serializable {
     }
     public Integer getStatus() {
         return status;
+    }
+
+    public String getStatusStr() {
+        return OrderStatus.getValue(getStatus());
     }
 
     public void setStatus(Integer status) {
@@ -337,11 +481,11 @@ public class Order implements Serializable {
         this.updated = updated;
     }
 
-    public List<OrderItem> getOrderItemList() {
+    public List<IOrderService.OrderItemVo> getOrderItemList() {
         return orderItemList;
     }
 
-    public void setOrderItemList(List<OrderItem> orderItemList) {
+    public void setOrderItemList(List<IOrderService.OrderItemVo> orderItemList) {
         this.orderItemList = orderItemList;
     }
 
@@ -355,7 +499,6 @@ public class Order implements Serializable {
             ", buyerMsg=" + buyerMsg +
             ", orderAmount=" + orderAmount +
             ", payStatus=" + payStatus +
-            ", paymentId=" + paymentId +
             ", deliveryId=" + deliveryId +
             ", deliveryStatus=" + deliveryStatus +
             ", consigneeUsername=" + consigneeUsername +

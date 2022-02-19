@@ -4,8 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.entity.Order;
+import com.fastcms.entity.OrderItem;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 /**
  * 订单服务类
@@ -20,14 +23,14 @@ public interface IOrderService extends IService<Order> {
      * @param queryWrapper
      * @return
      */
-    Page<OrderVo> pageOrder(Page pageParam, QueryWrapper queryWrapper);
+    Page<OrderListVo> pageOrder(Page pageParam, QueryWrapper queryWrapper);
 
     /**
      * 订单详情
      * @param orderId
      * @return
      */
-    OrderVo getOrderDetail(Long orderId);
+    OrderDetailVo getOrderDetail(Long orderId);
 
     /**
      * 获取订单统计数据
@@ -59,10 +62,133 @@ public interface IOrderService extends IService<Order> {
         }
     }
 
-    class OrderVo extends Order {
+    class OrderListVo implements Serializable {
+
+        /**
+         * 订单id
+         */
+        Integer id;
+
+        /**
+         * 订单编号
+         */
+        String orderSn;
+
+        /**
+         * 商品名称
+         */
+        String title;
+
+        /**
+         * 订单状态
+         */
+        Integer status;
+
+        /**
+         * 订单状态
+         */
+        String statusStr;
 
         /**
          * 买家昵称
+         */
+        String nickName;
+
+        /**
+         * 商品数量
+         */
+        Integer productCount;
+
+        /**
+         * 商品金额
+         */
+        BigDecimal totalAmount;
+
+        /**
+         * 创建时间
+         */
+        LocalDate created;
+
+        public Integer getId() {
+            return id;
+        }
+
+        public void setId(Integer id) {
+            this.id = id;
+        }
+
+        public String getOrderSn() {
+            return orderSn;
+        }
+
+        public void setOrderSn(String orderSn) {
+            this.orderSn = orderSn;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public Integer getStatus() {
+            return status;
+        }
+
+        public void setStatus(Integer status) {
+            this.status = status;
+        }
+
+        public String getStatusStr() {
+            return Order.OrderStatus.getValue(getStatus());
+        }
+
+        public void setStatusStr(String statusStr) {
+            this.statusStr = statusStr;
+        }
+
+        public String getNickName() {
+            return nickName;
+        }
+
+        public void setNickName(String nickName) {
+            this.nickName = nickName;
+        }
+
+        public Integer getProductCount() {
+            return productCount;
+        }
+
+        public void setProductCount(Integer productCount) {
+            this.productCount = productCount;
+        }
+
+        public BigDecimal getTotalAmount() {
+            return totalAmount;
+        }
+
+        public void setTotalAmount(BigDecimal totalAmount) {
+            this.totalAmount = totalAmount;
+        }
+
+        public LocalDate getCreated() {
+            return created;
+        }
+
+        public void setCreated(LocalDate created) {
+            this.created = created;
+        }
+
+    }
+
+    /**
+     * 订单详情
+     */
+    class OrderDetailVo extends Order implements Serializable {
+        /**
+         * 买家
          */
         String nickName;
 
@@ -72,6 +198,37 @@ public interface IOrderService extends IService<Order> {
 
         public void setNickName(String nickName) {
             this.nickName = nickName;
+        }
+
+    }
+
+    /**
+     * 订单项
+     */
+    class OrderItemVo extends OrderItem {
+        /**
+         * 商品名称
+         */
+        String productTitle;
+        /**
+         * 商品缩略图
+         */
+        String productThumbnail;
+
+        public String getProductTitle() {
+            return productTitle;
+        }
+
+        public void setProductTitle(String productTitle) {
+            this.productTitle = productTitle;
+        }
+
+        public String getProductThumbnail() {
+            return productThumbnail;
+        }
+
+        public void setProductThumbnail(String productThumbnail) {
+            this.productThumbnail = productThumbnail;
         }
     }
 

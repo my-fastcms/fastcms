@@ -16,10 +16,15 @@
  */
 package com.fastcms.web.controller.api;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.cms.order.IFastcmsOrderService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.core.auth.AuthUtils;
+import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.entity.Order;
 import com.fastcms.service.IOrderService;
 import org.slf4j.Logger;
@@ -61,6 +66,34 @@ public class OrderApi {
             LOG.error(e.getMessage());
             return RestResultUtils.failed(e.getMessage());
         }
+    }
+
+    /**
+     * 订单列表
+     * @param page
+     * @return
+     */
+    @GetMapping("list")
+    public RestResult<Page<IOrderService.OrderListVo>> list(PageModel page) {
+        QueryWrapper queryWrapper = Wrappers.query()
+                .eq("o.user_id", AuthUtils.getUserId())
+                .eq("o.status", Order.ORDER_STATUS_NORMAL)
+                .orderByDesc("o.created");
+        return RestResultUtils.success(orderService.pageOrder(page.toPage(), queryWrapper));
+    }
+
+    /**
+     * 订单详情
+     * @param orderId 订单id
+     * @return
+     */
+    @GetMapping("detail/{orderId}")
+    public RestResult<IOrderService.OrderDetailVo> detail(@PathVariable(name = "orderId") Long orderId) {
+        Order order = orderService.getById(orderId);
+        if(order != null && AuthUtils.getUser() != null && order.getUserId() != AuthUtils.getUserId()) {
+            return RestResultUtils.failed("只能查看自己的订单");
+        }
+        return RestResultUtils.success(orderService.getOrderDetail(orderId));
     }
 
     /**

@@ -15,13 +15,11 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface OrderMapper extends BaseMapper<Order> {
 
-    Page<IOrderService.OrderVo> pageOrder(Page pageParam, @Param(Constants.WRAPPER) QueryWrapper queryWrapper);
+    Page<IOrderService.OrderListVo> pageOrder(Page pageParam, @Param(Constants.WRAPPER) QueryWrapper queryWrapper);
 
     IOrderService.OrderCountVo getUCenterOrderCount(Long userId);
 
-    IOrderService.OrderVo getOrderDetail(Long orderId);
-
-    Page<Order> pageOrderOfApi(Page pageParam, @Param(Constants.WRAPPER) QueryWrapper queryWrapper);
+    IOrderService.OrderDetailVo getOrderDetail(Long orderId);
 
     IOrderService.OrderStatVo getOrderStatData();
 

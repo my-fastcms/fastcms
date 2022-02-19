@@ -12,6 +12,7 @@ import com.fastcms.core.auth.AuthConstants;
 import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.auth.Secured;
 import com.fastcms.core.mybatis.PageModel;
+import com.fastcms.entity.Order;
 import com.fastcms.service.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +42,7 @@ public class OrderController {
      */
     @GetMapping("list")
     @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "orders", action = ActionTypes.READ)
-    public RestResult<Page<IOrderService.OrderVo>> list(PageModel page,
+    public RestResult<Page<IOrderService.OrderListVo>> list(PageModel page,
                                                         @RequestParam(name = "orderSn", required = false) String orderSn,
                                                         @RequestParam(name = "title", required = false) String title,
                                                         @RequestParam(name = "status", required = false) String status) {
@@ -60,8 +61,24 @@ public class OrderController {
      */
     @GetMapping("detail/{orderId}")
     @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "orders", action = ActionTypes.READ)
-    public RestResult<IOrderService.OrderVo> detail(@PathVariable(name = "orderId") Long orderId) {
+    public RestResult<IOrderService.OrderDetailVo> detail(@PathVariable(name = "orderId") Long orderId) {
         return RestResultUtils.success(orderService.getOrderDetail(orderId));
+    }
+
+    /**
+     * 删除订单
+     * @param orderId
+     * @return
+     */
+    @PostMapping("delete/{orderId}")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.WRITE)
+    public Object deleteOrder(@PathVariable("orderId") Long orderId) {
+        Order order = orderService.getById(orderId);
+        if(order != null) {
+            order.setStatus(Order.ORDER_STATUS_DEL);
+            orderService.updateById(order);
+        }
+        return RestResultUtils.success();
     }
 
 }

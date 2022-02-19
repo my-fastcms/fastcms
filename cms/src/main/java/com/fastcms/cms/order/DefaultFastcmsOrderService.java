@@ -72,9 +72,6 @@ public class DefaultFastcmsOrderService implements IFastcmsOrderService {
 
         if(CollectionUtils.isEmpty(productParams)) throw new FastcmsException(FastcmsException.INVALID_PARAM, "articleId不能为空");
 
-        Article article = articleService.getById(productParams.get(0).getId());
-        if(article == null) throw new FastcmsException(FastcmsException.SERVER_ERROR, "商品不存在");
-
         //订单项
         List<OrderItem> orderItemList = new ArrayList<>();
 
@@ -82,8 +79,8 @@ public class DefaultFastcmsOrderService implements IFastcmsOrderService {
             Long num = item.getNum();
             Article product = articleService.getById(item.getId());
 
-            if(product != null && Article.STATUS_PUBLISH.equals(product.getStatus()) && ArticleUtils.getPrice(article) != null) {
-                BigDecimal productPrice = ArticleUtils.getPrice(article);
+            if(product != null && Article.STATUS_PUBLISH.equals(product.getStatus()) && ArticleUtils.getPrice(product) != null) {
+                BigDecimal productPrice = ArticleUtils.getPrice(product);
                 OrderItem orderItem = new OrderItem();
                 orderItem.setProductId(item.getId());
                 orderItem.setProductCount(num.intValue());
@@ -94,18 +91,22 @@ public class DefaultFastcmsOrderService implements IFastcmsOrderService {
 
         }
 
+        if(CollectionUtils.isEmpty(orderItemList)) {
+            throw new FastcmsException(FastcmsException.INVALID_PARAM, "订单项不能为空");
+        }
+
         Order order = new Order();
+
+        order.setOrderTitle(articleService.getById(orderItemList.get(0).getProductId()).getTitle());
         order.setUserId(AuthUtils.getUserId());
         order.setOrderSn(getOrderSN());
         order.setOrderAmount(orderItemList.stream().map(OrderItem::getTotalAmount).reduce(BigDecimal.ZERO, BigDecimal::add).setScale(2, BigDecimal.ROUND_HALF_UP));
         order.setBuyerMsg(createOrderParam.getBuyerMsg());
-        order.setOrderTitle(article.getTitle());
-
-        order.setInvoiceStatus(Order.INVOICE_STATUS_NOT_APPLY);
 
         //根据优惠券，会员价等，计算出最终订单需要支付金额
         order.setPayAmount(order.getOrderAmount());
 
+        order.setInvoiceStatus(Order.INVOICE_STATUS_NOT_APPLY);
         order.setPayStatus(Order.STATUS_PAY_PRE);
         order.setTradeStatus(Order.TRADE_STATUS_TRADING);
         order.setStatus(Order.ORDER_STATUS_NORMAL);

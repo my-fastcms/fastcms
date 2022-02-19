@@ -157,21 +157,20 @@ export const userCenterRoutes: Array<RouteRecordRaw> = [
 					icon: 'el-icon-chat-dot-square',
 				},
 			},
-			{
-				path: '/collect/index',
-				name: 'collectManager',
-				component: () => import('/@/views/center/collect/index.vue'),
-				meta: {
-					title: 'message.centerRoutes.collectManager',
-					isLink: '',
-					isHide: false,
-					isKeepAlive: true,
-					isAffix: false,
-					isIframe: false,
-					icon: 'iconfont icon-caidan',
-				},
-			},
-
+			// {
+			// 	path: '/collect/index',
+			// 	name: 'collectManager',
+			// 	component: () => import('/@/views/center/collect/index.vue'),
+			// 	meta: {
+			// 		title: 'message.centerRoutes.collectManager',
+			// 		isLink: '',
+			// 		isHide: false,
+			// 		isKeepAlive: true,
+			// 		isAffix: false,
+			// 		isIframe: false,
+			// 		icon: 'iconfont icon-caidan',
+			// 	},
+			// },
 			{
 				path: '/order/index',
 				name: 'orderManager',
