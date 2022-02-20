@@ -4,7 +4,7 @@
  */
 export const newsInfoList: Array<object> = [
 	{
-		title: '[发布] 2022年05月04日发布基于Fastcms-0.0.1版本',
+		title: '[发布] 2022年03月01日发布基于Fastcms-0.0.1版本',
 		date: '2022/05/04',
 		link: 'https://gitee.com/xjd2020/fastcms',
 	},

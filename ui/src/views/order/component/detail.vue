@@ -100,7 +100,7 @@ import { ElMessageBox, ElMessage } from 'element-plus';
 import { getOrderDetail, delOrder } from '/@/api/order/index';
 
 export default {
-	name: 'attachDetail',
+	name: 'orderDetail',
 	setup(props, ctx) {
 		const { proxy } = getCurrentInstance() as any;
 		const state = reactive({
@@ -127,7 +127,6 @@ export default {
 			initForm();
 		};
 
-		// 新增
 		const onSubmit = () => {
 
 			proxy.$refs['myRefForm'].validate((valid: any) => {

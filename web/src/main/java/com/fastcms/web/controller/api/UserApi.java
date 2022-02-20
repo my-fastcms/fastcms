@@ -24,11 +24,10 @@ import com.fastcms.entity.User;
 import com.fastcms.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Objects;
 
 /**
  * 用户
@@ -51,11 +50,32 @@ public class UserApi {
      * @return
      */
     @PostMapping("save")
-    public RestResult<Boolean> save(@Validated User user) {
-        if(!Objects.equals(AuthUtils.getUserId(), user.getId())) {
-            return RestResultUtils.failed("只能修改自己信息");
+    public RestResult<Boolean> save(@Validated IUserService.UpdateUserParam user) {
+        if(AuthUtils.getUserId() == null) {
+            return RestResultUtils.failed("user id is null");
         }
-        return RestResultUtils.success(userService.updateById(user));
+
+        User userInfo = userService.getById(AuthUtils.getUserId());
+        if(userInfo == null) {
+            return RestResultUtils.failed("user is null");
+        }
+
+        userInfo.setNickName(user.getNickName());
+        userInfo.setEmail(user.getEmail());
+        userInfo.setMobile(user.getMobile());
+        userInfo.setSex(user.getSex());
+        userInfo.setAutograph(user.getAutograph());
+
+        return RestResultUtils.success(userService.updateById(userInfo));
+    }
+
+    /**
+     * 获取用户信息
+     * @return
+     */
+    @GetMapping("get")
+    public RestResult<User> getUserInfo() {
+        return RestResultUtils.success(userService.getById(AuthUtils.getUserId()));
     }
 
     /**

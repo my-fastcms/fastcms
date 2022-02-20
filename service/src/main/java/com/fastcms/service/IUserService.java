@@ -5,6 +5,7 @@ import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.entity.User;
 import com.fastcms.entity.UserTag;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.List;
 
@@ -56,6 +57,74 @@ public interface IUserService extends IService<User> {
      * @return
      */
     Boolean register(String username, String password, String repeatPassword) throws FastcmsException;
+
+    /**
+     * 修改用户信息
+     */
+    class UpdateUserParam implements Serializable {
+        /**
+         * 昵称
+         */
+        @NotBlank(message = "用户昵称不能为空")
+        String nickName;
+        /**
+         * 邮箱
+         */
+        String email;
+        /**
+         * 手机号
+         */
+        String mobile;
+        /**
+         * 性别
+         */
+        Integer sex;
+        /**
+         * 个性签名
+         */
+        @NotBlank(message = "个性签名不能为空")
+        String autograph;
+
+        public String getNickName() {
+            return nickName;
+        }
+
+        public void setNickName(String nickName) {
+            this.nickName = nickName;
+        }
+
+        public String getEmail() {
+            return email;
+        }
+
+        public void setEmail(String email) {
+            this.email = email;
+        }
+
+        public String getMobile() {
+            return mobile;
+        }
+
+        public void setMobile(String mobile) {
+            this.mobile = mobile;
+        }
+
+        public Integer getSex() {
+            return sex;
+        }
+
+        public void setSex(Integer sex) {
+            this.sex = sex;
+        }
+
+        public String getAutograph() {
+            return autograph;
+        }
+
+        public void setAutograph(String autograph) {
+            this.autograph = autograph;
+        }
+    }
 
     /**
      * 修改用户密码

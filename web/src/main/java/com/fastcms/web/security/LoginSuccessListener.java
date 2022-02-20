@@ -17,11 +17,15 @@
 package com.fastcms.web.security;
 
 import com.fastcms.core.auth.FastcmsUserDetails;
+import com.fastcms.core.utils.RequestUtils;
+import com.fastcms.entity.User;
 import com.fastcms.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 
 /**
  * wjun_java@163.com
@@ -36,7 +40,12 @@ public class LoginSuccessListener implements ApplicationListener<AuthenticationS
     public void onApplicationEvent(AuthenticationSuccessEvent event) {
         if(event.getSource() != null && event.getAuthentication().getPrincipal() != null) {
             FastcmsUserDetails principal = (FastcmsUserDetails) event.getAuthentication().getPrincipal();
-            userService.updateUserLoginTime(principal.getUserId());
+            User user = userService.getById(principal.getUserId());
+            if(user != null) {
+                user.setAccessIp(RequestUtils.getIpAddress(RequestUtils.getRequest()));
+                user.setLoginTime(LocalDateTime.now());
+                userService.updateById(user);
+            }
         }
     }
 

@@ -32,8 +32,7 @@
 </template>
 
 <script lang="ts">
-import { ElMessageBox, ElMessage } from 'element-plus';
-import { toRefs, ref, reactive, onMounted } from 'vue';
+import { toRefs, reactive, onMounted } from 'vue';
 import { getArticleCommentList } from '/@/api/article/client';
 
 export default {

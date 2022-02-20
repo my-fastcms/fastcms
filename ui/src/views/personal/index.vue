@@ -13,28 +13,28 @@
 						<div class="personal-user-right">
 							<el-row>
 								<el-col :span="24" class="personal-title mb18">{{ currentTime }}，admin </el-col>
-								<el-col :span="24" class="personal-title mb18">生活变的再糟糕，也不妨碍我变得更好！</el-col>
+								<el-col :span="24" class="personal-title mb18" v-if="userInfo.autograph !=null">{{userInfo.autograph}}</el-col>
 								<el-col :span="24">
 									<el-row>
 										<el-col :xs="24" :sm="8" class="personal-item mb6">
 											<div class="personal-item-label">昵称：</div>
-											<div class="personal-item-value">小柒</div>
+											<div class="personal-item-value">{{ userInfo.nickName }}</div>
 										</el-col>
-										<el-col :xs="24" :sm="16" class="personal-item mb6">
+										<!-- <el-col :xs="24" :sm="16" class="personal-item mb6">
 											<div class="personal-item-label">身份：</div>
 											<div class="personal-item-value">超级管理</div>
-										</el-col>
+										</el-col> -->
 									</el-row>
 								</el-col>
 								<el-col :span="24">
 									<el-row>
 										<el-col :xs="24" :sm="8" class="personal-item mb6">
 											<div class="personal-item-label">登录IP：</div>
-											<div class="personal-item-value">192.168.1.1</div>
+											<div class="personal-item-value">{{ userInfo.accessIp }}</div>
 										</el-col>
 										<el-col :xs="24" :sm="16" class="personal-item mb6">
 											<div class="personal-item-label">登录时间：</div>
-											<div class="personal-item-value">2021-02-05 18:47:26</div>
+											<div class="personal-item-value">{{ userInfo.loginTime }}</div>
 										</el-col>
 									</el-row>
 								</el-col>
@@ -65,48 +65,40 @@
 			<el-col :span="24">
 				<el-card shadow="hover" class="mt15 personal-edit" header="更新信息">
 					<div class="personal-edit-title">基本信息</div>
-					<el-form :model="personalForm" size="small" label-width="40px" class="mt35 mb35">
+					<el-form :model="personalForm" :rules="personalFormRules" ref="myRefPersonalForm" size="small" label-width="80px" class="mt35 mb35">
 						<el-row :gutter="35">
 							<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
-								<el-form-item label="昵称">
-									<el-input v-model="personalForm.name" placeholder="请输入昵称" clearable></el-input>
+								<el-form-item label="昵称" prop="nickName">
+									<el-input v-model="personalForm.nickName" placeholder="请输入昵称" clearable></el-input>
 								</el-form-item>
 							</el-col>
 							<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
-								<el-form-item label="邮箱">
+								<el-form-item label="邮箱" prop="email">
 									<el-input v-model="personalForm.email" placeholder="请输入邮箱" clearable></el-input>
 								</el-form-item>
 							</el-col>
 							<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
-								<el-form-item label="签名">
-									<el-input v-model="personalForm.autograph" placeholder="请输入签名" clearable></el-input>
+								<el-form-item label="手机" prop="mobile">
+									<el-input v-model="personalForm.mobile" placeholder="请输入手机" clearable></el-input>
 								</el-form-item>
 							</el-col>
 							<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
-								<el-form-item label="职业">
-									<el-select v-model="personalForm.occupation" placeholder="请选择职业" clearable class="w100">
-										<el-option label="计算机 / 互联网 / 通信" value="1"></el-option>
-										<el-option label="生产 / 工艺 / 制造" value="2"></el-option>
-										<el-option label="医疗 / 护理 / 制药" value="3"></el-option>
-									</el-select>
-								</el-form-item>
-							</el-col>
-							<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
-								<el-form-item label="手机">
-									<el-input v-model="personalForm.phone" placeholder="请输入手机" clearable></el-input>
-								</el-form-item>
-							</el-col>
-							<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
-								<el-form-item label="性别">
+								<el-form-item label="性别" prop="sex">
 									<el-select v-model="personalForm.sex" placeholder="请选择性别" clearable class="w100">
 										<el-option label="男" value="1"></el-option>
 										<el-option label="女" value="2"></el-option>
 									</el-select>
 								</el-form-item>
 							</el-col>
+							<el-col :xs="24" :sm="12" :md="8" :lg="12" :xl="12" class="mb20">
+								<el-form-item label="签名" prop="autograph">
+									<el-input v-model="personalForm.autograph" placeholder="请输入签名" clearable></el-input>
+								</el-form-item>
+							</el-col>
+							
 							<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
 								<el-form-item>
-									<el-button type="primary" icon="el-icon-position">更新个人信息</el-button>
+									<el-button type="primary" @click="onUpdateUserInfo" icon="el-icon-position">更新个人信息</el-button>
 								</el-form-item>
 							</el-col>
 						</el-row>
@@ -155,11 +147,12 @@
 </template>
 
 <script lang="ts">
-import { toRefs, reactive, computed, getCurrentInstance } from 'vue';
+import { toRefs, reactive, computed, getCurrentInstance, onMounted } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { formatAxis } from '/@/utils/formatTime';
 import { newsInfoList, recommendList } from './mock';
 import { updatePassword } from '/@/api/user/index';
+import { updateUser, getUserInfo } from '/@/api/user/client';
 import { Session } from '/@/utils/storage';
 import qs from 'qs';
 
@@ -172,6 +165,7 @@ export default {
 			formLabelWidth: '120px',
 			newsInfoList,
 			recommendList,
+			userInfo: {},
 			passwordForm: {
 				password: '',
 				confirmPassword: ''
@@ -181,14 +175,34 @@ export default {
 				"confirmPassword": { required: true, message: '请再次输入新密码', trigger: 'blur' },
 			},
 			personalForm: {
-				name: '',
+				nickName: '',
 				email: '',
-				autograph: '',
-				occupation: '',
-				phone: '',
+				mobile: '',
 				sex: '',
+				autograph: '',
+			},
+			personalFormRules: {
+				"nickName": { required: true, message: '请输入昵称', trigger: 'blur' },
+				"email": { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+				"autograph": { required: true, message: '请输入个性签名', trigger: 'blur' },
 			},
 		});
+
+		const onUpdateUserInfo = () => {
+			proxy.$refs['myRefPersonalForm'].validate((valid: any) => {
+				
+				if (valid) {
+					let params = qs.stringify(state.personalForm, {arrayFormat: 'repeat'});
+					console.info("doUpdate User info")
+					updateUser(params).then(() => {
+						ElMessage.success("保存成功")
+					}).catch((res) => {
+						ElMessage({showClose: true, message: res.message ? res.message : '系统错误' , type: 'error'});
+					})
+				}
+			});
+
+		}
 
 		// 关闭弹窗
 		const closeDialog = () => {
@@ -222,8 +236,21 @@ export default {
 		const currentTime = computed(() => {
 			return formatAxis(new Date());
 		});
+
+		onMounted(() => {
+			getUserInfo().then((res => {
+				state.personalForm.nickName = res.data.nickName;
+				state.personalForm.email = res.data.email;
+				state.personalForm.mobile = res.data.mobile;
+				state.personalForm.autograph = res.data.autograph;
+				state.personalForm.sex = res.data.sex + "";
+				state.userInfo = res.data;
+			})).catch(()=>{})
+		})
+
 		return {
 			currentTime,
+			onUpdateUserInfo,
 			onUpdatePassword,
 			...toRefs(state),
 		};

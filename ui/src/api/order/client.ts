@@ -25,4 +25,27 @@ export function getOrderDetail(id: string) {
     })
 }
 
+/**
+ * PC扫码支付
+ * @param id 
+ * @returns 
+ */
+export function paymentOrder(id: string) {
+	return request({
+        url: '/client/pay/wxPay/NATIVE/getQrPay?orderId='+id,
+        method: 'get'
+    })
+}
+
+/**
+ * 检查订单支付状态
+ * @param id 
+ * @returns 
+ */
+export function checkOrderPayStatus(id: string) {
+	return request({
+        url: 'client/order/status/check/'+id,
+        method: 'get'
+    })
+}
 

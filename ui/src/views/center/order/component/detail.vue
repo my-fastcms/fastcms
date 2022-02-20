@@ -83,8 +83,12 @@
 					</el-col>
 				</el-row>
 			</div>
+			<div class="mb30 mt30 qrcode-img">
+				<div class="qrcode" ref="qrcodeRef"></div>
+			</div>
 			<template #footer>
 				<span class="dialog-footer">
+					<el-button type="success" @click="onPayment" v-if="ruleForm.payStatus !=1 ? true : false" size="small">支 付</el-button>
                     <el-button @click="onCancel" size="small">取 消</el-button>
 				</span>
 			</template>
@@ -95,7 +99,8 @@
 <script lang="ts">
 import { reactive, toRefs, getCurrentInstance, onUpdated } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
-import { getOrderDetail } from '/@/api/order/client';
+import { getOrderDetail, paymentOrder, checkOrderPayStatus } from '/@/api/order/client';
+import QRCode from 'qrcodejs2-fixes';
 
 export default {
 	name: 'attachDetail',
@@ -103,6 +108,7 @@ export default {
 		const { proxy } = getCurrentInstance() as any;
 		const state = reactive({
 			isShowDialog: false,
+			myTimer: null,
 			ruleForm: {
 				id: null,
 			},
@@ -118,6 +124,9 @@ export default {
 		// 关闭弹窗
 		const closeDialog = () => {
 			state.isShowDialog = false;
+			if(state.myTimer != null) {
+				clearInterval(Number(state.myTimer));
+			}
 		};
 		// 取消
 		const onCancel = () => {
@@ -133,6 +142,29 @@ export default {
 			}
 		}
 
+		const onPayment = () => {
+			paymentOrder(state.ruleForm.id).then((res) => {
+				proxy.$refs.qrcodeRef.innerHTML = '';
+				new QRCode(proxy.$refs.qrcodeRef, {
+					text: res,
+					width: 125,
+					height: 125,
+					colorDark: '#000000',
+					colorLight: '#ffffff',
+				});
+
+				state.myTimer = setInterval(() => {
+					if(!state.ruleForm.id) return
+					checkOrderPayStatus(state.ruleForm.id).then((res) => {
+						if(res.code == 200) {
+							closeDialog();
+							initForm();
+						}
+					}).catch(()=>{})
+				}, 2000)
+			})
+		};
+
 		onUpdated(() => {
 			getOrder();
 		});
@@ -143,6 +175,7 @@ export default {
 		};
 
 		return {
+			onPayment,
 			openDialog,
 			closeDialog,
 			onCancel,

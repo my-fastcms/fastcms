@@ -486,3 +486,6 @@ INSERT INTO `permission` (`id`, `parent_id`, `name`, `path`, `component`, `title
 ALTER TABLE `article` ADD COLUMN `attach_id` bigint(20) DEFAULT NULL COMMENT '附件' AFTER `suffix`;
 
 alter table `order` drop column `payment_id`;
+
+ALTER TABLE `user` ADD COLUMN `autograph` varchar(1024) DEFAULT NULL COMMENT '个性签名' AFTER `company`;
+ALTER TABLE `user` ADD COLUMN `access_ip` varchar(32) DEFAULT NULL COMMENT '登录IP' AFTER `login_time`;

@@ -86,7 +86,7 @@ public class UserController {
     }
 
     /**
-     * 保存用户信息
+     * 新增用户
      * @param user
      * @return
      */
@@ -101,7 +101,7 @@ public class UserController {
     }
 
     /**
-     * 获取用户详细信息
+     * 获取用户信息
      * @param userId
      * @return
      */
@@ -115,7 +115,7 @@ public class UserController {
     }
 
     /**
-     * 编辑用户信息
+     * 删除用户
      * @param userId
      * @return
      */
@@ -174,7 +174,6 @@ public class UserController {
      * @return
      */
     @PostMapping("password/update")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "users", action = ActionTypes.WRITE)
     public Object updatePassword(@Validated IUserService.UpdatePasswordParam updatePasswordParam) {
         try {
             updatePasswordParam.setId(AuthUtils.getUserId());
@@ -184,6 +183,5 @@ public class UserController {
             return RestResultUtils.failed(e.getMessage());
         }
     }
-
 
 }

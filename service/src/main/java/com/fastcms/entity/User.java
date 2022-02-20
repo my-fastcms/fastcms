@@ -73,6 +73,11 @@ public class User implements Serializable {
     private String company;
 
     /**
+     * 个性签名
+     */
+    private String autograph;
+
+    /**
      * 性别
      */
     private Integer sex;
@@ -101,6 +106,11 @@ public class User implements Serializable {
      * 最近登录时间
      */
     private LocalDateTime loginTime;
+
+    /**
+     * 登录ip
+     */
+    private String accessIp;
 
     /**
      * 创建时间
@@ -229,6 +239,14 @@ public class User implements Serializable {
         return company;
     }
 
+    public String getAutograph() {
+        return autograph;
+    }
+
+    public void setAutograph(String autograph) {
+        this.autograph = autograph;
+    }
+
     public void setCompany(String company) {
         this.company = company;
     }
@@ -311,6 +329,14 @@ public class User implements Serializable {
 
     public void setSex(Integer sex) {
         this.sex = sex;
+    }
+
+    public String getAccessIp() {
+        return accessIp;
+    }
+
+    public void setAccessIp(String accessIp) {
+        this.accessIp = accessIp;
     }
 
     @Override
