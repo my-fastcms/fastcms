@@ -74,7 +74,7 @@
             </el-row>
         </el-form>
     </el-card>
-    <AttachDialog ref="attachDialogRef" @attachHandler="getSelectAttach"/>
+    <AttachDialog ref="attachDialogRef" @attachHandler="getSelectAttach" :fileType="fileType"/>
 </div>
 </template>
 
@@ -98,6 +98,7 @@ export default {
         const route = useRoute();
         const { proxy } = getCurrentInstance() as any;
 		const state = reactive({
+            fileType: "image",
             fit: "fill",
             params: {},
             ruleForm: {

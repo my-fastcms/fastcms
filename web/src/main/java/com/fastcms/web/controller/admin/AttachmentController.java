@@ -60,9 +60,12 @@ public class AttachmentController {
      * @return
      */
     @RequestMapping("list")
-    public RestResult<Page<Attachment>> list(PageModel page, @RequestParam(value = "fileName", required = false) String fileName) {
+    public RestResult<Page<Attachment>> list(PageModel page,
+                                             @RequestParam(value = "fileType", required = false) String fileType,
+                                             @RequestParam(value = "fileName", required = false) String fileName) {
         Page<Attachment> pageData = attachmentService.page(page.toPage(),
                 Wrappers.<Attachment>lambdaQuery().eq(!AuthUtils.isAdmin(), Attachment::getUserId, AuthUtils.getUserId())
+                        .eq(StringUtils.isNotBlank(fileType), Attachment::getFileType, fileType)
                         .like(StringUtils.isNotBlank(fileName), Attachment::getFileName, fileName)
                 .orderByDesc(Attachment::getCreated));
         return RestResultUtils.success(pageData);

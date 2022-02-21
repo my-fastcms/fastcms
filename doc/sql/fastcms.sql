@@ -489,3 +489,6 @@ alter table `order` drop column `payment_id`;
 
 ALTER TABLE `user` ADD COLUMN `autograph` varchar(1024) DEFAULT NULL COMMENT '个性签名' AFTER `company`;
 ALTER TABLE `user` ADD COLUMN `access_ip` varchar(32) DEFAULT NULL COMMENT '登录IP' AFTER `login_time`;
+
+ALTER TABLE `attachment` ADD COLUMN `file_type` varchar(32) DEFAULT NULL COMMENT '文件类型' AFTER `file_path`;
+

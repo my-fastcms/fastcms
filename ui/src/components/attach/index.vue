@@ -64,7 +64,10 @@ import { Session } from '/@/utils/storage';
 export default {
 	emits: ["attachHandler"],
 	name: 'attachDialog',
-	setup(prop, ctx) {
+	props: {
+		fileType: String
+	},
+	setup(props, ctx) {
 		const state = reactive({
 			isShowDialog: false,
 			queryParams: {},
@@ -85,7 +88,7 @@ export default {
 			},
 		});
 
-		const openDialog = (max) => {
+		const openDialog = (max: number) => {
 			state.isShowDialog = true;
 			state.max = max;
 		};
@@ -96,6 +99,11 @@ export default {
 		};
 
 		const initTableData = () => {
+			if(props.fileType) {
+				console.log("==>fileType:" + props.fileType);
+				state.tableData.param.fileType = props.fileType
+			}
+			
 			getAttachList(state.tableData.param).then((res) => {
 				state.tableData.data = res.data.records;
 				state.tableData.total = res.data.total;

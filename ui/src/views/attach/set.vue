@@ -89,7 +89,7 @@
 				</el-card>
 			</el-col>
 		</el-row>
-		<AttachDialog ref="attachDialogRef" @attachHandler="getSelectAttach"/>
+		<AttachDialog ref="attachDialogRef" @attachHandler="getSelectAttach" :fileType="fileType"/>
 	</div>
 </template>
 
@@ -108,6 +108,7 @@ export default {
 		const attachDialogRef = ref();
 		const { proxy } = getCurrentInstance() as any;
 		const state = reactive({
+			fileType: "image",
 			fit: "fill",
 			posOptions: [{
 				value: 'leftup',

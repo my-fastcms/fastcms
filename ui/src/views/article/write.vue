@@ -106,7 +106,7 @@
             </el-row>
         </el-form>
     </el-card>
-    <AttachDialog ref="thumbnailDialogRef" @attachHandler="getSelectThumbnail"/>
+    <AttachDialog ref="thumbnailDialogRef" @attachHandler="getSelectThumbnail" :fileType="fileType"/>
     <AttachDialog ref="attachDialogRef" @attachHandler="getSelectAttach"/>
 </div>
 </template>
@@ -133,6 +133,7 @@ export default {
         const route = useRoute();
         const { proxy } = getCurrentInstance() as any;
 		const state = reactive({
+            fileType: "image",
             fit: "fill",
             row: null,
             isShowDialog: false,

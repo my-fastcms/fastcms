@@ -284,6 +284,7 @@ public abstract class AttachUtils {
                 Attachment attachment = new Attachment();
                 attachment.setFileName(file.getOriginalFilename());
                 attachment.setFilePath(newFilePath.replace("\\", "/"));
+                attachment.setFileType(Attachment.AttachType.getValue(FileUtils.getSuffix(file.getOriginalFilename())));
                 attachmentList.add(attachment);
             } catch (IOException e) {
                 e.printStackTrace();

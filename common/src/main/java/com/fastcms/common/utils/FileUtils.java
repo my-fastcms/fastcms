@@ -84,7 +84,7 @@ public abstract class FileUtils {
         if (fileName != null && fileName.contains(".")) {
             return fileName.substring(fileName.lastIndexOf("."));
         }
-        return null;
+        return "";
     }
 
     public static String removePrefix(String src, String prefix) {

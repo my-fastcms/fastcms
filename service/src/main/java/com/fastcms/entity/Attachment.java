@@ -47,6 +47,11 @@ public class Attachment implements Serializable {
     private String filePath;
 
     /**
+     * 文件类型
+     */
+    private String fileType;
+
+    /**
      * 创建时间
      */
     @TableField(fill = FieldFill.INSERT)
@@ -114,7 +119,26 @@ public class Attachment implements Serializable {
         this.updated = updated;
     }
 
+    public String getFileSize() {
+        return fileSize;
+    }
+    public void setFileSize(String fileSize) {
+        this.fileSize = fileSize;
+    }
+
+    public String getFileType() {
+        return fileType;
+    }
+
+    public void setFileType(String fileType) {
+        this.fileType = fileType;
+    }
+
     public String getPath() {
+        if(!TYPE_IMAGE.equals(getFileType())) {
+            return "/default.jpg";
+        }
+
         String fileDomain = ConfigUtils.getConfig(ATTACH_FILE_DOMAIN);
         if(StrUtils.isBlank(fileDomain)) {
             fileDomain = ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN);
@@ -122,12 +146,55 @@ public class Attachment implements Serializable {
         return fileDomain + getFilePath();
     }
 
-    public String getFileSize() {
-        return fileSize;
-    }
+    /**
+     * 图片
+     */
+    public static final String TYPE_IMAGE = "image";
+    /**
+     * 音频
+     */
+    public static final String TYPE_AUDIO = "audio";
+    /**
+     * 视频
+     */
+    public static final String TYPE_VIDEO = "video";
+    /**
+     * 压缩文件
+     */
+    public static final String TYPE_ZIP = "zip";
+    /**
+     * 办公文件
+     */
+    public static final String TYPE_OFFICE = "office";
 
-    public void setFileSize(String fileSize) {
-        this.fileSize = fileSize;
+    /**
+     * 附件类型
+     */
+    public enum AttachType {
+
+        IMAGE(".jpg, .png, .gif, .jpeg", TYPE_IMAGE),
+        AUDIO(".mp3, .aac, .ape, .flac, .alac", TYPE_AUDIO),
+        VIDEO(".avi, .wmv, .mpeg, .rmvb, .mp4, .mov, .m4v, .flv", TYPE_VIDEO),
+        ZIP(".zip, .rar, .gzip", TYPE_ZIP),
+        OFFICE(".doc, .docx, .xls, .xlsx, .ppt", TYPE_OFFICE);
+
+        AttachType(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        private final String key;
+        private final String value;
+
+        public static String getValue(String key) {
+            for (Attachment.AttachType s: values()) {
+                if (s.key.contains(key)) {
+                    return s.value;
+                }
+            }
+            return "";
+        }
+
     }
 
     @Override

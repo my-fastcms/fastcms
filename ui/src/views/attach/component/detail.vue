@@ -4,7 +4,7 @@
 			<el-form :model="ruleForm" size="small" label-width="80px" :rules="rules" ref="myRefForm">
 				<el-row :gutter="35">
                     <el-col class="mb20">
-						<img alt="fastcms" :src="ruleForm.path">
+						<img v-if="ruleForm.fileType == 'image' ? true : false" alt="fastcms" :src="ruleForm.path">
 					</el-col>
 					<el-col class="mb20">
 						<el-form-item label="文件名称" prop="fileName">
