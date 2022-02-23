@@ -108,7 +108,7 @@ public class PaymentApi {
     }
 
     /**
-     * app支持 | 获取支付预订单信息
+     * app支付 | 获取支付预订单信息
      * @param platform
      * @param orderId
      * @return
