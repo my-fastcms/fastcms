@@ -45,7 +45,7 @@ public class UserApi {
     private IUserService userService;
 
     /**
-     * 保存用户信息
+     * 保存用户
      * @param user
      * @return
      */
@@ -70,7 +70,7 @@ public class UserApi {
     }
 
     /**
-     * 获取用户信息
+     * 用户详情
      * @return
      */
     @GetMapping("get")

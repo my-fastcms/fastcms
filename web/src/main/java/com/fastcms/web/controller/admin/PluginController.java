@@ -124,7 +124,7 @@ public class PluginController {
     }
 
     /**
-     * 获取插件配置界面地址
+     * 插件配置界面
      * @param pluginId
      * @return
      */

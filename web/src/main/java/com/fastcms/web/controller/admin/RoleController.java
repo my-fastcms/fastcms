@@ -97,7 +97,7 @@ public class RoleController {
     }
 
     /**
-     * 获取角色列表，不分页
+     * 角色列表-不分页
      * @return
      */
     @GetMapping("list/select")
@@ -107,7 +107,7 @@ public class RoleController {
     }
 
     /**
-     * 获取角色权限列表
+     * 角色权限列表
      * @param roleId    角色id
      * @return
      */

@@ -49,7 +49,7 @@ public class ArticleCommentApi {
 	IArticleCommentService articleCommentService;
 
 	/**
-	 * 评论列表
+	 * 用户评论列表
 	 * @param page
 	 * @param author
 	 * @param content
@@ -66,7 +66,7 @@ public class ArticleCommentApi {
 	}
 
 	/**
-	 * 评论列表
+	 * 文章评论列表
 	 * @param page
 	 * @param articleId
 	 * @return

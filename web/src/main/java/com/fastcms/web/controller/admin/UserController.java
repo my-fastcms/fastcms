@@ -101,7 +101,7 @@ public class UserController {
     }
 
     /**
-     * 获取用户信息
+     * 用户信息
      * @param userId
      * @return
      */
@@ -159,7 +159,7 @@ public class UserController {
     }
 
     /**
-     * 获取标签列表
+     * 标签列表
      * @return
      */
     @GetMapping("tag/list")

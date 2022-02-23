@@ -150,7 +150,7 @@ public class WechatMiniUserApi {
 	}
 
 	/**
-	 * 取用户手机号码
+	 * 获取用户手机号码
 	 * @param params
 	 * @return
 	 */

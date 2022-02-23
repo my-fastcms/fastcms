@@ -48,7 +48,7 @@ public class PermissionController {
 	private IPermissionService permissionService;
 
 	/**
-	 * 获取用户菜单
+	 * 用户菜单
 	 * @return
 	 */
 	@GetMapping("menus")
