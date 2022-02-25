@@ -69,9 +69,10 @@ else
   JAVA_OPT="${JAVA_OPT} -Xloggc:${BASE_DIR}/logs/fastcms_gc.log -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=100M"
 fi
 
-JAVA_OPT="${JAVA_OPT} -jar ${BASE_DIR}/${SERVER}.jar"
+JAVA_OPT="${JAVA_OPT} -jar -Dfile.encoding=utf-8 ${BASE_DIR}/${SERVER}.jar --spring.profiles.active=prod"
 JAVA_OPT="${JAVA_OPT} ${JAVA_OPT_EXT}"
 JAVA_OPT="${JAVA_OPT} --server.max-http-header-size=524288"
 
 echo "$JAVA ${JAVA_OPT}"
-echo "fastcms is starting，you can check the ${BASE_DIR}/logs/fastcms.log"
+nohup $JAVA ${JAVA_OPT} fastcms.fastcms &
+echo "fastcms is starting, you can check the ${BASE_DIR}/logs/fastcms.log"
