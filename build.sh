@@ -21,8 +21,10 @@ cp doc/sql/* dist/config
 # copy htmls
 cp -r web/src/main/resources/htmls dist
 
-cp web/start.bat dist
-cp web/start.sh dist
+cp web/startup.cmd dist
+cp web/startup.sh dist
+cp web/shutdown.cmd dist
+cp web/shutdown.sh dist
 
 cd dist
 
