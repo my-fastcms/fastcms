@@ -21,6 +21,7 @@ import com.fastcms.plugin.PluginBase;
 import com.fastcms.plugin.PluginRegister;
 import com.fastcms.plugin.UnLoad;
 import com.fastcms.plugin.extension.FastcmsSpringExtensionFactory;
+import org.pf4j.Extension;
 import org.pf4j.Plugin;
 import org.pf4j.PluginWrapper;
 import org.slf4j.Logger;
@@ -73,6 +74,7 @@ public abstract class AbstractPluginRegister implements PluginRegister {
                 Class clazz = pluginWrapper.getPluginClassLoader().loadClass(metadataReader.getAnnotationMetadata().getClassName());
                 if(!PluginBase.class.isAssignableFrom(clazz)
                     && !Plugin.class.isAssignableFrom(clazz)
+                    && clazz.getAnnotation(Extension.class) == null
                     && clazz.getAnnotation(UnLoad.class) == null)
                     classList.add(clazz);
             }
@@ -89,12 +91,21 @@ public abstract class AbstractPluginRegister implements PluginRegister {
      * @param aClass
      */
     protected void registryBean(Class<?> aClass) {
+        registryBean(aClass.getName(), aClass);
+    }
+
+    /**
+     * 指定beanName注册SpringBean
+     * @param beanName
+     * @param aClass
+     */
+    protected void registryBean(String beanName, Class<?> aClass) {
         Map<String, ?> extensionBeanMap = pluginManger.getApplicationContext().getBeansOfType(aClass);
         if (extensionBeanMap.isEmpty()) {
             Object extension = pluginManger.getExtensionFactory().create(aClass);
-            beanFactory.registerSingleton(aClass.getName(), extension);
+            beanFactory.registerSingleton(beanName, extension);
         } else {
-            log.info("Bean registeration aborted! Extension '{}' already existed as bean!", aClass.getName());
+            log.info("Bean registeration aborted! Extension '{}' already existed as bean!", beanName);
         }
     }
 
@@ -103,9 +114,13 @@ public abstract class AbstractPluginRegister implements PluginRegister {
      * @param aClass
      */
     protected void destroyBean(Class<?> aClass) {
+        destroyBean(aClass.getName(), aClass);
+    }
+
+    protected void destroyBean(String beanName, Class<?> aClass) {
         FastcmsSpringExtensionFactory extensionFactory = (FastcmsSpringExtensionFactory) pluginManger.getExtensionFactory();
         extensionFactory.destroy(aClass);
-        beanFactory.destroySingleton(aClass.getName());
+        beanFactory.destroySingleton(beanName);
     }
 
 }

@@ -18,15 +18,13 @@ package com.fastcms.plugin.register;
 
 import com.fastcms.plugin.Directive;
 import com.fastcms.plugin.FastcmsPluginManager;
-import freemarker.template.TemplateModelException;
-import org.springframework.beans.factory.BeanFactoryUtils;
+import com.fastcms.plugin.view.FastcmsTemplateFreeMarkerConfig;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfig;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 插件中的freemarker标签注册
@@ -52,26 +50,27 @@ public class DirectiveRegister extends AbstractPluginRegister {
 		if(freeMarkerConfig == null) {
 			return;
 		}
+		FastcmsTemplateFreeMarkerConfig fastcmsTemplateFreeMarkerConfig = (FastcmsTemplateFreeMarkerConfig) getBean(FastcmsTemplateFreeMarkerConfig.class);
 
-		Map<String, Class> matchingBeans = new HashMap<>();
 		for (Class aClass : directiveClass) {
-			Map map = BeanFactoryUtils.beansOfTypeIncludingAncestors(pluginManger.getApplicationContext(), aClass, true, false);
-			matchingBeans.putAll(map);
-		}
-
-		matchingBeans.keySet().forEach(item -> {
-			try {
-				freeMarkerConfig.getConfiguration().setSharedVariable(item, matchingBeans.get(item));
-			} catch (TemplateModelException e) {
-				e.printStackTrace();
+			Directive annotation = (Directive) aClass.getAnnotation(Directive.class);
+			if (annotation != null && StringUtils.isNotBlank(annotation.value())) {
+				registryBean(annotation.value(), aClass);
+				freeMarkerConfig.getConfiguration().setSharedVariable(annotation.value(), getBean(aClass));
+				fastcmsTemplateFreeMarkerConfig.getConfiguration().setSharedVariable(annotation.value(), getBean(aClass));
 			}
-		});
+		}
 
 	}
 
 	@Override
 	public void unRegistry(String pluginId) throws Exception {
-
+		getDirectiveClass(getPluginClasses(pluginId)).forEach(item -> {
+			Directive annotation = item.getAnnotation(Directive.class);
+			if (annotation != null && StringUtils.isNotBlank(annotation.value())) {
+				destroyBean(annotation.value(), item);
+			}
+		});
 	}
 
 	List<Class<?>> getDirectiveClass(List<Class<?>> pluginClasses) {

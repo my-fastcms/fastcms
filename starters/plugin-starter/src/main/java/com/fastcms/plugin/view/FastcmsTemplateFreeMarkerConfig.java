@@ -14,30 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.plugin.extension;
+package com.fastcms.plugin.view;
+
+import freemarker.template.Configuration;
 
 /**
  * @author： wjun_java@163.com
- * @date： 2021/12/25
+ * @date： 2021/4/23
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-public interface FastcmsExtensionFactory {
+public interface FastcmsTemplateFreeMarkerConfig {
 
-	/**
-	 * 指定beanName创建Spring实例
-	 * @param beanName
-	 * @param extensionClass
-	 * @param <T>
-	 * @return
-	 */
-	<T> T create(String beanName, Class<T> extensionClass);
-
-	/**
-	 * 销毁扩展实例
-	 * @param extensionClass
-	 */
-	void destroy(Class<?> extensionClass);
+    Configuration getConfiguration();
 
 }

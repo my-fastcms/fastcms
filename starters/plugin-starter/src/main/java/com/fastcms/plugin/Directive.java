@@ -15,6 +15,6 @@ import java.lang.annotation.*;
 @Documented
 public @interface Directive {
 
-	String[] value();
+	String value() default "";
 
 }

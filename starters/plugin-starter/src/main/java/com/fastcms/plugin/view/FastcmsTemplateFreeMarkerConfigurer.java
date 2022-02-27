@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.core.template;
+package com.fastcms.plugin.view;
 
 import com.fastcms.common.constants.FastcmsConstants;
 import freemarker.cache.TemplateLoader;

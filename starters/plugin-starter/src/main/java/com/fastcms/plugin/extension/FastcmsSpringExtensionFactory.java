@@ -48,14 +48,18 @@ public class FastcmsSpringExtensionFactory extends SpringExtensionFactory implem
     @Override
     @SuppressWarnings("unchecked")
     public <T> T create(Class<T> extensionClass) {
-        String extensionClassName = extensionClass.getName();
-        if (cache.containsKey(extensionClassName)) {
-            return (T) cache.get(extensionClassName);
+        return create(extensionClass.getName(), extensionClass);
+    }
+
+    @Override
+    public <T> T create(String beanName, Class<T> extensionClass) {
+        if (cache.containsKey(beanName)) {
+            return (T) cache.get(beanName);
         }
 
         T extension = super.create(extensionClass);
-        if (extensionClassNames.isEmpty() || extensionClassNames.contains(extensionClassName)) {
-            cache.put(extensionClassName, extension);
+        if (extensionClassNames.isEmpty() || extensionClassNames.contains(beanName)) {
+            cache.put(beanName, extension);
         }
 
         return extension;

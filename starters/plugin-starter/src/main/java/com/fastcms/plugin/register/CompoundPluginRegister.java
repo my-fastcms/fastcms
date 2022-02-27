@@ -40,6 +40,7 @@ public class CompoundPluginRegister extends AbstractPluginRegister implements Pl
         addRegister(new ExtensionsRegister(pluginManger));
         addRegister(new ControllerRegister(pluginManger));
         addRegister(new InterceptorRegister(pluginManger));
+        addRegister(new DirectiveRegister(pluginManger));
         addRegister(new FreeMarkerViewRegister(pluginManger));
 
     }

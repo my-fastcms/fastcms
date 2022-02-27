@@ -17,13 +17,13 @@
 package com.fastcms.web.config;
 
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.utils.DirUtils;
 import com.fastcms.core.directive.BaseDirective;
 import com.fastcms.core.interceptor.PluginInterceptor;
-import com.fastcms.core.template.FastcmsTemplateFreeMarkerConfig;
+import com.fastcms.plugin.view.FastcmsTemplateFreeMarkerConfig;
 import com.fastcms.core.template.Template;
 import com.fastcms.core.template.TemplateService;
 import com.fastcms.core.utils.AttachUtils;
-import com.fastcms.common.utils.DirUtils;
 import com.fastcms.service.IConfigService;
 import com.fastcms.web.filter.AuthInterceptor;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -33,10 +33,12 @@ import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.boot.web.context.WebServerInitializedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -139,10 +141,8 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
             initServerInfo(event);
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
-
-        //注册freemarker自定义标签
-        registerFreemarkerDirective(event);
 
     }
 
@@ -159,12 +159,21 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
         }
     }
 
-    void registerFreemarkerDirective(WebServerInitializedEvent event) {
+    void registerFreemarkerDirective(ApplicationStartedEvent event) {
         Map<String, BaseDirective> matchingBeans = BeanFactoryUtils.beansOfTypeIncludingAncestors(event.getApplicationContext(), BaseDirective.class, true, false);
         matchingBeans.keySet().forEach(item -> {
             configuration.setSharedVariable(item, matchingBeans.get(item));
             fastcmsTemplateFreeMarkerConfig.getConfiguration().setSharedVariable(item, matchingBeans.get(item));
         });
+    }
+
+    @Component
+    class FreeMarkerDirectiveRegister implements ApplicationListener<ApplicationStartedEvent> {
+
+        @Override
+        public void onApplicationEvent(ApplicationStartedEvent event) {
+            registerFreemarkerDirective(event);
+        }
     }
 
 }

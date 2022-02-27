@@ -14,19 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.core.template;
+package com.fastcms.hello;
 
-import freemarker.template.Configuration;
+import com.fastcms.core.directive.BaseDirective;
+import com.fastcms.plugin.Directive;
+import freemarker.core.Environment;
+
+import java.util.Map;
 
 /**
  * @author： wjun_java@163.com
- * @date： 2021/4/23
+ * @date： 2022/2/27
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-public interface FastcmsTemplateFreeMarkerConfig {
+@Directive("helloTag")
+public class HelloDirective extends BaseDirective {
 
-    Configuration getConfiguration();
+	@Override
+	public Object doExecute(Environment env, Map params) {
+		return "hello plugin";
+	}
 
 }
