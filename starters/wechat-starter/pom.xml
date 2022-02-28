@@ -13,7 +13,7 @@
     <name>fastcms-wechat-starter-${project.version}</name>
 
     <properties>
-        <weixin.version>3.5.0</weixin.version>
+        <weixin.version>4.2.0</weixin.version>
     </properties>
 
     <dependencies>
@@ -26,6 +26,12 @@
         <dependency>
             <groupId>com.github.binarywang</groupId>
             <artifactId>weixin-java-mp</artifactId>
+            <version>${weixin.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-cp</artifactId>
             <version>${weixin.version}</version>
         </dependency>
 
