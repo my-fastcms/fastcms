@@ -17,6 +17,7 @@
         <module>plugin-starter</module>
         <module>payment-starter</module>
         <module>wechat-starter</module>
+        <module>lucene-starter</module>
     </modules>
 
     <dependencies>

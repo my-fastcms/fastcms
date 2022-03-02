@@ -74,6 +74,11 @@
             <artifactId>fastcms-wechat-starter</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.fastcms</groupId>
+            <artifactId>fastcms-lucene-starter</artifactId>
+        </dependency>
+
     </dependencies>
 
 

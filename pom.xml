@@ -143,6 +143,11 @@
 				<artifactId>fastcms-wechat-starter</artifactId>
 				<version>${revision}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.fastcms</groupId>
+				<artifactId>fastcms-lucene-starter</artifactId>
+				<version>${revision}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>io.jsonwebtoken</groupId>
