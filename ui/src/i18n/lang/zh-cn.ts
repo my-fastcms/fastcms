@@ -33,6 +33,7 @@ export default {
 		orderSet: '设置',
 		setting: '设置',
 		websiteSet: '网站',
+		wechatSet: '微信',
 		connectionSet: '通信',
 		loginSet: '登录注册',
 		searchSet: '搜索'
