@@ -1,5 +1,6 @@
 package com.fastcms.service;
 
+import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.entity.User;
@@ -15,12 +16,6 @@ import java.util.List;
  * @since 2021-02-14
  */
 public interface IUserService extends IService<User> {
-
-    /**
-     * 通过登录账号更新用户登录时间
-     * @param userId
-     */
-    void updateUserLoginTime(Long userId);
 
     /**
      * 修改用户密码
@@ -41,6 +36,25 @@ public interface IUserService extends IService<User> {
      * @return
      */
     Long saveUser(User user) throws FastcmsException;
+
+    /**
+     * 保存微信小程序授权用户信息
+     * @param userInfo
+     * @return
+     * @throws FastcmsException
+     */
+    User saveWxMaUserInfo(WxMaUserInfo userInfo) throws FastcmsException;
+
+    /**
+     * 用户通过手机号授权登录后保存用户信息
+     * @param openid
+     * @param unionId
+     * @param phone
+     * @param type
+     * @return
+     * @throws FastcmsException
+     */
+    User saveUser(String openid, String unionId, String phone, String type) throws FastcmsException;
 
     /**
      * 删除用户

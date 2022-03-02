@@ -61,9 +61,15 @@ public class JwtTokenManager {
 		Map<String, Object> claims = new HashMap<>();
 		claims.put(USER_ID, userId);
 		claims.put(USER_NAME, userName);
-		claims.put(AUTHORITIES_KEY, StringUtils.join(authorities.toArray(), ","));
+		if (authorities != null) {
+			claims.put(AUTHORITIES_KEY, StringUtils.join(authorities.toArray(), ","));
+		}
 		return Jwts.builder().setClaims(claims).setExpiration(validity)
 				.signWith(Keys.hmacShaKeyFor(authConfigs.getSecretKeyBytes()), SignatureAlgorithm.HS256).compact();
+	}
+
+	public String createToken(Long userId, String userName) {
+		return createToken(userId, userName, null);
 	}
 
 	public Authentication getAuthentication(String token) {

@@ -1,16 +1,19 @@
 package com.fastcms.service.impl;
 
+import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.entity.User;
+import com.fastcms.entity.UserOpenid;
 import com.fastcms.entity.UserTag;
 import com.fastcms.mapper.RoleMapper;
 import com.fastcms.mapper.UserMapper;
 import com.fastcms.mapper.UserTagMapper;
 import com.fastcms.service.IRoleService;
+import com.fastcms.service.IUserOpenidService;
 import com.fastcms.service.IUserService;
 import com.fastcms.service.IUserTagService;
 import org.apache.commons.lang.StringUtils;
@@ -19,7 +22,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -45,14 +47,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Override
-    public void updateUserLoginTime(Long userId) {
-        User user = getById(userId);
-        if(user != null) {
-            user.setLoginTime(LocalDateTime.now());
-            updateById(user);
-        }
-    }
+    @Autowired
+    private IUserOpenidService userOpenidService;
 
     @Override
     public void updateUserPassword(UpdatePasswordParam updatePasswordParam) throws FastcmsException {
@@ -111,6 +107,63 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         roleService.saveUserRole(user.getId(), user.getRoleList());
         processTag(user.getId(), user.getTagList());
         return user.getId();
+    }
+
+    @Override
+    @Transactional
+    public User saveWxMaUserInfo(WxMaUserInfo userInfo) throws FastcmsException {
+
+        if(userInfo == null || StringUtils.isBlank(userInfo.getOpenId())) {
+            throw new FastcmsException(FastcmsException.INVALID_PARAM, "小程序用户参数异常");
+        }
+
+        UserOpenid userOpenid = userOpenidService.getOne(Wrappers.<UserOpenid>lambdaQuery().eq(UserOpenid::getValue, userInfo.getOpenId()).eq(UserOpenid::getType, UserOpenid.TYPE_WECHAT_MINI));
+        User user;
+        if(userOpenid == null) {
+            user = new User();
+            user.setNickName(userInfo.getNickName());
+            user.setHeadImg(userInfo.getAvatarUrl());
+            user.setSource(User.SourceType.WX_MINI_PROGRAM.name().toLowerCase());
+            save(user);
+            userOpenid = new UserOpenid();
+            userOpenid.setUserId(user.getId());
+            userOpenid.setType(UserOpenid.TYPE_WECHAT_MINI);
+            userOpenid.setValue(userInfo.getOpenId());
+            userOpenidService.save(userOpenid);
+        }else {
+            user = getById(userOpenid.getUserId());
+        }
+
+        return user;
+    }
+
+    @Override
+    public User saveUser(String openid, String unionId, String phone, String type) throws FastcmsException {
+
+        if(openid == null || StringUtils.isBlank(phone)) {
+            throw new FastcmsException(FastcmsException.INVALID_PARAM, "小程序用户参数异常");
+        }
+
+        User userByPhone = getOne(Wrappers.<User>lambdaQuery().eq(User::getMobile, phone));
+        if(userByPhone != null) return userByPhone;
+
+        UserOpenid userOpenid = userOpenidService.getOne(Wrappers.<UserOpenid>lambdaQuery().eq(UserOpenid::getValue, openid).eq(UserOpenid::getType, type));
+        User user;
+        if(userOpenid == null) {
+            user = new User();
+            user.setMobile(phone);
+            user.setSource(User.SourceType.WX_MINI_PROGRAM.name().toLowerCase());
+            save(user);
+            userOpenid = new UserOpenid();
+            userOpenid.setUserId(user.getId());
+            userOpenid.setType(type);
+            userOpenid.setValue(openid);
+//            userOpenid.setUnionId(unionId);
+            userOpenidService.save(userOpenid);
+        }else {
+            user = getById(userOpenid.getUserId());
+        }
+        return user;
     }
 
     void processTag(Long userId, List<String> processList) {

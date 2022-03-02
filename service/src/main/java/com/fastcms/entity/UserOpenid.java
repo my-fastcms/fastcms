@@ -17,7 +17,7 @@ public class UserOpenid implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public static final String TYPE_WECHAT = "wechat";
+    public static final String TYPE_WECHAT_MP = "wechat_mp";
     public static final String TYPE_WECHAT_MINI = "wechat_mini";
 
     @TableId(value = "id", type = IdType.AUTO)

@@ -29,12 +29,6 @@
             <version>${weixin.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.github.binarywang</groupId>
-            <artifactId>weixin-java-cp</artifactId>
-            <version>${weixin.version}</version>
-        </dependency>
-
     </dependencies>
 
 </project>
