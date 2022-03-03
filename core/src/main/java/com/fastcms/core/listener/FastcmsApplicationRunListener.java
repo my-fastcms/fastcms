@@ -1,8 +1,8 @@
 package com.fastcms.core.listener;
 
+import com.fastcms.common.utils.DirUtils;
 import com.fastcms.common.utils.VersionUtils;
 import com.fastcms.core.utils.AttachUtils;
-import com.fastcms.common.utils.DirUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ConfigurableBootstrapContext;
@@ -32,7 +32,7 @@ public class FastcmsApplicationRunListener implements SpringApplicationRunListen
     private final String[] args;
 
     private static File workDir;
-    final static String [] dirNames = { "upload", "plugins", "htmls" };
+    final static String [] dirNames = { "upload", "plugins", "htmls", "lucene" };
 
     static {
 
@@ -81,6 +81,7 @@ public class FastcmsApplicationRunListener implements SpringApplicationRunListen
         DirUtils.injectUploadDir(getUploadDir());
         DirUtils.injectPluginDir(getPluginDir());
         DirUtils.injectTemplateDir(getTemplateDir());
+        DirUtils.injectLuceneDir(getLuceneDir());
     }
 
     @Override
@@ -118,6 +119,10 @@ public class FastcmsApplicationRunListener implements SpringApplicationRunListen
 
     String getTemplateDir() {
         return workDir.getAbsolutePath() + File.separator + dirNames[2] + File.separator;
+    }
+
+    String getLuceneDir() {
+        return workDir.getAbsolutePath() + File.separator + dirNames[3] + File.separator;
     }
 
 }

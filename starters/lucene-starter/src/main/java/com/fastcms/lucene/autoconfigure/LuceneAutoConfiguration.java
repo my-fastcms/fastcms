@@ -16,11 +16,11 @@
  */
 package com.fastcms.lucene.autoconfigure;
 
+import com.fastcms.common.utils.DirUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.search.ControlledRealTimeReopenThread;
 import org.apache.lucene.search.SearcherFactory;
 import org.apache.lucene.search.SearcherManager;
 import org.apache.lucene.store.Directory;
@@ -44,11 +44,6 @@ import java.nio.file.Paths;
 public class LuceneAutoConfiguration {
 
     /**
-     * lucene索引,存放位置
-     */
-    private static final String LUCENE_INDEX_PATH = "lucene/indexDir/";
-
-    /**
      * 创建一个 Analyzer 实例
      */
     @Bean
@@ -61,10 +56,9 @@ public class LuceneAutoConfiguration {
      */
     @Bean
     public Directory directory() throws IOException {
-        Path path = Paths.get(LUCENE_INDEX_PATH);
+        Path path = Paths.get(DirUtils.getLuceneDir());
         File file = path.toFile();
         if (!file.exists()) {
-            //如果文件夹不存在,则创建
             file.mkdirs();
         }
         return FSDirectory.open(path);
@@ -91,12 +85,10 @@ public class LuceneAutoConfiguration {
     @Bean
     public SearcherManager searcherManager(IndexWriter indexWriter) throws IOException {
         SearcherManager searcherManager = new SearcherManager(indexWriter, false, false, new SearcherFactory());
-        ControlledRealTimeReopenThread cRTReopenThead = new ControlledRealTimeReopenThread(indexWriter, searcherManager, 5.0, 0.025);
-        cRTReopenThead.setDaemon(true);
-        //线程名称
-        cRTReopenThead.setName("更新IndexReader线程");
-        // 开启线程
-        cRTReopenThead.start();
+//        ControlledRealTimeReopenThread cRTReopenThead = new ControlledRealTimeReopenThread(indexWriter, searcherManager, 5.0, 0.025);
+//        cRTReopenThead.setDaemon(true);
+//        cRTReopenThead.setName("更新IndexReader线程");
+//        cRTReopenThead.start();
         return searcherManager;
     }
 

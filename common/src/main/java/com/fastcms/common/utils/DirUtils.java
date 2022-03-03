@@ -24,6 +24,11 @@ public abstract class DirUtils {
      */
     static String templateDir;
 
+    /**
+     * lucene目录
+     */
+    static String luceneDir;
+
     public static void injectUploadDir(String uploadDir) {
         DirUtils.uploadDir = uploadDir;
     }
@@ -36,6 +41,10 @@ public abstract class DirUtils {
         DirUtils.templateDir = templateDir;
     }
 
+    public static void injectLuceneDir(String luceneDir) {
+        DirUtils.luceneDir = luceneDir;
+    }
+
     public static String getUploadDir() {
         return uploadDir;
     }
@@ -46,6 +55,10 @@ public abstract class DirUtils {
 
     public static String getTemplateDir() {
         return templateDir;
+    }
+
+    public static String getLuceneDir() {
+        return luceneDir;
     }
 
 }
