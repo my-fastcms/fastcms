@@ -20,6 +20,16 @@
 									<el-input v-model="ruleForm.wechat_mp_secret" placeholder="请输入公众号密钥" clearable></el-input>
 								</el-form-item>
 							</el-col>
+							<el-col class="mb20">
+								<el-form-item label="公众号token" prop="wechat_mp_token">
+									<el-input v-model="ruleForm.wechat_mp_token" placeholder="请输入公众号token" clearable></el-input>
+								</el-form-item>
+							</el-col>
+							<el-col class="mb20">
+								<el-form-item label="公众号消息密钥" prop="wechat_mp_aeskey">
+									<el-input v-model="ruleForm.wechat_mp_aeskey" placeholder="请输入公众号消息密钥" clearable></el-input>
+								</el-form-item>
+							</el-col>
 						</el-row>
 
                         <div class="personal-edit-title mb15">小程序设置</div>
@@ -30,6 +40,12 @@
 								</el-form-item>
 								<el-form-item label="小程序appSecret" prop="wechat_miniapp_secret">
 									<el-input v-model="ruleForm.wechat_miniapp_secret" placeholder="请输入小程序密钥" clearable></el-input>
+								</el-form-item>
+								<el-form-item label="小程序token" prop="wechat_miniapp_token">
+									<el-input v-model="ruleForm.wechat_miniapp_token" placeholder="请输入小程序token" clearable></el-input>
+								</el-form-item>
+								<el-form-item label="小程序消息密钥" prop="wechat_miniapp_aeskey">
+									<el-input v-model="ruleForm.wechat_miniapp_aeskey" placeholder="请输入小程序消息密钥" clearable></el-input>
 								</el-form-item>
 							</el-col>
 						</el-row>
@@ -63,8 +79,12 @@ export default {
 			ruleForm: {
 				wechate_mp_appid: '',
 				wechat_mp_secret: '',
+				wechat_mp_token: '',
+				wechat_mp_aeskey: '',
 				wechat_miniapp_appid: '',
 				wechat_miniapp_secret: '',
+				wechat_miniapp_token: '',
+				wechat_miniapp_aeskey: '',
 			},
 			rules: {
 				"wechate_mp_appid": [
@@ -73,12 +93,18 @@ export default {
 				"wechat_mp_secret": [
 					{required: true, message: '请输入公众号密钥', trigger: 'blur'},
 				],
+				"wechat_mp_token": [
+					{required: true, message: '请输入公众号token', trigger: 'blur'},
+				],
 				"wechat_miniapp_appid": [
 					{required: true, message: '请输入小程序appId', trigger: 'blur'}
 				],
 				"wechat_miniapp_secret": [
 					{required: true, message: '请输入小程序appSecret', trigger: 'blur'}
-				]  
+				],
+				"wechat_miniapp_token": [
+					{required: true, message: '请输入小程序token', trigger: 'blur'}
+				],  
 			}
 		});
 

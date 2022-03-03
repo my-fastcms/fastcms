@@ -22,6 +22,7 @@ import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.auth.ActionTypes;
 import com.fastcms.core.auth.AuthConstants;
 import com.fastcms.core.auth.Secured;
+import com.fastcms.core.config.ConfigListenerManager;
 import com.fastcms.entity.Config;
 import com.fastcms.service.IConfigService;
 import org.apache.commons.lang.StringUtils;
@@ -51,6 +52,9 @@ public class ConfigController {
 	@Autowired
 	private IConfigService configService;
 
+	@Autowired
+	private ConfigListenerManager configListenerManager;
+
 	/**
 	 * 保存配置
 	 * @param request
@@ -65,7 +69,7 @@ public class ConfigController {
 			return RestResultUtils.failed("没有数据提交");
 		}
 
-		HashMap<String, String> datasMap = new HashMap<>();
+		Map<String, String> datasMap = new HashMap<>();
 		for (Map.Entry<String, String[]> entry : parameterMap.entrySet()) {
 			if (entry.getValue() != null && entry.getValue().length > 0) {
 				String value = null;
@@ -89,6 +93,11 @@ public class ConfigController {
 			configService.saveConfig(key, entry.getValue());
 		}
 
+		try {
+			configListenerManager.change(datasMap);
+		} catch (Exception e) {
+		}
+
 		return RestResultUtils.success(true);
 	}
 
@@ -98,6 +107,7 @@ public class ConfigController {
 	 * @return
 	 */
 	@PostMapping("list")
+	@Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "configs", action = ActionTypes.READ)
 	public RestResult<List<Config>> getConfigList(@RequestParam("configKeys") List<String> configKeys) {
 		return RestResultUtils.success(configService.getConfigs(configKeys));
 	}
