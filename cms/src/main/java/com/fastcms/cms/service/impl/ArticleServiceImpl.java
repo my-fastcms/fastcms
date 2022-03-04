@@ -70,7 +70,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public void saveArticle(Article article) throws Exception {
 
         try {
-            saveOrUpdate(article);
+            if(!saveOrUpdate(article)) {
+                throw new FastcmsException(FastcmsException.SERVER_ERROR, "保存失败");
+            }
         } catch (Exception e) {
             throw new FastcmsException(FastcmsException.SERVER_ERROR, e.getMessage());
         }

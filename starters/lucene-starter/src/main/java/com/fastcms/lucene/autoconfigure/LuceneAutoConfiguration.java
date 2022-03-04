@@ -19,10 +19,6 @@ package com.fastcms.lucene.autoconfigure;
 import com.fastcms.common.utils.DirUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.cn.smart.SmartChineseAnalyzer;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.search.SearcherFactory;
-import org.apache.lucene.search.SearcherManager;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.springframework.context.annotation.Bean;
@@ -62,34 +58,6 @@ public class LuceneAutoConfiguration {
             file.mkdirs();
         }
         return FSDirectory.open(path);
-    }
-
-    /**
-     * 创建indexWriter
-     */
-    @Bean
-    public IndexWriter indexWriter(Directory directory, Analyzer analyzer) throws IOException {
-        IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
-        IndexWriter indexWriter = new IndexWriter(directory, indexWriterConfig);
-        // 清空索引
-        indexWriter.deleteAll();
-        indexWriter.commit();
-        return indexWriter;
-    }
-
-    /**
-     * SearcherManager管理
-     * ControlledRealTimeReopenThread创建一个守护线程，如果没有主线程这个也会消失，
-     * 这个线程作用就是定期更新让SearchManager管理的search能获得最新的索引库，下面是每25S执行一次。
-     */
-    @Bean
-    public SearcherManager searcherManager(IndexWriter indexWriter) throws IOException {
-        SearcherManager searcherManager = new SearcherManager(indexWriter, false, false, new SearcherFactory());
-//        ControlledRealTimeReopenThread cRTReopenThead = new ControlledRealTimeReopenThread(indexWriter, searcherManager, 5.0, 0.025);
-//        cRTReopenThead.setDaemon(true);
-//        cRTReopenThead.setName("更新IndexReader线程");
-//        cRTReopenThead.start();
-        return searcherManager;
     }
 
 }

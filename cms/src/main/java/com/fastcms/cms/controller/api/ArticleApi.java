@@ -16,16 +16,20 @@
  */
 package com.fastcms.cms.controller.api;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.cms.entity.Article;
+import com.fastcms.cms.search.FastcmsSearcherManager;
 import com.fastcms.cms.service.IArticleService;
 import com.fastcms.cms.utils.ArticleUtils;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
+import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.DirUtils;
 import com.fastcms.common.utils.FileUtils;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.auth.AuthUtils;
+import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.entity.Attachment;
 import com.fastcms.service.IAttachmentService;
 import com.fastcms.service.IPaymentRecordService;
@@ -63,6 +67,9 @@ public class ArticleApi {
 
 	@Autowired
 	private IAttachmentService attachmentService;
+
+	@Autowired
+	private FastcmsSearcherManager fastcmsSearcherManager;
 
 	/**
 	 * 保存文章
@@ -113,11 +120,21 @@ public class ArticleApi {
 	}
 
 	/**
+	 * 文章搜索
+	 * @param page
+	 * @param keyword
+	 * @return
+	 */
+	@RequestMapping("search")
+	public RestResult<Page<Article>> list(PageModel page, @RequestParam(name = "keyword", required = false) String keyword) {
+		return RestResultUtils.success(fastcmsSearcherManager.getSearcher().search(keyword, page.getPageNum().intValue(), page.getPageSize().intValue()));
+	}
+
+	/**
 	 * 下载附件
 	 * @param articleId
 	 * @param response
 	 */
-	@GetMapping("download/{articleId}")
 	public Object download(@PathVariable("articleId") Long articleId, HttpServletResponse response) throws IOException {
 		Article article = articleService.getById(articleId);
 		if(article == null) {

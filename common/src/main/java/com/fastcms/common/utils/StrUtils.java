@@ -50,6 +50,10 @@ public abstract class StrUtils extends StringUtils {
 
 	public static final String ENCODE = "UTF-8";
 
+	private static final String[] htmlChars = new String[]{"&", "<", ">", "'", "\""};
+
+	private static final String[] escapeChars = new String[]{"&amp;", "&lt;", "&gt;", "&#39;", "&quot;"};
+
 	/**
 	 * <p>Create a string with encoding format as utf8.</p>
 	 *
@@ -476,6 +480,15 @@ public abstract class StrUtils extends StringUtils {
 
 	public synchronized static String uuid() {
 		return UUID.randomUUID().toString().replace("-", "");
+	}
+
+
+	public static String escapeHtml(String content) {
+		return isBlank(content) ? content : StringUtils.replaceEach(unEscapeHtml(content), htmlChars, escapeChars);
+	}
+
+	public static String unEscapeHtml(String content) {
+		return isBlank(content) ? content : StringUtils.replaceEach(content, escapeChars, htmlChars);
 	}
 
 }

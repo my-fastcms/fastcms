@@ -3,9 +3,11 @@ package com.fastcms.cms.entity;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.annotation.*;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.utils.JsoupUtils;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.utils.AttachUtils;
 import com.fastcms.utils.ConfigUtils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang.StringUtils;
 
 import javax.validation.constraints.NotBlank;
@@ -161,8 +163,15 @@ public class Article implements Serializable {
     /**
      * 扩展字段
      */
+    @JsonIgnore
     @TableField(exist = false)
     private Map<String, Object> extFields;
+
+    @TableField(exist = false)
+    private String highlightTitle;
+
+    @TableField(exist = false)
+    private String highlightContent;
 
     public Long getId() {
         return id;
@@ -352,6 +361,22 @@ public class Article implements Serializable {
         return AttachUtils.getAttachFileDomain() == null ? getThumbnail() : AttachUtils.getAttachFileDomain() + getThumbnail();
     }
 
+    public String getHighlightTitle() {
+        return highlightTitle;
+    }
+
+    public void setHighlightTitle(String highlightTitle) {
+        this.highlightTitle = highlightTitle;
+    }
+
+    public String getHighlightContent() {
+        return highlightContent;
+    }
+
+    public void setHighlightContent(String highlightContent) {
+        this.highlightContent = highlightContent;
+    }
+
     public Map<String, Object> getExtFields() {
         if(StrUtils.isNotBlank(getJsonExt())) {
             try {
@@ -361,6 +386,16 @@ public class Article implements Serializable {
             }
         }
         return extFields;
+    }
+
+    @JsonIgnore
+    public String getText() {
+        return JsoupUtils.getText(getContent());
+    }
+
+    @JsonIgnore
+    public String getContent() {
+        return JsoupUtils.clean(getContentHtml());
     }
 
 }
