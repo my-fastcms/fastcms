@@ -135,6 +135,7 @@ public class ArticleApi {
 	 * @param articleId
 	 * @param response
 	 */
+	@GetMapping("download/{articleId}")
 	public Object download(@PathVariable("articleId") Long articleId, HttpServletResponse response) throws IOException {
 		Article article = articleService.getById(articleId);
 		if(article == null) {
@@ -162,7 +163,7 @@ public class ArticleApi {
 			BigDecimal price = ArticleUtils.getPrice(article);
 			if(price != null && price.compareTo(BigDecimal.ZERO) ==1) {
 				//检查是否需要支付
-				if(paymentRecordService.checkNeedPay(articleId)) {
+				if(paymentRecordService.checkNeedPay(articleId, AuthUtils.getUserId())) {
 					return RestResultUtils.failed(FastcmsException.ARTICLE_NEED_TO_PAY_CODE, "需要先支付");
 				}
 			}

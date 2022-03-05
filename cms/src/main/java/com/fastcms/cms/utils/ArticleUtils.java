@@ -56,7 +56,6 @@ public abstract class ArticleUtils {
     }
 
     public static boolean isEnableNeedToPay(Article article) {
-        if(getFieldProperty(article, ARTICLE_ENABLE_NEED_TO_PAY) == null) return false;
         try {
             return Boolean.parseBoolean((String) getFieldProperty(article, ARTICLE_ENABLE_NEED_TO_PAY));
         } catch (NumberFormatException e) {

@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
@@ -166,7 +167,8 @@ public class LuceneSearcher implements FastcmsSearcher {
         doc.add(new TextField(ARTICLE_CONTENT, article.getContent(), Field.Store.YES));
         doc.add(new TextField(ARTICLE_TEXT, article.getText(), Field.Store.YES));
         doc.add(new TextField(ARTICLE_TITLE, article.getTitle(), Field.Store.YES));
-        Date created = Date.from(article.getCreated().atZone(ZoneId.systemDefault()).toInstant());
+        LocalDateTime createdDate = article.getUpdated() == null ? LocalDateTime.now() : article.getUpdated();
+        Date created = Date.from(createdDate.atZone(ZoneId.systemDefault()).toInstant());
         doc.add(new StringField(ARTICLE_CREATED, DateTools.dateToString(created, DateTools.Resolution.YEAR), Field.Store.NO));
         return doc;
     }

@@ -75,8 +75,6 @@ public class WechatMiniUserApi {
 
 	static final String MINIAPP_RAW_DATA = "rawData";
 
-
-
 	/**
 	 * code2session
 	 * @param code code

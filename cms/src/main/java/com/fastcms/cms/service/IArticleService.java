@@ -43,7 +43,7 @@ public interface IArticleService extends IService<Article> {
      * @param article
      * @throws Exception
      */
-    void saveArticle(Article article) throws Exception;
+    boolean saveArticle(Article article) throws Exception;
 
     /**
      * 获取文章

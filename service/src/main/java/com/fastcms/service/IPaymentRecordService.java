@@ -20,10 +20,19 @@ public interface IPaymentRecordService extends IService<PaymentRecord> {
 	List<PaymentRecord> getPaymentRecordByProductId(Long productId);
 
 	/**
-	 * 检查文章是否需要支付
-	 * @param articleId
+	 * 获取用户商品支付记录
+	 * @param productId
+	 * @param userId
 	 * @return
 	 */
-	boolean checkNeedPay(Long articleId);
+	List<PaymentRecord> getUserProductPaymentRecord(Long productId, Long userId);
+
+	/**
+	 * 检查文章是否需要支付
+	 * @param articleId
+	 * @param userId
+	 * @return
+	 */
+	boolean checkNeedPay(Long articleId, Long userId);
 
 }

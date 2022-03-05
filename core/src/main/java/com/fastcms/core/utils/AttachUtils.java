@@ -260,9 +260,9 @@ public abstract class AttachUtils {
             return RestResultUtils.failed("请选择上传文件");
         }
 
-        java.util.List<String> errorFiles = new ArrayList<>();
+        List<String> errorFiles = new ArrayList<>();
 
-        java.util.List<Attachment> attachmentList = new ArrayList<>();
+        List<Attachment> attachmentList = new ArrayList<>();
         for(MultipartFile file : files) {
             String newFilePath = FileUtils.newFileName(file.getOriginalFilename());
             File uploadFile = new File(DirUtils.getUploadDir(), newFilePath);

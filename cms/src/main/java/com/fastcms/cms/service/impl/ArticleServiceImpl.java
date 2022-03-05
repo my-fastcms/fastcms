@@ -67,7 +67,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     @Transactional
-    public void saveArticle(Article article) throws Exception {
+    public boolean saveArticle(Article article) throws Exception {
 
         try {
             if(!saveOrUpdate(article)) {
@@ -94,6 +94,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
             //插入新的标签
             processTag(article.getId(), articleTagList);
         }
+
+        return true;
 
     }
 

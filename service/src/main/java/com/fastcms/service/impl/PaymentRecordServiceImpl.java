@@ -24,8 +24,13 @@ public class PaymentRecordServiceImpl extends ServiceImpl<PaymentRecordMapper, P
 	}
 
 	@Override
-	public boolean checkNeedPay(Long articleId) {
-		List<PaymentRecord> paymentRecordList = getPaymentRecordByProductId(articleId);
+	public List<PaymentRecord> getUserProductPaymentRecord(Long productId, Long userId) {
+		return list(Wrappers.<PaymentRecord>lambdaQuery().eq(PaymentRecord::getProductRelativeId, productId).eq(PaymentRecord::getUserId, userId));
+	}
+
+	@Override
+	public boolean checkNeedPay(Long articleId, Long userId) {
+		List<PaymentRecord> paymentRecordList = getUserProductPaymentRecord(articleId, userId);
 
 		for (PaymentRecord paymentRecord : paymentRecordList) {
 			//有成功支付的订单，无需再支付购买
