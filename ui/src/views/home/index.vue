@@ -31,7 +31,7 @@
 		<el-row :gutter="15">
 			<el-col :xs="24" :sm="14" :md="14" :lg="16" :xl="16" class="home-warning-media">
 				<el-card shadow="hover" :header="$t('message.card.title3')" class="home-warning-card">
-					<el-table :data="articleListData" style="width: 100%" stripe>
+					<el-table :data="articleListData" style="width: 100%;height: 300px;" stripe>
 						<el-table-column prop="title" min-width="80%" :label="$t('message.table.th1')">
 						<template #default="scope">
 							<a :href="scope.row.url" target="_blank">

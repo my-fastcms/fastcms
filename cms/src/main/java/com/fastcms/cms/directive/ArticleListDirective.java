@@ -37,18 +37,24 @@ public class ArticleListDirective extends BaseDirective {
 
 	private static final String ARTICLE_CATEGORY_ID = "categoryId";
 
+	private static final String ARTICLE_TAG_ID = "tagId";
+
 	@Autowired
 	private IArticleService articleService;
 
 	@Override
 	public Object doExecute(Environment env, Map params) {
 
-		final Long categoryId = getLong(ARTICLE_CATEGORY_ID, params, 0l);
+		final Long categoryId = getLong(ARTICLE_CATEGORY_ID, params, DEFAULT_ID);
 		final Integer count = getInt(PARAM_COUNT, params, 10);
-		String orderBy;
+		String orderBy = getStr(PARAM_ORDER_BY, params, "a.created");
 		if(categoryId != 0) {
-			orderBy = getStr(PARAM_ORDER_BY, params, "a.created");
 			return articleService.getArticleListByCategoryId(categoryId, count, orderBy);
+		}
+
+		final Long tagId = getLong(ARTICLE_TAG_ID, params, DEFAULT_ID);
+		if (tagId != null) {
+			return articleService.getArticleListByTagId(tagId, count, orderBy);
 		}
 
 		orderBy = getStr(PARAM_ORDER_BY, params, "created");

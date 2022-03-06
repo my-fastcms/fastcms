@@ -31,6 +31,14 @@ fastcms:
       expire:
         seconds: 18000
       secret-key: SecretKey012345678901234567890123456789012345678901234567890123456789
+  security:
+    ignore:
+      urls: "/fastcms/api/admin/login,\
+      /fastcms/api/admin/register,\
+      /fastcms/api/admin/captcha,\
+      /fastcms/api/client/wechat/miniapp/user/code2session,\
+      /fastcms/api/client/wechat/miniapp/user/login,\
+      /fastcms/api/client/wechat/miniapp/user/login/phone"
 
 logging:
   config: classpath:META-INF/logback/fastcms.xml

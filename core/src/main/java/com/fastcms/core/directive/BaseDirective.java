@@ -38,6 +38,7 @@ public abstract class BaseDirective implements TemplateDirectiveModel {
 
     protected static final String PARAM_COUNT = "count";
     protected static final String PARAM_ORDER_BY = "orderBy";
+    protected static final Long DEFAULT_ID = 0l;
 
     private static final String DATA_KEY = "data";
 

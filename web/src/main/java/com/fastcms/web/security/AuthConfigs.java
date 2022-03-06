@@ -20,6 +20,8 @@ import io.jsonwebtoken.io.Decoders;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
 /**
  * @author： wjun_java@163.com
  * @date： 2021/10/24
@@ -42,6 +44,12 @@ public class AuthConfigs {
 	@Value("${fastcms.auth.token.expire.seconds:18000}")
 	private long tokenValidityInSeconds;
 
+	/**
+	 * 忽悠安全校验的api urls
+	 */
+	@Value("${fastcms.security.ignore.urls}")
+	private List<String> ignoreUrls;
+
 	private byte[] secretKeyBytes;
 
 	public long getTokenValidityInSeconds() {
@@ -61,4 +69,11 @@ public class AuthConfigs {
 		return secretKeyBytes;
 	}
 
+	public List<String> getIgnoreUrls() {
+		return ignoreUrls;
+	}
+
+	public boolean isEnableUserAgentAuthWhite() {
+		return enableUserAgentAuthWhite;
+	}
 }

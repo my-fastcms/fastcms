@@ -72,7 +72,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
 		try {
 			Secured secured = method.getAnnotation(Secured.class);
-			String action = secured.action().toString();
+			final String action = secured.action().toString();
 			String resource = secured.resource();
 
 			if (StrUtils.isBlank(resource)) {

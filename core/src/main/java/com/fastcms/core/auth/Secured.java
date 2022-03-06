@@ -17,14 +17,15 @@
 
 package com.fastcms.core.auth;
 
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.auth.parser.DefaultResourceParser;
 import com.fastcms.core.auth.parser.ResourceParser;
-import com.fastcms.common.utils.StrUtils;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
+ * api权限标记注解
  * @author： wjun_java@163.com
  * @date： 2021/4/10
  * @description：

@@ -16,12 +16,11 @@
  */
 package com.fastcms.cms.controller.api;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.fastcms.cms.entity.ArticleCategory;
 import com.fastcms.cms.service.IArticleCategoryService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.core.auth.PassFastcms;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,11 +47,9 @@ public class ArticleCategoryApi {
 	 * @return
 	 */
 	@RequestMapping("list")
-	public RestResult<List<ArticleCategory>> list() {
-		return RestResultUtils.success(articleCategoryService.list(Wrappers.<ArticleCategory>lambdaQuery()
-				.eq(ArticleCategory::getType, ArticleCategory.CATEGORY_TYPE)
-				.orderByDesc(ArticleCategory::getSortNum)
-		));
+	@PassFastcms
+	public RestResult<List<IArticleCategoryService.CategoryTreeNode>> list() {
+		return RestResultUtils.success(articleCategoryService.getCategoryList());
 	}
 
 }

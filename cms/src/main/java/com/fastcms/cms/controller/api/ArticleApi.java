@@ -126,7 +126,7 @@ public class ArticleApi {
 	 * @return
 	 */
 	@RequestMapping("search")
-	public RestResult<Page<Article>> list(PageModel page, @RequestParam(name = "keyword", required = false) String keyword) {
+	public RestResult<Page<Article>> list(PageModel page, @RequestParam(name = "keyword") String keyword) {
 		return RestResultUtils.success(fastcmsSearcherManager.getSearcher().search(keyword, page.getPageNum().intValue(), page.getPageSize().intValue()));
 	}
 

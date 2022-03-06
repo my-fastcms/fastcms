@@ -16,11 +16,16 @@
  */
 package com.fastcms.core.utils;
 
+import com.fastcms.utils.ApplicationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.HandlerExecutionChain;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
 
 /**
  * @author： wjun_java@163.com
@@ -164,6 +169,22 @@ public abstract class RequestUtils {
 	public static HttpServletRequest getRequest() {
 		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 		return attr.getRequest();
+	}
+
+	public static Method getRequestMethod() {
+		Method method = null;
+		RequestMappingHandlerMapping requestMappingHandlerMapping = ApplicationUtils.getBean(RequestMappingHandlerMapping.class);
+		try {
+			HandlerExecutionChain handler = requestMappingHandlerMapping.getHandler(RequestUtils.getRequest());
+			if(handler != null && handler.getHandler() instanceof HandlerMethod == true) {
+				HandlerMethod handlerMethod = (HandlerMethod) handler.getHandler();
+				method = handlerMethod.getMethod();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			method = null;
+		}
+		return method;
 	}
 
 	static String[] mobileAgents = {"iphone", "android", "phone", "mobile", "wap", "netfront", "java", "opera mobi",

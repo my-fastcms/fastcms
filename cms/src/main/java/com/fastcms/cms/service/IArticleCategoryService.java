@@ -22,6 +22,12 @@ public interface IArticleCategoryService extends IService<ArticleCategory> {
 	List<CategoryTreeNode> getCategoryList(Long userId);
 
 	/**
+	 * 获取分类列表
+	 * @return
+	 */
+	List<CategoryTreeNode> getCategoryList();
+
+	/**
 	 * 删除分类
 	 * @param articleCategoryId
 	 */
