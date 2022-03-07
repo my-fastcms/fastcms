@@ -28,8 +28,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * @author： wjun_java@163.com
@@ -79,7 +81,7 @@ public class FastcmsGlobalExceptionHandler {
 
     @ExceptionHandler(AccessException.class)
     public ResponseEntity<String> handleAccessException(AccessException e) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getErrMsg());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ExceptionUtil.getAllExceptionMsg(e));
     }
 
     @ExceptionHandler(Exception.class)
@@ -91,6 +93,12 @@ public class FastcmsGlobalExceptionHandler {
     @ExceptionHandler(BadSqlGrammarException.class)
     public ResponseEntity<String> handleRunTimeException(BadSqlGrammarException e) {
         log.error("CONSOLE", e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ExceptionUtil.getAllExceptionMsg(e));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Object> mismatchErrorHandler(MethodArgumentTypeMismatchException e) {
+        log.error("参数转换失败，方法：" + Objects.requireNonNull(e.getParameter().getMethod()).getName() + ",参数：" + e.getName() + "，信息：" + e.getLocalizedMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ExceptionUtil.getAllExceptionMsg(e));
     }
 

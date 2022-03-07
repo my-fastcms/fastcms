@@ -29,8 +29,9 @@ public class FastcmsCaptcha implements Serializable {
 
     /**
      * 验证码
+     * 修复 https://gitee.com/xjd2020/fastcms/issues/I4WNWS
      */
-    private String verCode;
+//    private String verCode;
     /**
      * 验证码cache key
      */
@@ -40,18 +41,9 @@ public class FastcmsCaptcha implements Serializable {
      */
     private String image;
 
-    public FastcmsCaptcha(String verCode, String codeUuid, String image) {
-        this.verCode = verCode;
+    public FastcmsCaptcha(String codeUuid, String image) {
         this.codeUuid = codeUuid;
         this.image = image;
-    }
-
-    public String getVerCode() {
-        return verCode;
-    }
-
-    public void setVerCode(String verCode) {
-        this.verCode = verCode;
     }
 
     public String getCodeUuid() {
