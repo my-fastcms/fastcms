@@ -30,8 +30,6 @@ import org.springframework.core.Ordered;
  */
 public interface FastcmsSearcher extends Ordered {
 
-    String HIGH_LIGHT_CLASS = "search-highlight";
-
     /**
      * 添加搜索索引
      * @param article

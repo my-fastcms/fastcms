@@ -19,8 +19,8 @@ package com.fastcms.plugin.register;
 import com.fastcms.plugin.Directive;
 import com.fastcms.plugin.FastcmsPluginManager;
 import com.fastcms.plugin.view.FastcmsTemplateFreeMarkerConfig;
+import com.fastcms.plugin.view.PluginFreeMarkerConfig;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfig;
 
 import java.util.ArrayList;
@@ -43,21 +43,27 @@ public class DirectiveRegister extends AbstractPluginRegister {
 	@Override
 	public void registry(String pluginId) throws Exception {
 		List<Class<?>> directiveClass = getDirectiveClass(getPluginClasses(pluginId));
-		if(CollectionUtils.isEmpty(directiveClass)) {
-			return;
-		}
+		if (directiveClass.isEmpty()) return;
+
 		FreeMarkerConfig freeMarkerConfig = (FreeMarkerConfig) getBean(FreeMarkerConfig.class);
-		if(freeMarkerConfig == null) {
-			return;
-		}
 		FastcmsTemplateFreeMarkerConfig fastcmsTemplateFreeMarkerConfig = (FastcmsTemplateFreeMarkerConfig) getBean(FastcmsTemplateFreeMarkerConfig.class);
+		PluginFreeMarkerConfig pluginFreeMarkerConfig = (PluginFreeMarkerConfig) getBean(PluginFreeMarkerConfig.class);
 
 		for (Class aClass : directiveClass) {
 			Directive annotation = (Directive) aClass.getAnnotation(Directive.class);
 			if (annotation != null && StringUtils.isNotBlank(annotation.value())) {
 				registryBean(annotation.value(), aClass);
-				freeMarkerConfig.getConfiguration().setSharedVariable(annotation.value(), getBean(aClass));
-				fastcmsTemplateFreeMarkerConfig.getConfiguration().setSharedVariable(annotation.value(), getBean(aClass));
+				if (freeMarkerConfig != null) {
+					freeMarkerConfig.getConfiguration().setSharedVariable(annotation.value(), getBean(aClass));
+				}
+
+				if (fastcmsTemplateFreeMarkerConfig != null) {
+					fastcmsTemplateFreeMarkerConfig.getConfiguration().setSharedVariable(annotation.value(), getBean(aClass));
+				}
+
+				if (pluginFreeMarkerConfig != null) {
+					pluginFreeMarkerConfig.getConfiguration().setSharedVariable(annotation.value(), getBean(aClass));
+				}
 			}
 		}
 

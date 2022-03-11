@@ -49,6 +49,8 @@ import java.util.List;
 @Service
 public class LuceneSearcher implements FastcmsSearcher {
 
+    public static final String HIGH_LIGHT_CLASS = "search-highlight";
+
     private static final Logger LOG = LoggerFactory.getLogger(LuceneSearcher.class);
 
     private static final String ARTICLE_ID = "aid";

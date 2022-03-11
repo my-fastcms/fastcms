@@ -20,10 +20,11 @@ import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.utils.DirUtils;
 import com.fastcms.core.directive.BaseDirective;
 import com.fastcms.core.interceptor.PluginInterceptor;
-import com.fastcms.plugin.view.FastcmsTemplateFreeMarkerConfig;
 import com.fastcms.core.template.Template;
 import com.fastcms.core.template.TemplateService;
 import com.fastcms.core.utils.AttachUtils;
+import com.fastcms.plugin.view.FastcmsTemplateFreeMarkerConfig;
+import com.fastcms.plugin.view.PluginFreeMarkerConfig;
 import com.fastcms.service.IConfigService;
 import com.fastcms.web.filter.AuthInterceptor;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -75,6 +76,9 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
 
     @Autowired
     private FastcmsTemplateFreeMarkerConfig fastcmsTemplateFreeMarkerConfig;
+
+    @Autowired
+    private PluginFreeMarkerConfig pluginFreeMarkerConfig;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -164,6 +168,7 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
         matchingBeans.keySet().forEach(item -> {
             configuration.setSharedVariable(item, matchingBeans.get(item));
             fastcmsTemplateFreeMarkerConfig.getConfiguration().setSharedVariable(item, matchingBeans.get(item));
+            pluginFreeMarkerConfig.getConfiguration().setSharedVariable(item, matchingBeans.get(item));
         });
     }
 
