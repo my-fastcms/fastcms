@@ -50,6 +50,11 @@ public class WaterMarkAspect implements ApplicationListener<ApplicationStartedEv
             if(waterMarkProcessorList !=null && waterMarkProcessorList.size() > 0) {
                 Object[] args = joinPoint.getArgs();
                 if(args != null && args.length ==1) {
+
+                    //添加插件扩展
+                    List<WaterMarkProcessor> extensions = PluginUtils.getExtensions(WaterMarkProcessor.class);
+                    waterMarkProcessorList.addAll(extensions);
+
                     List<Attachment> attachmentList = (List<Attachment>) args[0];
                     attachmentList.forEach(item -> waterMarkProcessorList.stream().sorted(Comparator.comparing(WaterMarkProcessor::getOrder)).forEach(processor -> {
                         if(processor.isMatch(item)) {
@@ -74,11 +79,6 @@ public class WaterMarkAspect implements ApplicationListener<ApplicationStartedEv
         Map<String, WaterMarkProcessor> waterMarkProcessorMap = ApplicationUtils.getApplicationContext().getBeansOfType(WaterMarkProcessor.class);
         waterMarkProcessorList = Collections.synchronizedList(new ArrayList<>());
         waterMarkProcessorList.addAll(waterMarkProcessorMap.values());
-
-        //添加插件扩展
-        List<WaterMarkProcessor> extensions = PluginUtils.getExtensions(WaterMarkProcessor.class);
-        waterMarkProcessorList.addAll(extensions);
-
     }
 
 }

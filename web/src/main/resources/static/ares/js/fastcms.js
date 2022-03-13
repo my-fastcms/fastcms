@@ -1,6 +1,14 @@
-function submitForm(rules, messages, callback, beforeRequest) {
+function getToken() {
+    return token;
+}
 
-    $('#myForm').validate({
+function submitForm(rules, messages, callback, beforeRequest) {
+    submitFormById("myForm", rules, messages, callback, beforeRequest);
+}
+
+function submitFormById(formId, rules, messages, callback, beforeRequest) {
+
+    $('#'+formId).validate({
         rules: rules,
         messages: messages,
         errorElement: 'span',
@@ -128,11 +136,33 @@ function ajaxGet(url, okFunction, failFunction) {
         toastr.error(result.message, '操作失败');
     };
 
-    $.get(url, function (result) {
-        if (result.code == 200) {
-            okFunction(result);
-        } else {
-            failFunction(result);
+    $.ajax({
+        url: url,
+        type: "get",
+        //不使用缓存
+        cache: false,
+        processData: false,
+        beforeSend: function( xhr ) {
+            xhr.setRequestHeader("Authorization", getToken());
+        },
+        success: function (result) {
+            if(result.code && result.code != 200){
+                failFunction(result);
+            }else {
+                okFunction(result);
+            }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            if(xhr.status == 403) {
+                alert("403 forbid")
+            } else if(xhr.status == 401) {
+                alert("401 not auth")
+            } else {
+                alert("unknow status");
+            }
+        },
+        complete: function (resp) {
+
         }
     });
 }
@@ -151,13 +181,36 @@ function ajaxPost(url, data, okFunction, failFunction) {
         toastr.error(result.message, '操作失败');
     };
 
-    $.post(url, data,function (result) {
-        if (result.code == 200) {
-            okFunction(result);
-        } else {
-            failFunction(result);
+    $.ajax({
+        url: url,
+        type: "post",
+        cache: false,
+        processData: false,
+        contentType: false,
+        data: data,
+        beforeSend: function( xhr ) {
+            xhr.setRequestHeader("Authorization", getToken());
+        },
+        success: function (result) {
+            if(result.code != 200) {
+                failFunction(result);
+            }else {
+                okFunction(result);
+            }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            if(xhr.status == 403) {
+                alert("403 forbid")
+            } else if(xhr.status == 401) {
+                alert("401 not auth")
+            } else {
+                alert("unknow status");
+            }
+        },
+        complete: function (resp) {
+
         }
-    }, "json");
+    });
 }
 
 function alertWarn(message) {
