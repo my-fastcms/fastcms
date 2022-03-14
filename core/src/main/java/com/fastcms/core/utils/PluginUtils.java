@@ -12,6 +12,8 @@ import java.util.List;
  */
 public final class PluginUtils {
 
+    public static final String PAGE_DATA_ATTR = "pageData";
+
     private PluginUtils() {}
 
     /**
