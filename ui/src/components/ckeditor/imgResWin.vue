@@ -129,10 +129,12 @@ export default {
 		// 分页点击
 		const onHandleSizeChange = (val: number) => {
 			state.tableData.param.pageSize = val;
+			initTableData();
 		};
 		// 分页点击
 		const onHandleCurrentChange = (val: number) => {
 			state.tableData.param.pageNum = val;
+			initTableData();
 		};
 		
 		const onSubmit = () => {
