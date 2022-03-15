@@ -49,7 +49,7 @@ public abstract class ArticleUtils {
     public static boolean isEnableNeedToPay() {
         try {
             return Boolean.parseBoolean(ConfigUtils.getConfig(GLOBAL_ARTICLE_ENABLE_NEED_TO_PAY));
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             return true;
         }
     }
@@ -57,7 +57,7 @@ public abstract class ArticleUtils {
     public static boolean isEnableNeedToPay(Article article) {
         try {
             return Boolean.parseBoolean((String) getFieldProperty(article, ARTICLE_ENABLE_NEED_TO_PAY));
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             return true;
         }
     }
@@ -66,7 +66,7 @@ public abstract class ArticleUtils {
         Object fieldProperty = getFieldProperty(article, ARTICLE_PRICE);
         try {
             return fieldProperty == null ? BigDecimal.ZERO : new BigDecimal((String) fieldProperty);
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             return BigDecimal.ZERO;
         }
     }
