@@ -48,6 +48,7 @@ public abstract class ArticleUtils {
 
     public static boolean isEnableNeedToPay() {
         try {
+            if (ConfigUtils.getConfig(GLOBAL_ARTICLE_ENABLE_NEED_TO_PAY) == null) return true;
             return Boolean.parseBoolean(ConfigUtils.getConfig(GLOBAL_ARTICLE_ENABLE_NEED_TO_PAY));
         } catch (Exception e) {
             return true;
@@ -56,6 +57,7 @@ public abstract class ArticleUtils {
 
     public static boolean isEnableNeedToPay(Article article) {
         try {
+            if (getFieldProperty(article, ARTICLE_ENABLE_NEED_TO_PAY) == null) return true;
             return Boolean.parseBoolean((String) getFieldProperty(article, ARTICLE_ENABLE_NEED_TO_PAY));
         } catch (Exception e) {
             return true;
