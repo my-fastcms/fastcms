@@ -1,1 +1,0 @@
-import{s as e}from"./index.cbbddf4e.js";function d(t){return e({url:"/admin/attachment/list",method:"get",params:t})}function r(t){return e({url:"/admin/attachment/get/"+t,method:"get"})}function u(t,a){return e({url:"/admin/attachment/update/"+t,method:"post",params:a})}function c(t){return e({url:"/admin/attachment/delete/"+t,method:"post"})}export{r as a,c as d,d as g,u};

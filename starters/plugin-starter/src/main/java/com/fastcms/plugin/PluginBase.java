@@ -90,6 +90,7 @@ public abstract class PluginBase extends Plugin {
             FastcmsPluginManager pluginManager = (FastcmsPluginManager) wrapper.getPluginManager();
             SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) pluginManager.getApplicationContext().getBean("sqlSessionFactory");
             ScriptRunner scriptRunner = new ScriptRunner(sqlSessionFactory.getConfiguration().getEnvironment().getDataSource().getConnection());
+            scriptRunner.setLogWriter(null);
             scriptRunner.runScript(Resources.getResourceAsReader(wrapper.getPluginClassLoader(), sqlFile));
         } catch (Exception e) {
             e.printStackTrace();

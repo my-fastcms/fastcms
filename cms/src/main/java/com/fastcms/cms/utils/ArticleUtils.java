@@ -47,11 +47,10 @@ public abstract class ArticleUtils {
     public static final String ARTICLE_PRICE = "price";
 
     public static boolean isEnableNeedToPay() {
-        String config = ConfigUtils.getConfig(GLOBAL_ARTICLE_ENABLE_NEED_TO_PAY);
         try {
-            return Boolean.parseBoolean(config);
+            return Boolean.parseBoolean(ConfigUtils.getConfig(GLOBAL_ARTICLE_ENABLE_NEED_TO_PAY));
         } catch (NumberFormatException e) {
-            return false;
+            return true;
         }
     }
 
@@ -59,7 +58,7 @@ public abstract class ArticleUtils {
         try {
             return Boolean.parseBoolean((String) getFieldProperty(article, ARTICLE_ENABLE_NEED_TO_PAY));
         } catch (NumberFormatException e) {
-            return false;
+            return true;
         }
     }
 
