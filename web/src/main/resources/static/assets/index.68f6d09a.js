@@ -1,0 +1,1 @@
+import{s as i}from"./index.fc368bf7.js";function o(t){return i({url:"/admin/config/save",data:t,method:"post"})}function s(t){return i({url:"/admin/config/list",data:t,method:"post"})}export{s as g,o as s};

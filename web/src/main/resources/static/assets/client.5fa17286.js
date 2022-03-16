@@ -1,1 +1,0 @@
-import{s as e}from"./index.84013ba5.js";function i(t){return e({url:"/client/article/save",method:"post",data:t})}function l(t){return e({url:"/client/article/delete/"+t,method:"post"})}function n(t){return e({url:"/client/article/comment/list",method:"get",params:t})}export{i as a,l as d,n as g};

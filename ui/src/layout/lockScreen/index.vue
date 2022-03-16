@@ -207,7 +207,7 @@ export default defineComponent({
 }
 .layout-lock-screen-img {
 	@extend .layout-lock-screen-fixed;
-	background-image: url('https://gitee.com/lyt-top/vue-next-admin-images/raw/master/images/03.jpg');
+	background-image: url('/bg-login.png');
 	background-size: 100% 100%;
 	z-index: 9999991;
 }
