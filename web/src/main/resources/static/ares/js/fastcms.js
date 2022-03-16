@@ -105,7 +105,11 @@ function ajaxPost(url, data, okFunction, failFunction) {
         return
     }
 
-    okFunction = okFunction || function (result) {};
+    okFunction = okFunction || function (result) {
+        alertSuccess("操作成功", function () {
+            location.reload();
+        })
+    };
 
     failFunction = failFunction || function (result) {
         toastr.error(result.message, '操作失败');
@@ -151,7 +155,11 @@ function ajaxJsonPost(url, data, okFunction, failFunction) {
         return
     }
 
-    okFunction = okFunction || function (result) {};
+    okFunction = okFunction || function (result) {
+        alertSuccess("操作成功", function () {
+            location.reload();
+        })
+    };
 
     failFunction = failFunction || function (result) {
         alert(result.message);

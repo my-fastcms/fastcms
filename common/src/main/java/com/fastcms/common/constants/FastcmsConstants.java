@@ -71,6 +71,20 @@ public interface FastcmsConstants {
     String WEBSITE_COPYRIGHT = "website_copyright";
 
     /**
+     * 微信配置相关
+     */
+
+    String WECHAT_MP_APP_ID = "wechate_mp_appid";
+    String WECHAT_MP_APP_SECRET = "wechat_mp_secret";
+    String WECHAT_MP_APP_TOKEN = "wechat_mp_token";
+    String WECHAT_MP_APP_AESKEY = "wechat_mp_aeskey";
+
+    String WECHAT_MINIAPP_APP_ID = "wechat_miniapp_appid";
+    String WECHAT_MINIAPP_APP_SECRET = "wechat_miniapp_secret";
+    String WECHAT_MINIAPP_APP_TOKEN = "wechat_miniapp_token";
+    String WECHAT_MINIAPP_APP_AESKEY = "wechat_miniapp_aeskey";
+
+    /**
      * ================
      * Server info 相关
      * ================

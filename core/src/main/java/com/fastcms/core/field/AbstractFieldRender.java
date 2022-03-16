@@ -16,11 +16,7 @@
  */
 package com.fastcms.core.field;
 
-import freemarker.cache.StringTemplateLoader;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-
-import java.io.StringWriter;
+import com.fastcms.core.utils.RenderUtils;
 
 /**
  * fastcms抽象html字段组件渲染器
@@ -38,27 +34,7 @@ public abstract class AbstractFieldRender implements FastcmsFieldRender {
 
 	@Override
 	public String render(FastcmsField fastcmsField) throws Exception {
-		Template template = new Template(getTemplateName(), getTemplate(), getConfiguration());
-		String result;
-		StringWriter stringWriter = null;
-		try {
-			stringWriter = new StringWriter();
-			template.process(fastcmsField, stringWriter);
-			result = stringWriter.toString();
-		} finally {
-			if (stringWriter != null) {
-				stringWriter.close();
-			}
-		}
-		return result;
-	}
-
-	Configuration getConfiguration() {
-		Configuration configuration = new Configuration(Configuration.VERSION_2_3_25);
-		StringTemplateLoader stringTemplateLoader = new StringTemplateLoader();
-		configuration.setTemplateLoader(stringTemplateLoader);
-		configuration.setDefaultEncoding("UTF-8");
-		return configuration;
+		return RenderUtils.render(getTemplateName(), getTemplate(), fastcmsField);
 	}
 
 }

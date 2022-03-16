@@ -49,7 +49,9 @@ public abstract class BaseDirective implements TemplateDirectiveModel {
         DefaultObjectWrapperBuilder builder = new DefaultObjectWrapperBuilder(Configuration.VERSION_2_3_25);
         TemplateModel tm = builder.build().wrap(doExecute(env, params));
         env.setVariable(DATA_KEY, tm);
-        body.render(env.getOut());
+        if (body != null) {
+            body.render(env.getOut());
+        }
     }
 
     public abstract Object doExecute(Environment env, Map params);

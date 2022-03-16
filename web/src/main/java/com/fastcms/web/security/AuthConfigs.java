@@ -47,7 +47,7 @@ public class AuthConfigs {
 	/**
 	 * 忽悠安全校验的api urls
 	 */
-	@Value("${fastcms.security.ignore.urls}")
+	@Value("${fastcms.security.ignore.urls:}")
 	private List<String> ignoreUrls;
 
 	private byte[] secretKeyBytes;

@@ -29,6 +29,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+import static com.fastcms.common.constants.FastcmsConstants.*;
+
 /**
  * 微信公众号配置改变事件
  * @author： wjun_java@163.com
@@ -39,11 +41,6 @@ import java.util.Map;
  */
 @Component
 public class WechatMpConfigListener implements ConfigListener, ApplicationListener<ApplicationStartedEvent> {
-
-    static final String WECHAT_MP_APP_ID = "wechate_mp_appid";
-    static final String WECHAT_MP_APP_SECRET = "wechat_mp_secret";
-    static final String WECHAT_MP_APP_TOKEN = "wechat_mp_token";
-    static final String WECHAT_MP_APP_AESKEY = "wechat_mp_aeskey";
 
     @Autowired
     private WxMpService wxMpService;

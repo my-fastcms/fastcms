@@ -29,6 +29,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+import static com.fastcms.common.constants.FastcmsConstants.*;
+
 /**
  * 微信小程序配置改变事件
  * @author： wjun_java@163.com
@@ -39,11 +41,6 @@ import java.util.Map;
  */
 @Component
 public class WechatMiniAppConfigListener implements ConfigListener, ApplicationListener<ApplicationStartedEvent> {
-
-    static final String WECHAT_MINIAPP_APP_ID = "wechat_miniapp_appid";
-    static final String WECHAT_MINIAPP_APP_SECRET = "wechat_miniapp_secret";
-    static final String WECHAT_MINIAPP_APP_TOKEN = "wechat_miniapp_token";
-    static final String WECHAT_MINIAPP_APP_AESKEY = "wechat_miniapp_aeskey";
 
     @Autowired
     private WxMaService wxMaService;

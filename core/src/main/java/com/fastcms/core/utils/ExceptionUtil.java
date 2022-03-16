@@ -23,7 +23,11 @@ import java.io.PrintStream;
 import java.util.Objects;
 
 /**
- * wjun_java@163.com
+ * @author： wjun_java@163.com
+ * @date： 2022/3/16
+ * @description：
+ * @modifiedBy：
+ * @version: 1.0
  */
 public class ExceptionUtil {
 
