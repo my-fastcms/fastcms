@@ -28,10 +28,7 @@ import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.mybatis.PageModel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 文章评论
@@ -71,8 +68,8 @@ public class ArticleCommentApi {
 	 * @param articleId
 	 * @return
 	 */
-	@RequestMapping("list")
-	public RestResult<Page<IArticleCommentService.ArticleCommentVo>> list(PageModel page, Long articleId) {
+	@GetMapping("list/{articleId}")
+	public RestResult<Page<IArticleCommentService.ArticleCommentVo>> list(PageModel page, @PathVariable("articleId") Long articleId) {
 		return RestResultUtils.success(articleCommentService.pageArticleCommentByArticleId(page.toPage(), articleId, AuthUtils.getUserId()));
 	}
 
