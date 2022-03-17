@@ -166,6 +166,17 @@ public abstract class RequestUtils {
 		return defaultDomain.toString();
 	}
 
+	public static String getUrl(HttpServletRequest request) {
+		// 被拦截前的请求URL
+		String url = getBaseUrl(request);
+		// 获取用户将要去的路径
+		String queryString = request.getQueryString();
+		if (StringUtils.isNotBlank(queryString)) {
+			url = url.concat("?").concat(queryString);
+		}
+		return url;
+	}
+
 	public static HttpServletRequest getRequest() {
 		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 		return attr.getRequest();
