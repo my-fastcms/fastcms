@@ -5,7 +5,7 @@
 ### 介绍
 - fastcms内置一套完整的CMS建站系统
 - fastcms完全融入微信生态，是一切微信营销插件的基石
-- fastcms可以基于jar包动态热插拔
+- fastcms可以基于jar, zip包动态热插拔
 - fastcms基于SpringBoot进行插件式开发，具有极强的扩展性，让你彻底从臃肿的项目中解脱出来
 
 ### 文档

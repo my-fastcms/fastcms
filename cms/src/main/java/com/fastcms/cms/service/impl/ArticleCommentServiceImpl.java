@@ -8,6 +8,7 @@ import com.fastcms.cms.entity.ArticleComment;
 import com.fastcms.cms.mapper.ArticleCommentMapper;
 import com.fastcms.cms.service.IArticleCommentService;
 import com.fastcms.cms.service.IArticleService;
+import com.fastcms.cms.utils.ArticleUtils;
 import com.fastcms.common.exception.FastcmsException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +37,15 @@ public class ArticleCommentServiceImpl extends ServiceImpl<ArticleCommentMapper,
 
 	@Override
 	public void saveArticleComment(Long articleId, Long commentId, String content) throws FastcmsException {
+
+		if (!ArticleUtils.isEnableArticleComment()) {
+			throw new FastcmsException(FastcmsException.SERVER_ERROR, "系统已关闭文章评论功能");
+		}
+
 		if(articleId == null) {
 			throw new FastcmsException(FastcmsException.INVALID_PARAM, "文章id不能为空");
 		}
+
 		if(StringUtils.isBlank(content)) {
 			throw new FastcmsException(FastcmsException.INVALID_PARAM, "评论内容不能为空");
 		}
@@ -56,7 +63,13 @@ public class ArticleCommentServiceImpl extends ServiceImpl<ArticleCommentMapper,
 		articleComment.setArticleId(articleId);
 		articleComment.setContent(content);
 		articleComment.setParentId(commentId);
-		articleComment.setStatus(ArticleComment.STATUS_UNAUDITED);
+
+		if (ArticleUtils.isEnableArticleCommentAdminVerify()) {
+			articleComment.setStatus(ArticleComment.STATUS_UNAUDITED);
+		} else {
+			articleComment.setStatus(ArticleComment.STATUS_NORMAL);
+		}
+
 		save(articleComment);
 	}
 

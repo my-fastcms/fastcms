@@ -8,3 +8,7 @@ spring:
     password: root
 log:
   path: ./logs
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl

@@ -42,6 +42,16 @@ public abstract class ArticleUtils {
     public static final String ARTICLE_ENABLE_NEED_TO_PAY = "enableNeedToPay";
 
     /**
+     * 是否开启文章评论审核
+     */
+    public static final String ENABLE_ARTICLE_COMMENT_ADMIN_VERIFY = "enableArticleCommentAdminVerify";
+
+    /**
+     * 是否开启全局文章评论功能
+     */
+    public static final String ENABLE_ARTICLE_COMMENT = "enableArticleComment";
+
+    /**
      * 文章价格
      */
     public static final String ARTICLE_PRICE = "price";
@@ -75,6 +85,23 @@ public abstract class ArticleUtils {
 
     public static Object getFieldProperty(Article article, String property) {
         return (article.getExtFields() == null) ? null : article.getExtFields().get(property);
+    }
+
+    public static boolean isEnableArticleCommentAdminVerify() {
+        if (ConfigUtils.getConfig(ENABLE_ARTICLE_COMMENT_ADMIN_VERIFY) == null) return true;
+        try {
+            return Boolean.parseBoolean(ConfigUtils.getConfig(ENABLE_ARTICLE_COMMENT_ADMIN_VERIFY));
+        } catch (Exception e) {
+            return true;
+        }
+    }
+
+    public static boolean isEnableArticleComment() {
+        try {
+            return Boolean.parseBoolean(ConfigUtils.getConfig(ENABLE_ARTICLE_COMMENT));
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }

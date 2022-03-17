@@ -31,7 +31,7 @@ export function delArticle(id: string) {
  */
   export function getArticleCommentList(params: object) {
 	return request({
-		url: '/client/article/comment/list',
+		url: '/client/article/comment/user/list',
 		method: 'get',
 		params: params
 	});

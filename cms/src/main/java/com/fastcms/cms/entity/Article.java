@@ -31,6 +31,32 @@ public class Article implements Serializable {
     public static final String STATUS_AUDIT = "audit";
     public static final String STATUS_DELETE = "delete";
 
+    public enum ArticleStatus {
+
+        PUBLISH(STATUS_PUBLISH, "发布"),
+        DRAFT(STATUS_DRAFT, "草稿"),
+        AUDIT(STATUS_AUDIT, "审核"),
+        DELETE(STATUS_DELETE, "删除");
+
+        ArticleStatus(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        private final String key;
+        private final String value;
+
+        public static String getValue(String key) {
+            for (ArticleStatus s: values()) {
+                if (s.key.equals(key)) {
+                    return s.value;
+                }
+            }
+            return "";
+        }
+
+    }
+
     /**
      * id
      */
@@ -275,6 +301,10 @@ public class Article implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getStatusStr() {
+        return ArticleStatus.getValue(getStatus());
     }
 
     public String getSuffix() {

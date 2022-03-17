@@ -142,7 +142,7 @@ export default {
             tags: [],
             ruleForm: {
                 title: '',
-                commentEnable: 1,
+                commentEnable: true,
                 contentHtml: '',
                 summary: '',
                 seoKeywords: '',

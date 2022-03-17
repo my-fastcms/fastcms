@@ -22,6 +22,31 @@ public class ArticleComment implements Serializable {
     public static final String STATUS_UNAUDITED = "unaudited"; //待审核
     public static final String STATUS_HIDDEN = "hidden"; //隐藏
 
+    public enum ArticleCommentStatus {
+
+        NORMAL(STATUS_NORMAL, "发布"),
+        UNAUDITED(STATUS_UNAUDITED, "待审核"),
+        HIDDEN(STATUS_HIDDEN, "隐藏");
+
+        ArticleCommentStatus(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        private final String key;
+        private final String value;
+
+        public static String getValue(String key) {
+            for (ArticleCommentStatus s: values()) {
+                if (s.key.equals(key)) {
+                    return s.value;
+                }
+            }
+            return "";
+        }
+
+    }
+
     /**
      * id
      */
@@ -165,6 +190,10 @@ public class ArticleComment implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getStatusStr() {
+        return ArticleCommentStatus.getValue(getStatus());
     }
 
     public LocalDateTime getCreated() {
