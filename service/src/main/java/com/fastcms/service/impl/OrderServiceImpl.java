@@ -11,6 +11,7 @@ import org.pf4j.Extension;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -41,6 +42,11 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
     @Override
     public OrderStatVo getOrderStatData() {
         return getBaseMapper().getOrderStatData();
+    }
+
+    @Override
+    public List<Order> getUnPayOrderByLimitTime(int time) {
+        return getBaseMapper().getUnPayOrderByLimitTime(time);
     }
 
     @Override

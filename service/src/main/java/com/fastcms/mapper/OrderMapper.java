@@ -8,6 +8,8 @@ import com.fastcms.entity.Order;
 import com.fastcms.service.IOrderService;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * 订单表 Mapper 接口
  * @author wjun_java@163.com
@@ -22,5 +24,7 @@ public interface OrderMapper extends BaseMapper<Order> {
     IOrderService.OrderDetailVo getOrderDetail(Long orderId);
 
     IOrderService.OrderStatVo getOrderStatData();
+
+    List<Order> getUnPayOrderByLimitTime(@Param("overTime") int overTime);
 
 }

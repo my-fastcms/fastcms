@@ -9,6 +9,7 @@ import com.fastcms.entity.OrderItem;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * 订单服务类
@@ -37,6 +38,13 @@ public interface IOrderService extends IService<Order> {
      * @return
      */
     OrderStatVo getOrderStatData();
+
+    /**
+     * 查询限制时间内的订单
+     * @param time 单位分钟
+     * @return
+     */
+    List<Order> getUnPayOrderByLimitTime(int time);
 
     /**
      * 订单统计
@@ -90,9 +98,19 @@ public interface IOrderService extends IService<Order> {
         String statusStr;
 
         /**
+         * 支付状态
+         */
+        Integer payStatus;
+
+        /**
+         * 支付状态显示值
+         */
+        String payStatusStr;
+
+        /**
          * 买家昵称
          */
-        String nickName;
+        String userName;
 
         /**
          * 商品数量
@@ -149,12 +167,28 @@ public interface IOrderService extends IService<Order> {
             this.statusStr = statusStr;
         }
 
-        public String getNickName() {
-            return nickName;
+        public Integer getPayStatus() {
+            return payStatus;
         }
 
-        public void setNickName(String nickName) {
-            this.nickName = nickName;
+        public void setPayStatus(Integer payStatus) {
+            this.payStatus = payStatus;
+        }
+
+        public String getPayStatusStr() {
+            return Order.PayStatus.getValue(getPayStatus());
+        }
+
+        public void setPayStatusStr(String payStatusStr) {
+            this.payStatusStr = payStatusStr;
+        }
+
+        public String getUserName() {
+            return userName;
+        }
+
+        public void setUserName(String userName) {
+            this.userName = userName;
         }
 
         public Integer getProductCount() {

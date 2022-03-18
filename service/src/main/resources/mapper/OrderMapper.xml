@@ -19,7 +19,7 @@
     </select>
 
     <select id="pageOrder" resultType="com.fastcms.service.IOrderService$OrderListVo">
-        select o.*, u.nick_name, oa.* from `order` o
+        select o.*, u.user_name, oa.* from `order` o
         left join `user` u on o.user_id = u.id
         left join (
             select oi.order_id, oi.product_count, oi.total_amount, a.title
@@ -45,6 +45,10 @@
         COUNT( CASE WHEN o.trade_status = 4 THEN o.id ELSE NULL END ) AS afterSale
         FROM `order` o
         WHERE o.user_id =#{userId} and o.trade_status !=3
+    </select>
+
+    <select id="getUnPayOrderByLimitTime" resultType="com.fastcms.entity.Order">
+        select * from `order` where TIMESTAMPDIFF(MINUTE, created, now()) > #{overTime} and pay_status = 0 and status = 1
     </select>
 
 </mapper>
