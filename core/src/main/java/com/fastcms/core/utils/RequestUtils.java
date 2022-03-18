@@ -158,7 +158,7 @@ public abstract class RequestUtils {
 
 	public static String getBaseUrl(HttpServletRequest request) {
 		int port = request.getServerPort();
-		StringBuilder defaultDomain = new StringBuilder(getRealScheme(request));
+		StringBuilder defaultDomain = new StringBuilder(request.getScheme());
 		defaultDomain.append("://")
 				.append(request.getServerName())
 				.append(port == 80 ? "" : ":" + port)
@@ -175,14 +175,6 @@ public abstract class RequestUtils {
 			url = url.concat("?").concat(queryString);
 		}
 		return url;
-	}
-
-	public static String getRealScheme(HttpServletRequest request) {
-		String referer = getReferer(request);
-		if (StringUtils.isNotBlank(referer) && referer.startsWith("https")) {
-			return "https";
-		}
-		return request.getScheme();
 	}
 
 	public static HttpServletRequest getRequest() {
