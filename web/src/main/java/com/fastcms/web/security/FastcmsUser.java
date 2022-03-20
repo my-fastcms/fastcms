@@ -16,6 +16,8 @@
  */
 package com.fastcms.web.security;
 
+import com.fastcms.common.utils.VersionUtils;
+
 import java.io.Serializable;
 
 /**
@@ -64,12 +66,15 @@ public class FastcmsUser implements Serializable {
 	 */
 	private boolean hasRole;
 
+	private String version;
+
 	public FastcmsUser(String username, String token, long tokenTtl, boolean superAdmin, boolean hasRole) {
 		this.username = username;
 		this.token = token;
 		this.tokenTtl = tokenTtl;
 		this.superAdmin = superAdmin;
 		this.hasRole = hasRole;
+		this.version = VersionUtils.getFullClientVersion();
 	}
 
 	public String getToken() {
@@ -126,5 +131,13 @@ public class FastcmsUser implements Serializable {
 
 	public void setHasRole(boolean hasRole) {
 		this.hasRole = hasRole;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
 	}
 }

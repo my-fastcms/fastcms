@@ -19,7 +19,7 @@ package com.fastcms.web.config;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.utils.DirUtils;
 import com.fastcms.core.directive.BaseDirective;
-import com.fastcms.core.interceptor.PluginInterceptor;
+import com.fastcms.plugin.PluginInterceptor;
 import com.fastcms.core.template.Template;
 import com.fastcms.core.template.TemplateService;
 import com.fastcms.core.utils.AttachUtils;

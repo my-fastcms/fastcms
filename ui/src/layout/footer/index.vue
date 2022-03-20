@@ -1,18 +1,20 @@
 <template>
 	<div class="layout-footer mt15" v-show="isDelayFooter">
 		<div class="layout-footer-warp">
-			<div>Fastcms:v0.0.1</div>
+			<div>{{ getUserInfos.version }}</div>
 			<div class="mt5">{{ $t('message.copyright.one5') }}</div>
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
-import { toRefs, reactive } from 'vue';
+import { computed, toRefs, reactive } from 'vue';
 import { onBeforeRouteUpdate } from 'vue-router';
+import { useStore } from '/@/store/index';
 export default {
 	name: 'layoutFooter',
 	setup() {
+		const store = useStore();
 		const state = reactive({
 			isDelayFooter: true,
 		});
@@ -23,7 +25,11 @@ export default {
 				state.isDelayFooter = true;
 			}, 800);
 		});
+		const getUserInfos = computed(() => {
+			return store.state.userInfos.userInfos;
+		});
 		return {
+			getUserInfos,
 			...toRefs(state),
 		};
 	},

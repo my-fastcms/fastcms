@@ -44,7 +44,7 @@ export const activitiesList = [
 		label: '正式命名为 fastcms',
 	},
 	{
-		time1: '2022-03-20',
+		time1: '2022-03-01',
 		time2: '00:00:00',
 		title: '版本',
 		label: '发布第一个版本V0.0.1',

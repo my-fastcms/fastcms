@@ -146,6 +146,7 @@ export default defineComponent({
 				photo: res.data.headImg === null ? '/header.jpg' : res.data.headImg,
 				time: new Date().getTime(),
 				hasRole: res.data.hasRole,
+				version: res.data.version,
 				//authPageList: defaultAuthPageList,
 				//authBtnList: defaultAuthBtnList,
 			};

@@ -45,4 +45,3 @@ fastcms:
 logging:
   config: classpath:META-INF/logback/fastcms.xml
 
-

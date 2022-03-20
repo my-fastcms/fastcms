@@ -1,5 +1,6 @@
 package com.fastcms.cms.search;
 
+import com.fastcms.core.utils.PluginUtils;
 import com.fastcms.utils.ApplicationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
@@ -30,6 +31,10 @@ public class FastcmsSearcherManager implements ApplicationListener<ApplicationSt
     List<FastcmsSearcher> fastcmsSearcherList = Collections.synchronizedList(new ArrayList<>());
 
     public FastcmsSearcher getSearcher() {
+        //获取插件中的搜索器
+        List<FastcmsSearcher> extensions = PluginUtils.getExtensions(FastcmsSearcher.class);
+        fastcmsSearcherList.addAll(extensions);
+
         fastcmsSearcherList.stream().sorted(Comparator.comparing(FastcmsSearcher::getOrder));
         for (FastcmsSearcher fastcmsSearcher : fastcmsSearcherList) {
             if (fastcmsSearcher.isEnable()) {
@@ -49,8 +54,8 @@ public class FastcmsSearcherManager implements ApplicationListener<ApplicationSt
 
     @Override
     public void onApplicationEvent(ApplicationStartedEvent event) {
-        Map<String, FastcmsSearcher> configListenerMap = ApplicationUtils.getApplicationContext().getBeansOfType(FastcmsSearcher.class);
-        fastcmsSearcherList.addAll(configListenerMap.values());
+        Map<String, FastcmsSearcher> fastcmsSearcherMap = ApplicationUtils.getApplicationContext().getBeansOfType(FastcmsSearcher.class);
+        fastcmsSearcherList.addAll(fastcmsSearcherMap.values());
     }
 
 }
