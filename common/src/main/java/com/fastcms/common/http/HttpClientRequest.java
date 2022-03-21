@@ -16,6 +16,9 @@
  */
 package com.fastcms.common.http;
 
+import java.io.Closeable;
+import java.net.URI;
+
 /**
  * @author： wjun_java@163.com
  * @date： 2022/03/21
@@ -23,5 +26,16 @@ package com.fastcms.common.http;
  * @modifiedBy：
  * @version: 1.0
  */
-public interface HttpClientRequest extends Cloneable {
+public interface HttpClientRequest extends Closeable {
+
+	/**
+	 * 发起一个http请求
+	 * @param uri
+	 * @param httpMethod
+	 * @param requestHttpEntity
+	 * @return
+	 * @throws Exception
+	 */
+	HttpClientResponse execute(URI uri, String httpMethod, RequestHttpEntity requestHttpEntity) throws Exception;
+
 }

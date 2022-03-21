@@ -16,6 +16,8 @@
  */
 package com.fastcms.web;
 
+import com.fastcms.common.http.HttpRestResult;
+import com.fastcms.common.utils.HttpUtils;
 import com.fastcms.web.security.AuthConfigs;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -52,6 +54,12 @@ public class TestAuthService {
     @Test
     public void testPasswordEncode() {
         System.out.println(passwordEncoder.encode("1"));
+    }
+
+    @Test
+    public void testHttp() throws Exception {
+        HttpRestResult<String> objectHttpRestResult = HttpUtils.get("https://www.xjd2020.com");
+        System.out.println(objectHttpRestResult.getData());
     }
 
 }

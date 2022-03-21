@@ -23,9 +23,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Thread utils.
- *
- * @author <a href="mailto:liaochuntao@live.com">liaochuntao</a>
+ * @author： wjun_java@163.com
+ * @date： 2022/3/21
+ * @description：
+ * @modifiedBy：
+ * @version: 1.0
  */
 public final class ThreadUtils {
     

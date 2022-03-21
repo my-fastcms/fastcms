@@ -16,6 +16,10 @@
  */
 package com.fastcms.common.http;
 
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.InputStream;
+
 /**
  * @author： wjun_java@163.com
  * @date： 2022/03/21
@@ -23,5 +27,43 @@ package com.fastcms.common.http;
  * @modifiedBy：
  * @version: 1.0
  */
-public interface HttpClientResponse extends Cloneable {
+public interface HttpClientResponse extends Closeable {
+
+	/**
+	 * Return the headers of this message.
+	 *
+	 * @return a corresponding HttpHeaders object (never {@code null})
+	 */
+	Header getHeaders();
+
+	/**
+	 * Return the body of the message as an input stream.
+	 *
+	 * @return String response body
+	 * @throws IOException IOException
+	 */
+	InputStream getBody() throws IOException;
+
+	/**
+	 * Return the HTTP status code.
+	 *
+	 * @return the HTTP status as an integer
+	 * @throws IOException IOException
+	 */
+	int getStatusCode() throws IOException;
+
+	/**
+	 * Return the HTTP status text of the response.
+	 *
+	 * @return the HTTP status text
+	 * @throws IOException IOException
+	 */
+	String getStatusText() throws IOException;
+
+	/**
+	 * close response InputStream.
+	 */
+	@Override
+	void close();
+
 }
