@@ -41,6 +41,8 @@ public interface FastcmsConstants {
 
     String WEB_CODE_CACHE_NAME = "web_code_cache";
 
+    String ENCODE = "UTF-8";
+
     /**
      * 内置超级管理员角色id值,不可变
      */
