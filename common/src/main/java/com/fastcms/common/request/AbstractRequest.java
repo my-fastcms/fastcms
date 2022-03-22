@@ -23,6 +23,7 @@ import com.fastcms.common.model.RestResult;
 import com.fastcms.common.utils.HttpUtils;
 import com.fastcms.common.utils.JacksonUtils;
 import com.fastcms.common.utils.ReflectUtils;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
@@ -43,13 +44,12 @@ public abstract class AbstractRequest implements Serializable {
 
     protected transient Header header = Header.EMPTY;
     protected transient Query query = Query.EMPTY;
-    protected transient Map<String, String> data = new HashMap<>();
+    protected transient Map<String, String> params = new HashMap<>();
 
-    protected AbstractRequest() {
-        buildParams();
-    }
-
-    protected void buildParams() {
+    protected Map<String, String> buildParams() {
+        if (CollectionUtils.isNotEmpty(params.values())) {
+            return params;
+        }
         Field[] allFields = ReflectUtils.getFields(this.getClass());
         for (Field field : allFields) {
             field.setAccessible(true);
@@ -63,36 +63,40 @@ public abstract class AbstractRequest implements Serializable {
                             List v = (List) obj;
                             obj = v.stream().collect(Collectors.joining(","));
                         }
-
-                        HeaderField annotation = field.getAnnotation(HeaderField.class);
-                        if (annotation != null) {
-                            header.addParam(annotation.format() ? field.getName().replaceAll("_", "-") : field.getName(), obj.toString());
-                        } else {
-                            query.addParam(field.getName(), obj);
-                            data.put(field.getName(), (String) obj);
-                        }
+                        params.put(field.getName(), (String) obj);
                     }
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
+        return params;
+    }
+
+    public AbstractRequest addHeader(String key, String value) {
+        header.addParam(key, value);
+        return this;
+    }
+
+    public AbstractRequest addParams(String key, Object value) {
+        query.addParam(key, value);
+        return this;
     }
 
     public RestResult get() throws Exception {
-        return HttpUtils.get(getRequestUrl(), header, query, RestResult.class);
+        return HttpUtils.get(getRequestUrl(), header, query.initParams(buildParams()), RestResult.class);
     }
 
     public RestResult post() throws Exception {
-        return HttpUtils.post(getRequestUrl(), header, query, data, RestResult.class);
+        return HttpUtils.post(getRequestUrl(), header, query, buildParams(), RestResult.class);
     }
 
     public RestResult postJson() throws Exception {
-        return HttpUtils.postJson(getRequestUrl(), header, query, JacksonUtils.toJson(data), RestResult.class);
+        return HttpUtils.postJson(getRequestUrl(), header, query, JacksonUtils.toJson(buildParams()), RestResult.class);
     }
 
     public RestResult postForm() throws Exception {
-        return HttpUtils.postForm(getRequestUrl(), header, query, data, RestResult.class);
+        return HttpUtils.postForm(getRequestUrl(), header, query, buildParams(), RestResult.class);
     }
 
     protected abstract String getRequestUrl();

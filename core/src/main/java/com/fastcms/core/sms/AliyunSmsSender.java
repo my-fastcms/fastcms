@@ -16,14 +16,17 @@
  */
 package com.fastcms.core.sms;
 
-import com.egzosn.pay.common.util.sign.SignUtils;
-import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.http.Header;
+import com.fastcms.common.http.HttpRestResult;
+import com.fastcms.common.http.Query;
+import com.fastcms.common.utils.HttpUtils;
 import com.fastcms.utils.ConfigUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.security.InvalidKeyException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -43,14 +46,17 @@ public class AliyunSmsSender implements FastcmsSmsSender {
 
 	private final static String FORMAT_ISO8601 = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
-	static final String ALIYUN_SMS_APP_KEY = "aliyunSmsAppKey";
+	static final String ALIYUN_SMS_APP_KEY = "aliyun_sms_app_key";
 
-	static final String ALIYUN_SMS_APP_SECRET = "aliyunSmsAppSecret";
+	static final String ALIYUN_SMS_APP_SECRET = "aliyun_sms_app_secret";
 
-	static final String ALIYUN_SMS_IS_ENABLE = "aliyunSmsIsEnable";
+	static final String ALIYUN_SMS_IS_ENABLE = "aliyun_sms_is_enable";
 
 	@Override
 	public boolean send(SmsMessage smsMessage) {
+		if (isEnable()) {
+			return doSend(smsMessage, getAppKey(), getAppSecret());
+		}
 		return false;
 	}
 
@@ -70,7 +76,21 @@ public class AliyunSmsSender implements FastcmsSmsSender {
 		return LOWEST_PRECEDENCE;
 	}
 
-	private String doSend(SmsMessage sms, String appKey, String appSecret) {
+	private Boolean doSend(SmsMessage sms, String appKey, String appSecret) {
+//		try {
+//			AliyunSmsRequest aliyunSmsRequest = new AliyunSmsRequest(appKey, appSecret, sms.getSign(), sms.getTemplate(), sms.getCode(), sms.getMobile(), getISO8601Time());
+//			aliyunSmsRequest
+//					.addHeader("Content_Type", "application/x-www-form-urlencoded;charset=utf-8")
+//					.addHeader("x-sdk-client", "Java/2.0.0");
+//			RestResult restResult = aliyunSmsRequest.get();
+//			String message = restResult.getMessage();
+//			System.out.println(message);
+//			int code = restResult.getCode();
+//			return code == 200;
+//		} catch (Exception e) {
+//			logger.error("AlidayuSmsSender doSend http exception", e);
+//		}
+
 		Map<String, String> params = new HashMap<>();
 		params.put("Format", "XML");
 		params.put("SignName", sms.getSign());
@@ -87,25 +107,29 @@ public class AliyunSmsSender implements FastcmsSmsSender {
 		params.put("SignatureVersion", "1.0");
 		params.put("SignatureNonce", UUID.randomUUID().toString());
 
+		String sign = null;
+		try {
+			sign = new AliyunSmsRequest().signShaHmac1(params, appSecret + "&");
+		} catch (InvalidKeyException | IllegalStateException e1) {
+			e1.printStackTrace();
+			return null;
+		}
+//		params.put("Signature", SignUtils.SHA1.sign(params, appSecret, FastcmsConstants.ENCODE));
 
-		String sign = SignUtils.HMACSHA256.sign(params, appSecret, FastcmsConstants.ENCODE);
 		params.put("Signature", sign);
 
-		Map<String, String> headers = new HashMap<>();
+		Map<String, String> headers = new HashMap<String, String>();
 		headers.put("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
 		headers.put("x-sdk-client", "Java/2.0.0");
 		try {
-//			Header header = Header.EMPTY;
-//			header.addAll(headers);
-//			return HttpUtils.get("http://dysmsapi.aliyuncs.com/", header, Query.EMPTY.initParams(params), String.class).getData().toString();
-
-			AliyunSmsRequest aliyunSmsRequest = new AliyunSmsRequest(sms.getSign(), sms.getCode(), appKey, sms.getMobile(), getISO8601Time());
-			return aliyunSmsRequest.get().getData().toString();
+			Header header = Header.EMPTY;
+			header.addAll(headers);
+			HttpRestResult<Object> objectHttpRestResult = HttpUtils.get("http://dysmsapi.aliyuncs.com/", header, Query.EMPTY.initParams(params), String.class);
+			System.out.println(objectHttpRestResult.getData().toString());
 		} catch (Exception e) {
-			logger.error("AlidayuSmsSender doSend http exception", e);
 		}
 
-		return null;
+		return false;
 	}
 
 	String getISO8601Time() {

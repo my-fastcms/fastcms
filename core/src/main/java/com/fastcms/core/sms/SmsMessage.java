@@ -44,6 +44,13 @@ public class SmsMessage implements Serializable {
 	 */
 	private String code;
 
+	public SmsMessage(String mobile, String sign, String template, String code) {
+		this.mobile = mobile;
+		this.sign = sign;
+		this.template = template;
+		this.code = code;
+	}
+
 	public String getMobile() {
 		return mobile;
 	}

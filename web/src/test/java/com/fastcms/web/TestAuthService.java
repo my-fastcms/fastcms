@@ -18,6 +18,8 @@ package com.fastcms.web;
 
 import com.fastcms.common.http.HttpRestResult;
 import com.fastcms.common.utils.HttpUtils;
+import com.fastcms.core.sms.AliyunSmsSender;
+import com.fastcms.core.sms.SmsMessage;
 import com.fastcms.web.security.AuthConfigs;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -42,6 +44,9 @@ public class TestAuthService {
     @Autowired
     private AuthConfigs authConfigs;
 
+    @Autowired
+    private AliyunSmsSender aliyunSmsSender;
+
     @Test
     public void testJwtSecurity() {
         Claims claims = Jwts.parserBuilder().setSigningKey(authConfigs.getSecretKeyBytes()).build()
@@ -60,6 +65,13 @@ public class TestAuthService {
     public void testHttp() throws Exception {
         HttpRestResult<String> objectHttpRestResult = HttpUtils.get("https://www.xjd2020.com");
         System.out.println(objectHttpRestResult.getData());
+    }
+
+    @Test
+    public void testSendSms() {
+        SmsMessage smsMessage = new SmsMessage("13533109940", "小橘灯", "SMS_198840162", "1688");
+        boolean send = aliyunSmsSender.send(smsMessage);
+        System.out.println(send);
     }
 
 }
