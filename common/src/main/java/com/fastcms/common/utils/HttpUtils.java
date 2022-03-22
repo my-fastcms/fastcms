@@ -64,53 +64,52 @@ public class HttpUtils {
 		return execute(url, GET, new RequestHttpEntity(header, query), resultType);
 	}
 
-	public static <T> HttpRestResult<T> get(String url, HttpClientConfig config, Header header, Query query, Type resultType)
-			throws Exception {
+	public static <T> HttpRestResult<T> get(String url, HttpClientConfig config, Header header, Query query, Type resultType) throws Exception {
 		RequestHttpEntity requestHttpEntity = new RequestHttpEntity(config, header, query);
 		return execute(url, GET, requestHttpEntity, resultType);
 	}
 
-	public static <T> HttpRestResult<T> post(String url, Header header, Query query, Object body, Type resultType)
-			throws Exception {
+	public static <T> HttpRestResult<T> post(String url, Header header, Query query, Object body, Type resultType) throws Exception {
 		return execute(url, POST, new RequestHttpEntity(header, query, body), resultType);
 	}
 
-	public static <T> HttpRestResult<T> postForm(String url, Header header, Query query, Map<String, String> bodyValues,
-										  Type resultType) throws Exception {
-		RequestHttpEntity requestHttpEntity = new RequestHttpEntity(
-				header.setContentType(MediaType.APPLICATION_FORM_URLENCODED), query, bodyValues);
+	public static <T> HttpRestResult<T> postForm(String url, Header header, Query query, Map<String, String> bodyValues,  Type resultType) throws Exception {
+		RequestHttpEntity requestHttpEntity = new RequestHttpEntity(header.setContentType(MediaType.APPLICATION_FORM_URLENCODED), query, bodyValues);
 		return execute(url, POST, requestHttpEntity, resultType);
 	}
 
-	public static <T> HttpRestResult<T> postForm(String url, Header header, Map<String, String> bodyValues, Type resultType)
+	public static <T> HttpRestResult<T> postForm(String url, Header header, Map<String, String> bodyValues, Type resultType) throws Exception {
+		RequestHttpEntity requestHttpEntity = new RequestHttpEntity(header.setContentType(MediaType.APPLICATION_FORM_URLENCODED), bodyValues);
+		return execute(url, POST, requestHttpEntity, resultType);
+	}
+
+	public static <T> HttpRestResult<T> postForm(String url, HttpClientConfig config, Header header, Map<String, String> bodyValues, Type resultType) throws Exception {
+		RequestHttpEntity requestHttpEntity = new RequestHttpEntity(config, header.setContentType(MediaType.APPLICATION_FORM_URLENCODED), bodyValues);
+		return execute(url, POST, requestHttpEntity, resultType);
+	}
+
+	public static <T> HttpRestResult<T> postJson(String url, Header header, Query query, String body, Type responseType)
 			throws Exception {
-		RequestHttpEntity requestHttpEntity = new RequestHttpEntity(
-				header.setContentType(MediaType.APPLICATION_FORM_URLENCODED), bodyValues);
-		return execute(url, POST, requestHttpEntity, resultType);
+		RequestHttpEntity requestHttpEntity = new RequestHttpEntity(header.setContentType(MediaType.APPLICATION_JSON), query, body);
+		return execute(url, POST, requestHttpEntity, responseType);
 	}
 
-	public static <T> HttpRestResult<T> postForm(String url, HttpClientConfig config, Header header,
-										  Map<String, String> bodyValues, Type resultType) throws Exception {
-		RequestHttpEntity requestHttpEntity = new RequestHttpEntity(config,
-				header.setContentType(MediaType.APPLICATION_FORM_URLENCODED), bodyValues);
-		return execute(url, POST, requestHttpEntity, resultType);
+	public static  <T> HttpRestResult<T> postJson(String url, Header header, String body, Type responseType) throws Exception {
+		RequestHttpEntity requestHttpEntity = new RequestHttpEntity(header.setContentType(MediaType.APPLICATION_JSON), body);
+		return execute(url, POST, requestHttpEntity, responseType);
 	}
 
-	public static <T> HttpRestResult<T> exchangeForm(String url, Header header, Query query, Map<String, String> bodyValues,
-											  String httpMethod, Type resultType) throws Exception {
-		RequestHttpEntity requestHttpEntity = new RequestHttpEntity(
-				header.setContentType(MediaType.APPLICATION_FORM_URLENCODED), query, bodyValues);
+	public static <T> HttpRestResult<T> exchangeForm(String url, Header header, Query query, Map<String, String> bodyValues, String httpMethod, Type resultType) throws Exception {
+		RequestHttpEntity requestHttpEntity = new RequestHttpEntity(header.setContentType(MediaType.APPLICATION_FORM_URLENCODED), query, bodyValues);
 		return execute(url, httpMethod, requestHttpEntity, resultType);
 	}
 
-	public static <T> HttpRestResult<T> exchange(String url, HttpClientConfig config, Header header, Query query,
-										  Object body, String httpMethod, Type resultType) throws Exception {
+	public static <T> HttpRestResult<T> exchange(String url, HttpClientConfig config, Header header, Query query, Object body, String httpMethod, Type resultType) throws Exception {
 		RequestHttpEntity requestHttpEntity = new RequestHttpEntity(config, header, query, body);
 		return execute(url, httpMethod, requestHttpEntity, resultType);
 	}
 
-	private static <T> HttpRestResult<T> execute(String url, String httpMethod, RequestHttpEntity requestEntity,
-										  Type resultType) throws Exception {
+	private static <T> HttpRestResult<T> execute(String url, String httpMethod, RequestHttpEntity requestEntity, Type resultType) throws Exception {
 		URI uri = buildUri(url, requestEntity.getQuery());
 
 		ResultHandler<T> responseHandler = selectResponseHandler(resultType);
