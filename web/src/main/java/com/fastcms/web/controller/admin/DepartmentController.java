@@ -28,10 +28,7 @@ import com.fastcms.entity.Department;
 import com.fastcms.service.IDepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -49,6 +46,16 @@ public class DepartmentController {
 
     @Autowired
     private IDepartmentService departmentService;
+
+    /**
+     * 部门列表
+     * @return
+     */
+    @GetMapping("list")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "departments", action = ActionTypes.READ)
+    public RestResult<List<IDepartmentService.DepartmentNode>> list() {
+        return RestResultUtils.success(departmentService.getDepartmentList());
+    }
 
     /**
      * 保存部门

@@ -8,11 +8,10 @@ import com.fastcms.mapper.DepartmentMapper;
 import com.fastcms.service.IDepartmentService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
- * <p>
- *  服务实现类
- * </p>
- *
+ * 部门服务实现类
  * @author wjun_java@163.com
  * @since 2022-03-23
  */
@@ -20,8 +19,23 @@ import org.springframework.stereotype.Service;
 public class DepartmentServiceImpl<T extends TreeNode> extends ServiceImpl<DepartmentMapper, Department> implements IDepartmentService, TreeNodeConvert<T> {
 
     @Override
+    public List<DepartmentNode> getDepartmentList() {
+        List<Department> departmentList = list();
+        return (List<DepartmentNode>) getTreeNodeList(departmentList);
+    }
+
+    @Override
     public T convert2Node(Object object) {
-        return null;
+        Department department = (Department) object;
+        DepartmentNode departmentNode = new DepartmentNode(department.getId(),
+                department.getParentId(),
+                department.getDeptName(),
+                department.getDeptDesc(),
+                department.getStatus(),
+                department.getLeaderId(),
+                department.getSortNum()
+        );
+        return (T) departmentNode;
     }
 
 }
