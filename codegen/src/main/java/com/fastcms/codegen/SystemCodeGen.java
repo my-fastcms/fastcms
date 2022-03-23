@@ -37,7 +37,7 @@ public class SystemCodeGen extends AbstractCodeGen {
 
     @Override
     String[] getTableNames() {
-        return new String[] { "user", "role", "permission" , "config", "attachment", "user_tag", "user_openid", "order", "order_item", "order_invoice", "payment_record" };
+        return new String[] { "user", "role", "permission" , "department", "config", "attachment", "user_tag", "user_openid", "order", "order_item", "order_invoice", "payment_record" };
     }
 
     public static void main(String[] args) throws Exception {
