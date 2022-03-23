@@ -60,6 +60,7 @@ public class HttpUtils {
 	public static <T> HttpRestResult<T> get(String url) throws Exception {
 		return execute(url, GET, new RequestHttpEntity(Header.EMPTY, Query.EMPTY), String.class);
 	}
+
 	public static <T> HttpRestResult<T> get(String url, Header header, Query query, Type resultType) throws Exception {
 		return execute(url, GET, new RequestHttpEntity(header, query), resultType);
 	}
@@ -112,11 +113,11 @@ public class HttpUtils {
 	private static <T> HttpRestResult<T> execute(String url, String httpMethod, RequestHttpEntity requestEntity, Type resultType) throws Exception {
 		URI uri = buildUri(url, requestEntity.getQuery());
 
-		ResultHandler<T> responseHandler = selectResponseHandler(resultType);
+		ResultHandler<T> resultHandler = selectResultHandler(resultType);
 		HttpClientResponse response = null;
 		try {
 			response = requestClient.execute(uri, httpMethod, requestEntity);
-			return responseHandler.handle(response);
+			return resultHandler.handle(response);
 		} finally {
 			if (response != null) {
 				response.close();
@@ -124,7 +125,7 @@ public class HttpUtils {
 		}
 	}
 
-	private static ResultHandler selectResponseHandler(Type resultType) {
+	private static ResultHandler selectResultHandler(Type resultType) {
 		ResultHandler resultHandler = null;
 		if (resultType == null) {
 			resultHandler = responseHandlerMap.get(STRING_TYPE);

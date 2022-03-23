@@ -20,10 +20,9 @@ import com.fastcms.common.http.HttpRestResult;
 import com.fastcms.common.utils.HttpUtils;
 import com.fastcms.core.sms.AliyunSmsSender;
 import com.fastcms.core.sms.SmsMessage;
-import com.fastcms.web.security.AuthConfigs;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -36,25 +35,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  * @version: 1.0
  */
 @SpringBootTest
-public class TestAuthService {
+public class TestCaseService {
+
+    private static final Logger logger = LoggerFactory.getLogger(TestCaseService.class);
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    private AuthConfigs authConfigs;
-
-    @Autowired
     private AliyunSmsSender aliyunSmsSender;
-
-    @Test
-    public void testJwtSecurity() {
-        Claims claims = Jwts.parserBuilder().setSigningKey(authConfigs.getSecretKeyBytes()).build()
-                .parseClaimsJws("eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTYzNTQwMDI5OH0.0N_liADYX5nkLuC8JRoGPwudREw9gq0lr_YaoG_7fQM").getBody();
-        System.out.println(claims.getSubject());
-        String auths = (String) claims.get("auth");
-        System.out.println(auths);
-    }
 
     @Test
     public void testPasswordEncode() {
@@ -64,14 +53,14 @@ public class TestAuthService {
     @Test
     public void testHttp() throws Exception {
         HttpRestResult<String> objectHttpRestResult = HttpUtils.get("https://www.xjd2020.com");
-        System.out.println(objectHttpRestResult.getData());
+        logger.info(objectHttpRestResult.getData());
     }
 
     @Test
     public void testSendSms() {
         SmsMessage smsMessage = new SmsMessage("13533109940", "小橘灯", "SMS_198840162", "1688");
         boolean send = aliyunSmsSender.send(smsMessage);
-        System.out.println(send);
+        logger.info("============>>>send:" + send);
     }
 
 }

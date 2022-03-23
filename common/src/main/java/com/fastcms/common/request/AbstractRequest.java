@@ -18,8 +18,8 @@
 package com.fastcms.common.request;
 
 import com.fastcms.common.http.Header;
+import com.fastcms.common.http.HttpRestResult;
 import com.fastcms.common.http.Query;
-import com.fastcms.common.model.RestResult;
 import com.fastcms.common.utils.HttpUtils;
 import com.fastcms.common.utils.JacksonUtils;
 import com.fastcms.common.utils.ReflectUtils;
@@ -28,6 +28,7 @@ import org.apache.commons.collections.CollectionUtils;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +47,7 @@ public abstract class AbstractRequest implements Serializable {
     protected transient Query query = Query.EMPTY;
     protected transient Map<String, String> params = new HashMap<>();
 
-    protected Map<String, String> buildParams() {
+    public Map<String, String> buildParams() {
         if (CollectionUtils.isNotEmpty(params.values())) {
             return params;
         }
@@ -83,22 +84,40 @@ public abstract class AbstractRequest implements Serializable {
         return this;
     }
 
-    public RestResult get() throws Exception {
-        return HttpUtils.get(getRequestUrl(), header, query.initParams(buildParams()), RestResult.class);
+    public HttpRestResult get(Type resultType) throws Exception {
+        return HttpUtils.get(getRequestUrl(), header, query.initParams(buildParams()), resultType);
     }
 
-    public RestResult post() throws Exception {
-        return HttpUtils.post(getRequestUrl(), header, query, buildParams(), RestResult.class);
+    public HttpRestResult get() throws Exception {
+        return get(getResult());
     }
 
-    public RestResult postJson() throws Exception {
-        return HttpUtils.postJson(getRequestUrl(), header, query, JacksonUtils.toJson(buildParams()), RestResult.class);
+    public HttpRestResult post(Type resultType) throws Exception {
+        return HttpUtils.post(getRequestUrl(), header, query, buildParams(), resultType);
     }
 
-    public RestResult postForm() throws Exception {
-        return HttpUtils.postForm(getRequestUrl(), header, query, buildParams(), RestResult.class);
+    public HttpRestResult post() throws Exception {
+        return post(getResult());
     }
 
+    public HttpRestResult postJson() throws Exception {
+        return HttpUtils.postJson(getRequestUrl(), header, query, JacksonUtils.toJson(buildParams()), getResult());
+    }
+
+    public HttpRestResult postForm() throws Exception {
+        return HttpUtils.postForm(getRequestUrl(), header, query, buildParams(), getResult());
+    }
+
+    /**
+     * 请求的url地址
+     * @return
+     */
     protected abstract String getRequestUrl();
+
+    /**
+     * 返回结果集
+     * @return
+     */
+    protected abstract Type getResult();
 
 }
