@@ -36,6 +36,16 @@ public class Department implements Serializable {
     private String deptDesc;
 
     /**
+     * 联系电话
+     */
+    private String deptPhone;
+
+    /**
+     * 部门地址
+     */
+    private String deptAddr;
+
+    /**
      * 0，禁用，1启用
      */
     private Integer status;
@@ -48,7 +58,7 @@ public class Department implements Serializable {
     /**
      * 部门负责人
      */
-    private Long leaderId;
+    private String deptLeader;
 
     /**
      * 创建时间
@@ -90,6 +100,23 @@ public class Department implements Serializable {
     public void setDeptDesc(String deptDesc) {
         this.deptDesc = deptDesc;
     }
+
+    public String getDeptPhone() {
+        return deptPhone;
+    }
+
+    public void setDeptPhone(String deptPhone) {
+        this.deptPhone = deptPhone;
+    }
+
+    public String getDeptAddr() {
+        return deptAddr;
+    }
+
+    public void setDeptAddr(String deptAddr) {
+        this.deptAddr = deptAddr;
+    }
+
     public Integer getStatus() {
         return status;
     }
@@ -104,12 +131,12 @@ public class Department implements Serializable {
     public void setSortNum(Integer sortNum) {
         this.sortNum = sortNum;
     }
-    public Long getLeaderId() {
-        return leaderId;
+    public String getDeptLeader() {
+        return deptLeader;
     }
 
-    public void setLeaderId(Long leaderId) {
-        this.leaderId = leaderId;
+    public void setDeptLeader(String deptLeader) {
+        this.deptLeader = deptLeader;
     }
     public LocalDateTime getCreated() {
         return created;
@@ -135,7 +162,7 @@ public class Department implements Serializable {
             ", deptDesc=" + deptDesc +
             ", status=" + status +
             ", sortNum=" + sortNum +
-            ", leaderId=" + leaderId +
+            ", deptLeader=" + deptLeader +
             ", created=" + created +
             ", updated=" + updated +
         "}";

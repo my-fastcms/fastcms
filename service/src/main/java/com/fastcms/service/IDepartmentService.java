@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.common.model.TreeNode;
 import com.fastcms.entity.Department;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -24,14 +25,18 @@ public interface IDepartmentService extends IService<Department> {
 		private String deptName;
 		private String deptDesc;
 		private Integer status;
-		private Long leaderId;
+		private String deptLeader;
+		private String deptPhone;
+		private LocalDateTime created;
 
-		public DepartmentNode(Long id, Long parentId, String deptName, String deptDesc, Integer status, Long leaderId, Integer sortNum) {
+		public DepartmentNode(Long id, Long parentId, String deptName, String deptDesc, Integer status, String deptLeader, Integer sortNum, String deptPhone, LocalDateTime created) {
 			super(id, parentId, deptName, status == 1, sortNum);
 			this.deptName = deptName;
 			this.deptDesc = deptDesc;
 			this.status = status;
-			this.leaderId = leaderId;
+			this.deptLeader = deptLeader;
+			this.deptPhone = deptPhone;
+			this.created = created;
 		}
 
 		public String getDeptName() {
@@ -58,14 +63,29 @@ public interface IDepartmentService extends IService<Department> {
 			this.status = status;
 		}
 
-		public Long getLeaderId() {
-			return leaderId;
+		public String getDeptLeader() {
+			return deptLeader;
 		}
 
-		public void setLeaderId(Long leaderId) {
-			this.leaderId = leaderId;
+		public void setDeptLeader(String deptLeader) {
+			this.deptLeader = deptLeader;
 		}
 
+		public String getDeptPhone() {
+			return deptPhone;
+		}
+
+		public void setDeptPhone(String deptPhone) {
+			this.deptPhone = deptPhone;
+		}
+
+		public LocalDateTime getCreated() {
+			return created;
+		}
+
+		public void setCreated(LocalDateTime created) {
+			this.created = created;
+		}
 	}
 
 }

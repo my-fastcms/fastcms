@@ -158,7 +158,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             userOpenid.setUserId(user.getId());
             userOpenid.setType(type);
             userOpenid.setValue(openid);
-//            userOpenid.setUnionId(unionId);
             userOpenidService.save(userOpenid);
         }else {
             user = getById(userOpenid.getUserId());
@@ -210,6 +209,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         user = new User();
         user.setUserName(username);
+        user.setSex(User.SEX_MAN);
         user.setPassword(passwordEncoder.encode(password));
         user.setSource(User.SourceType.WEB_REGISTER.name().toLowerCase());
         save(user);

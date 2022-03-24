@@ -32,8 +32,10 @@ public class DepartmentServiceImpl<T extends TreeNode> extends ServiceImpl<Depar
                 department.getDeptName(),
                 department.getDeptDesc(),
                 department.getStatus(),
-                department.getLeaderId(),
-                department.getSortNum()
+                department.getDeptLeader(),
+                department.getSortNum(),
+                department.getDeptPhone(),
+                department.getCreated()
         );
         return (T) departmentNode;
     }

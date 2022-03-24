@@ -14,58 +14,49 @@
 				:tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
 			>
 				<el-table-column prop="deptName" label="部门名称" show-overflow-tooltip> </el-table-column>
-				<el-table-column label="排序" show-overflow-tooltip width="80">
-					<template #default="scope">
-						{{ scope.$index }}
-					</template>
-				</el-table-column>
 				<el-table-column prop="status" label="部门状态" show-overflow-tooltip>
 					<template #default="scope">
 						<el-tag type="success" v-if="scope.row.status">启用</el-tag>
 						<el-tag type="info" v-else>禁用</el-tag>
 					</template>
 				</el-table-column>
-				<el-table-column prop="describe" label="部门描述" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="createTime" label="创建时间" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="deptDesc" label="部门描述" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="created" label="创建时间" show-overflow-tooltip></el-table-column>
 				<el-table-column label="操作" show-overflow-tooltip width="140">
 					<template #default="scope">
-						<el-button size="small" type="text" @click="onOpenAddDept">新增</el-button>
+						<el-button size="small" type="text" @click="onOpenAddDept(scope.row)">新增</el-button>
 						<el-button size="small" type="text" @click="onOpenEditDept(scope.row)">修改</el-button>
 						<el-button size="small" type="text" @click="onTabelRowDel(scope.row)">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
 		</el-card>
-		<AddDept ref="addDeptRef" />
-		<EditDept ref="editDeptRef" />
+		<AddDept ref="addDeptRef" @reloadTable="initTableData"/>
+		<EditDept ref="editDeptRef" @reloadTable="initTableData"/>
 	</div>
 </template>
 
 <script lang="ts">
 import { ref, toRefs, reactive, onMounted, defineComponent } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
+import { getDeptList, delDept } from '/@/api/dept/index';
 import AddDept from '/@/views/system/dept/component/addDept.vue';
 import EditDept from '/@/views/system/dept/component/editDept.vue';
 
 // 定义接口来定义对象的类型
 interface TableDataRow {
 	deptName: string;
-	createTime: string;
+	created: string;
 	status: boolean;
-	sort: number;
-	describe: string;
+	sortNum: number;
+	deptDesc: string;
 	id: number;
 	children?: TableDataRow[];
 }
 interface TableDataState {
 	tableData: {
 		data: Array<TableDataRow>;
-		total: number;
 		loading: boolean;
-		param: {
-			pageNum: number;
-			pageSize: number;
-		};
 	};
 }
 
@@ -78,47 +69,18 @@ export default defineComponent({
 		const state = reactive<TableDataState>({
 			tableData: {
 				data: [],
-				total: 0,
 				loading: false,
-				param: {
-					pageNum: 1,
-					pageSize: 10,
-				},
 			},
 		});
 		// 初始化表格数据
 		const initTableData = () => {
-			state.tableData.data.push({
-				deptName: 'vueNextAdmin',
-				createTime: new Date().toLocaleString(),
-				status: true,
-				sort: Math.random(),
-				describe: '顶级部门',
-				id: Math.random(),
-				children: [
-					{
-						deptName: 'IT外包服务',
-						createTime: new Date().toLocaleString(),
-						status: true,
-						sort: Math.random(),
-						describe: '总部',
-						id: Math.random(),
-					},
-					{
-						deptName: '资本控股',
-						createTime: new Date().toLocaleString(),
-						status: true,
-						sort: Math.random(),
-						describe: '分部',
-						id: Math.random(),
-					},
-				],
-			});
-			state.tableData.total = state.tableData.data.length;
+			getDeptList().then(res => {
+				state.tableData.data = res.data
+			})
 		};
 		// 打开新增菜单弹窗
-		const onOpenAddDept = () => {
-			addDeptRef.value.openDialog();
+		const onOpenAddDept = (row: TableDataRow) => {
+			addDeptRef.value.openDialog(row);
 		};
 		// 打开编辑菜单弹窗
 		const onOpenEditDept = (row: TableDataRow) => {
@@ -132,7 +94,12 @@ export default defineComponent({
 				type: 'warning',
 			})
 				.then(() => {
-					ElMessage.success('删除成功');
+					delDept(row.id).then((res) => {
+						if(res.code == 200) {
+							ElMessage.success('删除成功');
+							initTableData();
+						}
+					})
 				})
 				.catch(() => {});
 		};
@@ -141,6 +108,7 @@ export default defineComponent({
 			initTableData();
 		});
 		return {
+			initTableData,
 			addDeptRef,
 			editDeptRef,
 			onOpenAddDept,
