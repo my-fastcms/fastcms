@@ -15,10 +15,31 @@ import java.util.List;
 public interface IDepartmentService extends IService<Department> {
 
 	/**
+	 * 根据状态获取部门树状数据
+	 * @param status
+	 * @return
+	 */
+	List<DepartmentNode> getDepartmentList(Integer status);
+
+	/**
 	 * 获取部门树状数据
 	 * @return
 	 */
 	List<DepartmentNode> getDepartmentList();
+
+	/**
+	 * 保存用户部门
+	 * @param userId
+	 * @param deptIdList
+	 */
+	void saveUserDepartments(Long userId, List<Long> deptIdList);
+
+	/**
+	 * 获取用户所在部门集合
+	 * @param userId
+	 * @return
+	 */
+	List<Department> getUserDepartment(Long userId);
 
 	class DepartmentNode extends TreeNode {
 

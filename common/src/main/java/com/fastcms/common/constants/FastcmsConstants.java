@@ -44,6 +44,16 @@ public interface FastcmsConstants {
     String ENCODE = "UTF-8";
 
     /**
+     * 数据启用状态
+     */
+    Integer STATUS_NORMAL = 1;
+
+    /**
+     * 数据禁用删除状态
+     */
+    Integer STATUS_DEL = 0;
+
+    /**
      * 内置超级管理员角色id值,不可变
      */
     Long ADMIN_ROLE_ID = 1L;
@@ -99,7 +109,7 @@ public interface FastcmsConstants {
     /**
      * The constants in exception directory.
      */
-    public static class Exception {
+    class Exception {
 
         public static final int DESERIALIZE_ERROR_CODE = 101;
 

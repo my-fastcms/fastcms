@@ -55,6 +55,11 @@
 						</el-form-item>
 					</el-col>
 					<el-col class="mb20">
+						<el-form-item label="分配部门">
+							<el-cascader v-model="ruleForm.deptList" :options="deptList" placeholder="请选择部门" :props="{ checkStrictly: true, multiple: true, label: 'label', value: 'id', children: 'children' }" class="w100" clearable/>
+						</el-form-item>
+					</el-col>
+					<el-col class="mb20">
 						<el-form-item label="用户标签">
 							<el-select
 								v-model="ruleForm.tagList"
@@ -92,6 +97,7 @@ import { reactive, toRefs, getCurrentInstance, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { saveUser, getTagList } from '/@/api/user/index';
 import { getRoleSelectList } from '/@/api/role/index';
+import { getDeptList } from '/@/api/dept/client';
 import qs from 'qs';
 
 export default {
@@ -100,6 +106,7 @@ export default {
 		const { proxy } = getCurrentInstance() as any;
 		const state = reactive({
 			isShowDialog: false,
+			deptList: [],
 			tags: [],
 			roleList: [],
 			ruleForm: {
@@ -163,7 +170,10 @@ export default {
 			});
 			getTagList().then((res) => {
 				state.tags = res.data;
-			})
+			});
+			getDeptList().then((res) => {
+				state.deptList = res.data;
+			});
 		}
 
 		onMounted(() => {

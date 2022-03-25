@@ -4,6 +4,21 @@
 			<div class="mb15">
 				<el-button class="mt15" size="small" @click="addArticle()" type="primary" icon="iconfont icon-shuxingtu">新建文章</el-button>
 				<el-input size="small" v-model="tableData.param.title" placeholder="请输入文章标题" prefix-icon="el-icon-search" style="max-width: 180px" class="ml10"></el-input>
+				<el-cascader size="small" v-model="tableData.param.categoryId" :options="categoryList" :props="{ checkStrictly: true, label: 'label', value: 'id', children: 'children' }" placeholder="分类" clearable class="ml10"/>
+				<el-select size="small" v-model="tableData.param.tagId" clearable placeholder="标签" class="ml10">
+					<el-option
+						v-for="item in tagList"
+						:key="item.id"
+						:label="item.tagName"
+						:value="item.id"
+					/>
+				</el-select>
+				<el-select size="small" style="max-width: 180px" v-model="tableData.param.status" placeholder="请选择状态" clearable class="ml10">
+					<el-option label="发布" value="publish"></el-option>
+					<el-option label="草稿" value="draft"></el-option>
+					<el-option label="审核" value="audit"></el-option>
+					<el-option label="删除" value="delete"></el-option>
+				</el-select>
 				<el-button size="small" type="primary" class="ml10" @click="initTableData">查询</el-button>
 			</div>
 			<el-table :data="tableData.data" stripe style="width: 100%">
@@ -14,8 +29,18 @@
 						{{scope.row.title}}
 					</a></template>
 				</el-table-column>
+				<el-table-column prop="categoryList" label="分类" show-overflow-tooltip>
+					<template #default="scope">
+						<span v-for="item in scope.row.categoryList" :key="item.id">{{item.title}},</span>
+					</template>
+				</el-table-column>
+				<el-table-column prop="tagList" label="标签" show-overflow-tooltip>
+					<template #default="scope">
+						<span v-for="item in scope.row.tagList" :key="item.id">{{item.tagName}},</span>
+					</template>
+				</el-table-column>
 				<el-table-column prop="author" label="作者" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="status" label="状态" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="statusStr" label="状态" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="viewCount" label="浏览次数" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="created" label="创建时间" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="path" label="操作" width="90">
@@ -45,7 +70,7 @@
 <script lang="ts">
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { toRefs, reactive, onMounted } from 'vue';
-import { getArticleList, delArticle } from '/@/api/article/index';
+import { getArticleList, getArticleCategoryList, delArticle, getArticleTagList } from '/@/api/article/index';
 import { useRouter } from 'vue-router';
 
 export default {
@@ -55,6 +80,8 @@ export default {
 		const router = useRouter();
 
 		const state = reactive({
+			tagList: [],
+			categoryList: [],
 			tableData: {
 				data: [],
 				total: 0,
@@ -68,6 +95,10 @@ export default {
 
 		// 初始化表格数据
 		const initTableData = () => {
+			const categoryIdArray = state.tableData.param.categoryId;
+			if(categoryIdArray != null && categoryIdArray.length>0) {
+				state.tableData.param.categoryId = categoryIdArray[0];
+			}
 			getArticleList(state.tableData.param).then((res) => {
 				state.tableData.data = res.data.records;
 				state.tableData.total = res.data.total;
@@ -111,9 +142,16 @@ export default {
         const addArticle = () => {
 			router.push({ path: '/article/write'});
         };
+		
 		// 页面加载时
 		onMounted(() => {
 			initTableData();
+			getArticleCategoryList().then((res) => {
+                state.categoryList = res.data;
+            })
+			getArticleTagList().then((res) => {
+				state.tagList = res.data;
+			})
 		});
 		return {
             addArticle,

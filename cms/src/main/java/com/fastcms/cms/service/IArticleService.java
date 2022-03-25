@@ -177,6 +177,10 @@ public interface IArticleService extends IService<Article> {
          */
         String status;
         /**
+         * 显示状态
+         */
+        String statusStr;
+        /**
          * 创建时间
          */
         LocalDateTime created;
@@ -293,6 +297,9 @@ public interface IArticleService extends IService<Article> {
             return ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + "/a/" + getId();
         }
 
+        public String getStatusStr() {
+            return Article.ArticleStatus.getValue(getStatus());
+        }
     }
 
     /**

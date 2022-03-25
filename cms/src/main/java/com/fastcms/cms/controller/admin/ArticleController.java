@@ -88,7 +88,6 @@ public class ArticleController {
                 .eq(StrUtils.isNotBlank(status), "a.status", status)
                 .eq(StrUtils.isNotBlank(categoryId), "acr.category_id", categoryId)
                 .eq(StrUtils.isNotBlank(tagId), "acr.category_id", tagId)
-                .ne("a.status", Article.STATUS_DELETE)
                 .orderByDesc("a.created");
 
         Page<IArticleService.ArticleVo> pageData = articleService.pageArticle(page.toPage(), queryWrapper);

@@ -34,10 +34,11 @@ public class OrderController {
 
     /**
      * 订单列表
-     * @param page
-     * @param orderSn
-     * @param title
-     * @param status
+     * @param page      分页
+     * @param orderSn   订单号
+     * @param title     商品标题
+     * @param status    订单状态
+     * @param payStatus 支付状态
      * @return
      */
     @GetMapping("list")
@@ -45,18 +46,22 @@ public class OrderController {
     public RestResult<Page<IOrderService.OrderListVo>> list(PageModel page,
                                                         @RequestParam(name = "orderSn", required = false) String orderSn,
                                                         @RequestParam(name = "title", required = false) String title,
+                                                        @RequestParam(name = "payStatus", required = false) String payStatus,
+                                                        @RequestParam(name = "tradeStatus", required = false) String tradeStatus,
                                                         @RequestParam(name = "status", required = false) String status) {
         QueryWrapper queryWrapper = Wrappers.query().eq(StrUtils.isNotBlank(orderSn), "o.order_sn", orderSn)
                 .eq(!AuthUtils.isAdmin(), "o.user_id", AuthUtils.getUserId())
-                .eq(StrUtils.isNotBlank(status), "o.pay_status", status)
                 .like(StrUtils.isNotBlank(title), "o.order_title", title)
+                .eq(StrUtils.isNotBlank(status), "o.status", status)
+                .eq(StrUtils.isNotBlank(payStatus), "o.pay_status", payStatus)
+                .eq(StrUtils.isNotBlank(tradeStatus), "o.trade_status", tradeStatus)
                 .orderByDesc("o.created");
         return RestResultUtils.success(orderService.pageOrder(page.toPage(), queryWrapper));
     }
 
     /**
      * 订单详情
-     * @param orderId
+     * @param orderId   订单号
      * @return
      */
     @GetMapping("detail/{orderId}")

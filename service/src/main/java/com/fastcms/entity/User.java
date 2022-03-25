@@ -151,6 +151,12 @@ public class User implements Serializable {
     @TableField(exist = false)
     private List<Long> roleList;
 
+    /**
+     * 已分配的部门列表
+     */
+    @TableField(exist = false)
+    private List<Long> deptList;
+
     public String getSourceStr() {
         String text = SourceType.getValue(getSource());
         return StringUtils.isBlank(text) ? "" : text;
@@ -324,6 +330,14 @@ public class User implements Serializable {
 
     public void setRoleList(List<Long> roleList) {
         this.roleList = roleList;
+    }
+
+    public List<Long> getDeptList() {
+        return deptList;
+    }
+
+    public void setDeptList(List<Long> deptList) {
+        this.deptList = deptList;
     }
 
     public Integer getSex() {

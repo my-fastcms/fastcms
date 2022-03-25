@@ -27,9 +27,11 @@ import com.fastcms.core.auth.AuthConstants;
 import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.auth.Secured;
 import com.fastcms.core.mybatis.PageModel;
+import com.fastcms.entity.Department;
 import com.fastcms.entity.Role;
 import com.fastcms.entity.User;
 import com.fastcms.entity.UserTag;
+import com.fastcms.service.IDepartmentService;
 import com.fastcms.service.IRoleService;
 import com.fastcms.service.IUserService;
 import com.fastcms.service.IUserTagService;
@@ -62,6 +64,9 @@ public class UserController {
 
     @Autowired
     private IUserTagService userTagService;
+
+    @Autowired
+    private IDepartmentService departmentService;
 
     /**
      * 用户列表
@@ -111,6 +116,7 @@ public class UserController {
         User user = userService.getById(userId);
         user.setRoleList(roleService.getUserRoleList(userId).stream().map(Role::getId).collect(Collectors.toList()));
         user.setTagList(userTagService.getTagListByUserId(userId).stream().map(UserTag::getTitle).collect(Collectors.toList()));
+        user.setDeptList(departmentService.getUserDepartment(userId).stream().map(Department::getId).collect(Collectors.toList()));
         return RestResultUtils.success(user);
     }
 

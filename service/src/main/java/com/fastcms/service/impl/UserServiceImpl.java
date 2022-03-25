@@ -12,10 +12,7 @@ import com.fastcms.entity.UserTag;
 import com.fastcms.mapper.RoleMapper;
 import com.fastcms.mapper.UserMapper;
 import com.fastcms.mapper.UserTagMapper;
-import com.fastcms.service.IRoleService;
-import com.fastcms.service.IUserOpenidService;
-import com.fastcms.service.IUserService;
-import com.fastcms.service.IUserTagService;
+import com.fastcms.service.*;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,6 +46,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Autowired
     private IUserOpenidService userOpenidService;
+
+    @Autowired
+    private IDepartmentService departmentService;
 
     @Override
     public void updateUserPassword(UpdatePasswordParam updatePasswordParam) throws FastcmsException {
@@ -105,6 +105,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         saveOrUpdate(user);
         roleService.saveUserRole(user.getId(), user.getRoleList());
+        departmentService.saveUserDepartments(user.getId(), user.getDeptList());
         processTag(user.getId(), user.getTagList());
         return user.getId();
     }
