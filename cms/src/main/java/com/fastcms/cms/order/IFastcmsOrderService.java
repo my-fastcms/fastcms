@@ -18,6 +18,7 @@ package com.fastcms.cms.order;
 
 import com.egzosn.pay.common.bean.PayMessage;
 import com.fastcms.common.exception.FastcmsException;
+import com.fastcms.entity.Order;
 
 import java.io.Serializable;
 
@@ -45,6 +46,14 @@ public interface IFastcmsOrderService {
      * @throws FastcmsException
      */
     void payBackOrder(PayMessage payMessage) throws FastcmsException;
+
+    /**
+     * 对订单进行业务扩展处理
+     * @param order
+     */
+    default void processOrder(Order order) throws FastcmsException {
+
+    }
 
     /**
      * 创建订单
