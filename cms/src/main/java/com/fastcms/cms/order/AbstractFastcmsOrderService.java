@@ -84,11 +84,6 @@ public abstract class AbstractFastcmsOrderService implements IFastcmsOrderServic
             paymentRecord.setPaySuccessAmount(item.getTotalAmount());
             paymentRecord.setUserId(order.getUserId());
             paymentRecord.setPaySuccessTime(LocalDateTime.now());
-//            paymentRecord.setThirdpartyUserOpenid(wxPayMessage.getOpenid());
-//            paymentRecord.setThirdpartyTransactionId(wxPayMessage.getTransactionId());
-//            paymentRecord.setThirdpartyAppid(wxPayMessage.getAppid());
-//            paymentRecord.setThirdpartyMchId(wxPayMessage.getMchId());
-//            paymentRecord.setThirdpartyType(WechatPaymentPlatform.platformName);
             setPaymentRecordPlatformInfo(paymentRecord, payMessage);
             paymentRecord.setPayStatus(Order.STATUS_PAY_SUCCESS);
             paymentRecordService.save(paymentRecord);
@@ -105,7 +100,6 @@ public abstract class AbstractFastcmsOrderService implements IFastcmsOrderServic
                 e.printStackTrace();
             }
         });
-
 
     }
 
