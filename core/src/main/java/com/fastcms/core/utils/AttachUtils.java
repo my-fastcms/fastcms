@@ -16,6 +16,7 @@
  */
 package com.fastcms.core.utils;
 
+import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.DirUtils;
 import com.fastcms.common.utils.FileUtils;
@@ -90,7 +91,8 @@ public abstract class AttachUtils {
     public static final String ATTACH_WATERMARK_TXT = "waterMarkTxt";
 
     public static String getAttachFileDomain() {
-        return ConfigUtils.getConfig(ATTACH_FILE_DOMAIN);
+        String config = ConfigUtils.getConfig(ATTACH_FILE_DOMAIN);
+        return StringUtils.isBlank(config) ? ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) : config;
     }
 
     public static Integer getImageMaxSize() {

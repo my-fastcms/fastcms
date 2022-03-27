@@ -23,6 +23,7 @@ import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.entity.ArticleCategory;
 import com.fastcms.cms.entity.ArticleTag;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.core.utils.AttachUtils;
 import com.fastcms.utils.ConfigUtils;
 
 import java.io.Serializable;
@@ -177,10 +178,6 @@ public interface IArticleService extends IService<Article> {
          */
         String status;
         /**
-         * 显示状态
-         */
-        String statusStr;
-        /**
          * 创建时间
          */
         LocalDateTime created;
@@ -200,6 +197,10 @@ public interface IArticleService extends IService<Article> {
          * 文章摘要
          */
         String summary;
+        /**
+         * 扩展字段
+         */
+        String jsonExt;
         /**
          * 文章所属分类
          */
@@ -277,6 +278,14 @@ public interface IArticleService extends IService<Article> {
             this.summary = summary;
         }
 
+        public String getJsonExt() {
+            return jsonExt;
+        }
+
+        public void setJsonExt(String jsonExt) {
+            this.jsonExt = jsonExt;
+        }
+
         public List<ArticleCategory> getCategoryList() {
             return categoryList;
         }
@@ -299,6 +308,10 @@ public interface IArticleService extends IService<Article> {
 
         public String getStatusStr() {
             return Article.ArticleStatus.getValue(getStatus());
+        }
+
+        public String getThumbnailUrl() {
+            return AttachUtils.getAttachFileDomain() + getThumbnail();
         }
     }
 

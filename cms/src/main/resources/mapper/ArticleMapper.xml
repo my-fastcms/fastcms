@@ -49,7 +49,7 @@
     </delete>
 
     <select id="pageArticle" resultMap="ArticleToResult">
-        select distinct a.id, a.title, a.status, a.created, a.view_count, a.thumbnail,
+        select distinct a.id, a.title, a.status, a.created, a.view_count, a.thumbnail, a.json_ext, a.summary,
         u.user_name from article a
         LEFT JOIN `user` u on a.user_id = u.id
         LEFT JOIN article_category_relation acr on acr.article_id = a.id

@@ -180,19 +180,6 @@ public class Article implements Serializable {
     @TableField(exist = false)
     String url;
 
-    /**
-     * 缩略图全路径地址
-     */
-    @TableField(exist = false)
-    String thumbnailUrl;
-
-    /**
-     * 扩展字段
-     */
-    @JsonIgnore
-    @TableField(exist = false)
-    private Map<String, Object> extFields;
-
     @TableField(exist = false)
     private String highlightTitle;
 
@@ -412,10 +399,10 @@ public class Article implements Serializable {
             try {
                 return JSON.toJavaObject(JSON.parseObject(getJsonExt()), Map.class);
             } catch (Exception e) {
-                return extFields;
+                return null;
             }
         }
-        return extFields;
+        return null;
     }
 
     @JsonIgnore

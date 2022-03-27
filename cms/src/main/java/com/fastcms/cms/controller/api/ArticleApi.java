@@ -16,6 +16,9 @@
  */
 package com.fastcms.cms.controller.api;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.search.FastcmsSearcherManager;
@@ -70,6 +73,16 @@ public class ArticleApi {
 
 	@Autowired
 	private FastcmsSearcherManager fastcmsSearcherManager;
+
+	@RequestMapping("list")
+	public RestResult<Page<IArticleService.ArticleVo>> list(PageModel page, @RequestParam(name = "categoryId") String categoryId) {
+		QueryWrapper<Object> queryWrapper = Wrappers.query()
+				.eq(StringUtils.isNotBlank(categoryId), "acr.category_id", categoryId)
+				.eq("a.status", Article.STATUS_PUBLISH)
+				.orderByDesc("a.created");
+		Page<IArticleService.ArticleVo> articleVoPage = articleService.pageArticle(page.toPage(), queryWrapper);
+		return RestResultUtils.success(articleVoPage);
+	}
 
 	/**
 	 * 保存文章
@@ -126,7 +139,7 @@ public class ArticleApi {
 	 * @return
 	 */
 	@RequestMapping("search")
-	public RestResult<Page<Article>> list(PageModel page, @RequestParam(name = "keyword") String keyword) {
+	public RestResult<Page<Article>> search(PageModel page, @RequestParam(name = "keyword") String keyword) {
 		return RestResultUtils.success(fastcmsSearcherManager.getSearcher().search(keyword, page.getPageNum().intValue(), page.getPageSize().intValue()));
 	}
 

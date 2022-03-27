@@ -92,7 +92,7 @@ public abstract class AbstractFastcmsOrderService implements IFastcmsOrderServic
         /**
          * 插件中对订单处理的业务扩展
          */
-        List<IFastcmsOrderService> extensions = PluginUtils.getExtensions(IFastcmsOrderService.class);
+        List<AbstractExtensionOrderService> extensions = PluginUtils.getExtensions(AbstractExtensionOrderService.class);
         extensions.forEach(item -> {
             try {
                 item.processOrder(order);

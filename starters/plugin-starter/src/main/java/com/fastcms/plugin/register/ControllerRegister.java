@@ -22,6 +22,7 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
@@ -50,7 +51,8 @@ public class ControllerRegister extends AbstractPluginRegister {
 
         for (Class<?> aClass : getPluginClasses(pluginId)) {
             Controller annotation = aClass.getAnnotation(Controller.class);
-            if(annotation != null) {
+            RestController restAnnotation = aClass.getAnnotation(RestController.class);
+            if(annotation != null || restAnnotation != null) {
                 Object bean = pluginManger.getExtensionFactory().create(aClass);
                 Method[] methods = aClass.getMethods();
                 for (Method method : methods) {
@@ -77,7 +79,8 @@ public class ControllerRegister extends AbstractPluginRegister {
         List<RequestMappingInfo> requestMappingInfoList = new ArrayList<>();
         for (Class<?> aClass : getPluginClasses(pluginId)) {
             Controller annotation = aClass.getAnnotation(Controller.class);
-            if (annotation != null) {
+            RestController restAnnotation = aClass.getAnnotation(RestController.class);
+            if (annotation != null || restAnnotation != null) {
                 Method[] methods = aClass.getMethods();
                 for (Method method : methods) {
                     RequestMappingInfo requestMappingInfo = (RequestMappingInfo) getMappingForMethod.invoke(requestMappingHandlerMapping, method, aClass);

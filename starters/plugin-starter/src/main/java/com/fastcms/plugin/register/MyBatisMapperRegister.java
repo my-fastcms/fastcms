@@ -70,7 +70,7 @@ public class MyBatisMapperRegister extends AbstractPluginRegister {
 		PathMatchingResourcePatternResolver pathMatchingResourcePatternResolver = new PathMatchingResourcePatternResolver(pluginWrapper.getPluginClassLoader());
 		String pluginBasePath = ClassUtils.classPackageAsResourcePath(pluginWrapper.getPlugin().getClass());
 		//扫描plugin所有的mapper.xml文件
-		Resource[] mapperXmlResources = pathMatchingResourcePatternResolver.getResources(PathMatchingResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + pluginBasePath + "/mapper/*Mapper.xml");
+		Resource[] mapperXmlResources = pathMatchingResourcePatternResolver.getResources(PathMatchingResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + pluginBasePath + "/*Mapper.xml");
 
 		//注册mapper.xml
 		SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) beanFactory.getBean("sqlSessionFactory");
