@@ -1,6 +1,6 @@
 # fastcms
 
-![输入图片说明](./doc/images/fastcms.png "屏幕截图.png")
+![输入图片说明](./doc/images/fastcms.png "fastcms.png")
 
 ### 介绍
 - fastcms内置一套完整的CMS建站系统
