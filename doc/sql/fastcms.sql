@@ -188,7 +188,7 @@ CREATE TABLE `order` (
   `remarks` text COMMENT '管理员后台备注',
   `trade_status` tinyint(2) DEFAULT NULL COMMENT '交易状态：1交易中、 2交易完成（但是可以申请退款） 、3取消交易 、4申请退款、 5拒绝退款、 6退款中、 7退款完成、 8交易结束',
   `version` int(11) DEFAULT '0',
-  `status` tinyint(2) DEFAULT NULL COMMENT '删除状态：1 正常 ，0 已经删除',
+  `status` tinyint(2) DEFAULT '1' COMMENT '删除状态：1 正常 ，0 已经删除',
   `created` datetime DEFAULT NULL COMMENT '创建时间',
   `updated` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`),

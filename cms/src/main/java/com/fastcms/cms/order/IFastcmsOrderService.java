@@ -73,6 +73,11 @@ public interface IFastcmsOrderService {
          */
         String buyerMsg;
 
+        /**
+         * json扩展参数
+         */
+        String jsonExt;
+
         public ProductParam[] getProducts() {
             return products;
         }
@@ -96,6 +101,15 @@ public interface IFastcmsOrderService {
         public void setBuyerMsg(String buyerMsg) {
             this.buyerMsg = buyerMsg;
         }
+
+        public String getJsonExt() {
+            return jsonExt;
+        }
+
+        public void setJsonExt(String jsonExt) {
+            this.jsonExt = jsonExt;
+        }
+
     }
 
     /**

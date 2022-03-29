@@ -110,6 +110,8 @@ public class DefaultFastcmsOrderService implements IFastcmsOrderService {
         order.setPayStatus(Order.STATUS_PAY_PRE);
         order.setTradeStatus(Order.TRADE_STATUS_TRADING);
         order.setStatus(Order.ORDER_STATUS_NORMAL);
+
+        order.setJsonExt(createOrderParam.getJsonExt());
         orderService.save(order);
 
         for (OrderItem orderItem : orderItemList) {

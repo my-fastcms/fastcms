@@ -286,6 +286,12 @@ public class Order implements Serializable {
     private Integer version;
 
     /**
+     * json格式扩展字段
+     */
+    @TableField(updateStrategy = FieldStrategy.NOT_EMPTY)
+    private String jsonExt;
+
+    /**
      * 删除状态：1 正常 ，0 已经删除
      */
     private Integer status;
@@ -466,6 +472,15 @@ public class Order implements Serializable {
     public void setStatus(Integer status) {
         this.status = status;
     }
+
+    public String getJsonExt() {
+        return jsonExt;
+    }
+
+    public void setJsonExt(String jsonExt) {
+        this.jsonExt = jsonExt;
+    }
+
     public LocalDateTime getCreated() {
         return created;
     }
