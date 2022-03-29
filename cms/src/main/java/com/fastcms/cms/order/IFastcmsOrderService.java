@@ -48,7 +48,7 @@ public interface IFastcmsOrderService {
     void payBackOrder(PayMessage payMessage) throws FastcmsException;
 
     /**
-     * 对订单进行业务扩展处理
+     * 订单支付完成后，对订单进行业务扩展处理
      * @param order
      */
     default void processOrder(Order order) throws FastcmsException {

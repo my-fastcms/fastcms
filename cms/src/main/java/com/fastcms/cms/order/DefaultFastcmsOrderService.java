@@ -63,7 +63,7 @@ public class DefaultFastcmsOrderService implements IFastcmsOrderService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public Long createOrder(CreateOrderParam createOrderParam) throws FastcmsException {
 
         if (AuthUtils.getUserId() == null) throw new FastcmsException(FastcmsException.INVALID_PARAM, "下单人不能为空");
