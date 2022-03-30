@@ -86,9 +86,11 @@ public interface IFastcmsOrderService {
             final JSONObject jsonObject = new JSONObject();
             Field[] allFields = ReflectUtils.getFields(this.getClass());
             for (Field field : allFields) {
-                String value = ReflectUtils.getFieldValue(this, field);
-                if (StringUtils.isNotBlank(value)) {
-                    jsonObject.put(field.getName(), value);
+                if (field.getAnnotation(JsonExtField.class) != null) {
+                    String value = ReflectUtils.getFieldValue(this, field);
+                    if (StringUtils.isNotBlank(value)) {
+                        jsonObject.put(field.getName(), value);
+                    }
                 }
             }
             setJsonExt(jsonObject.toJSONString());
