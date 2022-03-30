@@ -24,15 +24,13 @@ import com.fastcms.common.utils.HttpUtils;
 import com.fastcms.common.utils.JacksonUtils;
 import com.fastcms.common.utils.ReflectUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @author： wjun_java@163.com
@@ -53,22 +51,9 @@ public abstract class AbstractRequest implements Serializable {
         }
         Field[] allFields = ReflectUtils.getFields(this.getClass());
         for (Field field : allFields) {
-            field.setAccessible(true);
-            Object obj;
-            try {
-                obj = field.get(this);
-                if(obj != null) {
-                    int mod = field.getModifiers();
-                    if(!"serialVersionUID".equals(field.getName()) && !Modifier.isTransient(mod)) {
-                        if (obj instanceof List == true) {
-                            List v = (List) obj;
-                            obj = v.stream().collect(Collectors.joining(","));
-                        }
-                        params.put(field.getName(), (String) obj);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+            String fieldValue = ReflectUtils.getFieldValue(this, field);
+            if (StringUtils.isNotBlank(fieldValue)) {
+                params.put(field.getName(), fieldValue);
             }
         }
         return params;

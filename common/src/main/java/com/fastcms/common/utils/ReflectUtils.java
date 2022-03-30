@@ -1,6 +1,9 @@
 package com.fastcms.common.utils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ReflectUtils {
 
@@ -38,6 +41,32 @@ public class ReflectUtils {
         }
 
         return allFields;
+    }
+
+    /**
+     * 获取字段值
+     * @param field
+     * @return
+     */
+    public static String getFieldValue(Object o, Field field) {
+        field.setAccessible(true);
+        Object obj;
+        try {
+            obj = field.get(o);
+            if(obj != null) {
+                int mod = field.getModifiers();
+                if(!"serialVersionUID".equals(field.getName()) && !Modifier.isTransient(mod)) {
+                    if (obj instanceof List == true) {
+                        List v = (List) obj;
+                        obj = v.stream().collect(Collectors.joining(","));
+                    }
+                    return (String) obj;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

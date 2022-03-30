@@ -16,11 +16,15 @@
  */
 package com.fastcms.cms.order;
 
+import com.alibaba.fastjson.JSONObject;
 import com.egzosn.pay.common.bean.PayMessage;
 import com.fastcms.common.exception.FastcmsException;
+import com.fastcms.common.utils.ReflectUtils;
 import com.fastcms.entity.Order;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 
 /**
  * @author： wjun_java@163.com
@@ -77,6 +81,18 @@ public interface IFastcmsOrderService {
          * json扩展参数
          */
         String jsonExt;
+
+        public CreateOrderParam() {
+            final JSONObject jsonObject = new JSONObject();
+            Field[] allFields = ReflectUtils.getFields(this.getClass());
+            for (Field field : allFields) {
+                String value = ReflectUtils.getFieldValue(this, field);
+                if (StringUtils.isNotBlank(value)) {
+                    jsonObject.put(field.getName(), value);
+                }
+            }
+            setJsonExt(jsonObject.toJSONString());
+        }
 
         public ProductParam[] getProducts() {
             return products;

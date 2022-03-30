@@ -39,7 +39,10 @@
 2. apache maven 3.6+
 3. spring-boot 2.4.0+
 
+### 沟通交流
+加微信请备注fastcms
 
+![输入图片说明](./doc/images/wechat.jpg "wechat.jpg")
 
 
 
