@@ -92,7 +92,7 @@ public class PaymentApi {
      * @param openid
      * @return
      */
-    @RequestMapping(value = "{platform}/{type}/jsapi" )
+    @RequestMapping(value = "{platform}/{type}/jsapi")
     public Map toPay(@PathVariable("platform") String platform, @PathVariable("type") String type, @RequestParam("orderId") Long orderId, @RequestParam("openid") String openid) {
 
         Order order = orderService.getById(orderId);
