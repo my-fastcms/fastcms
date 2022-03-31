@@ -19,6 +19,7 @@ package com.fastcms.web.controller.api;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fastcms.cms.order.CreateOrderParam;
 import com.fastcms.cms.order.IFastcmsOrderService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
@@ -58,10 +59,10 @@ public class OrderApi {
      * @return
      */
     @PostMapping("save")
-    public RestResult<Long> save(@RequestBody IFastcmsOrderService.CreateOrderParam orderParam) {
+    public RestResult<Long> save(@RequestBody CreateOrderParam orderParam) {
         try {
-            Long orderId = fastcmsOrderService.createOrder(orderParam);
-            return RestResultUtils.success(orderId);
+            Order order = fastcmsOrderService.createOrder(orderParam);
+            return RestResultUtils.success(order.getId());
         } catch (Exception e) {
             LOG.error(e.getMessage());
             return RestResultUtils.failed(e.getMessage());

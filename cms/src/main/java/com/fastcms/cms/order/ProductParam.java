@@ -14,33 +14,68 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.fastcms.cms.order;
 
-import com.egzosn.pay.common.bean.PayMessage;
-import com.fastcms.common.exception.FastcmsException;
-import com.fastcms.entity.Order;
+import java.io.Serializable;
 
 /**
+ * 创建订单商品参数
  * @author： wjun_java@163.com
- * @date： 2022/02/10
+ * @date： 2022/03/31
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-public interface IFastcmsOrderService {
+public class ProductParam implements Serializable {
 
     /**
-     * 创建订单
-     * @param createOrderParam 文章id集合
-     * @return
+     * 产品id
      */
-    Order createOrder(CreateOrderParam createOrderParam) throws FastcmsException;
-
+    Long id;
     /**
-     * 支付回调处理
-     * @param payMessage
-     * @throws FastcmsException
+     * 产品类型
      */
-    void payBackOrder(PayMessage payMessage) throws FastcmsException;
+    String type;
+    /**
+     * 产品数量
+     */
+    Long num;
+    /**
+     * 产品sku
+     */
+    String sku;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Long getNum() {
+        return num;
+    }
+
+    public void setNum(Long num) {
+        this.num = num;
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
+    }
 
 }

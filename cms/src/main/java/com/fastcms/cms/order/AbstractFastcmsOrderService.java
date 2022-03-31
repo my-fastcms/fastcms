@@ -18,9 +18,13 @@ package com.fastcms.cms.order;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.egzosn.pay.common.bean.PayMessage;
+import com.fastcms.cms.entity.Article;
+import com.fastcms.cms.service.IArticleService;
+import com.fastcms.cms.utils.ArticleUtils;
 import com.fastcms.common.exception.FastcmsException;
+import com.fastcms.common.utils.SnowFlake;
 import com.fastcms.common.utils.StrUtils;
-import com.fastcms.core.utils.PluginUtils;
+import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.utils.RequestUtils;
 import com.fastcms.entity.Order;
 import com.fastcms.entity.OrderItem;
@@ -28,10 +32,14 @@ import com.fastcms.entity.PaymentRecord;
 import com.fastcms.service.IOrderItemService;
 import com.fastcms.service.IOrderService;
 import com.fastcms.service.IPaymentRecordService;
+import com.fastcms.utils.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -43,6 +51,8 @@ import java.util.List;
  */
 public abstract class AbstractFastcmsOrderService implements IFastcmsOrderService {
 
+    private static final SnowFlake SNOW_FLAKE = new SnowFlake(1, 1);
+
     @Autowired
     private IPaymentRecordService paymentRecordService;
 
@@ -51,6 +61,86 @@ public abstract class AbstractFastcmsOrderService implements IFastcmsOrderServic
 
     @Autowired
     private IOrderItemService orderItemService;
+
+    @Autowired
+    private IArticleService articleService;
+
+    protected String getOrderSN() {
+        return String.valueOf(SNOW_FLAKE.genNextId());
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Order createOrder(CreateOrderParam createOrderParam) throws FastcmsException {
+
+        if (AuthUtils.getUserId() == null) throw new FastcmsException(FastcmsException.INVALID_PARAM, "下单人不能为空");
+
+        List<ProductParam> productParams = Arrays.asList(createOrderParam.getProducts());
+
+        if(CollectionUtils.isEmpty(productParams)) throw new FastcmsException(FastcmsException.INVALID_PARAM, "商品不能为空");
+
+        //订单项
+        List<OrderItem> orderItemList = new ArrayList<>();
+
+        for (ProductParam item : productParams) {
+            Long num = item.getNum();
+            Article product = articleService.getById(item.getId());
+
+            if(product != null && Article.STATUS_PUBLISH.equals(product.getStatus()) && ArticleUtils.getPrice(product) != null) {
+                BigDecimal productPrice = ArticleUtils.getPrice(product);
+                OrderItem orderItem = new OrderItem();
+                orderItem.setProductId(item.getId());
+                orderItem.setProductCount(num.intValue());
+                orderItem.setTotalAmount(new BigDecimal(num).multiply(productPrice));
+                orderItem.setSellerId(product.getUserId());
+                orderItemList.add(orderItem);
+            }
+
+        }
+
+        if(CollectionUtils.isEmpty(orderItemList)) {
+            throw new FastcmsException(FastcmsException.INVALID_PARAM, "订单项不能为空");
+        }
+
+        Order order = new Order();
+
+        order.setOrderTitle(articleService.getById(orderItemList.get(0).getProductId()).getTitle());
+        order.setUserId(AuthUtils.getUserId());
+        order.setOrderSn(getOrderSN());
+        order.setOrderAmount(orderItemList.stream().map(OrderItem::getTotalAmount).reduce(BigDecimal.ZERO, BigDecimal::add).setScale(2, BigDecimal.ROUND_HALF_UP));
+        order.setBuyerMsg(createOrderParam.getBuyerMsg());
+
+        //根据优惠券，会员价等，计算出最终订单需要支付金额
+        order.setPayAmount(order.getOrderAmount());
+
+        order.setInvoiceStatus(Order.INVOICE_STATUS_NOT_APPLY);
+        order.setPayStatus(Order.STATUS_PAY_PRE);
+        order.setTradeStatus(Order.TRADE_STATUS_TRADING);
+        order.setStatus(Order.ORDER_STATUS_NORMAL);
+
+        order.setJsonExt(createOrderParam.getJsonExt());
+
+        processOrderBeforePersistence(order, createOrderParam);
+
+        orderService.save(order);
+
+        for (OrderItem orderItem : orderItemList) {
+            orderItem.setOrderId(order.getId());
+            orderItem.setOrderSn(order.getOrderSn());
+        }
+
+        orderItemService.saveBatch(orderItemList);
+
+        return order;
+    }
+
+    /**
+     * 订单数据持久化前对不同业务进行扩展
+     * 比如拼团订单，会员订单，折扣订单等逻辑不同
+     * @param order
+     * @param createOrderParam
+     */
+    protected abstract void processOrderBeforePersistence(Order order, CreateOrderParam createOrderParam);
 
     @Override
     public void payBackOrder(PayMessage payMessage) throws FastcmsException {
@@ -92,14 +182,14 @@ public abstract class AbstractFastcmsOrderService implements IFastcmsOrderServic
         /**
          * 插件中对订单处理的业务扩展
          */
-        List<AbstractExtensionOrderService> extensions = PluginUtils.getExtensions(AbstractExtensionOrderService.class);
-        extensions.forEach(item -> {
-            try {
-                item.processOrder(order);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+//        List<AbstractExtensionOrderService> extensions = PluginUtils.getExtensions(AbstractExtensionOrderService.class);
+//        extensions.forEach(item -> {
+//            try {
+//                item.processOrder(order);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        });
 
     }
 

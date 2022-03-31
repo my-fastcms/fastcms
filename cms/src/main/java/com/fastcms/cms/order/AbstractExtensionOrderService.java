@@ -18,7 +18,6 @@ package com.fastcms.cms.order;
 
 import com.egzosn.pay.common.bean.PayMessage;
 import com.fastcms.common.exception.FastcmsException;
-import com.fastcms.entity.Order;
 import org.pf4j.ExtensionPoint;
 
 /**
@@ -29,18 +28,12 @@ import org.pf4j.ExtensionPoint;
  * @modifiedBy：
  * @version: 1.0
  */
+@Deprecated
 public abstract class AbstractExtensionOrderService implements IFastcmsOrderService, ExtensionPoint {
 
 	@Override
 	public void payBackOrder(PayMessage payMessage) throws FastcmsException {
 		throw new FastcmsException("not support");
 	}
-
-	@Override
-	public void processOrder(Order order) throws FastcmsException {
-		doProcessOrder(order);
-	}
-
-	public abstract void doProcessOrder(Order order) throws FastcmsException;
 
 }
