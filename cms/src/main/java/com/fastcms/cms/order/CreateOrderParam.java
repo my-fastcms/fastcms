@@ -50,7 +50,7 @@ public class CreateOrderParam implements Serializable {
     /**
      * 订单逻辑处理类
      */
-    String orderTypeClass;
+    String orderTypeClass = "com.fastcms.cms.order.DefaultFastcmsOrderService";
 
     /**
      * json扩展参数

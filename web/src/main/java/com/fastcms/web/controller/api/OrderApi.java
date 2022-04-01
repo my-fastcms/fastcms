@@ -20,7 +20,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.cms.order.CreateOrderParam;
-import com.fastcms.cms.order.IFastcmsOrderService;
+import com.fastcms.cms.order.FastcmsOrderServiceManager;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
@@ -48,20 +48,20 @@ public class OrderApi {
     private static final Logger LOG = LoggerFactory.getLogger(OrderApi.class);
 
     @Autowired
-    IFastcmsOrderService fastcmsOrderService;
+    FastcmsOrderServiceManager orderServiceManager;
 
     @Autowired
     private IOrderService orderService;
 
     /**
-     * 创建订单
+     * 创建普通订单
      * @param orderParam
      * @return
      */
     @PostMapping("save")
     public RestResult<Long> save(@RequestBody CreateOrderParam orderParam) {
         try {
-            Order order = fastcmsOrderService.createOrder(orderParam);
+            Order order = orderServiceManager.createOrder(orderParam);
             return RestResultUtils.success(order.getId());
         } catch (Exception e) {
             LOG.error(e.getMessage());
