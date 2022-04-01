@@ -14,28 +14,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.fastcms.cms.order;
 
+import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.entity.Order;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
 
 /**
+ * 订单服务统一入口
  * @author： wjun_java@163.com
- * @date： 2022/02/10
+ * @date： 2022/04/01
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
 @Service
-public class DefaultFastcmsOrderService extends AbstractFastcmsOrderService {
+public class OrderServiceManager {
 
-    /**
-     * 默认订单不做处理
-     * @param order
-     * @param createOrderParam
-     */
-    @Override
-    protected void processOrderBeforePersistence(Order order, CreateOrderParam createOrderParam) {
+    public Order createOrder(CreateOrderParam createOrderParam) throws FastcmsException {
+        if (createOrderParam == null) throw new FastcmsException("参数不能为空");
+
+        if (StringUtils.isBlank(createOrderParam.getOrderTypeClass())) {
+            throw new FastcmsException("订单类型不能为空");
+        }
+
+        //ApplicationUtils.getBean(ClassUtils.forName(createOrderParam.getOrderTypeClass()))
+
+        return null;
 
     }
 

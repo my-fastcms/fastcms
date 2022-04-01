@@ -48,6 +48,11 @@ public class CreateOrderParam implements Serializable {
     String buyerMsg;
 
     /**
+     * 订单逻辑处理类
+     */
+    String orderTypeClass;
+
+    /**
      * json扩展参数
      */
     String jsonExt;
@@ -74,6 +79,14 @@ public class CreateOrderParam implements Serializable {
 
     public void setBuyerMsg(String buyerMsg) {
         this.buyerMsg = buyerMsg;
+    }
+
+    public String getOrderTypeClass() {
+        return orderTypeClass;
+    }
+
+    public void setOrderTypeClass(String orderTypeClass) {
+        this.orderTypeClass = orderTypeClass;
     }
 
     public String getJsonExt() {

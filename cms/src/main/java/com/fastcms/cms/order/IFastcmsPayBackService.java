@@ -14,29 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.fastcms.cms.order;
 
-import com.fastcms.entity.Order;
-import org.springframework.stereotype.Service;
+import com.egzosn.pay.common.bean.PayMessage;
+import com.fastcms.common.exception.FastcmsException;
 
 /**
+ * 各支付平台支付回调处理接口
  * @author： wjun_java@163.com
- * @date： 2022/02/10
+ * @date： 2022/04/01
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-@Service
-public class DefaultFastcmsOrderService extends AbstractFastcmsOrderService {
+public interface IFastcmsPayBackService {
 
     /**
-     * 默认订单不做处理
-     * @param order
-     * @param createOrderParam
+     * 订单支付后回调处理
+     * 针对不同的支付平台进行抽象
+     * @param payMessage
+     * @throws FastcmsException
      */
-    @Override
-    protected void processOrderBeforePersistence(Order order, CreateOrderParam createOrderParam) {
-
-    }
+    void payBackOrder(PayMessage payMessage) throws FastcmsException;
 
 }

@@ -14,29 +14,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.fastcms.cms.order;
 
+import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.entity.Order;
-import org.springframework.stereotype.Service;
+import org.pf4j.ExtensionPoint;
 
 /**
+ * 订单支付后业务逻辑处理
+ * 各种订单类型在支付后，对应的处理逻辑不同
+ * 比如分销订单需要结算佣金
+ * 比如拼团订单需要关联团购信息
+ * 等等...
+ * 通常在插件中实现
  * @author： wjun_java@163.com
- * @date： 2022/02/10
+ * @date： 2022/04/01
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-@Service
-public class DefaultFastcmsOrderService extends AbstractFastcmsOrderService {
+public interface IPayBackProcessOrderService extends ExtensionPoint {
 
     /**
-     * 默认订单不做处理
+     * 订单支付后业务逻辑扩展
      * @param order
-     * @param createOrderParam
      */
-    @Override
-    protected void processOrderBeforePersistence(Order order, CreateOrderParam createOrderParam) {
+    void processOrder(Order order) throws FastcmsException;
 
-    }
+    /**
+     * 是否符合业务逻辑处理条件
+     * @param order
+     * @return
+     */
+    boolean isMatch(Order order);
 
 }

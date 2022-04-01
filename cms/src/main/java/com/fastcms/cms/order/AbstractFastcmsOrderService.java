@@ -16,28 +16,21 @@
  */
 package com.fastcms.cms.order;
 
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.egzosn.pay.common.bean.PayMessage;
 import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.service.IArticleService;
 import com.fastcms.cms.utils.ArticleUtils;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.utils.SnowFlake;
-import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.auth.AuthUtils;
-import com.fastcms.core.utils.RequestUtils;
 import com.fastcms.entity.Order;
 import com.fastcms.entity.OrderItem;
-import com.fastcms.entity.PaymentRecord;
 import com.fastcms.service.IOrderItemService;
 import com.fastcms.service.IOrderService;
-import com.fastcms.service.IPaymentRecordService;
 import com.fastcms.utils.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -52,9 +45,6 @@ import java.util.List;
 public abstract class AbstractFastcmsOrderService implements IFastcmsOrderService {
 
     private static final SnowFlake SNOW_FLAKE = new SnowFlake(1, 1);
-
-    @Autowired
-    private IPaymentRecordService paymentRecordService;
 
     @Autowired
     private IOrderService orderService;
@@ -83,7 +73,7 @@ public abstract class AbstractFastcmsOrderService implements IFastcmsOrderServic
         List<OrderItem> orderItemList = new ArrayList<>();
 
         for (ProductParam item : productParams) {
-            Long num = item.getNum();
+            final Long num = item.getNum();
             Article product = articleService.getById(item.getId());
 
             if(product != null && Article.STATUS_PUBLISH.equals(product.getStatus()) && ArticleUtils.getPrice(product) != null) {
@@ -141,63 +131,5 @@ public abstract class AbstractFastcmsOrderService implements IFastcmsOrderServic
      * @param createOrderParam
      */
     protected abstract void processOrderBeforePersistence(Order order, CreateOrderParam createOrderParam);
-
-    @Override
-    public void payBackOrder(PayMessage payMessage) throws FastcmsException {
-
-        final String orderSn = payMessage.getOutTradeNo();
-        Order order = orderService.getOne(Wrappers.<Order>lambdaQuery().eq(Order::getOrderSn, orderSn));
-        if(order == null) {
-            throw new FastcmsException(">>>can not find Order by orderSn:" + orderSn);
-        }
-
-        if (order.getPayStatus() == Order.STATUS_PAY_SUCCESS) {
-            throw new FastcmsException(">>>Order is already payed orderSn:" + orderSn);
-        }
-
-        order.setPayStatus(Order.STATUS_PAY_SUCCESS);
-        order.setTradeStatus(Order.TRADE_STATUS_COMPLETED);
-        orderService.updateById(order);
-
-        List<OrderItem> orderItems = orderItemService.list(Wrappers.<OrderItem>lambdaQuery().eq(OrderItem::getOrderId, order.getId()));
-        orderItems.forEach(item -> {
-            PaymentRecord paymentRecord = new PaymentRecord();
-            paymentRecord.setTrxNo(orderSn);
-            paymentRecord.setTrxType(PaymentRecord.TRX_TYPE_ORDER);
-            paymentRecord.setTrxNonceStr(StrUtils.uuid());
-            paymentRecord.setPayType(payMessage.getPayType());
-            paymentRecord.setOrderIp(RequestUtils.getIpAddress(RequestUtils.getRequest()));
-            paymentRecord.setPayStatus(Order.STATUS_PAY_SUCCESS);
-            paymentRecord.setProductRelativeId(item.getProductId());
-            paymentRecord.setPayAmount(item.getTotalAmount());
-            paymentRecord.setPayerFee(BigDecimal.ZERO);
-            paymentRecord.setPaySuccessAmount(item.getTotalAmount());
-            paymentRecord.setUserId(order.getUserId());
-            paymentRecord.setPaySuccessTime(LocalDateTime.now());
-            setPaymentRecordPlatformInfo(paymentRecord, payMessage);
-            paymentRecord.setPayStatus(Order.STATUS_PAY_SUCCESS);
-            paymentRecordService.save(paymentRecord);
-        });
-
-        /**
-         * 插件中对订单处理的业务扩展
-         */
-//        List<AbstractExtensionOrderService> extensions = PluginUtils.getExtensions(AbstractExtensionOrderService.class);
-//        extensions.forEach(item -> {
-//            try {
-//                item.processOrder(order);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//        });
-
-    }
-
-    /**
-     * 由子类实现不同的支付平台对支付记录的信息补充
-     * @param paymentRecord
-     * @param payMessage
-     */
-    protected abstract void setPaymentRecordPlatformInfo(PaymentRecord paymentRecord, PayMessage payMessage);
 
 }
