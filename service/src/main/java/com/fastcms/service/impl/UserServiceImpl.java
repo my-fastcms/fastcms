@@ -75,6 +75,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
+    public String getUserOpenId(Long userId, String type) {
+        UserOpenid one = userOpenidService.getOne(Wrappers.<UserOpenid>lambdaQuery().eq(UserOpenid::getUserId, userId).eq(UserOpenid::getType, type), false);
+        return one == null ? "" : one.getValue();
+    }
+
+    @Override
     public List<UserTag> getUserTagList(Long userId) {
         return getBaseMapper().getUserTagList(userId);
     }

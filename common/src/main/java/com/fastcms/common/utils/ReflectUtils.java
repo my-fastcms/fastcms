@@ -60,7 +60,7 @@ public class ReflectUtils {
                         List v = (List) obj;
                         obj = v.stream().collect(Collectors.joining(","));
                     }
-                    return (String) obj;
+                    return String.valueOf(obj);
                 }
             }
         } catch (Exception e) {

@@ -110,6 +110,7 @@ public class WechatMiniUserApi {
 		session.setAttribute(MINIAPP_UNIONID, unionId);
 		HashMap<Object, Object> result = new HashMap<>();
 		result.put(MINIAPP_SESSIONID, sessionId);
+		result.put(MINIAPP_OPENID, openId);
 		return RestResultUtils.success(result);
 	}
 

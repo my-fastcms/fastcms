@@ -24,6 +24,14 @@ public interface IUserService extends IService<User> {
     void updateUserPassword(UpdatePasswordParam updatePasswordParam) throws FastcmsException;
 
     /**
+     * 获取用户openid
+     * @param userId
+     * @param type
+     * @return
+     */
+    String getUserOpenId(Long userId, String type);
+
+    /**
      * 获取用户标签集合
      * @param userId
      * @return

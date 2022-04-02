@@ -18,6 +18,8 @@ package com.fastcms.web.controller.api;
 
 import com.egzosn.pay.common.util.MatrixToImageWriter;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.model.RestResult;
+import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.entity.Order;
 import com.fastcms.payment.PayServiceManager;
 import com.fastcms.payment.bean.FastcmsPayOrder;
@@ -32,7 +34,6 @@ import javax.imageio.ImageIO;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -93,7 +94,7 @@ public class PaymentApi {
      * @return
      */
     @RequestMapping(value = "{platform}/{type}/jsapi")
-    public Map toPay(@PathVariable("platform") String platform, @PathVariable("type") String type, @RequestParam("orderId") Long orderId, @RequestParam("openid") String openid) {
+    public RestResult<Map<String, Object>> toPay(@PathVariable("platform") String platform, @PathVariable("type") String type, @RequestParam("orderId") Long orderId, @RequestParam("openid") String openid) {
 
         Order order = orderService.getById(orderId);
         BigDecimal price = order.getPayAmount();
@@ -102,9 +103,8 @@ public class PaymentApi {
         fastcmsPayOrder.setOpenid(openid);
 
         Map orderInfo = payServiceManager.getOrderInfo(fastcmsPayOrder);
-        orderInfo.put("code", 0);
 
-        return orderInfo;
+        return RestResultUtils.success(orderInfo);
     }
 
     /**
@@ -114,15 +114,11 @@ public class PaymentApi {
      * @return
      */
     @RequestMapping("{platform}/{type}/app")
-    public Map<String, Object> app(@PathVariable("platform") String platform, @PathVariable("type") String type, @RequestParam("orderId") Long orderId) {
+    public RestResult<Map<String, Object>> app(@PathVariable("platform") String platform, @PathVariable("type") String type, @RequestParam("orderId") Long orderId) {
         Order order = orderService.getById(orderId);
         BigDecimal price = order.getPayAmount();
-
-        Map<String, Object> data = new HashMap<>();
-        data.put("code", 0);
         FastcmsPayOrder fastcmsPayOrder = new FastcmsPayOrder(platform, type, order.getOrderTitle(), order.getRemarks(), price, order.getOrderSn());
-        data.put("orderInfo", payServiceManager.app(fastcmsPayOrder));
-        return data;
+        return RestResultUtils.success(payServiceManager.app(fastcmsPayOrder));
     }
 
     /**
@@ -133,7 +129,7 @@ public class PaymentApi {
      * @return 支付结果
      */
     @RequestMapping(value = "{platform}/{type}/microPay")
-    public Map<String, Object> microPay(@PathVariable("platform") String platform, @PathVariable("type") String type, @RequestParam("orderId") Long orderId, @RequestParam("authCode") String authCode) {
+    public RestResult<Map<String, Object>> microPay(@PathVariable("platform") String platform, @PathVariable("type") String type, @RequestParam("orderId") Long orderId, @RequestParam("authCode") String authCode) {
 
         Order order = orderService.getById(orderId);
         BigDecimal price = order.getPayAmount();
@@ -151,7 +147,7 @@ public class PaymentApi {
             //......业务逻辑处理块........
         }
         //这里开发者自行处理
-        return params;
+        return RestResultUtils.success(params);
     }
 
     /**
@@ -163,7 +159,7 @@ public class PaymentApi {
      * @return 支付结果
      */
     @RequestMapping(value = "{platform}/{type}/facePay")
-    public Map<String, Object> facePay(@PathVariable("platform") String platform, @PathVariable("type") String type, @RequestParam("orderId") Long orderId, @RequestParam("authCode") String authCode, @RequestParam("openid") String openid)  {
+    public RestResult<Map<String, Object>> facePay(@PathVariable("platform") String platform, @PathVariable("type") String type, @RequestParam("orderId") Long orderId, @RequestParam("authCode") String authCode, @RequestParam("openid") String openid)  {
 
         Order order = orderService.getById(orderId);
         BigDecimal price = order.getPayAmount();
@@ -182,7 +178,7 @@ public class PaymentApi {
             //......业务逻辑处理块........
         }
         //这里开发者自行处理
-        return params;
+        return RestResultUtils.success(params);
     }
 
 }
