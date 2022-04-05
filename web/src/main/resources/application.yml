@@ -21,8 +21,6 @@ mybatis-plus:
   global-config:
     banner: false
   mapper-locations: classpath*:/mapper/*Mapper.xml
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 plugin:
   path: ./plugins

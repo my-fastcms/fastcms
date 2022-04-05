@@ -18,6 +18,7 @@ package com.fastcms.core.exception;
 
 import com.fastcms.common.exception.AccessException;
 import com.fastcms.common.exception.FastcmsException;
+import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.monitor.MetricsMonitor;
 import com.fastcms.core.utils.ExceptionUtil;
 import org.slf4j.Logger;
@@ -25,13 +26,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.BadSqlGrammarException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.io.IOException;
-import java.util.Objects;
 
 /**
  * @author： wjun_java@163.com
@@ -52,20 +51,9 @@ public class FastcmsGlobalExceptionHandler {
      * @throws IllegalArgumentException IllegalArgumentException.
      */
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(Exception ex) throws IOException {
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) throws IOException {
         MetricsMonitor.getIllegalArgumentException().increment();
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ExceptionUtil.getAllExceptionMsg(ex));
-    }
-
-    /**
-     * For FastcmsException.
-     *
-     * @throws FastcmsException FastcmsException.
-     */
-    @ExceptionHandler(FastcmsException.class)
-    public ResponseEntity<String> handleFastcmsException(FastcmsException ex) throws IOException {
-        MetricsMonitor.getFastcmsException().increment();
-        return ResponseEntity.status(ex.getErrCode()).body(ExceptionUtil.getAllExceptionMsg(ex));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ExceptionUtil.getAllExceptionMsg(e));
     }
 
     /**
@@ -74,32 +62,32 @@ public class FastcmsGlobalExceptionHandler {
      * @throws DataAccessException DataAccessException.
      */
     @ExceptionHandler(DataAccessException.class)
-    public ResponseEntity<String> handleDataAccessException(DataAccessException ex) throws DataAccessException {
+    public ResponseEntity<String> handleDataAccessException(DataAccessException e) throws DataAccessException {
         MetricsMonitor.getDbException().increment();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ExceptionUtil.getAllExceptionMsg(ex));
-    }
-
-    @ExceptionHandler(AccessException.class)
-    public ResponseEntity<String> handleAccessException(AccessException e) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ExceptionUtil.getAllExceptionMsg(e));
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(Exception e) {
-        log.error("CONSOLE", e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ExceptionUtil.getAllExceptionMsg(e));
-    }
-
-    @ExceptionHandler(BadSqlGrammarException.class)
-    public ResponseEntity<String> handleRunTimeException(BadSqlGrammarException e) {
-        log.error("CONSOLE", e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ExceptionUtil.getAllExceptionMsg(e));
+        log.error("rootFile", e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fastcms Database sql error");
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<Object> mismatchErrorHandler(MethodArgumentTypeMismatchException e) {
-        log.error("参数转换失败，方法：" + Objects.requireNonNull(e.getParameter().getMethod()).getName() + ",参数：" + e.getName() + "，信息：" + e.getLocalizedMessage());
+        log.error("CONSOLE", e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ExceptionUtil.getAllExceptionMsg(e));
+    }
+
+    /**
+     * For FastcmsException.
+     *
+     * @throws FastcmsException FastcmsException.
+     */
+    @ExceptionHandler(FastcmsException.class)
+    public ResponseEntity<Object> handleFastcmsException(FastcmsException e) {
+        MetricsMonitor.getFastcmsException().increment();
+        return ResponseEntity.status(HttpStatus.OK).body(RestResultUtils.failed(e.getMessage()));
+    }
+
+    @ExceptionHandler(AccessException.class)
+    public ResponseEntity<Object> handleAccessException(AccessException e) {
+        return ResponseEntity.status(HttpStatus.OK).body(RestResultUtils.failed(e.getMessage()));
     }
 
 }

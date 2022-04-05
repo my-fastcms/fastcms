@@ -30,6 +30,7 @@ import com.fastcms.entity.User;
 import com.fastcms.entity.UserOpenid;
 import com.fastcms.service.IUserService;
 import com.fastcms.web.security.JwtTokenManager;
+import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.session.WxSession;
 import me.chanjar.weixin.common.session.WxSessionManager;
 import org.apache.commons.lang.StringUtils;
@@ -163,18 +164,18 @@ public class WechatMiniUserApi {
 
 	/**
 	 * 获取用户手机号码
-	 * @param params
+	 * @param code
 	 * @return
 	 */
-	@PostMapping("phone")
-	public RestResult<String> getUserPhone(@RequestBody Map<String, Object> params) {
-		WxSession session = getSession(params);
-		if(session == null) {
-			return RestResultUtils.failed("获取手机号:获取到空session");
+	@GetMapping("phone")
+	public RestResult<String> getUserPhone(@RequestParam("code") String code) {
+		WxMaPhoneNumberInfo wxMaPhoneNumberInfo;
+		try {
+			wxMaPhoneNumberInfo = wxService.getUserService().getNewPhoneNoInfo(code);
+		} catch (WxErrorException e) {
+			e.printStackTrace();
+			return RestResultUtils.failed("获取手机号码失败");
 		}
-		final String sessionKey = (String) session.getAttribute(MINIAPP_SESSIONKEY);
-		String iv = (String) params.get("iv");
-		WxMaPhoneNumberInfo wxMaPhoneNumberInfo = wxService.getUserService().getPhoneNoInfo(sessionKey, getEncryptedData(params), iv);
 		if(wxMaPhoneNumberInfo == null || StrUtils.isBlank(wxMaPhoneNumberInfo.getPhoneNumber())) {
 			return RestResultUtils.failed("获取手机号码失败");
 		}

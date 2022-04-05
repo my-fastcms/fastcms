@@ -71,6 +71,14 @@
             <appender-ref ref="CONSOLE"/>
             <level value="WARN"/>
         </logger>
+        <logger name="org.apache.ibatis">
+            <appender-ref ref="CONSOLE"/>
+            <level value="DEBUG"/>
+        </logger>
+        <logger name="com.baomidou.mybatisplus">
+            <appender-ref ref="CONSOLE"/>
+            <level value="DEBUG"/>
+        </logger>
         <logger name="com.fastcms">
             <appender-ref ref="CONSOLE"/>
             <level value="INFO"/>
@@ -95,7 +103,7 @@
             <level value="INFO"/>
         </logger>
         <logger name="org.apache.catalina.util.LifecycleBase">
-            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="rootFile"/>
             <level value="ERROR"/>
         </logger>
         <logger name="org.apache.coyote.http11.Http11NioProtocol">
@@ -105,6 +113,18 @@
         <logger name="org.apache.tomcat.util.net.NioSelectorPool">
             <appender-ref ref="CONSOLE"/>
             <level value="WARN"/>
+        </logger>
+        <logger name="org.apache.ibatis">
+            <appender-ref ref="rootFile"/>
+            <level value="ERROR"/>
+        </logger>
+        <logger name="com.baomidou.mybatisplus">
+            <appender-ref ref="rootFile"/>
+            <level value="ERROR"/>
+        </logger>
+        <logger name="org.mybatis.spring">
+            <appender-ref ref="rootFile"/>
+            <level value="ERROR"/>
         </logger>
         <logger name="com.fastcms">
             <appender-ref ref="rootFile"/>
