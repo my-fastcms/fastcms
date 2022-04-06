@@ -1,8 +1,6 @@
 package com.fastcms.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -20,6 +18,37 @@ import java.time.LocalDateTime;
 public class UserAmountStatement implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    /**
+     * 增加余额
+     */
+    public static final String AMOUNT_ACTION_ADD = "add";
+    /**
+     * 减去余额
+     */
+    public static final String AMOUNT_ACTION_DEL = "del";
+
+    public enum AmountAction {
+        ADD(AMOUNT_ACTION_ADD, "增加"),
+        DEL(AMOUNT_ACTION_DEL, "减少");
+
+        AmountAction(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        private final String key;
+        private final String value;
+
+        public static String getValue(String key) {
+            for (AmountAction s: values()) {
+                if (s.key.equals(key)) {
+                    return s.value;
+                }
+            }
+            return "";
+        }
+    }
 
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
@@ -72,6 +101,7 @@ public class UserAmountStatement implements Serializable {
     /**
      * 时间
      */
+    @TableField(fill = FieldFill.INSERT)
     private LocalDateTime created;
 
     public Long getId() {

@@ -2,10 +2,12 @@ CREATE TABLE `user_amount` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) NOT NULL,
   `amount` decimal(20,6) NOT NULL DEFAULT '0.000000',
+  `version` int(11) DEFAULT '0',
   `updated` datetime DEFAULT NULL,
   `created` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
+  KEY `action` (`action`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='用户余额';
 
 CREATE TABLE `user_amount_statement` (

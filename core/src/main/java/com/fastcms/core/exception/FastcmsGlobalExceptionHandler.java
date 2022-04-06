@@ -82,7 +82,7 @@ public class FastcmsGlobalExceptionHandler {
     @ExceptionHandler(FastcmsException.class)
     public ResponseEntity<Object> handleFastcmsException(FastcmsException e) {
         MetricsMonitor.getFastcmsException().increment();
-        return ResponseEntity.status(HttpStatus.OK).body(RestResultUtils.failed(e.getMessage()));
+        return ResponseEntity.status(HttpStatus.OK).body(RestResultUtils.failed(e.getErrMsg()));
     }
 
     @ExceptionHandler(AccessException.class)

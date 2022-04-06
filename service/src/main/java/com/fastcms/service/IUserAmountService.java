@@ -1,7 +1,10 @@
 package com.fastcms.service;
 
-import com.fastcms.entity.UserAmount;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.fastcms.common.exception.FastcmsException;
+import com.fastcms.entity.UserAmount;
+
+import java.math.BigDecimal;
 
 /**
  * <p>
@@ -12,5 +15,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2022-03-28
  */
 public interface IUserAmountService extends IService<UserAmount> {
+
+    /**
+     * 用户提现
+     * @param amount
+     * @return
+     * @throws FastcmsException
+     */
+    void cashOut(Long userId, BigDecimal amount) throws FastcmsException;
 
 }
