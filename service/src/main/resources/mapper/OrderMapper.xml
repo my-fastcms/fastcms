@@ -15,11 +15,11 @@
     </select>
 
     <select id="getOrderDetail" resultMap="OrderToResult">
-        select o.*, u.user_name as nick_name from `order` o left join `user` u on o.user_id = u.id where o.id = #{orderId}
+        select o.*, u.user_name, u.nick_name from `order` o left join `user` u on o.user_id = u.id where o.id = #{orderId}
     </select>
 
     <select id="pageOrder" resultType="com.fastcms.service.IOrderService$OrderListVo">
-        select o.*, u.user_name, oa.* from `order` o
+        select o.*, u.user_name, u.nick_name, oa.* from `order` o
         left join `user` u on o.user_id = u.id
         left join (
             select oi.order_id, oi.product_count, oi.total_amount, a.title

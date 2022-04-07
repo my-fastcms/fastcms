@@ -28,6 +28,31 @@ public class UserAmountStatement implements Serializable {
      */
     public static final String AMOUNT_ACTION_DEL = "del";
 
+    /**
+     * 用户提现
+     */
+    public static final Integer AMOUNT_ACTION_TYPE_CASHOUT = 1;
+
+    /**
+     * 余额支付
+     */
+    public static final Integer AMOUNT_ACTION_TYPE_PAY = 2;
+
+    /**
+     * 待审核
+     */
+    public static final Integer AMOUNT_STATUS_AUDIT = 0;
+
+    /**
+     * 审核通过
+     */
+    public static final Integer AMOUNT_STATUS_PASS = 1;
+
+    /**
+     * 审核拒绝
+     */
+    public static final Integer AMOUNT_STATUS_REFUSE = 2;
+
     public enum AmountAction {
         ADD(AMOUNT_ACTION_ADD, "增加"),
         DEL(AMOUNT_ACTION_DEL, "减少");
@@ -50,6 +75,52 @@ public class UserAmountStatement implements Serializable {
         }
     }
 
+    public enum AmountActionType {
+        CASHOUT(AMOUNT_ACTION_TYPE_CASHOUT, "用户提现"),
+        PAY(AMOUNT_ACTION_TYPE_PAY, "余额支付");
+
+        AmountActionType(Integer key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        private final Integer key;
+        private final String value;
+
+        public static String getValue(Integer key) {
+            for (AmountActionType s: values()) {
+                if (s.key.equals(key)) {
+                    return s.value;
+                }
+            }
+            return "";
+        }
+
+    }
+
+    public enum ActionStatus {
+        AUDIT(AMOUNT_STATUS_AUDIT, "待审核"),
+        REFUSE(AMOUNT_STATUS_REFUSE, "审核拒绝"),
+        PASS(AMOUNT_STATUS_PASS, "审核通过");
+
+        ActionStatus(Integer key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        private final Integer key;
+        private final String value;
+
+        public static String getValue(Integer key) {
+            for (ActionStatus s: values()) {
+                if (s.key.equals(key)) {
+                    return s.value;
+                }
+            }
+            return "";
+        }
+    }
+
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
@@ -64,9 +135,9 @@ public class UserAmountStatement implements Serializable {
     private String action;
 
     /**
-     * 金额变动名称 增加，减少
+     * 余额变动业务类型
      */
-    private String actionName;
+    private Integer actionType;
 
     /**
      * 金额变动描述
@@ -99,10 +170,30 @@ public class UserAmountStatement implements Serializable {
     private BigDecimal newAmount;
 
     /**
+     * 提现状态
+     */
+    private Integer status;
+
+    /**
      * 时间
      */
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime created;
+
+    /**
+     * 金额变动名称 增加，减少
+     */
+    @TableField(exist = false)
+    private String actionName;
+
+    /**
+     * 余额变动业务类型名称
+     */
+    @TableField(exist = false)
+    private String actionTypeName;
+
+    @TableField(exist = false)
+    private String statusName;
 
     public Long getId() {
         return id;
@@ -125,12 +216,12 @@ public class UserAmountStatement implements Serializable {
     public void setAction(String action) {
         this.action = action;
     }
-    public String getActionName() {
-        return actionName;
+    public Integer getActionType() {
+        return actionType;
     }
 
-    public void setActionName(String actionName) {
-        this.actionName = actionName;
+    public void setActionType(Integer actionType) {
+        this.actionType = actionType;
     }
     public String getActionDesc() {
         return actionDesc;
@@ -174,12 +265,33 @@ public class UserAmountStatement implements Serializable {
     public void setNewAmount(BigDecimal newAmount) {
         this.newAmount = newAmount;
     }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
     public LocalDateTime getCreated() {
         return created;
     }
 
     public void setCreated(LocalDateTime created) {
         this.created = created;
+    }
+
+    public String getActionName() {
+        return AmountAction.getValue(getAction());
+    }
+
+    public String getActionTypeName() {
+        return AmountActionType.getValue(getActionType());
+    }
+
+    public String getStatusName() {
+        return ActionStatus.getValue(getStatus());
     }
 
     @Override

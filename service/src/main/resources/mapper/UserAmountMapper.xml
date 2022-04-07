@@ -2,4 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fastcms.mapper.UserAmountMapper">
 
+    <select id="pageCashOut" resultType="com.fastcms.service.IUserAmountService$CashOutListVo">
+        select uas.*, u.id, u.user_name, u.nick_name from user_amount_statement uas
+        left join `user` u on uas.user_id = u.id
+        ${ew.customSqlSegment}
+    </select>
+
 </mapper>

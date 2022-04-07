@@ -108,9 +108,14 @@ public interface IOrderService extends IService<Order> {
         String payStatusStr;
 
         /**
-         * 买家昵称
+         * 买家账号
          */
         String userName;
+
+        /**
+         * 买家昵称
+         */
+        String nickName;
 
         /**
          * 商品数量
@@ -121,6 +126,11 @@ public interface IOrderService extends IService<Order> {
          * 商品金额
          */
         BigDecimal totalAmount;
+
+        /**
+         * 支付金额
+         */
+        BigDecimal payAmount;
 
         /**
          * 创建时间
@@ -184,11 +194,19 @@ public interface IOrderService extends IService<Order> {
         }
 
         public String getUserName() {
-            return userName;
+            return userName == null ? getNickName() : userName;
         }
 
         public void setUserName(String userName) {
             this.userName = userName;
+        }
+
+        public String getNickName() {
+            return nickName;
+        }
+
+        public void setNickName(String nickName) {
+            this.nickName = nickName;
         }
 
         public Integer getProductCount() {
@@ -207,6 +225,14 @@ public interface IOrderService extends IService<Order> {
             this.totalAmount = totalAmount;
         }
 
+        public BigDecimal getPayAmount() {
+            return payAmount;
+        }
+
+        public void setPayAmount(BigDecimal payAmount) {
+            this.payAmount = payAmount;
+        }
+
         public LocalDate getCreated() {
             return created;
         }
@@ -222,18 +248,30 @@ public interface IOrderService extends IService<Order> {
      */
     class OrderDetailVo extends Order implements Serializable {
         /**
-         * 买家
+         * 买家昵称
          */
         String nickName;
 
+        /**
+         * 买家账号
+         */
+        String userName;
+
         public String getNickName() {
-            return nickName;
+            return nickName == null ? getUserName() : nickName;
         }
 
         public void setNickName(String nickName) {
             this.nickName = nickName;
         }
 
+        public String getUserName() {
+            return userName;
+        }
+
+        public void setUserName(String userName) {
+            this.userName = userName;
+        }
     }
 
     /**

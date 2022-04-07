@@ -1,6 +1,7 @@
 package com.fastcms.web.controller.admin;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.constants.FastcmsConstants;
@@ -14,6 +15,8 @@ import com.fastcms.core.auth.Secured;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.entity.Order;
 import com.fastcms.service.IOrderService;
+import com.fastcms.service.IPaymentRecordService;
+import com.fastcms.service.IUserAmountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +34,12 @@ public class OrderController {
 
     @Autowired
     private IOrderService orderService;
+
+    @Autowired
+    private IUserAmountService userAmountService;
+
+    @Autowired
+    private IPaymentRecordService paymentRecordService;
 
     /**
      * 订单列表
@@ -84,6 +93,41 @@ public class OrderController {
             orderService.updateById(order);
         }
         return RestResultUtils.success();
+    }
+
+    /**
+     * 提现管理
+     * @param page
+     * @param userName
+     * @param status
+     * @return
+     */
+    @GetMapping("cashout/list")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "orders", action = ActionTypes.READ)
+    public RestResult<Page<IUserAmountService.CashOutListVo>> cashOutList(PageModel page,
+                                                            @RequestParam(name = "userName", required = false) String userName,
+                                                            @RequestParam(name = "status", required = false) String status) {
+        QueryWrapper queryWrapper = Wrappers.query().eq(StrUtils.isNotBlank(userName), "u.user_name", userName)
+                .eq(StringUtils.isNotBlank(status), "uas.status", status)
+                .eq(!AuthUtils.isAdmin(), "o.user_id", AuthUtils.getUserId())
+                .orderByDesc("uas.created");
+        return RestResultUtils.success(userAmountService.pageCashOut(page.toPage(), queryWrapper));
+    }
+
+    /**
+     * 支付记录
+     * @param page
+     * @param userName
+     * @return
+     */
+    @GetMapping("payment/list")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "orders", action = ActionTypes.READ)
+    public RestResult<Page<IPaymentRecordService.PaymentListVo>> paymentList(PageModel page,
+                                                                          @RequestParam(name = "userName", required = false) String userName) {
+        QueryWrapper queryWrapper = Wrappers.query().eq(StrUtils.isNotBlank(userName), "u.user_name", userName)
+                .eq(!AuthUtils.isAdmin(), "o.user_id", AuthUtils.getUserId())
+                .orderByDesc("pr.created");
+        return RestResultUtils.success(paymentRecordService.pagePaymentRecord(page.toPage(), queryWrapper));
     }
 
 }

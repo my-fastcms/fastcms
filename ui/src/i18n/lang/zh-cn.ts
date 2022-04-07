@@ -31,6 +31,8 @@ export default {
 		templateSet: '设置',
 		order: '订单',
 		orderManager: '订单管理',
+		paymentManager: '支付记录',
+		cashoutManager: '提现管理',
 		orderSet: '设置',
 		setting: '设置',
 		websiteSet: '网站',

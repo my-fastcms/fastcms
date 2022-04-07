@@ -1,6 +1,8 @@
 package com.fastcms.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fastcms.entity.Order;
 import com.fastcms.entity.PaymentRecord;
@@ -40,6 +42,11 @@ public class PaymentRecordServiceImpl extends ServiceImpl<PaymentRecordMapper, P
 		}
 
 		return true;
+	}
+
+	@Override
+	public Page<PaymentListVo> pagePaymentRecord(Page pageParam, QueryWrapper queryWrapper) {
+		return getBaseMapper().pagePaymentRecord(pageParam, queryWrapper);
 	}
 
 }
