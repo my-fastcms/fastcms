@@ -18,7 +18,6 @@ package com.fastcms.cms.task;
 
 import com.fastcms.cms.service.IArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +34,6 @@ import java.util.concurrent.atomic.AtomicLong;
  * @version: 1.0
  */
 @Component
-@EnableScheduling
 public class ArticleViewCountUpdateTask {
 
 	@Autowired

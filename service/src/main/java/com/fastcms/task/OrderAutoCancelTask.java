@@ -22,7 +22,6 @@ import com.fastcms.entity.Order;
 import com.fastcms.service.IOrderService;
 import com.fastcms.utils.ConfigUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -39,7 +38,6 @@ import java.util.concurrent.ExecutorService;
  * @version: 1.0
  */
 @Component
-@EnableScheduling
 public class OrderAutoCancelTask {
 
 	private static final String OVER_TIME = "unPayOrderCancelTime";

@@ -68,9 +68,9 @@ public class PageController {
 																  @RequestParam(name = "title", required = false) String title,
 																  @RequestParam(name = "status", required = false) String status) {
 		QueryWrapper queryWrapper = Wrappers.query()
-				.like(StrUtils.isNotBlank(title), "a.title", title)
-				.eq(StrUtils.isNotBlank(status), "a.status", status)
-				.ne("a.status", SinglePage.STATUS_DELETE);
+				.like(StrUtils.isNotBlank(title), "p.title", title)
+				.eq(StrUtils.isNotBlank(status), "p.status", status)
+				.orderByDesc("p.created");
 		return RestResultUtils.success(singlePageService.pageSinglePage(page.toPage(), queryWrapper));
 	}
 

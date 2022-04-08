@@ -85,7 +85,7 @@
         </logger>
         <logger name="freemarker.template">
             <appender-ref ref="CONSOLE"/>
-            <level value="INFO"/>
+            <level value="DEBUG"/>
         </logger>
     </springProfile>
 

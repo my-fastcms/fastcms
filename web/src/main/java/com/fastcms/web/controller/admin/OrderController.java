@@ -109,7 +109,7 @@ public class OrderController {
                                                             @RequestParam(name = "status", required = false) String status) {
         QueryWrapper queryWrapper = Wrappers.query().eq(StrUtils.isNotBlank(userName), "u.user_name", userName)
                 .eq(StringUtils.isNotBlank(status), "uas.status", status)
-                .eq(!AuthUtils.isAdmin(), "o.user_id", AuthUtils.getUserId())
+                .eq(!AuthUtils.isAdmin(), "uas.user_id", AuthUtils.getUserId())
                 .orderByDesc("uas.created");
         return RestResultUtils.success(userAmountService.pageCashOut(page.toPage(), queryWrapper));
     }
@@ -125,7 +125,7 @@ public class OrderController {
     public RestResult<Page<IPaymentRecordService.PaymentListVo>> paymentList(PageModel page,
                                                                           @RequestParam(name = "userName", required = false) String userName) {
         QueryWrapper queryWrapper = Wrappers.query().eq(StrUtils.isNotBlank(userName), "u.user_name", userName)
-                .eq(!AuthUtils.isAdmin(), "o.user_id", AuthUtils.getUserId())
+                .eq(!AuthUtils.isAdmin(), "pr.user_id", AuthUtils.getUserId())
                 .orderByDesc("pr.created");
         return RestResultUtils.success(paymentRecordService.pagePaymentRecord(page.toPage(), queryWrapper));
     }
