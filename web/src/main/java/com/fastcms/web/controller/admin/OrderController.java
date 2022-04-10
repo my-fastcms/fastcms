@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.StrUtils;
@@ -14,9 +15,10 @@ import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.auth.Secured;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.entity.Order;
+import com.fastcms.entity.UserAmountPayout;
 import com.fastcms.service.IOrderService;
 import com.fastcms.service.IPaymentRecordService;
-import com.fastcms.service.IUserAmountService;
+import com.fastcms.service.IUserAmountPayoutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +38,7 @@ public class OrderController {
     private IOrderService orderService;
 
     @Autowired
-    private IUserAmountService userAmountService;
+    private IUserAmountPayoutService userAmountPayoutService;
 
     @Autowired
     private IPaymentRecordService paymentRecordService;
@@ -104,14 +106,57 @@ public class OrderController {
      */
     @GetMapping("cashout/list")
     @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "orders", action = ActionTypes.READ)
-    public RestResult<Page<IUserAmountService.CashOutListVo>> cashOutList(PageModel page,
-                                                            @RequestParam(name = "userName", required = false) String userName,
-                                                            @RequestParam(name = "status", required = false) String status) {
+    public RestResult<Page<IUserAmountPayoutService.CashOutListVo>> cashOutList(PageModel page,
+                                                                                @RequestParam(name = "userName", required = false) String userName,
+                                                                                @RequestParam(name = "status", required = false) String status) {
         QueryWrapper queryWrapper = Wrappers.query().eq(StrUtils.isNotBlank(userName), "u.user_name", userName)
                 .eq(StringUtils.isNotBlank(status), "uas.status", status)
                 .eq(!AuthUtils.isAdmin(), "uas.user_id", AuthUtils.getUserId())
                 .orderByDesc("uas.created");
-        return RestResultUtils.success(userAmountService.pageCashOut(page.toPage(), queryWrapper));
+        return RestResultUtils.success(userAmountPayoutService.pageCashOut(page.toPage(), queryWrapper));
+    }
+
+    /**
+     * 提现单详情
+     * @param payoutId   提现单号
+     * @return
+     */
+    @GetMapping("cashout/detail/{payoutId}")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "orders", action = ActionTypes.READ)
+    public RestResult<IUserAmountPayoutService.CashOutDetailVo> getCashOutDetail(@PathVariable(name = "payoutId") Long payoutId) {
+        return RestResultUtils.success(userAmountPayoutService.getCashOutDetail(payoutId));
+    }
+
+    /**
+     * 确认提现单
+     * @param payoutId
+     * @return
+     * @throws FastcmsException
+     */
+    @PostMapping("cashout/confirm/{payoutId}")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "orders", action = ActionTypes.WRITE)
+    public Object confirmCashOut(@PathVariable("payoutId") Long payoutId) throws FastcmsException {
+        userAmountPayoutService.auditCashOut(payoutId);
+        return RestResultUtils.success();
+    }
+
+    /**
+     * 拒绝提现单
+     * @param payoutId
+     * @param feedback
+     * @return
+     * @throws FastcmsException
+     */
+    @PostMapping("cashout/refuse/{payoutId}")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "orders", action = ActionTypes.WRITE)
+    public Object refuseCashOut(@PathVariable("payoutId") Long payoutId, @RequestParam("feedback") String feedback) {
+        UserAmountPayout userAmountPayout = userAmountPayoutService.getById(payoutId);
+        if (userAmountPayout != null) {
+            userAmountPayout.setFeedback(feedback);
+            userAmountPayout.setStatus(UserAmountPayout.AMOUNT_STATUS_REFUSE);
+            userAmountPayoutService.updateById(userAmountPayout);
+        }
+        return RestResultUtils.success();
     }
 
     /**
@@ -123,11 +168,24 @@ public class OrderController {
     @GetMapping("payment/list")
     @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "orders", action = ActionTypes.READ)
     public RestResult<Page<IPaymentRecordService.PaymentListVo>> paymentList(PageModel page,
-                                                                          @RequestParam(name = "userName", required = false) String userName) {
+                                                                             @RequestParam(name = "trxNo", required = false) String trxNo,
+                                                                             @RequestParam(name = "userName", required = false) String userName) {
         QueryWrapper queryWrapper = Wrappers.query().eq(StrUtils.isNotBlank(userName), "u.user_name", userName)
+                .eq(StringUtils.isNotBlank(trxNo), "pr.trx_no", trxNo)
                 .eq(!AuthUtils.isAdmin(), "pr.user_id", AuthUtils.getUserId())
                 .orderByDesc("pr.created");
         return RestResultUtils.success(paymentRecordService.pagePaymentRecord(page.toPage(), queryWrapper));
+    }
+
+    /**
+     * 支付记录详情
+     * @param paymentId   订单号
+     * @return
+     */
+    @GetMapping("payment/detail/{paymentId}")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "orders", action = ActionTypes.READ)
+    public RestResult<IPaymentRecordService.PaymentDetailVo> paymentDetail(@PathVariable(name = "paymentId") Long paymentId) {
+        return RestResultUtils.success(paymentRecordService.getPaymentDetail(paymentId));
     }
 
 }

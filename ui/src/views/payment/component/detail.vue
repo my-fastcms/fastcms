@@ -1,6 +1,6 @@
 <template>
 	<div class="system-menu-container">
-		<el-dialog title="订单详情" fullscreen v-model="isShowDialog">
+		<el-dialog title="支付记录详情" fullscreen v-model="isShowDialog">
 			<div class="personal">
 				<el-row>
 					<el-col :xs="24" :sm="24">
@@ -8,24 +8,20 @@
 							<div class="personal-user">
 								<div class="personal-user-right">
 									<el-row>
-										<el-col :span="24" class="personal-title mb18">{{ruleForm.orderTitle}} </el-col>
+										<el-col :span="24" class="personal-title mb18">{{ruleForm.prodTitle}} </el-col>
 										<el-col :span="24">
 											<el-row>
 												<el-col :xs="24" :sm="8" class="personal-item mb6">
-													<div class="personal-item-label">订单编号：</div>
-													<div class="personal-item-value">{{ruleForm.orderSn}}</div>
+													<div class="personal-item-label">支付编号：</div>
+													<div class="personal-item-value">{{ruleForm.trxNo}}</div>
 												</el-col>
-												<el-col :xs="24" :sm="4" class="personal-item mb6">
-													<div class="personal-item-label">订单状态：</div>
-													<div class="personal-item-value">{{ruleForm.statusStr}}</div>
-												</el-col>
-												<el-col :xs="24" :sm="4" class="personal-item mb6">
-													<div class="personal-item-label">交易状态：</div>
-													<div class="personal-item-value">{{ruleForm.tradeStatusStr}}</div>
-												</el-col>
-												<el-col :xs="24" :sm="4" class="personal-item mb6">
+												<el-col :xs="24" :sm="8" class="personal-item mb6">
 													<div class="personal-item-label">支付状态：</div>
 													<div class="personal-item-value">{{ruleForm.payStatusStr}}</div>
+												</el-col>
+												<el-col :xs="24" :sm="8" class="personal-item mb6">
+													<div class="personal-item-label">支付时间：</div>
+													<div class="personal-item-value">{{ruleForm.paySuccessTime}}</div>
 												</el-col>
 											</el-row>
 										</el-col>
@@ -33,18 +29,54 @@
 											<el-row>
 												<el-col :xs="24" :sm="8" class="personal-item mb6">
 													<div class="personal-item-label">订单金额：</div>
-													<div class="personal-item-value">{{ruleForm.orderAmount}}</div>
+													<div class="personal-item-value">{{ruleForm.payAmount}}</div>
 												</el-col>
-												<el-col :xs="24" :sm="4" class="personal-item mb6">
+												<el-col :xs="24" :sm="8" class="personal-item mb6">
+													<div class="personal-item-label">支付金额：</div>
+													<div class="personal-item-value">{{ruleForm.paySuccessAmount}}</div>
+												</el-col>
+												<el-col :xs="24" :sm="8" class="personal-item mb6">
 													<div class="personal-item-label">买家：</div>
 													<div class="personal-item-value">{{ruleForm.nickName}}</div>
 												</el-col>
-												<el-col :xs="24" :sm="4" class="personal-item mb6">
-													<div class="personal-item-label">创建时间：</div>
-													<div class="personal-item-value">{{ruleForm.created}}</div>
+											</el-row>
+										</el-col>
+										<el-col :span="24">
+											<el-row>
+												<el-col :xs="24" :sm="24" class="personal-item mb6">
+													<div class="personal-item-label">支付类型：</div>
+													<div class="personal-item-value">{{ruleForm.thirdpartyType}}</div>
 												</el-col>
 											</el-row>
 										</el-col>
+
+										<el-col :span="24">
+											<el-row>
+												<el-col :xs="24" :sm="24" class="personal-item mb6">
+													<div class="personal-item-label">第三方支付appId：</div>
+													<div class="personal-item-value">{{ruleForm.thirdpartyAppid}}</div>
+												</el-col>
+											</el-row>
+										</el-col>	
+
+										<el-col :span="24">
+											<el-row>
+												<el-col :xs="24" :sm="24" class="personal-item mb6">
+													<div class="personal-item-label">第三方支付openId：</div>
+													<div class="personal-item-value">{{ruleForm.thirdpartyUserOpenid}}</div>
+												</el-col>
+											</el-row>
+										</el-col>
+
+										<el-col :span="24">
+											<el-row>
+												<el-col :xs="24" :sm="24" class="personal-item mb6">
+													<div class="personal-item-label">第三方支付交易流水号：</div>
+													<div class="personal-item-value">{{ruleForm.thirdpartyTransactionId}}</div>
+												</el-col>
+											</el-row>
+										</el-col>
+
 										<el-col :span="24" v-if="ruleForm.buyerMsg != null && ruleForm.buyerMsg !=''">
 											<el-row>
 												<el-col :xs="24" :sm="24" class="personal-item mb6">
@@ -53,11 +85,11 @@
 												</el-col>
 											</el-row>	
 										</el-col>
-										<el-col :span="24" v-if="ruleForm.remarks != null && ruleForm.remarks !=''">
+										<el-col :span="24" v-if="ruleForm.remark != null && ruleForm.remark !=''">
 											<el-row>
 												<el-col :xs="24" :sm="24" class="personal-item mb6">
-													<div class="personal-item-label">卖家备注：</div>
-													<div class="personal-item-value">{{ruleForm.remarks}}</div>
+													<div class="personal-item-label">备注：</div>
+													<div class="personal-item-value">{{ruleForm.remark}}</div>
 												</el-col>
 											</el-row>	
 										</el-col>
@@ -66,27 +98,11 @@
 							</div>
 						</el-card>
 					</el-col>
-
-					<el-col :span="24">
-						<el-card shadow="hover" class="mt15 personal-edit" header="商品信息">
-							<div class="personal-edit-safe-box" v-for="(v, k) in ruleForm.orderItemList" :key="k">
-								<div class="personal-edit-safe-item">
-									<div class="personal-edit-safe-item-left">
-										<div class="personal-edit-safe-item-left-label">{{ v.productTitle }}</div>
-									</div>
-									<div class="personal-edit-safe-item-right">
-										<el-button type="text">数量 X {{ v.productCount }}</el-button>
-									</div>
-								</div>
-							</div>
-						</el-card>
-					</el-col>
 				</el-row>
 			</div>
 			<template #footer>
 				<span class="dialog-footer">
-                    <el-button type="danger" @click="deleteOrder" size="small" v-if="ruleForm.status ==1 ? true : false">删 除</el-button>
-					<el-button @click="onCancel" size="small">取 消</el-button>
+                    <el-button @click="onCancel" size="small">取 消</el-button>
 					<!-- <el-button type="primary" @click="onSubmit" size="small">保 存</el-button> -->
 				</span>
 			</template>
@@ -96,11 +112,10 @@
 
 <script lang="ts">
 import { reactive, toRefs, getCurrentInstance, onUpdated } from 'vue';
-import { ElMessageBox, ElMessage } from 'element-plus';
-import { getOrderDetail, delOrder } from '/@/api/order/index';
+import { getPaymentDetail } from '/@/api/order/index';
 
 export default {
-	name: 'orderDetail',
+	name: 'paymentRecordDetail',
 	setup(props, ctx) {
 		const { proxy } = getCurrentInstance() as any;
 		const state = reactive({
@@ -127,47 +142,9 @@ export default {
 			initForm();
 		};
 
-		const onSubmit = () => {
-
-			proxy.$refs['myRefForm'].validate((valid: any) => {
-				if (valid) {
-					// let params = {
-                    //     price: state.ruleForm.payAmount,
-                    // }
-					// updateOrder(state.ruleForm.id, params).then(() => {
-					// 	closeDialog(); // 关闭弹窗
-					// 	// 刷新菜单，未进行后端接口测试
-					// 	initForm();
-					// 	ctx.emit("reloadTable");
-					// }).catch((res) => {
-					// 	ElMessage({showClose: true, message: res.message ? res.message : '系统错误' , type: 'error'});
-					// })
-				}
-			});
-
-		};
-
-        //删除订单
-        const deleteOrder = () => {
-            ElMessageBox.confirm('此操作将删除订单, 是否继续?', '提示', {
-				confirmButtonText: '删除',
-				cancelButtonText: '取消',
-				type: 'warning',
-			}).then(() => {
-				delOrder(state.ruleForm.id).then(() => {
-                    closeDialog(); // 关闭弹窗
-					ElMessage.success("删除成功");
-                    ctx.emit("reloadTable");
-				}).catch((res) => {
-					ElMessage.error(res.message);
-				});
-			})
-			.catch(() => {});
-        }
-
 		const getOrder = () => {
 			if(state.ruleForm.id && state.ruleForm.id != null) {
-				getOrderDetail(state.ruleForm.id).then((res) => {
+				getPaymentDetail(state.ruleForm.id).then((res) => {
 					state.ruleForm = res.data;
 				})
 			}
@@ -186,8 +163,6 @@ export default {
 			openDialog,
 			closeDialog,
 			onCancel,
-			onSubmit,
-            deleteOrder,
 			...toRefs(state),
 		};
 	},
@@ -197,12 +172,12 @@ export default {
 @import '../../../theme/mixins/mixins.scss';
 .personal {
 	.personal-user {
-		height: 130px;
+		height: 330px;
 		display: flex;
 		align-items: center;
 		.personal-user-left {
 			width: 100px;
-			height: 130px;
+			height: 330px;
 			border-radius: 3px;
 			::v-deep(.el-upload) {
 				height: 100%;
@@ -252,7 +227,7 @@ export default {
 			}
 		}
 		.personal-info-box {
-			height: 130px;
+			height: 330px;
 			overflow: hidden;
 			.personal-info-ul {
 				list-style: none;

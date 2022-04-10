@@ -17,8 +17,6 @@
 package com.fastcms.hello;
 
 import com.fastcms.plugin.FastcmsTask;
-import com.fastcms.service.IUserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -33,13 +31,9 @@ import org.springframework.stereotype.Component;
 @FastcmsTask
 public class HelloTask {
 
-	@Autowired
-	private IUserService userService;
-
 	@Scheduled(cron = "0 */1 * * * ?")
 	public void run() {
-		System.out.println("===>hello task");
-		System.out.println(userService);
+
 	}
 
 }

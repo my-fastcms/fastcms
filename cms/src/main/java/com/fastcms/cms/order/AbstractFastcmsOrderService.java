@@ -127,6 +127,7 @@ public abstract class AbstractFastcmsOrderService implements IFastcmsOrderServic
     /**
      * 订单数据持久化前对不同业务进行扩展
      * 比如拼团订单，会员订单，折扣订单等逻辑不同
+     * 会覆盖之前设置过的属性
      * @param order
      * @param createOrderParam
      */

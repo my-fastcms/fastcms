@@ -49,4 +49,9 @@ public class PaymentRecordServiceImpl extends ServiceImpl<PaymentRecordMapper, P
 		return getBaseMapper().pagePaymentRecord(pageParam, queryWrapper);
 	}
 
+	@Override
+	public PaymentDetailVo getPaymentDetail(Long paymentId) {
+		return getBaseMapper().getPaymentDetail(paymentId);
+	}
+
 }

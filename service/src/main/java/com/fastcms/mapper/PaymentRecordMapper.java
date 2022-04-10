@@ -20,4 +20,6 @@ public interface PaymentRecordMapper extends BaseMapper<PaymentRecord> {
 
     Page<IPaymentRecordService.PaymentListVo> pagePaymentRecord(Page pageParam, @Param(Constants.WRAPPER) QueryWrapper queryWrapper);
 
+    IPaymentRecordService.PaymentDetailVo getPaymentDetail(@Param("paymentId") Long paymentId);
+
 }

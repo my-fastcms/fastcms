@@ -3,9 +3,18 @@
 <mapper namespace="com.fastcms.mapper.PaymentRecordMapper">
 
     <select id="pagePaymentRecord" resultType="com.fastcms.service.IPaymentRecordService$PaymentListVo">
-        select pr.*, u.user_name, u.nick_name from payment_record pr
+        select pr.id, pr.trx_no, pr.pay_amount, pr.created, pr.thirdparty_type as pay_type, u.user_name, u.nick_name, a.title as prod_title from payment_record pr
+        left join article a on pr.product_relative_id = a.id
         left join `user` u on pr.user_id = u.id
         ${ew.customSqlSegment}
+    </select>
+
+    <select id="getPaymentDetail" resultType="com.fastcms.service.IPaymentRecordService$PaymentDetailVo">
+        select pr.*, u.user_name, u.nick_name, a.title as prod_title
+        from payment_record pr
+        left join article a on pr.product_relative_id = a.id
+        left join `user` u on pr.user_id = u.id
+        where pr.id = #{paymentId}
     </select>
 
 </mapper>

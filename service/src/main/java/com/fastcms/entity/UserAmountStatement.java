@@ -7,10 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * <p>
  * 用户余额流水情况
- * </p>
- *
  * @author wjun_java@163.com
  * @since 2022-03-28
  */
@@ -39,19 +36,14 @@ public class UserAmountStatement implements Serializable {
     public static final Integer AMOUNT_ACTION_TYPE_PAY = 2;
 
     /**
-     * 待审核
+     * 已结算
      */
-    public static final Integer AMOUNT_STATUS_AUDIT = 0;
+    public static final Integer AMOUNT_BALANCE_STATUS = 1;
 
     /**
-     * 审核通过
+     * 未结算
      */
-    public static final Integer AMOUNT_STATUS_PASS = 1;
-
-    /**
-     * 审核拒绝
-     */
-    public static final Integer AMOUNT_STATUS_REFUSE = 2;
+    public static final Integer AMOUNT_UNBALANCE_STATUS = 0;
 
     public enum AmountAction {
         ADD(AMOUNT_ACTION_ADD, "增加"),
@@ -96,29 +88,6 @@ public class UserAmountStatement implements Serializable {
             return "";
         }
 
-    }
-
-    public enum ActionStatus {
-        AUDIT(AMOUNT_STATUS_AUDIT, "待审核"),
-        REFUSE(AMOUNT_STATUS_REFUSE, "审核拒绝"),
-        PASS(AMOUNT_STATUS_PASS, "审核通过");
-
-        ActionStatus(Integer key, String value) {
-            this.key = key;
-            this.value = value;
-        }
-
-        private final Integer key;
-        private final String value;
-
-        public static String getValue(Integer key) {
-            for (ActionStatus s: values()) {
-                if (s.key.equals(key)) {
-                    return s.value;
-                }
-            }
-            return "";
-        }
     }
 
     @TableId(value = "id", type = IdType.AUTO)
@@ -170,12 +139,7 @@ public class UserAmountStatement implements Serializable {
     private BigDecimal newAmount;
 
     /**
-     * 提现状态
-     */
-    private Integer status;
-
-    /**
-     * 时间
+     * 创建时间
      */
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime created;
@@ -191,9 +155,6 @@ public class UserAmountStatement implements Serializable {
      */
     @TableField(exist = false)
     private String actionTypeName;
-
-    @TableField(exist = false)
-    private String statusName;
 
     public Long getId() {
         return id;
@@ -265,15 +226,6 @@ public class UserAmountStatement implements Serializable {
     public void setNewAmount(BigDecimal newAmount) {
         this.newAmount = newAmount;
     }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
     public LocalDateTime getCreated() {
         return created;
     }
@@ -288,10 +240,6 @@ public class UserAmountStatement implements Serializable {
 
     public String getActionTypeName() {
         return AmountActionType.getValue(getActionType());
-    }
-
-    public String getStatusName() {
-        return ActionStatus.getValue(getStatus());
     }
 
     @Override

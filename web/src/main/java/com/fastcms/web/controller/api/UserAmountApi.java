@@ -21,7 +21,7 @@ import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.auth.AuthUtils;
-import com.fastcms.service.IUserAmountService;
+import com.fastcms.service.IUserAmountPayoutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,11 +43,11 @@ import java.math.BigDecimal;
 public class UserAmountApi {
 
     @Autowired
-    private IUserAmountService userAmountService;
+    private IUserAmountPayoutService userAmountPayoutService;
 
     @PostMapping("cashout")
     public Object cashOut(@RequestParam("amount") BigDecimal amount) throws FastcmsException {
-        userAmountService.cashOut(AuthUtils.getUserId(), amount);
+        userAmountPayoutService.cashOut(AuthUtils.getUserId(), amount);
         return RestResultUtils.success();
     }
 

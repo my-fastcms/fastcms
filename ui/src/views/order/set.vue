@@ -7,9 +7,11 @@
 					
 					<el-form :model="ruleForm" :rules="rules" ref="myRefForm" size="small" label-width="150px" class="mt35 mb35">
                         
+						<div class="personal-edit-title mb15">订单设置</div>
+
                         <el-row :gutter="35">
 							<el-col class="mb20">
-								<el-form-item label="开启自动取消订单">
+								<el-form-item label="开启自动取消订单" prop="enableAutoCancelOrder">
 									<el-switch
 										v-model="ruleForm.enableAutoCancelOrder"
 										active-color="#13ce66">
@@ -18,12 +20,46 @@
 							</el-col>
 							
 							<el-col class="mb20">
-								<el-form-item label="未支付取消订单时间">
+								<el-form-item label="未支付取消订单时间" prop="unPayOrderCancelTime">
 									<el-input v-model="ruleForm.unPayOrderCancelTime" placeholder="请输入订单取消时间，单位分钟" onkeyup="value=value.replace(/[^\d]/g,'')" clearable></el-input>
 								</el-form-item>
 							</el-col>
 							
 						</el-row>
+
+						<div class="personal-edit-title mb15">提现设置</div>
+
+						<el-row :gutter="35">
+							<el-col class="mb20">
+								<el-form-item label="是否开启提现审核" prop="enableAmountCashOutAudit">
+									<el-switch
+										v-model="ruleForm.enableAmountCashOutAudit"
+										active-color="#13ce66">
+									</el-switch>
+								</el-form-item>
+							</el-col>
+							<el-col class="mb20">
+								<el-form-item label="单日提现最大次数" prop="cashOutAmountDayMaxTimeValue">
+									<el-input v-model="ruleForm.cashOutAmountDayMaxTimeValue" placeholder="0表示不限制" onkeyup="value=value.replace(/[^\d]/g,'')" clearable></el-input>
+								</el-form-item>
+							</el-col>
+							<el-col class="mb20">
+								<el-form-item label="单次提现最大金额" prop="cashOutAmountDayMaxValue">
+									<el-input v-model="ruleForm.cashOutAmountDayMaxValue" placeholder="单位元，0表示不限制" onkeyup="value=value.replace(/[^\d]/g,'')" clearable></el-input>
+								</el-form-item>
+							</el-col>
+							<el-col class="mb20">
+								<el-form-item label="余额满多少金额允许提现" prop="cashOutAmountDayBalanceMaxValue">
+									<el-input v-model="ruleForm.cashOutAmountDayBalanceMaxValue" placeholder="单位元，0表示不限制" onkeyup="value=value.replace(/[^\d]/g,'')" clearable></el-input>
+								</el-form-item>
+							</el-col>							
+							<el-col class="mb20">
+								<el-form-item label="超过多少金额需要强制审核" prop="cashOutAmountOverflowValue">
+									<el-input v-model="ruleForm.cashOutAmountOverflowAuditValue" placeholder="单位元" onkeyup="value=value.replace(/[^\d]/g,'')" clearable></el-input>
+								</el-form-item>
+							</el-col>
+						</el-row>	
+
                         <el-col>
                             <el-form-item>
                                 <el-button type="primary"  @click="onSubmit" icon="el-icon-position">保 存</el-button>
@@ -53,10 +89,24 @@ export default {
 			ruleForm: {
 				enableAutoCancelOrder: false,
                 unPayOrderCancelTime: 0,
+				enableAmountCashOutAudit: false,
+				cashOutAmountOverflowAuditValue: 500,
+				cashOutAmountDayMaxTimeValue:0,
+				cashOutAmountDayMaxValue:0,
+				cashOutAmountDayBalanceMaxValue: 0,
 			},
 			rules: {
 				"unPayOrderCancelTime": [
 					{required: true, message: '请输入订单取消时间', trigger: 'blur'},
+				],
+				"cashOutAmountOverflowAuditValue": [
+					{required: true, message: '请输入提现超出金额', trigger: 'blur'},
+				],
+				"cashOutAmountDayMaxTimeValue": [
+					{required: true, message: '请输入单日提现最大次数', trigger: 'blur'},
+				],
+				"cashOutAmountDayMaxValue": [
+					{required: true, message: '请输入单次提现最大金额', trigger: 'blur'},
 				],
 			}
 		});

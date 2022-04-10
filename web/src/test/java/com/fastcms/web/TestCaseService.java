@@ -47,7 +47,7 @@ public class TestCaseService {
 
     @Test
     public void testPasswordEncode() {
-        System.out.println(passwordEncoder.encode("1"));
+        logger.info(passwordEncoder.encode("1"));
     }
 
     @Test

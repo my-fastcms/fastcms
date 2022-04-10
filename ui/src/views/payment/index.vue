@@ -2,33 +2,18 @@
 	<div class="list-adapt-container">
 		<el-card shadow="hover">
 			<div class="mb15">
-				<el-input size="small" v-model="tableData.param.orderSn" placeholder="订单编号" style="max-width: 180px" class="ml10"></el-input>
-				<el-input size="small" v-model="tableData.param.title" placeholder="商品名称" style="max-width: 180px" class="ml10"></el-input>
-				<el-select size="small" style="max-width: 180px" v-model="tableData.param.payStatus" placeholder="支付状态" clearable class="ml10">
-					<el-option label="已支付" value="1"></el-option>
-					<el-option label="未支付" value="0"></el-option>
-				</el-select>
-				<el-select size="small" style="max-width: 180px" v-model="tableData.param.tradeStatus" placeholder="交易状态" clearable class="ml10">
-					<el-option label="交易中" value="1"></el-option>
-					<el-option label="交易完成(可退款)" value="2"></el-option>
-					<el-option label="取消交易" value="3"></el-option>
-					<el-option label="交易完成" value="8"></el-option>
-					<el-option label="订单关闭" value="9"></el-option>
-				</el-select>
-				<el-select size="small" style="max-width: 180px" v-model="tableData.param.status" placeholder="订单状态" clearable class="ml10">
-					<el-option label="正常" value="1"></el-option>
-					<el-option label="删除" value="0"></el-option>
-				</el-select>
+				<el-input size="small" v-model="tableData.param.trxNo" placeholder="支付编号" style="max-width: 180px" class="ml10"></el-input>
+				<el-input size="small" v-model="tableData.param.userName" placeholder="支付用户" style="max-width: 180px" class="ml10"></el-input>
 				<el-button size="small" type="primary" class="ml10" @click="initTableData">查询</el-button>
 			</div>
 			<el-table :data="tableData.data" stripe style="width: 100%">
 				<el-table-column prop="id" label="ID" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="orderSn" label="订单编号" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="title" label="商品" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="totalAmount" label="金额" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="trxNo" label="支付编号" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="prodTitle" label="商品" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="payAmount" label="支付金额" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="userName" label="买家" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="payStatusStr" label="支付状态" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="created" label="创建时间" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="payType" label="支付类型" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="created" label="支付时间" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="path" label="操作" width="90">
 					<template #default="scope">
 						<el-button size="mini" type="text" @click="onRowInfo(scope.row)">详情</el-button>
@@ -56,10 +41,10 @@
 
 <script lang="ts">
 import { toRefs, ref, reactive, onMounted } from 'vue';
-import { getOrderList } from '/@/api/order/index';
-import Detail from '/@/views/order/component/detail.vue';
+import { getPaymentList } from '/@/api/order/index';
+import Detail from '/@/views/payment/component/detail.vue';
 export default {
-	name: 'orderManager',
+	name: 'paymentManager',
 	components: { Detail },
 	setup() {
 		const detailRef = ref();
@@ -79,7 +64,7 @@ export default {
 		});
 
 		const initTableData = () => {
-			getOrderList(state.tableData.param).then((res) => {
+			getPaymentList(state.tableData.param).then((res) => {
 				state.tableData.data = res.data.records;
 				state.tableData.total = res.data.total;
 			});

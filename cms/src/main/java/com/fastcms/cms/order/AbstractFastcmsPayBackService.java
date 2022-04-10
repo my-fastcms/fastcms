@@ -99,8 +99,8 @@ public abstract class AbstractFastcmsPayBackService implements IFastcmsPayBackSe
             paymentRecord.setPaySuccessAmount(item.getTotalAmount());
             paymentRecord.setUserId(order.getUserId());
             paymentRecord.setPaySuccessTime(LocalDateTime.now());
-            setPaymentRecordPlatformInfo(paymentRecord, payMessage);
             paymentRecord.setPayStatus(Order.STATUS_PAY_SUCCESS);
+            processPaymentRecordBeforePersistence(paymentRecord, payMessage);
             paymentRecordService.save(paymentRecord);
         });
 
@@ -122,10 +122,11 @@ public abstract class AbstractFastcmsPayBackService implements IFastcmsPayBackSe
     }
 
     /**
-     * 由子类实现不同的支付平台对支付记录的信息补充
+     * 持久化支付记录之前的拦截处理
+     * 会覆盖之前设置过的属性
      * @param paymentRecord
      * @param payMessage
      */
-    protected abstract void setPaymentRecordPlatformInfo(PaymentRecord paymentRecord, PayMessage payMessage);
+    protected abstract void processPaymentRecordBeforePersistence(PaymentRecord paymentRecord, PayMessage payMessage);
 
 }

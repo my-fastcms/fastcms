@@ -1,6 +1,6 @@
 <template>
 	<div class="system-menu-container">
-		<el-dialog title="订单详情" fullscreen v-model="isShowDialog">
+		<el-dialog title="提现详情" fullscreen v-model="isShowDialog">
 			<div class="personal">
 				<el-row>
 					<el-col :xs="24" :sm="24">
@@ -12,52 +12,41 @@
 										<el-col :span="24">
 											<el-row>
 												<el-col :xs="24" :sm="8" class="personal-item mb6">
-													<div class="personal-item-label">订单编号：</div>
-													<div class="personal-item-value">{{ruleForm.orderSn}}</div>
+													<div class="personal-item-label">提现用户：</div>
+													<div class="personal-item-value">{{ruleForm.nickName}}</div>
 												</el-col>
 												<el-col :xs="24" :sm="4" class="personal-item mb6">
-													<div class="personal-item-label">订单状态：</div>
-													<div class="personal-item-value">{{ruleForm.statusStr}}</div>
+													<div class="personal-item-label">提现金额：</div>
+													<div class="personal-item-value">{{ruleForm.amount}}</div>
 												</el-col>
 												<el-col :xs="24" :sm="4" class="personal-item mb6">
-													<div class="personal-item-label">交易状态：</div>
-													<div class="personal-item-value">{{ruleForm.tradeStatusStr}}</div>
+													<div class="personal-item-label">收款账号：</div>
+													<div class="personal-item-value">{{ruleForm.payTo}}</div>
 												</el-col>
-												<el-col :xs="24" :sm="4" class="personal-item mb6">
-													<div class="personal-item-label">支付状态：</div>
-													<div class="personal-item-value">{{ruleForm.payStatusStr}}</div>
-												</el-col>
+												
 											</el-row>
 										</el-col>
 										<el-col :span="24">
 											<el-row>
 												<el-col :xs="24" :sm="8" class="personal-item mb6">
-													<div class="personal-item-label">订单金额：</div>
-													<div class="personal-item-value">{{ruleForm.orderAmount}}</div>
-												</el-col>
-												<el-col :xs="24" :sm="4" class="personal-item mb6">
-													<div class="personal-item-label">买家：</div>
-													<div class="personal-item-value">{{ruleForm.nickName}}</div>
-												</el-col>
-												<el-col :xs="24" :sm="4" class="personal-item mb6">
-													<div class="personal-item-label">创建时间：</div>
+													<div class="personal-item-label">提现时间：</div>
 													<div class="personal-item-value">{{ruleForm.created}}</div>
+												</el-col>
+												<el-col :xs="24" :sm="4" class="personal-item mb6">
+													<div class="personal-item-label">提现状态：</div>
+													<div class="personal-item-value">{{ruleForm.statusStr}}</div>
+												</el-col>
+												<el-col :xs="24" :sm="4" class="personal-item mb6">
+													<div class="personal-item-label">审核方式：</div>
+													<div class="personal-item-value">{{ruleForm.payTypeStr}}</div>
 												</el-col>
 											</el-row>
 										</el-col>
-										<el-col :span="24" v-if="ruleForm.buyerMsg != null && ruleForm.buyerMsg !=''">
+										<el-col :span="24" v-if="ruleForm.feedback != null && ruleForm.feedback !=''">
 											<el-row>
 												<el-col :xs="24" :sm="24" class="personal-item mb6">
-													<div class="personal-item-label">买家留言：</div>
-													<div class="personal-item-value">{{ruleForm.buyerMsg}}</div>
-												</el-col>
-											</el-row>	
-										</el-col>
-										<el-col :span="24" v-if="ruleForm.remarks != null && ruleForm.remarks !=''">
-											<el-row>
-												<el-col :xs="24" :sm="24" class="personal-item mb6">
-													<div class="personal-item-label">卖家备注：</div>
-													<div class="personal-item-value">{{ruleForm.remarks}}</div>
+													<div class="personal-item-label">拒绝原因：</div>
+													<div class="personal-item-value">{{ruleForm.feedback}}</div>
 												</el-col>
 											</el-row>	
 										</el-col>
@@ -68,14 +57,14 @@
 					</el-col>
 
 					<el-col :span="24">
-						<el-card shadow="hover" class="mt15 personal-edit" header="商品信息">
-							<div class="personal-edit-safe-box" v-for="(v, k) in ruleForm.orderItemList" :key="k">
+						<el-card shadow="hover" class="mt5 personal-edit" header="最近收入流水">
+							<div class="personal-edit-safe-box" v-for="(v, k) in ruleForm.userAmountStatementList" :key="k">
 								<div class="personal-edit-safe-item">
 									<div class="personal-edit-safe-item-left">
-										<div class="personal-edit-safe-item-left-label">{{ v.productTitle }}</div>
+										<div class="personal-edit-safe-item-left-label">收入 {{ v.changeAmount }} 元</div>
 									</div>
 									<div class="personal-edit-safe-item-right">
-										<el-button type="text">数量 X {{ v.productCount }}</el-button>
+										<el-button type="text"> {{ v.created }}</el-button>
 									</div>
 								</div>
 							</div>
@@ -85,9 +74,23 @@
 			</div>
 			<template #footer>
 				<span class="dialog-footer">
-                    <el-button type="danger" @click="deleteOrder" size="small" v-if="ruleForm.status ==1 ? true : false">删 除</el-button>
+                    <el-button type="danger" @click="dialogFormVisible = true" size="small" v-if="ruleForm.status ==0 ? true : false">拒 绝</el-button>
+					<el-button type="primary" @click="confirmCashout" size="small" v-if="ruleForm.status ==0 ? true : false">确认提现</el-button>
 					<el-button @click="onCancel" size="small">取 消</el-button>
-					<!-- <el-button type="primary" @click="onSubmit" size="small">保 存</el-button> -->
+				</span>
+			</template>
+		</el-dialog>
+
+		<el-dialog v-model="dialogFormVisible" title="拒绝提现申请">
+			<el-form :model="form" :rules="rules" ref="myRefForm">
+				<el-form-item label="拒绝原因" prop="feedback">
+					<el-input v-model="form.feedback" />
+				</el-form-item>
+			</el-form>
+			<template #footer>
+				<span class="dialog-footer">
+					<el-button @click="dialogFormVisible = false">取 消</el-button>
+					<el-button type="primary" @click="onSubmit">确 认</el-button>
 				</span>
 			</template>
 		</el-dialog>
@@ -95,21 +98,26 @@
 </template>
 
 <script lang="ts">
-import { reactive, toRefs, getCurrentInstance, onUpdated } from 'vue';
+import { reactive, toRefs, ref, getCurrentInstance, onUpdated } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
-import { getOrderDetail, delOrder } from '/@/api/order/index';
+import { getCashoutDetail, confirmCashOut, refuseCashOut } from '/@/api/order/index';
+import qs from 'qs';
 
 export default {
 	name: 'orderDetail',
 	setup(props, ctx) {
 		const { proxy } = getCurrentInstance() as any;
 		const state = reactive({
+			dialogFormVisible: false,
 			isShowDialog: false,
+			form: {
+				feedback: ''
+			},
 			ruleForm: {
 				id: null,
 			},
             rules: {
-				
+				"feedback": { required: true, message: '请输入拒绝原因', trigger: 'blur' },
 			},
 		});
 		// 打开弹窗
@@ -131,50 +139,43 @@ export default {
 
 			proxy.$refs['myRefForm'].validate((valid: any) => {
 				if (valid) {
-					// let params = {
-                    //     price: state.ruleForm.payAmount,
-                    // }
-					// updateOrder(state.ruleForm.id, params).then(() => {
-					// 	closeDialog(); // 关闭弹窗
-					// 	// 刷新菜单，未进行后端接口测试
-					// 	initForm();
-					// 	ctx.emit("reloadTable");
-					// }).catch((res) => {
-					// 	ElMessage({showClose: true, message: res.message ? res.message : '系统错误' , type: 'error'});
-					// })
+					refuseCashOut(state.ruleForm.id, qs.stringify(state.form)).then(() => {
+						onCancel()
+						state.dialogFormVisible = false;
+					}).catch(error =>{
+						ElMessage.error(error.message);
+					})
 				}
 			});
 
 		};
 
-        //删除订单
-        const deleteOrder = () => {
-            ElMessageBox.confirm('此操作将删除订单, 是否继续?', '提示', {
+        //确认提现
+        const confirmCashout = () => {
+            ElMessageBox.confirm('确认提现申请会立即转账给该用户，请认真核对！', '提示', {
 				confirmButtonText: '删除',
 				cancelButtonText: '取消',
 				type: 'warning',
 			}).then(() => {
-				delOrder(state.ruleForm.id).then(() => {
-                    closeDialog(); // 关闭弹窗
-					ElMessage.success("删除成功");
-                    ctx.emit("reloadTable");
-				}).catch((res) => {
-					ElMessage.error(res.message);
-				});
+				confirmCashOut(state.ruleForm.id).then(() => {
+					onCancel()
+				}).catch(error => {
+					ElMessage.error(error.message);
+				})
 			})
 			.catch(() => {});
         }
 
-		const getOrder = () => {
+		const getCashoutDetailInfo = () => {
 			if(state.ruleForm.id && state.ruleForm.id != null) {
-				getOrderDetail(state.ruleForm.id).then((res) => {
+				getCashoutDetail(state.ruleForm.id).then((res) => {
 					state.ruleForm = res.data;
 				})
 			}
 		}
 
 		onUpdated(() => {
-			getOrder();
+			getCashoutDetailInfo();
 		});
 
 		// 表单初始化，方法：`resetFields()` 无法使用
@@ -187,7 +188,7 @@ export default {
 			closeDialog,
 			onCancel,
 			onSubmit,
-            deleteOrder,
+            confirmCashout,
 			...toRefs(state),
 		};
 	},
@@ -339,7 +340,7 @@ export default {
 					overflow: hidden;
 					.personal-edit-safe-item-left-label {
 						color: var(--el-text-color-regular);
-						margin-bottom: 5px;
+						margin-bottom: 2px;
 					}
 					.personal-edit-safe-item-left-value {
 						color: var(--el-text-color-secondary);
