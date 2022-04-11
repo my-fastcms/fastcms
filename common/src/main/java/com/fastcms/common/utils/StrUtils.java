@@ -54,6 +54,12 @@ public abstract class StrUtils extends StringUtils {
 
 	private static final String[] escapeChars = new String[]{"&amp;", "&lt;", "&gt;", "&#39;", "&quot;"};
 
+	private static final SnowFlake SNOW_FLAKE = new SnowFlake(1, 1);
+
+	public static String getSnowNo() {
+		return String.valueOf(SNOW_FLAKE.genNextId());
+	}
+
 	/**
 	 * <p>Create a string with encoding format as utf8.</p>
 	 *

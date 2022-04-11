@@ -153,7 +153,7 @@ export default {
         //确认提现
         const confirmCashout = () => {
             ElMessageBox.confirm('确认提现申请会立即转账给该用户，请认真核对！', '提示', {
-				confirmButtonText: '删除',
+				confirmButtonText: '确认',
 				cancelButtonText: '取消',
 				type: 'warning',
 			}).then(() => {

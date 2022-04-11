@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.egzosn.pay.common.bean.TransferOrder;
+import com.egzosn.pay.common.bean.TransferType;
 import com.fastcms.common.exception.FastcmsException;
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.entity.User;
 import com.fastcms.entity.UserAmount;
 import com.fastcms.entity.UserAmountPayout;
@@ -178,10 +180,17 @@ public class UserAmountPayoutServiceImpl extends ServiceImpl<UserAmountPayoutMap
 			throw new FastcmsException("未找到第三方支付平台，请安装支付插件");
 		}
 
+		final String userOpenId = userService.getUserOpenId(userAmount.getUserId(), User.SourceType.WX_MINI_PROGRAM.name().toLowerCase());
+		if (StrUtils.isBlank(userOpenId)) {
+			throw new FastcmsException("用户账户为空");
+		}
+
 		try {
 			TransferOrder transferOrder = new TransferOrder();
-			transferOrder.setPayeeAccount(userService.getUserOpenId(userAmount.getUserId(), User.SourceType.WX_MINI_PROGRAM.name().toLowerCase()));
+			transferOrder.setTransferType(WxTransferType.TRANSFERS);
+			transferOrder.setPayeeAccount(userOpenId);
 			transferOrder.setAmount(userAmountPayout.getAmount());
+			transferOrder.setOutNo(StrUtils.getSnowNo());
 			Map<String, Object> transfer = ApplicationUtils.getBean(FastcmsPayServiceManager.class).transfer(defaultPlatformName, transferOrder);
 
 			if (transfer.get("return_code") != null && transfer.get("return_code").equals("SUCCESS")
@@ -212,6 +221,47 @@ public class UserAmountPayoutServiceImpl extends ServiceImpl<UserAmountPayoutMap
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new FastcmsException("调用第三方支付平台的转账接口失败");
+		}
+	}
+
+	public enum WxTransferType implements TransferType {
+		/**
+		 * 转账到零钱
+		 */
+		TRANSFERS("mmpaymkttransfers/promotion/transfers"),
+		/**
+		 * 查询转账到零钱的记录
+		 */
+		GETTRANSFERINFO("mmpaymkttransfers/gettransferinfo"),
+		/**
+		 * 转账到银行卡
+		 */
+		PAY_BANK("mmpaysptrans/pay_bank"),
+		/**
+		 * 查询转账到银行卡的记录
+		 */
+		QUERY_BANK("mmpaysptrans/query_bank"),
+
+		;
+
+		WxTransferType(String method) {
+			this.method = method;
+		}
+
+		private String method;
+		@Override
+		public String getType() {
+			return this.name();
+		}
+		@Override
+		public String getMethod() {
+			return this.method;
+		}
+
+
+		@Override
+		public Map<String, Object> setAttr(Map<String, Object> attr, TransferOrder order) {
+			return attr;
 		}
 	}
 
