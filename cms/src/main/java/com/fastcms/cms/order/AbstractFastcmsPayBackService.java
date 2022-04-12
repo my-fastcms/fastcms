@@ -21,7 +21,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.egzosn.pay.common.bean.PayMessage;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.utils.StrUtils;
-import com.fastcms.core.utils.PluginUtils;
+import com.fastcms.utils.PluginUtils;
 import com.fastcms.core.utils.RequestUtils;
 import com.fastcms.entity.Order;
 import com.fastcms.entity.OrderItem;

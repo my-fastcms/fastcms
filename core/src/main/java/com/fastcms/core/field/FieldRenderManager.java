@@ -16,7 +16,7 @@
  */
 package com.fastcms.core.field;
 
-import com.fastcms.core.utils.PluginUtils;
+import com.fastcms.utils.PluginUtils;
 import com.fastcms.utils.ApplicationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.boot.context.event.ApplicationStartedEvent;

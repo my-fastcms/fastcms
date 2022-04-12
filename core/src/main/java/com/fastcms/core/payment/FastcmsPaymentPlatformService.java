@@ -1,10 +1,10 @@
 package com.fastcms.core.payment;
 
-import com.fastcms.core.utils.PluginUtils;
 import com.fastcms.payment.PaymentPlatform;
 import com.fastcms.payment.PaymentPlatformService;
 import com.fastcms.payment.PaymentPlatforms;
-import org.springframework.boot.context.event.ApplicationStartedEvent;
+import com.fastcms.utils.PluginUtils;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ import java.util.Map;
  * 支付平台管理器
  */
 @Component
-public class FastcmsPaymentPlatformService implements PaymentPlatformService, ApplicationListener<ApplicationStartedEvent> {
+public class FastcmsPaymentPlatformService implements PaymentPlatformService, ApplicationListener<ApplicationReadyEvent> {
 
     @Override
     public PaymentPlatform getPlatform(String platform) {
@@ -31,7 +31,7 @@ public class FastcmsPaymentPlatformService implements PaymentPlatformService, Ap
     }
 
     @Override
-    public void onApplicationEvent(ApplicationStartedEvent event) {
+    public void onApplicationEvent(ApplicationReadyEvent event) {
         ApplicationContext applicationContext = event.getApplicationContext();
         //扫描支付平台实现类并注册
         Map<String, PaymentPlatform> paymentPlatformMap = applicationContext.getBeansOfType(PaymentPlatform.class);

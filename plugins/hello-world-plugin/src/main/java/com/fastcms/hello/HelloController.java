@@ -18,7 +18,7 @@ package com.fastcms.hello;
 
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.core.utils.PluginUtils;
+import com.fastcms.utils.PluginUtils;
 import com.fastcms.utils.ApplicationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

@@ -18,11 +18,11 @@
 package com.fastcms.cms.order;
 
 import com.fastcms.common.exception.FastcmsException;
-import com.fastcms.core.utils.PluginUtils;
 import com.fastcms.entity.Order;
 import com.fastcms.utils.ApplicationUtils;
+import com.fastcms.utils.PluginUtils;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.boot.context.event.ApplicationStartedEvent;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +40,7 @@ import java.util.Map;
  * @version: 1.0
  */
 @Service
-public class FastcmsOrderServiceManager implements ApplicationListener<ApplicationStartedEvent> {
+public class FastcmsOrderServiceManager implements ApplicationListener<ApplicationReadyEvent> {
 
     Map<String, IFastcmsOrderService> allOrderServiceMap = Collections.synchronizedMap(new HashMap<>());
 
@@ -59,7 +59,7 @@ public class FastcmsOrderServiceManager implements ApplicationListener<Applicati
     }
 
     @Override
-    public void onApplicationEvent(ApplicationStartedEvent event) {
+    public void onApplicationEvent(ApplicationReadyEvent event) {
         Map<String, IFastcmsOrderService> fastcmsOrderServiceMap = ApplicationUtils.getApplicationContext().getBeansOfType(IFastcmsOrderService.class);
         fastcmsOrderServiceMap.keySet().forEach(item -> {
             IFastcmsOrderService fastcmsOrderService = fastcmsOrderServiceMap.get(item);
@@ -72,6 +72,6 @@ public class FastcmsOrderServiceManager implements ApplicationListener<Applicati
 
         List<IFastcmsOrderService> extensions = PluginUtils.getExtensions(IFastcmsOrderService.class);
         extensions.forEach(item -> allOrderServiceMap.putIfAbsent(item.getClass().getName(), item));
-
     }
+
 }

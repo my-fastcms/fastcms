@@ -14,30 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.hello;
 
-import com.fastcms.utils.PluginUtils;
-import com.fastcms.plugin.PluginBase;
-import org.pf4j.PluginWrapper;
+package com.fastcms.extension;
+
+import com.fastcms.common.exception.FastcmsException;
+
+import java.math.BigDecimal;
 
 /**
- * hello world plugin
- * wjun_java@163.com
+ * 转账接口
+ * @author： wjun_java@163.com
+ * @date： 2022/4/12
+ * @description：
+ * @modifiedBy：
+ * @version: 1.0
  */
-public class HelloPlugin extends PluginBase {
+public interface FastcmsTransferService {
 
-    @Override
-    public String getConfigUrl() {
-        return PluginUtils.getConfigUrlHost() + "/hello";
-    }
-
-    public HelloPlugin(PluginWrapper wrapper) {
-        super(wrapper);
-    }
-
-    @Override
-    public void start() {
-        super.start();
-    }
+    /**
+     * 转账
+     * @param openId
+     * @param amount
+     * @param desc
+     * @return
+     * @throws FastcmsException
+     */
+    Boolean transfer(String openId, BigDecimal amount, String desc) throws FastcmsException;
 
 }

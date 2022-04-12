@@ -19,4 +19,8 @@
         where uas.id = #{payoutId}
     </select>
 
+    <select id="getUserUnAuditAmountPayout" resultType="java.math.BigDecimal">
+        select IFNULL(sum(uap.amount), 0) from user_amount_payout uap where uap.user_id = #{userId} and uap.`status` = 0
+    </select>
+
 </mapper>

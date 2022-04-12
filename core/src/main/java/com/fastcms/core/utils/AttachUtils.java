@@ -24,6 +24,7 @@ import com.fastcms.core.attach.FileServerManager;
 import com.fastcms.entity.Attachment;
 import com.fastcms.service.IAttachmentService;
 import com.fastcms.utils.ConfigUtils;
+import com.fastcms.utils.PluginUtils;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
 import org.apache.commons.lang.StringUtils;

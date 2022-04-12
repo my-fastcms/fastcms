@@ -36,7 +36,7 @@ public interface IUserAmountPayoutService extends IService<UserAmountPayout> {
 	 * @return
 	 * @throws FastcmsException
 	 */
-	void cashOut(Long userId, BigDecimal amount) throws FastcmsException;
+	String cashOut(Long userId, BigDecimal amount) throws FastcmsException;
 
 	/**
 	 * 审核提现单

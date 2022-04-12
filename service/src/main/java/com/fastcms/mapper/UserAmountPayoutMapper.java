@@ -8,6 +8,8 @@ import com.fastcms.entity.UserAmountPayout;
 import com.fastcms.service.IUserAmountPayoutService;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
+
 /**
  * <p>
  * 提现申请表 Mapper 接口
@@ -23,5 +25,7 @@ public interface UserAmountPayoutMapper extends BaseMapper<UserAmountPayout> {
 	Long getUserTodayPayoutCount(@Param("userId") Long userId);
 
 	IUserAmountPayoutService.CashOutDetailVo getCashOutDetail(@Param("payoutId") Long payoutId);
+
+	BigDecimal getUserUnAuditAmountPayout(@Param("userId") Long userId);
 
 }

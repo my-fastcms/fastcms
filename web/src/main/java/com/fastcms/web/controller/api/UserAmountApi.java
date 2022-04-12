@@ -39,7 +39,7 @@ import java.math.BigDecimal;
  * @version: 1.0
  */
 @RestController
-@RequestMapping(FastcmsConstants.API_MAPPING + "/useramount")
+@RequestMapping(FastcmsConstants.API_MAPPING + "/user/amount")
 public class UserAmountApi {
 
     @Autowired
@@ -47,8 +47,7 @@ public class UserAmountApi {
 
     @PostMapping("cashout")
     public Object cashOut(@RequestParam("amount") BigDecimal amount) throws FastcmsException {
-        userAmountPayoutService.cashOut(AuthUtils.getUserId(), amount);
-        return RestResultUtils.success();
+        return RestResultUtils.success(userAmountPayoutService.cashOut(AuthUtils.getUserId(), amount));
     }
 
 }

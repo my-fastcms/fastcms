@@ -26,7 +26,7 @@ import com.fastcms.core.auth.AuthConstants;
 import com.fastcms.core.auth.Secured;
 import com.fastcms.core.captcha.FastcmsCaptcha;
 import com.fastcms.core.captcha.FastcmsCaptchaService;
-import com.fastcms.core.utils.PluginUtils;
+import com.fastcms.utils.PluginUtils;
 import com.fastcms.extension.IndexDataExtension;
 import com.fastcms.service.IUserService;
 import com.fastcms.web.security.AuthManager;

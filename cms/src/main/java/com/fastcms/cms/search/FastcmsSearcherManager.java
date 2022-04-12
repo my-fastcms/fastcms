@@ -1,9 +1,9 @@
 package com.fastcms.cms.search;
 
-import com.fastcms.core.utils.PluginUtils;
 import com.fastcms.utils.ApplicationUtils;
+import com.fastcms.utils.PluginUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationStartedEvent;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +18,7 @@ import java.util.*;
  * @version: 1.0
  */
 @Component
-public class FastcmsSearcherManager implements ApplicationListener<ApplicationStartedEvent> {
+public class FastcmsSearcherManager implements ApplicationListener<ApplicationReadyEvent> {
 
     @Autowired
     private LuceneSearcher luceneSearcher;
@@ -53,7 +53,7 @@ public class FastcmsSearcherManager implements ApplicationListener<ApplicationSt
     }
 
     @Override
-    public void onApplicationEvent(ApplicationStartedEvent event) {
+    public void onApplicationEvent(ApplicationReadyEvent event) {
         Map<String, FastcmsSearcher> fastcmsSearcherMap = ApplicationUtils.getApplicationContext().getBeansOfType(FastcmsSearcher.class);
         fastcmsSearcherList.addAll(fastcmsSearcherMap.values());
     }

@@ -141,7 +141,7 @@ public class UserAmountPayout implements Serializable {
     /**
      * 用户备注
      */
-    private String remarks;
+    private String remarks = "提现";
 
     /**
      * 回绝提现时给出原因
@@ -155,6 +155,12 @@ public class UserAmountPayout implements Serializable {
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updated;
+
+    /**
+     * 默认使用微信转账到零钱
+     */
+    @TableField(exist = false)
+    private String transferClassName = "com.fastcms.plugin.wechat.pay.WechatTransferService";
 
     public Long getId() {
         return id;
@@ -267,6 +273,14 @@ public class UserAmountPayout implements Serializable {
 
     public void setUpdated(LocalDateTime updated) {
         this.updated = updated;
+    }
+
+    public String getTransferClassName() {
+        return transferClassName;
+    }
+
+    public void setTransferClassName(String transferClassName) {
+        this.transferClassName = transferClassName;
     }
 
     @Override

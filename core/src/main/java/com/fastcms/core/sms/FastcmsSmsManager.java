@@ -16,17 +16,14 @@
  */
 package com.fastcms.core.sms;
 
-import com.fastcms.core.utils.PluginUtils;
 import com.fastcms.utils.ApplicationUtils;
+import com.fastcms.utils.PluginUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationStartedEvent;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author： wjun_java@163.com
@@ -36,7 +33,7 @@ import java.util.Map;
  * @version: 1.0
  */
 @Component
-public class FastcmsSmsManager implements ApplicationListener<ApplicationStartedEvent> {
+public class FastcmsSmsManager implements ApplicationListener<ApplicationReadyEvent> {
 
 	List<FastcmsSmsSender> fastcmsSmsSenderList = Collections.synchronizedList(new ArrayList<>());
 
@@ -47,13 +44,18 @@ public class FastcmsSmsManager implements ApplicationListener<ApplicationStarted
 		List<FastcmsSmsSender> extensions = PluginUtils.getExtensions(FastcmsSmsSender.class);
 		fastcmsSmsSenderList.addAll(extensions);
 
-
+		fastcmsSmsSenderList.stream().sorted(Comparator.comparing(FastcmsSmsSender::getOrder));
+		for (FastcmsSmsSender fastcmsSmsSender : fastcmsSmsSenderList) {
+			if (fastcmsSmsSender.isEnable()) {
+				return fastcmsSmsSender;
+			}
+		}
 
 		return aliyunSmsSender;
 	}
 
 	@Override
-	public void onApplicationEvent(ApplicationStartedEvent event) {
+	public void onApplicationEvent(ApplicationReadyEvent event) {
 		Map<String, FastcmsSmsSender> fastcmsSmsSenderMap = ApplicationUtils.getApplicationContext().getBeansOfType(FastcmsSmsSender.class);
 		fastcmsSmsSenderList.addAll(fastcmsSmsSenderMap.values());
 	}
