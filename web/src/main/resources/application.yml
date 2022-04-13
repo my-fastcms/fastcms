@@ -39,6 +39,9 @@ fastcms:
       /fastcms/api/client/wechat/miniapp/user/code2session,\
       /fastcms/api/client/wechat/miniapp/user/login,\
       /fastcms/api/client/wechat/miniapp/user/login/phone"
+  config:
+    ignore:
+      keys: "wechat_mch_secret"
 
 logging:
   config: classpath:META-INF/logback/fastcms.xml

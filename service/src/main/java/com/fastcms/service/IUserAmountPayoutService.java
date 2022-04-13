@@ -1,11 +1,13 @@
 package com.fastcms.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.entity.UserAmountPayout;
 import com.fastcms.entity.UserAmountStatement;
+import org.apache.ibatis.annotations.Param;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -53,6 +55,13 @@ public interface IUserAmountPayoutService extends IService<UserAmountPayout> {
 	CashOutDetailVo getCashOutDetail(Long payoutId);
 
 	/**
+	 * 获取用户提现列表
+	 * @param queryWrapper
+	 * @return
+	 */
+	List<IUserAmountPayoutService.CashOutListVo> getUserCashOutList(@Param(Constants.WRAPPER) QueryWrapper queryWrapper);
+
+	/**
 	 * 用户提现记录
 	 */
 	class CashOutListVo implements Serializable {
@@ -86,6 +95,11 @@ public interface IUserAmountPayoutService extends IService<UserAmountPayout> {
 		 * 提现类型
 		 */
 		private Integer payType;
+
+		/**
+		 * 审核类型
+		 */
+		private Integer auditType;
 
 		/**
 		 * 支付账号
@@ -150,6 +164,14 @@ public interface IUserAmountPayoutService extends IService<UserAmountPayout> {
 			this.payType = payType;
 		}
 
+		public Integer getAuditType() {
+			return auditType;
+		}
+
+		public void setAuditType(Integer auditType) {
+			this.auditType = auditType;
+		}
+
 		public String getPayTo() {
 			return payTo;
 		}
@@ -178,8 +200,8 @@ public interface IUserAmountPayoutService extends IService<UserAmountPayout> {
 			return UserAmountPayout.PayOutStatus.getValue(getStatus());
 		}
 
-		public String getPayTypeStr() {
-			return UserAmountPayout.PayOutType.getValue(getPayType());
+		public String getAuditTypeStr() {
+			return UserAmountPayout.AuditType.getValue(getAuditType());
 		}
 
 	}

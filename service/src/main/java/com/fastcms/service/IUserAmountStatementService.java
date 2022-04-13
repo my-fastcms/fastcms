@@ -2,7 +2,6 @@ package com.fastcms.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.fastcms.entity.UserAmount;
 import com.fastcms.entity.UserAmountStatement;
 
 import java.io.Serializable;
@@ -24,7 +23,7 @@ public interface IUserAmountStatementService extends IService<UserAmountStatemen
 	 */
 	Page<UserAmountStatementVo> pageUserAmountStatement(Page pageParam, Long userId, String action, Integer status);
 
-	class UserAmountStatementVo extends UserAmount implements Serializable {
+	class UserAmountStatementVo extends UserAmountStatement implements Serializable {
 
 		private String nickName;
 

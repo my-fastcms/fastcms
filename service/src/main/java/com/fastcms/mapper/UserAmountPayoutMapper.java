@@ -9,6 +9,7 @@ import com.fastcms.service.IUserAmountPayoutService;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * <p>
@@ -27,5 +28,7 @@ public interface UserAmountPayoutMapper extends BaseMapper<UserAmountPayout> {
 	IUserAmountPayoutService.CashOutDetailVo getCashOutDetail(@Param("payoutId") Long payoutId);
 
 	BigDecimal getUserUnAuditAmountPayout(@Param("userId") Long userId);
+
+	List<IUserAmountPayoutService.CashOutListVo> getUserCashOutList(@Param(Constants.WRAPPER) QueryWrapper queryWrapper);
 
 }

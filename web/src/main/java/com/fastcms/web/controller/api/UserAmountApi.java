@@ -17,16 +17,17 @@
 
 package com.fastcms.web.controller.api;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.auth.AuthUtils;
+import com.fastcms.core.mybatis.PageModel;
+import com.fastcms.entity.UserAmountStatement;
 import com.fastcms.service.IUserAmountPayoutService;
+import com.fastcms.service.IUserAmountStatementService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 
@@ -45,9 +46,40 @@ public class UserAmountApi {
     @Autowired
     private IUserAmountPayoutService userAmountPayoutService;
 
+    @Autowired
+    private IUserAmountStatementService userAmountStatementService;
+
+    /**
+     * 用户提现
+     * @param amount
+     * @return
+     * @throws FastcmsException
+     */
     @PostMapping("cashout")
     public Object cashOut(@RequestParam("amount") BigDecimal amount) throws FastcmsException {
         return RestResultUtils.success(userAmountPayoutService.cashOut(AuthUtils.getUserId(), amount));
+    }
+
+    /**
+     * 用户提现列表
+     * @return
+     */
+    @GetMapping("cashout/list")
+    public Object getUserCashOutList() {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("uas.user_id", AuthUtils.getUserId());
+        queryWrapper.orderByDesc("uas.created");
+        return RestResultUtils.success(userAmountPayoutService.getUserCashOutList(queryWrapper));
+    }
+
+    /**
+     * 用户收入列表
+     * @param page
+     * @return
+     */
+    @GetMapping("income/list")
+    public Object getUserAmountIncomeList(PageModel page) {
+        return RestResultUtils.success(userAmountStatementService.pageUserAmountStatement(page.toPage(), AuthUtils.getUserId(), UserAmountStatement.AMOUNT_ACTION_ADD, null));
     }
 
 }

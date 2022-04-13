@@ -37,8 +37,8 @@
 													<div class="personal-item-value">{{ruleForm.statusStr}}</div>
 												</el-col>
 												<el-col :xs="24" :sm="4" class="personal-item mb6">
-													<div class="personal-item-label">审核方式：</div>
-													<div class="personal-item-value">{{ruleForm.payTypeStr}}</div>
+													<div class="personal-item-label">审核类型：</div>
+													<div class="personal-item-value">{{ruleForm.auditTypeStr}}</div>
 												</el-col>
 											</el-row>
 										</el-col>

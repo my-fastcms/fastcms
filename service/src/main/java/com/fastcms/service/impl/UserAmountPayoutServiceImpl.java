@@ -108,7 +108,7 @@ public class UserAmountPayoutServiceImpl extends ServiceImpl<UserAmountPayoutMap
 			userAmountPayout.setAmount(amount);
 			userAmountPayout.setStatus(UserAmountPayout.AMOUNT_STATUS_AUDIT);
 			userAmountPayout.setPayTo(userService.getUserOpenId(userAmount.getUserId(), UserOpenid.TYPE_WECHAT_MINI));
-			userAmountPayout.setPayType(UserAmountUtils.isEnableAmountCashOutAudit() ? 1 : 0);
+			userAmountPayout.setAuditType(UserAmountUtils.isEnableAmountCashOutAudit() ? 1 : 0);
 			save(userAmountPayout);
 
 			if (UserAmountUtils.isEnableAmountCashOutAudit()) {
@@ -127,17 +127,18 @@ public class UserAmountPayoutServiceImpl extends ServiceImpl<UserAmountPayoutMap
 
 	@Override
 	public void auditCashOut(Long payoutId) throws FastcmsException {
-		UserAmountPayout amountPayout = getById(payoutId);
-		if (amountPayout == null) {
-			throw new FastcmsException("提现审核单不存在");
-		} else if (amountPayout.getStatus() == UserAmountPayout.AMOUNT_STATUS_PASS) {
-			throw new FastcmsException("该提现申请已审核通过");
-		} else if (amountPayout.getStatus() == UserAmountPayout.AMOUNT_STATUS_REFUSE) {
-			throw new FastcmsException("该提现申请已拒绝");
-		}
 
 		try {
 			payoutLock.lock();
+
+			UserAmountPayout amountPayout = getById(payoutId);
+			if (amountPayout == null) {
+				throw new FastcmsException("提现审核单不存在");
+			} else if (amountPayout.getStatus() == UserAmountPayout.AMOUNT_STATUS_PASS) {
+				throw new FastcmsException("该提现申请已审核通过");
+			} else if (amountPayout.getStatus() == UserAmountPayout.AMOUNT_STATUS_REFUSE) {
+				throw new FastcmsException("该提现申请已拒绝");
+			}
 
 			if (UserAmountUtils.getCashOutAmountDayMaxTimeValue() > 0) {
 				Long todayPayoutCount = getBaseMapper().getUserTodayPayoutCount(amountPayout.getUserId());
@@ -178,6 +179,11 @@ public class UserAmountPayoutServiceImpl extends ServiceImpl<UserAmountPayoutMap
 		);
 		cashOutDetail.setUserAmountStatementList(list);
 		return cashOutDetail;
+	}
+
+	@Override
+	public List<CashOutListVo> getUserCashOutList(QueryWrapper queryWrapper) {
+		return getBaseMapper().getUserCashOutList(queryWrapper);
 	}
 
 	/**

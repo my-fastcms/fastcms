@@ -22,14 +22,15 @@ import com.fastcms.cms.service.IMenuService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.common.utils.DirUtils;
 import com.fastcms.common.utils.FileUtils;
 import com.fastcms.core.auth.ActionTypes;
 import com.fastcms.core.auth.AuthConstants;
 import com.fastcms.core.auth.Secured;
 import com.fastcms.core.template.Template;
 import com.fastcms.core.template.TemplateService;
-import com.fastcms.common.utils.DirUtils;
 import com.fastcms.service.IConfigService;
+import com.fastcms.utils.ApplicationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FileCopyUtils;
@@ -98,6 +99,10 @@ public class TemplateController {
     @PostMapping("install")
     @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "templates", action = ActionTypes.WRITE)
     public Object install(@RequestParam("file") MultipartFile file) {
+
+        if (ApplicationUtils.isDevelopment()) {
+            return RestResultUtils.failed("开发环境不允许安装模板");
+        }
 
         String fileName = file.getOriginalFilename();
         String suffixName = fileName.substring(fileName.lastIndexOf("."));

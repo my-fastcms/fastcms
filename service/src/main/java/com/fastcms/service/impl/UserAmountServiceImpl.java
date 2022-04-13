@@ -1,10 +1,18 @@
 package com.fastcms.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fastcms.entity.UserAmount;
+import com.fastcms.entity.UserAmountStatement;
 import com.fastcms.mapper.UserAmountMapper;
 import com.fastcms.service.IUserAmountService;
+import com.fastcms.service.IUserAmountStatementService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -16,5 +24,59 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserAmountServiceImpl extends ServiceImpl<UserAmountMapper, UserAmount> implements IUserAmountService {
+
+    @Autowired
+    private IUserAmountStatementService userAmountStatementService;
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateUserAmount(Long userId, String action, BigDecimal changeAmount, Long orderId, String desc) {
+        if (changeAmount == null || changeAmount.compareTo(BigDecimal.ZERO) <=0) return;
+
+        UserAmount one;
+        try {
+            one = getOne(Wrappers.<UserAmount>lambdaQuery().eq(UserAmount::getUserId, userId));
+        } catch (Exception e) {
+            return;
+        }
+        BigDecimal oldAmount = one.getAmount();
+
+        BigDecimal newAmount;
+        if (UserAmountStatement.AMOUNT_ACTION_ADD.equalsIgnoreCase(action)) {
+            newAmount = oldAmount.add(changeAmount);
+        } else if (UserAmountStatement.AMOUNT_ACTION_DEL.equalsIgnoreCase(action)) {
+            if (oldAmount.compareTo(changeAmount) <0) {
+                return;
+            }
+            newAmount = oldAmount.subtract(changeAmount);
+        } else {
+            return;
+        }
+
+        UserAmountStatement userAmountStatement = new UserAmountStatement();
+        userAmountStatement.setUserId(userId);
+        userAmountStatement.setAction(action);
+        userAmountStatement.setOldAmount(oldAmount);
+        userAmountStatement.setNewAmount(newAmount);
+        userAmountStatement.setChangeAmount(changeAmount);
+        userAmountStatement.setActionOrderId(orderId);
+        userAmountStatement.setActionDesc(desc);
+        userAmountStatement.setCreated(LocalDateTime.now());
+
+        userAmountStatementService.save(userAmountStatement);
+
+        one.setAmount(newAmount);
+        updateById(one);
+    }
+
+    @Override
+    public void addUserAmount(Long userId, BigDecimal changeAmount, Long orderId, String desc) {
+        updateUserAmount(userId, UserAmountStatement.AMOUNT_ACTION_ADD, changeAmount, orderId, desc);
+    }
+
+    @Override
+    public void delUserAmount(Long userId, BigDecimal changeAmount, Long orderId, String desc) {
+        updateUserAmount(userId, UserAmountStatement.AMOUNT_ACTION_DEL, changeAmount, orderId, desc);
+    }
 
 }

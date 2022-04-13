@@ -23,4 +23,10 @@
         select IFNULL(sum(uap.amount), 0) from user_amount_payout uap where uap.user_id = #{userId} and uap.`status` = 0
     </select>
 
+    <select id="getUserCashOutList" resultType="com.fastcms.service.IUserAmountPayoutService$CashOutListVo">
+        select uas.*, u.id, u.user_name, u.nick_name from user_amount_payout uas
+        left join `user` u on uas.user_id = u.id
+        ${ew.customSqlSegment}
+    </select>
+
 </mapper>

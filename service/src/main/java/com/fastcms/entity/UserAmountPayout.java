@@ -61,11 +61,11 @@ public class UserAmountPayout implements Serializable {
 
     public static final Integer PAY_OUT_PASS_TYPE = 0;
 
-    public enum PayOutType {
+    public enum AuditType {
         AUDIT(PAY_OUT_AUDIT_TYPE, "人工审核"),
         PASS(PAY_OUT_PASS_TYPE, "无审核");
 
-        PayOutType(Integer key, String value) {
+        AuditType(Integer key, String value) {
             this.key = key;
             this.value = value;
         }
@@ -74,7 +74,7 @@ public class UserAmountPayout implements Serializable {
         private final String value;
 
         public static String getValue(Integer key) {
-            for (PayOutType s: values()) {
+            for (AuditType s: values()) {
                 if (s.key.equals(key)) {
                     return s.value;
                 }
@@ -149,6 +149,11 @@ public class UserAmountPayout implements Serializable {
     private String feedback;
 
     private String options;
+
+    /**
+     * 审核类型
+     */
+    private Integer auditType;
 
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime created;
@@ -273,6 +278,14 @@ public class UserAmountPayout implements Serializable {
 
     public void setUpdated(LocalDateTime updated) {
         this.updated = updated;
+    }
+
+    public Integer getAuditType() {
+        return auditType;
+    }
+
+    public void setAuditType(Integer auditType) {
+        this.auditType = auditType;
     }
 
     public String getTransferClassName() {

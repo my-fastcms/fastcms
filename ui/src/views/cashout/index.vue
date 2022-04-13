@@ -15,7 +15,7 @@
 				<el-table-column prop="nickName" label="用户" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="amount" label="提现金额" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="payTo" label="支付账号" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="payTypeStr" label="到账类型" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="auditTypeStr" label="审核类型" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="statusStr" label="状态" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="created" label="提现时间" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="path" label="操作" width="90">

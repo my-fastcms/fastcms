@@ -40,7 +40,7 @@ public final class UserAmountUtils {
 	public static final String CASH_OUT_AMOUNT_OVERFLOW_AUDIT_VALUE = "cashOutAmountOverflowAuditValue";
 
 	/**
-	 * 单日提现最大次数，默认为1次
+	 * 单日提现最大次数，默认为3次
 	 */
 	public static final String CASH_OUT_AMOUNT_DAY_MAX_TIME_VALUE = "cashOutAmountDayMaxTimeValue";
 
@@ -71,13 +71,14 @@ public final class UserAmountUtils {
 
 	/**
 	 * 获取提现金额超过多少需要强制审核
+	 * 系统默认500
 	 * @return
 	 */
 	public static BigDecimal getAuditOverflowAmountValue() {
 		try {
 			return BigDecimal.valueOf(Long.valueOf(ConfigUtils.getConfig(CASH_OUT_AMOUNT_OVERFLOW_AUDIT_VALUE)));
 		} catch (NumberFormatException e) {
-			return BigDecimal.ZERO;
+			return new BigDecimal(500);
 		}
 	}
 
@@ -89,19 +90,20 @@ public final class UserAmountUtils {
 		try {
 			return Integer.valueOf(ConfigUtils.getConfig(CASH_OUT_AMOUNT_DAY_MAX_TIME_VALUE));
 		} catch (NumberFormatException e) {
-			return 0;
+			return 3;
 		}
 	}
 
 	/**
 	 * 获取单次最大提现金额
+	 * 系统默认1000
 	 * @return
 	 */
 	public static BigDecimal getCashOutAmountDayMaxValue() {
 		try {
 			return BigDecimal.valueOf(Long.valueOf(ConfigUtils.getConfig(CASH_OUT_AMOUNT_DAY_MAX_VALUE)));
 		} catch (NumberFormatException e) {
-			return BigDecimal.ZERO;
+			return new BigDecimal(1000);
 		}
 	}
 

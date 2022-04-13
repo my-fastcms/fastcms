@@ -1,0 +1,1 @@
+import{s as e}from"./index.fd217d0f.js";function i(t){return e({url:"/client/article/save",method:"post",data:t})}function l(t){return e({url:"/client/article/delete/"+t,method:"post"})}function n(t){return e({url:"/client/article/comment/user/list",method:"get",params:t})}export{i as a,l as d,n as g};

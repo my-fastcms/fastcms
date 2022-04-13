@@ -20,9 +20,13 @@ import com.fastcms.entity.Config;
 import com.fastcms.service.IConfigService;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateModelException;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,16 +39,42 @@ import java.util.List;
  * @version: 1.0
  */
 @Component("config")
-public class ConfigDirective extends BaseFunction {
+public class ConfigDirective extends BaseFunction implements InitializingBean {
+
+	@Value("${fastcms.config.ignore.keys:}")
+	private List<String> ignoreKeys;
+
+	/**
+	 * 私密配置属性
+	 */
+	static final List<String> securityKeyList = Collections.synchronizedList(new ArrayList<>());
+
+	static {
+		securityKeyList.add("wehcat_key_store_path");
+		securityKeyList.add("aliyun_sms_app_secret");
+		securityKeyList.add("wechat_miniapp_secret");
+		securityKeyList.add("wechat_mp_secret");
+		securityKeyList.add("wechat_mch_secret");
+		securityKeyList.add("aliyunOssAccessKeySecret");
+	}
 
 	@Autowired
 	private IConfigService configService;
 
 	@Override
 	public Object exec(List arguments) throws TemplateModelException {
+
 		SimpleScalar simpleScalar = (SimpleScalar) arguments.get(0);
+		if (securityKeyList.contains(simpleScalar.getAsString())) {
+			return "";
+		}
+
 		Config config = configService.findByKey(simpleScalar.getAsString());
 		return config == null ? "" : config.getValue();
 	}
 
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		securityKeyList.addAll(ignoreKeys);
+	}
 }

@@ -89,10 +89,10 @@ export default {
 			ruleForm: {
 				enableAutoCancelOrder: false,
                 unPayOrderCancelTime: 0,
-				enableAmountCashOutAudit: false,
+				enableAmountCashOutAudit: true,
 				cashOutAmountOverflowAuditValue: 500,
-				cashOutAmountDayMaxTimeValue:0,
-				cashOutAmountDayMaxValue:0,
+				cashOutAmountDayMaxTimeValue:3,
+				cashOutAmountDayMaxValue:1000,
 				cashOutAmountDayBalanceMaxValue: 0,
 			},
 			rules: {

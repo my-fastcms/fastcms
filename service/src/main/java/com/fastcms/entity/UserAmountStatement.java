@@ -116,12 +116,12 @@ public class UserAmountStatement implements Serializable {
     /**
      * 相关的订单ID
      */
-    private Integer actionOrderId;
+    private Long actionOrderId;
 
     /**
      * 相关的支付ID
      */
-    private Integer actionPaymentId;
+    private Long actionPaymentId;
 
     /**
      * 用户之前的余额
@@ -191,18 +191,18 @@ public class UserAmountStatement implements Serializable {
     public void setActionDesc(String actionDesc) {
         this.actionDesc = actionDesc;
     }
-    public Integer getActionOrderId() {
+    public Long getActionOrderId() {
         return actionOrderId;
     }
 
-    public void setActionOrderId(Integer actionOrderId) {
+    public void setActionOrderId(Long actionOrderId) {
         this.actionOrderId = actionOrderId;
     }
-    public Integer getActionPaymentId() {
+    public Long getActionPaymentId() {
         return actionPaymentId;
     }
 
-    public void setActionPaymentId(Integer actionPaymentId) {
+    public void setActionPaymentId(Long actionPaymentId) {
         this.actionPaymentId = actionPaymentId;
     }
     public BigDecimal getOldAmount() {

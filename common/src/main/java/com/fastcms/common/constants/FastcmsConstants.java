@@ -35,10 +35,6 @@ public interface FastcmsConstants {
 
     String DEV_MODE = "dev";
 
-    String USER_ID = "user_id";
-
-    String OPEN_ID = "openid";
-
     String WEB_CODE_CACHE_NAME = "web_code_cache";
 
     String ENCODE = "UTF-8";
@@ -73,14 +69,7 @@ public interface FastcmsConstants {
      */
     String WEBSITE_TITLE_KEY = "website_title";
     String WEBSITE_SEO = "website_seo";
-    String WEBSITE_NAME = "website_name";
     String WEBSITE_DOMAIN = "website_domain";
-    String WEBSITE_ADMIN_MOBILE = "website_admin_mobile";
-    String WEBSITE_ADMIN_WECHAT = "website_admin_wechat";
-    String WEBSITE_ADMIN_QQ = "website_admin_qq";
-    String WEBSITE_ADMIN_EMAIL = "website_admin_email";
-    String WEBSITE_CASE_NUM = "website_case_num";
-    String WEBSITE_COPYRIGHT = "website_copyright";
 
     /**
      * 微信配置相关

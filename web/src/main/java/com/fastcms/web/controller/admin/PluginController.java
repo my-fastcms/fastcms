@@ -21,14 +21,15 @@ import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.common.utils.DirUtils;
 import com.fastcms.common.utils.FileUtils;
 import com.fastcms.core.auth.ActionTypes;
 import com.fastcms.core.auth.AuthConstants;
 import com.fastcms.core.auth.Secured;
 import com.fastcms.core.mybatis.PageModel;
-import com.fastcms.common.utils.DirUtils;
 import com.fastcms.plugin.PluginBase;
 import com.fastcms.plugin.PluginManagerService;
+import com.fastcms.utils.ApplicationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.pf4j.Plugin;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,6 +76,10 @@ public class PluginController {
     @PostMapping("install")
     @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "plugins", action = ActionTypes.WRITE)
     public Object install(@RequestParam("file") MultipartFile file) {
+
+        if (ApplicationUtils.isDevelopment()) {
+            return RestResultUtils.failed("开发环境不允许安装插件");
+        }
 
         String suffixName = FileUtils.getSuffix(file.getOriginalFilename());
 

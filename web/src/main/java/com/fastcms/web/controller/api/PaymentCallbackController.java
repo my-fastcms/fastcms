@@ -41,6 +41,13 @@ public class PaymentCallbackController {
 	@Autowired
 	private PayServiceManager payServiceManager;
 
+	/**
+	 * 支付回调
+	 * @param request
+	 * @param platform
+	 * @return
+	 * @throws IOException
+	 */
 	@RequestMapping(value = "{platform}")
 	public String payBack(HttpServletRequest request, @PathVariable String platform) throws IOException {
 		return payServiceManager.payBack(platform, request.getParameterMap(), request.getInputStream());

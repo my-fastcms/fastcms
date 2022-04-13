@@ -16,6 +16,7 @@
  */
 package com.fastcms.utils;
 
+import com.fastcms.common.constants.FastcmsConstants;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -23,6 +24,7 @@ import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.*;
 import org.springframework.core.ResolvableType;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
@@ -229,6 +231,12 @@ public class ApplicationUtils implements ApplicationContextInitializer<Configura
 
 	public static void injectContext(ConfigurableApplicationContext context) {
 		ApplicationUtils.applicationContext = context;
+	}
+
+	public static boolean isDevelopment() {
+		final String[] activeProfiles = getBean(Environment.class).getActiveProfiles();
+		final String profile = activeProfiles == null || activeProfiles.length <=0 ? FastcmsConstants.DEV_MODE : activeProfiles[0];
+		return FastcmsConstants.DEV_MODE.equals(profile);
 	}
 
 	@Override
