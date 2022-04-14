@@ -37,7 +37,7 @@
 ### 运行环境
 1. jdk1.8+
 2. apache maven 3.6+
-3. spring-boot 2.4.0+
+3. spring-boot 2.6.6+
 
 ### 沟通交流
 加微信请备注fastcms
