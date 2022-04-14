@@ -20,13 +20,17 @@ import com.fastcms.common.executor.ExecutorFactory;
 import com.fastcms.common.executor.NameThreadFactory;
 import com.fastcms.entity.Order;
 import com.fastcms.service.IOrderService;
+import com.fastcms.utils.CollectionUtils;
 import com.fastcms.utils.ConfigUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -43,9 +47,10 @@ public class OrderAutoCancelTask {
 	private static final String OVER_TIME = "unPayOrderCancelTime";
 	private static final String ENABLE_AUTO_CANCEL_ORDER = "enableAutoCancelOrder";
 
-	private static final Set<Long> orderSet = Collections.synchronizedSet(new HashSet<>());
-
-	private static final List<Order> orderList = Collections.synchronizedList(new ArrayList<>());
+	/**
+	 * 正在处理中的订单
+	 */
+	public static volatile Set<Order> orderSet = Collections.synchronizedSet(new HashSet<>());
 
 	private static final ExecutorService executorService = ExecutorFactory.newFixedExecutorService(6, new NameThreadFactory("OrderAutoCancelThread"));
 
@@ -62,47 +67,41 @@ public class OrderAutoCancelTask {
 			return;
 		}
 
-		List<Order> unPayOrder = orderService.getUnPayOrderByLimitTime(getOverTime());
+		List<Order> unPayOrderList = orderService.getUnPayOrderByLimitTime(getOverTime());
+		if (CollectionUtils.isEmpty(unPayOrderList)) {
+			return;
+		}
 
-		unPayOrder.forEach(item -> {
-			if (!orderSet.contains(item.getId())) {
-				orderSet.add(item.getId());
-				orderList.add(item);
+		unPayOrderList.forEach(item -> {
+			if (orderSet.contains(item)) {
+				return;
 			}
+			orderSet.add(item);
 		});
-		unPayOrder.clear();
-	}
+		unPayOrderList.clear();
 
-	@Scheduled(cron = "0 */1 * * * ?")
-	public void dealOrder() {
-		executorService.submit(() -> {
-			orderList.forEach(item -> {
-				item.setStatus(Order.ORDER_STATUS_DEL);
-				item.setUpdated(LocalDateTime.now());
+		if (CollectionUtils.isNotEmpty(orderSet)) {
+			executorService.submit(() -> {
+				orderSet.forEach(item -> {
+					item.setStatus(Order.ORDER_STATUS_DEL);
+					item.setUpdated(LocalDateTime.now());
+				});
+				try {
+					orderService.updateBatchById(orderSet);
+				} finally {
+					orderSet.clear();
+				}
 			});
-			try {
-				orderService.updateBatchById(orderList);
-			} finally {
-				orderSet.clear();
-				orderList.clear();
-			}
-		});
+		}
+
 	}
 
 	int getOverTime() {
-		try {
-			return Integer.parseInt(ConfigUtils.getConfig(OVER_TIME));
-		} catch (NumberFormatException e) {
-			return -1;
-		}
+		return ConfigUtils.getInt(OVER_TIME);
 	}
 
 	boolean isEnableAutoCancelOrder() {
-		try {
-			return Boolean.parseBoolean(ConfigUtils.getConfig(ENABLE_AUTO_CANCEL_ORDER));
-		} catch (Exception e) {
-			return false;
-		}
+		return ConfigUtils.getBool(ENABLE_AUTO_CANCEL_ORDER);
 	}
 
 }

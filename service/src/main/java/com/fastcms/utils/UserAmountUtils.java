@@ -75,11 +75,7 @@ public final class UserAmountUtils {
 	 * @return
 	 */
 	public static BigDecimal getAuditOverflowAmountValue() {
-		try {
-			return BigDecimal.valueOf(Long.valueOf(ConfigUtils.getConfig(CASH_OUT_AMOUNT_OVERFLOW_AUDIT_VALUE)));
-		} catch (NumberFormatException e) {
-			return new BigDecimal(500);
-		}
+		return ConfigUtils.getBigDecimal(CASH_OUT_AMOUNT_OVERFLOW_AUDIT_VALUE, new BigDecimal(500));
 	}
 
 	/**
@@ -87,11 +83,7 @@ public final class UserAmountUtils {
 	 * @return
 	 */
 	public static Integer getCashOutAmountDayMaxTimeValue() {
-		try {
-			return Integer.valueOf(ConfigUtils.getConfig(CASH_OUT_AMOUNT_DAY_MAX_TIME_VALUE));
-		} catch (NumberFormatException e) {
-			return 3;
-		}
+		return ConfigUtils.getInt(CASH_OUT_AMOUNT_DAY_MAX_TIME_VALUE, 3);
 	}
 
 	/**
@@ -100,11 +92,7 @@ public final class UserAmountUtils {
 	 * @return
 	 */
 	public static BigDecimal getCashOutAmountDayMaxValue() {
-		try {
-			return BigDecimal.valueOf(Long.valueOf(ConfigUtils.getConfig(CASH_OUT_AMOUNT_DAY_MAX_VALUE)));
-		} catch (NumberFormatException e) {
-			return new BigDecimal(1000);
-		}
+		return ConfigUtils.getBigDecimal(CASH_OUT_AMOUNT_DAY_MAX_VALUE, new BigDecimal(1000));
 	}
 
 	/**
@@ -112,11 +100,7 @@ public final class UserAmountUtils {
 	 * @return
 	 */
 	public static BigDecimal getCashOutAmountDayBalanceMaxValue() {
-		try {
-			return BigDecimal.valueOf(Long.valueOf(ConfigUtils.getConfig(CASH_OUT_AMOUNT_DAY_BALANCE_MAX_VALUE)));
-		} catch (NumberFormatException e) {
-			return BigDecimal.ZERO;
-		}
+		return ConfigUtils.getBigDecimal(CASH_OUT_AMOUNT_DAY_BALANCE_MAX_VALUE);
 	}
 
 }

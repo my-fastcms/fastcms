@@ -16,6 +16,7 @@
  */
 package com.fastcms.cms.order;
 
+import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.entity.Order;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,11 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class DefaultFastcmsOrderService extends AbstractFastcmsOrderService {
+
+    @Override
+    protected void checkCreateOrderParam(CreateOrderParam createOrderParam) throws FastcmsException {
+
+    }
 
     /**
      * 默认订单不做处理

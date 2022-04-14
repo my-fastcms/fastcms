@@ -116,6 +116,10 @@ public class PluginController {
     @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "plugins", action = ActionTypes.WRITE)
     public Object unInstall(@PathVariable(name = "pluginId") String pluginId) {
 
+        if (ApplicationUtils.isDevelopment()) {
+            return RestResultUtils.failed("开发环境不允许卸载插件");
+        }
+
         try {
             pluginService.unInstallPlugin(pluginId);
             return RestResultUtils.success();

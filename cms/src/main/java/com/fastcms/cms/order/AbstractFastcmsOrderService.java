@@ -69,6 +69,8 @@ public abstract class AbstractFastcmsOrderService implements IFastcmsOrderServic
 
         if(CollectionUtils.isEmpty(productParams)) throw new FastcmsException(FastcmsException.INVALID_PARAM, "商品不能为空");
 
+        checkCreateOrderParam(createOrderParam);
+
         //订单项
         List<OrderItem> orderItemList = new ArrayList<>();
 
@@ -123,6 +125,12 @@ public abstract class AbstractFastcmsOrderService implements IFastcmsOrderServic
 
         return order;
     }
+
+    /**
+     * 校验创建订单的请求参数
+     * @param createOrderParam
+     */
+    protected abstract void checkCreateOrderParam(CreateOrderParam createOrderParam) throws FastcmsException;
 
     /**
      * 订单数据持久化前对不同业务进行扩展

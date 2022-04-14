@@ -134,6 +134,10 @@ public class TemplateController {
     @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "templates", action = ActionTypes.WRITE)
     public Object unInstall(@PathVariable("templateId") String templateId) {
 
+        if (ApplicationUtils.isDevelopment()) {
+            return RestResultUtils.failed("开发环境不允许卸载模板");
+        }
+
         try {
             templateService.unInstall(templateId);
             return RestResultUtils.success();

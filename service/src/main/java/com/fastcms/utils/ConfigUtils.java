@@ -16,7 +16,10 @@
  */
 package com.fastcms.utils;
 
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.service.IConfigService;
+
+import java.math.BigDecimal;
 
 /**
  * 获取系统配置工具类
@@ -30,6 +33,54 @@ public final class ConfigUtils {
 
 	public static String getConfig(String key) {
 		return ApplicationUtils.getApplicationContext().getBean(IConfigService.class).getValue(key);
+	}
+
+	public static Integer getInt(String key, Integer defaultValue) {
+		try {
+			return Integer.parseInt(getConfig(key));
+		} catch (NumberFormatException e) {
+			return defaultValue;
+		}
+	}
+
+	public static Integer getInt(String key) {
+		return getInt(key, 0);
+	}
+
+	public static Long getLong(String key, Long defaultValue) {
+		try {
+			return Long.parseLong(getConfig(key));
+		} catch (NumberFormatException e) {
+			return defaultValue;
+		}
+	}
+
+	public static Long getLong(String key) {
+		return getLong(key, 0L);
+	}
+
+	public static Boolean getBool(String key, Boolean defaultValue) {
+		final String config = getConfig(key);
+		if (StrUtils.isBlank(config)) {
+			return defaultValue;
+		}
+		return Boolean.parseBoolean(config);
+	}
+
+	public static Boolean getBool(String key) {
+		return getBool(key, false);
+	}
+
+	public static BigDecimal getBigDecimal(String key, BigDecimal defaultValue) {
+		try {
+			return BigDecimal.valueOf(Long.valueOf(ConfigUtils.getConfig(key)));
+		} catch (NumberFormatException e) {
+			return defaultValue;
+		}
+	}
+
+	public static BigDecimal getBigDecimal(String key) {
+		return getBigDecimal(key, BigDecimal.ZERO);
 	}
 
 }

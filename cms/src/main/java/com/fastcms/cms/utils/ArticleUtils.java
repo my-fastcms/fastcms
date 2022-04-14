@@ -57,12 +57,7 @@ public abstract class ArticleUtils {
     public static final String ARTICLE_PRICE = "price";
 
     public static boolean isEnableNeedToPay() {
-        try {
-            if (ConfigUtils.getConfig(GLOBAL_ARTICLE_ENABLE_NEED_TO_PAY) == null) return true;
-            return Boolean.parseBoolean(ConfigUtils.getConfig(GLOBAL_ARTICLE_ENABLE_NEED_TO_PAY));
-        } catch (Exception e) {
-            return true;
-        }
+        return ConfigUtils.getBool(GLOBAL_ARTICLE_ENABLE_NEED_TO_PAY, true);
     }
 
     public static boolean isEnableNeedToPay(Article article) {
@@ -88,20 +83,11 @@ public abstract class ArticleUtils {
     }
 
     public static boolean isEnableArticleCommentAdminVerify() {
-        if (ConfigUtils.getConfig(ENABLE_ARTICLE_COMMENT_ADMIN_VERIFY) == null) return true;
-        try {
-            return Boolean.parseBoolean(ConfigUtils.getConfig(ENABLE_ARTICLE_COMMENT_ADMIN_VERIFY));
-        } catch (Exception e) {
-            return true;
-        }
+        return ConfigUtils.getBool(ENABLE_ARTICLE_COMMENT_ADMIN_VERIFY, true);
     }
 
     public static boolean isEnableArticleComment() {
-        try {
-            return Boolean.parseBoolean(ConfigUtils.getConfig(ENABLE_ARTICLE_COMMENT));
-        } catch (Exception e) {
-            return false;
-        }
+        return ConfigUtils.getBool(ENABLE_ARTICLE_COMMENT);
     }
 
 }
