@@ -16,6 +16,8 @@
  */
 package com.fastcms.web.controller.api;
 
+import com.egzosn.pay.common.bean.result.PayException;
+import com.egzosn.pay.common.exception.PayErrorException;
 import com.egzosn.pay.common.util.MatrixToImageWriter;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
@@ -94,7 +96,7 @@ public class PaymentApi {
      * @return
      */
     @RequestMapping(value = "{platform}/{type}/jsapi")
-    public RestResult<Map<String, Object>> toPay(@PathVariable("platform") String platform, @PathVariable("type") String type, @RequestParam("orderId") Long orderId, @RequestParam("openid") String openid) {
+    public RestResult<Map<String, Object>> toPay(@PathVariable("platform") String platform, @PathVariable("type") String type, @RequestParam("orderId") Long orderId, @RequestParam("openid") String openid) throws PayErrorException {
 
         Order order = orderService.getById(orderId);
         BigDecimal price = order.getPayAmount();
@@ -102,7 +104,13 @@ public class PaymentApi {
         FastcmsPayOrder fastcmsPayOrder = new FastcmsPayOrder(platform, type, order.getOrderTitle(), order.getRemarks(), null == price ? BigDecimal.valueOf(0.01) : price, order.getOrderSn());
         fastcmsPayOrder.setOpenid(openid);
 
-        Map orderInfo = payServiceManager.getOrderInfo(fastcmsPayOrder);
+        Map orderInfo;
+        try {
+            orderInfo = payServiceManager.getOrderInfo(fastcmsPayOrder);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new PayErrorException(new PayException("500", e.getMessage()));
+        }
 
         return RestResultUtils.success(orderInfo);
     }

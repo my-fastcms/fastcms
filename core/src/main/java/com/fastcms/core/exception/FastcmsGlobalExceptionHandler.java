@@ -16,6 +16,7 @@
  */
 package com.fastcms.core.exception;
 
+import com.egzosn.pay.common.exception.PayErrorException;
 import com.fastcms.common.exception.AccessException;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResultUtils;
@@ -87,6 +88,11 @@ public class FastcmsGlobalExceptionHandler {
 
     @ExceptionHandler(AccessException.class)
     public ResponseEntity<Object> handleAccessException(AccessException e) {
+        return ResponseEntity.status(HttpStatus.OK).body(RestResultUtils.failed(e.getMessage()));
+    }
+
+    @ExceptionHandler(PayErrorException.class)
+    public ResponseEntity<Object> handlePayErrorException(PayErrorException e) {
         return ResponseEntity.status(HttpStatus.OK).body(RestResultUtils.failed(e.getMessage()));
     }
 
