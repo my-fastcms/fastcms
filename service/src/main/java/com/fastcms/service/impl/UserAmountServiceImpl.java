@@ -7,6 +7,8 @@ import com.fastcms.entity.UserAmountStatement;
 import com.fastcms.mapper.UserAmountMapper;
 import com.fastcms.service.IUserAmountService;
 import com.fastcms.service.IUserAmountStatementService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +27,8 @@ import java.time.LocalDateTime;
 @Service
 public class UserAmountServiceImpl extends ServiceImpl<UserAmountMapper, UserAmount> implements IUserAmountService {
 
+    Logger logger = LoggerFactory.getLogger(UserAmountServiceImpl.class);
+
     @Autowired
     private IUserAmountStatementService userAmountStatementService;
 
@@ -33,19 +37,31 @@ public class UserAmountServiceImpl extends ServiceImpl<UserAmountMapper, UserAmo
     public void updateUserAmount(Long userId, String action, BigDecimal changeAmount, Long orderId, String desc) {
         if (changeAmount == null || changeAmount.compareTo(BigDecimal.ZERO) <=0) return;
 
-        UserAmount one;
+        UserAmount userAmount;
         try {
-            one = getOne(Wrappers.<UserAmount>lambdaQuery().eq(UserAmount::getUserId, userId));
+            userAmount = getOne(Wrappers.<UserAmount>lambdaQuery().eq(UserAmount::getUserId, userId));
         } catch (Exception e) {
+            logger.error(e.getMessage());
             return;
         }
-        BigDecimal oldAmount = one.getAmount();
+
+        if (userAmount == null) {
+            userAmount = new UserAmount();
+            userAmount.setUserId(userId);
+            userAmount.setCreated(LocalDateTime.now());
+            userAmount.setAmount(BigDecimal.ZERO);
+            userAmount.setVersion(0);
+            save(userAmount);
+        }
+
+        BigDecimal oldAmount = userAmount.getAmount();
 
         BigDecimal newAmount;
         if (UserAmountStatement.AMOUNT_ACTION_ADD.equalsIgnoreCase(action)) {
             newAmount = oldAmount.add(changeAmount);
         } else if (UserAmountStatement.AMOUNT_ACTION_DEL.equalsIgnoreCase(action)) {
             if (oldAmount.compareTo(changeAmount) <0) {
+                logger.error("用户余额不足");
                 return;
             }
             newAmount = oldAmount.subtract(changeAmount);
@@ -65,8 +81,8 @@ public class UserAmountServiceImpl extends ServiceImpl<UserAmountMapper, UserAmo
 
         userAmountStatementService.save(userAmountStatement);
 
-        one.setAmount(newAmount);
-        updateById(one);
+        userAmount.setAmount(newAmount);
+        updateById(userAmount);
     }
 
     @Override

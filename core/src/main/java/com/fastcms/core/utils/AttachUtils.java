@@ -49,7 +49,21 @@ import java.util.stream.Collectors;
  * @modifiedBy：
  * @version: 1.0
  */
-public abstract class AttachUtils {
+public final class AttachUtils {
+
+    private AttachUtils() {
+
+    }
+
+    static List<String> allowFileTypeList = new ArrayList<>();
+
+    static {
+        allowFileTypeList.add("image");
+        allowFileTypeList.add("audio");
+        allowFileTypeList.add("video");
+        allowFileTypeList.add("zip");
+        allowFileTypeList.add("office");
+    }
 
     /**
      * 附件域名
@@ -90,6 +104,10 @@ public abstract class AttachUtils {
      * 水印文字
      */
     public static final String ATTACH_WATERMARK_TXT = "waterMarkTxt";
+
+    public static Boolean isAllowFileType(String fileType) {
+        return allowFileTypeList.contains(fileType);
+    }
 
     public static String getAttachFileDomain() {
         String config = ConfigUtils.getConfig(ATTACH_FILE_DOMAIN);
@@ -269,6 +287,11 @@ public abstract class AttachUtils {
         for(MultipartFile file : files) {
             String newFilePath = FileUtils.newFileName(file.getOriginalFilename());
             File uploadFile = new File(DirUtils.getUploadDir(), newFilePath);
+
+            if (!isAllowFileType(Attachment.AttachType.getValue(FileUtils.getSuffix(file.getOriginalFilename())))) {
+                errorFiles.add("[" +file.getOriginalFilename() + "]文件类型不允许");
+                continue;
+            }
 
             if(AttachUtils.getImageMaxSize() > 0) {
                 long fileSize = uploadFile.length(); //文件大小超过限制大小不上传

@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.utils.ConfigUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -134,16 +135,23 @@ public class Attachment implements Serializable {
         this.fileType = fileType;
     }
 
+    /**
+     * 获取文件网络全路径
+     * @return
+     */
     public String getPath() {
+        return getFileDomain() + getFilePath();
+    }
+
+    /**
+     * 根据文件类型获取显示路径
+     * @return
+     */
+    public String getTypePath() {
         if(!TYPE_IMAGE.equals(getFileType())) {
             return "/default.jpg";
         }
-
-        String fileDomain = ConfigUtils.getConfig(ATTACH_FILE_DOMAIN);
-        if(StrUtils.isBlank(fileDomain)) {
-            fileDomain = ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN);
-        }
-        return fileDomain + getFilePath();
+        return getFileDomain() + getFilePath();
     }
 
     /**
@@ -197,6 +205,14 @@ public class Attachment implements Serializable {
 
     }
 
+    String getFileDomain() {
+        String fileDomain = ConfigUtils.getConfig(ATTACH_FILE_DOMAIN);
+        if(StrUtils.isBlank(fileDomain)) {
+            fileDomain = ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN);
+        }
+        return StringUtils.isBlank(fileDomain) ? "" : fileDomain;
+    }
+
     @Override
     public String toString() {
         return "Attachment{" +
@@ -209,7 +225,5 @@ public class Attachment implements Serializable {
             ", updated=" + updated +
         "}";
     }
-
-
 
 }

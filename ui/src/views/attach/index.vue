@@ -19,7 +19,7 @@
 				<el-row :gutter="15">
 					<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb15" v-for="(v, k) in tableData.data" :key="k" @click="onTableItemClick(v)">
 						<el-card :body-style="{ padding: '0px' }">
-							<img :src="v.path" :fit="fit" class="image">
+							<img :src="v.typePath" :fit="fit" class="image">
 							<div style="padding: 14px;">
 								<span>{{ v.fileName }}</span>
 							</div>
@@ -83,8 +83,13 @@ export default {
 			});
 		};
 
-		const uploadSuccess = () => {
-			initTableData();
+		const uploadSuccess = (res: any) => {
+			if (res.code == 200) {
+				initTableData();
+			}else {
+				ElMessage.error(res.message);	
+			}
+			
 		}
 
 		const onHandleExceed = () => {
