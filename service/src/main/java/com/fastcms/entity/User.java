@@ -51,6 +51,11 @@ public class User implements Serializable {
     private String nickName;
 
     /**
+     * 真实姓名
+     */
+    private String realName;
+
+    /**
      * 邮箱
      */
     private String email;
@@ -134,12 +139,6 @@ public class User implements Serializable {
     private Integer version;
 
     /**
-     * 来源
-     */
-    @TableField(exist = false)
-    private String sourceStr;
-
-    /**
      * 标签名称集合
      */
     @TableField(exist = false)
@@ -215,6 +214,13 @@ public class User implements Serializable {
 
     public void setNickName(String nickName) {
         this.nickName = nickName;
+    }
+    public String getRealName() {
+        return realName;
+    }
+
+    public void setRealName(String realName) {
+        this.realName = realName;
     }
     public String getEmail() {
         return email;

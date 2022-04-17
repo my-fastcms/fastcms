@@ -6,7 +6,6 @@ import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.entity.User;
 import com.fastcms.entity.UserTag;
 
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.List;
 
@@ -87,8 +86,12 @@ public interface IUserService extends IService<User> {
         /**
          * 昵称
          */
-        @NotBlank(message = "用户昵称不能为空")
         String nickName;
+
+        /**
+         * 用户姓名
+         */
+        String realName;
         /**
          * 邮箱
          */
@@ -104,7 +107,6 @@ public interface IUserService extends IService<User> {
         /**
          * 个性签名
          */
-        @NotBlank(message = "个性签名不能为空")
         String autograph;
 
         public String getNickName() {
@@ -113,6 +115,14 @@ public interface IUserService extends IService<User> {
 
         public void setNickName(String nickName) {
             this.nickName = nickName;
+        }
+
+        public String getRealName() {
+            return realName;
+        }
+
+        public void setRealName(String realName) {
+            this.realName = realName;
         }
 
         public String getEmail() {

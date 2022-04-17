@@ -24,10 +24,7 @@ import com.fastcms.entity.User;
 import com.fastcms.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 用户
@@ -50,16 +47,14 @@ public class UserApi {
      * @return
      */
     @PostMapping("save")
-    public RestResult<Boolean> save(@Validated IUserService.UpdateUserParam user) {
-        if(AuthUtils.getUserId() == null) {
-            return RestResultUtils.failed("user id is null");
-        }
+    public RestResult<Boolean> save(@RequestBody IUserService.UpdateUserParam user) {
 
         User userInfo = userService.getById(AuthUtils.getUserId());
         if(userInfo == null) {
             return RestResultUtils.failed("user is null");
         }
 
+        userInfo.setRealName(user.getRealName());
         userInfo.setNickName(user.getNickName());
         userInfo.setEmail(user.getEmail());
         userInfo.setMobile(user.getMobile());
