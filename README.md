@@ -14,6 +14,9 @@
 ### 官网
 - [官网地址](https://www.xjd2020.com)
 
+### Fastcms拼团小程序
+![输入图片说明](./doc/images/fastcms-pintuan.jpg "fastcms-pintuan.jpg")
+
 ### 后端技术
 - SpringBoot作为底层框架
 - mybatis-plus代码生成，可快速生成模块骨架代码
