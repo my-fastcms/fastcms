@@ -20,26 +20,6 @@ public interface IPermissionService extends IService<Permission> {
      */
     List<RouterNode> getPermissions(Long userId);
 
-    /**
-     * 获取角色对应的权限
-     * @param roleId
-     * @return
-     */
-    List<RouterNode> getPermissionByRoleId(Long roleId);
-
-    /**
-     * 获取用户已授权权限
-     * @param userId
-     * @return
-     */
-    List<RouterNode> getPermissionByUserId(Long userId);
-
-    /**
-     * 删除掉权限
-     * @param permissionList
-     */
-    void deleteRolePermissionByPermission(List<Permission> permissionList);
-
     class RolePermission extends Permission implements Serializable {
         private Long roleId;
 

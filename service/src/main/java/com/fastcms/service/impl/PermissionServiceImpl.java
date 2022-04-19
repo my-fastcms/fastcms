@@ -1,7 +1,6 @@
 package com.fastcms.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.fastcms.cache.CacheConfig;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RouterNode;
 import com.fastcms.common.model.TreeNode;
@@ -9,14 +8,13 @@ import com.fastcms.common.model.TreeNodeConvert;
 import com.fastcms.entity.Permission;
 import com.fastcms.mapper.PermissionMapper;
 import com.fastcms.service.IPermissionService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+
+import static com.fastcms.cache.CacheConfig.USER_MENU_PERMISSION_CACHE_NAME;
 
 /**
  *  权限服务实现类
@@ -26,10 +24,8 @@ import java.util.Objects;
 @Service
 public class PermissionServiceImpl<T extends TreeNode> extends ServiceImpl<PermissionMapper, Permission> implements IPermissionService, TreeNodeConvert<T> {
 
-    @Autowired
-    private CacheManager cacheManager;
-
     @Override
+    @Cacheable(value = USER_MENU_PERMISSION_CACHE_NAME, key = "#userId")
     public List<RouterNode> getPermissions(Long userId) {
 
         List<Permission> permissionList;
@@ -44,26 +40,6 @@ public class PermissionServiceImpl<T extends TreeNode> extends ServiceImpl<Permi
 
     List<T> getPermissionNodeList(List<Permission> permissionList) {
         return getTreeNodeList(permissionList);
-    }
-
-    @Override
-    @Cacheable(value = CacheConfig.ROLE_PERMISSION_CACHE_NAME, key = "#roleId")
-    public List<RouterNode> getPermissionByRoleId(Long roleId) {
-        return null;
-    }
-
-    @Override
-    public List<RouterNode> getPermissionByUserId(Long userId) {
-        List<Permission> permissionList = getBaseMapper().getPermissionByUserId(userId);
-        return (List<RouterNode>) getPermissionNodeList(permissionList);
-    }
-
-    @Override
-    public void deleteRolePermissionByPermission(List<Permission> permissionList) {
-        for (Permission permission : permissionList) {
-            getBaseMapper().deleteByPermissionId(permission.getId());
-        }
-        cacheManager.getCache(CacheConfig.USER_MENU_PERMISSION_CACHE_NAME).clear();
     }
 
     @Override

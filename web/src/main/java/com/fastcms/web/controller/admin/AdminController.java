@@ -32,11 +32,14 @@ import com.fastcms.utils.PluginUtils;
 import com.fastcms.web.security.AuthManager;
 import com.fastcms.web.security.FastcmsUser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.fastcms.cache.CacheConfig.ADMIN_INDEX_DATA_CACHE_NAME;
 
 /**
  * 登录授权
@@ -113,6 +116,7 @@ public class AdminController {
      */
     @GetMapping("index/data")
     @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "datas", action = ActionTypes.READ)
+    @Cacheable(value = ADMIN_INDEX_DATA_CACHE_NAME)
     public Object getIndexData() {
 
         final Map<String, Object> result = new HashMap<>();

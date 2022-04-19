@@ -14,8 +14,4 @@
         on p.id = t.permission_id
     </select>
 
-    <delete id="deleteByPermissionId">
-        delete from role_permission where permission_id = #{permissionId}
-    </delete>
-
 </mapper>

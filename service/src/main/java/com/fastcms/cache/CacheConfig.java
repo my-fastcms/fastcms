@@ -36,6 +36,7 @@ public class CacheConfig {
 
     public static final String ROLE_PERMISSION_CACHE_NAME = "role_permissions";
     public static final String USER_MENU_PERMISSION_CACHE_NAME = "user_menu_permissions";
+    public static final String ADMIN_INDEX_DATA_CACHE_NAME = "admin_index_data";
 
     @Bean
     public CacheManager cacheManager() {

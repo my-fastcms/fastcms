@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static com.fastcms.cache.CacheConfig.USER_MENU_PERMISSION_CACHE_NAME;
+
 /**
  * 角色服务实现类
  * @author wjun_java@163.com
@@ -59,6 +61,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
 
     @Override
     @Transactional
+    @CacheEvict(value = USER_MENU_PERMISSION_CACHE_NAME, key = "#userId")
     public void saveUserRole(Long userId, List<Long> roleIds) {
         getBaseMapper().deleteRoleByUserId(userId);
         if(roleIds != null && roleIds.size()>0) {
