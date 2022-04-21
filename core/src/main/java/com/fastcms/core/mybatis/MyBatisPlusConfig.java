@@ -37,7 +37,7 @@ import org.springframework.context.annotation.Configuration;
 public class MyBatisPlusConfig {
 
     @Bean
-    public MybatisPlusInterceptor paginationInterceptor() {
+    public MybatisPlusInterceptor mybatisPlusInterceptor() {
 
         MybatisPlusInterceptor mybatisPlusInterceptor = new MybatisPlusInterceptor();
 
