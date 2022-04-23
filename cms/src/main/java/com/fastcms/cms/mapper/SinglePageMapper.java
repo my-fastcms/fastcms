@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.fastcms.core.mybatis.DataPermission;
 import com.fastcms.cms.entity.SinglePage;
 import com.fastcms.cms.service.ISinglePageService;
 import org.apache.ibatis.annotations.Param;
@@ -19,7 +18,6 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface SinglePageMapper extends BaseMapper<SinglePage> {
 
-	@DataPermission("p")
 	Page<ISinglePageService.SinglePageVo> pageSinglePage(Page pageParam, @Param(Constants.WRAPPER) QueryWrapper queryWrapper);
 
 }

@@ -39,7 +39,9 @@ public class FastcmsMetaObjectHandler implements MetaObjectHandler {
 
     @Override
     public void insertFill(MetaObject metaObject) {
-        this.strictInsertFill(metaObject, CREATED, () -> LocalDateTime.now(), LocalDateTime.class);
+        if (metaObject.hasSetter(CREATED)) {
+            this.strictInsertFill(metaObject, CREATED, () -> LocalDateTime.now(), LocalDateTime.class);
+        }
 
         if(metaObject.hasSetter(USER_ID)) {
             Object fieldValByName = getFieldValByName(USER_ID, metaObject);
@@ -51,7 +53,9 @@ public class FastcmsMetaObjectHandler implements MetaObjectHandler {
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        this.strictUpdateFill(metaObject, UPDATED, () -> LocalDateTime.now(), LocalDateTime.class);
+        if (metaObject.hasSetter(UPDATED)) {
+            this.strictUpdateFill(metaObject, UPDATED, () -> LocalDateTime.now(), LocalDateTime.class);
+        }
     }
 
 }

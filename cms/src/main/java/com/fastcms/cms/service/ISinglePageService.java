@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.cms.entity.SinglePage;
-import com.fastcms.core.mybatis.DataPermission;
+
 /**
  * 单页服务类
  * @author wjun_java@163.com
@@ -25,7 +25,6 @@ public interface ISinglePageService extends IService<SinglePage> {
 	 * @param queryWrapper
 	 * @return
 	 */
-	@DataPermission("p")
 	Page<ISinglePageService.SinglePageVo> pageSinglePage(Page pageParam, QueryWrapper queryWrapper);
 
 	class SinglePageVo extends SinglePage {

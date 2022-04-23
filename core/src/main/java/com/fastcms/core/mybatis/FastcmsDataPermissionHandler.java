@@ -16,19 +16,12 @@
  */
 package com.fastcms.core.mybatis;
 
-import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.plugins.handler.DataPermissionHandler;
 import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.auth.FastcmsUserDetails;
 import net.sf.jsqlparser.expression.Expression;
-import net.sf.jsqlparser.expression.LongValue;
-import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
-import net.sf.jsqlparser.expression.operators.relational.EqualsTo;
 import net.sf.jsqlparser.schema.Column;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.core.annotation.AnnotationUtils;
-
-import java.lang.reflect.Method;
 
 /**
  * @author： wjun_java@163.com
@@ -44,51 +37,23 @@ public class FastcmsDataPermissionHandler implements DataPermissionHandler {
 	@Override
 	public Expression getSqlSegment(Expression where, String mappedStatementId) {
 
-		String className = mappedStatementId.substring(0, mappedStatementId.lastIndexOf("."));
-		Class<?> clazz = null;
+		final FastcmsUserDetails user;
 		try {
-			clazz = Class.forName(className);
-		} catch (ClassNotFoundException e) {
-			if(clazz == null) {
+			user = AuthUtils.getUser();
+			if(user.isAdmin()) {
 				return where;
 			}
+		} catch (Exception e) {
+			return where;
 		}
 
-		String methodName = mappedStatementId.substring(mappedStatementId.lastIndexOf(".") + 1);
-		Method[] methods = clazz.getDeclaredMethods();
-
-		Method myMethod = null;
-		for (Method method : methods) {
-			if (method.getName().equals(methodName) || (method.getName() + "_COUNT").equals(methodName)) {
-				// 获取当前的用户
-				myMethod = method;
-				break;
-			}
-		}
-
-		if(myMethod != null) {
-
-			final FastcmsUserDetails user;
-			try {
-				user = AuthUtils.getUser();
-				if(user.isAdmin()) {
-					return where;
-				}
-			} catch (Exception e) {
-				return where;
-			}
-
-			if(user != null) {
-				//只查看自己的数据
-				DataPermission annotation = AnnotationUtils.getAnnotation(myMethod, DataPermission.class);
-				if(annotation != null) {
-					EqualsTo equalsTo = new EqualsTo();
-					equalsTo.setLeftExpression(buildColumn(annotation.value(), USER_COLUMN));
-					equalsTo.setRightExpression(new LongValue(user.getUserId()));
-					return ObjectUtils.isNotEmpty(where) ? new AndExpression(where, equalsTo) : equalsTo;
-				}
-			}
-		}
+//		if(user != null) {
+//			//只查看自己的数据
+//			EqualsTo equalsTo = new EqualsTo();
+//			equalsTo.setLeftExpression(buildColumn("", USER_COLUMN));
+//			equalsTo.setRightExpression(new LongValue(user.getUserId()));
+//			return ObjectUtils.isNotEmpty(where) ? new AndExpression(where, equalsTo) : equalsTo;
+//		}
 
 		return where;
 	}
