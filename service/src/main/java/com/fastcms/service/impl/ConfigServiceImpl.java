@@ -28,11 +28,7 @@ public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> impleme
 
 	@Override
 	public Config findByKey(String key) {
-		Config config = configMap.get(key);
-		if(config == null) {
-			config = getOne(Wrappers.<Config>lambdaQuery().eq(Config::getKey, key));
-		}
-		return config;
+		return configMap.get(key);
 	}
 
 	@Override

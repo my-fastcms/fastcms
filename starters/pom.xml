@@ -18,6 +18,7 @@
         <module>payment-starter</module>
         <module>wechat-starter</module>
         <module>lucene-starter</module>
+        <module>mybatis-starter</module>
     </modules>
 
     <dependencies>

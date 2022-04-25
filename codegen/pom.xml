@@ -23,8 +23,9 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <groupId>com.fastcms</groupId>
+            <artifactId>fastcms-mybatis-starter</artifactId>
+            <version>${revision}</version>
         </dependency>
         <dependency>
             <groupId>mysql</groupId>

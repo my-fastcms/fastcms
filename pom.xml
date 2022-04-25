@@ -15,14 +15,12 @@
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<mybatis-plus.version>3.5.1</mybatis-plus.version>
 		<commons.lang.version>2.6</commons.lang.version>
 		<commons-io.version>2.7</commons-io.version>
 		<easy-captcha.version>1.6.2</easy-captcha.version>
 		<reflections.version>0.9.11</reflections.version>
 		<jsoup.version>1.11.3</jsoup.version>
 		<jjwt.version>0.11.2</jjwt.version>
-
 		<maven-flatten-version>1.1.0</maven-flatten-version>
 		<maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
 		<spring-boot-dependencies.version>2.6.6</spring-boot-dependencies.version>
@@ -77,16 +75,6 @@
 				<version>${spring-boot-dependencies.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
-			</dependency>
-			<dependency>
-				<groupId>com.baomidou</groupId>
-				<artifactId>mybatis-plus-boot-starter</artifactId>
-				<version>${mybatis-plus.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.baomidou</groupId>
-				<artifactId>mybatis-plus-annotation</artifactId>
-				<version>${mybatis-plus.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>commons-lang</groupId>
@@ -146,6 +134,11 @@
 			<dependency>
 				<groupId>com.fastcms</groupId>
 				<artifactId>fastcms-lucene-starter</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fastcms</groupId>
+				<artifactId>fastcms-mybatis-starter</artifactId>
 				<version>${revision}</version>
 			</dependency>
 

@@ -39,6 +39,8 @@ public interface FastcmsConstants {
 
     String ENCODE = "UTF-8";
 
+    String USER_ID = "user_id";
+
     /**
      * 数据启用状态
      */
