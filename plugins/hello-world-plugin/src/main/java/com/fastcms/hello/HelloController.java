@@ -18,7 +18,6 @@ package com.fastcms.hello;
 
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.utils.ApplicationUtils;
 import com.fastcms.utils.PluginUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,9 +42,6 @@ public class HelloController {
 
     @GetMapping
     public String index() {
-
-        HelloPluginMapper bean = ApplicationUtils.getBean(HelloPluginMapper.class);
-        System.out.println(bean);
 
         List<HelloService> extensions = PluginUtils.getExtensions(HelloService.class);
         extensions.forEach(item -> item.sayHello());

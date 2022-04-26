@@ -21,7 +21,7 @@ mybatis-plus:
   mapper-locations: classpath*:/mapper/*Mapper.xml
 
 plugin:
-  path: ./plugins
+  path: ../plugins
 
 fastcms:
   auth:

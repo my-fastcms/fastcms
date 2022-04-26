@@ -26,3 +26,9 @@
 - 插件新增支持任务调度
 - 升级springboot到2.6.6
 - 修复一些已知Bug
+
+## [v0.0.4] 2022.04.30
+- 优化mybatis-plus集成
+- 插件Mapper完美兼容mybatis-plus
+- 重构数据权限
+- 优化系统缓存

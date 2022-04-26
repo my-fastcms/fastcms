@@ -20,12 +20,16 @@ import com.fastcms.common.http.HttpRestResult;
 import com.fastcms.common.utils.HttpUtils;
 import com.fastcms.core.sms.AliyunSmsSender;
 import com.fastcms.core.sms.SmsMessage;
+import com.fastcms.plugin.FastcmsPluginManager;
+import com.fastcms.plugin.register.CompoundPluginRegister;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import javax.annotation.Resource;
 
 /**
  * @author： wjun_java@163.com
@@ -39,11 +43,14 @@ public class TestCaseService {
 
     private static final Logger logger = LoggerFactory.getLogger(TestCaseService.class);
 
-    @Autowired
+    @Resource
     private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     private AliyunSmsSender aliyunSmsSender;
+
+    @Autowired
+    private FastcmsPluginManager fastcmsPluginManager;
 
     @Test
     public void testPasswordEncode() {
@@ -61,6 +68,28 @@ public class TestCaseService {
         SmsMessage smsMessage = new SmsMessage("13533109940", "小橘灯", "SMS_198840162", "1688");
         boolean send = aliyunSmsSender.send(smsMessage);
         logger.info("============>>>send:" + send);
+    }
+
+    @Test
+    public void testPlugin() throws Exception {
+        final String pluginId = "hello-world-plugin";
+
+        unInstallPlugin(pluginId);
+
+//        installPlugin(pluginId);
+
+    }
+
+    private void unInstallPlugin(String pluginId) throws Exception {
+        new CompoundPluginRegister(fastcmsPluginManager).unRegistry(pluginId);
+        fastcmsPluginManager.stopPlugin(pluginId);
+        fastcmsPluginManager.unloadPlugin(pluginId);
+    }
+
+    private void installPlugin(String pluginId) throws Exception {
+        fastcmsPluginManager.loadPlugins();
+        fastcmsPluginManager.startPlugin(pluginId);
+        new CompoundPluginRegister(fastcmsPluginManager).registry(pluginId);
     }
 
 }

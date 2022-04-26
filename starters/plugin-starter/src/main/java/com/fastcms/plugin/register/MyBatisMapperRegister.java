@@ -38,9 +38,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 暂时不支持mybatis-plus service中的泛型写法
- * 目前支持注入mapper，通过mapper接口操作数据库
- * 把mybatis mapper注册到 Spring容器中
  * @author： wjun_java@163.com
  * @date： 2022/1/9
  * @description：
@@ -58,14 +55,40 @@ public class MyBatisMapperRegister extends AbstractPluginRegister {
 
 		//注册mapper
 		for (Class<?> mapperClass : getMapperClassList(pluginId)) {
-			GenericBeanDefinition definition = new GenericBeanDefinition();
-			definition.getConstructorArgumentValues().addGenericArgumentValue(mapperClass);
-			definition.setBeanClass(MapperFactoryBean.class);
-			definition.getPropertyValues().add("addToConfig", true);
-			definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
-			((GenericWebApplicationContext) this.pluginManger.getApplicationContext()).registerBeanDefinition(mapperClass.getName(), definition);
+			registerBeanDefinition(mapperClass);
 		}
 
+		registerMapperXml(pluginId);
+
+	}
+
+	@Override
+	public void unRegistry(String pluginId) throws Exception {
+		//注册mapper
+		for (Class<?> mapperClass : getMapperClassList(pluginId)) {
+			removeBeanDefinition(mapperClass);
+		}
+	}
+
+	List<Class<?>> getMapperClassList(String pluginId) throws Exception {
+		return getPluginClasses(pluginId).stream().filter(clazz -> BaseMapper.class.isAssignableFrom(clazz)).collect(Collectors.toList());
+	}
+
+	void registerBeanDefinition(Class mapperClass) {
+		GenericBeanDefinition definition = new GenericBeanDefinition();
+		definition.getConstructorArgumentValues().addGenericArgumentValue(mapperClass);
+		definition.setBeanClass(MapperFactoryBean.class);
+		definition.getPropertyValues().add("addToConfig", true);
+		definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
+		((GenericWebApplicationContext) this.pluginManger.getApplicationContext()).registerBeanDefinition(mapperClass.getName(), definition);
+	}
+
+	void removeBeanDefinition(Class mapperClass) {
+		((GenericWebApplicationContext) this.pluginManger.getApplicationContext()).removeBeanDefinition(mapperClass.getName());
+		destroyBean(mapperClass);
+	}
+
+	void registerMapperXml(String pluginId) throws Exception {
 		PluginWrapper pluginWrapper = pluginManger.getPlugin(pluginId);
 		PathMatchingResourcePatternResolver pathMatchingResourcePatternResolver = new PathMatchingResourcePatternResolver(pluginWrapper.getPluginClassLoader());
 		String pluginBasePath = ClassUtils.classPackageAsResourcePath(pluginWrapper.getPlugin().getClass());
@@ -92,21 +115,6 @@ public class MyBatisMapperRegister extends AbstractPluginRegister {
 		} finally {
 			Resources.setDefaultClassLoader(ClassUtils.getDefaultClassLoader());
 		}
-
-	}
-
-	@Override
-	public void unRegistry(String pluginId) throws Exception {
-		//注册mapper
-		for (Class<?> mapperClass : getMapperClassList(pluginId)) {
-			((GenericWebApplicationContext) this.pluginManger.getApplicationContext()).removeBeanDefinition(mapperClass.getName());
-			destroyBean(mapperClass);
-		}
-	}
-
-
-	List<Class<?>> getMapperClassList(String pluginId) throws Exception {
-		return getPluginClasses(pluginId).stream().filter(clazz -> BaseMapper.class.isAssignableFrom(clazz)).collect(Collectors.toList());
 	}
 
 }

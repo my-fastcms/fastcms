@@ -79,6 +79,10 @@
             <appender-ref ref="CONSOLE"/>
             <level value="DEBUG"/>
         </logger>
+        <logger name="org.mybatis.spring">
+            <appender-ref ref="CONSOLE"/>
+            <level value="DEBUG"/>
+        </logger>
         <logger name="com.fastcms">
             <appender-ref ref="CONSOLE"/>
             <level value="INFO"/>
