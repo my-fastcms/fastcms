@@ -17,7 +17,7 @@
 
 package com.fastcms.mybatis.interceptor;
 
-import org.apache.ibatis.executor.parameter.ParameterHandler;
+import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
@@ -26,38 +26,39 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.sql.PreparedStatement;
+import java.sql.CallableStatement;
+import java.sql.Statement;
 
 /**
  * fastcms mybatis param 拦截器
  * @author： wjun_java@163.com
- * @date： 2021/4/25
+ * @date： 2021/4/26
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
 @Intercepts(
-    {
-        @Signature(type = ParameterHandler.class, method = "getParameterObject", args = {}),
-        @Signature(type = ParameterHandler.class, method = "setParameters", args = { PreparedStatement.class }),
-    }
+        {
+                @Signature(type = ResultSetHandler.class, method = "handleResultSets", args = { Statement.class }),
+                @Signature(type = ResultSetHandler.class, method = "handleCursorResultSets", args = { Statement.class }),
+                @Signature(type = ResultSetHandler.class, method = "handleOutputParameters", args = { CallableStatement.class }),
+        }
 )
 @Component
-public class FastcmsParamInterceptor implements Interceptor {
+public class FastcmsResultSetInterceptor implements Interceptor {
 
-    private static final Logger log = LoggerFactory.getLogger(FastcmsParamInterceptor.class);
+    private static final Logger log = LoggerFactory.getLogger(FastcmsResultSetInterceptor.class);
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
         Object target = invocation.getTarget();
         Object[] args = invocation.getArgs();
 
-        log.info(">>>>>>param target:" + target);
+        log.info(">>>>>>result set target:" + target);
 
         if (args != null && args.length >0) {
-            log.info(">>>>param len:" + args.length);
+            log.info(">>>>result set len:" + args.length);
         }
-
         return invocation.proceed();
     }
 

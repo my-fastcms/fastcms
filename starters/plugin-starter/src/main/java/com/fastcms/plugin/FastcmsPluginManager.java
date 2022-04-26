@@ -75,7 +75,7 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
 
     @Override
     public void unInstallPlugin(String pluginId) throws Exception {
-        if(isDevelopment()) throw new FastcmsException(FastcmsException.NO_RIGHT, "开发环境不允许安装");
+        if(isDevelopment()) throw new FastcmsException(FastcmsException.NO_RIGHT, "开发环境不允许卸载");
         try {
             pluginRegister.unRegistry(pluginId);
             deletePlugin(pluginId);

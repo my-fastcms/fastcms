@@ -55,8 +55,8 @@ public class CompoundPluginRegister extends AbstractPluginRegister implements Pl
 
     @Override
     public void unRegistry(String pluginId) throws Exception {
-        for (PluginRegister pluginRegister : registerList) {
-            pluginRegister.unRegistry(pluginId);
+        for (int i= registerList.size()-1; i>=0; i--) {
+            registerList.get(i).unRegistry(pluginId);
         }
     }
 
