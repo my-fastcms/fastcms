@@ -77,7 +77,7 @@ public class JwtTokenManager {
 		List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get(AUTHORITIES_KEY));
 		Integer userId = (Integer) claims.get(USER_ID);
 		String username = (String) claims.get(USER_NAME);
-		FastcmsUserDetails principal = new FastcmsUserDetails(Long.valueOf(userId), username, "", authorities);
+		FastcmsUserDetails principal = new FastcmsUserDetails(Long.valueOf(userId), username, "", 0, authorities);
 		return new UsernamePasswordAuthenticationToken(principal, "", authorities);
 	}
 

@@ -1,6 +1,19 @@
 import request from '/@/utils/request';
 
 /**
+ * 文章列表
+ * @param params 
+ * @returns 
+ */
+ export function getArticleList(params: object) {
+	return request({
+		url: '/client/article/list',
+		method: 'get',
+		params: params
+	});
+}
+
+/**
  * 新建文章
  * @param params 
  * @returns 

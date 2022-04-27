@@ -54,7 +54,7 @@ public class FastcmsUserDetailsServiceImpl implements UserDetailsService {
 		if(user == null) throw new UsernameNotFoundException(username);
 		List<Role> userRoleList = roleService.getUserRoleList(user.getId());
 		List<GrantedAuthority> collect = userRoleList.stream().map(item -> new SimpleGrantedAuthority(String.valueOf(item.getId()))).collect(Collectors.toList());
-		return new FastcmsUserDetails(user.getId(), user.getUserName(), user.getPassword(), collect);
+		return new FastcmsUserDetails(user.getId(), user.getUserName(), user.getPassword(), user.getUserType(), collect);
 	}
 
 }

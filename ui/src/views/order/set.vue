@@ -134,7 +134,7 @@ export default {
 			const keys: any[] = Object.keys(state.ruleForm);
 			keys.forEach(key => { paramKeys.push(key); });
 			let params = qs.stringify( {"configKeys" : paramKeys}, {arrayFormat: 'repeat'});
-			getConfigList(params).then((res) => {
+			getConfigList(params).then((res: any) => {
 				res.data.forEach(item => {
 					state.ruleForm[item.key] = item.jsonValue;
 				});

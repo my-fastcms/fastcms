@@ -66,14 +66,23 @@ public class FastcmsUser implements Serializable {
 	 */
 	private boolean hasRole;
 
+	/**
+	 * 系统版本号
+	 */
 	private String version;
 
-	public FastcmsUser(String username, String token, long tokenTtl, boolean superAdmin, boolean hasRole) {
+	/**
+	 * 用户类型
+	 */
+	private Integer userType;
+
+	public FastcmsUser(String username, String token, long tokenTtl, boolean superAdmin, boolean hasRole, Integer userType) {
 		this.username = username;
 		this.token = token;
 		this.tokenTtl = tokenTtl;
 		this.superAdmin = superAdmin;
 		this.hasRole = hasRole;
+		this.userType = userType;
 		this.version = VersionUtils.getFullClientVersion();
 	}
 
@@ -140,4 +149,13 @@ public class FastcmsUser implements Serializable {
 	public void setVersion(String version) {
 		this.version = version;
 	}
+
+	public Integer getUserType() {
+		return userType;
+	}
+
+	public void setUserType(Integer userType) {
+		this.userType = userType;
+	}
+
 }

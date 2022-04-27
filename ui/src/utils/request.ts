@@ -50,15 +50,6 @@ service.interceptors.response.use(
 	},
 	(error) => {
 		
-		if (error.response.data.status === 401) {
-			Session.clear(); // 清除浏览器全部临时缓存
-			ElMessageBox.alert('你已被登出，请重新登录', '提示', {})
-				.then(() => {
-					window.location.href = '/'; // 去登录页
-				})
-				.catch(() => {});
-		}
-
 		// 对响应错误做点什么
 		if (error.message.indexOf('timeout') != -1) {
 			ElMessage.error('网络超时');
@@ -66,7 +57,20 @@ service.interceptors.response.use(
 			ElMessage.error('网络连接错误');
 		} else {
 			if (error.response.data) {
-				ElMessage.error(error.response.statusText);
+				if (error.response.data.status === 401) {
+					Session.clear(); // 清除浏览器全部临时缓存
+					ElMessageBox.alert('你已被登出，请重新登录', '提示', {})
+						.then(() => {
+							window.location.href = '/'; // 去登录页
+						})
+						.catch(() => {});
+				} 
+				// else if(error.response.data.status === 403) {
+				// 	ElMessage.error("没有访问权限");
+				// } 
+				// else if(error.response.data.status === 500) {
+				// 	ElMessage.error("系统错误");
+				// }
 			} else {
 				ElMessage.error('接口路径找不到');
 			}

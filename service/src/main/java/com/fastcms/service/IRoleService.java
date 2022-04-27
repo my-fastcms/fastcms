@@ -2,8 +2,10 @@ package com.fastcms.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.common.model.TreeNode;
+import com.fastcms.entity.Permission;
 import com.fastcms.entity.Role;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -54,6 +56,18 @@ public interface IRoleService extends IService<Role> {
 
         public void setUserId(Long userId) {
             this.userId = userId;
+        }
+    }
+
+    class RolePermission extends Permission implements Serializable {
+        private Long roleId;
+
+        public Long getRoleId() {
+            return roleId;
+        }
+
+        public void setRoleId(Long roleId) {
+            this.roleId = roleId;
         }
     }
 

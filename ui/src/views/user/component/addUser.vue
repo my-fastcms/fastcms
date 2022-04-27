@@ -68,18 +68,6 @@
 							</el-select>
 						</el-form-item>
 					</el-col>
-					<el-col class="mb20">
-						<el-form-item label="分配部门">
-							<el-cascader v-model="ruleForm.deptList" :options="deptList" placeholder="请选择部门" :props="{ checkStrictly: true, multiple: true, label: 'label', value: 'id', children: 'children' }" class="w100" clearable/>
-						</el-form-item>
-					</el-col>
-					<el-col class="mb20">
-						<el-form-item label="分配角色">
-							<el-select v-model="ruleForm.roleList" multiple placeholder="请选择角色" clearable class="w100">
-								<el-option v-for="(item,index) in roleList" :key="index" :label="item.roleName" :value="item.id" />
-							</el-select>
-						</el-form-item>
-					</el-col>
 				</el-row>
 			</el-form>
 			<template #footer>
@@ -96,8 +84,6 @@
 import { reactive, toRefs, getCurrentInstance, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { saveUser, getTagList } from '/@/api/user/index';
-import { getRoleSelectList } from '/@/api/role/index';
-import { getDeptList } from '/@/api/dept/client';
 import qs from 'qs';
 
 export default {
@@ -112,7 +98,7 @@ export default {
 			ruleForm: {
 				id: null,
 				userName: '',
-				userType: 1,
+				userType: 2,
 				password: '',
 				nickName: '',
 				mobile: '', 
@@ -164,16 +150,8 @@ export default {
 		};
 
 		const loadRoleList = () => {
-			getRoleSelectList().then((res) => {
-				state.roleList = res.data;
-			}).catch((err) => {
-				console.log(err);
-			});
 			getTagList().then((res) => {
 				state.tags = res.data;
-			});
-			getDeptList().then((res) => {
-				state.deptList = res.data;
 			});
 		}
 

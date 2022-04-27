@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.common.model.RouterNode;
 import com.fastcms.entity.Permission;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -15,21 +14,22 @@ import java.util.List;
 public interface IPermissionService extends IService<Permission> {
 
     /**
+     * 获取角色授权
+     * @param userId
+     * @return
+     */
+    List<Permission> getUserPermissionList(Long userId);
+
+    /**
      * 获取系统权限列表
      * @return userId
      */
-    List<RouterNode> getPermissions(Long userId);
+    List<RouterNode> getUserPermissionsMenu(Long userId);
 
-    class RolePermission extends Permission implements Serializable {
-        private Long roleId;
-
-        public Long getRoleId() {
-            return roleId;
-        }
-
-        public void setRoleId(Long roleId) {
-            this.roleId = roleId;
-        }
-    }
+    /**
+     * 获取所有路由数据
+     * @return
+     */
+    List<RouterNode> getPermissions();
 
 }

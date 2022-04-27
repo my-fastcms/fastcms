@@ -36,9 +36,12 @@ public class FastcmsUserDetails extends User {
 
 	private Long userId;
 
-	public FastcmsUserDetails(Long userId, String username, String password, Collection<? extends GrantedAuthority> authorities) {
+	private Integer userType;
+
+	public FastcmsUserDetails(Long userId, String username, String password, Integer userType, Collection<? extends GrantedAuthority> authorities) {
 		super(username, password, authorities);
 		this.userId = userId;
+		this.userType = userType;
 	}
 
 	public Long getUserId() {
@@ -47,6 +50,14 @@ public class FastcmsUserDetails extends User {
 
 	public void setUserId(Long userId) {
 		this.userId = userId;
+	}
+
+	public Integer getUserType() {
+		return userType;
+	}
+
+	public void setUserType(Integer userType) {
+		this.userType = userType;
 	}
 
 	public Boolean isAdmin() {

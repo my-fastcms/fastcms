@@ -9,7 +9,7 @@
         </foreach>
     </insert>
 
-    <select id="getRolePermission" resultType="com.fastcms.service.IPermissionService$RolePermission">
+    <select id="getRolePermission" resultType="com.fastcms.service.IRoleService$RolePermission">
         select p.*, t.role_id from permission p LEFT JOIN
         (select rp.* from role_permission rp where rp.role_id=${roleId}) t
         on p.id = t.permission_id order by p.parent_id
@@ -20,11 +20,11 @@
     </delete>
 
     <select id="getRoleListByUserId" resultType="com.fastcms.service.IRoleService$UserRole">
-        SELECT r.*, urs.user_id FROM role r LEFT JOIN (select * from user_role ur where ur.user_id = #{userId}) urs on r.id = urs.role_id
+        SELECT r.*, urs.user_id FROM role r LEFT JOIN (select ur.* from user_role ur join `user` u on ur.user_id = u.id where ur.user_id = #{userId} and u.user_type = 1) urs on r.id = urs.role_id
     </select>
 
     <select id="getUserRoleList" resultType="com.fastcms.entity.Role">
-        SELECT r.* FROM role r JOIN (select * from user_role ur where ur.user_id = #{userId}) urs on r.id = urs.role_id
+        SELECT r.* FROM role r JOIN (select ur.* from user_role ur join `user` u on ur.user_id = u.id where ur.user_id = #{userId} and u.user_type = 1) urs on r.id = urs.role_id
     </select>
 
     <insert id="saveUserRole">

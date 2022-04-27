@@ -20,10 +20,7 @@ import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.model.RouterNode;
-import com.fastcms.core.auth.ActionTypes;
-import com.fastcms.core.auth.AuthConstants;
 import com.fastcms.core.auth.AuthUtils;
-import com.fastcms.core.auth.Secured;
 import com.fastcms.service.IPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,9 +49,8 @@ public class PermissionController {
 	 * @return
 	 */
 	@GetMapping("menus")
-	@Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "permissions", action = ActionTypes.READ)
 	public RestResult<List<RouterNode>> getMenus() {
-		return RestResultUtils.success(permissionService.getPermissions(AuthUtils.getUserId()));
+		return RestResultUtils.success(permissionService.getUserPermissionsMenu(AuthUtils.getUserId()));
 	}
 
 }

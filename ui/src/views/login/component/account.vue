@@ -137,10 +137,38 @@ export default defineComponent({
 			})
 		}
 
-		const doLogin = async(res) => {
+		const doLogin = async(res: any) => {
 			state.loading.signIn = true;
 			//let defaultAuthPageList: Array<string> = ['admin'];
 			//let defaultAuthBtnList: Array<string> = ['btn.add', 'btn.del', 'btn.edit', 'btn.link'];
+			
+			if (!store.state.themeConfig.themeConfig.isRequestRoutes) {
+				// 前端控制路由，2、请注意执行顺序
+				await initFrontEndControlRoutes();
+				signInSuccess(res);
+			} else {
+				if(res.data.userType === 1) {
+					if(res.data.hasRole == true) {
+						// 模拟后端控制路由，isRequestRoutes 为 true，则开启后端控制路由
+						// 添加完动态路由，再进行 router 跳转，否则可能报错 No match found for location with path "/"
+						await initBackEndControlRoutes();
+						signInSuccess(res);
+					} else {
+						ElMessage.error("请联系管理员授权");
+					}
+					
+				} else if(res.data.userType === 2) {
+					// 前端控制路由，2、请注意执行顺序
+					await initFrontEndControlRoutes();
+					signInSuccess(res);
+				} else {
+					ElMessage.error("未知用户类型");
+				}
+			}
+		}
+
+		// 登录成功后的跳转
+		const signInSuccess = (res: any) => {
 			const userInfos = {
 				username: res.data.username,
 				photo: res.data.headImg === null ? '/header.jpg' : res.data.headImg,
@@ -157,27 +185,7 @@ export default defineComponent({
 			Session.set('userInfo', userInfos);
 			// 1、请注意执行顺序(存储用户信息到vuex)
 			store.dispatch('userInfos/setUserInfos', userInfos);
-			if (!store.state.themeConfig.themeConfig.isRequestRoutes) {
-				// 前端控制路由，2、请注意执行顺序
-				await initFrontEndControlRoutes();
-				signInSuccess();
-			} else {
-				if(res.data.hasRole === true) {
-					// 模拟后端控制路由，isRequestRoutes 为 true，则开启后端控制路由
-					// 添加完动态路由，再进行 router 跳转，否则可能报错 No match found for location with path "/"
-					await initBackEndControlRoutes();
-					signInSuccess();
-					
-				} else {
-					// 前端控制路由，2、请注意执行顺序
-					await initFrontEndControlRoutes();
-					signInSuccess();
-				}
-			}
-		}
 
-		// 登录成功后的跳转
-		const signInSuccess = () => {
 			// 初始化登录成功时间问候语
 			let currentTimeInfo = currentTime.value;
 			// 登录成功，跳到转首页

@@ -16,12 +16,12 @@
  */
 package com.fastcms.web.security;
 
+import com.fastcms.common.exception.AccessException;
+import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.core.auth.AuthPermissionService;
 import com.fastcms.core.auth.FastcmsUserDetails;
 import com.fastcms.core.auth.model.Permission;
 import com.fastcms.core.auth.model.User;
-import com.fastcms.common.exception.AccessException;
-import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.core.captcha.FastcmsCaptchaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -69,7 +69,7 @@ public class FastcmsAuthManager implements AuthManager {
             FastcmsUserDetails principal = (FastcmsUserDetails) authenticate.getPrincipal();
             String token = tokenManager.createToken(principal.getUserId(), authenticate.getName(), principal.getAuthorities());
 
-            return new FastcmsUser(authenticate.getName(), token, authConfigs.getTokenValidityInSeconds(), principal.isAdmin(), principal.hasRole());
+            return new FastcmsUser(authenticate.getName(), token, authConfigs.getTokenValidityInSeconds(), principal.isAdmin(), principal.hasRole(), principal.getUserType());
 
         } catch (AuthenticationException e) {
             throw new AccessException(FastcmsException.NO_RIGHT, e.getMessage());

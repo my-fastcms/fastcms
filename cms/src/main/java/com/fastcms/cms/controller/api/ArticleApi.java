@@ -74,11 +74,14 @@ public class ArticleApi {
 	@Autowired
 	private FastcmsSearcherManager fastcmsSearcherManager;
 
-	@RequestMapping("list")
-	public RestResult<Page<IArticleService.ArticleVo>> list(PageModel page, @RequestParam(name = "categoryId") String categoryId) {
+	@GetMapping("list")
+	public RestResult<Page<IArticleService.ArticleVo>> list(PageModel page,
+															@RequestParam(name = "categoryId", required = false) String categoryId,
+															@RequestParam(name = "status", required = false) String status) {
 		QueryWrapper<Object> queryWrapper = Wrappers.query()
+				.eq("a.user_id", AuthUtils.getUserId())
 				.eq(StringUtils.isNotBlank(categoryId), "acr.category_id", categoryId)
-				.eq("a.status", Article.STATUS_PUBLISH)
+				.eq("a.status", StringUtils.isNotBlank(status) ? status : Article.STATUS_PUBLISH)
 				.orderByDesc("a.created");
 		Page<IArticleService.ArticleVo> articleVoPage = articleService.pageArticle(page.toPage(), queryWrapper);
 		return RestResultUtils.success(articleVoPage);

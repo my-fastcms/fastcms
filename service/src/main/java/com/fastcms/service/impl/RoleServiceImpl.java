@@ -5,7 +5,6 @@ import com.fastcms.cache.CacheConfig;
 import com.fastcms.common.model.TreeNode;
 import com.fastcms.entity.Role;
 import com.fastcms.mapper.RoleMapper;
-import com.fastcms.service.IPermissionService;
 import com.fastcms.service.IRoleService;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -36,7 +35,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
 
     @Override
     public List<TreeNode> getRolePermission(Long roleId) {
-        List<IPermissionService.RolePermission> permissionList = getBaseMapper().getRolePermission(roleId);
+        List<IRoleService.RolePermission> permissionList = getBaseMapper().getRolePermission(roleId);
 
         List<TreeNode> treeNodeList = new ArrayList<>();
         permissionList.forEach(item -> {

@@ -42,8 +42,8 @@
 <script lang="ts">
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { ref, toRefs, reactive, onMounted } from 'vue';
-import AddUser from '/@/views/system/user/component/addUser.vue';
-import EditUser from '/@/views/system/user/component/editUser.vue';
+import AddUser from '/@/views/user/component/addUser.vue';
+import EditUser from '/@/views/user/component/editUser.vue';
 import { getUserList, delUser } from '/@/api/user/index';
 export default {
 	name: 'systemUser',
@@ -57,7 +57,7 @@ export default {
 				total: 0,
 				loading: false,
 				param: {
-					type: 1,
+					type: 2,
 					username: '',
 					phone: '',
 					pageNum: 1,

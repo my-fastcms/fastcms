@@ -60,6 +60,7 @@ public class AttachmentController {
      * @return
      */
     @RequestMapping("list")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "attaches", action = ActionTypes.READ)
     public RestResult<Page<Attachment>> list(PageModel page,
                                              @RequestParam(value = "fileType", required = false) String fileType,
                                              @RequestParam(value = "fileName", required = false) String fileName) {
@@ -78,6 +79,7 @@ public class AttachmentController {
      */
     @PostMapping("upload")
     @ExceptionHandler(value = MultipartException.class)
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "attaches", action = ActionTypes.WRITE)
     public Object upload(@RequestParam("files") MultipartFile files[]) {
         return AttachUtils.upload(files, attachmentService);
     }
@@ -111,6 +113,7 @@ public class AttachmentController {
      * @return
      */
     @GetMapping("get/{attachId}")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "attaches", action = ActionTypes.READ)
     public RestResult<Attachment> detail(@PathVariable(name = "attachId") Long attachId) {
 
         Attachment attachment = attachmentService.getById(attachId);

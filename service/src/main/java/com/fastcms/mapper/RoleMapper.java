@@ -2,7 +2,6 @@ package com.fastcms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.fastcms.entity.Role;
-import com.fastcms.service.IPermissionService;
 import com.fastcms.service.IRoleService;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,7 +19,7 @@ public interface RoleMapper extends BaseMapper<Role> {
 
     void saveRolePermission(@Param("roleId") Long roleId, @Param("permissionIdList") List<Long> permissionIdList);
 
-    List<IPermissionService.RolePermission> getRolePermission(Long roleId);
+    List<IRoleService.RolePermission> getRolePermission(Long roleId);
 
     void deleteByRoleId(Long roleId);
 

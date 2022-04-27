@@ -49,7 +49,10 @@ public class AuthPermissionService {
             }
 
             //需要检查角色资源权限
-            return true;
+            for (Role role : userRoleList) {
+
+            }
+            return false;
 
         }
 

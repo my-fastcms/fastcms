@@ -78,10 +78,12 @@ public class UserController {
     @GetMapping("list")
     @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "users", action = ActionTypes.READ)
     public RestResult<Page<User>> list(PageModel page,
+                                       @RequestParam(name = "type") Integer type,
                                        @RequestParam(name = "username", required = false) String username,
                                        @RequestParam(name = "phone", required = false) String phone,
                                        @RequestParam(name = "status", required = false) Integer status) {
         Page<User> pageData = userService.page(page.toPage(), Wrappers.<User>lambdaQuery()
+                .eq(User::getUserType, type)
                 .like(StringUtils.isNotBlank(username), User::getUserName, username)
                 .eq(StringUtils.isNoneBlank(phone), User::getMobile, phone)
                 .eq(status != null, User::getStatus, status)
@@ -180,6 +182,7 @@ public class UserController {
      * @return
      */
     @PostMapping("password/update")
+    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "users", action = ActionTypes.WRITE)
     public Object updatePassword(@Validated IUserService.UpdatePasswordParam updatePasswordParam) {
         try {
             updatePasswordParam.setId(AuthUtils.getUserId());

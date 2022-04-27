@@ -36,6 +36,61 @@ public class User implements Serializable {
     public static final Integer SEX_MAN = 1;
     public static final Integer SEX_WOMAN = 0;
 
+    public static final Integer USER_TYPE_SYS = 1;
+    public static final Integer USER_TYPE_CLIENT = 2;
+
+    public enum UserType {
+
+        TYPE_SYS(USER_TYPE_SYS, "系统用户"),
+        TYPE_CLIENT(USER_TYPE_CLIENT, "网站用户");
+
+        UserType(Integer key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        private final Integer key;
+        private final String value;
+
+        public static String getValue(Integer key) {
+            for (UserType s: values()) {
+                if (s.key == key) {
+                    return s.value;
+                }
+            }
+            return "";
+        }
+
+    }
+
+    public enum SourceType {
+
+        WX_WEB("wx_web_auth", "微信网页授权"),
+        WX_QRCODE("wx_qrcode", "扫描公众号二维码"),
+        WX_MINI_PROGRAM("wx_mini_program", "微信小程序"),
+        WX_MINI_PROGRAM_QRCODE("wx_mini_program_qrcode", "扫描小程序二维码"),
+        WEB_REGISTER("web_register", "网页注册"),
+        ADMIN_CREATE("admin_create", "后台创建");
+
+        SourceType(String key, String value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        private final String key;
+        private final String value;
+
+        public static String getValue(String key) {
+            for (SourceType s: values()) {
+                if (s.key.equals(key)) {
+                    return s.value;
+                }
+            }
+            return "";
+        }
+
+    }
+
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
@@ -121,6 +176,11 @@ public class User implements Serializable {
     private String accessIp;
 
     /**
+     * 用户类型
+     */
+    private Integer userType;
+
+    /**
      * 创建时间
      */
     @TableField(fill = FieldFill.INSERT)
@@ -155,44 +215,6 @@ public class User implements Serializable {
      */
     @TableField(exist = false)
     private List<Long> deptList;
-
-    public String getSourceStr() {
-        String text = SourceType.getValue(getSource());
-        return StringUtils.isBlank(text) ? "" : text;
-    }
-
-    public String getAvatar() {
-        if(StringUtils.isBlank(getHeadImg())) return "/img/default.jpg";
-        return getHeadImg().startsWith("http") ? getHeadImg() : getHeadImg();
-    }
-
-    public enum SourceType {
-
-        WX_WEB("wx_web_auth", "微信网页授权"),
-        WX_QRCODE("wx_qrcode", "扫描公众号二维码"),
-        WX_MINI_PROGRAM("wx_mini_program", "微信小程序"),
-        WX_MINI_PROGRAM_QRCODE("wx_mini_program_qrcode", "扫描小程序二维码"),
-        WEB_REGISTER("web_register", "网页注册"),
-        ADMIN_CREATE("admin_create", "后台创建");
-
-        SourceType(String key, String value) {
-            this.key = key;
-            this.value = value;
-        }
-
-        private final String key;
-        private final String value;
-
-        public static String getValue(String key) {
-            for (SourceType s: values()) {
-                if (s.key.equals(key)) {
-                    return s.value;
-                }
-            }
-            return "";
-        }
-
-    }
 
     public Long getId() {
         return id;
@@ -360,6 +382,28 @@ public class User implements Serializable {
 
     public void setAccessIp(String accessIp) {
         this.accessIp = accessIp;
+    }
+
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
+    }
+
+    public String getSourceStr() {
+        String text = SourceType.getValue(getSource());
+        return StringUtils.isBlank(text) ? "" : text;
+    }
+
+    public String getAvatar() {
+        if(StringUtils.isBlank(getHeadImg())) return "/img/default.jpg";
+        return getHeadImg().startsWith("http") ? getHeadImg() : getHeadImg();
+    }
+
+    public String getUserTypeStr() {
+        return UserType.getValue(getUserType());
     }
 
     @Override

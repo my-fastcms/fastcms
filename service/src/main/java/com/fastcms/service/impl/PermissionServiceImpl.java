@@ -25,17 +25,28 @@ import static com.fastcms.cache.CacheConfig.USER_MENU_PERMISSION_CACHE_NAME;
 public class PermissionServiceImpl<T extends TreeNode> extends ServiceImpl<PermissionMapper, Permission> implements IPermissionService, TreeNodeConvert<T> {
 
     @Override
+    public List<Permission> getUserPermissionList(Long userId) {
+        return getBaseMapper().getPermissionByUserId(userId);
+    }
+
+    @Override
     @Cacheable(value = USER_MENU_PERMISSION_CACHE_NAME, key = "#userId")
-    public List<RouterNode> getPermissions(Long userId) {
+    public List<RouterNode> getUserPermissionsMenu(Long userId) {
 
         List<Permission> permissionList;
         if(Objects.equals(FastcmsConstants.ADMIN_USER_ID, userId)) {
             permissionList = list();
         } else {
-            permissionList = getBaseMapper().getPermissionByUserId(userId);
+            permissionList = getUserPermissionList(userId);
         }
 
         return (List<RouterNode>) getPermissionNodeList(permissionList);
+    }
+
+    @Override
+    public List<RouterNode> getPermissions() {
+        List<Permission> list = list();
+        return (List<RouterNode>) getPermissionNodeList(list);
     }
 
     List<T> getPermissionNodeList(List<Permission> permissionList) {

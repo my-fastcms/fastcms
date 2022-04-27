@@ -54,7 +54,7 @@ public class RouterController {
 	@GetMapping("list")
 	@Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "routers", action = ActionTypes.READ)
 	public RestResult<List<RouterNode>> list() {
-		return RestResultUtils.success(permissionService.getPermissions(FastcmsConstants.ADMIN_USER_ID));
+		return RestResultUtils.success(permissionService.getPermissions());
 	}
 
 	/**

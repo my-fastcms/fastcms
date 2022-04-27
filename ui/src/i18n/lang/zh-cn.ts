@@ -29,6 +29,8 @@ export default {
 		templateEdit: '编辑',
 		templateMenu: '菜单',
 		templateSet: '设置',
+		user: '用户',
+		userManager: '用户管理',
 		order: '订单',
 		orderManager: '订单管理',
 		paymentManager: '支付记录',
