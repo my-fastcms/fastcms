@@ -10,7 +10,7 @@
 			<el-table :data="tableData.data" stripe style="width: 100%">
 				<el-table-column prop="id" label="ID" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="userName" label="用户名" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="email" label="邮箱" show-overflow-tooltip></el-table-column>
+				<!-- <el-table-column prop="email" label="邮箱" show-overflow-tooltip></el-table-column> -->
 				<el-table-column prop="sourceStr" label="来源" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="created" label="加入时间" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="path" label="操作" width="90">

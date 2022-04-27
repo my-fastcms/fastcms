@@ -87,7 +87,7 @@ public class UserController {
                 .like(StringUtils.isNotBlank(username), User::getUserName, username)
                 .eq(StringUtils.isNoneBlank(phone), User::getMobile, phone)
                 .eq(status != null, User::getStatus, status)
-                .select(User::getId, User::getUserName, User::getCreated, User::getSource, User::getEmail)
+                .select(User::getId, User::getUserName, User::getNickName, User::getCreated, User::getSource, User::getEmail)
                 .orderByDesc(User::getCreated));
         return RestResultUtils.success(pageData);
     }

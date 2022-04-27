@@ -105,6 +105,7 @@ export default {
 			},
 			rules: {
 				"userName": { required: true, message: '请输入账号', trigger: 'blur' },
+				"nickName": { required: true, message: '请输入昵称', trigger: 'blur' },
 			},
 		});
 		// 打开弹窗
