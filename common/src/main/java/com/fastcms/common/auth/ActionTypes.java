@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.fastcms.core.auth.parser;
+package com.fastcms.common.auth;
 
 /**
  * @author： wjun_java@163.com
@@ -24,14 +24,24 @@ package com.fastcms.core.auth.parser;
  * @modifiedBy：
  * @version: 1.0
  */
-public interface ResourceParser {
-    
+public enum ActionTypes {
     /**
-     * Parse a unique name of the resource from the request.
-     *
-     * @param request where we can find the resource info. Given it may vary from Http request to gRPC request, we use a
-     *                Object type for future accommodation.
-     * @return resource name
+     * Read.
      */
-    String parseName(Object request);
+    READ("r"),
+    /**
+     * Write.
+     */
+    WRITE("w");
+    
+    private String action;
+    
+    ActionTypes(String action) {
+        this.action = action;
+    }
+    
+    @Override
+    public String toString() {
+        return action;
+    }
 }

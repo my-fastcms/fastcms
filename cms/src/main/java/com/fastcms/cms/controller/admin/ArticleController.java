@@ -28,14 +28,14 @@ import com.fastcms.cms.service.IArticleCategoryService;
 import com.fastcms.cms.service.IArticleCommentService;
 import com.fastcms.cms.service.IArticleService;
 import com.fastcms.cms.service.IArticleTagService;
+import com.fastcms.common.auth.ActionTypes;
+import com.fastcms.common.auth.Secured;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.StrUtils;
-import com.fastcms.core.auth.ActionTypes;
-import com.fastcms.core.auth.AuthConstants;
 import com.fastcms.core.auth.AuthUtils;
-import com.fastcms.core.auth.Secured;
 import com.fastcms.core.mybatis.PageModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -77,8 +77,8 @@ public class ArticleController {
      * @return
      */
     @RequestMapping("list")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.READ)
-    public RestResult<Page<IArticleService.ArticleVo>> list(PageModel page,
+    @Secured(name = "文章列表", resource = "articles:list", action = ActionTypes.READ)
+	public RestResult<Page<IArticleService.ArticleVo>> list(PageModel page,
                                                             @RequestParam(name = "title", required = false) String title,
                                                             @RequestParam(name = "status", required = false) String status,
                                                             @RequestParam(name = "categoryId", required = false) String categoryId,
@@ -102,15 +102,10 @@ public class ArticleController {
      * @return
      */
     @PostMapping("save")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.WRITE)
-    public RestResult<Long> save(@Validated Article article) {
-        try {
-            articleService.saveArticle(article);
-            return RestResultUtils.success(article.getId());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return RestResultUtils.failed(e.getMessage());
-        }
+    @Secured(name = "文章保存", resource = "articles:save", action = ActionTypes.WRITE)
+	public RestResult<Long> save(@Validated Article article) throws FastcmsException {
+        articleService.saveArticle(article);
+        return RestResultUtils.success(article.getId());
     }
 
     /**
@@ -119,7 +114,8 @@ public class ArticleController {
      * @return
      */
     @GetMapping("get/{articleId}")
-    public RestResult<Article> getArticle(@PathVariable("articleId") Long articleId) {
+    @Secured(name = "文章详情", resource = "articles:get", action = ActionTypes.READ)
+	public RestResult<Article> getArticle(@PathVariable("articleId") Long articleId) {
         return RestResultUtils.success(articleService.getArticle(articleId));
     }
 
@@ -129,8 +125,8 @@ public class ArticleController {
      * @return
      */
     @PostMapping("delete/{articleId}")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.WRITE)
-    public Object deleteArticle(@PathVariable("articleId") Long articleId) {
+    @Secured(name = "文章删除", resource = "articles:delete", action = ActionTypes.WRITE)
+	public Object deleteArticle(@PathVariable("articleId") Long articleId) {
         Article article = articleService.getById(articleId);
         if(article != null) {
             article.setStatus(Article.STATUS_DELETE);
@@ -145,8 +141,8 @@ public class ArticleController {
      * @return
      */
     @PostMapping("category/save")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.WRITE)
-    public RestResult<Boolean> saveCategory(@Validated ArticleCategory articleCategory) {
+    @Secured(name = "文章分类保存", resource = "articles:category/save", action = ActionTypes.WRITE)
+	public RestResult<Boolean> saveCategory(@Validated ArticleCategory articleCategory) {
         return RestResultUtils.success(articleCategoryService.saveOrUpdate(articleCategory));
     }
 
@@ -156,8 +152,8 @@ public class ArticleController {
      * @return
      */
     @GetMapping("category/list")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.READ)
-    public RestResult<List<IArticleCategoryService.CategoryTreeNode>> listCategory() {
+    @Secured(name = "文章分类列表", resource = "articles:category/list", action = ActionTypes.READ)
+	public RestResult<List<IArticleCategoryService.CategoryTreeNode>> listCategory() {
         return RestResultUtils.success(articleCategoryService.getCategoryList(AuthUtils.getUserId()));
     }
 
@@ -167,8 +163,8 @@ public class ArticleController {
      * @return
      */
     @PostMapping("category/delete/{categoryId}")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.WRITE)
-    public Object deleteCategory(@PathVariable("categoryId") Long categoryId) {
+    @Secured(name = "文章分类删除", resource = "articles:category/delete", action = ActionTypes.WRITE)
+	public Object deleteCategory(@PathVariable("categoryId") Long categoryId) {
 
         List<ArticleCategory> categoryList = articleCategoryService.list(Wrappers.<ArticleCategory>lambdaQuery().eq(ArticleCategory::getParentId, categoryId));
         if(categoryList != null && categoryList.size() >0) {
@@ -185,8 +181,7 @@ public class ArticleController {
      * @return
      */
     @GetMapping("tag/list")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.READ)
-    public RestResult<List<ArticleTag>> listTags() {
+	public RestResult<List<ArticleTag>> listTags() {
         return RestResultUtils.success(articleTagService.list());
     }
 
@@ -198,8 +193,8 @@ public class ArticleController {
      * @return
      */
     @GetMapping("comment/list")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.READ)
-    public Object getCommentList(PageModel page, String author, String content, Boolean isParent) {
+    @Secured(name = "文章评论列表", resource = "articles:comment/list", action = ActionTypes.READ)
+	public Object getCommentList(PageModel page, String author, String content, Boolean isParent) {
         QueryWrapper<Object> queryWrapper = Wrappers.query().eq(StringUtils.isNotBlank(author), "u.user_name", author)
                 .eq(isParent != null && isParent == true, "ac.parentId", 0)
                 .likeLeft(StringUtils.isNotBlank(content), "ac.content", content)
@@ -213,8 +208,8 @@ public class ArticleController {
      * @return
      */
     @PostMapping("comment/save")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.WRITE)
-    public RestResult<Boolean> saveComment(@Validated ArticleComment articleComment) {
+    @Secured(name = "文章评论保存", resource = "articles:comment/list", action = ActionTypes.WRITE)
+	public RestResult<Boolean> saveComment(@Validated ArticleComment articleComment) {
         return RestResultUtils.success(articleCommentService.saveOrUpdate(articleComment));
     }
 
@@ -224,8 +219,8 @@ public class ArticleController {
      * @return
      */
     @PostMapping("comment/delete/{commentId}")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.WRITE)
-    public Object doDeleteComment(@PathVariable("commentId") Long commentId) {
+    @Secured(name = "文章评论删除", resource = "articles:comment/delete/", action = ActionTypes.WRITE)
+	public Object doDeleteComment(@PathVariable("commentId") Long commentId) {
         List<ArticleComment> articleCommentList = articleCommentService.list(Wrappers.<ArticleComment>lambdaQuery().eq(ArticleComment::getParentId, commentId));
         if(articleCommentList != null && articleCommentList.size() >0) {
             return RestResultUtils.failed("该评论有回复内容，请先删除");

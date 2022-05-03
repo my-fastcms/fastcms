@@ -14,40 +14,54 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.cms.controller.api;
+package com.fastcms.web.controller.admin;
 
-import com.fastcms.cms.service.IArticleCategoryService;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.fastcms.common.auth.ActionTypes;
+import com.fastcms.common.auth.Secured;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.entity.Resource;
+import com.fastcms.service.IResourceService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 /**
- * 文章分类
+ * 资源管理
  * @author： wjun_java@163.com
- * @date： 2021/6/7
+ * @date： 2022/5/3
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
 @RestController
-@RequestMapping(FastcmsConstants.API_MAPPING + "/article/category")
-public class ArticleCategoryApi {
+@RequestMapping(FastcmsConstants.ADMIN_MAPPING + "/resource")
+public class ResourceController {
 
 	@Autowired
-	private IArticleCategoryService articleCategoryService;
+	private IResourceService resourceService;
 
 	/**
-	 * 分类列表
+	 * 资源列表
 	 * @return
 	 */
-	@RequestMapping("list")
-	public RestResult<List<IArticleCategoryService.CategoryTreeNode>> list() {
-		return RestResultUtils.success(articleCategoryService.getCategoryList());
+	@GetMapping("list")
+	@Secured(name = "资源列表", resource = "resource:list", action = ActionTypes.READ)
+	public RestResult<List<Resource>> getResources() {
+		return RestResultUtils.success(resourceService.list(Wrappers.<Resource>lambdaQuery().orderByDesc(Resource::getResourcePath)));
+	}
+
+	@PostMapping("sync")
+	@Secured(name = "资源同步", resource = "resource:sync", action = ActionTypes.WRITE)
+	public Object syncResource() {
+		resourceService.syncResources();
+		return RestResultUtils.success();
 	}
 
 }

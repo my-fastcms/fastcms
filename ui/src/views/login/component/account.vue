@@ -175,8 +175,7 @@ export default defineComponent({
 				time: new Date().getTime(),
 				hasRole: res.data.hasRole,
 				version: res.data.version,
-				//authPageList: defaultAuthPageList,
-				//authBtnList: defaultAuthBtnList,
+				userType: res.data.userType,
 			};
 			// 存储 token 到浏览器缓存
 			Session.set('token', res.data.token);

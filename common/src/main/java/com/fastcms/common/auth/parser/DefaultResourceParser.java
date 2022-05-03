@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.fastcms.core.auth.parser;
+package com.fastcms.common.auth.parser;
 
 import com.fastcms.common.utils.StrUtils;
 

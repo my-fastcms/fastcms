@@ -67,7 +67,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     @Transactional
-    public boolean saveArticle(Article article) throws Exception {
+    public boolean saveArticle(Article article) throws FastcmsException {
 
         try {
             if(!saveOrUpdate(article)) {

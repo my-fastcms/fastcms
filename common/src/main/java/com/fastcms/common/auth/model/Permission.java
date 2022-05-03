@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package com.fastcms.core.auth.model;
+package com.fastcms.common.auth.model;
 
 import java.io.Serializable;
 

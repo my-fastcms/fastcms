@@ -239,17 +239,17 @@ router.beforeEach(async (to, from, next) => {
 	} else {
 		if (!token) {
 			next(`/login?redirect=${to.path}&params=${JSON.stringify(to.query ? to.query : to.params)}`);
+			const userType = Session.get("userInfo").userType;
 			Session.clear();
-			const hasRole = Session.get("userInfo").hasRole;
-			if(hasRole == false) {
+			if(userType == 2) {
 				resetFrontRoute();
 			} else {
 				resetRoute();
 			}
 			NProgress.done();
 		} else if (token && to.path === '/login') {
-			const hasRole = Session.get("userInfo").hasRole;
-			if(hasRole == false) {
+			const userType = Session.get("userInfo").userType;
+			if(userType == 2) {
 				next('/personal');
 				NProgress.done();
 			} else {
@@ -258,8 +258,8 @@ router.beforeEach(async (to, from, next) => {
 			}
 		} else {
 			if (store.state.routesList.routesList.length === 0) {
-				const hasRole = Session.get("userInfo").hasRole;
-				if(hasRole == false) {
+				const userType = Session.get("userInfo").userType;
+				if(userType == 2) {
 					await initFrontEndControlRoutes();
 					next({ ...to, replace: true });
 				} else{

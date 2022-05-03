@@ -17,13 +17,12 @@
 package com.fastcms.web.controller.admin;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.fastcms.common.auth.ActionTypes;
+import com.fastcms.common.auth.Secured;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.model.RouterNode;
-import com.fastcms.core.auth.ActionTypes;
-import com.fastcms.core.auth.AuthConstants;
-import com.fastcms.core.auth.Secured;
 import com.fastcms.entity.Permission;
 import com.fastcms.service.IPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +51,7 @@ public class RouterController {
 	 * @return
 	 */
 	@GetMapping("list")
-	@Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "routers", action = ActionTypes.READ)
+	@Secured(name = "路由列表", resource = "routers:list", action = ActionTypes.READ)
 	public RestResult<List<RouterNode>> list() {
 		return RestResultUtils.success(permissionService.getPermissions());
 	}
@@ -63,7 +62,7 @@ public class RouterController {
 	 * @return
 	 */
 	@PostMapping("save")
-	@Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "routers", action = ActionTypes.WRITE)
+	@Secured(name = "路由保存", resource = "routers:save", action = ActionTypes.WRITE)
 	public RestResult<Boolean> save(@Validated Permission permission) {
 		return RestResultUtils.success(permissionService.saveOrUpdate(permission));
 	}
@@ -74,7 +73,7 @@ public class RouterController {
 	 * @return
 	 */
 	@PostMapping("delete/{routerId}")
-	@Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "routers", action = ActionTypes.WRITE)
+	@Secured(name = "路由删除", resource = "routers:delete", action = ActionTypes.WRITE)
 	public RestResult<Object> delMenu(@PathVariable("routerId") Long routerId) {
 		List<Permission> list = permissionService.list(Wrappers.<Permission>lambdaQuery().eq(Permission::getParentId, routerId));
 		if(list != null && list.size()>0) {

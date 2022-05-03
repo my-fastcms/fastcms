@@ -16,14 +16,14 @@
  */
 package com.fastcms.web.filter;
 
+import com.fastcms.common.auth.Secured;
+import com.fastcms.common.auth.model.Permission;
+import com.fastcms.common.auth.model.User;
+import com.fastcms.common.auth.parser.ResourceParser;
 import com.fastcms.common.exception.AccessException;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.auth.AuthUtils;
-import com.fastcms.core.auth.Secured;
-import com.fastcms.core.auth.model.Permission;
-import com.fastcms.core.auth.model.User;
-import com.fastcms.core.auth.parser.ResourceParser;
 import com.fastcms.utils.ApplicationUtils;
 import com.fastcms.web.security.AuthManager;
 import org.apache.commons.logging.Log;
@@ -83,6 +83,9 @@ public class AuthInterceptor implements HandlerInterceptor {
 			if (StrUtils.isBlank(resource)) {
 				throw new AccessException(FastcmsException.NO_RIGHT, "resource name invalid!");
 			}
+
+			String requestURI = request.getRequestURI();
+
 			authManager.auth(new Permission(resource, action), new User(AuthUtils.getUserId()));
 			return true;
 		} catch (Exception e) {

@@ -18,14 +18,12 @@ package com.fastcms.web.controller.admin;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fastcms.common.auth.ActionTypes;
+import com.fastcms.common.auth.Secured;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.common.model.TreeNode;
 import com.fastcms.common.utils.StrUtils;
-import com.fastcms.core.auth.ActionTypes;
-import com.fastcms.core.auth.AuthConstants;
-import com.fastcms.core.auth.Secured;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.entity.Role;
 import com.fastcms.service.IRoleService;
@@ -58,7 +56,7 @@ public class RoleController {
      * @return
      */
     @GetMapping("list")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "roles", action = ActionTypes.READ)
+    @Secured(name = "角色列表", resource = "roles:list", action = ActionTypes.READ)
     public RestResult<Page<Role>> list(PageModel page,
                                        @RequestParam(name = "roleName", required = false) String roleName) {
         Page<Role> pageData = roleService.page(page.toPage(), Wrappers.<Role>lambdaQuery().like(StrUtils.isNotBlank(roleName), Role::getRoleName, roleName));
@@ -71,7 +69,7 @@ public class RoleController {
      * @return
      */
     @PostMapping("save")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "roles", action = ActionTypes.WRITE)
+    @Secured(name = "角色保存", resource = "roles:save", action = ActionTypes.WRITE)
     public Object save(@Validated Role role) {
 
         if(role.getId() != null && Objects.equals(role.getId(), FastcmsConstants.ADMIN_ROLE_ID)) {
@@ -88,7 +86,7 @@ public class RoleController {
      * @return
      */
     @PostMapping("delete/{roleId}")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "roles", action = ActionTypes.WRITE)
+    @Secured(name = "角色删除", resource = "roles:delete", action = ActionTypes.WRITE)
     public RestResult<Object> del(@PathVariable("roleId") Long roleId) {
         if(roleId != null && Objects.equals(roleId, FastcmsConstants.ADMIN_ROLE_ID)) {
             return RestResultUtils.failed("超级管理员角色不可删除");
@@ -97,11 +95,10 @@ public class RoleController {
     }
 
     /**
-     * 角色列表-不分页
+     * 角色列表
      * @return
      */
     @GetMapping("list/select")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "roles", action = ActionTypes.READ)
     public RestResult<List<Role>> getRoleList() {
         return RestResultUtils.success(roleService.list(Wrappers.<Role>lambdaQuery().eq(Role::getActive, 1).select(Role::getId, Role::getRoleName)));
     }
@@ -112,8 +109,8 @@ public class RoleController {
      * @return
      */
     @GetMapping("{roleId}/permissions")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "roles", action = ActionTypes.READ)
-    public RestResult<List<TreeNode>> getPermissionList(@PathVariable("roleId") Long roleId) {
+    @Secured(name = "角色权限列表", resource = "roles:permissions/list", action = ActionTypes.READ)
+    public RestResult<IRoleService.RolePermissions> getPermissionList(@PathVariable("roleId") Long roleId) {
         return RestResultUtils.success(roleService.getRolePermission(roleId));
     }
 
@@ -124,12 +121,14 @@ public class RoleController {
      * @return
      */
     @PostMapping("{roleId}/permissions/save")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "roles", action = ActionTypes.WRITE)
-    public Object saveRolePermission(@PathVariable("roleId") Long roleId, @RequestParam("permissionIdList") List<Long> permissionIdList) {
+    @Secured(name = "角色权限保存", resource = "roles:permissions/save", action = ActionTypes.WRITE)
+    public Object saveRolePermission(@PathVariable("roleId") Long roleId,
+                                     @RequestParam(value = "permissionIdList", required = false) List<Long> permissionIdList,
+                                     @RequestParam(value = "resourcePathList", required = false) List<String> resourcePathList) {
         if(roleId != null && Objects.equals(roleId, FastcmsConstants.ADMIN_ROLE_ID)) {
             return RestResultUtils.failed("超级管理员不可修改权限");
         }
-        roleService.saveRolePermission(roleId, permissionIdList);
+        roleService.saveRolePermission(roleId, permissionIdList, resourcePathList);
         return RestResultUtils.success();
     }
 

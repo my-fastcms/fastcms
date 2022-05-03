@@ -1,15 +1,34 @@
 <template>
 	<div class="system-menu-container">
 		<el-dialog title="权限设置" fullscreen v-model="isShowDialog" width="769px">
-			<el-tree :data="treeData" 
-					show-checkbox 
-					node-key="id" 
-					:default-expand-all="true"
-					ref="treeTable" 
-					:props="treeDefaultProps" 
-					:default-checked-keys="defaultCheckedKeys"
-					@check="onCheckTree">
-             </el-tree>
+			<el-row>
+				<el-col :span="6">
+					<span>菜单权限</span>
+					<el-tree :data="treeData" 
+							show-checkbox 
+							node-key="id" 
+							:default-expand-all="true"
+							ref="treeTable" 
+							:props="treeDefaultProps" 
+							:default-checked-keys="defaultCheckedKeys"
+							@check="onCheckTree">
+					</el-tree>
+				</el-col>
+				<el-col :span="8">
+					<span>接口权限</span>
+					<el-table
+						ref="resourceTableRef"
+						:data="tableData"
+						style="width: 100%;"
+						@selection-change="handleSelectionChange"
+					>
+						<el-table-column type="selection" width="55" />
+						<el-table-column property="resourceName" label="接口名称" width="120" />
+						<el-table-column property="resourcePath" label="权限标识" show-overflow-tooltip />
+					</el-table>
+				</el-col>
+			</el-row>
+			
 			<template #footer>
 				<span class="dialog-footer">
 					<el-button @click="onCancel" size="small">取 消</el-button>
@@ -21,8 +40,8 @@
 </template>
 
 <script lang="ts">
-import { reactive, toRefs, getCurrentInstance, onUpdated } from 'vue';
-import { ElMessage } from 'element-plus';
+import { reactive, toRefs, ref, getCurrentInstance, onUpdated } from 'vue';
+import { ElMessage, ElTable } from 'element-plus';
 import { getRolePermissions, saveRolePermissions } from '/@/api/role/index';
 import { i18n } from '/@/i18n/index';
 import qs from 'qs';
@@ -31,6 +50,8 @@ export default {
 	name: 'pagesTree',
 	setup() {
 		const { proxy } = getCurrentInstance() as any;
+		const multipleSelection = ref();
+		const resourceTableRef = ref<InstanceType<typeof ElTable>>();
 		const state = reactive({
 			row: null,
 			isShowDialog: false,
@@ -38,6 +59,7 @@ export default {
 			treeLoading: false,
 			defaultCheckedKeys: [],
 			treeData: [],
+			tableData: [],
 			treeDefaultProps: {
 				children: 'children',
 				label: 'label',
@@ -98,18 +120,31 @@ export default {
 			if(state.row && state.row.id) {
 				state.defaultCheckedKeys = [];
 				getRolePermissions(state.row.id).then((res) => {
-					state.treeData = res.data;
+					state.treeData = res.data.permissions;
 					i18nTreeData(state.treeData);
 					initTreeLengh(state.treeData);
+					state.tableData = res.data.roleResources;
+					onCheckTree();
+
+					// state.tableData.forEach(item => {
+					// 	resourceTableRef.value!.toggleRowSelection(item, true);
+					// })
 				})
 			}		
 		};
+
+		//表格选中项
+		const handleSelectionChange = (val: any) => {
+			multipleSelection.value = val;	
+		}
+
 		// 页面加载前
 		onUpdated(() => {
 			getTreeData();
 		});
+
 		//递归处理国际化
-		const i18nTreeData= ((treeData) => {
+		const i18nTreeData= ((treeData: any) => {
 			treeData.forEach(item => {
 				item.label = i18n.global.t(item.label);
 				if(item.checked && item.children == null) {
@@ -119,7 +154,6 @@ export default {
 					i18nTreeData(item.children);
 				}
 			});
-			console.log("====length:" + state.defaultCheckedKeys.length)
 		})
 
 		//提交数据
@@ -128,7 +162,13 @@ export default {
 			state.treeSelArr.forEach(item => {
 				selectPermissionIdList.push(item.id);
 			})
-			saveRolePermissions(state.row.id, qs.stringify({"permissionIdList": selectPermissionIdList}, {arrayFormat: 'repeat'})).then(() => {
+			const selectResourcePathList = new Array();
+			if(multipleSelection.value && multipleSelection.value.length && multipleSelection.value.length >0) {
+				multipleSelection.value.forEach(item => {
+					selectResourcePathList.push(item.resourcePath);
+				});
+			}
+			saveRolePermissions(state.row.id, qs.stringify({"permissionIdList": selectPermissionIdList, "resourcePathList": selectResourcePathList}, {arrayFormat: 'repeat'})).then(() => {
 				ElMessage.success("保存成功");
 				closeDialog();
 			}).catch((res) => {ElMessage.error(res.message);})
@@ -144,6 +184,7 @@ export default {
 			onCheckAllChange,
 			onCheckTree,
 			onSelect,
+			handleSelectionChange,
 			...toRefs(state),
 		};
 	},

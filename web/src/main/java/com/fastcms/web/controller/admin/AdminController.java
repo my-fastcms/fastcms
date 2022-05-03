@@ -21,9 +21,6 @@ import com.fastcms.common.exception.AccessException;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.core.auth.ActionTypes;
-import com.fastcms.core.auth.AuthConstants;
-import com.fastcms.core.auth.Secured;
 import com.fastcms.core.captcha.FastcmsCaptcha;
 import com.fastcms.core.captcha.FastcmsCaptchaService;
 import com.fastcms.extension.IndexDataExtension;
@@ -88,17 +85,13 @@ public class AdminController {
     public RestResult<Boolean> register(@RequestParam String username,
                                         @RequestParam String password,
                                         @RequestParam String repeatPassword,
-                                        @RequestParam String code) {
+                                        @RequestParam String code) throws FastcmsException {
 
         if(!fastcmsCaptchaService.checkCaptcha(code)) {
             return RestResultUtils.failed("验证码错误");
         }
 
-        try {
-            return RestResultUtils.success(userService.register(username, password, repeatPassword));
-        } catch (FastcmsException e) {
-            return RestResultUtils.failed(e.getMessage());
-        }
+        return RestResultUtils.success(userService.register(username, password, repeatPassword));
     }
 
     /**
@@ -115,8 +108,7 @@ public class AdminController {
      * @return
      */
     @GetMapping("index/data")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "datas", action = ActionTypes.READ)
-    @Cacheable(value = ADMIN_INDEX_DATA_CACHE_NAME)
+	@Cacheable(value = ADMIN_INDEX_DATA_CACHE_NAME)
     public Object getIndexData() {
 
         final Map<String, Object> result = new HashMap<>();

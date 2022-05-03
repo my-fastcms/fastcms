@@ -3,6 +3,7 @@ package com.fastcms.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.common.model.TreeNode;
 import com.fastcms.entity.Permission;
+import com.fastcms.entity.Resource;
 import com.fastcms.entity.Role;
 
 import java.io.Serializable;
@@ -19,15 +20,16 @@ public interface IRoleService extends IService<Role> {
      * 保存角色权限
      * @param roleId
      * @param permissionIdList
+     * @param resourcePathList
      */
-    void saveRolePermission(Long roleId, List<Long> permissionIdList);
+    void saveRolePermission(Long roleId, List<Long> permissionIdList, List<String> resourcePathList);
 
     /**
      * 获取角色已分配路由权限
      * @param roleId
      * @return
      */
-    List<TreeNode> getRolePermission(Long roleId);
+    RolePermissions getRolePermission(Long roleId);
 
     /**
      * 保存用户角色
@@ -68,6 +70,54 @@ public interface IRoleService extends IService<Role> {
 
         public void setRoleId(Long roleId) {
             this.roleId = roleId;
+        }
+    }
+
+    class RoleResource extends Resource implements Serializable {
+
+        private Long roleId;
+
+        public Long getRoleId() {
+            return roleId;
+        }
+
+        public void setRoleId(Long roleId) {
+            this.roleId = roleId;
+        }
+    }
+
+    /**
+     * 角色权限
+     */
+    class RolePermissions implements Serializable {
+        /**
+         * 菜单权限
+         */
+        List<TreeNode> permissions;
+        /**
+         * 接口权限
+         */
+        List<RoleResource> roleResources;
+
+        public RolePermissions(List<TreeNode> permissions, List<RoleResource> roleResources) {
+            this.permissions = permissions;
+            this.roleResources = roleResources;
+        }
+
+        public List<TreeNode> getPermissions() {
+            return permissions;
+        }
+
+        public void setPermissions(List<TreeNode> permissions) {
+            this.permissions = permissions;
+        }
+
+        public List<RoleResource> getRoleResources() {
+            return roleResources;
+        }
+
+        public void setRoleResources(List<RoleResource> roleResources) {
+            this.roleResources = roleResources;
         }
     }
 

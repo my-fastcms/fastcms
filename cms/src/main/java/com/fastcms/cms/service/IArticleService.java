@@ -23,6 +23,7 @@ import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.entity.ArticleCategory;
 import com.fastcms.cms.entity.ArticleTag;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.core.utils.AttachUtils;
 import com.fastcms.utils.ConfigUtils;
 
@@ -42,9 +43,9 @@ public interface IArticleService extends IService<Article> {
     /**
      * 保存文章信息
      * @param article
-     * @throws Exception
+     * @throws FastcmsException
      */
-    boolean saveArticle(Article article) throws Exception;
+    boolean saveArticle(Article article) throws FastcmsException;
 
     /**
      * 获取文章

@@ -17,15 +17,14 @@
 package com.fastcms.web.controller.admin;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fastcms.common.auth.ActionTypes;
+import com.fastcms.common.auth.Secured;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.DirUtils;
 import com.fastcms.common.utils.FileUtils;
-import com.fastcms.core.auth.ActionTypes;
-import com.fastcms.core.auth.AuthConstants;
-import com.fastcms.core.auth.Secured;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.plugin.PluginBase;
 import com.fastcms.plugin.PluginManagerService;
@@ -61,7 +60,7 @@ public class PluginController {
      * @return
      */
     @GetMapping("list")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "plugins", action = ActionTypes.READ)
+    @Secured(name = "插件列表", resource = "plugin:list", action = ActionTypes.READ)
     public RestResult<Page<PluginManagerService.PluginVo>> list(PageModel page, String pluginId, String provider) {
         PluginManagerService.PluginResult pluginResult = pluginService.getPluginList(page.getPageNum().intValue(), page.getPageSize().intValue(), pluginId, provider);
         return RestResultUtils.success(new Page<PluginManagerService.PluginVo>(page.getPageNum(), page.getPageSize(), pluginResult.getTotal())
@@ -74,7 +73,7 @@ public class PluginController {
      * @return
      */
     @PostMapping("install")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "plugins", action = ActionTypes.WRITE)
+    @Secured(name = "插件安装", resource = "plugin:install", action = ActionTypes.WRITE)
     public Object install(@RequestParam("file") MultipartFile file) {
 
         if (ApplicationUtils.isDevelopment()) {
@@ -113,7 +112,7 @@ public class PluginController {
      * @return
      */
     @PostMapping("unInstall/{pluginId}")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "plugins", action = ActionTypes.WRITE)
+    @Secured(name = "插件卸载", resource = "plugin:unInstall", action = ActionTypes.WRITE)
     public Object unInstall(@PathVariable(name = "pluginId") String pluginId) {
 
         if (ApplicationUtils.isDevelopment()) {
@@ -138,7 +137,7 @@ public class PluginController {
      * @return
      */
     @GetMapping("config/url/{pluginId}")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "plugins", action = ActionTypes.READ)
+    @Secured(name = "插件配置", resource = "plugin:config/url", action = ActionTypes.WRITE)
     public RestResult<String> getPluginConfigUrl(@PathVariable("pluginId") String pluginId) {
         Plugin plugin = pluginService.getPluginManager().getPlugin(pluginId).getPlugin();
         if(plugin instanceof PluginBase) {

@@ -15,11 +15,11 @@
  * limitations under the License.
  */
 
-package com.fastcms.core.auth;
+package com.fastcms.common.auth;
 
+import com.fastcms.common.auth.parser.DefaultResourceParser;
+import com.fastcms.common.auth.parser.ResourceParser;
 import com.fastcms.common.utils.StrUtils;
-import com.fastcms.core.auth.parser.DefaultResourceParser;
-import com.fastcms.core.auth.parser.ResourceParser;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -48,6 +48,12 @@ public @interface Secured {
      * @return resource name
      */
     String resource() default StrUtils.EMPTY;
+
+    /**
+     * rest api name
+     * @return
+     */
+    String name() default StrUtils.EMPTY;
     
     /**
      * Resource name parser. Should have lower priority than resource().

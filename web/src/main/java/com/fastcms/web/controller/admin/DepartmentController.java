@@ -18,12 +18,11 @@
 package com.fastcms.web.controller.admin;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.fastcms.common.auth.ActionTypes;
+import com.fastcms.common.auth.Secured;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.core.auth.ActionTypes;
-import com.fastcms.core.auth.AuthConstants;
-import com.fastcms.core.auth.Secured;
 import com.fastcms.entity.Department;
 import com.fastcms.service.IDepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +51,7 @@ public class DepartmentController {
      * @return
      */
     @GetMapping("list")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "departments", action = ActionTypes.READ)
+    @Secured(name = "部门列表", resource = "department:list", action = ActionTypes.READ)
     public RestResult<List<IDepartmentService.DepartmentNode>> list() {
         return RestResultUtils.success(departmentService.getDepartmentList());
     }
@@ -63,7 +62,7 @@ public class DepartmentController {
      * @return
      */
     @PostMapping("save")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "departments", action = ActionTypes.WRITE)
+    @Secured(name = "部门保存", resource = "department:save", action = ActionTypes.WRITE)
     public RestResult<Boolean> save(@Validated Department department) {
         return RestResultUtils.success(departmentService.saveOrUpdate(department));
     }
@@ -74,7 +73,7 @@ public class DepartmentController {
      * @return
      */
     @PostMapping("delete/{deptId}")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "departments", action = ActionTypes.WRITE)
+    @Secured(name = "部门删除", resource = "department:delete", action = ActionTypes.WRITE)
     public RestResult<Object> delDepartment(@PathVariable("deptId") Long deptId) {
         List<Department> list = departmentService.list(Wrappers.<Department>lambdaQuery().eq(Department::getParentId, deptId));
         if(list != null && list.size()>0) {

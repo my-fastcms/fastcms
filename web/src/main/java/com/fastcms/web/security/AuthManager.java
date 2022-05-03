@@ -16,8 +16,8 @@
  */
 package com.fastcms.web.security;
 
-import com.fastcms.core.auth.model.Permission;
-import com.fastcms.core.auth.model.User;
+import com.fastcms.common.auth.model.Permission;
+import com.fastcms.common.auth.model.User;
 import com.fastcms.common.exception.AccessException;
 
 /**

@@ -9,6 +9,7 @@ import com.fastcms.common.utils.StrUtils;
 import com.fastcms.entity.User;
 import com.fastcms.entity.UserOpenid;
 import com.fastcms.entity.UserTag;
+import com.fastcms.mapper.DepartmentMapper;
 import com.fastcms.mapper.RoleMapper;
 import com.fastcms.mapper.UserMapper;
 import com.fastcms.mapper.UserTagMapper;
@@ -131,6 +132,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             user.setNickName(userInfo.getNickName());
             user.setHeadImg(userInfo.getAvatarUrl());
             user.setSource(User.SourceType.WX_MINI_PROGRAM.name().toLowerCase());
+            user.setUserType(User.USER_TYPE_CLIENT);
             save(user);
             userOpenid = new UserOpenid();
             userOpenid.setUserId(user.getId());
@@ -197,12 +199,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
         ((RoleMapper) roleService.getBaseMapper()).deleteRoleByUserId(userId);
         ((UserTagMapper) userTagService.getBaseMapper()).deleteUserTagRelationByUserId(userId);
+        ((DepartmentMapper) departmentService.getBaseMapper()).deleteDepartmentByUserId(userId);
         removeById(userId);
         return true;
     }
 
     @Override
-    public Boolean register(String username, String password, String repeatPassword) throws FastcmsException {
+    public synchronized Boolean register(String username, String password, String repeatPassword) throws FastcmsException {
         if(StrUtils.isBlank(username) || StrUtils.isBlank(password) || StrUtils.isBlank(repeatPassword)) {
             throw new FastcmsException(FastcmsException.INVALID_PARAM, "请输入完成注册数据");
         }
@@ -219,6 +222,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setSex(User.SEX_MAN);
         user.setPassword(passwordEncoder.encode(password));
         user.setSource(User.SourceType.WEB_REGISTER.name().toLowerCase());
+        user.setUserType(User.USER_TYPE_CLIENT);
         save(user);
         return true;
     }

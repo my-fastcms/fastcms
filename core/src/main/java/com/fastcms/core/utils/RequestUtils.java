@@ -16,7 +16,7 @@
  */
 package com.fastcms.core.utils;
 
-import com.fastcms.core.auth.PassFastcms;
+import com.fastcms.common.auth.PassFastcms;
 import com.fastcms.utils.ApplicationUtils;
 import com.fastcms.utils.CollectionUtils;
 import org.apache.commons.lang.StringUtils;

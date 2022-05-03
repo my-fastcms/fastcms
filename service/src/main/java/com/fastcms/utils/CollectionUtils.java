@@ -291,4 +291,38 @@ public final class CollectionUtils {
         return msg;
     }
 
+    public static Collection getDiff(Collection collmax, Collection collmin) {
+        Collection csReturn = new LinkedList();
+        Collection max = collmax;
+        Collection min = collmin;
+
+        if(collmax.size() < collmin.size()) {
+            max = collmin;
+            min = collmax;
+        }
+
+        Map<Object,Integer> map = new HashMap<>(max.size());
+
+        for (Object object : max) {
+            map.put(object, 1);
+        }
+
+        for (Object object : min) {
+            if(map.get(object) == null) {
+                csReturn.add(object);
+            } else {
+                map.put(object, 2);
+            }
+        }
+
+        for (Map.Entry<Object, Integer> entry : map.entrySet()) {
+            if(entry.getValue() == 1) {
+                csReturn.add(entry.getKey());
+            }
+        }
+
+        return new HashSet(csReturn);
+
+    }
+
 }

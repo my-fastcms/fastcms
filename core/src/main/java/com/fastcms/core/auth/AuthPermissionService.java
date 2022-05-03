@@ -1,8 +1,8 @@
 package com.fastcms.core.auth;
 
+import com.fastcms.common.auth.model.Permission;
+import com.fastcms.common.auth.model.User;
 import com.fastcms.common.constants.FastcmsConstants;
-import com.fastcms.core.auth.model.Permission;
-import com.fastcms.core.auth.model.User;
 import com.fastcms.entity.Role;
 import com.fastcms.service.IRoleService;
 import com.fastcms.utils.CollectionUtils;

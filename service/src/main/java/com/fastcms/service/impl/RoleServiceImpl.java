@@ -6,6 +6,7 @@ import com.fastcms.common.model.TreeNode;
 import com.fastcms.entity.Role;
 import com.fastcms.mapper.RoleMapper;
 import com.fastcms.service.IRoleService;
+import com.fastcms.utils.CollectionUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,13 +29,19 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
     @Override
     @Transactional
     @CacheEvict(value = {CacheConfig.ROLE_PERMISSION_CACHE_NAME, CacheConfig.USER_MENU_PERMISSION_CACHE_NAME}, key = "#roleId")
-    public void saveRolePermission(Long roleId, List<Long> permissionIdList) {
-        getBaseMapper().deleteByRoleId(roleId);
-        getBaseMapper().saveRolePermission(roleId, permissionIdList);
+    public void saveRolePermission(Long roleId, List<Long> permissionIdList, List<String> resourcePathList) {
+        getBaseMapper().deletePermissionByRoleId(roleId);
+        getBaseMapper().deleteResourceByRoleId(roleId);
+        if (CollectionUtils.isNotEmpty(permissionIdList)) {
+            getBaseMapper().saveRolePermission(roleId, permissionIdList);
+        }
+        if (CollectionUtils.isNotEmpty(resourcePathList)) {
+            getBaseMapper().saveRoleResource(roleId, resourcePathList);
+        }
     }
 
     @Override
-    public List<TreeNode> getRolePermission(Long roleId) {
+    public RolePermissions getRolePermission(Long roleId) {
         List<IRoleService.RolePermission> permissionList = getBaseMapper().getRolePermission(roleId);
 
         List<TreeNode> treeNodeList = new ArrayList<>();
@@ -47,7 +54,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements IR
         //递归组装children
         List<TreeNode> parentNodeList = treeNodeList.stream().filter(item -> item.getParentId() == 0).collect(Collectors.toList());
         parentNodeList.forEach(item -> getChildren(item, treeNodeList));
-        return parentNodeList;
+
+        return new RolePermissions(parentNodeList, getBaseMapper().getRoleResource(roleId));
     }
 
     void getChildren(TreeNode treeNode, List<TreeNode> treeNodeList) {

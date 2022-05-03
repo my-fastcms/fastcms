@@ -7,6 +7,7 @@ export default {
 		systemUser: '用户管理',
 		systemRole: '角色管理',
 		systemDept: '部门管理',
+		systemRes: '资源管理',
 		plugin: '插件',
 		pluginManager: '插件管理',
 		pluginSet: '设置',

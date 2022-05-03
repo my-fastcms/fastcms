@@ -1,4 +1,4 @@
-package com.fastcms.core.auth;
+package com.fastcms.common.auth;
 
 import com.fastcms.common.constants.FastcmsConstants;
 

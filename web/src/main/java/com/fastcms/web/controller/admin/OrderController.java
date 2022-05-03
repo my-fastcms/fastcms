@@ -4,15 +4,14 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fastcms.common.auth.ActionTypes;
+import com.fastcms.common.auth.Secured;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.StrUtils;
-import com.fastcms.core.auth.ActionTypes;
-import com.fastcms.core.auth.AuthConstants;
 import com.fastcms.core.auth.AuthUtils;
-import com.fastcms.core.auth.Secured;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.entity.Order;
 import com.fastcms.entity.UserAmountPayout;
@@ -53,7 +52,7 @@ public class OrderController {
      * @return
      */
     @GetMapping("list")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "orders", action = ActionTypes.READ)
+    @Secured(name = "订单列表", resource = "orders:list", action = ActionTypes.READ)
     public RestResult<Page<IOrderService.OrderListVo>> list(PageModel page,
                                                         @RequestParam(name = "orderSn", required = false) String orderSn,
                                                         @RequestParam(name = "title", required = false) String title,
@@ -76,7 +75,7 @@ public class OrderController {
      * @return
      */
     @GetMapping("detail/{orderId}")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "orders", action = ActionTypes.READ)
+    @Secured(name = "订单详情", resource = "orders:detail", action = ActionTypes.READ)
     public RestResult<IOrderService.OrderDetailVo> detail(@PathVariable(name = "orderId") Long orderId) {
         return RestResultUtils.success(orderService.getOrderDetail(orderId));
     }
@@ -87,7 +86,7 @@ public class OrderController {
      * @return
      */
     @PostMapping("delete/{orderId}")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "articles", action = ActionTypes.WRITE)
+    @Secured(name = "订单删除", resource = "orders:delete", action = ActionTypes.WRITE)
     public Object deleteOrder(@PathVariable("orderId") Long orderId) {
         Order order = orderService.getById(orderId);
         if(order != null) {
@@ -105,7 +104,7 @@ public class OrderController {
      * @return
      */
     @GetMapping("cashout/list")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "orders", action = ActionTypes.READ)
+    @Secured(name = "订单提现列表", resource = "orders:cashout/list", action = ActionTypes.READ)
     public RestResult<Page<IUserAmountPayoutService.CashOutListVo>> cashOutList(PageModel page,
                                                                                 @RequestParam(name = "userName", required = false) String userName,
                                                                                 @RequestParam(name = "status", required = false) String status) {
@@ -122,7 +121,7 @@ public class OrderController {
      * @return
      */
     @GetMapping("cashout/detail/{payoutId}")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "orders", action = ActionTypes.READ)
+    @Secured(name = "订单提现详情", resource = "orders:cashout/detail", action = ActionTypes.READ)
     public RestResult<IUserAmountPayoutService.CashOutDetailVo> getCashOutDetail(@PathVariable(name = "payoutId") Long payoutId) {
         return RestResultUtils.success(userAmountPayoutService.getCashOutDetail(payoutId));
     }
@@ -134,7 +133,7 @@ public class OrderController {
      * @throws FastcmsException
      */
     @PostMapping("cashout/confirm/{payoutId}")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "orders", action = ActionTypes.WRITE)
+    @Secured(name = "订单提现确认", resource = "orders:cashout/confirm", action = ActionTypes.WRITE)
     public Object confirmCashOut(@PathVariable("payoutId") Long payoutId) throws FastcmsException {
         userAmountPayoutService.auditCashOut(payoutId);
         return RestResultUtils.success();
@@ -148,7 +147,7 @@ public class OrderController {
      * @throws FastcmsException
      */
     @PostMapping("cashout/refuse/{payoutId}")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "orders", action = ActionTypes.WRITE)
+    @Secured(name = "订单提现拒绝", resource = "orders:cashout/refuse", action = ActionTypes.WRITE)
     public Object refuseCashOut(@PathVariable("payoutId") Long payoutId, @RequestParam("feedback") String feedback) {
         UserAmountPayout userAmountPayout = userAmountPayoutService.getById(payoutId);
         if (userAmountPayout != null) {
@@ -166,7 +165,7 @@ public class OrderController {
      * @return
      */
     @GetMapping("payment/list")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "orders", action = ActionTypes.READ)
+    @Secured(name = "订单支付列表", resource = "orders:payment/list", action = ActionTypes.READ)
     public RestResult<Page<IPaymentRecordService.PaymentListVo>> paymentList(PageModel page,
                                                                              @RequestParam(name = "trxNo", required = false) String trxNo,
                                                                              @RequestParam(name = "userName", required = false) String userName) {
@@ -183,7 +182,7 @@ public class OrderController {
      * @return
      */
     @GetMapping("payment/detail/{paymentId}")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "orders", action = ActionTypes.READ)
+    @Secured(name = "订单支付详情", resource = "orders:payment/detail", action = ActionTypes.READ)
     public RestResult<IPaymentRecordService.PaymentDetailVo> paymentDetail(@PathVariable(name = "paymentId") Long paymentId) {
         return RestResultUtils.success(paymentRecordService.getPaymentDetail(paymentId));
     }

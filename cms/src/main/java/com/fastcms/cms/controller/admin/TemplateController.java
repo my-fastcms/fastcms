@@ -19,14 +19,13 @@ package com.fastcms.cms.controller.admin;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.fastcms.cms.entity.Menu;
 import com.fastcms.cms.service.IMenuService;
+import com.fastcms.common.auth.ActionTypes;
+import com.fastcms.common.auth.Secured;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.DirUtils;
 import com.fastcms.common.utils.FileUtils;
-import com.fastcms.core.auth.ActionTypes;
-import com.fastcms.core.auth.AuthConstants;
-import com.fastcms.core.auth.Secured;
 import com.fastcms.core.template.Template;
 import com.fastcms.core.template.TemplateService;
 import com.fastcms.service.IConfigService;
@@ -76,8 +75,8 @@ public class TemplateController {
      * @return
      */
     @GetMapping("list")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "templates", action = ActionTypes.READ)
-    public RestResult<List<Template>> list() {
+    @Secured(name = "模板列表", resource = "templates:list", action = ActionTypes.READ)
+	public RestResult<List<Template>> list() {
         return RestResultUtils.success(templateService.getTemplateList());
     }
 
@@ -86,8 +85,7 @@ public class TemplateController {
      * @return
      */
     @GetMapping("current")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "templates", action = ActionTypes.READ)
-    public RestResult<Template> getCurrTemplate() {
+	public RestResult<Template> getCurrTemplate() {
         return RestResultUtils.success(templateService.getCurrTemplate());
     }
 
@@ -97,8 +95,8 @@ public class TemplateController {
      * @return
      */
     @PostMapping("install")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "templates", action = ActionTypes.WRITE)
-    public Object install(@RequestParam("file") MultipartFile file) {
+    @Secured(name = "模板安装", resource = "templates:install", action = ActionTypes.WRITE)
+	public Object install(@RequestParam("file") MultipartFile file) {
 
         if (ApplicationUtils.isDevelopment()) {
             return RestResultUtils.failed("开发环境不允许安装模板");
@@ -131,8 +129,8 @@ public class TemplateController {
      * @return
      */
     @PostMapping("unInstall/{templateId}")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "templates", action = ActionTypes.WRITE)
-    public Object unInstall(@PathVariable("templateId") String templateId) {
+    @Secured(name = "模板卸载", resource = "templates:unInstall", action = ActionTypes.WRITE)
+	public Object unInstall(@PathVariable("templateId") String templateId) {
 
         if (ApplicationUtils.isDevelopment()) {
             return RestResultUtils.failed("开发环境不允许卸载模板");
@@ -152,8 +150,8 @@ public class TemplateController {
      * @return
      */
     @GetMapping("files/tree/list")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "templates", action = ActionTypes.READ)
-    public Object treeList() {
+    @Secured(name = "模板文件列表", resource = "templates:files/tree/list", action = ActionTypes.READ)
+	public Object treeList() {
         Template currTemplate = templateService.getCurrTemplate();
         if(currTemplate == null) {
             return RestResultUtils.failed("模板不存在");
@@ -172,8 +170,8 @@ public class TemplateController {
      * @return
      */
     @GetMapping("files/get")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "templates", action = ActionTypes.READ)
-    public Object getFileContent(@RequestParam("filePath") String filePath) {
+    @Secured(name = "模板文件信息", resource = "templates:files/get", action = ActionTypes.READ)
+	public Object getFileContent(@RequestParam("filePath") String filePath) {
 
         if (StringUtils.isBlank(filePath) || filePath.contains("..")) {
             return RestResultUtils.failed("文件不存在");
@@ -216,8 +214,8 @@ public class TemplateController {
      * @return
      */
     @PostMapping("enable/{templateId}")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "templates", action = ActionTypes.WRITE)
-    public Object enable(@PathVariable("templateId") String templateId) {
+    @Secured(name = "模板启用", resource = "templates:enable", action = ActionTypes.WRITE)
+	public Object enable(@PathVariable("templateId") String templateId) {
         configService.saveConfig(FastcmsConstants.TEMPLATE_ENABLE_ID, templateId);
         return RestResultUtils.success();
     }
@@ -230,8 +228,8 @@ public class TemplateController {
      * @throws IOException
      */
     @PostMapping("file/save")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "templates", action = ActionTypes.WRITE)
-    public Object save(@RequestParam("filePath") String filePath, @RequestParam("fileContent") String fileContent) {
+    @Secured(name = "模板文件保存", resource = "templates:file/save", action = ActionTypes.WRITE)
+	public Object save(@RequestParam("filePath") String filePath, @RequestParam("fileContent") String fileContent) {
         if(StringUtils.isBlank(filePath) || filePath.contains("..")) {
             return RestResultUtils.failed("没有找到模板");
         }
@@ -269,8 +267,8 @@ public class TemplateController {
      */
     @PostMapping("files/upload")
     @ExceptionHandler(value = MultipartException.class)
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "templates", action = ActionTypes.WRITE)
-    public Object upload(String dirName, @RequestParam("files") MultipartFile files[]) {
+    @Secured(name = "模板文件上传", resource = "templates:files/upload", action = ActionTypes.WRITE)
+	public Object upload(String dirName, @RequestParam("files") MultipartFile files[]) {
 
         if(StringUtils.isBlank(dirName) || dirName.contains("..")) {
             return RestResultUtils.failed("请选择上传目录");
@@ -329,8 +327,8 @@ public class TemplateController {
      * @return
      */
     @PostMapping("file/delete")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "templates", action = ActionTypes.WRITE)
-    public Object delFile(@RequestParam("filePath") String filePath) {
+    @Secured(name = "模板文件删除", resource = "templates:file/delete", action = ActionTypes.WRITE)
+	public Object delFile(@RequestParam("filePath") String filePath) {
 
         if(StringUtils.isBlank(filePath)) {
             return RestResultUtils.failed("文件路径为空");
@@ -364,8 +362,8 @@ public class TemplateController {
      * @return
      */
     @RequestMapping("menu/list")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "templates", action = ActionTypes.READ)
-    public RestResult<List<IMenuService.MenuNode> > menuList() {
+    @Secured(name = "模板菜单列表", resource = "templates:menu/list", action = ActionTypes.READ)
+	public RestResult<List<IMenuService.MenuNode> > menuList() {
         return RestResultUtils.success(menuService.getMenus());
     }
 
@@ -375,8 +373,8 @@ public class TemplateController {
      * @return
      */
     @RequestMapping("menu/get/{menuId}")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "templates", action = ActionTypes.READ)
-    public RestResult<Menu> getMenu(@PathVariable("menuId") Long menuId) {
+    @Secured(name = "模板菜单详情", resource = "templates:menu/get", action = ActionTypes.READ)
+	public RestResult<Menu> getMenu(@PathVariable("menuId") Long menuId) {
         return RestResultUtils.success(menuService.getById(menuId));
     }
 
@@ -386,8 +384,8 @@ public class TemplateController {
      * @return
      */
     @PostMapping("menu/save")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "templates", action = ActionTypes.WRITE)
-    public RestResult<Boolean> saveMenu(@Validated Menu menu) {
+    @Secured(name = "模板菜单保存", resource = "templates:menu/save", action = ActionTypes.WRITE)
+	public RestResult<Boolean> saveMenu(@Validated Menu menu) {
         return RestResultUtils.success(menuService.saveOrUpdate(menu));
     }
 
@@ -397,8 +395,8 @@ public class TemplateController {
      * @return
      */
     @PostMapping("menu/delete/{menuId}")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "templates", action = ActionTypes.WRITE)
-    public RestResult<Boolean> doDeleteMenu(@PathVariable("menuId") Long menuId) {
+    @Secured(name = "模板菜单删除", resource = "templates:menu/delete", action = ActionTypes.WRITE)
+	public RestResult<Boolean> doDeleteMenu(@PathVariable("menuId") Long menuId) {
 
         List<Menu> list = menuService.list(Wrappers.<Menu>lambdaQuery().eq(Menu::getParentId, menuId));
         if(list != null && !list.isEmpty()) {

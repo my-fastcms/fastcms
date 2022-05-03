@@ -18,14 +18,13 @@ package com.fastcms.web.controller.admin;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fastcms.common.auth.ActionTypes;
+import com.fastcms.common.auth.Secured;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.core.auth.ActionTypes;
-import com.fastcms.core.auth.AuthConstants;
 import com.fastcms.core.auth.AuthUtils;
-import com.fastcms.core.auth.Secured;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.entity.Department;
 import com.fastcms.entity.Role;
@@ -76,7 +75,7 @@ public class UserController {
      * @return
      */
     @GetMapping("list")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "users", action = ActionTypes.READ)
+    @Secured(name = "用户列表", resource = "users:list", action = ActionTypes.READ)
     public RestResult<Page<User>> list(PageModel page,
                                        @RequestParam(name = "type") Integer type,
                                        @RequestParam(name = "username", required = false) String username,
@@ -98,13 +97,9 @@ public class UserController {
      * @return
      */
     @PostMapping("save")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "users", action = ActionTypes.WRITE)
-    public RestResult<Long> save(@Validated User user) {
-        try {
-            return RestResultUtils.success(userService.saveUser(user));
-        } catch (FastcmsException e) {
-            return RestResultUtils.failed(e.getMessage());
-        }
+    @Secured(name = "用户保存", resource = "users:save", action = ActionTypes.WRITE)
+    public RestResult<Long> save(@Validated User user) throws FastcmsException {
+        return RestResultUtils.success(userService.saveUser(user));
     }
 
     /**
@@ -113,7 +108,7 @@ public class UserController {
      * @return
      */
     @GetMapping("{userId}/get")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "users", action = ActionTypes.READ)
+    @Secured(name = "用户详情", resource = "users:get", action = ActionTypes.READ)
     public RestResult<User> getUserInfo(@PathVariable("userId") Long userId) {
         User user = userService.getById(userId);
         user.setRoleList(roleService.getUserRoleList(userId).stream().map(Role::getId).collect(Collectors.toList()));
@@ -128,13 +123,9 @@ public class UserController {
      * @return
      */
     @PostMapping("delete/{userId}")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "users", action = ActionTypes.WRITE)
-    public RestResult<Boolean> del(@PathVariable("userId") Long userId) {
-        try {
-            return RestResultUtils.success(userService.deleteUser(userId));
-        } catch (FastcmsException e) {
-            return RestResultUtils.failed(e.getMessage());
-        }
+    @Secured(name = "用户删除", resource = "users:delete", action = ActionTypes.WRITE)
+    public RestResult<Boolean> del(@PathVariable("userId") Long userId) throws FastcmsException {
+        return RestResultUtils.success(userService.deleteUser(userId));
     }
 
     /**
@@ -144,7 +135,7 @@ public class UserController {
      * @return
      */
     @PostMapping("{userId}/roles/save")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "users", action = ActionTypes.WRITE)
+    @Secured(name = "用户角色分配", resource = "users:roles/save", action = ActionTypes.WRITE)
     public Object saveUserRoles(@PathVariable("userId") Long userId, @RequestParam("roleIds") List<Long> roleIds) {
         if(userId != null && Objects.equals(userId, FastcmsConstants.ADMIN_USER_ID)) {
             return RestResultUtils.failed("admin不允许修改权限");
@@ -160,7 +151,7 @@ public class UserController {
      * @return
      */
     @PostMapping("{userId}/tags/save")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "users", action = ActionTypes.WRITE)
+    @Secured(name = "用户标签分配", resource = "users:tags/save", action = ActionTypes.WRITE)
     public Object saveUserTags(@PathVariable("userId") Long userId, @RequestParam("tagIds") List<Long> tagIds) {
         userTagService.saveUserTagRelation(userId, tagIds);
         return RestResultUtils.success();
@@ -171,7 +162,6 @@ public class UserController {
      * @return
      */
     @GetMapping("tag/list")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "users", action = ActionTypes.READ)
     public RestResult<List<UserTag>> getTagList() {
         return RestResultUtils.success(userTagService.list());
     }
@@ -182,15 +172,11 @@ public class UserController {
      * @return
      */
     @PostMapping("password/update")
-    @Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "users", action = ActionTypes.WRITE)
-    public Object updatePassword(@Validated IUserService.UpdatePasswordParam updatePasswordParam) {
-        try {
-            updatePasswordParam.setId(AuthUtils.getUserId());
-            userService.updateUserPassword(updatePasswordParam);
-            return RestResultUtils.success();
-        } catch (FastcmsException e) {
-            return RestResultUtils.failed(e.getMessage());
-        }
+    @Secured(name = "用户密码修改", resource = "users:password/update", action = ActionTypes.WRITE)
+    public Object updatePassword(@Validated IUserService.UpdatePasswordParam updatePasswordParam) throws FastcmsException {
+        updatePasswordParam.setId(AuthUtils.getUserId());
+        userService.updateUserPassword(updatePasswordParam);
+        return RestResultUtils.success();
     }
 
 }

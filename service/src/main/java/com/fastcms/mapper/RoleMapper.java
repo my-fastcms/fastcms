@@ -19,9 +19,15 @@ public interface RoleMapper extends BaseMapper<Role> {
 
     void saveRolePermission(@Param("roleId") Long roleId, @Param("permissionIdList") List<Long> permissionIdList);
 
-    List<IRoleService.RolePermission> getRolePermission(Long roleId);
+    List<IRoleService.RolePermission> getRolePermission(@Param("roleId") Long roleId);
 
-    void deleteByRoleId(Long roleId);
+    void deletePermissionByRoleId(Long roleId);
+
+    void saveRoleResource(@Param("roleId") Long roleId, @Param("resourcePathList") List<String> resourcePathList);
+
+    List<IRoleService.RoleResource> getRoleResource(@Param("roleId") Long roleId);
+
+    void deleteResourceByRoleId(Long roleId);
 
     void saveUserRole(@Param("userId") Long userId, @Param("roleIds") List<Long> roleIds);
 

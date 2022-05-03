@@ -16,12 +16,11 @@
  */
 package com.fastcms.web.controller.admin;
 
+import com.fastcms.common.auth.ActionTypes;
+import com.fastcms.common.auth.Secured;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.core.auth.ActionTypes;
-import com.fastcms.core.auth.AuthConstants;
-import com.fastcms.core.auth.Secured;
 import com.fastcms.core.config.ConfigListenerManager;
 import com.fastcms.entity.Config;
 import com.fastcms.service.IConfigService;
@@ -61,7 +60,7 @@ public class ConfigController {
 	 * @return
 	 */
 	@PostMapping("save")
-	@Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "configs", action = ActionTypes.WRITE)
+	@Secured(name = "配置保存", resource = "config:save", action = ActionTypes.WRITE)
 	public RestResult<Boolean> save(HttpServletRequest request) {
 
 		Map<String, String[]> parameterMap = request.getParameterMap();
@@ -107,7 +106,7 @@ public class ConfigController {
 	 * @return
 	 */
 	@PostMapping("list")
-	@Secured(resource = AuthConstants.ADMIN_RESOURCE_NAME_PREFIX + "configs", action = ActionTypes.READ)
+	@Secured(name = "配置列表", resource = "config:list", action = ActionTypes.READ)
 	public RestResult<List<Config>> getConfigList(@RequestParam("configKeys") List<String> configKeys) {
 		return RestResultUtils.success(configService.getConfigs(configKeys));
 	}

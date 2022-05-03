@@ -16,12 +16,12 @@
  */
 package com.fastcms.web.security;
 
+import com.fastcms.common.auth.model.Permission;
+import com.fastcms.common.auth.model.User;
 import com.fastcms.common.exception.AccessException;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.core.auth.AuthPermissionService;
 import com.fastcms.core.auth.FastcmsUserDetails;
-import com.fastcms.core.auth.model.Permission;
-import com.fastcms.core.auth.model.User;
 import com.fastcms.core.captcha.FastcmsCaptchaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
