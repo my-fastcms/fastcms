@@ -40,8 +40,8 @@
 </template>
 
 <script lang="ts">
-import { reactive, toRefs, ref, getCurrentInstance, onUpdated } from 'vue';
-import { ElMessage, ElTable } from 'element-plus';
+import { reactive, toRefs, ref, getCurrentInstance, onUpdated, onMounted, nextTick } from 'vue';
+import { ElMessage } from 'element-plus';
 import { getRolePermissions, saveRolePermissions } from '/@/api/role/index';
 import { i18n } from '/@/i18n/index';
 import qs from 'qs';
@@ -51,7 +51,7 @@ export default {
 	setup() {
 		const { proxy } = getCurrentInstance() as any;
 		const multipleSelection = ref();
-		const resourceTableRef = ref<InstanceType<typeof ElTable>>();
+		const resourceTableRef = ref();
 		const state = reactive({
 			row: null,
 			isShowDialog: false,
@@ -125,13 +125,22 @@ export default {
 					initTreeLengh(state.treeData);
 					state.tableData = res.data.roleResources;
 					onCheckTree();
-
-					// state.tableData.forEach(item => {
-					// 	resourceTableRef.value!.toggleRowSelection(item, true);
-					// })
+					selectRes();
 				})
 			}		
 		};
+
+		const selectRes = () => {
+			nextTick(() => {
+				console.log(">>>data len:" + state.tableData.length);
+				state.tableData.forEach(item => {
+					//resourceTableRef.value.toggleRowSelection(item, true);
+					if(item.roleId != null) {
+						proxy.$refs['resourceTableRef'].toggleRowSelection(item, true);
+					}
+				})
+			})
+		}
 
 		//表格选中项
 		const handleSelectionChange = (val: any) => {
@@ -140,8 +149,16 @@ export default {
 
 		// 页面加载前
 		onUpdated(() => {
+			console.log("===>onUpdated")
 			getTreeData();
 		});
+
+		onMounted(() => {
+			console.log("===>onMounted")
+			// state.tableData.forEach(item => {
+			// 	resourceTableRef.value!.toggleRowSelection(item, true);
+			// })
+		})
 
 		//递归处理国际化
 		const i18nTreeData= ((treeData: any) => {

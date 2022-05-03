@@ -84,8 +84,6 @@ public class AuthInterceptor implements HandlerInterceptor {
 				throw new AccessException(FastcmsException.NO_RIGHT, "resource name invalid!");
 			}
 
-			String requestURI = request.getRequestURI();
-
 			authManager.auth(new Permission(resource, action), new User(AuthUtils.getUserId()));
 			return true;
 		} catch (Exception e) {

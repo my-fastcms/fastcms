@@ -8,12 +8,16 @@ import com.fastcms.service.IResourceService;
 import com.fastcms.utils.ApplicationUtils;
 import com.fastcms.utils.CollectionUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.util.pattern.PathPattern;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 接口资源
@@ -24,7 +28,10 @@ import java.util.*;
 public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> implements IResourceService {
 
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void syncResources() {
+
+		getBaseMapper().deleteAll();
 
 		List<Resource> resourceList = new ArrayList<>();
 		RequestMappingHandlerMapping requestMappingHandlerMapping = ApplicationUtils.getBean(RequestMappingHandlerMapping.class);
@@ -40,15 +47,12 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
 			}
 		}
 
-		List<Resource> resourceListInDb = list();
+		saveBatch(resourceList);
+	}
 
-		if (CollectionUtils.isEmpty(resourceListInDb)) {
-			saveBatch(resourceList);
-		} else {
-			HashSet<Resource> resList = (HashSet<Resource>) CollectionUtils.getDiff(resourceList, resourceListInDb);
-			saveBatch(resList);
-		}
-
+	@Override
+	public List<String> getUserResourceList(Long userId) {
+		return getBaseMapper().getUserResourceList(userId);
 	}
 
 }

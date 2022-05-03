@@ -4,6 +4,7 @@ import com.fastcms.common.auth.model.Permission;
 import com.fastcms.common.auth.model.User;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.entity.Role;
+import com.fastcms.service.IResourceService;
 import com.fastcms.service.IRoleService;
 import com.fastcms.utils.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ public class AuthPermissionService {
 
     @Autowired
     private IRoleService roleService;
+    
+    @Autowired
+    private IResourceService resourceService;
 
     /**
      * 判断用户是否有资源访问权限
@@ -48,10 +52,14 @@ public class AuthPermissionService {
                 }
             }
 
-            //需要检查角色资源权限
-            for (Role role : userRoleList) {
-
+            //需要检查角色接口权限
+            List<String> userResourceList = resourceService.getUserResourceList(user.getUserId());
+            for (String res : userResourceList) {
+                if (Objects.equals(res, permission.getResource())) {
+                    return true;
+                }
             }
+
             return false;
 
         }

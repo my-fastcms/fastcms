@@ -208,7 +208,7 @@ public class ArticleController {
      * @return
      */
     @PostMapping("comment/save")
-    @Secured(name = "文章评论保存", resource = "articles:comment/list", action = ActionTypes.WRITE)
+    @Secured(name = "文章评论保存", resource = "articles:comment/save", action = ActionTypes.WRITE)
 	public RestResult<Boolean> saveComment(@Validated ArticleComment articleComment) {
         return RestResultUtils.success(articleCommentService.saveOrUpdate(articleComment));
     }

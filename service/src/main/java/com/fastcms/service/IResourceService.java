@@ -2,6 +2,9 @@ package com.fastcms.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.entity.Resource;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 接口资源表
@@ -10,6 +13,16 @@ import com.fastcms.entity.Resource;
  */
 public interface IResourceService extends IService<Resource> {
 
+	/**
+	 * 同步接口资源
+	 */
 	void syncResources();
+
+	/**
+	 * 获取用户接口授权
+	 * @param userId
+	 * @return
+	 */
+	List<String> getUserResourceList(Long userId);
 
 }
