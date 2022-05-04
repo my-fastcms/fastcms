@@ -16,7 +16,9 @@
  */
 package com.fastcms.web.filter;
 
+import com.fastcms.common.auth.PassJwt;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.core.auth.ControllerMethodsCache;
 import com.fastcms.web.security.JwtTokenManager;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.apache.commons.lang.StringUtils;
@@ -29,6 +31,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.reflect.Method;
 
 /**
  * @author： wjun_java@163.com
@@ -47,35 +50,43 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
 
     private final JwtTokenManager tokenManager;
 
-    public JwtAuthTokenFilter(JwtTokenManager tokenManager) {
+    private final ControllerMethodsCache controllerMethodsCache;
+
+    public JwtAuthTokenFilter(JwtTokenManager tokenManager, ControllerMethodsCache controllerMethodsCache) {
         this.tokenManager = tokenManager;
+        this.controllerMethodsCache = controllerMethodsCache;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
 
-        if (request.getRequestURI().startsWith(FastcmsConstants.API_PREFIX_MAPPING)
-            || request.getRequestURI().startsWith(FastcmsConstants.PLUGIN_MAPPING)) {
+        Method requestMethod = controllerMethodsCache.getMethod(request);
+        if (requestMethod != null && requestMethod.isAnnotationPresent(PassJwt.class)) {
+            filterChain.doFilter(request, response);
+        } else {
+            if (request.getRequestURI().startsWith(FastcmsConstants.API_PREFIX_MAPPING)
+                    || request.getRequestURI().startsWith(FastcmsConstants.PLUGIN_MAPPING)) {
 
-            final String jwt = resolveToken(request);
+                final String jwt = resolveToken(request);
 
-            if (StringUtils.isNotBlank(jwt) && SecurityContextHolder.getContext().getAuthentication() == null) {
-                try {
-                    tokenManager.validateToken(jwt);
-                    Authentication authentication = this.tokenManager.getAuthentication(jwt);
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                    filterChain.doFilter(request, response);
-                } catch (ExpiredJwtException e) {
-                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
-                } catch (Exception e) {
-                    response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Server failed," + e.getMessage());
+                if (StringUtils.isNotBlank(jwt) && SecurityContextHolder.getContext().getAuthentication() == null) {
+                    try {
+                        tokenManager.validateToken(jwt);
+                        Authentication authentication = this.tokenManager.getAuthentication(jwt);
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                        filterChain.doFilter(request, response);
+                    } catch (ExpiredJwtException e) {
+                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
+                    } catch (Exception e) {
+                        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Server failed," + e.getMessage());
+                    }
+                } else {
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "not auth");
                 }
             } else {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "not auth");
+                filterChain.doFilter(request, response);
             }
-        } else {
-            filterChain.doFilter(request, response);
         }
 
     }

@@ -27,6 +27,7 @@ import com.fastcms.cms.service.IArticleCategoryService;
 import com.fastcms.cms.service.IArticleService;
 import com.fastcms.cms.service.IArticleTagService;
 import com.fastcms.cms.utils.ArticleUtils;
+import com.fastcms.common.auth.PassJwt;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResult;
@@ -161,7 +162,8 @@ public class ArticleApi {
 	 * @param keyword
 	 * @return
 	 */
-	@RequestMapping("search")
+	@PassJwt
+	@GetMapping("search")
 	public RestResult<Page<Article>> search(PageModel page, @RequestParam(name = "keyword") String keyword) {
 		return RestResultUtils.success(fastcmsSearcherManager.getSearcher().search(keyword, page.getPageNum().intValue(), page.getPageSize().intValue()));
 	}

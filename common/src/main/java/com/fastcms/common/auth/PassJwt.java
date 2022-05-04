@@ -17,19 +17,20 @@
 
 package com.fastcms.common.auth;
 
-import com.fastcms.common.constants.FastcmsConstants;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
+ * 标记接口不校验jwt
  * @author： wjun_java@163.com
- * @date： 2022/3/6
+ * @date： 2022/5/4
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-public interface AuthConstants {
-
-    String ADMIN_RESOURCE_NAME_PREFIX = FastcmsConstants.ADMIN_MAPPING + "/";
-
-    String REQUEST_PATH_SEPARATOR = "-->";
-
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface PassJwt {
 }

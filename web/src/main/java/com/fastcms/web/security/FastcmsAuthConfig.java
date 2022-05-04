@@ -16,9 +16,11 @@
  */
 package com.fastcms.web.security;
 
-import com.fastcms.core.utils.RequestUtils;
+import com.fastcms.core.auth.ControllerMethodsCache;
 import com.fastcms.web.filter.JwtAuthTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
@@ -40,13 +42,16 @@ import org.springframework.web.cors.CorsUtils;
  *  * @version: 1.0
  */
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class FastcmsAuthConfig extends WebSecurityConfigurerAdapter {
+public class FastcmsAuthConfig extends WebSecurityConfigurerAdapter implements ApplicationListener<ApplicationStartedEvent> {
 
     @Autowired
     private JwtTokenManager tokenManager;
 
     @Autowired
     private AuthConfigs authConfigs;
+
+    @Autowired
+    private ControllerMethodsCache controllerMethodsCache;
 
     @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
     @Override
@@ -57,7 +62,6 @@ public class FastcmsAuthConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) {
         web.ignoring().antMatchers(authConfigs.getIgnoreUrls().toArray(new String[]{}));
-        web.ignoring().antMatchers(RequestUtils.getIgnoreUrls().toArray(new String[]{}));
     }
 
     @Override
@@ -70,13 +74,21 @@ public class FastcmsAuthConfig extends WebSecurityConfigurerAdapter {
         http.headers().cacheControl();
         http.headers().frameOptions().disable();
 
-        http.addFilterBefore(new JwtAuthTokenFilter(tokenManager), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtAuthTokenFilter(tokenManager, controllerMethodsCache), UsernamePasswordAuthenticationFilter.class);
 
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Override
+    public void onApplicationEvent(ApplicationStartedEvent event) {
+        controllerMethodsCache.initClassMethod("com.fastcms.web.controller.admin");
+        controllerMethodsCache.initClassMethod("com.fastcms.web.controller.api");
+        controllerMethodsCache.initClassMethod("com.fastcms.cms.controller.admin");
+        controllerMethodsCache.initClassMethod("com.fastcms.cms.controller.api");
     }
 
 }
