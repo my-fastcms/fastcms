@@ -21,8 +21,11 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.cms.entity.Article;
+import com.fastcms.cms.entity.ArticleTag;
 import com.fastcms.cms.search.FastcmsSearcherManager;
+import com.fastcms.cms.service.IArticleCategoryService;
 import com.fastcms.cms.service.IArticleService;
+import com.fastcms.cms.service.IArticleTagService;
 import com.fastcms.cms.utils.ArticleUtils;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
@@ -48,6 +51,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -73,6 +77,12 @@ public class ArticleApi {
 
 	@Autowired
 	private FastcmsSearcherManager fastcmsSearcherManager;
+
+	@Autowired
+	private IArticleTagService articleTagService;
+
+	@Autowired
+	private IArticleCategoryService articleCategoryService;
 
 	@GetMapping("list")
 	public RestResult<Page<IArticleService.ArticleVo>> list(PageModel page,
@@ -108,6 +118,16 @@ public class ArticleApi {
 		} catch (Exception e) {
 			return RestResultUtils.failed(e.getMessage());
 		}
+	}
+
+	/**
+	 * 文章详情
+	 * @param articleId 文章id
+	 * @return
+	 */
+	@GetMapping("get/{articleId}")
+	public RestResult<Article> getArticle(@PathVariable("articleId") Long articleId) {
+		return RestResultUtils.success(articleService.getArticle(articleId));
 	}
 
 	/**
@@ -206,5 +226,25 @@ public class ArticleApi {
 
 		return null;
 	}
+
+	/**
+	 * 文章分类
+	 * @description
+	 * @return
+	 */
+	@GetMapping("category/list")
+	public RestResult<List<IArticleCategoryService.CategoryTreeNode>> listCategory() {
+		return RestResultUtils.success(articleCategoryService.getCategoryList(AuthUtils.getUserId()));
+	}
+
+	/**
+	 * 文章标签
+	 * @return
+	 */
+	@GetMapping("tag/list")
+	public RestResult<List<ArticleTag>> listTags() {
+		return RestResultUtils.success(articleTagService.list());
+	}
+
 
 }

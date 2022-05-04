@@ -59,6 +59,7 @@
 <script lang="ts">
 import {toRefs, reactive, onMounted } from "vue";
 import { getAttachList } from '/@/api/attach/index';
+import { getAttachList as getClientAttachList } from '/@/api/attach/client';
 import { ElMessage } from 'element-plus';
 import { Session } from '/@/utils/storage';
 import insertImage from "./imgPlugin/insertImage";
@@ -67,15 +68,27 @@ import connect from "./imgPlugin/connect";
 export default {
 //   emits: ["attachHandler"],
   name: 'ckeditorAttachDialog',
+  props: {
+	fileType: String,
+	isClient: {
+		type: Boolean,
+		default: false,
+	},
+  },
   setup(props, ctx) {
     
+	let _uploadUrl = import.meta.env.VITE_API_URL + "/admin/attachment/upload";
+	if(props.isClient && props.isClient == true) {
+		_uploadUrl = import.meta.env.VITE_API_URL + "/client/attachment/upload";
+	}
+
     const state = reactive({
 			isShowDialog: false,
 			queryParams: {},
 			showSearch: true,
 			max: 1,
 			limit: 3,
-			uploadUrl: import.meta.env.VITE_API_URL + "/admin/attachment/upload",
+			uploadUrl: _uploadUrl,
 			headers: {"Authorization": Session.get('token')},
 			checkedObjs: [],	//选中的图片元素
 			tableData: {
@@ -100,10 +113,17 @@ export default {
 		};
 
 		const initTableData = () => {
-			getAttachList(state.tableData.param).then((res) => {
-				state.tableData.data = res.data.records;
-				state.tableData.total = res.data.total;
-			});
+			if(props.isClient && props.isClient == true) {
+				getClientAttachList(state.tableData.param).then((res) => {
+					state.tableData.data = res.data.records;
+					state.tableData.total = res.data.total;
+				});
+			} else {
+				getAttachList(state.tableData.param).then((res) => {
+					state.tableData.data = res.data.records;
+					state.tableData.total = res.data.total;
+				});
+			}
 		};
 
 		const uploadSuccess = () => {

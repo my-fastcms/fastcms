@@ -60,7 +60,7 @@ import { delArticle, getArticleList } from '/@/api/article/client';
 import { useRouter } from 'vue-router';
 
 export default {
-  name: 'articleManager',
+  name: 'clientArticleManager',
   setup() {
 
     const router = useRouter();

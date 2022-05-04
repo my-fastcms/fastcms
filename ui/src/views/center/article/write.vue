@@ -10,7 +10,7 @@
           </el-col>
           <el-col class="mb20">
             <el-form-item label="文章详情" prop="contentHtml">
-              <ckeditor v-model="ruleForm.contentHtml"></ckeditor>
+              <ckeditor v-model="ruleForm.contentHtml" :isClient="true"></ckeditor>
             </el-form-item>
           </el-col>
           <el-col class="mb20">
@@ -111,8 +111,8 @@
         </el-row>
       </el-form>
     </el-card>
-    <AttachDialog ref="thumbnailDialogRef" @attachHandler="getSelectThumbnail" />
-    <AttachDialog ref="attachDialogRef" @attachHandler="getSelectAttach" />
+    <AttachDialog ref="thumbnailDialogRef" @attachHandler="getSelectThumbnail" :isClient="true"/>
+    <AttachDialog ref="attachDialogRef" @attachHandler="getSelectAttach" :isClient="true"/>
   </div>
 </template>
 
@@ -121,13 +121,12 @@ import { toRefs, ref, reactive, getCurrentInstance, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { useRoute } from 'vue-router';
 import AttachDialog from '/@/components/attach/index.vue';
-import { getArticle, getArticleCategoryList, getArticleTagList } from '/@/api/article/index';
-import { addArticle } from '/@/api/article/client';
+import { addArticle, getArticle, getArticleCategoryList, getArticleTagList } from '/@/api/article/client';
 import qs from 'qs';
 import CKEditor from "/@/components/ckeditor/index.vue";
 
 export default {
-  name: 'articleWrite',
+  name: 'clientArticleWrite',
   components: {
     AttachDialog,
     ckeditor: CKEditor

@@ -30,5 +30,5 @@
 ## [v0.0.4] 2022.04.30
 - 优化mybatis-plus集成
 - 插件Mapper完美兼容mybatis-plus
-- 重构数据权限
+- 完善api接口权限
 - 优化系统缓存

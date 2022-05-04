@@ -15,19 +15,17 @@
 					</template>
 				</el-table-column>
 			</el-table>
-			<template v-if="tableData.data.length > 0">
-				<el-pagination
-					style="text-align: right"
-					background
-					@size-change="onHandleSizeChange"
-					@current-change="onHandleCurrentChange"
-					:page-sizes="[10, 20, 30]"
-					:current-page="tableData.param.pageNum"
-					:page-size="tableData.param.pageSize"
-					layout="total, sizes, prev, pager, next, jumper"
-					:total="tableData.total"
-				></el-pagination>
-			</template>
+			<el-pagination
+				style="text-align: right"
+				background
+				@size-change="onHandleSizeChange"
+				@current-change="onHandleCurrentChange"
+				:page-sizes="[10, 20, 30]"
+				:current-page="tableData.param.pageNum"
+				:page-size="tableData.param.pageSize"
+				layout="total, sizes, prev, pager, next, jumper"
+				:total="tableData.total"
+			></el-pagination>
 		</el-card>
 		<Detail ref="detailRef" @reloadTable="initTableData" />
 	</div>

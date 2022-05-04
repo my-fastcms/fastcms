@@ -49,7 +49,7 @@
 
 <script lang="ts">
 import { toRefs, ref, reactive, onMounted } from 'vue';
-import { getAttachList } from '/@/api/attach/index';
+import { getAttachList } from '/@/api/attach/client';
 import { ElMessage } from 'element-plus';
 import { Session } from '/@/utils/storage';
 import Detail from '/@/views/center/attach/component/detail.vue';
@@ -63,7 +63,7 @@ export default {
 			queryParams: {},
 			showSearch: true,
 			limit: 3,
-			uploadUrl: import.meta.env.VITE_API_URL + "/admin/attachment/upload",
+			uploadUrl: import.meta.env.VITE_API_URL + "/client/attachment/upload",
 			headers: {"Authorization": Session.get('token')},
 			tableData: {
 				data: [],

@@ -27,6 +27,18 @@ export function addArticle(params: string) {
 }
 
 /**
+ * 获取文章详情
+ * @param id 
+ * @returns 
+ */
+ export function getArticle(id: string) {
+	return request({
+		url: '/client/article/get/'+id,
+		method: 'get'
+	});
+}
+
+/**
  * 删除文章
  * @param id 
  * @returns 
@@ -47,5 +59,27 @@ export function delArticle(id: string) {
 		url: '/client/article/comment/user/list',
 		method: 'get',
 		params: params
+	});
+}
+
+/**
+ * 获取文章分类列表
+ * @returns 
+ */
+ export function getArticleCategoryList() {
+	return request({
+		url: '/client/article/category/list',
+		method: 'get'
+	});
+}
+
+/**
+ * 获取文章标签列表
+ * @returns 
+ */
+ export function getArticleTagList() {
+	return request({
+		url: '/client/article/tag/list',
+		method: 'get'
 	});
 }

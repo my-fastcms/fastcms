@@ -41,8 +41,7 @@
 <script lang="ts">
 import { reactive, toRefs, getCurrentInstance, onUpdated } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
-import { delAttach } from '/@/api/attach/client';
-import { getAttach } from '/@/api/attach/index';
+import { delAttach, getAttach } from '/@/api/attach/client';
 
 export default {
 	name: 'attachDetail',

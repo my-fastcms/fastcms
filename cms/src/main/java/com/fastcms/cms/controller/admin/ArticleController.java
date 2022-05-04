@@ -152,7 +152,6 @@ public class ArticleController {
      * @return
      */
     @GetMapping("category/list")
-    @Secured(name = "文章分类列表", resource = "articles:category/list", action = ActionTypes.READ)
 	public RestResult<List<IArticleCategoryService.CategoryTreeNode>> listCategory() {
         return RestResultUtils.success(articleCategoryService.getCategoryList(AuthUtils.getUserId()));
     }

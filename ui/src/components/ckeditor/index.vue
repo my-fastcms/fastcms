@@ -1,5 +1,5 @@
 <script lang="ts">
-import {defineComponent, onMounted, ref, watch} from "vue";
+import {defineComponent, onMounted, ref, watch, reactive} from "vue";
 
 import connect from "./imgPlugin/connect";
 
@@ -41,6 +41,10 @@ import imgResWin from "./imgResWin.vue";
 
 export default defineComponent({
   props: {
+    isClient: {
+      type: Boolean,
+      default: false,
+    },
     modelValue: {
       type: String
     }
@@ -53,6 +57,11 @@ export default defineComponent({
     let ckeditorDom = ref();
     let editorExample: { setData: (arg0: string | undefined) => any; } | null = null;
     let isPrint = false;
+
+    const state = reactive({
+      isClient: props.isClient || false
+    })
+
     onMounted(() => {
       connect.dialogObj = attachDialog.value;
       const ckeditorDiv = ckeditorDom.value;
@@ -177,7 +186,8 @@ export default defineComponent({
     })
     return {
       ckeditorDom,
-      attachDialog
+      attachDialog,
+      state
     }
   }
 });
@@ -189,7 +199,7 @@ export default defineComponent({
       <div class="CKEditorToolbar"></div>
       <div class="CKEditorContent"></div>
     </div>
-    <imgResWin ref="attachDialog" />
+    <imgResWin ref="attachDialog" :isClient=isClient />
   </div>
 </template>
 
