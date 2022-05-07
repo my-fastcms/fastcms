@@ -85,10 +85,10 @@ public class FastcmsAuthConfig extends WebSecurityConfigurerAdapter implements A
 
     @Override
     public void onApplicationEvent(ApplicationStartedEvent event) {
-        controllerMethodsCache.initClassMethod("com.fastcms.web.controller.admin");
-        controllerMethodsCache.initClassMethod("com.fastcms.web.controller.api");
-        controllerMethodsCache.initClassMethod("com.fastcms.cms.controller.admin");
-        controllerMethodsCache.initClassMethod("com.fastcms.cms.controller.api");
+//        controllerMethodsCache.initClassMethod("com.fastcms.web.controller.admin");
+//        controllerMethodsCache.initClassMethod("com.fastcms.web.controller.api");
+//        controllerMethodsCache.initClassMethod("com.fastcms.cms.controller.admin");
+//        controllerMethodsCache.initClassMethod("com.fastcms.cms.controller.api");
     }
 
 }
