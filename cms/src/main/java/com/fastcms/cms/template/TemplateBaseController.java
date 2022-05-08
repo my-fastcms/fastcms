@@ -19,7 +19,6 @@ package com.fastcms.cms.template;
 import com.fastcms.core.template.Template;
 import com.fastcms.core.template.TemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * @author： wjun_java@163.com
@@ -28,7 +27,6 @@ import org.springframework.stereotype.Component;
  * @modifiedBy：
  * @version: 1.0
  */
-@Component
 public class TemplateBaseController {
 
 	@Autowired

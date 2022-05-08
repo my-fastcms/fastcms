@@ -27,7 +27,6 @@ import com.fastcms.cms.service.IArticleCategoryService;
 import com.fastcms.cms.service.IArticleService;
 import com.fastcms.cms.service.IArticleTagService;
 import com.fastcms.cms.utils.ArticleUtils;
-import com.fastcms.common.auth.PassJwt;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResult;
@@ -104,21 +103,17 @@ public class ArticleApi {
 	 * @return
 	 */
 	@PostMapping("save")
-	public Object save(@Validated Article article) {
-		try {
-			if(article.getId() == null) {
-				article.setStatus(Article.STATUS_AUDIT);
-			} else {
-				if(!Objects.equals(article.getUserId(), AuthUtils.getUserId())) {
-					return RestResultUtils.failed("只能修改自己的文章");
-				}
+	public Object save(@Validated Article article) throws FastcmsException {
+		if(article.getId() == null) {
+			article.setStatus(Article.STATUS_AUDIT);
+		} else {
+			if(!Objects.equals(article.getUserId(), AuthUtils.getUserId())) {
+				return RestResultUtils.failed("只能修改自己的文章");
 			}
-
-			articleService.saveArticle(article);
-			return RestResultUtils.success();
-		} catch (Exception e) {
-			return RestResultUtils.failed(e.getMessage());
 		}
+
+		articleService.saveArticle(article);
+		return RestResultUtils.success();
 	}
 
 	/**
@@ -138,22 +133,18 @@ public class ArticleApi {
 	 */
 	@PostMapping("delete/{articleId}")
 	public Object delete(@PathVariable("articleId") Long articleId) {
-		try {
-			Article article = articleService.getById(articleId);
-			if(article == null) {
-				return RestResultUtils.failed("文章不存在");
-			}
-
-			if(!Objects.equals(AuthUtils.getUserId(), article.getUserId())) {
-				return RestResultUtils.failed("只能删除自己的文章");
-			}
-
-			article.setStatus(Article.STATUS_DELETE);
-			articleService.updateById(article);
-			return RestResultUtils.success();
-		} catch (Exception e) {
-			return RestResultUtils.failed(e.getMessage());
+		Article article = articleService.getById(articleId);
+		if(article == null) {
+			return RestResultUtils.failed("文章不存在");
 		}
+
+		if(!Objects.equals(AuthUtils.getUserId(), article.getUserId())) {
+			return RestResultUtils.failed("只能删除自己的文章");
+		}
+
+		article.setStatus(Article.STATUS_DELETE);
+		articleService.updateById(article);
+		return RestResultUtils.success();
 	}
 
 	/**
@@ -162,7 +153,6 @@ public class ArticleApi {
 	 * @param keyword
 	 * @return
 	 */
-	@PassJwt
 	@GetMapping("search")
 	public RestResult<Page<Article>> search(PageModel page, @RequestParam(name = "keyword") String keyword) {
 		return RestResultUtils.success(fastcmsSearcherManager.getSearcher().search(keyword, page.getPageNum().intValue(), page.getPageSize().intValue()));
@@ -247,6 +237,5 @@ public class ArticleApi {
 	public RestResult<List<ArticleTag>> listTags() {
 		return RestResultUtils.success(articleTagService.list());
 	}
-
 
 }

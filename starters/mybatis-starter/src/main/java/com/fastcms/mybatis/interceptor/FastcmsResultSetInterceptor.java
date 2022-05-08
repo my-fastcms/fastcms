@@ -30,7 +30,7 @@ import java.sql.CallableStatement;
 import java.sql.Statement;
 
 /**
- * fastcms mybatis param 拦截器
+ * fastcms mybatis result 拦截器
  * @author： wjun_java@163.com
  * @date： 2021/4/26
  * @description：
