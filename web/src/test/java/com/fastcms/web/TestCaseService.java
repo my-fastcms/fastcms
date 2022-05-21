@@ -76,7 +76,7 @@ public class TestCaseService {
 
         unInstallPlugin(pluginId);
 
-//        installPlugin(pluginId);
+        installPlugin(pluginId);
 
     }
 

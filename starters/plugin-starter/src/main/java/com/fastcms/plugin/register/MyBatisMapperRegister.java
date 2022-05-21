@@ -26,7 +26,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.mapper.MapperFactoryBean;
 import org.pf4j.PluginWrapper;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
-import org.springframework.beans.factory.support.GenericBeanDefinition;
+import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.core.NestedIOException;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -75,9 +75,24 @@ public class MyBatisMapperRegister extends AbstractPluginRegister {
 	}
 
 	void registerBeanDefinition(Class mapperClass) {
-		GenericBeanDefinition definition = new GenericBeanDefinition();
+		RootBeanDefinition definition = new RootBeanDefinition();
 		definition.getConstructorArgumentValues().addGenericArgumentValue(mapperClass);
 		definition.setBeanClass(MapperFactoryBean.class);
+		/**
+		 * 问题描述：
+		 * 插件在卸载之后，再安装的时候，service中注入mapper的时候会报 mapper实例在容器中不存在的问题
+		 *
+		 * 原因：
+		 * spring会拿之前的classloader加载的Mapper与插件新安装的classloader中的Mapper进行比较
+		 * 按道理插件卸载之后，classloader也随之close，但是root bean definition的targetType竟然还持有之前的classloader加载的Mapper类的引用
+		 *
+		 * 解决办法：
+		 * 目前暂定解决办法，用新的classloader加载的Mapper类手动设置targetType的值，用来强行替换旧的classloader加载的Mapper类
+		 * 具体代码参考
+		 * {@see GenericTypeAwareAutowireCandidateResolver#checkGenericTypeMatch()}方法第98行，会去找root definition中的旧的Mapper class
+		 * {@see ResolvableType#isAssignableFrom()} 方法第348行 用来比较bean definition中的Mapper是否为同一个classloader加载的
+		 */
+		definition.setTargetType(mapperClass);
 		definition.getPropertyValues().add("addToConfig", true);
 		definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
 		((GenericWebApplicationContext) this.pluginManger.getApplicationContext()).registerBeanDefinition(mapperClass.getName(), definition);
