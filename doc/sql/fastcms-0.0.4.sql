@@ -20,6 +20,6 @@ CREATE TABLE `resource` (
 
 CREATE TABLE `role_resource` (
   `role_id` bigint(20) NOT NULL,
-  `resource_id` bigint(20) NOT NULL,
-  PRIMARY KEY (`role_id`,`resource_id`)
+  `resource_path` varchar(128) NOT NULL,
+  PRIMARY KEY (`role_id`,`resource_path`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='接口资源关联表';
