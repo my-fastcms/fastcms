@@ -16,24 +16,20 @@
  */
 package com.fastcms.hello;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  * @author： wjun_java@163.com
- * @date： 2022/1/23
+ * @date： 2022/06/16
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
 @Component
-public class HelloComponent {
+public class HelloComponent2 {
 
-    @Autowired
-    private HelloComponent2 helloComponent2;
-
-    public void hello() {
-        helloComponent2.hello2();
+    public void hello2() {
+        System.out.println(">>>HelloComponent2");
     }
 
 }

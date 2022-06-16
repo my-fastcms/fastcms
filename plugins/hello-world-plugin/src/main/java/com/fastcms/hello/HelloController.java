@@ -50,6 +50,8 @@ public class HelloController {
         hello.setName("hello, fastcms");
         helloService.saveOrUpdate(hello);
 
+        helloComponent.hello();
+
         return "hello";
     }
 

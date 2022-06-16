@@ -27,11 +27,14 @@ import org.pf4j.PluginWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory;
+import org.springframework.beans.factory.support.AbstractBeanDefinition;
+import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.type.classreading.CachingMetadataReaderFactory;
 import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.util.ClassUtils;
+import org.springframework.web.context.support.GenericWebApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,6 +124,26 @@ public abstract class AbstractPluginRegister implements PluginRegister {
         FastcmsSpringExtensionFactory extensionFactory = (FastcmsSpringExtensionFactory) pluginManger.getExtensionFactory();
         extensionFactory.destroy(aClass);
         beanFactory.destroySingleton(beanName);
+    }
+
+    /**
+     * 移除beanDefinition
+     * @param mapperClass
+     */
+    protected void removeBeanDefinition(Class mapperClass) {
+        ((GenericWebApplicationContext) this.pluginManger.getApplicationContext()).removeBeanDefinition(mapperClass.getName());
+    }
+
+    /**
+     * 注册beanDefinition
+     * @param mapperClass
+     */
+    protected void registerBeanDefinition(Class mapperClass) {
+        RootBeanDefinition definition = new RootBeanDefinition();
+        definition.setBeanClass(mapperClass);
+        definition.setTargetType(mapperClass);
+        definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
+        ((GenericWebApplicationContext) this.pluginManger.getApplicationContext()).registerBeanDefinition(mapperClass.getName(), definition);
     }
 
 }

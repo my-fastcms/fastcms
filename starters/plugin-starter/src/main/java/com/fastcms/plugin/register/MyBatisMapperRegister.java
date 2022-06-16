@@ -55,7 +55,7 @@ public class MyBatisMapperRegister extends AbstractPluginRegister {
 
 		//注册mapper
 		for (Class<?> mapperClass : getMapperClassList(pluginId)) {
-			registerBeanDefinition(mapperClass);
+			registerMapperBeanDefinition(mapperClass);
 		}
 
 		registerMapperXml(pluginId);
@@ -66,7 +66,7 @@ public class MyBatisMapperRegister extends AbstractPluginRegister {
 	public void unRegistry(String pluginId) throws Exception {
 		//注册mapper
 		for (Class<?> mapperClass : getMapperClassList(pluginId)) {
-			removeBeanDefinition(mapperClass);
+			removeMapperBeanDefinition(mapperClass);
 		}
 	}
 
@@ -74,7 +74,7 @@ public class MyBatisMapperRegister extends AbstractPluginRegister {
 		return getPluginClasses(pluginId).stream().filter(clazz -> BaseMapper.class.isAssignableFrom(clazz)).collect(Collectors.toList());
 	}
 
-	void registerBeanDefinition(Class mapperClass) {
+	void registerMapperBeanDefinition(Class mapperClass) {
 		RootBeanDefinition definition = new RootBeanDefinition();
 		definition.getConstructorArgumentValues().addGenericArgumentValue(mapperClass);
 		definition.setBeanClass(MapperFactoryBean.class);
@@ -98,8 +98,8 @@ public class MyBatisMapperRegister extends AbstractPluginRegister {
 		((GenericWebApplicationContext) this.pluginManger.getApplicationContext()).registerBeanDefinition(mapperClass.getName(), definition);
 	}
 
-	void removeBeanDefinition(Class mapperClass) {
-		((GenericWebApplicationContext) this.pluginManger.getApplicationContext()).removeBeanDefinition(mapperClass.getName());
+	void removeMapperBeanDefinition(Class mapperClass) {
+		removeBeanDefinition(mapperClass);
 		destroyBean(mapperClass);
 	}
 

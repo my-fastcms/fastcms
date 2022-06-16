@@ -41,7 +41,14 @@ public class ComponentRegister extends AbstractPluginRegister {
 
 	@Override
 	public void registry(String pluginId) throws Exception {
-		getComponentClasses(pluginId).forEach(item -> registryBean(item));
+		List<Class<?>> componentClasses = getComponentClasses(pluginId);
+
+		// 修复 https://gitee.com/xjd2020/fastcms/issues/I5BIN1
+		// 在创建bean之前注册component service相关beanDefinition
+		componentClasses.forEach(item -> registerBeanDefinition(item));
+
+		componentClasses.forEach(item -> registryBean(item));
+
 	}
 
 	@Override
@@ -65,4 +72,5 @@ public class ComponentRegister extends AbstractPluginRegister {
 		}
 		return classList;
 	}
+
 }
