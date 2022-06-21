@@ -157,8 +157,8 @@ export default {
 				})
 					.then(() => {
 						Session.clear(); // 清除缓存/token等
-						resetRoute(); // 删除/重置路由
-						resetFrontRoute();
+						// resetRoute(); // 删除/重置路由
+						// resetFrontRoute();
 						router.push('/login');
 						setTimeout(() => {
 							ElMessage.success(t('message.user.logOutSuccess'));

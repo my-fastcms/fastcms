@@ -191,6 +191,7 @@ export default defineComponent({
 			// 添加完动态路由，再进行 router 跳转，否则可能报错 No match found for location with path "/"
 			// 如果是复制粘贴的路径，非首页/登录页，那么登录成功后重定向到对应的路径中
 			if (route.query?.redirect) {
+				console.log(route.query)
 				router.push({
 					path: route.query?.redirect,
 					query: Object.keys(route.query?.params).length > 0 ? JSON.parse(route.query?.params) : '',
@@ -200,6 +201,7 @@ export default defineComponent({
 			}
 			// 登录成功提示
 			setTimeout(() => {
+				
 				// 关闭 loading
 				state.loading.signIn = true;
 				const signInText = t('message.signInText');

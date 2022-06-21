@@ -194,7 +194,7 @@ public interface IOrderService extends IService<Order> {
         }
 
         public String getUserName() {
-            return userName == null ? getNickName() : userName;
+            return userName;
         }
 
         public void setUserName(String userName) {
@@ -258,7 +258,7 @@ public interface IOrderService extends IService<Order> {
         String userName;
 
         public String getNickName() {
-            return nickName == null ? getUserName() : nickName;
+            return nickName;
         }
 
         public void setNickName(String nickName) {

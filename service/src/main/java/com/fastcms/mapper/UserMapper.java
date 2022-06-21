@@ -19,4 +19,6 @@ public interface UserMapper extends BaseMapper<User> {
 
 	List<UserTag> getUserTagList(@Param("userId") Long userId);
 
+	Long getLastUserNum();
+
 }

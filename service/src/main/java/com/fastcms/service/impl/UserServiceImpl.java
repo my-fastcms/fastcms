@@ -129,6 +129,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         User user;
         if(userOpenid == null) {
             user = new User();
+            user.setUserName(getLastUserNum());
             user.setNickName(userInfo.getNickName());
             user.setHeadImg(userInfo.getAvatarUrl());
             user.setSource(User.SourceType.WX_MINI_PROGRAM.name().toLowerCase());
@@ -147,6 +148,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
+    @Transactional
     public User saveUser(String openid, String unionId, String phone, String type) throws FastcmsException {
 
         if(openid == null || StringUtils.isBlank(phone)) {
@@ -160,6 +162,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         User user;
         if(userOpenid == null) {
             user = new User();
+            user.setUserName(getLastUserNum());
             user.setMobile(phone);
             user.setSource(User.SourceType.WX_MINI_PROGRAM.name().toLowerCase());
             save(user);
@@ -225,6 +228,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         user.setUserType(User.USER_TYPE_CLIENT);
         save(user);
         return true;
+    }
+
+    @Override
+    public synchronized String getLastUserNum() {
+        return String.valueOf(getBaseMapper().getLastUserNum() + 10000);
     }
 
 }

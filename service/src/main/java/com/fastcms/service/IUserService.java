@@ -80,6 +80,13 @@ public interface IUserService extends IService<User> {
     Boolean register(String username, String password, String repeatPassword) throws FastcmsException;
 
     /**
+     * 获取用户最大id值
+     * 用来给小程序或者app授权用户自动生成账号
+     * @return
+     */
+    String getLastUserNum();
+
+    /**
      * 修改用户信息
      */
     class UpdateUserParam implements Serializable {

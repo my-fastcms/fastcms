@@ -135,7 +135,7 @@ public interface IPaymentRecordService extends IService<PaymentRecord> {
 		}
 
 		public String getUserName() {
-			return userName == null ? getNickName() : userName;
+			return userName;
 		}
 
 		public void setUserName(String userName) {

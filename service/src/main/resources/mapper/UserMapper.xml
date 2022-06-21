@@ -7,4 +7,8 @@
         where utr.user_id = #{userId}
     </select>
 
+    <select id="getLastUserNum" resultType="java.lang.Long">
+        select id from `user` order by id desc limit 1
+    </select>
+
 </mapper>
