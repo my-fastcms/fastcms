@@ -53,7 +53,13 @@ public class ComponentRegister extends AbstractPluginRegister {
 
 	@Override
 	public void unRegistry(String pluginId) throws Exception {
-		getComponentClasses(pluginId).forEach(item -> destroyBean(item));
+
+		List<Class<?>> componentClasses = getComponentClasses(pluginId);
+
+		componentClasses.forEach(item -> destroyBean(item));
+
+		componentClasses.forEach(item -> removeBeanDefinition(item));
+
 	}
 
 	List<Class<?>> getComponentClasses(String pluginId) throws Exception {
