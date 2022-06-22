@@ -37,20 +37,11 @@ public class HelloController {
     @Autowired
     private HelloService helloService;
 
-    @Autowired
-    private HelloComponent helloComponent;
-
     @GetMapping
     public String index() {
 
         List<HelloService> extensions = PluginUtils.getExtensions(HelloService.class);
         extensions.forEach(item -> item.sayHello());
-
-        Hello hello = new Hello();
-        hello.setName("hello, fastcms");
-        helloService.saveOrUpdate(hello);
-
-        helloComponent.hello();
 
         return "hello";
     }

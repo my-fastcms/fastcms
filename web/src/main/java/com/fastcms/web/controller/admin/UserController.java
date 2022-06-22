@@ -179,4 +179,26 @@ public class UserController {
         return RestResultUtils.success();
     }
 
+    @PostMapping("changUserType")
+    @Secured(name = "用户类型修改", resource = "users:changeUserType", action = ActionTypes.WRITE)
+    public Object changeUserType(@RequestParam("userId") Long userId, @RequestParam("userType") Integer userType) {
+        if (userId != null && userId == FastcmsConstants.ADMIN_USER_ID) {
+            return RestResultUtils.failed("超级管理员不可修改用户类型");
+        }
+
+        User user = userService.getById(userId);
+        if (user == null) {
+            return RestResultUtils.failed("用户不存在");
+        }
+
+        if (user.getUserType() == userType) {
+            return RestResultUtils.failed("当前状态与修改状态相同，无需修改");
+        }
+
+        user.setUserType(userType);
+        userService.updateById(user);
+
+        return RestResultUtils.success();
+    }
+
 }

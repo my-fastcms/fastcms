@@ -98,7 +98,7 @@ export default {
 			ruleForm: {
 				id: null,
 				userName: '',
-				userType: 2,
+				userType: 2,	//表示网站或小程序客户端用户
 				password: '',
 				nickName: '',
 				mobile: '', 
@@ -174,6 +174,7 @@ export default {
 			state.ruleForm.status = '',
 			state.ruleForm.roleList = '',
 			state.ruleForm.tagList = '',
+			state.ruleForm.userType = 2,
 			state.ruleForm.source = 'admin_create'
 		};
 		return {

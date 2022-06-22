@@ -22,6 +22,7 @@ import com.fastcms.core.sms.AliyunSmsSender;
 import com.fastcms.core.sms.SmsMessage;
 import com.fastcms.plugin.FastcmsPluginManager;
 import com.fastcms.plugin.register.CompoundPluginRegister;
+import com.fastcms.utils.ApplicationUtils;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.annotation.Resource;
+import java.lang.reflect.Method;
 
 /**
  * @author： wjun_java@163.com
@@ -77,6 +79,16 @@ public class TestCaseService {
         unInstallPlugin(pluginId);
 
         installPlugin(pluginId);
+
+        Object bean = ApplicationUtils.getBean("com.fastcms.hello.HelloComponent");
+        System.out.println(bean);
+        Object bean1 = ApplicationUtils.getBean("com.fastcms.hello.HelloComponent2");
+        System.out.println(bean1);
+        for (Method method : bean.getClass().getMethods()) {
+            if (method.getName().equals("hello")) {
+                Object invoke = method.invoke(bean, null);
+            }
+        }
 
     }
 

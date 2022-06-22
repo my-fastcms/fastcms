@@ -75,3 +75,17 @@ export function updatePassword(params?: string) {
 		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 	});
 }
+
+/**
+ * 改变用户类型
+ * @param params 
+ * @returns 
+ */
+export function changeUserType(params?: string) {
+	return request({
+		url: '/admin/user/changUserType',
+		method: 'post',
+		data: params,
+		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+	});
+}

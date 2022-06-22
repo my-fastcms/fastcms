@@ -112,7 +112,7 @@ export default {
 			ruleForm: {
 				id: null,
 				userName: '',
-				userType: 1,
+				userType: 1,	//表示系统用户
 				password: '',
 				nickName: '',
 				mobile: '', 
@@ -195,6 +195,7 @@ export default {
 			state.ruleForm.status = '',
 			state.ruleForm.roleList = '',
 			state.ruleForm.tagList = '',
+			state.ruleForm.userType = 1,
 			state.ruleForm.source = 'admin_create'
 		};
 		return {

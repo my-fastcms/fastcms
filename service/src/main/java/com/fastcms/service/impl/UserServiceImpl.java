@@ -95,7 +95,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         }
 
         if(user.getId() == null) {
-            User one = getOne(Wrappers.<User>lambdaQuery().eq(User::getUserName, user.getUserName()));
+            User one = getOne(Wrappers.<User>lambdaQuery().eq(User::getUserName, user.getUserName()), false);
             if(one != null) throw new FastcmsException(FastcmsException.SERVER_ERROR, "账号已存在");
 
             if(StringUtils.isBlank(user.getPassword())) {
