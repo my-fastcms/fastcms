@@ -23,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -209,8 +211,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public synchronized Boolean register(String username, String password, String repeatPassword) throws FastcmsException {
-        if(StrUtils.isBlank(username) || StrUtils.isBlank(password) || StrUtils.isBlank(repeatPassword)) {
+        if(StrUtils.isBlank(username)) {
             throw new FastcmsException(FastcmsException.INVALID_PARAM, "请输入完成注册数据");
+        }
+
+        Pattern p = Pattern.compile("[0-9]*");
+        Matcher m = p.matcher(username);
+        if (m.matches()) {
+            throw new FastcmsException(FastcmsException.INVALID_PARAM, "注册账号不能全是数字");
+        }
+
+        if (StrUtils.isBlank(password)) {
+            throw new FastcmsException(FastcmsException.INVALID_PARAM, "请输入密码");
+        }
+
+        if (StrUtils.isBlank(repeatPassword)) {
+            throw new FastcmsException(FastcmsException.INVALID_PARAM, "请输入确认密码");
         }
 
         if(!repeatPassword.equals(password)) {
