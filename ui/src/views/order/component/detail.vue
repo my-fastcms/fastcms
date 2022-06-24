@@ -36,6 +36,10 @@
 													<div class="personal-item-value">{{ruleForm.orderAmount}}</div>
 												</el-col>
 												<el-col :xs="24" :sm="4" class="personal-item mb6">
+													<div class="personal-item-label">支付金额：</div>
+													<div class="personal-item-value">{{ruleForm.payAmount}}</div>
+												</el-col>
+												<el-col :xs="24" :sm="4" class="personal-item mb6">
 													<div class="personal-item-label">买家：</div>
 													<div class="personal-item-value">{{ruleForm.nickName}}</div>
 												</el-col>
