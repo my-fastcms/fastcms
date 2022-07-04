@@ -41,7 +41,7 @@
 												</el-col>
 												<el-col :xs="24" :sm="4" class="personal-item mb6">
 													<div class="personal-item-label">买家：</div>
-													<div class="personal-item-value">{{ruleForm.nickName}}</div>
+													<div class="personal-item-value">{{ruleForm.userName}}</div>
 												</el-col>
 												<el-col :xs="24" :sm="4" class="personal-item mb6">
 													<div class="personal-item-label">创建时间：</div>

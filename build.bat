@@ -28,6 +28,9 @@ xcopy web\startup.cmd .dist /s
 xcopy web\startup.sh .dist /s
 xcopy web\shutdown.cmd .dist /s
 xcopy web\shutdown.sh .dist /s
+xcopy web\Dockerfile .dist /s
+xcopy web\docker-build.sh .dist /s
+xcopy web\docker-run.sh .dist /s
 
 cd .dist
 

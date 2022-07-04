@@ -25,6 +25,9 @@ cp web/startup.cmd dist
 cp web/startup.sh dist
 cp web/shutdown.cmd dist
 cp web/shutdown.sh dist
+cp web/Dockerfile dist
+cp web/docker-build.sh dist
+cp web/docker-run.sh dist
 
 cd dist
 
