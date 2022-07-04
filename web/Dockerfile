@@ -3,7 +3,7 @@ LABEL maintainer="WangJun<wjun_java@163.com>"
 
 WORKDIR /opt/fastcms
 
-COPY ./ /opt/fastcms
+COPY .. /opt/fastcms
 
 RUN chmod +x /opt/fastcms/startup.sh
 
