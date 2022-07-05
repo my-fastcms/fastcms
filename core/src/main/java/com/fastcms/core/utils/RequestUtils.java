@@ -16,11 +16,24 @@
  */
 package com.fastcms.core.utils;
 
+import com.fastcms.core.auth.PassFastcms;
+import com.fastcms.utils.ApplicationUtils;
+import com.fastcms.utils.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.HandlerExecutionChain;
+import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import org.springframework.web.util.pattern.PathPattern;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author： wjun_java@163.com
@@ -175,6 +188,38 @@ public abstract class RequestUtils {
 	public static HttpServletRequest getRequest() {
 		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 		return attr.getRequest();
+	}
+
+	public static Method getRequestMethod() {
+		Method method = null;
+		RequestMappingHandlerMapping requestMappingHandlerMapping = ApplicationUtils.getBean(RequestMappingHandlerMapping.class);
+		try {
+			HandlerExecutionChain handler = requestMappingHandlerMapping.getHandler(RequestUtils.getRequest());
+			if(handler != null && handler.getHandler() instanceof HandlerMethod == true) {
+				HandlerMethod handlerMethod = (HandlerMethod) handler.getHandler();
+				method = handlerMethod.getMethod();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			method = null;
+		}
+		return method;
+	}
+
+	public static List<String> getIgnoreUrls() {
+		List<String> ignoreUrls = new ArrayList<>();
+		RequestMappingHandlerMapping requestMappingHandlerMapping = ApplicationUtils.getBean(RequestMappingHandlerMapping.class);
+		Map<RequestMappingInfo, HandlerMethod> handlerMethods = requestMappingHandlerMapping.getHandlerMethods();
+		for (RequestMappingInfo requestMappingInfo : handlerMethods.keySet()) {
+			HandlerMethod handlerMethod = handlerMethods.get(requestMappingInfo);
+			if (handlerMethod.getMethod().isAnnotationPresent(PassFastcms.class)) {
+				Set<PathPattern> patterns = requestMappingInfo.getPathPatternsCondition().getPatterns();
+				if (CollectionUtils.isNotEmpty(patterns)) {
+					ignoreUrls.add(patterns.toArray()[0].toString());
+				}
+			}
+		}
+		return ignoreUrls;
 	}
 
 	static String[] mobileAgents = {"iphone", "android", "phone", "mobile", "wap", "netfront", "java", "opera mobi",
