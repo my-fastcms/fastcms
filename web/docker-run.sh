@@ -2,13 +2,15 @@
 # abort on errors
 set -e
 
+version="$1"
+
 if [[ "$version" == "" ]]; then
 	echo "./please designated docker image version"
 	exit 0
 fi
 
 PROJECT_NAME=fastcms
-version="$1"
+
 IMAGE_NAME=wangjun/fastcms:${version}
 
 #容器名
