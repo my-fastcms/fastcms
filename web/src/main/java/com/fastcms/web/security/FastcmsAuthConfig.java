@@ -17,6 +17,7 @@
 package com.fastcms.web.security;
 
 import com.fastcms.core.auth.ControllerMethodsCache;
+import com.fastcms.core.utils.RequestUtils;
 import com.fastcms.web.filter.JwtAuthTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
@@ -61,7 +62,8 @@ public class FastcmsAuthConfig extends WebSecurityConfigurerAdapter implements A
 
     @Override
     public void configure(WebSecurity web) {
-        web.ignoring().antMatchers(authConfigs.getIgnoreUrls().toArray(new String[]{}));
+        web.ignoring().antMatchers(authConfigs.getIgnoreUrls().toArray(new String[] {}));
+        web.ignoring().antMatchers(RequestUtils.getIgnoreUrls().toArray(new String[] {}));
     }
 
     @Override
