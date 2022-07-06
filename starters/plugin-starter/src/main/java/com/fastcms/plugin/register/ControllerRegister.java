@@ -17,6 +17,7 @@
 package com.fastcms.plugin.register;
 
 import com.fastcms.plugin.FastcmsPluginManager;
+import org.springframework.security.web.FilterChainProxy;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,12 +39,16 @@ public class ControllerRegister extends AbstractPluginRegister {
 
     RequestMappingHandlerMapping requestMappingHandlerMapping;
     Method getMappingForMethod;
+//    List<SecurityFilterChain> securityFilterChains;
 
     public ControllerRegister(FastcmsPluginManager pluginManger) {
         super(pluginManger);
         requestMappingHandlerMapping = pluginManger.getApplicationContext().getBean(RequestMappingHandlerMapping.class);
         getMappingForMethod = ReflectionUtils.findMethod(RequestMappingHandlerMapping.class, "getMappingForMethod", Method.class, Class.class);
         getMappingForMethod.setAccessible(true);
+
+//        Field filterChains = ReflectionUtils.findField(FilterChainProxy.class, "filterChains");
+//        securityFilterChains = (List<SecurityFilterChain>) ReflectionUtils.getField(filterChains, pluginManger.getApplicationContext().getBean(FilterChainProxy.class));
     }
 
     @Override
@@ -61,6 +66,15 @@ public class ControllerRegister extends AbstractPluginRegister {
                             || method.getAnnotation(PostMapping.class) != null) {
                         RequestMappingInfo requestMappingInfo = (RequestMappingInfo) getMappingForMethod.invoke(requestMappingHandlerMapping, method, aClass);
                         requestMappingHandlerMapping.registerMapping(requestMappingInfo, bean, method);
+
+//                        if (method.getAnnotation(PassFastcms.class) != null) {
+//                            Set<PathPattern> patterns = requestMappingInfo.getPathPatternsCondition().getPatterns();
+//                            if (CollectionUtils.isNotEmpty(patterns)) {
+//                                String url = patterns.toArray()[0].toString();
+//                                securityFilterChains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(url), new Filter[0]));
+//                            }
+//                        }
+
                     }
                 }
             }

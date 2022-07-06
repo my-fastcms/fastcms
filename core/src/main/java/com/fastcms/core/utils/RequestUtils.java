@@ -16,7 +16,7 @@
  */
 package com.fastcms.core.utils;
 
-import com.fastcms.core.auth.PassFastcms;
+import com.fastcms.plugin.PassFastcms;
 import com.fastcms.utils.ApplicationUtils;
 import com.fastcms.utils.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -215,7 +215,18 @@ public abstract class RequestUtils {
 			if (handlerMethod.getMethod().isAnnotationPresent(PassFastcms.class)) {
 				Set<PathPattern> patterns = requestMappingInfo.getPathPatternsCondition().getPatterns();
 				if (CollectionUtils.isNotEmpty(patterns)) {
-					ignoreUrls.add(patterns.toArray()[0].toString());
+
+					String url = patterns.toArray()[0].toString();
+
+//					Pattern p = Pattern.compile("\\{[a-zA-Z0-9]+\\}");
+//					Matcher m = p.matcher(url);
+//
+//					while (m.find()) {
+//						String tmplStr = m.group();
+//						url = url.replace(tmplStr, "*");
+//					}
+
+					ignoreUrls.add(url);
 				}
 			}
 		}

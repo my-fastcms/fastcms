@@ -18,6 +18,7 @@ package com.fastcms.hello;
 
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.plugin.PassFastcms;
 import com.fastcms.utils.PluginUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -46,6 +47,7 @@ public class HelloController {
         return "hello";
     }
 
+    @PassFastcms
     @GetMapping("say")
     @ResponseBody
     public Object say() {
