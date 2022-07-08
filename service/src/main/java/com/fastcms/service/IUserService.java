@@ -6,6 +6,7 @@ import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.entity.User;
 import com.fastcms.entity.UserTag;
 
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.List;
 
@@ -176,11 +177,17 @@ public interface IUserService extends IService<User> {
         /**
          * 新密码
          */
+        @NotBlank(message = "密码不能为空")
         String password;
         /**
          * 旧密码
          */
+        @NotBlank(message = "确认密码不能为空")
         String confirmPassword;
+        /**
+         * 手机验证码
+         */
+        String phoneCode;
 
         public Long getId() {
             return id;
@@ -204,6 +211,14 @@ public interface IUserService extends IService<User> {
 
         public void setConfirmPassword(String confirmPassword) {
             this.confirmPassword = confirmPassword;
+        }
+
+        public String getPhoneCode() {
+            return phoneCode;
+        }
+
+        public void setPhoneCode(String phoneCode) {
+            this.phoneCode = phoneCode;
         }
     }
 
