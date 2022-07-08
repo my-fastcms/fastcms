@@ -17,7 +17,12 @@
 package com.fastcms.plugin.register;
 
 import com.fastcms.plugin.FastcmsPluginManager;
+import com.fastcms.plugin.PassFastcms;
+import org.apache.commons.collections.CollectionUtils;
+import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.FilterChainProxy;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,10 +31,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+import org.springframework.web.util.pattern.PathPattern;
 
+import javax.servlet.Filter;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * wjun_java@163.com
@@ -39,16 +48,12 @@ public class ControllerRegister extends AbstractPluginRegister {
 
     RequestMappingHandlerMapping requestMappingHandlerMapping;
     Method getMappingForMethod;
-//    List<SecurityFilterChain> securityFilterChains;
 
     public ControllerRegister(FastcmsPluginManager pluginManger) {
         super(pluginManger);
         requestMappingHandlerMapping = pluginManger.getApplicationContext().getBean(RequestMappingHandlerMapping.class);
         getMappingForMethod = ReflectionUtils.findMethod(RequestMappingHandlerMapping.class, "getMappingForMethod", Method.class, Class.class);
         getMappingForMethod.setAccessible(true);
-
-//        Field filterChains = ReflectionUtils.findField(FilterChainProxy.class, "filterChains");
-//        securityFilterChains = (List<SecurityFilterChain>) ReflectionUtils.getField(filterChains, pluginManger.getApplicationContext().getBean(FilterChainProxy.class));
     }
 
     @Override
@@ -64,22 +69,38 @@ public class ControllerRegister extends AbstractPluginRegister {
                     if (method.getAnnotation(RequestMapping.class) != null
                             || method.getAnnotation(GetMapping.class) != null
                             || method.getAnnotation(PostMapping.class) != null) {
+
                         RequestMappingInfo requestMappingInfo = (RequestMappingInfo) getMappingForMethod.invoke(requestMappingHandlerMapping, method, aClass);
                         requestMappingHandlerMapping.registerMapping(requestMappingInfo, bean, method);
 
-//                        if (method.getAnnotation(PassFastcms.class) != null) {
-//                            Set<PathPattern> patterns = requestMappingInfo.getPathPatternsCondition().getPatterns();
-//                            if (CollectionUtils.isNotEmpty(patterns)) {
-//                                String url = patterns.toArray()[0].toString();
-//                                securityFilterChains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher(url), new Filter[0]));
-//                            }
-//                        }
+                        if (method.getAnnotation(PassFastcms.class) != null) {
+                            Set<PathPattern> patterns = requestMappingInfo.getPathPatternsCondition().getPatterns();
+                            if (CollectionUtils.isNotEmpty(patterns)) {
+                                String url = patterns.toArray()[0].toString();
+                                FilterChainProxy filterChainProxy = (FilterChainProxy) beanFactory.getBean("springSecurityFilterChain");
+                                List<SecurityFilterChain> securityFilterChains = (List<SecurityFilterChain>) getProperty(filterChainProxy,"filterChains");
+                                if (securityFilterChains != null) {
+                                    securityFilterChains.add(0, new DefaultSecurityFilterChain(new AntPathRequestMatcher(url), new Filter[0]));
+                                }
+                            }
+                        }
 
                     }
                 }
             }
         }
 
+    }
+
+    private Object getProperty(Object obj, String fieldName) {
+        try {
+            Field field = obj.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
+            return field.get(obj);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override

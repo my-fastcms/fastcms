@@ -27,6 +27,7 @@ import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.core.utils.AttachUtils;
 import com.fastcms.entity.Attachment;
+import com.fastcms.plugin.PassFastcms;
 import com.fastcms.service.IAttachmentService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,6 +112,7 @@ public class AttachmentApi {
 	 * @param attachId    附件id
 	 * @return
 	 */
+	@PassFastcms
 	@GetMapping("get/{attachId}")
 	public RestResult<Attachment> detail(@PathVariable(name = "attachId") Long attachId) {
 

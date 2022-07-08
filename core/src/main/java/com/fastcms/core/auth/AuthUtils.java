@@ -27,7 +27,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
  */
 public final class AuthUtils {
 
-    private AuthUtils() {}
+    private AuthUtils() {
+
+    }
 
     public static Long getUserId() {
         return getUser() == null ? null : getUser().getUserId();
@@ -38,8 +40,17 @@ public final class AuthUtils {
     }
 
     public static FastcmsUserDetails getUser() {
+
+        if (SecurityContextHolder.getContext() == null) {
+            return null;
+        }
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
+            return null;
+        }
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(principal == null) return null;
+        if(principal == null) {
+            return null;
+        }
         return (FastcmsUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 

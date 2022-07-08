@@ -34,6 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author： wjun_java@163.com
@@ -191,10 +193,14 @@ public abstract class RequestUtils {
 	}
 
 	public static Method getRequestMethod() {
+		return getRequestMethod(RequestUtils.getRequest());
+	}
+
+	public static Method getRequestMethod(HttpServletRequest request) {
 		Method method = null;
 		RequestMappingHandlerMapping requestMappingHandlerMapping = ApplicationUtils.getBean(RequestMappingHandlerMapping.class);
 		try {
-			HandlerExecutionChain handler = requestMappingHandlerMapping.getHandler(RequestUtils.getRequest());
+			HandlerExecutionChain handler = requestMappingHandlerMapping.getHandler(request);
 			if(handler != null && handler.getHandler() instanceof HandlerMethod == true) {
 				HandlerMethod handlerMethod = (HandlerMethod) handler.getHandler();
 				method = handlerMethod.getMethod();
@@ -218,13 +224,13 @@ public abstract class RequestUtils {
 
 					String url = patterns.toArray()[0].toString();
 
-//					Pattern p = Pattern.compile("\\{[a-zA-Z0-9]+\\}");
-//					Matcher m = p.matcher(url);
-//
-//					while (m.find()) {
-//						String tmplStr = m.group();
-//						url = url.replace(tmplStr, "*");
-//					}
+					Pattern p = Pattern.compile("\\{[a-zA-Z0-9]+\\}");
+					Matcher m = p.matcher(url);
+
+					while (m.find()) {
+						String tmplStr = m.group();
+						url = url.replace(tmplStr, "*");
+					}
 
 					ignoreUrls.add(url);
 				}
