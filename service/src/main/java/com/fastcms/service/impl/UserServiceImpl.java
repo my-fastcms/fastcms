@@ -72,7 +72,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if(user == null) {
             throw new FastcmsException(FastcmsException.INVALID_PARAM, "用户不存在");
         }
-        user.setPassword(passwordEncoder.encode(updatePasswordParam.getPassword()));
+        user.setPassword(passwordEncoder.encode(updatePasswordParam.getPassword().trim()));
 
         updateById(user);
     }
