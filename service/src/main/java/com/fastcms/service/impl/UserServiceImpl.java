@@ -215,8 +215,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             throw new FastcmsException(FastcmsException.INVALID_PARAM, "请输入完成注册数据");
         }
 
+        final String userName = username.trim();
         Pattern p = Pattern.compile("[0-9]*");
-        Matcher m = p.matcher(username);
+        Matcher m = p.matcher(userName);
         if (m.matches()) {
             throw new FastcmsException(FastcmsException.INVALID_PARAM, "注册账号不能全是数字");
         }
@@ -237,7 +238,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         if(user != null) throw new FastcmsException(FastcmsException.INVALID_PARAM, "账号已存在");
 
         user = new User();
-        user.setUserName(username);
+        user.setUserName(userName);
         user.setSex(User.SEX_MAN);
         user.setPassword(passwordEncoder.encode(password));
         user.setSource(User.SourceType.WEB_REGISTER.name().toLowerCase());
@@ -248,7 +249,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public synchronized String getLastUserNum() {
-        return String.valueOf(getBaseMapper().getLastUserNum() + 10000);
+        return String.valueOf(getBaseMapper().getLastUserNum() + "1000".hashCode());
     }
 
 }
