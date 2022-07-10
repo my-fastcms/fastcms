@@ -19,6 +19,7 @@
         <module>wechat-starter</module>
         <module>lucene-starter</module>
         <module>mybatis-starter</module>
+        <module>email-starter</module>
     </modules>
 
     <dependencies>

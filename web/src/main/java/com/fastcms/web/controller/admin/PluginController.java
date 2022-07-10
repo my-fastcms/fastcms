@@ -51,7 +51,7 @@ import java.nio.file.Paths;
 public class PluginController {
 
     @Autowired
-    private PluginManagerService pluginService;
+    private PluginManagerService pluginManagerService;
 
     /**
      * 插件列表
@@ -62,7 +62,7 @@ public class PluginController {
     @GetMapping("list")
     @Secured(name = "插件列表", resource = "plugin:list", action = ActionTypes.READ)
     public RestResult<Page<PluginManagerService.PluginVo>> list(PageModel page, String pluginId, String provider) {
-        PluginManagerService.PluginResult pluginResult = pluginService.getPluginList(page.getPageNum().intValue(), page.getPageSize().intValue(), pluginId, provider);
+        PluginManagerService.PluginResult pluginResult = pluginManagerService.getPluginList(page.getPageNum().intValue(), page.getPageSize().intValue(), pluginId, provider);
         return RestResultUtils.success(new Page<PluginManagerService.PluginVo>(page.getPageNum(), page.getPageSize(), pluginResult.getTotal())
                 .setRecords(pluginResult.getPluginVoList()));
     }
@@ -93,7 +93,7 @@ public class PluginController {
         File uploadFile = new File(DirUtils.getPluginDir(), file.getOriginalFilename());
         try {
             file.transferTo(uploadFile);
-            pluginService.installPlugin(Paths.get(uploadFile.getPath()));
+            pluginManagerService.installPlugin(Paths.get(uploadFile.getPath()));
             return RestResultUtils.success();
         } catch (Exception e) {
             if(e instanceof FastcmsException == false) {
@@ -120,7 +120,7 @@ public class PluginController {
         }
 
         try {
-            pluginService.unInstallPlugin(pluginId);
+            pluginManagerService.unInstallPlugin(pluginId);
             return RestResultUtils.success();
         } catch (Exception e) {
             if(e instanceof FastcmsException == false) {
@@ -139,7 +139,7 @@ public class PluginController {
     @GetMapping("config/url/{pluginId}")
     @Secured(name = "插件配置", resource = "plugin:config/url", action = ActionTypes.WRITE)
     public RestResult<String> getPluginConfigUrl(@PathVariable("pluginId") String pluginId) {
-        Plugin plugin = pluginService.getPluginManager().getPlugin(pluginId).getPlugin();
+        Plugin plugin = pluginManagerService.getPluginManager().getPlugin(pluginId).getPlugin();
         if(plugin instanceof PluginBase) {
             PluginBase pluginBase = (PluginBase) plugin;
             return RestResultUtils.success(pluginBase.getConfigUrl());

@@ -98,6 +98,19 @@ public interface FastcmsConstants {
     String SERVER_PORT = "serverPort";
 
     /**
+     * ================
+     * email 配置相关
+     * ================
+     */
+    String EMAIL_HOST = "email_host";
+
+    String EMAIL_PORT = "email_port";
+
+    String EMAIL_USERNAME = "email_username";
+
+    String EMAIL_PASSWORD = "email_password";
+
+    /**
      * The constants in exception directory.
      */
     class Exception {

@@ -26,3 +26,13 @@ export function getConfigList(params: string) {
 	});
 }
 
+/**
+ * 测试邮件配置
+ * @returns 
+ */
+export function testMailConfig() {
+	return request({
+		url: '/admin/config/mail/test',
+		method: 'get'
+	});
+}

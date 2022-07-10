@@ -40,35 +40,27 @@ import static com.fastcms.common.constants.FastcmsConstants.*;
  * @version: 1.0
  */
 @Component
-public class WechatMiniAppConfigListener implements ConfigListener, ApplicationListener<ApplicationStartedEvent> {
+public class WechatMiniAppConfigListener extends AbstractConfigListener implements ApplicationListener<ApplicationStartedEvent> {
 
     @Autowired
     private WxMaService wxMaService;
 
     @Override
-    public void change(Map<String, String> datasMap) {
-        if (isMatch(datasMap)) {
-            WxMaDefaultConfigImpl configStorage = new WxMaDefaultConfigImpl();
-            configStorage.setAppid(getAppId());
-            configStorage.setSecret(getAppSecret());
-            configStorage.setToken(getAppToken());
-            configStorage.setAesKey(getAppAesKey());
-            Map<String, WxMaConfig> configStorages = Maps.newHashMap();
-            configStorages.put(configStorage.getAppid(), configStorage);
-
-            wxMaService.setMultiConfigs(configStorages, configStorage.getAppid());
-        }
+    protected String getMatchKey() {
+        return "wechat_miniapp_";
     }
 
     @Override
-    public boolean isMatch(Map<String, String> datasMap) {
-        for (Map.Entry<String, String> entry : datasMap.entrySet()) {
-            String key = entry.getKey().trim();
-            if(WECHAT_MINIAPP_APP_ID.equals(key)) {
-                return true;
-            }
-        }
-        return false;
+    protected void doChange(Map<String, String> datasMap) {
+        WxMaDefaultConfigImpl configStorage = new WxMaDefaultConfigImpl();
+        configStorage.setAppid(getAppId());
+        configStorage.setSecret(getAppSecret());
+        configStorage.setToken(getAppToken());
+        configStorage.setAesKey(getAppAesKey());
+        Map<String, WxMaConfig> configStorages = Maps.newHashMap();
+        configStorages.put(configStorage.getAppid(), configStorage);
+
+        wxMaService.setMultiConfigs(configStorages, configStorage.getAppid());
     }
 
     @Override

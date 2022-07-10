@@ -71,6 +71,11 @@
             <artifactId>fastcms-lucene-starter</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.fastcms</groupId>
+            <artifactId>fastcms-email-starter</artifactId>
+        </dependency>
+
     </dependencies>
 
 

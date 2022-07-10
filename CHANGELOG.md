@@ -40,3 +40,4 @@
 - 修复小程序授权没有创建用户账号
 - 支持docker
 - 支持插件中的url跳过Spring Security
+- 支持邮件发送

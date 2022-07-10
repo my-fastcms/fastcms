@@ -138,6 +138,11 @@
 			</dependency>
 			<dependency>
 				<groupId>com.fastcms</groupId>
+				<artifactId>fastcms-email-starter</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fastcms</groupId>
 				<artifactId>fastcms-mybatis-starter</artifactId>
 				<version>${revision}</version>
 			</dependency>

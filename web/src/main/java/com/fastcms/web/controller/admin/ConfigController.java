@@ -24,13 +24,13 @@ import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.config.ConfigListenerManager;
 import com.fastcms.entity.Config;
 import com.fastcms.service.IConfigService;
+import com.fastcms.utils.ApplicationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
@@ -93,7 +93,9 @@ public class ConfigController {
 		}
 
 		try {
-			configListenerManager.change(datasMap);
+			if (datasMap.size() > 0) {
+				configListenerManager.change(datasMap);
+			}
 		} catch (Exception e) {
 		}
 
@@ -109,6 +111,20 @@ public class ConfigController {
 	@Secured(name = "配置列表", resource = "config:list", action = ActionTypes.READ)
 	public RestResult<List<Config>> getConfigList(@RequestParam("configKeys") List<String> configKeys) {
 		return RestResultUtils.success(configService.getConfigs(configKeys));
+	}
+
+	/**
+	 * 测试邮件配置
+	 * @return
+	 */
+	@GetMapping("mail/test")
+	public Object testMailConfig() {
+		try {
+			ApplicationUtils.getBean(JavaMailSenderImpl.class).testConnection();
+			return RestResultUtils.success();
+		} catch (MessagingException e) {
+			return RestResultUtils.failed(e.getMessage());
+		}
 	}
 
 }

@@ -40,35 +40,27 @@ import static com.fastcms.common.constants.FastcmsConstants.*;
  * @version: 1.0
  */
 @Component
-public class WechatMpConfigListener implements ConfigListener, ApplicationListener<ApplicationStartedEvent> {
+public class WechatMpConfigListener extends AbstractConfigListener implements ApplicationListener<ApplicationStartedEvent> {
 
     @Autowired
     private WxMpService wxMpService;
 
     @Override
-    public void change(Map<String, String> datasMap) {
-        if (isMatch(datasMap)) {
-            WxMpDefaultConfigImpl configStorage = new WxMpDefaultConfigImpl();
-            configStorage.setAppId(getAppId());
-            configStorage.setSecret(getAppSecret());
-            configStorage.setToken(getAppToken());
-            configStorage.setAesKey(getAppAesKey());
-            Map<String, WxMpConfigStorage> configStorages = Maps.newHashMap();
-            configStorages.put(configStorage.getAppId(), configStorage);
-
-            wxMpService.setMultiConfigStorages(configStorages, configStorage.getAppId());
-        }
+    protected String getMatchKey() {
+        return "wechate_mp_";
     }
 
     @Override
-    public boolean isMatch(Map<String, String> datasMap) {
-        for (Map.Entry<String, String> entry : datasMap.entrySet()) {
-            String key = entry.getKey().trim();
-            if(WECHAT_MP_APP_ID.equals(key)) {
-                return true;
-            }
-        }
-        return false;
+    protected void doChange(Map<String, String> datasMap) {
+        WxMpDefaultConfigImpl configStorage = new WxMpDefaultConfigImpl();
+        configStorage.setAppId(getAppId());
+        configStorage.setSecret(getAppSecret());
+        configStorage.setToken(getAppToken());
+        configStorage.setAesKey(getAppAesKey());
+        Map<String, WxMpConfigStorage> configStorages = Maps.newHashMap();
+        configStorages.put(configStorage.getAppId(), configStorage);
+
+        wxMpService.setMultiConfigStorages(configStorages, configStorage.getAppId());
     }
 
     @Override

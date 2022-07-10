@@ -16,6 +16,7 @@
  */
 package com.fastcms.web;
 
+import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.http.HttpRestResult;
 import com.fastcms.common.utils.HttpUtils;
 import com.fastcms.core.sms.AliyunSmsSender;
@@ -23,15 +24,21 @@ import com.fastcms.core.sms.SmsMessage;
 import com.fastcms.plugin.FastcmsPluginManager;
 import com.fastcms.plugin.register.CompoundPluginRegister;
 import com.fastcms.utils.ApplicationUtils;
+import com.fastcms.utils.ConfigUtils;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.annotation.Resource;
+import javax.mail.internet.MimeMessage;
 import java.lang.reflect.Method;
+import java.util.Date;
 
 /**
  * @author： wjun_java@163.com
@@ -54,6 +61,9 @@ public class TestCaseService {
     @Autowired
     private FastcmsPluginManager fastcmsPluginManager;
 
+    @Autowired
+    private JavaMailSenderImpl javaMailSender;
+
     @Test
     public void testPasswordEncode() {
         logger.info(passwordEncoder.encode("1"));
@@ -70,6 +80,30 @@ public class TestCaseService {
         SmsMessage smsMessage = new SmsMessage("13533109940", "小橘灯", "SMS_198840162", "1688");
         boolean send = aliyunSmsSender.send(smsMessage);
         logger.info("============>>>send:" + send);
+    }
+
+    @Test
+    public void testSendMail() {
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setFrom(ConfigUtils.getConfig(FastcmsConstants.EMAIL_USERNAME));
+        simpleMailMessage.setTo("24582711@qq.com");
+        simpleMailMessage.setSubject("测试邮件");
+        simpleMailMessage.setText("您的fastcms初始密码：888888");
+        javaMailSender.send(simpleMailMessage);
+    }
+
+    @Test
+    public void testSendHtmlMail() throws Exception {
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+        helper.setFrom(ConfigUtils.getConfig(FastcmsConstants.EMAIL_USERNAME));
+        helper.setTo("24582711@qq.com");
+        helper.setSubject("Fastcms测试Html邮件");
+        helper.setText("<p>您的fastcms初始账号密码为:888888</p>" +
+                "<p>fastcms官网：https://www.xjd2020.com</p>" +
+                "<p>fastcms文档：http://doc.xjd2020.com</p>", true);
+        helper.setSentDate(new Date());
+        javaMailSender.send(mimeMessage);
     }
 
     @Test
