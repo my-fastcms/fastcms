@@ -68,6 +68,7 @@ public class EmailConfigListener extends AbstractConfigListener implements Appli
 		mailProperties.setPort(getEmailPort());
 		mailProperties.setUsername(getEmailUserName());
 		mailProperties.setPassword(getEmailPassword());
+		mailProperties.getProperties().put("mail.".concat(mailProperties.getProtocol()).concat(".socketFactory.port"), "465");
 
 		applyProperties(mailProperties, javaMailSender);
 	}

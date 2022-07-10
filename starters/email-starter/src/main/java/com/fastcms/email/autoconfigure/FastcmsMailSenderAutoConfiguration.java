@@ -46,6 +46,8 @@ public class FastcmsMailSenderAutoConfiguration {
 	@ConditionalOnMissingBean(JavaMailSender.class)
 	JavaMailSenderImpl mailSender(MailProperties properties) {
 		properties.getProperties().put("mail.".concat(properties.getProtocol()).concat(".timeout"), "10000");
+		properties.getProperties().put("mail.".concat(properties.getProtocol()).concat(".ssl.enable"), "true");
+		properties.getProperties().put("mail.".concat(properties.getProtocol()).concat(".socketFactory.class"), "javax.net.ssl.SSLSocketFactory");
 		JavaMailSenderImpl sender = new JavaMailSenderImpl();
 		return sender;
 	}
