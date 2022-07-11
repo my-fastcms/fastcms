@@ -21,7 +21,9 @@ import com.fastcms.entity.Role;
 import com.fastcms.entity.User;
 import com.fastcms.service.IRoleService;
 import com.fastcms.service.IUserService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -51,7 +53,9 @@ public class FastcmsUserDetailsServiceImpl implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userService.getOne(Wrappers.<User>lambdaQuery().eq(User::getUserName, username));
-		if(user == null) throw new UsernameNotFoundException(username);
+		if (user == null) throw new UsernameNotFoundException(username);
+		if (StringUtils.isBlank(user.getPassword())) throw new BadCredentialsException(username);
+
 		List<Role> userRoleList = roleService.getUserRoleList(user.getId());
 		List<GrantedAuthority> collect = userRoleList.stream().map(item -> new SimpleGrantedAuthority(String.valueOf(item.getId()))).collect(Collectors.toList());
 		return new FastcmsUserDetails(user.getId(), user.getUserName(), user.getPassword(), user.getUserType(), collect);
