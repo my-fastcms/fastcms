@@ -7,6 +7,8 @@ INSERT INTO `permission`(`id`, `parent_id`, `name`, `path`, `component`, `title`
 VALUES (37, 0, 'user', '/user', 'layout/routerView/parent', 'message.router.user', 'el-icon-user', 0, 0, 0, 0, 0, 0, NULL, '2022-04-27 11:02:31', NULL);
 INSERT INTO `permission`(`id`, `parent_id`, `name`, `path`, `component`, `title`, `icon`, `is_link`, `is_hide`, `is_keep_alive`, `is_affix`, `is_iframe`, `sort_num`, `category`, `created`, `updated`)
 VALUES (38, 37, 'userManager', '/user/index', 'user/index', 'message.router.userManager', 'el-icon-user-solid', 0, 0, 0, 0, 0, 0, NULL, '2022-04-27 11:13:00', NULL);
+INSERT INTO `permission` (`id`, `parent_id`, `name`, `path`, `component`, `title`, `icon`, `is_link`, `is_hide`, `is_keep_alive`, `is_affix`, `is_iframe`, `sort_num`, `category`, `created`, `updated`)
+VALUES ('39', '2', 'systemRes', '/system/res', 'system/res/index', 'message.router.systemRes', 'el-icon-s-data', '0', '0', '0', '0', '0', '0', NULL, '2022-05-02 18:15:51', '2022-05-02 18:20:17');
 
 CREATE TABLE `resource` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
