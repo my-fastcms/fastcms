@@ -17,6 +17,7 @@
 package com.fastcms.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fastcms.common.constants.FastcmsConstants;
 import org.apache.commons.lang.StringUtils;
 
 import javax.validation.constraints.NotBlank;
@@ -395,6 +396,10 @@ public class User implements Serializable {
     public String getSourceStr() {
         String text = SourceType.getValue(getSource());
         return StringUtils.isBlank(text) ? "" : text;
+    }
+
+    public String getStatusStr() {
+        return getStatus() != null && getStatus() == FastcmsConstants.STATUS_NORMAL ? "启用" : "禁用";
     }
 
     public String getAvatar() {

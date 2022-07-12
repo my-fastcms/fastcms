@@ -1,6 +1,6 @@
 <template>
 	<div class="system-menu-container">
-		<el-dialog title="编辑用户" v-model="isShowDialog" width="769px">
+		<el-dialog title="编辑员工" v-model="isShowDialog" width="769px">
 			<el-form :model="ruleForm" size="small" label-width="80px" :rules="rules" ref="myRefForm">
 				<el-row :gutter="35">
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">

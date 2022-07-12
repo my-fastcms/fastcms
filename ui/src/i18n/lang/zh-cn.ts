@@ -4,7 +4,7 @@ export default {
 		home: '首页',
 		system: '权限',
 		systemMenu: '路由管理',
-		systemUser: '用户管理',
+		systemUser: '员工管理',
 		systemRole: '角色管理',
 		systemDept: '部门管理',
 		systemRes: '资源管理',

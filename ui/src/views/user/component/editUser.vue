@@ -68,6 +68,7 @@
 			<template #footer>
 				<span class="dialog-footer">
 					<el-button @click="onCancel" size="small">取 消</el-button>
+					<el-button type="primary" :loading="loading" @click="onSetSystemUser" size="small">设为员工</el-button>
 					<el-button type="primary" @click="onSubmit" size="small">保 存</el-button>
 				</span>
 			</template>
@@ -77,8 +78,8 @@
 
 <script lang="ts">
 import { reactive, toRefs, getCurrentInstance, onMounted, onUpdated } from 'vue';
-import { ElMessage } from 'element-plus';
-import { saveUser, getUserInfo, getTagList } from '/@/api/user/index';
+import { ElMessageBox, ElMessage } from 'element-plus';
+import { saveUser, getUserInfo, getTagList, changeUserType } from '/@/api/user/index';
 import qs from 'qs';
 
 export default {
@@ -86,6 +87,7 @@ export default {
 	setup(props, ctx) {
 		const { proxy } = getCurrentInstance() as any;
 		const state = reactive({
+			loading: false,
 			isShowDialog: false,
 			deptList: [],
 			tags: [],
@@ -144,6 +146,30 @@ export default {
 
 		};
 
+		// 设置用户为系统用户
+		const onSetSystemUser = () => {
+			ElMessageBox.confirm('确定将用户['+state.ruleForm.userName+']设置为员工吗?', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning',
+			}).then(() => {
+				state.loading = true;
+				let params = qs.stringify({"userId": state.ruleForm.id, "userType": 1}, {arrayFormat: 'repeat'});
+				changeUserType(params).then(() => {
+					state.loading = false;
+					ElMessage.success("设置成功");
+					closeDialog(); // 关闭弹窗
+					// 刷新菜单，未进行后端接口测试
+					initForm();
+					ctx.emit("reloadTable");
+				}).catch((res) => {
+					state.loading = false;
+					ElMessage.error(res.message);
+				});
+			})
+			.catch(() => {});
+		};
+
 		const loadRoleList = () => {
 			
 			getTagList().then((res) => {
@@ -196,6 +222,7 @@ export default {
 			closeDialog,
 			onCancel,
 			onSubmit,
+			onSetSystemUser,
 			loadRoleList,
 			...toRefs(state),
 		};

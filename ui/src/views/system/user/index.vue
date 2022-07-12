@@ -2,7 +2,7 @@
 	<div class="system-user-container">
 		<el-card shadow="hover">
 			<div class="system-role-search mb15">
-				<el-button @click="onOpenAddUser" class="mt15" size="small" type="primary" icon="iconfont icon-shuxingtu">新建用户</el-button>
+				<el-button @click="onOpenAddUser" class="mt15" size="small" type="primary" icon="iconfont icon-shuxingtu">新建员工</el-button>
 				<el-input size="small" v-model="tableData.param.username" placeholder="请输入账号" style="max-width: 180px" class="ml10"></el-input>
 				<el-input size="small" v-model="tableData.param.phone" placeholder="请输入手机号" style="max-width: 180px" class="ml10"></el-input>
 				<el-button size="small" type="primary" class="ml10" @click="initTableData">查询</el-button>

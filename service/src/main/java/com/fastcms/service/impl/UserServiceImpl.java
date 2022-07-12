@@ -14,13 +14,21 @@ import com.fastcms.mapper.RoleMapper;
 import com.fastcms.mapper.UserMapper;
 import com.fastcms.mapper.UserTagMapper;
 import com.fastcms.service.*;
+import com.fastcms.utils.ConfigUtils;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -52,6 +60,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Autowired
     private IDepartmentService departmentService;
+
+    @Autowired
+    private JavaMailSenderImpl javaMailSender;
 
     @Override
     public void updateUserPassword(UpdatePasswordParam updatePasswordParam) throws FastcmsException {
@@ -250,6 +261,54 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public synchronized String getLastUserNum() {
         return String.valueOf(getBaseMapper().getLastUserNum() + "1000".hashCode());
+    }
+
+    @Override
+    public void changeUserTyp(Long userId, Integer userType) throws FastcmsException {
+        if (userId != null && userId == FastcmsConstants.ADMIN_USER_ID) {
+            throw new FastcmsException("超级管理员不可修改用户类型");
+        }
+
+        User user = getById(userId);
+        if (user == null) {
+            throw new FastcmsException("用户不存在");
+        }
+
+        if (user.getStatus() != null && user.getStatus() == 0) {
+            throw new FastcmsException("用户已禁用");
+        }
+
+        if (user.getUserType() == userType) {
+            throw new FastcmsException("当前状态与修改状态相同，无需修改");
+        }
+
+        if (org.apache.commons.lang3.StringUtils.isBlank(user.getEmail())) {
+            throw new FastcmsException("请补全用户邮箱地址，用来接收邮件");
+        }
+
+        try {
+            String password = RandomStringUtils.random(8, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+            helper.setFrom(ConfigUtils.getConfig(FastcmsConstants.EMAIL_USERNAME));
+            helper.setTo(user.getEmail());
+            helper.setSubject("Fastcms员工账号激活");
+            helper.setText(
+                    "<p>您的Fastcms账号为:" + user.getUserName() + "</p>" +
+                    "<p>您的Fastcms账号初始密码为:" + password + "</p>" +
+                    "<p>Fastcms官网：https://www.xjd2020.com</p>" +
+                    "<p>Fastcms文档：http://doc.xjd2020.com</p>", true);
+            helper.setSentDate(new Date());
+            javaMailSender.send(mimeMessage);
+
+            user.setPassword(passwordEncoder.encode(password));
+
+        } catch (MailException | MessagingException e) {
+            throw new FastcmsException("邮件发送失败，请检查邮箱地址：" + user.getEmail());
+        }
+
+        user.setUserType(userType);
+        updateById(user);
     }
 
 }

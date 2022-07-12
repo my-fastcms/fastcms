@@ -11,14 +11,13 @@
 				<el-table-column prop="id" label="ID" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="userName" label="登录账号" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="nickName" label="用户昵称" show-overflow-tooltip></el-table-column>
-				<!-- <el-table-column prop="email" label="邮箱" show-overflow-tooltip></el-table-column> -->
 				<el-table-column prop="sourceStr" label="来源" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="statusStr" label="状态" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="created" label="加入时间" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="path" label="操作" width="190">
 					<template #default="scope">
 						<el-button size="mini" type="text" @click="onOpenEditUser(scope.row)">修改</el-button>
 						<el-button size="mini" type="text" @click="onRowDel(scope.row)">删除</el-button>
-						<el-button size="mini" type="text" @click="onSetSystemUser(scope.row)">设为系统用户</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -46,8 +45,7 @@ import { ElMessageBox, ElMessage } from 'element-plus';
 import { ref, toRefs, reactive, onMounted } from 'vue';
 import AddUser from '/@/views/user/component/addUser.vue';
 import EditUser from '/@/views/user/component/editUser.vue';
-import { getUserList, delUser, changeUserType } from '/@/api/user/index';
-import qs from 'qs';
+import { getUserList, delUser } from '/@/api/user/index';
 
 export default {
 	name: 'systemUser',
@@ -102,23 +100,7 @@ export default {
 			})
 			.catch(() => {});
 		};
-		// 设置用户为系统用户
-		const onSetSystemUser = (row: object) => {
-			ElMessageBox.confirm('确定将用户['+row.userName+']设置为系统用户吗?', '提示', {
-				confirmButtonText: '确定',
-				cancelButtonText: '取消',
-				type: 'warning',
-			}).then(() => {
-				let params = qs.stringify({"userId": row.id, "userType": 1}, {arrayFormat: 'repeat'});
-				changeUserType(params).then(() => {
-					ElMessage.success("设置成功");
-					initTableData();
-				}).catch((res) => {
-					ElMessage.error(res.message);
-				});
-			})
-			.catch(() => {});
-		};
+		
 		// 分页改变
 		const onHandleSizeChange = (val: number) => {
 			state.tableData.param.pageSize = val;
@@ -139,7 +121,6 @@ export default {
 			onOpenEditUser,
 			onOpenAddUser,
 			onRowDel,
-			onSetSystemUser,
 			onHandleSizeChange,
 			onHandleCurrentChange,
 			initTableData,

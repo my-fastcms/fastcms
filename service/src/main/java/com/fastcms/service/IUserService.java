@@ -88,6 +88,13 @@ public interface IUserService extends IService<User> {
     String getLastUserNum();
 
     /**
+     * 设置用户类型
+     * @param userId
+     * @param userType
+     */
+    void changeUserTyp(Long userId, Integer userType) throws FastcmsException;
+
+    /**
      * 修改用户信息
      */
     class UpdateUserParam implements Serializable {
