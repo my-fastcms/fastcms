@@ -68,7 +68,7 @@
 			<template #footer>
 				<span class="dialog-footer">
 					<el-button @click="onCancel" size="small">取 消</el-button>
-					<el-button type="primary" :loading="loading" @click="onSetSystemUser" size="small">设为员工</el-button>
+					<el-button :loading="loading" @click="onSetSystemUser" size="small">设为员工</el-button>
 					<el-button type="primary" @click="onSubmit" size="small">保 存</el-button>
 				</span>
 			</template>

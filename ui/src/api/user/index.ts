@@ -77,6 +77,20 @@ export function updatePassword(params?: string) {
 }
 
 /**
+ * 重置用户密码
+ * @param params 
+ * @returns 
+ */
+ export function resetPassword(params?: string) {
+	return request({
+		url: '/admin/user/reset/password',
+		method: 'post',
+		data: params,
+		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+	});
+}
+
+/**
  * 改变用户类型
  * @param params 
  * @returns 

@@ -95,6 +95,13 @@ public interface IUserService extends IService<User> {
     void changeUserTyp(Long userId, Integer userType) throws FastcmsException;
 
     /**
+     * 重置用户密码
+     * @param userId
+     * @throws FastcmsException
+     */
+    void resetPassword(Long userId) throws FastcmsException;
+
+    /**
      * 修改用户信息
      */
     class UpdateUserParam implements Serializable {

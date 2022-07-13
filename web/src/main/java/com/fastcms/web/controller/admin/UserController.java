@@ -179,6 +179,26 @@ public class UserController {
         return RestResultUtils.success();
     }
 
+    /**
+     * 管理员重置用户密码
+     * @param userId
+     * @return
+     * @throws FastcmsException
+     */
+    @PostMapping("/reset/password")
+    @Secured(name = "用户类型修改", resource = "users:resetPassword", action = ActionTypes.WRITE)
+    public Object resetPassword(@RequestParam("userId") Long userId) throws FastcmsException {
+        userService.resetPassword(userId);
+        return RestResultUtils.success();
+    }
+
+    /**
+     * 修改用户类型
+     * @param userId
+     * @param userType
+     * @return
+     * @throws FastcmsException
+     */
     @PostMapping("changUserType")
     @Secured(name = "用户类型修改", resource = "users:changeUserType", action = ActionTypes.WRITE)
     public Object changeUserType(@RequestParam("userId") Long userId, @RequestParam("userType") Integer userType) throws FastcmsException {
