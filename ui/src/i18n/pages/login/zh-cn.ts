@@ -8,13 +8,14 @@ export default {
 		one3: '新用户注册',
 		two4: '友情链接',
 		two5: '已有账号?现在登录',
+		two6: '找回密码',
 	},
 	copyright: {
 		one5: '版权所有：广州小橘灯信息科技有限公司',
 		two6: 'Copyright: Guangzhou xiaojuedeng Software Technology 粤ICP备20053122号',
 	},
 	account: {
-		accountPlaceholder1: '用户名',
+		accountPlaceholder1: '账号',
 		accountPlaceholder2: '密码',
 		accountPlaceholder3: '请输入验证码',
 		accountPlaceholder4: '确认密码',

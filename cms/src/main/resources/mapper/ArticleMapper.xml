@@ -82,14 +82,14 @@
     </select>
 
     <select id="getArticleListByCategoryId" resultType="com.fastcms.cms.service.IArticleService$ArticleVo">
-        select a.id, a.title, a.status, a.created, a.view_count, a.thumbnail, u.user_name as author from article_category_relation acr
+        select a.id, a.title, a.status, a.created, a.view_count, a.thumbnail, a.summary, u.user_name as author from article_category_relation acr
         join article a on acr.article_id = a.id
         LEFT JOIN `user` u on a.user_id = u.id
         ${ew.customSqlSegment}
     </select>
 
     <select id="getArticleListByTagId" resultType="com.fastcms.cms.service.IArticleService$ArticleVo">
-        select a.id, a.title, a.status, a.created, a.view_count, a.thumbnail, u.user_name as author from article_tag_relation acr
+        select a.id, a.title, a.status, a.created, a.view_count, a.thumbnail, a.summary, u.user_name as author from article_tag_relation acr
         join article a on acr.article_id = a.id
         LEFT JOIN `user` u on a.user_id = u.id
         ${ew.customSqlSegment}
