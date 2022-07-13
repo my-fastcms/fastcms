@@ -84,6 +84,14 @@ export const staticRoutes: Array<RouteRecordRaw> = [
 		},
 	},
 	{
+		path: '/rest/password',
+		name: 'restPassword',
+		component: () => import('/@/views/register/restPassword.vue'),
+		meta: {
+			title: 'message.staticRoutes.restPassword',
+		},
+	},
+	{
 		path: '/404',
 		name: 'notFound',
 		component: () => import('/@/views/error/404.vue'),

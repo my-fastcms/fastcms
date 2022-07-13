@@ -49,6 +49,7 @@ export default {
 		register: '注册',
 		notFound: '找不到此页面',
 		noPower: '没有权限',
+		restPassword: '找回密码',
 	},
 	centerRoutes: {
 		attachManager: '我的附件',

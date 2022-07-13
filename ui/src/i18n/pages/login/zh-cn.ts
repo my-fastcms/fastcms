@@ -19,8 +19,10 @@ export default {
 		accountPlaceholder2: '密码',
 		accountPlaceholder3: '请输入验证码',
 		accountPlaceholder4: '确认密码',
+		accountPlaceholder5: '邮箱',
 		accountBtnText: '登 录',
 		accountRegistBtnText: '注 册',
+		accountRestPasswordBtnText: '重置密码',
 	},
 	mobile: {
 		placeholder1: '请输入手机号',
