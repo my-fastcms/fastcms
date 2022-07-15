@@ -27,7 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @modifiedBy：
  * @version: 1.0
  */
-public class TemplateBaseController {
+public abstract class TemplateBaseController {
 
 	@Autowired
 	private TemplateService templateService;
