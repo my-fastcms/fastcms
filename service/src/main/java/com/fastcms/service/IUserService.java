@@ -102,6 +102,13 @@ public interface IUserService extends IService<User> {
     void resetPassword(Long userId) throws FastcmsException;
 
     /**
+     * 根据openid获取用户信息
+     * @param openId
+     * @return
+     */
+    User getUserByOpenId(String openId);
+
+    /**
      * 修改用户信息
      */
     class UpdateUserParam implements Serializable {

@@ -81,15 +81,9 @@ public class ArticleCommentApi {
 	 * @return
 	 */
 	@PostMapping("save")
-	public Object saveComment(Long articleId, Long commentId, String context) {
-
-		try {
-			articleCommentService.saveArticleComment(articleId, commentId, context);
-			return RestResultUtils.success();
-		} catch (FastcmsException e) {
-			return RestResultUtils.failed(e.getMessage());
-		}
-
+	public Object saveComment(Long articleId, Long commentId, String context) throws FastcmsException {
+		articleCommentService.saveArticleComment(articleId, commentId, context);
+		return RestResultUtils.success();
 	}
 
 }

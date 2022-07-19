@@ -355,4 +355,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     }
 
+    @Override
+    public User getUserByOpenId(String openId) {
+        UserOpenid userOpenid = userOpenidService.getOne(Wrappers.<UserOpenid>lambdaQuery().eq(UserOpenid::getValue, openId));
+        return userOpenid == null ? null : getById(userOpenid.getValue());
+    }
+
 }

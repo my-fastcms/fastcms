@@ -18,6 +18,7 @@ package com.fastcms.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang.StringUtils;
 
 import javax.validation.constraints.NotBlank;
@@ -154,6 +155,7 @@ public class User implements Serializable {
     /**
      * 登录密码
      */
+    @JsonIgnore
     private String password;
 
     /**

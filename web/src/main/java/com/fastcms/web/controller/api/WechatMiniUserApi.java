@@ -154,7 +154,7 @@ public class WechatMiniUserApi {
 
 		try {
 			User user = userService.saveWxMaUserInfo(userInfo);
-			return RestResultUtils.success(tokenManager.createToken(user.getId(), user.getNickName()));
+			return RestResultUtils.success(tokenManager.createToken(user.getId(), user.getUserName()));
 		} catch (FastcmsException e) {
 			e.printStackTrace();
 			return RestResultUtils.failed("登录失败:user is null");

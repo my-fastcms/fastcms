@@ -17,6 +17,7 @@
 package com.fastcms.web.controller.api;
 
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.auth.AuthUtils;
@@ -79,14 +80,10 @@ public class UserApi {
      * @return
      */
     @PostMapping("password/update")
-    public Object updatePwd(@Validated IUserService.UpdatePasswordParam updatePasswordParam) {
-        try {
-            updatePasswordParam.setId(AuthUtils.getUserId());
-            userService.updateUserPassword(updatePasswordParam);
-            return RestResultUtils.success();
-        } catch (Exception e) {
-            return RestResultUtils.failed(e.getMessage());
-        }
+    public Object updatePwd(@Validated IUserService.UpdatePasswordParam updatePasswordParam) throws FastcmsException {
+        updatePasswordParam.setId(AuthUtils.getUserId());
+        userService.updateUserPassword(updatePasswordParam);
+        return RestResultUtils.success();
     }
 
     /**
