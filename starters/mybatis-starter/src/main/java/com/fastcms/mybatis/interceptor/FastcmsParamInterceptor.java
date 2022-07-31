@@ -52,10 +52,11 @@ public class FastcmsParamInterceptor implements Interceptor {
         Object target = invocation.getTarget();
         Object[] args = invocation.getArgs();
 
-        log.debug(">>>>>>param target:" + target);
-
-        if (args != null && args.length >0) {
-            log.debug(">>>>param len:" + args.length);
+        if (target instanceof ParameterHandler) {
+            log.debug(">>>>>>param target:" + target);
+            if (args != null && args.length >0) {
+                log.debug(">>>>param len:" + args.length);
+            }
         }
 
         return invocation.proceed();
