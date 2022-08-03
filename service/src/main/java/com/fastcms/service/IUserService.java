@@ -92,7 +92,7 @@ public interface IUserService extends IService<User> {
      * @param userId
      * @param userType
      */
-    void changeUserTyp(Long userId, Integer userType) throws FastcmsException;
+    void changeUserType(Long userId, Integer userType) throws FastcmsException;
 
     /**
      * 重置用户密码

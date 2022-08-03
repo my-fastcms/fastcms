@@ -202,7 +202,7 @@ public class UserController {
     @PostMapping("changUserType")
     @Secured(name = "用户类型修改", resource = "users:changeUserType", action = ActionTypes.WRITE)
     public Object changeUserType(@RequestParam("userId") Long userId, @RequestParam("userType") Integer userType) throws FastcmsException {
-        userService.changeUserTyp(userId, userType);
+        userService.changeUserType(userId, userType);
         return RestResultUtils.success();
     }
 

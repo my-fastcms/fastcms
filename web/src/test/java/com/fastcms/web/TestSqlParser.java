@@ -69,7 +69,7 @@ public class TestSqlParser {
 
     @Test
     public void test3() throws JSQLParserException {
-        String sql = "select DISTINCT t.* from (\n" +
+        String sql = "select * from (select * from (select DISTINCT t.* from (\n" +
                 "        select * from user u\n" +
                 "        join article a on u.id = a.user_id\n" +
                 "        UNION ALL\n" +
@@ -81,7 +81,7 @@ public class TestSqlParser {
                 "        UNION ALL\n" +
                 "        select * from user u\n" +
                 "        join article a on u.id = a.user_id\n" +
-                "        ) t";
+                "        ) t) a) b";
 
         Statement statement = CCJSqlParserUtil.parse(sql);
 

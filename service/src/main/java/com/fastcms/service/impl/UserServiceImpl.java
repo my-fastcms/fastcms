@@ -103,11 +103,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Transactional
     public Long saveUser(User user) throws FastcmsException {
 
+        if (user == null) {
+            throw new FastcmsException(FastcmsException.INVALID_PARAM, "user is null");
+        }
+
         if(user.getId() != null && Objects.equals(FastcmsConstants.ADMIN_USER_ID, user.getId())) {
             throw new FastcmsException(FastcmsException.NO_RIGHT, "超级管理员不可修改");
         }
 
         if(user.getId() == null) {
+            final String userName = user.getUserName();
+
+            if (StringUtils.isBlank(userName)) {
+                throw new FastcmsException(FastcmsException.INVALID_PARAM, "用户账号不能为空");
+            }
+
+            Pattern p = Pattern.compile("[0-9]*");
+            Matcher m = p.matcher(userName);
+            if (m.matches()) {
+                throw new FastcmsException(FastcmsException.INVALID_PARAM, "注册账号不能全是数字");
+            }
+
             User one = getOne(Wrappers.<User>lambdaQuery().eq(User::getUserName, user.getUserName()), false);
             if(one != null) throw new FastcmsException(FastcmsException.SERVER_ERROR, "账号已存在");
 
@@ -264,7 +280,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public void changeUserTyp(Long userId, Integer userType) throws FastcmsException {
+    public void changeUserType(Long userId, Integer userType) throws FastcmsException {
         if (userId != null && userId == FastcmsConstants.ADMIN_USER_ID) {
             throw new FastcmsException("超级管理员不可修改用户类型");
         }
