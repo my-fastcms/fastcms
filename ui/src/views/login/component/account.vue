@@ -129,16 +129,18 @@ export default defineComponent({
 		};
 
 		const signLogin = async() => {
+			state.loading.signIn = true;
 			signIn(qs.stringify(state.myForm)).then(res => {
+				state.loading.signIn = false;
 				doLogin(res);
 			}).catch((res) => {
+				state.loading.signIn = false;
 				refreshCode();
 				ElMessage({showClose: true, message: res.message ? res.message : '系统错误' , type: 'error'});
 			})
 		}
 
 		const doLogin = async(res: any) => {
-			state.loading.signIn = true;
 			//let defaultAuthPageList: Array<string> = ['admin'];
 			//let defaultAuthBtnList: Array<string> = ['btn.add', 'btn.del', 'btn.edit', 'btn.link'];
 			
