@@ -17,32 +17,24 @@
 
 package com.fastcms.core.mybatis;
 
-import com.fastcms.common.constants.FastcmsConstants;
-import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.mybatis.DataPermissionSqlHandler;
-import com.fastcms.mybatis.DataPermissionSqlHandlerFactory;
-import com.fastcms.utils.ApplicationUtils;
+import net.sf.jsqlparser.statement.Statement;
 import org.springframework.stereotype.Component;
 
 /**
- * fastcms数据权限sql处理器默认工厂实现
+ * fastcms 查看自身数据权限
  * @author： wjun_java@163.com
- * @date： 2022/7/31
+ * @date： 2022/8/1
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
 @Component
-public class DefaultDataPermissionSqlHandlerFactory implements DataPermissionSqlHandlerFactory {
+public class AllDataPermissionSqlHandler implements DataPermissionSqlHandler {
 
     @Override
-    public DataPermissionSqlHandler getDataPermissionSqlHandler() {
-
-        if (FastcmsConstants.ADMIN_USER_ID == AuthUtils.getUserId() || AuthUtils.getUserId() == null) {
-            return ApplicationUtils.getBean(AllDataPermissionSqlHandler.class);
-        }
-
-        return ApplicationUtils.getBean(SelfDataPermissionSqlHandler.class);
+    public String getSqlSegment(String mappedStatementId, String mainTable, Statement statement) throws Exception {
+        return null;
     }
 
 }

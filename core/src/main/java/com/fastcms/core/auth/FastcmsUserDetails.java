@@ -62,11 +62,11 @@ public class FastcmsUserDetails extends User {
 
 	public Boolean isAdmin() {
 		List<GrantedAuthority> collect = getAuthorities().stream().filter(item -> Objects.equals(Long.valueOf(item.getAuthority()), FastcmsConstants.ADMIN_ROLE_ID)).collect(Collectors.toList());
-		return collect != null && !collect.isEmpty();
+		return FastcmsConstants.ADMIN_USER_ID == this.userId || (collect != null && !collect.isEmpty());
 	}
 
 	public Boolean hasRole() {
-		return getAuthorities().size() > 0;
+		return FastcmsConstants.ADMIN_USER_ID == this.userId || getAuthorities().size() > 0;
 	}
 
 }

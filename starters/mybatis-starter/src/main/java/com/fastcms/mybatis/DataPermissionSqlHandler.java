@@ -36,6 +36,6 @@ public interface DataPermissionSqlHandler {
      * @param statement
      * @return
      */
-    String getSqlSegment(String mappedStatementId, String mainTable, Statement statement);
+    String getSqlSegment(String mappedStatementId, String mainTable, Statement statement) throws Exception;
 
 }

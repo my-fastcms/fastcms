@@ -28,15 +28,15 @@ import net.sf.jsqlparser.statement.select.SelectBody;
 import org.springframework.stereotype.Component;
 
 /**
- * fastcms 查看自身数据权限
+ * fastcms 部门主管数据权限
  * @author： wjun_java@163.com
- * @date： 2022/7/31
+ * @date： 2022/8/1
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
 @Component
-public class SelfDataPermissionSqlHandler implements DataPermissionSqlHandler {
+public class DeptLeaderDataPermissionSqlHandler implements DataPermissionSqlHandler {
 
     @Override
     public String getSqlSegment(String mappedStatementId, String mainTable, Statement statement) throws Exception {
@@ -45,7 +45,7 @@ public class SelfDataPermissionSqlHandler implements DataPermissionSqlHandler {
         SelectBody selectBody = select.getSelectBody();
         PlainSelect plainSelect = (PlainSelect) selectBody;
 
-        String permissionSql = mainTable + ".user_id = " + AuthUtils.getUserId();
+        String permissionSql = mainTable + ".user_id in (" + AuthUtils.getUserId() + ")";
 
         if (plainSelect.getWhere() == null) {
             plainSelect.setWhere(CCJSqlParserUtil.parseCondExpression(permissionSql));
