@@ -16,7 +16,10 @@
  */
 package com.fastcms.web.security;
 
+import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.utils.ConfigUtils;
 import io.jsonwebtoken.io.Decoders;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
@@ -53,7 +56,7 @@ public class AuthConfigs {
 	private byte[] secretKeyBytes;
 
 	public long getTokenValidityInSeconds() {
-		return tokenValidityInSeconds;
+		return StringUtils.isNotBlank(ConfigUtils.getConfig(FastcmsConstants.JWT_EXPIRE)) ? ConfigUtils.getLong(FastcmsConstants.JWT_EXPIRE, 18000l) : tokenValidityInSeconds;
 	}
 
 	/**
@@ -66,6 +69,11 @@ public class AuthConfigs {
 		if (secretKeyBytes == null) {
 			secretKeyBytes = Decoders.BASE64.decode(secretKey);
 		}
+
+		if (StringUtils.isNotBlank(ConfigUtils.getConfig(FastcmsConstants.JWT_SECRET))) {
+			secretKeyBytes = Decoders.BASE64.decode(ConfigUtils.getConfig(FastcmsConstants.JWT_SECRET));
+		}
+
 		return secretKeyBytes;
 	}
 
@@ -76,4 +84,5 @@ public class AuthConfigs {
 	public boolean isEnableUserAgentAuthWhite() {
 		return enableUserAgentAuthWhite;
 	}
+
 }

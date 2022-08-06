@@ -20,6 +20,7 @@ import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.core.auth.ControllerMethodsCache;
 import com.fastcms.web.security.JwtTokenManager;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -70,7 +71,7 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
                     Authentication authentication = this.tokenManager.getAuthentication(jwt);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                     filterChain.doFilter(request, response);
-                } catch (ExpiredJwtException e) {
+                } catch (ExpiredJwtException | SignatureException e) {
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
                 } catch (Exception e) {
                     response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Server failed," + e.getMessage());

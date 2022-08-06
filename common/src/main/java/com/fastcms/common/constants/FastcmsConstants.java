@@ -111,6 +111,15 @@ public interface FastcmsConstants {
     String EMAIL_PASSWORD = "email_password";
 
     /**
+     * ================
+     * Jwt 配置相关
+     * ================
+     */
+
+    String JWT_SECRET = "jwt_secret";
+    String JWT_EXPIRE = "jwt_expire";
+
+    /**
      * The constants in exception directory.
      */
     class Exception {

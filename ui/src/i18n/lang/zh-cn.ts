@@ -41,6 +41,7 @@ export default {
 		websiteSet: '网站',
 		wechatSet: '微信',
 		connectionSet: '通信',
+		systemSet: '系统',
 		loginSet: '登录注册',
 		searchSet: '搜索'
 	},
