@@ -66,6 +66,8 @@ public class TestCaseService {
 
     @Test
     public void testPasswordEncode() {
+        boolean matches = passwordEncoder.matches("1", passwordEncoder.encode("1"));
+        logger.info("matches:" + matches);
         logger.info(passwordEncoder.encode("1"));
     }
 

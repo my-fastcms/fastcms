@@ -88,7 +88,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             throw new FastcmsException(FastcmsException.SERVER_ERROR, "用户不存在");
         }
 
-        if (passwordEncoder.encode(updatePasswordParam.getOldPassword()).equals(user.getPassword())) {
+        if (!passwordEncoder.matches(updatePasswordParam.getOldPassword(), user.getPassword())) {
             throw new FastcmsException(FastcmsException.SERVER_ERROR, "旧密码输入错误");
         }
 

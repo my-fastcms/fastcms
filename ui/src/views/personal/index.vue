@@ -123,6 +123,11 @@
 			<el-form :model="passwordForm" size="small" label-width="80px" :rules="passwordFormRules" ref="myRefPasswordForm">
 				<el-row :gutter="35">
 					<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
+						<el-form-item label="旧密码" prop="oldPassword">
+							<el-input type="password" v-model="passwordForm.oldPassword" placeholder="请输入旧密码" clearable></el-input>
+						</el-form-item>
+					</el-col>
+					<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
 						<el-form-item label="新密码" prop="password">
 							<el-input type="password" v-model="passwordForm.password" placeholder="请输入新密码" clearable></el-input>
 						</el-form-item>
@@ -171,6 +176,7 @@ export default {
 				confirmPassword: ''
 			},
 			passwordFormRules: {
+				"oldPassword": { required: true, message: '请输入旧密码', trigger: 'blur' },
 				"password": { required: true, message: '请输入新密码', trigger: 'blur' },
 				"confirmPassword": { required: true, message: '请再次输入新密码', trigger: 'blur' },
 			},
