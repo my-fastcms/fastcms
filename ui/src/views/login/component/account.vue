@@ -143,26 +143,26 @@ export default defineComponent({
 		const doLogin = async(res: any) => {
 			//let defaultAuthPageList: Array<string> = ['admin'];
 			//let defaultAuthBtnList: Array<string> = ['btn.add', 'btn.del', 'btn.edit', 'btn.link'];
-			
 			if (!store.state.themeConfig.themeConfig.isRequestRoutes) {
 				// 前端控制路由，2、请注意执行顺序
-				await initFrontEndControlRoutes();
 				signInSuccess(res);
+				await initFrontEndControlRoutes();
 			} else {
 				if(res.data.userType === 1) {
 					if(res.data.hasRole == true) {
 						// 模拟后端控制路由，isRequestRoutes 为 true，则开启后端控制路由
 						// 添加完动态路由，再进行 router 跳转，否则可能报错 No match found for location with path "/"
-						await initBackEndControlRoutes();
 						signInSuccess(res);
+						await initBackEndControlRoutes();
+						
 					} else {
 						ElMessage.error("请联系管理员授权");
 					}
 					
 				} else if(res.data.userType === 2) {
+					signInSuccess(res);
 					// 前端控制路由，2、请注意执行顺序
 					await initFrontEndControlRoutes();
-					signInSuccess(res);
 				} else {
 					ElMessage.error("未知用户类型");
 				}

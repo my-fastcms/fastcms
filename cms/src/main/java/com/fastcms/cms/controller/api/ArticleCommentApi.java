@@ -56,7 +56,6 @@ public class ArticleCommentApi {
 	public Object getCommentList(PageModel page, String author, String content, Boolean isParent) {
 		QueryWrapper<Object> queryWrapper = Wrappers.query().eq(StringUtils.isNotBlank(author), "u.user_name", author)
 				.eq(isParent != null && isParent == true, "ac.parentId", 0)
-				.eq("a.user_id", AuthUtils.getUserId())
 				.likeLeft(StringUtils.isNotBlank(content), "ac.content", content)
 				.orderByDesc("ac.created");
 		return RestResultUtils.success(articleCommentService.pageArticleComment(page.toPage(), queryWrapper));

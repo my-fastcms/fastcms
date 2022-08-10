@@ -77,7 +77,6 @@ public class OrderApi {
     @GetMapping("list")
     public RestResult<Page<IOrderService.OrderListVo>> list(PageModel page) {
         QueryWrapper queryWrapper = Wrappers.query()
-                .eq("o.user_id", AuthUtils.getUserId())
                 .eq("o.status", Order.ORDER_STATUS_NORMAL)
                 .orderByDesc("o.created");
         return RestResultUtils.success(orderService.pageOrder(page.toPage(), queryWrapper));

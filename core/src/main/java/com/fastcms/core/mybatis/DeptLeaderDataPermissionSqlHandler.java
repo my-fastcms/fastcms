@@ -17,6 +17,7 @@
 
 package com.fastcms.core.mybatis;
 
+import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.mybatis.DataPermissionSqlHandler;
 import org.springframework.stereotype.Component;
@@ -34,7 +35,7 @@ public class DeptLeaderDataPermissionSqlHandler implements DataPermissionSqlHand
 
     @Override
     public String getSqlSegment(String mappedStatementId) throws Exception {
-        String permissionSql = ".user_id in (" + AuthUtils.getUserId() + ")";
+        String permissionSql = FastcmsConstants.CREATE_USER_ID + " in (" + AuthUtils.getUserId() + ")";
         return permissionSql;
     }
 

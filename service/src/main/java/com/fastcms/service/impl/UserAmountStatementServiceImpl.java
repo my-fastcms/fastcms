@@ -20,7 +20,7 @@ public class UserAmountStatementServiceImpl extends ServiceImpl<UserAmountStatem
 
 	@Override
 	public Page<UserAmountStatementVo> pageUserAmountStatement(Page pageParam, Long userId, String action, Integer status) {
-		QueryWrapper<Object> queryWrapper = Wrappers.query().eq(userId != null, "uas.user_id", userId)
+		QueryWrapper<Object> queryWrapper = Wrappers.query().eq(userId != null, "uas.create_user_id", userId)
 				.eq(StringUtils.isNotBlank(action), "uas.action", action)
 				.eq(status != null, "uas.status", status)
 				.orderByDesc("uas.created");

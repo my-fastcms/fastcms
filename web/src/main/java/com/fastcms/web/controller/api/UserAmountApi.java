@@ -67,7 +67,6 @@ public class UserAmountApi {
     @GetMapping("cashout/list")
     public Object getUserCashOutList() {
         QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("uas.user_id", AuthUtils.getUserId());
         queryWrapper.orderByDesc("uas.created");
         return RestResultUtils.success(userAmountPayoutService.getUserCashOutList(queryWrapper));
     }

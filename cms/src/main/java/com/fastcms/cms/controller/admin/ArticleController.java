@@ -85,7 +85,6 @@ public class ArticleController {
                                                             @RequestParam(name = "tagId", required = false) String tagId) {
         QueryWrapper<Object> queryWrapper = Wrappers.query()
                 .like(StrUtils.isNotBlank(title), "a.title", title)
-                .eq(!AuthUtils.isAdmin(), "a.user_id", AuthUtils.getUserId())
                 .eq(StrUtils.isNotBlank(status), "a.status", status)
                 .eq(StrUtils.isNotBlank(categoryId), "acr.category_id", categoryId)
                 .eq(StrUtils.isNotBlank(tagId), "acr.category_id", tagId)

@@ -89,7 +89,6 @@ public class ArticleApi {
 															@RequestParam(name = "categoryId", required = false) String categoryId,
 															@RequestParam(name = "status", required = false) String status) {
 		QueryWrapper<Object> queryWrapper = Wrappers.query()
-				.eq("a.user_id", AuthUtils.getUserId())
 				.eq(StringUtils.isNotBlank(categoryId), "acr.category_id", categoryId)
 				.eq("a.status", StringUtils.isNotBlank(status) ? status : Article.STATUS_PUBLISH)
 				.orderByDesc("a.created");

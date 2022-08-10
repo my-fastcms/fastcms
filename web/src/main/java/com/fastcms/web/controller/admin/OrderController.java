@@ -11,7 +11,6 @@ import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.StrUtils;
-import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.entity.Order;
 import com.fastcms.entity.UserAmountPayout;
@@ -60,7 +59,6 @@ public class OrderController {
                                                         @RequestParam(name = "tradeStatus", required = false) String tradeStatus,
                                                         @RequestParam(name = "status", required = false) String status) {
         QueryWrapper queryWrapper = Wrappers.query().eq(StrUtils.isNotBlank(orderSn), "o.order_sn", orderSn)
-                .eq(!AuthUtils.isAdmin(), "o.user_id", AuthUtils.getUserId())
                 .like(StrUtils.isNotBlank(title), "o.order_title", title)
                 .eq(StrUtils.isNotBlank(status), "o.status", status)
                 .eq(StrUtils.isNotBlank(payStatus), "o.pay_status", payStatus)
@@ -110,7 +108,6 @@ public class OrderController {
                                                                                 @RequestParam(name = "status", required = false) String status) {
         QueryWrapper queryWrapper = Wrappers.query().eq(StrUtils.isNotBlank(userName), "u.user_name", userName)
                 .eq(StringUtils.isNotBlank(status), "uas.status", status)
-                .eq(!AuthUtils.isAdmin(), "uas.user_id", AuthUtils.getUserId())
                 .orderByDesc("uas.created");
         return RestResultUtils.success(userAmountPayoutService.pageCashOut(page.toPage(), queryWrapper));
     }
@@ -171,7 +168,6 @@ public class OrderController {
                                                                              @RequestParam(name = "userName", required = false) String userName) {
         QueryWrapper queryWrapper = Wrappers.query().eq(StrUtils.isNotBlank(userName), "u.user_name", userName)
                 .eq(StringUtils.isNotBlank(trxNo), "pr.trx_no", trxNo)
-                .eq(!AuthUtils.isAdmin(), "pr.user_id", AuthUtils.getUserId())
                 .orderByDesc("pr.created");
         return RestResultUtils.success(paymentRecordService.pagePaymentRecord(page.toPage(), queryWrapper));
     }
