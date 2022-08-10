@@ -22,7 +22,8 @@ public class UserAmount implements Serializable {
     /**
      * 用户
      */
-    private Long userId;
+    @TableField(fill = FieldFill.INSERT)
+    private Long createUserId;
 
     /**
      * 用户余额
@@ -54,12 +55,12 @@ public class UserAmount implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    public Long getUserId() {
-        return userId;
+    public Long getCreateUserId() {
+        return createUserId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setCreateUserId(Long createUserId) {
+        this.createUserId = createUserId;
     }
     public BigDecimal getAmount() {
         return amount;
@@ -95,7 +96,7 @@ public class UserAmount implements Serializable {
     public String toString() {
         return "UserAmount{" +
             "id=" + id +
-            ", userId=" + userId +
+            ", createUserId=" + createUserId +
             ", amount=" + amount +
             ", updated=" + updated +
             ", created=" + created +

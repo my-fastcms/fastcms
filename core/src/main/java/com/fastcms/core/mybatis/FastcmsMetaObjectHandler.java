@@ -35,7 +35,8 @@ public class FastcmsMetaObjectHandler implements MetaObjectHandler {
 
     private final static String CREATED = "created";
     private final static String UPDATED = "updated";
-    private final static String USER_ID = "userId";
+    private final static String CREATE_USER_ID = "createUserId";
+    private final static String UPDATE_USER_ID = "updateUserId";
 
     @Override
     public void insertFill(MetaObject metaObject) {
@@ -43,12 +44,13 @@ public class FastcmsMetaObjectHandler implements MetaObjectHandler {
             this.strictInsertFill(metaObject, CREATED, () -> LocalDateTime.now(), LocalDateTime.class);
         }
 
-        if(metaObject.hasSetter(USER_ID)) {
-            Object fieldValByName = getFieldValByName(USER_ID, metaObject);
+        if(metaObject.hasSetter(CREATE_USER_ID)) {
+            Object fieldValByName = getFieldValByName(CREATE_USER_ID, metaObject);
             if(fieldValByName == null) {
-                setFieldValByName(USER_ID, AuthUtils.getUserId(), metaObject);
+                setFieldValByName(CREATE_USER_ID, AuthUtils.getUserId(), metaObject);
             }
         }
+
     }
 
     @Override
@@ -56,6 +58,14 @@ public class FastcmsMetaObjectHandler implements MetaObjectHandler {
         if (metaObject.hasSetter(UPDATED)) {
             this.strictUpdateFill(metaObject, UPDATED, () -> LocalDateTime.now(), LocalDateTime.class);
         }
+
+        if (metaObject.hasSetter(UPDATE_USER_ID)) {
+            Object fieldValByName = getFieldValByName(UPDATE_USER_ID, metaObject);
+            if (fieldValByName == null) {
+                setFieldValByName(UPDATE_USER_ID, AuthUtils.getUserId(), metaObject);
+            }
+        }
+
     }
 
 }

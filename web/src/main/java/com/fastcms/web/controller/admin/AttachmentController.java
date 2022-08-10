@@ -64,7 +64,7 @@ public class AttachmentController {
                                              @RequestParam(value = "fileType", required = false) String fileType,
                                              @RequestParam(value = "fileName", required = false) String fileName) {
         Page<Attachment> pageData = attachmentService.page(page.toPage(),
-                Wrappers.<Attachment>lambdaQuery().eq(!AuthUtils.isAdmin(), Attachment::getUserId, AuthUtils.getUserId())
+                Wrappers.<Attachment>lambdaQuery().eq(!AuthUtils.isAdmin(), Attachment::getCreateUserId, AuthUtils.getUserId())
                         .eq(StringUtils.isNotBlank(fileType), Attachment::getFileType, fileType)
                         .like(StringUtils.isNotBlank(fileName), Attachment::getFileName, fileName)
                 .orderByDesc(Attachment::getCreated));

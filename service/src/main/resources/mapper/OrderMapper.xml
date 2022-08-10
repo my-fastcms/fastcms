@@ -15,12 +15,12 @@
     </select>
 
     <select id="getOrderDetail" resultMap="OrderToResult">
-        select o.*, u.user_name, u.nick_name from `order` o left join `user` u on o.user_id = u.id where o.id = #{orderId}
+        select o.*, u.user_name, u.nick_name from `order` o left join `user` u on o.create_user_id = u.id where o.id = #{orderId}
     </select>
 
     <select id="pageOrder" resultType="com.fastcms.service.IOrderService$OrderListVo">
         select o.*, u.user_name, u.nick_name, oa.* from `order` o
-        left join `user` u on o.user_id = u.id
+        left join `user` u on o.create_user_id = u.id
         left join (
             select oi.order_id, oi.product_count, oi.total_amount, a.title
             from `order_item` oi left join `article` a on oi.product_id = a.id)
@@ -44,7 +44,7 @@
         COUNT( CASE WHEN o.trade_status = 9 THEN o.id ELSE NULL END ) AS `close`,
         COUNT( CASE WHEN o.trade_status = 4 THEN o.id ELSE NULL END ) AS afterSale
         FROM `order` o
-        WHERE o.user_id =#{userId} and o.trade_status !=3
+        WHERE o.create_user_id =#{userId} and o.trade_status !=3
     </select>
 
     <select id="getUnPayOrderByLimitTime" resultType="com.fastcms.entity.Order">

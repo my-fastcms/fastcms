@@ -17,8 +17,6 @@
 
 package com.fastcms.mybatis;
 
-import net.sf.jsqlparser.statement.Statement;
-
 /**
  * fastcms数据权限sql处理器
  * @author： wjun_java@163.com
@@ -32,10 +30,8 @@ public interface DataPermissionSqlHandler {
     /**
      * 获取权限sql片段
      * @param mappedStatementId
-     * @param mainTable
-     * @param statement
      * @return
      */
-    String getSqlSegment(String mappedStatementId, String mainTable, Statement statement) throws Exception;
+    String getSqlSegment(String mappedStatementId) throws Exception;
 
 }

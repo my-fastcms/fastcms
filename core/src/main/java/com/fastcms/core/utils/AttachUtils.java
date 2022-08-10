@@ -342,7 +342,7 @@ public final class AttachUtils {
 
         return errorFiles.isEmpty() ?
                 RestResultUtils.success(result) :
-                RestResultUtils.failed(errorFiles.stream().collect(Collectors.joining(",")).concat(",以上文件上传失败"));
+                RestResultUtils.failed(errorFiles.stream().collect(Collectors.joining(",")).concat("\n"));
     }
 
     public static Object deleteAttachment(Attachment attachment, IAttachmentService attachmentService) {

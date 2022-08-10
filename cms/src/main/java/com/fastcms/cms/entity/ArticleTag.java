@@ -21,7 +21,7 @@ public class ArticleTag implements Serializable {
     private Long id;
 
     @TableField(fill = FieldFill.INSERT)
-    private Long userId;
+    private Long createUserId;
 
     private String tagName;
 
@@ -42,12 +42,12 @@ public class ArticleTag implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    public Long getUserId() {
-        return userId;
+    public Long getCreateUserId() {
+        return createUserId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setCreateUserId(Long createUserId) {
+        this.createUserId = createUserId;
     }
     public String getTagName() {
         return tagName;
@@ -89,7 +89,7 @@ public class ArticleTag implements Serializable {
     public String toString() {
         return "ArticleTag{" +
             "id=" + id +
-            ", userId=" + userId +
+            ", createUserId=" + createUserId +
             ", tagName=" + tagName +
             ", type=" + type +
             ", sortNum=" + sortNum +

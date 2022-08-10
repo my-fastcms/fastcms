@@ -62,7 +62,7 @@ public class AttachmentApi {
 											 @RequestParam(value = "fileType", required = false) String fileType,
 											 @RequestParam(value = "fileName", required = false) String fileName) {
 		Page<Attachment> pageData = attachmentService.page(page.toPage(),
-				Wrappers.<Attachment>lambdaQuery().eq(Attachment::getUserId, AuthUtils.getUserId())
+				Wrappers.<Attachment>lambdaQuery().eq(Attachment::getCreateUserId, AuthUtils.getUserId())
 						.eq(StringUtils.isNotBlank(fileType), Attachment::getFileType, fileType)
 						.like(StringUtils.isNotBlank(fileName), Attachment::getFileName, fileName)
 						.orderByDesc(Attachment::getCreated));
@@ -96,7 +96,7 @@ public class AttachmentApi {
 			return RestResultUtils.failed("文件不存在");
 		}
 
-		if(attachment.getUserId() != AuthUtils.getUserId()) {
+		if(attachment.getCreateUserId() != AuthUtils.getUserId()) {
 			return RestResultUtils.failed("只能修改自己的附件");
 		}
 
@@ -146,7 +146,7 @@ public class AttachmentApi {
 		Attachment attachment = attachmentService.getById(attachId);
 		if(attachment == null) return RestResultUtils.failed("文件不存在");
 
-		if(attachment.getUserId() != AuthUtils.getUserId()) {
+		if(attachment.getCreateUserId() != AuthUtils.getUserId()) {
 			return RestResultUtils.failed("只能删除自己的附件");
 		}
 		return AttachUtils.deleteAttachment(attachment, attachmentService);

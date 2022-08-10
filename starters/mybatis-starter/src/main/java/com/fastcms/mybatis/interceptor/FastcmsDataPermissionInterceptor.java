@@ -17,23 +17,12 @@
 
 package com.fastcms.mybatis.interceptor;
 
-import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
-import com.baomidou.mybatisplus.core.metadata.TableInfo;
-import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.mybatis.DataPermissionSqlHandlerFactory;
-import net.sf.jsqlparser.expression.Alias;
+import com.fastcms.mybatis.DataPermissionSqlProcessor;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
-import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.Statement;
-import net.sf.jsqlparser.statement.select.FromItem;
-import net.sf.jsqlparser.statement.select.PlainSelect;
-import net.sf.jsqlparser.statement.select.Select;
-import net.sf.jsqlparser.statement.select.SelectBody;
-import net.sf.jsqlparser.util.TablesNamesFinder;
 import org.apache.ibatis.executor.statement.StatementHandler;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
@@ -48,9 +37,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
 
 /**
  * fastcms mybatis 数据权限 拦截器
@@ -84,10 +70,7 @@ public class FastcmsDataPermissionInterceptor implements Interceptor {
         String originalSql = boundSql.getSql();
 
         final String finalSql = handleSql(mappedStatement.getId(), originalSql);
-
-        if (StringUtils.isNotBlank(finalSql)) {
-            metaObject.setValue("delegate.boundSql.sql", finalSql);
-        }
+        metaObject.setValue("delegate.boundSql.sql", finalSql);
 
         return invocation.proceed();
     }
@@ -100,52 +83,16 @@ public class FastcmsDataPermissionInterceptor implements Interceptor {
      */
     protected String handleSql(String mappedStatementId, String originalSql) throws Exception {
 
-        Statement statement = CCJSqlParserUtil.parse(originalSql);
-
-        TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
-        List<String> tableList = tablesNamesFinder.getTableList(statement);
-
-        AtomicBoolean needAuth = new AtomicBoolean(false);
-
-        tableList.forEach(item -> {
-            TableInfo tableInfo = TableInfoHelper.getTableInfo(item);
-            if (tableInfo != null) {
-                List<TableFieldInfo> userIdFieldList = tableInfo.getFieldList().stream().filter(field -> field.getColumn().equals(FastcmsConstants.USER_ID)).collect(Collectors.toList());
-
-                if (CollectionUtils.isNotEmpty(userIdFieldList)) {
-                    needAuth.set(true);
-                }
-            }
-        });
-
-        if (!needAuth.get()) {
+        String sqlSegment = dataPermissionSqlHandlerFactory.getDataPermissionSqlHandler().getSqlSegment(mappedStatementId);
+        if (StringUtils.isBlank(sqlSegment)) {
             return originalSql;
         }
 
-        String tableName = "";
+        Statement statement = CCJSqlParserUtil.parse(originalSql);
 
-        Select select = (Select) statement;
-        SelectBody selectBody = select.getSelectBody();
-        if (selectBody instanceof PlainSelect) {
-            PlainSelect plainSelect = (PlainSelect) selectBody;
-            FromItem fromItem = plainSelect.getFromItem();
-            Alias alias = fromItem.getAlias();
-            if (alias != null) {
-                tableName = alias.getName();
-            }
+        new DataPermissionSqlProcessor(sqlSegment, statement).process();
 
-            if (StringUtils.isBlank(tableName) && fromItem instanceof Table) {
-                Table table = (Table) fromItem;
-                tableName = table.getName();
-            }
-
-            if (StringUtils.isBlank(tableName)) {
-                return originalSql;
-            }
-
-        }
-
-        return dataPermissionSqlHandlerFactory.getDataPermissionSqlHandler().getSqlSegment(mappedStatementId, tableName, statement);
+        return statement.toString();
     }
 
 }

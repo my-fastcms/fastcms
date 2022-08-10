@@ -97,7 +97,7 @@ public abstract class AbstractFastcmsPayBackService implements IFastcmsPayBackSe
             paymentRecord.setPayAmount(item.getTotalAmount());
             paymentRecord.setPayerFee(BigDecimal.ZERO);
             paymentRecord.setPaySuccessAmount(item.getTotalAmount());
-            paymentRecord.setUserId(order.getUserId());
+            paymentRecord.setCreateUserId(order.getCreateUserId());
             paymentRecord.setPaySuccessTime(LocalDateTime.now());
             paymentRecord.setPayStatus(Order.STATUS_PAY_SUCCESS);
             processPaymentRecordBeforePersistence(paymentRecord, payMessage);

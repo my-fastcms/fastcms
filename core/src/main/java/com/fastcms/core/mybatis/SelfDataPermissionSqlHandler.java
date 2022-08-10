@@ -17,14 +17,9 @@
 
 package com.fastcms.core.mybatis;
 
+import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.mybatis.DataPermissionSqlHandler;
-import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
-import net.sf.jsqlparser.parser.CCJSqlParserUtil;
-import net.sf.jsqlparser.statement.Statement;
-import net.sf.jsqlparser.statement.select.PlainSelect;
-import net.sf.jsqlparser.statement.select.Select;
-import net.sf.jsqlparser.statement.select.SelectBody;
 import org.springframework.stereotype.Component;
 
 /**
@@ -39,21 +34,8 @@ import org.springframework.stereotype.Component;
 public class SelfDataPermissionSqlHandler implements DataPermissionSqlHandler {
 
     @Override
-    public String getSqlSegment(String mappedStatementId, String mainTable, Statement statement) throws Exception {
-        Select select = (Select) statement;
-
-        SelectBody selectBody = select.getSelectBody();
-        PlainSelect plainSelect = (PlainSelect) selectBody;
-
-        String permissionSql = mainTable + ".user_id = " + AuthUtils.getUserId();
-
-        if (plainSelect.getWhere() == null) {
-            plainSelect.setWhere(CCJSqlParserUtil.parseCondExpression(permissionSql));
-        } else {
-            plainSelect.setWhere(new AndExpression(plainSelect.getWhere(), CCJSqlParserUtil.parseCondExpression(permissionSql)));
-        }
-
-        return select.toString();
+    public String getSqlSegment(String mappedStatementId) throws Exception {
+        return FastcmsConstants.CREATE_USER_ID + " = " + AuthUtils.getUserId();
     }
 
 }

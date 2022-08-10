@@ -107,7 +107,7 @@ public class ArticleApi {
 		if(article.getId() == null) {
 			article.setStatus(Article.STATUS_AUDIT);
 		} else {
-			if(!Objects.equals(article.getUserId(), AuthUtils.getUserId())) {
+			if(!Objects.equals(article.getCreateUserId(), AuthUtils.getUserId())) {
 				return RestResultUtils.failed("只能修改自己的文章");
 			}
 		}
@@ -138,7 +138,7 @@ public class ArticleApi {
 			return RestResultUtils.failed("文章不存在");
 		}
 
-		if(!Objects.equals(AuthUtils.getUserId(), article.getUserId())) {
+		if(!Objects.equals(AuthUtils.getUserId(), article.getCreateUserId())) {
 			return RestResultUtils.failed("只能删除自己的文章");
 		}
 

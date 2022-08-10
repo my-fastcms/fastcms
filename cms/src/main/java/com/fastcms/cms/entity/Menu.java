@@ -35,7 +35,7 @@ public class Menu implements Serializable {
      * 创建者
      */
     @TableField(fill = FieldFill.INSERT)
-    private Long userId;
+    private Long createUserId;
 
     /**
      * 菜单名称
@@ -91,12 +91,12 @@ public class Menu implements Serializable {
         this.parentId = parentId;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getCreateUserId() {
+        return createUserId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setCreateUserId(Long createUserId) {
+        this.createUserId = createUserId;
     }
 
     public String getMenuName() {

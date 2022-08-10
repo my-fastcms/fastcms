@@ -31,7 +31,7 @@ public class ArticleCategory implements Serializable {
      * 创建人
      */
     @TableField(fill = FieldFill.INSERT)
-    private Long userId;
+    private Long createUserId;
 
     /**
      * 上级分类
@@ -98,12 +98,12 @@ public class ArticleCategory implements Serializable {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getCreateUserId() {
+        return createUserId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setCreateUserId(Long createUserId) {
+        this.createUserId = createUserId;
     }
 
     public Long getParentId() {

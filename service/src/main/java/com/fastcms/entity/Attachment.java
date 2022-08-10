@@ -30,7 +30,7 @@ public class Attachment implements Serializable {
      * 上传人id
      */
     @TableField(fill = FieldFill.INSERT)
-    private Long userId;
+    private Long createUserId;
 
     /**
      * 原始文件名
@@ -77,12 +77,12 @@ public class Attachment implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    public Long getUserId() {
-        return userId;
+    public Long getCreateUserId() {
+        return createUserId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setCreateUserId(Long createUserId) {
+        this.createUserId = createUserId;
     }
     public String getFileName() {
         return fileName;
@@ -180,7 +180,7 @@ public class Attachment implements Serializable {
      */
     public enum AttachType {
 
-        IMAGE(".jpg, .png, .gif, .jpeg", TYPE_IMAGE),
+        IMAGE(".jpg, .png, .gif, .jpeg, .webp", TYPE_IMAGE),
         AUDIO(".mp3, .aac, .ape, .flac, .alac", TYPE_AUDIO),
         VIDEO(".avi, .wmv, .mpeg, .rmvb, .mp4, .mov, .m4v, .flv", TYPE_VIDEO),
         ZIP(".zip, .rar, .gzip", TYPE_ZIP),
@@ -217,7 +217,7 @@ public class Attachment implements Serializable {
     public String toString() {
         return "Attachment{" +
             "id=" + id +
-            ", userId=" + userId +
+            ", createUserId=" + createUserId +
             ", fileName=" + fileName +
             ", fileDesc=" + fileDesc +
             ", filePath=" + filePath +

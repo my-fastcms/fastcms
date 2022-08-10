@@ -67,7 +67,7 @@ public class UserAmountServiceImpl extends ServiceImpl<UserAmountMapper, UserAmo
 
         UserAmount userAmount;
         try {
-            userAmount = getOne(Wrappers.<UserAmount>lambdaQuery().eq(UserAmount::getUserId, userId));
+            userAmount = getOne(Wrappers.<UserAmount>lambdaQuery().eq(UserAmount::getCreateUserId, userId));
         } catch (Exception e) {
             logger.error(e.getMessage());
             return;
@@ -75,7 +75,7 @@ public class UserAmountServiceImpl extends ServiceImpl<UserAmountMapper, UserAmo
 
         if (userAmount == null) {
             userAmount = new UserAmount();
-            userAmount.setUserId(userId);
+            userAmount.setCreateUserId(userId);
             userAmount.setCreated(LocalDateTime.now());
             userAmount.setAmount(BigDecimal.ZERO);
             userAmount.setVersion(0);
@@ -98,7 +98,7 @@ public class UserAmountServiceImpl extends ServiceImpl<UserAmountMapper, UserAmo
         }
 
         UserAmountStatement userAmountStatement = new UserAmountStatement();
-        userAmountStatement.setUserId(userId);
+        userAmountStatement.setCreateUserId(userId);
         userAmountStatement.setAction(action);
         userAmountStatement.setOldAmount(oldAmount);
         userAmountStatement.setNewAmount(newAmount);

@@ -27,7 +27,7 @@ public class PaymentRecordServiceImpl extends ServiceImpl<PaymentRecordMapper, P
 
 	@Override
 	public List<PaymentRecord> getUserProductPaymentRecord(Long productId, Long userId) {
-		return list(Wrappers.<PaymentRecord>lambdaQuery().eq(PaymentRecord::getProductRelativeId, productId).eq(PaymentRecord::getUserId, userId));
+		return list(Wrappers.<PaymentRecord>lambdaQuery().eq(PaymentRecord::getProductRelativeId, productId).eq(PaymentRecord::getCreateUserId, userId));
 	}
 
 	@Override

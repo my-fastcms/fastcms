@@ -91,7 +91,7 @@ public class OrderApi {
     @GetMapping("detail/{orderId}")
     public RestResult<IOrderService.OrderDetailVo> detail(@PathVariable(name = "orderId") Long orderId) {
         Order order = orderService.getById(orderId);
-        if(order != null && AuthUtils.getUser() != null && order.getUserId() != AuthUtils.getUserId()) {
+        if(order != null && AuthUtils.getUser() != null && order.getCreateUserId() != AuthUtils.getUserId()) {
             return RestResultUtils.failed("只能查看自己的订单");
         }
         return RestResultUtils.success(orderService.getOrderDetail(orderId));

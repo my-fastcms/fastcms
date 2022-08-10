@@ -1,6 +1,8 @@
 package com.fastcms.cms.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 
 import javax.validation.constraints.NotBlank;
@@ -39,7 +41,8 @@ public class SinglePageComment implements Serializable {
     /**
      * 评论的用户ID
      */
-    private Long userId;
+    @TableField(fill = FieldFill.INSERT)
+    private Long createUserId;
 
     /**
      * 评论的内容
@@ -96,12 +99,12 @@ public class SinglePageComment implements Serializable {
         this.pageId = pageId;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getCreateUserId() {
+        return createUserId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setCreateUserId(Long createUserId) {
+        this.createUserId = createUserId;
     }
 
     public String getContent() {

@@ -39,7 +39,7 @@ public interface FastcmsConstants {
 
     String ENCODE = "UTF-8";
 
-    String USER_ID = "user_id";
+    String CREATE_USER_ID = "create_user_id";
 
     /**
      * 数据启用状态

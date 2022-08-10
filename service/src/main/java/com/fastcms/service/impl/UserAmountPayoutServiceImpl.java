@@ -84,7 +84,7 @@ public class UserAmountPayoutServiceImpl extends ServiceImpl<UserAmountPayoutMap
 				}
 			}
 
-			UserAmount userAmount = userAmountService.getOne(Wrappers.<UserAmount>lambdaQuery().eq(UserAmount::getUserId, userId));
+			UserAmount userAmount = userAmountService.getOne(Wrappers.<UserAmount>lambdaQuery().eq(UserAmount::getCreateUserId, userId));
 			if (userAmount == null) {
 				throw new FastcmsException("用户余额为空");
 			}
@@ -107,7 +107,7 @@ public class UserAmountPayoutServiceImpl extends ServiceImpl<UserAmountPayoutMap
 			UserAmountPayout userAmountPayout = new UserAmountPayout();
 			userAmountPayout.setAmount(amount);
 			userAmountPayout.setStatus(UserAmountPayout.AMOUNT_STATUS_AUDIT);
-			userAmountPayout.setPayTo(userService.getUserOpenId(userAmount.getUserId(), UserOpenid.TYPE_WECHAT_MINI));
+			userAmountPayout.setPayTo(userService.getUserOpenId(userAmount.getCreateUserId(), UserOpenid.TYPE_WECHAT_MINI));
 			userAmountPayout.setAuditType(UserAmountUtils.isEnableAmountCashOutAudit() ? 1 : 0);
 			save(userAmountPayout);
 
@@ -141,13 +141,13 @@ public class UserAmountPayoutServiceImpl extends ServiceImpl<UserAmountPayoutMap
 			}
 
 			if (UserAmountUtils.getCashOutAmountDayMaxTimeValue() > 0) {
-				Long todayPayoutCount = getBaseMapper().getUserTodayPayoutCount(amountPayout.getUserId());
+				Long todayPayoutCount = getBaseMapper().getUserTodayPayoutCount(amountPayout.getCreateUserId());
 				if (todayPayoutCount.intValue() > UserAmountUtils.getCashOutAmountDayMaxTimeValue()) {
 					throw new FastcmsException("单日最多提现" + UserAmountUtils.getCashOutAmountDayMaxTimeValue() + "次");
 				}
 			}
 
-			UserAmount userAmount = userAmountService.getOne(Wrappers.<UserAmount>lambdaQuery().eq(UserAmount::getUserId, amountPayout.getUserId()));
+			UserAmount userAmount = userAmountService.getOne(Wrappers.<UserAmount>lambdaQuery().eq(UserAmount::getCreateUserId, amountPayout.getCreateUserId()));
 			if (userAmount == null) {
 				throw new FastcmsException("用户余额为空");
 			}
@@ -172,7 +172,7 @@ public class UserAmountPayoutServiceImpl extends ServiceImpl<UserAmountPayoutMap
 	public CashOutDetailVo getCashOutDetail(Long payoutId) {
 		CashOutDetailVo cashOutDetail = getBaseMapper().getCashOutDetail(payoutId);
 		List<UserAmountStatement> list = userAmountStatementService.list(Wrappers.<UserAmountStatement>lambdaQuery()
-				.eq(UserAmountStatement::getUserId, cashOutDetail.getUserId())
+				.eq(UserAmountStatement::getCreateUserId, cashOutDetail.getUserId())
 				.eq(UserAmountStatement::getAction, UserAmountStatement.AMOUNT_ACTION_ADD)
 				.last("limit 0, 15")
 				.orderByDesc(UserAmountStatement::getCreated)
@@ -198,7 +198,7 @@ public class UserAmountPayoutServiceImpl extends ServiceImpl<UserAmountPayoutMap
 			throw new FastcmsException("未找到第三方支付平台，请安装支付插件");
 		}
 
-		final String userOpenId = userService.getUserOpenId(userAmount.getUserId(), UserOpenid.TYPE_WECHAT_MINI);
+		final String userOpenId = userService.getUserOpenId(userAmount.getCreateUserId(), UserOpenid.TYPE_WECHAT_MINI);
 		if (StrUtils.isBlank(userOpenId)) {
 			throw new FastcmsException("用户账户为空");
 		}
@@ -218,7 +218,7 @@ public class UserAmountPayoutServiceImpl extends ServiceImpl<UserAmountPayoutMap
 		//插入流水变动记录
 		UserAmountStatement userAmountStatement = new UserAmountStatement();
 		userAmountStatement.setAction(UserAmountStatement.AMOUNT_ACTION_DEL);
-		userAmountStatement.setUserId(userAmount.getUserId());
+		userAmountStatement.setCreateUserId(userAmount.getCreateUserId());
 		userAmountStatement.setActionType(UserAmountStatement.AMOUNT_ACTION_TYPE_CASHOUT);
 		userAmountStatement.setActionDesc("提现");
 		userAmountStatement.setOldAmount(userAmount.getAmount());

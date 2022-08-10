@@ -35,7 +35,7 @@ public class SinglePage implements Serializable {
      * 创建者
      */
     @TableField(fill = FieldFill.INSERT)
-    private Long userId;
+    private Long createUserId;
 
     /**
      * 标题
@@ -134,12 +134,12 @@ public class SinglePage implements Serializable {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getCreateUserId() {
+        return createUserId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setCreateUserId(Long createUserId) {
+        this.createUserId = createUserId;
     }
 
     public String getTitle() {

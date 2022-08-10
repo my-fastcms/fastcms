@@ -84,7 +84,7 @@ public abstract class AbstractFastcmsOrderService implements IFastcmsOrderServic
                 orderItem.setProductId(item.getId());
                 orderItem.setProductCount(num.intValue());
                 orderItem.setTotalAmount(new BigDecimal(num).multiply(productPrice));
-                orderItem.setSellerId(product.getUserId());
+                orderItem.setSellerId(product.getCreateUserId());
                 orderItemList.add(orderItem);
             }
 
@@ -97,7 +97,7 @@ public abstract class AbstractFastcmsOrderService implements IFastcmsOrderServic
         Order order = new Order();
 
         order.setOrderTitle(articleService.getById(orderItemList.get(0).getProductId()).getTitle());
-        order.setUserId(AuthUtils.getUserId());
+        order.setCreateUserId(AuthUtils.getUserId());
         order.setOrderSn(getOrderSN());
         order.setOrderAmount(orderItemList.stream().map(OrderItem::getTotalAmount).reduce(BigDecimal.ZERO, BigDecimal::add).setScale(2, BigDecimal.ROUND_HALF_UP));
         order.setBuyerMsg(createOrderParam.getBuyerMsg());

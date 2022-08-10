@@ -209,7 +209,7 @@ public class Order implements Serializable {
      * 购买人
      */
     @TableField(fill = FieldFill.INSERT)
-    private Long userId;
+    private Long createUserId;
 
     private String orderTitle;
 
@@ -326,12 +326,12 @@ public class Order implements Serializable {
     public void setOrderSn(String orderSn) {
         this.orderSn = orderSn;
     }
-    public Long getUserId() {
-        return userId;
+    public Long getCreateUserId() {
+        return createUserId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setCreateUserId(Long createUserId) {
+        this.createUserId = createUserId;
     }
     public String getOrderTitle() {
         return orderTitle;
@@ -510,7 +510,7 @@ public class Order implements Serializable {
         return "Order{" +
             "id=" + id +
             ", orderSn=" + orderSn +
-            ", userId=" + userId +
+            ", createUserId=" + createUserId +
             ", orderTitle=" + orderTitle +
             ", buyerMsg=" + buyerMsg +
             ", orderAmount=" + orderAmount +

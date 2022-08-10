@@ -5,7 +5,7 @@
     <select id="pagePaymentRecord" resultType="com.fastcms.service.IPaymentRecordService$PaymentListVo">
         select pr.id, pr.trx_no, pr.pay_amount, pr.created, pr.thirdparty_type as pay_type, u.user_name, u.nick_name, a.title as prod_title from payment_record pr
         left join article a on pr.product_relative_id = a.id
-        left join `user` u on pr.user_id = u.id
+        left join `user` u on pr.create_user_id = u.id
         ${ew.customSqlSegment}
     </select>
 
@@ -13,7 +13,7 @@
         select pr.*, u.user_name, u.nick_name, a.title as prod_title
         from payment_record pr
         left join article a on pr.product_relative_id = a.id
-        left join `user` u on pr.user_id = u.id
+        left join `user` u on pr.create_user_id = u.id
         where pr.id = #{paymentId}
     </select>
 

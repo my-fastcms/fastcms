@@ -101,6 +101,8 @@ public class TestSqlParser {
         FromItemFinder fromItemFinder = new FromItemFinder();
         fromItemFinder.getFromItemList(statement);
 
+        System.out.println(statement.toString());
+
     }
 
     @Test
@@ -112,12 +114,13 @@ public class TestSqlParser {
         FromItemFinder fromItemFinder = new FromItemFinder();
         fromItemFinder.getFromItemList(statement);
 
+        System.out.println(statement.toString());
+
     }
 
     class FromItemFinder extends StatementVisitorAdapter implements FromItemVisitor, SelectVisitor {
 
         private String permissionSql = "user_id = 1";
-        private PlainSelect currentPlainSelect;
 
         public void getFromItemList(Statement statement) {
             statement.accept(this);
@@ -137,36 +140,6 @@ public class TestSqlParser {
 
         @Override
         public void visit(Table tableName) {
-            // TODO 解析 join里面的table
-            System.out.println("currPlainSel:" + this.currentPlainSelect);
-            System.out.println("tableName:" + tableName);
-            String fullyQualifiedName = tableName.getFullyQualifiedName();
-            System.out.println("fullyQualifiedName:" + fullyQualifiedName);
-
-            TableInfo tableInfo = TableInfoHelper.getTableInfo(tableName.getFullyQualifiedName());
-
-            AtomicBoolean needAuth = new AtomicBoolean(false);
-
-            if (tableInfo != null) {
-                List<TableFieldInfo> userIdFieldList = tableInfo.getFieldList().stream().filter(field -> field.getColumn().equals(FastcmsConstants.USER_ID)).collect(Collectors.toList());
-
-                if (CollectionUtils.isNotEmpty(userIdFieldList)) {
-                    needAuth.set(true);
-                }
-            }
-
-            if (needAuth.get()) {
-                try {
-                    if (this.currentPlainSelect.getWhere() == null) {
-                        this.currentPlainSelect.setWhere(CCJSqlParserUtil.parseCondExpression(permissionSql));
-                    } else {
-                        this.currentPlainSelect.setWhere(new AndExpression(this.currentPlainSelect.getWhere(), CCJSqlParserUtil.parseCondExpression(permissionSql)));
-                    }
-                } catch (JSQLParserException e) {
-                    throw new RuntimeException(e.getMessage());
-                }
-            }
-
         }
 
         @Override
@@ -206,13 +179,17 @@ public class TestSqlParser {
 
             if (plainSelect.getFromItem() != null) {
                 if (plainSelect.getFromItem() instanceof Table) {
-                    this.currentPlainSelect = plainSelect;
+                    Table table = (Table) plainSelect.getFromItem();
+                    processWhere(table, plainSelect);
                 }
                 plainSelect.getFromItem().accept(this);
             }
 
             if (plainSelect.getJoins() != null) {
                 for (Join join : plainSelect.getJoins()) {
+                    if (join.getRightItem() instanceof Table) {
+                        processWhere((Table) join.getRightItem(), plainSelect);
+                    }
                     join.getRightItem().accept(this);
                 }
             }
@@ -230,6 +207,36 @@ public class TestSqlParser {
         public void visit(WithItem withItem) {
 
         }
+
+        void processWhere(Table table, PlainSelect plainSelect) {
+            TableInfo tableInfo = TableInfoHelper.getTableInfo(table.getFullyQualifiedName());
+
+            AtomicBoolean needAuth = new AtomicBoolean(false);
+
+            if (tableInfo != null) {
+                List<TableFieldInfo> userIdFieldList = tableInfo.getFieldList().stream().filter(field -> field.getColumn().equals(FastcmsConstants.CREATE_USER_ID)).collect(Collectors.toList());
+
+                if (CollectionUtils.isNotEmpty(userIdFieldList)) {
+                    needAuth.set(true);
+                }
+            }
+
+            if (needAuth.get()) {
+                if (table.getAlias() != null) {
+                    permissionSql = table.getAlias().getName() + "." +permissionSql;
+                }
+                try {
+                    if (plainSelect.getWhere() == null) {
+                        plainSelect.setWhere(CCJSqlParserUtil.parseCondExpression(permissionSql));
+                    } else {
+                        plainSelect.setWhere(new AndExpression(plainSelect.getWhere(), CCJSqlParserUtil.parseCondExpression(permissionSql)));
+                    }
+                } catch (JSQLParserException e) {
+                    throw new RuntimeException(e.getMessage());
+                }
+            }
+        }
+
     }
 
 }

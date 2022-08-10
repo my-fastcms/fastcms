@@ -96,7 +96,8 @@ public class UserAmountStatement implements Serializable {
     /**
      * 用户
      */
-    private Long userId;
+    @TableField(fill = FieldFill.INSERT)
+    private Long createUserId;
 
     /**
      * 金额变动方向 add, del
@@ -163,12 +164,12 @@ public class UserAmountStatement implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    public Long getUserId() {
-        return userId;
+    public Long getCreateUserId() {
+        return createUserId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setCreateUserId(Long createUserId) {
+        this.createUserId = createUserId;
     }
     public String getAction() {
         return action;
@@ -246,7 +247,7 @@ public class UserAmountStatement implements Serializable {
     public String toString() {
         return "UserAmountStatement{" +
             "id=" + id +
-            ", userId=" + userId +
+            ", createUserId=" + createUserId +
             ", action=" + action +
             ", actionName=" + actionName +
             ", actionDesc=" + actionDesc +

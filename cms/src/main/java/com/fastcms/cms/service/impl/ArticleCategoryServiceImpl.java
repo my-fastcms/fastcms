@@ -24,7 +24,7 @@ public class ArticleCategoryServiceImpl<T extends TreeNode> extends ServiceImpl<
 
 	@Override
 	public List<CategoryTreeNode> getCategoryList(Long userId) {
-		List<ArticleCategory> articleCategoryList = list(Wrappers.<ArticleCategory>lambdaQuery().eq(!AuthUtils.isAdmin(), ArticleCategory::getUserId, userId).eq(ArticleCategory::getType, ArticleCategory.CATEGORY_TYPE));
+		List<ArticleCategory> articleCategoryList = list(Wrappers.<ArticleCategory>lambdaQuery().eq(!AuthUtils.isAdmin(), ArticleCategory::getCreateUserId, userId).eq(ArticleCategory::getType, ArticleCategory.CATEGORY_TYPE));
 		articleCategoryList.sort(Comparator.comparing(ArticleCategory::getSortNum));
 		return (List<CategoryTreeNode>) getTreeNodeList(articleCategoryList);
 	}

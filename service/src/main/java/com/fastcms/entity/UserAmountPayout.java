@@ -91,7 +91,7 @@ public class UserAmountPayout implements Serializable {
      * 申请提现用户
      */
     @TableField(fill = FieldFill.INSERT)
-    private Long userId;
+    private Long createUserId;
 
     /**
      * 用户的真实名字
@@ -174,12 +174,12 @@ public class UserAmountPayout implements Serializable {
     public void setId(Long id) {
         this.id = id;
     }
-    public Long getUserId() {
-        return userId;
+    public Long getCreateUserId() {
+        return createUserId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setCreateUserId(Long createUserId) {
+        this.createUserId = createUserId;
     }
     public String getUserRealName() {
         return userRealName;
@@ -300,7 +300,7 @@ public class UserAmountPayout implements Serializable {
     public String toString() {
         return "UserAmountPayout{" +
             "id=" + id +
-            ", userId=" + userId +
+            ", createUserId=" + createUserId +
             ", userRealName=" + userRealName +
             ", userIdcard=" + userIdcard +
             ", amount=" + amount +

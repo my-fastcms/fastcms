@@ -51,7 +51,7 @@
     <select id="pageArticle" resultMap="ArticleToResult">
         select distinct a.id, a.title, a.status, a.created, a.view_count, a.thumbnail, a.json_ext, a.summary,
         u.user_name from article a
-        LEFT JOIN `user` u on a.user_id = u.id
+        LEFT JOIN `user` u on a.create_user_id = u.id
         LEFT JOIN article_category_relation acr on acr.article_id = a.id
         LEFT JOIN article_tag_relation atr on atr.article_id = a.id
         ${ew.customSqlSegment}
@@ -70,28 +70,28 @@
     <select id="getArticleById" resultMap="ArticleInfoToResult">
         select a.*,
         u.user_name, u.head_img from article a
-        LEFT JOIN `user` u on a.user_id = u.id
+        LEFT JOIN `user` u on a.create_user_id = u.id
         where a.id = #{id}
     </select>
 
     <select id="pageArticleByCategoryId" resultType="com.fastcms.cms.service.IArticleService$ArticleVo">
         select DISTINCT a.id, a.title, a.status, a.created, a.view_count, a.thumbnail, a.summary, u.user_name as author from article_category_relation acr
         join article a on acr.article_id = a.id
-        LEFT JOIN `user` u on a.user_id = u.id
+        LEFT JOIN `user` u on a.create_user_id = u.id
         ${ew.customSqlSegment}
     </select>
 
     <select id="getArticleListByCategoryId" resultType="com.fastcms.cms.service.IArticleService$ArticleVo">
         select a.id, a.title, a.status, a.created, a.view_count, a.thumbnail, a.summary, u.user_name as author from article_category_relation acr
         join article a on acr.article_id = a.id
-        LEFT JOIN `user` u on a.user_id = u.id
+        LEFT JOIN `user` u on a.create_user_id = u.id
         ${ew.customSqlSegment}
     </select>
 
     <select id="getArticleListByTagId" resultType="com.fastcms.cms.service.IArticleService$ArticleVo">
         select a.id, a.title, a.status, a.created, a.view_count, a.thumbnail, a.summary, u.user_name as author from article_tag_relation acr
         join article a on acr.article_id = a.id
-        LEFT JOIN `user` u on a.user_id = u.id
+        LEFT JOIN `user` u on a.create_user_id = u.id
         ${ew.customSqlSegment}
     </select>
 
