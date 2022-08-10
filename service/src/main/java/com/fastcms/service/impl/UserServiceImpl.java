@@ -67,6 +67,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public void updateUserPassword(UpdatePasswordParam updatePasswordParam) throws FastcmsException {
 
+        if (StringUtils.isBlank(updatePasswordParam.getOldPassword())) {
+            throw new FastcmsException(FastcmsException.INVALID_PARAM, "旧密码不能为空");
+        }
+
         if(StringUtils.isBlank(updatePasswordParam.getPassword())) {
             throw new FastcmsException(FastcmsException.INVALID_PARAM, "请输入新密码");
         }
@@ -81,8 +85,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         User user = getById(updatePasswordParam.getId());
         if(user == null) {
-            throw new FastcmsException(FastcmsException.INVALID_PARAM, "用户不存在");
+            throw new FastcmsException(FastcmsException.SERVER_ERROR, "用户不存在");
         }
+
+        if (passwordEncoder.encode(updatePasswordParam.getOldPassword()).equals(user.getPassword())) {
+            throw new FastcmsException(FastcmsException.SERVER_ERROR, "旧密码输入错误");
+        }
+
         user.setPassword(passwordEncoder.encode(updatePasswordParam.getPassword().trim()));
 
         updateById(user);

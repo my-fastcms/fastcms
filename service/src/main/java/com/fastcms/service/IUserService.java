@@ -196,6 +196,11 @@ public interface IUserService extends IService<User> {
          */
         Long id;
         /**
+         * 旧密码
+         */
+        @NotBlank(message = "旧密码不能为空")
+        String oldPassword;
+        /**
          * 新密码
          */
         @NotBlank(message = "密码不能为空")
@@ -216,6 +221,14 @@ public interface IUserService extends IService<User> {
 
         public void setId(Long id) {
             this.id = id;
+        }
+
+        public String getOldPassword() {
+            return oldPassword;
+        }
+
+        public void setOldPassword(String oldPassword) {
+            this.oldPassword = oldPassword;
         }
 
         public String getPassword() {

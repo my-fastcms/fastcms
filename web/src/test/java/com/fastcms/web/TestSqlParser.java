@@ -17,13 +17,25 @@
 
 package com.fastcms.web;
 
+import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
+import com.baomidou.mybatisplus.core.metadata.TableInfo;
+import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.fastcms.common.constants.FastcmsConstants;
 import net.sf.jsqlparser.JSQLParserException;
+import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
+import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.Statement;
+import net.sf.jsqlparser.statement.StatementVisitorAdapter;
+import net.sf.jsqlparser.statement.select.*;
 import net.sf.jsqlparser.util.TablesNamesFinder;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -35,6 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @modifiedBy：
  * @version: 1.0
  */
+@SpringBootTest
 public class TestSqlParser {
 
     @Test
@@ -70,23 +83,153 @@ public class TestSqlParser {
     @Test
     public void test3() throws JSQLParserException {
         String sql = "select * from (select * from (select DISTINCT t.* from (\n" +
-                "        select * from user u\n" +
-                "        join article a on u.id = a.user_id\n" +
+                "        select * from user u1\n" +
+                "        join article a1 on u1.id = a1.user_id\n" +
                 "        UNION ALL\n" +
-                "        select * from user u\n" +
-                "        join article a on u.id = a.user_id\n" +
+                "        select * from user u2\n" +
+                "        join article a2 on u2.id = a2.user_id\n" +
                 "        UNION ALL\n" +
-                "        select * from user u\n" +
-                "        join article a on u.id = a.user_id\n" +
+                "        select * from user u3\n" +
+                "        join article a3 on u3.id = a3.user_id\n" +
                 "        UNION ALL\n" +
-                "        select * from user u\n" +
-                "        join article a on u.id = a.user_id\n" +
+                "        select * from user u4\n" +
+                "        join article a4 on u4.id = a4.user_id\n" +
                 "        ) t) a) b";
 
         Statement statement = CCJSqlParserUtil.parse(sql);
 
-        System.out.println(statement);
+        FromItemFinder fromItemFinder = new FromItemFinder();
+        fromItemFinder.getFromItemList(statement);
 
+    }
+
+    @Test
+    public void test4() throws JSQLParserException {
+        String sql = "select * from (select a.*, u.user_name from article a join user u on a.user_id = u.id) t where t.user_id=1 ";
+
+        Statement statement = CCJSqlParserUtil.parse(sql);
+
+        FromItemFinder fromItemFinder = new FromItemFinder();
+        fromItemFinder.getFromItemList(statement);
+
+    }
+
+    class FromItemFinder extends StatementVisitorAdapter implements FromItemVisitor, SelectVisitor {
+
+        private String permissionSql = "user_id = 1";
+        private PlainSelect currentPlainSelect;
+
+        public void getFromItemList(Statement statement) {
+            statement.accept(this);
+        }
+
+        @Override
+        public void visit(Select select) {
+
+            if (select.getWithItemsList() != null) {
+                for (WithItem withItem : select.getWithItemsList()) {
+                    withItem.accept(this);
+                }
+            }
+            select.getSelectBody().accept(this);
+
+        }
+
+        @Override
+        public void visit(Table tableName) {
+            // TODO 解析 join里面的table
+            System.out.println("currPlainSel:" + this.currentPlainSelect);
+            System.out.println("tableName:" + tableName);
+            String fullyQualifiedName = tableName.getFullyQualifiedName();
+            System.out.println("fullyQualifiedName:" + fullyQualifiedName);
+
+            TableInfo tableInfo = TableInfoHelper.getTableInfo(tableName.getFullyQualifiedName());
+
+            AtomicBoolean needAuth = new AtomicBoolean(false);
+
+            if (tableInfo != null) {
+                List<TableFieldInfo> userIdFieldList = tableInfo.getFieldList().stream().filter(field -> field.getColumn().equals(FastcmsConstants.USER_ID)).collect(Collectors.toList());
+
+                if (CollectionUtils.isNotEmpty(userIdFieldList)) {
+                    needAuth.set(true);
+                }
+            }
+
+            if (needAuth.get()) {
+                try {
+                    if (this.currentPlainSelect.getWhere() == null) {
+                        this.currentPlainSelect.setWhere(CCJSqlParserUtil.parseCondExpression(permissionSql));
+                    } else {
+                        this.currentPlainSelect.setWhere(new AndExpression(this.currentPlainSelect.getWhere(), CCJSqlParserUtil.parseCondExpression(permissionSql)));
+                    }
+                } catch (JSQLParserException e) {
+                    throw new RuntimeException(e.getMessage());
+                }
+            }
+
+        }
+
+        @Override
+        public void visit(SubSelect subSelect) {
+            if (subSelect != null) {
+                subSelect.getSelectBody().accept(this);
+            }
+        }
+
+        @Override
+        public void visit(SubJoin subjoin) {
+
+        }
+
+        @Override
+        public void visit(LateralSubSelect lateralSubSelect) {
+
+        }
+
+        @Override
+        public void visit(ValuesList valuesList) {
+
+        }
+
+        @Override
+        public void visit(TableFunction tableFunction) {
+
+        }
+
+        @Override
+        public void visit(ParenthesisFromItem aThis) {
+
+        }
+
+        @Override
+        public void visit(PlainSelect plainSelect) {
+
+            if (plainSelect.getFromItem() != null) {
+                if (plainSelect.getFromItem() instanceof Table) {
+                    this.currentPlainSelect = plainSelect;
+                }
+                plainSelect.getFromItem().accept(this);
+            }
+
+            if (plainSelect.getJoins() != null) {
+                for (Join join : plainSelect.getJoins()) {
+                    join.getRightItem().accept(this);
+                }
+            }
+
+        }
+
+        @Override
+        public void visit(SetOperationList setOpList) {
+            for (SelectBody plainSelect : setOpList.getSelects()) {
+                plainSelect.accept(this);
+            }
+        }
+
+        @Override
+        public void visit(WithItem withItem) {
+
+        }
     }
 
 }

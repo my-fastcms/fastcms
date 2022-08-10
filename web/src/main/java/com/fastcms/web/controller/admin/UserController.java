@@ -186,7 +186,7 @@ public class UserController {
      * @throws FastcmsException
      */
     @PostMapping("/reset/password")
-    @Secured(name = "用户类型修改", resource = "users:resetPassword", action = ActionTypes.WRITE)
+    @Secured(name = "用户密码修改", resource = "users:resetPassword", action = ActionTypes.WRITE)
     public Object resetPassword(@RequestParam("userId") Long userId) throws FastcmsException {
         userService.resetPassword(userId);
         return RestResultUtils.success();
