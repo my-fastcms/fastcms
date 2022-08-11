@@ -31,7 +31,6 @@ export async function initBackEndControlRoutes() {
 	store.dispatch('userInfos/setUserInfos');
 	// 获取路由菜单数据
 	const res:any = await getBackEndControlRoutes();
-	debugger
 	if(res.data.length<=0) return false;
 	// 存储接口原始路由（未处理component），根据需求选择使用
 	store.dispatch('requestOldRoutes/setBackEndControlRoutes', JSON.parse(JSON.stringify(res.data)));

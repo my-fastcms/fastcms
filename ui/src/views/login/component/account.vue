@@ -61,6 +61,7 @@
 import { toRefs, reactive, defineComponent, computed, getCurrentInstance, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
+import { dynamicRoutes } from '/@/router/route';
 import { useI18n } from 'vue-i18n';
 import { initFrontEndControlRoutes } from '/@/router/frontEnd';
 import { initBackEndControlRoutes } from '/@/router/backEnd';
@@ -141,36 +142,25 @@ export default defineComponent({
 		}
 
 		const doLogin = async(res: any) => {
+
 			//let defaultAuthPageList: Array<string> = ['admin'];
 			//let defaultAuthBtnList: Array<string> = ['btn.add', 'btn.del', 'btn.edit', 'btn.link'];
-			if (!store.state.themeConfig.themeConfig.isRequestRoutes) {
-				// 前端控制路由，2、请注意执行顺序
-				signInSuccess(res);
-				await initFrontEndControlRoutes();
-			} else {
-				if(res.data.userType === 1) {
-					if(res.data.hasRole == true) {
-						// 模拟后端控制路由，isRequestRoutes 为 true，则开启后端控制路由
-						// 添加完动态路由，再进行 router 跳转，否则可能报错 No match found for location with path "/"
-						signInSuccess(res);
-						await initBackEndControlRoutes();
-						
-					} else {
-						ElMessage.error("请联系管理员授权");
-					}
-					
-				} else if(res.data.userType === 2) {
-					signInSuccess(res);
-					// 前端控制路由，2、请注意执行顺序
-					await initFrontEndControlRoutes();
-				} else {
-					ElMessage.error("未知用户类型");
-				}
+			if(res.data.userType != 1 && res.data.userType != 2) {
+				ElMessage.error("未知用户类型");
+				return;
 			}
+
+			if(res.data.userType === 1 && res.data.hasRole == false) {
+				ElMessage.error("请联系管理员授权");
+			} else {
+				signInSuccess(res);				
+			}
+
 		}
 
 		// 登录成功后的跳转
-		const signInSuccess = (res: any) => {
+		const signInSuccess = async(res: any) => {
+
 			const userInfos = {
 				username: res.data.username,
 				photo: res.data.headImg === null ? '/header.jpg' : res.data.headImg,
@@ -187,6 +177,19 @@ export default defineComponent({
 			// 1、请注意执行顺序(存储用户信息到vuex)
 			store.dispatch('userInfos/setUserInfos', userInfos);
 
+			if (!store.state.themeConfig.themeConfig.isRequestRoutes) {
+				// 前端控制路由，2、请注意执行顺序
+				await initFrontEndControlRoutes();
+			} else {
+				if(res.data.userType === 1) {
+					// 后端管理用户初始化后端动态路由
+					await initBackEndControlRoutes();					
+				} else if(res.data.userType === 2) {
+					// 前台用户初始化前端静态路由
+					await initFrontEndControlRoutes();
+				}
+			}
+
 			// 初始化登录成功时间问候语
 			let currentTimeInfo = currentTime.value;
 			// 登录成功，跳到转首页
@@ -199,7 +202,9 @@ export default defineComponent({
 					query: Object.keys(route.query?.params).length > 0 ? JSON.parse(route.query?.params) : '',
 				});
 			} else {
-				router.push('/');
+				const views = dynamicRoutes[0].children;
+				const gotoPath = views[0].path || '/'
+				router.push(gotoPath);
 			}
 			// 登录成功提示
 			setTimeout(() => {
