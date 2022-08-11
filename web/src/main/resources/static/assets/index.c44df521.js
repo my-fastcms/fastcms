@@ -1,1 +1,0 @@
-import{s as e}from"./index.a25e4820.js";function r(t){return e({url:"/admin/attachment/list",method:"get",params:t})}function u(t){return e({url:"/admin/attachment/get/"+t,method:"get"})}function d(t,a){return e({url:"/admin/attachment/update/"+t,method:"post",params:a})}function m(t){return e({url:"/admin/attachment/delete/"+t,method:"post"})}export{u as a,m as d,r as g,d as u};
