@@ -51,7 +51,8 @@ public final class AuthUtils {
         if(principal == null) {
             return null;
         }
-        return (FastcmsUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        return principal instanceof FastcmsUserDetails ? (FastcmsUserDetails) principal : null;
     }
 
     public static Boolean isAdmin() {

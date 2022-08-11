@@ -38,7 +38,7 @@ public class DefaultDataPermissionSqlHandlerFactory implements DataPermissionSql
     @Override
     public DataPermissionSqlHandler getDataPermissionSqlHandler() {
 
-        if (FastcmsConstants.ADMIN_USER_ID == AuthUtils.getUserId() || AuthUtils.getUserId() == null) {
+        if (AuthUtils.getUserId() == null || FastcmsConstants.ADMIN_USER_ID == AuthUtils.getUserId()) {
             return ApplicationUtils.getBean(AllDataPermissionSqlHandler.class);
         }
 
