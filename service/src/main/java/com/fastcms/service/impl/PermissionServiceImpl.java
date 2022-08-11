@@ -6,8 +6,11 @@ import com.fastcms.common.model.RouterNode;
 import com.fastcms.common.model.TreeNode;
 import com.fastcms.common.model.TreeNodeConvert;
 import com.fastcms.entity.Permission;
+import com.fastcms.entity.Role;
 import com.fastcms.mapper.PermissionMapper;
 import com.fastcms.service.IPermissionService;
+import com.fastcms.service.IRoleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +27,9 @@ import static com.fastcms.cache.CacheConfig.USER_MENU_PERMISSION_CACHE_NAME;
 @Service
 public class PermissionServiceImpl<T extends TreeNode> extends ServiceImpl<PermissionMapper, Permission> implements IPermissionService, TreeNodeConvert<T> {
 
+    @Autowired
+    private IRoleService roleService;
+
     @Override
     public List<Permission> getUserPermissionList(Long userId) {
         return getBaseMapper().getPermissionByUserId(userId);
@@ -33,8 +39,19 @@ public class PermissionServiceImpl<T extends TreeNode> extends ServiceImpl<Permi
     @Cacheable(value = USER_MENU_PERMISSION_CACHE_NAME, key = "#userId")
     public List<RouterNode> getUserPermissionsMenu(Long userId) {
 
+        List<Role> userRoleList = roleService.getUserRoleList(userId);
+
+        boolean isAdmin = false;
+        for (Role role : userRoleList) {
+            //检查是否拥有超级管理员权限
+            if(Objects.equals(FastcmsConstants.ADMIN_ROLE_ID, role.getId())) {
+                isAdmin = true;
+                break;
+            }
+        }
+
         List<Permission> permissionList;
-        if(Objects.equals(FastcmsConstants.ADMIN_USER_ID, userId)) {
+        if(isAdmin || Objects.equals(FastcmsConstants.ADMIN_USER_ID, userId)) {
             permissionList = list();
         } else {
             permissionList = getUserPermissionList(userId);

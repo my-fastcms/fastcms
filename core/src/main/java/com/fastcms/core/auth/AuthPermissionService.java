@@ -31,7 +31,11 @@ public class AuthPermissionService {
     public Boolean hasPermission(User user, Permission permission) {
 
         //超级用户拥有最大权限
-        if(Objects.equals(user.getUserId(), FastcmsConstants.ADMIN_USER_ID)) {
+        if (Objects.equals(user.getUserId(), FastcmsConstants.ADMIN_USER_ID)) {
+            return true;
+        }
+
+        if (AuthUtils.isAdmin()) {
             return true;
         }
 
@@ -44,13 +48,6 @@ public class AuthPermissionService {
         }
 
         if(CollectionUtils.isNotEmpty(userRoleList)) {
-
-            for (Role role : userRoleList) {
-                //检查是否拥有超级管理员权限
-                if(Objects.equals(FastcmsConstants.ADMIN_ROLE_ID, role.getId())) {
-                    return true;
-                }
-            }
 
             //需要检查角色接口权限
             List<String> userResourceList = resourceService.getUserResourceList(user.getUserId());
