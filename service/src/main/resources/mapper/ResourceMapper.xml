@@ -10,7 +10,7 @@
         select DISTINCT rr.resource_path from role_resource rr
         where rr.role_id in(
         SELECT r.id FROM role r
-        JOIN (select ur.* from user_role ur join `user` u on ur.user_id = u.id where ur.user_id = #(userId) and u.user_type = 1) urs
+        JOIN (select ur.* from user_role ur join `user` u on ur.user_id = u.id where ur.user_id = #{userId} and u.user_type = 1) urs
         on r.id = urs.role_id
         where r.active = 1
         )
