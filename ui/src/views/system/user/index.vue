@@ -1,39 +1,54 @@
 <template>
 	<div class="system-user-container">
-		<el-card shadow="hover">
-			<div class="system-role-search mb15">
-				<el-button @click="onOpenAddUser" class="mt15" size="small" type="primary" icon="iconfont icon-shuxingtu">新建员工</el-button>
-				<el-input size="small" v-model="tableData.param.username" placeholder="请输入账号" style="max-width: 180px" class="ml10"></el-input>
-				<el-input size="small" v-model="tableData.param.phone" placeholder="请输入手机号" style="max-width: 180px" class="ml10"></el-input>
-				<el-button size="small" type="primary" class="ml10" @click="initTableData">查询</el-button>
-			</div>
-			<el-table :data="tableData.data" stripe style="width: 100%">
-				<el-table-column prop="id" label="ID" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="userName" label="账号" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="nickName" label="昵称" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="sourceStr" label="来源" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="created" label="加入时间" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="path" label="操作" width="90">
-					<template #default="scope">
-						<el-button v-if="scope.row.id != 1" size="mini" type="text" @click="onOpenEditUser(scope.row)">修改</el-button>
-						<el-button v-if="scope.row.id != 1" size="mini" type="text" @click="onRowDel(scope.row)">删除</el-button>
-					</template>
-				</el-table-column>
-			</el-table>
-			<el-pagination
-				@size-change="onHandleSizeChange"
-				@current-change="onHandleCurrentChange"
-				class="mt15"
-				:pager-count="5"
-				:page-sizes="[10, 20, 30]"
-				v-model:current-page="tableData.param.pageNum"
-				background
-				v-model:page-size="tableData.param.pageSize"
-				layout="total, sizes, prev, pager, next, jumper"
-				:total="tableData.total"
-			>
-			</el-pagination>
-		</el-card>
+		<el-row>
+			<el-col :span="6">
+				<span>部门树</span>
+				<el-tree :data="treeData" 
+						node-key="id" 
+						:default-expand-all="true"
+						ref="treeTable"
+						:expand-on-click-node="false"
+						@node-click="onClickTree">
+				</el-tree>
+			</el-col>
+			<el-col :span="18">
+				<el-card shadow="hover">
+					<div class="system-role-search mb15">
+						<el-button @click="onOpenAddUser" class="mt15" size="small" type="primary" icon="iconfont icon-shuxingtu">新建员工</el-button>
+						<el-input size="small" v-model="tableData.param.username" placeholder="请输入账号" style="max-width: 180px" class="ml10"></el-input>
+						<el-input size="small" v-model="tableData.param.phone" placeholder="请输入手机号" style="max-width: 180px" class="ml10"></el-input>
+						<el-button size="small" type="primary" class="ml10" @click="initTableData">查询</el-button>
+					</div>
+					<el-table :data="tableData.data" stripe style="width: 100%">
+						<el-table-column prop="id" label="ID" show-overflow-tooltip></el-table-column>
+						<el-table-column prop="userName" label="账号" show-overflow-tooltip></el-table-column>
+						<el-table-column prop="nickName" label="昵称" show-overflow-tooltip></el-table-column>
+						<el-table-column prop="sourceStr" label="来源" show-overflow-tooltip></el-table-column>
+						<el-table-column prop="created" label="加入时间" show-overflow-tooltip></el-table-column>
+						<el-table-column prop="path" label="操作" width="90">
+							<template #default="scope">
+								<el-button v-if="scope.row.id != 1" size="mini" type="text" @click="onOpenEditUser(scope.row)">修改</el-button>
+								<el-button v-if="scope.row.id != 1" size="mini" type="text" @click="onRowDel(scope.row)">删除</el-button>
+							</template>
+						</el-table-column>
+					</el-table>
+					<el-pagination
+						@size-change="onHandleSizeChange"
+						@current-change="onHandleCurrentChange"
+						class="mt15"
+						:pager-count="5"
+						:page-sizes="[10, 20, 30]"
+						v-model:current-page="tableData.param.pageNum"
+						background
+						v-model:page-size="tableData.param.pageSize"
+						layout="total, sizes, prev, pager, next, jumper"
+						:total="tableData.total"
+					>
+					</el-pagination>
+				</el-card>
+			</el-col>
+		</el-row>
+		
 		<AddUser ref="addUserRef" @reloadTable="initTableData"/>
 		<EditUser ref="editUserRef" @reloadTable="initTableData"/>
 	</div>
@@ -45,6 +60,7 @@ import { ref, toRefs, reactive, onMounted } from 'vue';
 import AddUser from '/@/views/system/user/component/addUser.vue';
 import EditUser from '/@/views/system/user/component/editUser.vue';
 import { getUserList, delUser } from '/@/api/user/index';
+import { getDeptList } from '/@/api/dept/index';
 export default {
 	name: 'systemUser',
 	components: { AddUser, EditUser },
@@ -52,6 +68,7 @@ export default {
 		const addUserRef = ref();
 		const editUserRef = ref();
 		const state: any = reactive({
+			treeData: [],
 			tableData: {
 				data: [],
 				total: 0,
@@ -65,6 +82,11 @@ export default {
 				},
 			},
 		});
+
+		const onClickTree = (data, node, elem) => {
+			
+			console.log("id:" + data.id)
+		}
 		
 		const onOpenAddUser = () => {
 			addUserRef.value.openDialog();
@@ -111,8 +133,12 @@ export default {
 		// 页面加载时
 		onMounted(() => {
 			initTableData();
+			getDeptList().then(res => {
+				state.treeData = res.data
+			})
 		});
 		return {
+			onClickTree,
 			addUserRef,
 			editUserRef,
 			onOpenEditUser,
