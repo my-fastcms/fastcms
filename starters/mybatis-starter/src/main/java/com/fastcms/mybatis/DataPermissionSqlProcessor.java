@@ -111,20 +111,19 @@ public class DataPermissionSqlProcessor extends StatementVisitorAdapter implemen
 
         if (plainSelect.getFromItem() != null) {
             if (plainSelect.getFromItem() instanceof Table) {
-                Table table = (Table) plainSelect.getFromItem();
-                processWhere(table, plainSelect);
+                processWhere((Table) plainSelect.getFromItem(), plainSelect);
             }
             plainSelect.getFromItem().accept(this);
         }
 
-        if (plainSelect.getJoins() != null) {
-            for (Join join : plainSelect.getJoins()) {
-                if (join.getRightItem() instanceof Table) {
-                    processWhere((Table) join.getRightItem(), plainSelect);
-                }
-                join.getRightItem().accept(this);
-            }
-        }
+//        if (plainSelect.getJoins() != null) {
+//            for (Join join : plainSelect.getJoins()) {
+//                if (join.getRightItem() instanceof Table) {
+//                    processWhere((Table) join.getRightItem(), plainSelect);
+//                }
+//                join.getRightItem().accept(this);
+//            }
+//        }
 
     }
 

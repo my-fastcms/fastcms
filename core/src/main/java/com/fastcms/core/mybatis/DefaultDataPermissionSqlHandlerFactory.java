@@ -17,7 +17,6 @@
 
 package com.fastcms.core.mybatis;
 
-import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.mybatis.DataPermissionSqlHandler;
 import com.fastcms.mybatis.DataPermissionSqlHandlerFactory;
@@ -38,7 +37,7 @@ public class DefaultDataPermissionSqlHandlerFactory implements DataPermissionSql
     @Override
     public DataPermissionSqlHandler getDataPermissionSqlHandler() {
 
-        if (AuthUtils.getUserId() == null || FastcmsConstants.ADMIN_USER_ID == AuthUtils.getUserId()) {
+        if (AuthUtils.getUserId() == null || AuthUtils.isAdmin()) {
             return ApplicationUtils.getBean(AllDataPermissionSqlHandler.class);
         }
 

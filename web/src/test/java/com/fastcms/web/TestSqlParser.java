@@ -22,6 +22,7 @@ import com.baomidou.mybatisplus.core.metadata.TableInfo;
 import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.mybatis.DataPermissionSqlProcessor;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
@@ -113,6 +114,37 @@ public class TestSqlParser {
 
         FromItemFinder fromItemFinder = new FromItemFinder();
         fromItemFinder.getFromItemList(statement);
+
+        System.out.println(statement.toString());
+
+    }
+
+    @Test
+    public void test5() throws JSQLParserException {
+        String sql = "select u.id as user_id,\n" +
+                "       u.nick_name,\n" +
+                "       u.user_name,\n" +
+                "       u.head_img as user_header,\n" +
+                "       u.real_name,\n" +
+                "       u.user_type,\n" +
+                "       u.autograph,\n" +
+                "       IFNULL(ua.amount, 0)  as amount,\n" +
+                "       (\n" +
+                "select count(g.id)  from `group` g\n" +
+                " where g.create_user_id= u.id)  as group_count,\n" +
+                "       (\n" +
+                "select count(DISTINCT(gu.`user_id`))  from group_user gu JOIN(\n" +
+                "select g.id\n" +
+                "  from `group` g\n" +
+                " where g.create_user_id= 37)  gg on gu.group_id= gg.id)  as user_count\n" +
+                "  from `user` u\n" +
+                "  left JOIN user_amount ua on u.id= ua.create_user_id\n" +
+                " where u.id= 37;\n";
+
+        Statement statement = CCJSqlParserUtil.parse(sql);
+
+        DataPermissionSqlProcessor dataPermissionSqlProcessor = new DataPermissionSqlProcessor("create_user_id = 37", statement);
+        dataPermissionSqlProcessor.process();
 
         System.out.println(statement.toString());
 
