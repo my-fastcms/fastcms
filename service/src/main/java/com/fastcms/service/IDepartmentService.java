@@ -35,6 +35,13 @@ public interface IDepartmentService extends IService<Department> {
 	void saveUserDepartments(Long userId, List<Long> deptIdList);
 
 	/**
+	 * 获取部门员工
+	 * @param deptId
+	 * @return
+	 */
+	List<Long> getDepartmentUserIdList(Long deptId);
+
+	/**
 	 * 获取用户所在部门集合
 	 * @param userId
 	 * @return

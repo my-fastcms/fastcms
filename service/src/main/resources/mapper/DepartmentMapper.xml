@@ -17,4 +17,8 @@
         SELECT d.* FROM department d JOIN (select * from department_user du where du.user_id = #{userId}) dus on d.id = dus.dept_id where d.status = 1
     </select>
 
+    <select id="getDepartmentUserIdList" resultType="java.lang.Long">
+        SELECT user_id FROM department_user where dept_id = #{deptId}
+    </select>
+
 </mapper>

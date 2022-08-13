@@ -16,6 +16,7 @@
  */
 package com.fastcms.web.controller.admin;
 
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.common.auth.ActionTypes;
@@ -80,12 +81,23 @@ public class UserController {
                                        @RequestParam(name = "type") Integer type,
                                        @RequestParam(name = "username", required = false) String username,
                                        @RequestParam(name = "phone", required = false) String phone,
+                                       @RequestParam(name = "deptId", required = false) Long deptId,
                                        @RequestParam(name = "status", required = false) Integer status) {
+
+        List<Long> departmentUserIdList = null;
+        if (deptId != null) {
+            departmentUserIdList = departmentService.getDepartmentUserIdList(deptId);
+            if (CollectionUtils.isEmpty(departmentUserIdList)) {
+                return null;
+            }
+        }
+
         Page<User> pageData = userService.page(page.toPage(), Wrappers.<User>lambdaQuery()
                 .eq(User::getUserType, type)
                 .like(StringUtils.isNotBlank(username), User::getUserName, username)
                 .eq(StringUtils.isNoneBlank(phone), User::getMobile, phone)
                 .eq(status != null, User::getStatus, status)
+                .in(departmentUserIdList != null && departmentUserIdList.size() > 0, User::getId, departmentUserIdList)
                 .select(User::getId, User::getUserName, User::getNickName, User::getCreated, User::getSource, User::getEmail, User::getStatus)
                 .orderByDesc(User::getCreated));
         return RestResultUtils.success(pageData);

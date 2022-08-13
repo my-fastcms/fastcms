@@ -40,6 +40,11 @@ public class DepartmentServiceImpl<T extends TreeNode> extends ServiceImpl<Depar
     }
 
     @Override
+    public List<Long> getDepartmentUserIdList(Long deptId) {
+        return getBaseMapper().getDepartmentUserIdList(deptId);
+    }
+
+    @Override
     public List<Department> getUserDepartment(Long userId) {
         return getBaseMapper().getUserDepartment(userId);
     }

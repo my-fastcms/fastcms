@@ -115,6 +115,7 @@ export default defineComponent({
 			proxy.$refs['myRefForm'].validate((valid: any) => {
 				if (valid) {
 					state.ruleForm.created = null;
+					state.ruleForm.children = null;
 					saveDept(state.ruleForm).then(() => {
 						closeDialog(); // 关闭弹窗
 						// initForm();

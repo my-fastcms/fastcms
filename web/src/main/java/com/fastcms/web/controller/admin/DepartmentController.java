@@ -48,12 +48,13 @@ public class DepartmentController {
 
     /**
      * 部门列表
+     * @param status
      * @return
      */
     @GetMapping("list")
     @Secured(name = "部门列表", resource = "department:list", action = ActionTypes.READ)
-    public RestResult<List<IDepartmentService.DepartmentNode>> list() {
-        return RestResultUtils.success(departmentService.getDepartmentList());
+    public RestResult<List<IDepartmentService.DepartmentNode>> list(@RequestParam(name = "status", required = false) Integer status) {
+        return RestResultUtils.success(departmentService.getDepartmentList(status));
     }
 
     /**

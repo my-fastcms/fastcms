@@ -97,7 +97,7 @@ export default {
 		const initTableData = () => {
 			const categoryIdArray = state.tableData.param.categoryId;
 			if(categoryIdArray != null && categoryIdArray.length>0) {
-				state.tableData.param.categoryId = categoryIdArray[0];
+				state.tableData.param.categoryId = categoryIdArray[categoryIdArray.length];
 			}
 			getArticleList(state.tableData.param).then((res) => {
 				state.tableData.data = res.data.records;

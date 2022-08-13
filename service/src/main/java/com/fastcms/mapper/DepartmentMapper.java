@@ -22,4 +22,6 @@ public interface DepartmentMapper extends BaseMapper<Department> {
 
     List<Department> getUserDepartment(@Param("userId") Long userId);
 
+    List<Long> getDepartmentUserIdList(@Param("deptId") Long deptId);
+
 }
