@@ -25,8 +25,9 @@ import com.fastcms.common.utils.FileUtils;
 import com.fastcms.entity.Config;
 import com.fastcms.service.IConfigService;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
@@ -46,7 +47,7 @@ import java.util.stream.Collectors;
  * @version: 1.0
  */
 @Service
-public class DefaultTemplateService<T extends TreeNode> implements TemplateService, InitializingBean, TreeNodeConvert<T> {
+public class DefaultTemplateService<T extends TreeNode> implements TemplateService, TreeNodeConvert<T>, ApplicationListener<ApplicationStartedEvent> {
 
     private String templateDir = "./htmls";
 
@@ -80,7 +81,7 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
             });
 
             List<Template> templateList = getTemplateList();
-            if(templateList != null && templateList.size()>0) {
+            if(templateList != null && templateList.size() > 0) {
                 Config config = configService.findByKey(FastcmsConstants.TEMPLATE_ENABLE_ID);
                 if(config == null) {
                     configService.saveConfig(FastcmsConstants.TEMPLATE_ENABLE_ID, templateList.get(0).getId());
@@ -185,11 +186,6 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        initialize();
-    }
-
-    @Override
     public T convert2Node(Object object) {
         Template currTemplate = getCurrTemplate();
         FileTreeNode fileTreeNode = (FileTreeNode) object;
@@ -219,6 +215,11 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
             rootPath = Paths.get(DirUtils.getTemplateDir());
         }
         return rootPath;
+    }
+
+    @Override
+    public void onApplicationEvent(ApplicationStartedEvent event) {
+        initialize();
     }
 
 }

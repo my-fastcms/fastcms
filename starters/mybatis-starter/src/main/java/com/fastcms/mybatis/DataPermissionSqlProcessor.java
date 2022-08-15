@@ -17,23 +17,16 @@
 
 package com.fastcms.mybatis;
 
-import com.baomidou.mybatisplus.core.metadata.TableFieldInfo;
-import com.baomidou.mybatisplus.core.metadata.TableInfo;
-import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
-import com.fastcms.common.constants.FastcmsConstants;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import net.sf.jsqlparser.JSQLParserException;
+import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.StatementVisitorAdapter;
 import net.sf.jsqlparser.statement.select.*;
-
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
 
 /**
  * 数据权限sql处理器
@@ -48,6 +41,8 @@ public class DataPermissionSqlProcessor extends StatementVisitorAdapter implemen
     private String permissionSql;
 
     private Statement statement;
+
+    private String mappedStatementId;
 
     public DataPermissionSqlProcessor(String permissionSql, Statement statement) {
         this.permissionSql = permissionSql;
@@ -140,32 +135,24 @@ public class DataPermissionSqlProcessor extends StatementVisitorAdapter implemen
     }
 
     void processWhere(Table table, PlainSelect plainSelect) {
-        TableInfo tableInfo = TableInfoHelper.getTableInfo(table.getFullyQualifiedName());
 
-        AtomicBoolean needProcess = new AtomicBoolean(false);
-
-        if (tableInfo != null) {
-            List<TableFieldInfo> userIdFieldList = tableInfo.getFieldList().stream().filter(field -> field.getColumn().equals(FastcmsConstants.CREATE_USER_ID)).collect(Collectors.toList());
-
-            if (CollectionUtils.isNotEmpty(userIdFieldList)) {
-                needProcess.set(true);
-            }
-        }
-
-        if (needProcess.get()) {
+        if (StringUtils.isNotBlank(permissionSql)) {
             if (table.getAlias() != null) {
                 permissionSql = table.getAlias().getName() + StringPool.DOT + permissionSql;
             }
+
             try {
+                Expression expression = CCJSqlParserUtil.parseCondExpression(permissionSql);
                 if (plainSelect.getWhere() == null) {
-                    plainSelect.setWhere(CCJSqlParserUtil.parseCondExpression(permissionSql));
+                    plainSelect.setWhere(expression);
                 } else {
-                    plainSelect.setWhere(new AndExpression(plainSelect.getWhere(), CCJSqlParserUtil.parseCondExpression(permissionSql)));
+                    plainSelect.setWhere(new AndExpression(plainSelect.getWhere(), expression));
                 }
             } catch (JSQLParserException e) {
                 throw new RuntimeException(e.getMessage());
             }
         }
+
     }
 
 }

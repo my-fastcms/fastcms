@@ -18,8 +18,7 @@
 package com.fastcms.mybatis.interceptor;
 
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.fastcms.mybatis.DataPermissionSqlHandlerFactory;
+import com.fastcms.mybatis.DataPermissionSqlHandlerManager;
 import com.fastcms.mybatis.DataPermissionSqlProcessor;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;
@@ -55,7 +54,7 @@ import java.sql.Connection;
 public class FastcmsDataPermissionInterceptor implements Interceptor {
 
     @Autowired
-    private DataPermissionSqlHandlerFactory dataPermissionSqlHandlerFactory;
+    private DataPermissionSqlHandlerManager dataPermissionSqlHandlerManager;
 
     @Override
     public Object intercept(Invocation invocation) throws Exception {
@@ -83,14 +82,9 @@ public class FastcmsDataPermissionInterceptor implements Interceptor {
      */
     protected String handleSql(String mappedStatementId, String originalSql) throws Exception {
 
-        String sqlSegment = dataPermissionSqlHandlerFactory.getDataPermissionSqlHandler().getSqlSegment(mappedStatementId);
-        if (StringUtils.isBlank(sqlSegment)) {
-            return originalSql;
-        }
-
         Statement statement = CCJSqlParserUtil.parse(originalSql);
 
-        new DataPermissionSqlProcessor(sqlSegment, statement).process();
+        new DataPermissionSqlProcessor(dataPermissionSqlHandlerManager.getSqlSegment(mappedStatementId), statement).process();
 
         return statement.toString();
     }

@@ -15,33 +15,43 @@
  * limitations under the License.
  */
 
-package com.fastcms.core.mybatis;
+package com.fastcms.mybatis;
 
-import com.fastcms.core.auth.AuthUtils;
-import com.fastcms.mybatis.DataPermissionSqlHandler;
-import com.fastcms.mybatis.DataPermissionSqlHandlerFactory;
-import com.fastcms.utils.ApplicationUtils;
-import org.springframework.stereotype.Component;
+import java.util.List;
 
 /**
- * fastcms数据权限sql处理器默认工厂实现
+ * fastcms数据权限sql处理器工厂
  * @author： wjun_java@163.com
  * @date： 2022/7/31
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-@Component
-public class DefaultDataPermissionSqlHandlerFactory implements DataPermissionSqlHandlerFactory {
+public interface DataPermissionSqlHandlerManager {
 
-    @Override
-    public DataPermissionSqlHandler getDataPermissionSqlHandler() {
+    /**
+     * 获取权限sql片段
+     * @param mappedStatementId
+     * @return
+     */
+    String getSqlSegment(String mappedStatementId) throws Exception;
 
-        if (AuthUtils.getUserId() == null || AuthUtils.isAdmin()) {
-            return ApplicationUtils.getBean(AllDataPermissionSqlHandler.class);
-        }
+    /**
+     * 获取权限SQL判断处理器
+     * @return
+     */
+    List<DataPermissionSqlHandler> getDataPermissionSqlHandlerList();
 
-        return ApplicationUtils.getBean(SelfDataPermissionSqlHandler.class);
-    }
+    /**
+     * 添加sql权限处理器
+     * @param dataPermissionSqlHandler
+     */
+    void addDataPermissionSqlHandler(DataPermissionSqlHandler dataPermissionSqlHandler);
+
+    /**
+     * 移除sql权限处理器
+     * @param dataPermissionSqlHandler
+     */
+    void removeDataPermissionSqlHandler(DataPermissionSqlHandler dataPermissionSqlHandler);
 
 }

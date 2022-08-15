@@ -17,6 +17,9 @@
 
 package com.fastcms.mybatis;
 
+import net.sf.jsqlparser.schema.Table;
+import org.springframework.core.Ordered;
+
 /**
  * fastcms数据权限sql处理器
  * @author： wjun_java@163.com
@@ -25,7 +28,19 @@ package com.fastcms.mybatis;
  * @modifiedBy：
  * @version: 1.0
  */
-public interface DataPermissionSqlHandler {
+public interface DataPermissionSqlHandler extends Ordered {
+
+    /**
+     * 获取下一个权限SQL处理器
+     * @return
+     */
+    DataPermissionSqlHandler getNext();
+
+    /**
+     * 设置下一个权限SQL处理器
+     * @return
+     */
+    void setNext(DataPermissionSqlHandler dataPermissionSqlHandler);
 
     /**
      * 获取权限sql片段
@@ -33,5 +48,25 @@ public interface DataPermissionSqlHandler {
      * @return
      */
     String getSqlSegment(String mappedStatementId) throws Exception;
+
+    /**
+     * 是否匹配
+     * @return
+     */
+    boolean isMatch();
+
+    /**
+     * 是否过滤
+     * @param mappedStatementId
+     * @return
+     */
+    boolean isFilter(String mappedStatementId);
+
+    /**
+     * 检查sql table是否需要增强权限sql片段
+     * @param table
+     * @return
+     */
+    boolean isNeedProcess(Table table);
 
 }
