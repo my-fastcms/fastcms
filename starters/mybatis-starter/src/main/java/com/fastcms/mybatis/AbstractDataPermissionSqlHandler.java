@@ -41,7 +41,7 @@ public abstract class AbstractDataPermissionSqlHandler implements DataPermission
     @Override
     public String getSqlSegment(String mappedStatementId, Statement statement) throws Exception {
         if (isFilter(mappedStatementId)) {
-            return null;
+            return statement.toString();
         }
         if (isMatch()) {
             new DataPermissionSqlProcessor(this, doGetSqlSegment(mappedStatementId, statement), statement).process();
