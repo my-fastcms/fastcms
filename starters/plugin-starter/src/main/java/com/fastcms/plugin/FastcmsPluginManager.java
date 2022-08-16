@@ -156,6 +156,7 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
             initPlugins();
         } catch (Exception e) {
             e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
     }
 

@@ -44,6 +44,9 @@ public class HelloController {
         List<HelloService> extensions = PluginUtils.getExtensions(HelloService.class);
         extensions.forEach(item -> item.sayHello());
 
+        Hello hello = helloService.getById(1);
+        System.out.println(hello);
+
         return "hello";
     }
 

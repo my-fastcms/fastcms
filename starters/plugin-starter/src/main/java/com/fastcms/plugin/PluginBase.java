@@ -16,6 +16,7 @@
  */
 package com.fastcms.plugin;
 
+import com.fastcms.mybatis.DataPermissionSqlHandlerManager;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -61,6 +62,8 @@ public abstract class PluginBase extends Plugin {
     @Override
     public void start() {
         getApplicationContext();
+        // 刷新数据权限SQL处理器
+        getPluginApplicationContext().getBean(DataPermissionSqlHandlerManager.class).getHandler();
     }
 
     @Override
@@ -69,6 +72,8 @@ public abstract class PluginBase extends Plugin {
         if ((applicationContext != null) && (applicationContext instanceof ConfigurableApplicationContext)) {
             ((ConfigurableApplicationContext) applicationContext).close();
         }
+        // 刷新数据权限SQL处理器
+        getPluginApplicationContext().getBean(DataPermissionSqlHandlerManager.class).getHandler();
     }
 
     /**
@@ -95,6 +100,14 @@ public abstract class PluginBase extends Plugin {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    protected FastcmsPluginManager getPluginManager() {
+        return (FastcmsPluginManager) wrapper.getPluginManager();
+    }
+
+    protected ApplicationContext getPluginApplicationContext() {
+        return getPluginManager().getApplicationContext();
     }
 
 }

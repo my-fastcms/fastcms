@@ -19,8 +19,6 @@ package com.fastcms.mybatis;
 
 import net.sf.jsqlparser.statement.Statement;
 
-import java.util.List;
-
 /**
  * fastcms数据权限sql处理器工厂
  * @author： wjun_java@163.com
@@ -43,12 +41,6 @@ public interface DataPermissionSqlHandlerManager {
      * @return
      */
     DataPermissionSqlHandler getHandler();
-
-    /**
-     * 获取权限SQL判断处理器
-     * @return
-     */
-    List<DataPermissionSqlHandler> getDataPermissionSqlHandlerList();
 
     /**
      * 添加sql权限处理器

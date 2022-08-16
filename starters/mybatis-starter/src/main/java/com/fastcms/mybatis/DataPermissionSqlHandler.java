@@ -54,7 +54,7 @@ public interface DataPermissionSqlHandler extends Ordered {
      * 是否匹配
      * @return
      */
-    boolean isMatch();
+    boolean isMatch(String mappedStatementId);
 
     /**
      * 是否过滤

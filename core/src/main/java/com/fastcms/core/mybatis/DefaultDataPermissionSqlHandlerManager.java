@@ -20,7 +20,6 @@ package com.fastcms.core.mybatis;
 import com.fastcms.mybatis.DataPermissionSqlHandler;
 import com.fastcms.mybatis.DataPermissionSqlHandlerManager;
 import com.fastcms.utils.ApplicationUtils;
-import com.fastcms.utils.PluginUtils;
 import net.sf.jsqlparser.statement.Statement;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
@@ -51,11 +50,11 @@ public class DefaultDataPermissionSqlHandlerManager implements DataPermissionSql
 
     @Override
     public DataPermissionSqlHandler getHandler() {
+
+        dataPermissionSqlHandlerList.clear();
+
         Map<String, DataPermissionSqlHandler> dataPermissionSqlHandlerMap = ApplicationUtils.getApplicationContext().getBeansOfType(DataPermissionSqlHandler.class);
         dataPermissionSqlHandlerList.addAll(dataPermissionSqlHandlerMap.values());
-
-        List<DataPermissionSqlHandler> pluginDataPermissionSqlHandlers = PluginUtils.getExtensions(DataPermissionSqlHandler.class);
-        dataPermissionSqlHandlerList.addAll(pluginDataPermissionSqlHandlers);
 
         // 排序
         List<DataPermissionSqlHandler> collect = dataPermissionSqlHandlerList.stream().sorted(Comparator.comparing(DataPermissionSqlHandler::getOrder)).collect(Collectors.toList());
@@ -67,11 +66,6 @@ public class DefaultDataPermissionSqlHandlerManager implements DataPermissionSql
             dataPermissionSqlHandler = temp;
         }
         return dataPermissionSqlHandler;
-    }
-
-    @Override
-    public List<DataPermissionSqlHandler> getDataPermissionSqlHandlerList() {
-        return dataPermissionSqlHandlerList;
     }
 
     @Override

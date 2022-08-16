@@ -43,7 +43,7 @@ public abstract class AbstractDataPermissionSqlHandler implements DataPermission
         if (isFilter(mappedStatementId)) {
             return statement.toString();
         }
-        if (isMatch()) {
+        if (isMatch(mappedStatementId)) {
             new DataPermissionSqlProcessor(this, doGetSqlSegment(mappedStatementId, statement), statement).process();
             return statement.toString();
         } else {
@@ -52,7 +52,7 @@ public abstract class AbstractDataPermissionSqlHandler implements DataPermission
     }
 
     @Override
-    public boolean isMatch() {
+    public boolean isMatch(String mappedStatementId) {
         return false;
     }
 
