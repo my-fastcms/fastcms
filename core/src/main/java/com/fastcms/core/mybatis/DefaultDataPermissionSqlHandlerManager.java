@@ -50,6 +50,26 @@ public class DefaultDataPermissionSqlHandlerManager implements DataPermissionSql
     }
 
     @Override
+    public DataPermissionSqlHandler getHandler() {
+        Map<String, DataPermissionSqlHandler> dataPermissionSqlHandlerMap = ApplicationUtils.getApplicationContext().getBeansOfType(DataPermissionSqlHandler.class);
+        dataPermissionSqlHandlerList.addAll(dataPermissionSqlHandlerMap.values());
+
+        List<DataPermissionSqlHandler> pluginDataPermissionSqlHandlers = PluginUtils.getExtensions(DataPermissionSqlHandler.class);
+        dataPermissionSqlHandlerList.addAll(pluginDataPermissionSqlHandlers);
+
+        // 排序
+        List<DataPermissionSqlHandler> collect = dataPermissionSqlHandlerList.stream().sorted(Comparator.comparing(DataPermissionSqlHandler::getOrder)).collect(Collectors.toList());
+
+        dataPermissionSqlHandler = collect.get(0);
+        for (int i = collect.size() - 1; i > 0; i --) {
+            DataPermissionSqlHandler temp = collect.get(i);
+            temp.setNext(dataPermissionSqlHandler);
+            dataPermissionSqlHandler = temp;
+        }
+        return dataPermissionSqlHandler;
+    }
+
+    @Override
     public List<DataPermissionSqlHandler> getDataPermissionSqlHandlerList() {
         return dataPermissionSqlHandlerList;
     }
@@ -66,22 +86,7 @@ public class DefaultDataPermissionSqlHandlerManager implements DataPermissionSql
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
-        Map<String, DataPermissionSqlHandler> dataPermissionSqlHandlerMap = ApplicationUtils.getApplicationContext().getBeansOfType(DataPermissionSqlHandler.class);
-        dataPermissionSqlHandlerList.addAll(dataPermissionSqlHandlerMap.values());
-
-        List<DataPermissionSqlHandler> pluginDataPermissionSqlHandlers = PluginUtils.getExtensions(DataPermissionSqlHandler.class);
-        dataPermissionSqlHandlerList.addAll(pluginDataPermissionSqlHandlers);
-
-        // 排序
-        List<DataPermissionSqlHandler> collect = dataPermissionSqlHandlerList.stream().sorted(Comparator.comparing(DataPermissionSqlHandler::getOrder)).collect(Collectors.toList());
-
-        dataPermissionSqlHandler = collect.get(0);
-        for (int i = collect.size() - 1; i > 0; i --) {
-            DataPermissionSqlHandler temp = collect.get(i);
-            temp.setNext(dataPermissionSqlHandler);
-            dataPermissionSqlHandler = temp;
-        }
-
+        getHandler();
     }
 
 }

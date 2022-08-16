@@ -39,6 +39,12 @@ public interface DataPermissionSqlHandlerManager {
     String getSqlSegment(String mappedStatementId, Statement statement) throws Exception;
 
     /**
+     * 获取数据权限handler
+     * @return
+     */
+    DataPermissionSqlHandler getHandler();
+
+    /**
      * 获取权限SQL判断处理器
      * @return
      */
