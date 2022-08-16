@@ -17,16 +17,12 @@
 
 package com.fastcms.core.mybatis;
 
-import com.baomidou.mybatisplus.core.metadata.TableInfo;
-import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.mybatis.AbstractDataPermissionSqlHandler;
-import net.sf.jsqlparser.schema.Table;
+import net.sf.jsqlparser.statement.Statement;
 import org.springframework.stereotype.Component;
-
-import java.util.stream.Collectors;
 
 /**
  * fastcms 查看自身数据权限
@@ -40,8 +36,8 @@ import java.util.stream.Collectors;
 public class SelfDataPermissionSqlHandler extends AbstractDataPermissionSqlHandler {
 
     @Override
-    protected String doGetSqlSegment(String mappedStatementId) throws Exception {
-        return FastcmsConstants.CREATE_USER_ID + " = " + AuthUtils.getUserId();
+    protected String doGetSqlSegment(String mappedStatementId, Statement statement) throws Exception {
+        return FastcmsConstants.CREATE_USER_ID.concat(StringPool.EQUALS + AuthUtils.getUserId());
     }
 
     @Override
@@ -50,19 +46,8 @@ public class SelfDataPermissionSqlHandler extends AbstractDataPermissionSqlHandl
     }
 
     @Override
-    public boolean isNeedProcess(Table table) {
-        TableInfo tableInfo = TableInfoHelper.getTableInfo(table.getFullyQualifiedName());
-
-        if (tableInfo != null) {
-            return CollectionUtils.isNotEmpty(tableInfo.getFieldList().stream().filter(field -> field.getColumn().equals(FastcmsConstants.CREATE_USER_ID)).collect(Collectors.toList()));
-        }
-
-        return super.isNeedProcess(table);
-    }
-
-    @Override
     public int getOrder() {
-        return 0;
+        return LOWEST_PRECEDENCE;
     }
 
 }

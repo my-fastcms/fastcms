@@ -17,7 +17,14 @@
 
 package com.fastcms.mybatis;
 
+import com.baomidou.mybatisplus.core.metadata.TableInfo;
+import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
+import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.fastcms.common.constants.FastcmsConstants;
 import net.sf.jsqlparser.schema.Table;
+import net.sf.jsqlparser.statement.Statement;
+
+import java.util.stream.Collectors;
 
 /**
  * fastcms数据权限sql处理器工厂
@@ -32,14 +39,15 @@ public abstract class AbstractDataPermissionSqlHandler implements DataPermission
     protected DataPermissionSqlHandler dataPermissionSqlHandler;
 
     @Override
-    public String getSqlSegment(String mappedStatementId) throws Exception {
+    public String getSqlSegment(String mappedStatementId, Statement statement) throws Exception {
         if (isFilter(mappedStatementId)) {
             return null;
         }
         if (isMatch()) {
-            return doGetSqlSegment(mappedStatementId);
+            new DataPermissionSqlProcessor(this, doGetSqlSegment(mappedStatementId, statement), statement).process();
+            return statement.toString();
         } else {
-            return getNext() == null ? null : getNext().getSqlSegment(mappedStatementId);
+            return getNext() == null ? statement.toString() : getNext().getSqlSegment(mappedStatementId, statement);
         }
     }
 
@@ -55,6 +63,11 @@ public abstract class AbstractDataPermissionSqlHandler implements DataPermission
 
     @Override
     public boolean isNeedProcess(Table table) {
+        TableInfo tableInfo = TableInfoHelper.getTableInfo(table.getFullyQualifiedName());
+
+        if (tableInfo != null) {
+            return CollectionUtils.isNotEmpty(tableInfo.getFieldList().stream().filter(field -> field.getColumn().equals(FastcmsConstants.CREATE_USER_ID)).collect(Collectors.toList()));
+        }
         return false;
     }
 
@@ -68,6 +81,6 @@ public abstract class AbstractDataPermissionSqlHandler implements DataPermission
         return dataPermissionSqlHandler;
     }
 
-    protected abstract String doGetSqlSegment(String mappedStatementId) throws Exception;
+    protected abstract String doGetSqlSegment(String mappedStatementId, Statement statement) throws Exception;
 
 }

@@ -143,7 +143,7 @@ public class TestSqlParser {
 
         Statement statement = CCJSqlParserUtil.parse(sql);
 
-        DataPermissionSqlProcessor dataPermissionSqlProcessor = new DataPermissionSqlProcessor("create_user_id = 37", statement);
+        DataPermissionSqlProcessor dataPermissionSqlProcessor = new DataPermissionSqlProcessor(null, "create_user_id = 37", statement);
         dataPermissionSqlProcessor.process();
 
         System.out.println(statement.toString());

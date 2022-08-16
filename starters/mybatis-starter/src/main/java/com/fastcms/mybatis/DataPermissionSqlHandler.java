@@ -18,6 +18,7 @@
 package com.fastcms.mybatis;
 
 import net.sf.jsqlparser.schema.Table;
+import net.sf.jsqlparser.statement.Statement;
 import org.springframework.core.Ordered;
 
 /**
@@ -47,7 +48,7 @@ public interface DataPermissionSqlHandler extends Ordered {
      * @param mappedStatementId
      * @return
      */
-    String getSqlSegment(String mappedStatementId) throws Exception;
+    String getSqlSegment(String mappedStatementId, Statement statement) throws Exception;
 
     /**
      * 是否匹配

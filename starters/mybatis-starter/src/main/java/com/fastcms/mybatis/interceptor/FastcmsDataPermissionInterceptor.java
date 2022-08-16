@@ -19,7 +19,6 @@ package com.fastcms.mybatis.interceptor;
 
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.fastcms.mybatis.DataPermissionSqlHandlerManager;
-import com.fastcms.mybatis.DataPermissionSqlProcessor;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;
 import org.apache.ibatis.executor.statement.StatementHandler;
@@ -84,9 +83,8 @@ public class FastcmsDataPermissionInterceptor implements Interceptor {
 
         Statement statement = CCJSqlParserUtil.parse(originalSql);
 
-        new DataPermissionSqlProcessor(dataPermissionSqlHandlerManager.getSqlSegment(mappedStatementId), statement).process();
+        return dataPermissionSqlHandlerManager.getSqlSegment(mappedStatementId, statement);
 
-        return statement.toString();
     }
 
 }

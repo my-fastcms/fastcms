@@ -42,9 +42,10 @@ public class DataPermissionSqlProcessor extends StatementVisitorAdapter implemen
 
     private Statement statement;
 
-    private String mappedStatementId;
+    private DataPermissionSqlHandler dataPermissionSqlHandler;
 
-    public DataPermissionSqlProcessor(String permissionSql, Statement statement) {
+    public DataPermissionSqlProcessor(DataPermissionSqlHandler dataPermissionSqlHandler, String permissionSql, Statement statement) {
+        this.dataPermissionSqlHandler = dataPermissionSqlHandler;
         this.permissionSql = permissionSql;
         this.statement = statement;
     }
@@ -135,6 +136,10 @@ public class DataPermissionSqlProcessor extends StatementVisitorAdapter implemen
     }
 
     void processWhere(Table table, PlainSelect plainSelect) {
+
+        if (dataPermissionSqlHandler == null || !dataPermissionSqlHandler.isNeedProcess(table)) {
+            return;
+        }
 
         if (StringUtils.isNotBlank(permissionSql)) {
             if (table.getAlias() != null) {
