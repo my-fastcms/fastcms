@@ -91,7 +91,7 @@ public class AttachmentController {
      * @return
      */
     @PostMapping("update/{attachId}")
-    @Secured(name = "附件修改", resource = "attachment:upload", action = ActionTypes.WRITE)
+    @Secured(name = "附件修改", resource = "attachment:update", action = ActionTypes.WRITE)
 	public RestResult<Boolean> update(@PathVariable("attachId") Long attachId,
                                       @RequestParam("fileName") String fileName,
                                       @RequestParam(value = "fileDesc", required = false) String fileDesc) {
