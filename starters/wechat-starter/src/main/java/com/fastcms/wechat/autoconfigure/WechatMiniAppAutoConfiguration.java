@@ -16,7 +16,9 @@
  */
 package com.fastcms.wechat.autoconfigure;
 
+import cn.binarywang.wx.miniapp.api.WxMaQrcodeService;
 import cn.binarywang.wx.miniapp.api.WxMaService;
+import cn.binarywang.wx.miniapp.api.impl.WxMaQrcodeServiceImpl;
 import cn.binarywang.wx.miniapp.api.impl.WxMaServiceImpl;
 import cn.binarywang.wx.miniapp.message.WxMaMessageRouter;
 import me.chanjar.weixin.common.session.StandardSessionManager;
@@ -59,6 +61,12 @@ public class WechatMiniAppAutoConfiguration {
     public WxMaMessageRouter maMessageRouter(WxMaService wxMaService) {
         final WxMaMessageRouter maMessageRouter = new WxMaMessageRouter(wxMaService);
         return maMessageRouter;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(WxMaQrcodeService.class)
+    public WxMaQrcodeService wxMaQrcodeService(WxMaService wxMaService) {
+        return new WxMaQrcodeServiceImpl(wxMaService);
     }
 
 }

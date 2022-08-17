@@ -16,7 +16,9 @@
  */
 package com.fastcms.web.controller.api;
 
+import cn.binarywang.wx.miniapp.api.WxMaQrcodeService;
 import cn.binarywang.wx.miniapp.api.WxMaService;
+import cn.binarywang.wx.miniapp.bean.WxMaCodeLineColor;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
@@ -37,6 +39,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,6 +66,9 @@ public class WechatMiniUserApi {
 
 	@Autowired
 	private JwtTokenManager tokenManager;
+
+	@Autowired
+	private WxMaQrcodeService wxMaQrcodeService;
 
 	static final String MINIAPP_SESSIONKEY = "sessionKey";
 
@@ -222,6 +228,31 @@ public class WechatMiniUserApi {
 		} catch (FastcmsException e) {
 			e.printStackTrace();
 			return RestResultUtils.failed("登录失败:user is null");
+		}
+
+	}
+
+	/**
+	 * 获取小程序二维码
+	 * @param scene
+	 * @param envVersion | release
+	 * @param path
+	 * @return
+	 * @throws WxErrorException
+	 */
+	@GetMapping("getWxaQrCode")
+	public Object getWxaQrCode(@RequestParam(value = "scene", required = false) String scene,
+							   @RequestParam(value = "path", required = false, defaultValue = "pages/index/index") String path,
+							   @RequestParam(value = "envVersion") String envVersion) throws FastcmsException {
+		if (StringUtils.isBlank(scene)) {
+			scene = String.valueOf(AuthUtils.getUserId());
+		}
+
+		try {
+			byte[] qrCodeBytes = wxMaQrcodeService.createWxaCodeUnlimitBytes(scene, path, true, envVersion, 430, true, new WxMaCodeLineColor("0", "0", "0"), false);
+			return RestResultUtils.success("data:image/png;base64," + Base64.getEncoder().encodeToString(qrCodeBytes));
+		} catch (Exception e) {
+			throw new FastcmsException(e.getMessage());
 		}
 
 	}
