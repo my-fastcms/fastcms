@@ -5,6 +5,7 @@ INSERT INTO `permission`(`id`, `parent_id`, `name`, `path`, `component`, `title`
 ALTER TABLE article CHANGE user_id create_user_id bigint(20);
 ALTER TABLE article_category CHANGE user_id create_user_id bigint(20);
 ALTER TABLE article_tag CHANGE user_id create_user_id bigint(20);
+ALTER TABLE article_comment CHANGE user_id create_user_id bigint(20);
 ALTER TABLE attachment CHANGE user_id create_user_id bigint(20);
 ALTER TABLE menu CHANGE user_id create_user_id bigint(20);
 ALTER TABLE `order` CHANGE user_id create_user_id bigint(20);
