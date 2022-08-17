@@ -25,9 +25,8 @@ import com.fastcms.common.utils.FileUtils;
 import com.fastcms.entity.Config;
 import com.fastcms.service.IConfigService;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationStartedEvent;
-import org.springframework.context.ApplicationListener;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
@@ -47,7 +46,7 @@ import java.util.stream.Collectors;
  * @version: 1.0
  */
 @Service
-public class DefaultTemplateService<T extends TreeNode> implements TemplateService, TreeNodeConvert<T>, ApplicationListener<ApplicationStartedEvent> {
+public class DefaultTemplateService<T extends TreeNode> implements TemplateService, TreeNodeConvert<T>, InitializingBean {
 
     private String templateDir = "./htmls";
 
@@ -218,7 +217,7 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
     }
 
     @Override
-    public void onApplicationEvent(ApplicationStartedEvent event) {
+    public void afterPropertiesSet() throws Exception {
         initialize();
     }
 
