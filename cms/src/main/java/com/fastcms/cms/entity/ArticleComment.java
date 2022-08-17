@@ -57,7 +57,7 @@ public class ArticleComment implements Serializable {
      * 创建人
      */
     @TableField(fill = FieldFill.INSERT)
-    private Long userId;
+    private Long createUserId;
 
     /**
      * 上级评论
@@ -120,12 +120,12 @@ public class ArticleComment implements Serializable {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getCreateUserId() {
+        return createUserId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setCreateUserId(Long createUserId) {
+        this.createUserId = createUserId;
     }
 
     public Long getParentId() {
