@@ -137,7 +137,11 @@ public class DataPermissionSqlProcessor extends StatementVisitorAdapter implemen
 
     void processWhere(Table table, PlainSelect plainSelect) {
 
-        if (dataPermissionSqlHandler == null || !dataPermissionSqlHandler.isNeedProcess(table)) {
+        if (dataPermissionSqlHandler == null) {
+            return;
+        }
+
+        if (!dataPermissionSqlHandler.isNeedProcess(table)) {
             return;
         }
 
