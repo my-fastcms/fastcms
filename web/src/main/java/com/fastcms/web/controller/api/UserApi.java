@@ -70,8 +70,8 @@ public class UserApi {
      * @return
      */
     @GetMapping("get")
-    public RestResult<User> getUserInfo() {
-        return RestResultUtils.success(userService.getById(AuthUtils.getUserId()));
+    public RestResult<User> getUserInfo(@RequestParam(value = "userId", required = false) Long userId) {
+        return RestResultUtils.success(userService.getById(userId == null ? AuthUtils.getUserId() : userId));
     }
 
     /**
