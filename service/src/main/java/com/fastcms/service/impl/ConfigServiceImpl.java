@@ -5,8 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fastcms.entity.Config;
 import com.fastcms.mapper.ConfigMapper;
 import com.fastcms.service.IConfigService;
-import org.springframework.boot.context.event.ApplicationStartedEvent;
-import org.springframework.context.ApplicationListener;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
  * @since 2021-02-14
  */
 @Service
-public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> implements IConfigService, ApplicationListener<ApplicationStartedEvent> {
+public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> implements IConfigService, InitializingBean {
 
 	/**
 	 * 缓存系统配置
@@ -57,7 +56,7 @@ public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> impleme
 	}
 
 	@Override
-	public void onApplicationEvent(ApplicationStartedEvent event) {
+	public void afterPropertiesSet() throws Exception {
 		list().forEach(item -> configMap.put(item.getKey(), item));
 	}
 
