@@ -5,6 +5,8 @@ import org.pf4j.Extension;
 import org.pf4j.ExtensionPoint;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 /**
  * wjun_java@163.com
  */
@@ -18,6 +20,11 @@ public class HelloServiceImpl extends ServiceImpl<HelloPluginMapper, Hello> impl
     public void sayHello() {
         System.out.println("=============sayHello");
         System.out.println(helloComponent);
+    }
+
+    @Override
+    public List<Hello> getHelloList() {
+        return getBaseMapper().getHelloList();
     }
 
 }

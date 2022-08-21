@@ -45,7 +45,7 @@ public class HelloDataPermissionSqlHandler extends AbstractDataPermissionSqlHand
 
     @Override
     public boolean isMatch(String mappedStatementId) {
-        return mappedStatementId.equalsIgnoreCase("com.fastcms.hello.HelloPluginMapper.selectById");
+        return mappedStatementId.equalsIgnoreCase("com.fastcms.hello.HelloPluginMapper.getHelloList");
     }
 
     @Override

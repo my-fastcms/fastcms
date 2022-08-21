@@ -18,6 +18,8 @@ package com.fastcms.hello;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.util.List;
+
 /**
  * @author： wjun_java@163.com
  * @date： 2022/1/9
@@ -26,5 +28,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @version: 1.0
  */
 public interface HelloPluginMapper extends BaseMapper<Hello> {
+
+    List<Hello> getHelloList();
 
 }
