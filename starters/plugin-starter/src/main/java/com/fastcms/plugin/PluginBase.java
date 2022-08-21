@@ -63,7 +63,7 @@ public abstract class PluginBase extends Plugin {
     public void start() {
         getApplicationContext();
         // 刷新数据权限SQL处理器
-        getPluginApplicationContext().getBean(DataPermissionSqlHandlerManager.class).getHandler();
+        refresh();
     }
 
     @Override
@@ -72,8 +72,7 @@ public abstract class PluginBase extends Plugin {
         if ((applicationContext != null) && (applicationContext instanceof ConfigurableApplicationContext)) {
             ((ConfigurableApplicationContext) applicationContext).close();
         }
-        // 刷新数据权限SQL处理器
-        getPluginApplicationContext().getBean(DataPermissionSqlHandlerManager.class).getHandler();
+        refresh();
     }
 
     /**
@@ -108,6 +107,11 @@ public abstract class PluginBase extends Plugin {
 
     protected ApplicationContext getPluginApplicationContext() {
         return getPluginManager().getApplicationContext();
+    }
+
+    protected void refresh() {
+        // 刷新数据权限SQL处理器
+        getPluginApplicationContext().getBean(DataPermissionSqlHandlerManager.class).getHandler();
     }
 
 }

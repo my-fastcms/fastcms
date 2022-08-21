@@ -18,6 +18,8 @@
 package com.fastcms.hello;
 
 import com.fastcms.mybatis.AbstractDataPermissionSqlHandler;
+import com.fastcms.service.IUserService;
+import com.fastcms.utils.ApplicationUtils;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.Statement;
 import org.pf4j.Extension;
@@ -35,6 +37,8 @@ public class HelloDataPermissionSqlHandler extends AbstractDataPermissionSqlHand
 
     @Override
     protected String doGetSqlSegment(String mappedStatementId, Statement statement) throws Exception {
+        IUserService bean = ApplicationUtils.getBean(IUserService.class);
+        System.out.println(bean);
         return "1=1";
     }
 
