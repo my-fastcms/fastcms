@@ -42,7 +42,7 @@ public class DeptLeaderDataPermissionSqlHandler extends AbstractDataPermissionSq
 
     @Override
     public int getOrder() {
-        return 2;
+        return 200;
     }
 
 }

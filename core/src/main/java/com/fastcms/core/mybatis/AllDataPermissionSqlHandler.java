@@ -45,7 +45,7 @@ public class AllDataPermissionSqlHandler extends AbstractDataPermissionSqlHandle
 
     @Override
     public int getOrder() {
-        return 1;
+        return 100;
     }
 
 }
