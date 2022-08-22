@@ -58,6 +58,9 @@ public abstract class AbstractDataPermissionSqlHandler implements DataPermission
 
     @Override
     public boolean isFilter(String mappedStatementId) {
+        if (mappedStatementId.contains("selectById")) {
+            return true;
+        }
         return false;
     }
 
