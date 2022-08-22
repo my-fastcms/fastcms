@@ -64,6 +64,11 @@ public class FastcmsDataPermissionInterceptor implements Interceptor {
         if (!SqlCommandType.SELECT.equals(mappedStatement.getSqlCommandType())) {
             return invocation.proceed();
         }
+
+        if (mappedStatement.getId().contains("selectById")) {
+            return invocation.proceed();
+        }
+
         BoundSql boundSql = (BoundSql) metaObject.getValue("delegate.boundSql");
         String originalSql = boundSql.getSql();
 
