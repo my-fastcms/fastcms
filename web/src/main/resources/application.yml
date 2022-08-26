@@ -42,6 +42,9 @@ fastcms:
   config:
     ignore:
       keys: "wechat_mch_secret"
+  mybatis:
+    ignore:
+      mappedStatementIds: "selectById, selectBatchIds"
 
 logging:
   config: classpath:META-INF/logback/fastcms.xml

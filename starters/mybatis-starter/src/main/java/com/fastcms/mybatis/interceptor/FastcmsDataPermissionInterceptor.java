@@ -32,9 +32,11 @@ import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
+import java.util.List;
 
 /**
  * fastcms mybatis 数据权限 拦截器
@@ -55,6 +57,9 @@ public class FastcmsDataPermissionInterceptor implements Interceptor {
     @Autowired
     private DataPermissionSqlHandlerManager dataPermissionSqlHandlerManager;
 
+    @Value("${fastcms.mybatis.ignore.mappedStatementIds:}")
+    private List<String> ignoreMappedStatementIds;
+
     @Override
     public Object intercept(Invocation invocation) throws Exception {
 
@@ -65,7 +70,7 @@ public class FastcmsDataPermissionInterceptor implements Interceptor {
             return invocation.proceed();
         }
 
-        if (mappedStatement.getId().contains("selectById")) {
+        if (ignoreMappedStatementIds.stream().filter(item -> mappedStatement.getId().contains(item)).count() > 0) {
             return invocation.proceed();
         }
 
