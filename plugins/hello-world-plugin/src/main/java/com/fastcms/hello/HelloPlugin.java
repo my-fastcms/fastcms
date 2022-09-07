@@ -16,8 +16,8 @@
  */
 package com.fastcms.hello;
 
-import com.fastcms.utils.PluginUtils;
 import com.fastcms.plugin.PluginBase;
+import com.fastcms.utils.PluginUtils;
 import org.pf4j.PluginWrapper;
 
 /**
@@ -38,6 +38,7 @@ public class HelloPlugin extends PluginBase {
     @Override
     public void start() {
         super.start();
+        runSqlFile("hello-plugin.sql");
     }
 
 }

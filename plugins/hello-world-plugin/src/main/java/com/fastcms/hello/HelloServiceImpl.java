@@ -27,4 +27,9 @@ public class HelloServiceImpl extends ServiceImpl<HelloPluginMapper, Hello> impl
         return getBaseMapper().getHelloList();
     }
 
+    @Override
+    public HelloVo findByHelloId(Long id) {
+        return getBaseMapper().findByHelloId(id);
+    }
+
 }

@@ -126,6 +126,15 @@ public class TestCaseService {
             }
         }
 
+        Object helloService = ApplicationUtils.getBean("com.fastcms.hello.HelloServiceImpl");
+        for (Method method : helloService.getClass().getMethods()) {
+            if (method.getName().equals("findByHelloId")) {
+                Object invoke = method.invoke(helloService, new Long(1));
+                System.out.println(invoke);
+                break;
+            }
+        }
+
     }
 
     private void unInstallPlugin(String pluginId) throws Exception {

@@ -17,6 +17,7 @@
 package com.fastcms.hello;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -30,5 +31,7 @@ import java.util.List;
 public interface HelloPluginMapper extends BaseMapper<Hello> {
 
     List<Hello> getHelloList();
+
+    HelloService.HelloVo findByHelloId(@Param("id") Long id);
 
 }
