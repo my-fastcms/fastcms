@@ -83,6 +83,7 @@ public class ArticleController {
                                                             @RequestParam(name = "status", required = false) String status,
                                                             @RequestParam(name = "categoryId", required = false) String categoryId,
                                                             @RequestParam(name = "tagId", required = false) String tagId) {
+
         QueryWrapper<Object> queryWrapper = Wrappers.query()
                 .like(StrUtils.isNotBlank(title), "a.title", title)
                 .eq(StrUtils.isNotBlank(status), "a.status", status)

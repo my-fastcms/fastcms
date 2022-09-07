@@ -23,24 +23,27 @@
                 <div class="category-title">
                     <h3>最新插件</h3>
                 </div>
-                <@articleListTag categoryId=category.id!>
-                    <#if data??>
-                                <div class="category-content-wrap">
-                                    <#list data as item>
-                                    <div class="category-post-list">
-                                        <div class="category-post-img">
-                                            <img src="${(item.thumbnail)!}" alt="">
-                                        </div>
-                                        <div class="category-post-content">
-                                            <h4><a href="${(item.url)!}">${(item.title)!}</a></h4>
-                                            <h4><a href="${(item.url)!}">摘要：${(item.summary)!}</a></h4>
-                                            <p><@formatTime value=(item.created)! format="yyyy-MM-dd"/></p>
-                                        </div>
-                                    </div>
-                                </#list>
+                <#if category??>
+                    <@articleListTag categoryId=category.id!>
+                        <#if data??>
+                        <div class="category-content-wrap">
+                            <#list data as item>
+                            <div class="category-post-list">
+                                <div class="category-post-img">
+                                    <img src="${(item.thumbnail)!}" alt="">
+                                </div>
+                                <div class="category-post-content">
+                                    <h4><a href="${(item.url)!}">${(item.title)!}</a></h4>
+                                    <h4><a href="${(item.summary)!}">摘要：${(item.summary)!}</a></h4>
+                                    <p><@formatTime value=(item.created)! format="yyyy-MM-dd"/></p>
+                                </div>
                             </div>
-                    </#if>
-                </@articleListTag>
+                            </#list>
+                        </div>
+                        </#if>
+                    </@articleListTag>
+                </#if>
+
             </div>
 
         </div>

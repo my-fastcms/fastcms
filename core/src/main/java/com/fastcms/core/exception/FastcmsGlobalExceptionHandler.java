@@ -31,8 +31,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import java.io.IOException;
-
 /**
  * @author： wjun_java@163.com
  * @date： 2021/5/25
@@ -52,7 +50,7 @@ public class FastcmsGlobalExceptionHandler {
      * @throws IllegalArgumentException IllegalArgumentException.
      */
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) throws IOException {
+    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException e) {
         MetricsMonitor.getIllegalArgumentException().increment();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ExceptionUtil.getAllExceptionMsg(e));
     }
@@ -73,6 +71,13 @@ public class FastcmsGlobalExceptionHandler {
     public ResponseEntity<Object> mismatchErrorHandler(MethodArgumentTypeMismatchException e) {
         log.error("CONSOLE", e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ExceptionUtil.getAllExceptionMsg(e));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleDataAccessException(Exception e) {
+        MetricsMonitor.getDbException().increment();
+        log.error("rootFile", e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fastcms Server error");
     }
 
     /**

@@ -106,7 +106,7 @@ public abstract class BasePaginationDirective extends BaseDirective {
 
 		result.put("list", pageItemList);
 		result.put("current", current);
-		result.put("total", page.getTotal());
+		result.put("total", page == null ? 0 : page.getTotal());
 		result.put("totalPage", totalPage);
 		return result;
 	}
