@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.type.classreading.CachingMetadataReaderFactory;
@@ -144,6 +145,14 @@ public abstract class AbstractPluginRegister implements PluginRegister {
         definition.setTargetType(mapperClass);
         definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
         ((GenericWebApplicationContext) this.pluginManger.getApplicationContext()).registerBeanDefinition(mapperClass.getName(), definition);
+    }
+
+    /**
+     * 获取插件applicationContext
+     * @return
+     */
+    protected ApplicationContext getApplicationContext() {
+        return pluginManger.getApplicationContext();
     }
 
 }

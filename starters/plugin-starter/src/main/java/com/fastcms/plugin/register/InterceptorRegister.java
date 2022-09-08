@@ -28,8 +28,12 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * wjun_java@163.com
  * 注册插件拦截器
+ * @author： wjun_java@163.com
+ * @date： 2021/10/24
+ * @description：
+ * @modifiedBy：
+ * @version: 1.0
  */
 public class InterceptorRegister extends AbstractPluginRegister {
 

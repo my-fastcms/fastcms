@@ -22,6 +22,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+/**
+ * @author： wjun_java@163.com
+ * @date： 2021/10/24
+ * @description：
+ * @modifiedBy：
+ * @version: 1.0
+ */
 @SpringBootApplication
 @ComponentScan("com.fastcms")
 @EnableScheduling

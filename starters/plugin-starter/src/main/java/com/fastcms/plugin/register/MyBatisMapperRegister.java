@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * mybatis mapper注册器
  * @author： wjun_java@163.com
  * @date： 2022/1/9
  * @description：
@@ -68,6 +69,7 @@ public class MyBatisMapperRegister extends AbstractPluginRegister {
 		for (Class<?> mapperClass : getMapperClassList(pluginId)) {
 			removeMapperBeanDefinition(mapperClass);
 		}
+
 	}
 
 	List<Class<?>> getMapperClassList(String pluginId) throws Exception {
@@ -92,7 +94,7 @@ public class MyBatisMapperRegister extends AbstractPluginRegister {
 		 * {@see GenericTypeAwareAutowireCandidateResolver#checkGenericTypeMatch()}方法第98行，会去找root definition中的旧的Mapper class
 		 * {@see ResolvableType#isAssignableFrom()} 方法第348行 用来比较bean definition中的Mapper是否为同一个classloader加载的
 		 */
-		definition.setTargetType(mapperClass);
+//		definition.setTargetType(mapperClass);
 		definition.getPropertyValues().add("addToConfig", true);
 		definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
 		((GenericWebApplicationContext) this.pluginManger.getApplicationContext()).registerBeanDefinition(mapperClass.getName(), definition);

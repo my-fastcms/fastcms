@@ -28,7 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * wjun_java@163.com
+ * @author： wjun_java@163.com
+ * @date： 2021/10/24
+ * @description：
+ * @modifiedBy：
+ * @version: 1.0
  */
 public class FreeMarkerViewRegister extends AbstractPluginRegister {
 
