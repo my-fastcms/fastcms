@@ -65,6 +65,7 @@
         <module>common</module>
 		<module>starters</module>
         <module>cms</module>
+        <module>templates</module>
     </modules>
 
 	<dependencyManagement>
@@ -104,6 +105,11 @@
 			<dependency>
 				<groupId>com.fastcms</groupId>
 				<artifactId>fastcms-service</artifactId>
+				<version>${revision}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.fastcms</groupId>
+				<artifactId>fastcms-templates</artifactId>
 				<version>${revision}</version>
 			</dependency>
 			<dependency>

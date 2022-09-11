@@ -34,7 +34,7 @@ build/
 ### VS Code ###
 .vscode/
 
-/web/src/main/resources/htmls/xjd2020/
+/templates/src/main/resources/xjd2020/
 /web/src/main/resources/static/doc/
 /**/.flattened-pom.xml
 /.flattened-pom.xml

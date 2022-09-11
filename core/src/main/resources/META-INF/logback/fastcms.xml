@@ -83,6 +83,10 @@
             <appender-ref ref="CONSOLE"/>
             <level value="DEBUG"/>
         </logger>
+        <logger name="org.pf4j">
+            <appender-ref ref="CONSOLE"/>
+            <level value="DEBUG"/>
+        </logger>
         <logger name="com.fastcms">
             <appender-ref ref="CONSOLE"/>
             <level value="INFO"/>

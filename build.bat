@@ -22,7 +22,7 @@ xcopy web\src\main\resources\application-prod.yml .dist\config /s
 xcopy doc\sql\* .dist\config /s
 
 REM copy htmls
-xcopy web\src\main\resources\htmls .dist\htmls /s /i
+xcopy templates\src\main\resources .dist\htmls /s /i
 
 xcopy web\startup.cmd .dist /s
 xcopy web\startup.sh .dist /s

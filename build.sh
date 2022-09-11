@@ -19,7 +19,7 @@ cp web/src/main/resources/application-prod.yml dist/config
 cp doc/sql/* dist/config
 
 # copy htmls
-cp -r web/src/main/resources/htmls dist
+cp -r templates/src/main/resources dist
 
 cp web/startup.cmd dist
 cp web/startup.sh dist
