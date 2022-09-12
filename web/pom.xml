@@ -120,7 +120,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${basedir}/target/classes/htmls</outputDirectory>
+                            <outputDirectory>${project.build.directory}/classes/htmls</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${basedir}/../templates/src/main/resources</directory>
