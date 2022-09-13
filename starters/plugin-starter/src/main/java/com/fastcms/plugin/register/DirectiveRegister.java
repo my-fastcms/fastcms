@@ -23,8 +23,8 @@ import com.fastcms.plugin.view.PluginFreeMarkerConfig;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfig;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 插件中的freemarker标签注册
@@ -42,7 +42,7 @@ public class DirectiveRegister extends AbstractPluginRegister {
 
 	@Override
 	public void registry(String pluginId) throws Exception {
-		List<Class<?>> directiveClass = getDirectiveClass(getPluginClasses(pluginId));
+		List<Class<?>> directiveClass = getDirectiveClass(pluginId);
 		if (directiveClass.isEmpty()) return;
 
 		FreeMarkerConfig freeMarkerConfig = (FreeMarkerConfig) getBean(FreeMarkerConfig.class);
@@ -71,7 +71,7 @@ public class DirectiveRegister extends AbstractPluginRegister {
 
 	@Override
 	public void unRegistry(String pluginId) throws Exception {
-		getDirectiveClass(getPluginClasses(pluginId)).forEach(item -> {
+		getDirectiveClass(pluginId).forEach(item -> {
 			Directive annotation = item.getAnnotation(Directive.class);
 			if (annotation != null && StringUtils.isNotBlank(annotation.value())) {
 				destroyBean(annotation.value(), item);
@@ -79,15 +79,8 @@ public class DirectiveRegister extends AbstractPluginRegister {
 		});
 	}
 
-	List<Class<?>> getDirectiveClass(List<Class<?>> pluginClasses) {
-		List<Class<?>> directiveClassList = new ArrayList<>();
-		for (Class<?> pluginClass : pluginClasses) {
-			Directive annotation = pluginClass.getAnnotation(Directive.class);
-			if (annotation != null) {
-				directiveClassList.add(pluginClass);
-			}
-		}
-		return directiveClassList;
+	List<Class<?>> getDirectiveClass(String pluginId) throws Exception {
+		return getPluginClasses(pluginId).stream().filter(item -> item.getAnnotation(Directive.class) != null).collect(Collectors.toList());
 	}
 
 }

@@ -36,7 +36,7 @@ public class ExtensionsRegister extends AbstractPluginRegister {
             try {
                 registerExtension(getPluginExtensionClass(pluginId, extensionClassName));
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e.getMessage());
             }
         }
     }
@@ -47,7 +47,7 @@ public class ExtensionsRegister extends AbstractPluginRegister {
             try {
                 unRegisterExtension(getPluginExtensionClass(pluginId, extensionClassName));
             } catch (ClassNotFoundException e) {
-                e.printStackTrace();
+                throw new RuntimeException(e.getMessage());
             }
         }
     }
@@ -65,6 +65,7 @@ public class ExtensionsRegister extends AbstractPluginRegister {
     }
 
     private void unRegisterExtension(Class<?> extensionClass) {
+        removeBeanDefinition(extensionClass);
         destroyBean(extensionClass);
     }
 

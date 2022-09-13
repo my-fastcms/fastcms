@@ -65,7 +65,8 @@ public class MyBatisMapperRegister extends AbstractPluginRegister {
 
 	@Override
 	public void unRegistry(String pluginId) throws Exception {
-		//注册mapper
+
+		//卸载mapper
 		for (Class<?> mapperClass : getMapperClassList(pluginId)) {
 			removeMapperBeanDefinition(mapperClass);
 		}

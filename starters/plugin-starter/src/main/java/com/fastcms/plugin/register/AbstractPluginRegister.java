@@ -38,6 +38,7 @@ import org.springframework.util.ClassUtils;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -132,7 +133,10 @@ public abstract class AbstractPluginRegister implements PluginRegister {
      * @param mapperClass
      */
     protected void removeBeanDefinition(Class mapperClass) {
-        ((GenericWebApplicationContext) this.pluginManger.getApplicationContext()).removeBeanDefinition(mapperClass.getName());
+        String[] beanDefinitionNames = getApplicationContext().getBeanDefinitionNames();
+        if (Arrays.asList(beanDefinitionNames).contains(mapperClass.getName())) {
+            ((GenericWebApplicationContext) this.pluginManger.getApplicationContext()).removeBeanDefinition(mapperClass.getName());
+        }
     }
 
     /**

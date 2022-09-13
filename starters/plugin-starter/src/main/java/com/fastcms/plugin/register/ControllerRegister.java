@@ -39,6 +39,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * wjun_java@163.com
@@ -59,37 +60,37 @@ public class ControllerRegister extends AbstractPluginRegister {
     @Override
     public void registry(String pluginId) throws Exception {
 
-        for (Class<?> aClass : getPluginClasses(pluginId)) {
-            Controller annotation = aClass.getAnnotation(Controller.class);
-            RestController restAnnotation = aClass.getAnnotation(RestController.class);
-            if(annotation != null || restAnnotation != null) {
-                Object bean = pluginManger.getExtensionFactory().create(aClass);
-                Method[] methods = aClass.getMethods();
-                for (Method method : methods) {
-                    if (method.getAnnotation(RequestMapping.class) != null
-                            || method.getAnnotation(GetMapping.class) != null
-                            || method.getAnnotation(PostMapping.class) != null) {
+        for (Class aClass : getControllerClass(pluginId)) {
+            Object bean = pluginManger.getExtensionFactory().create(aClass);
+            Method[] methods = aClass.getMethods();
+            for (Method method : methods) {
+                if (method.getAnnotation(RequestMapping.class) != null
+                        || method.getAnnotation(GetMapping.class) != null
+                        || method.getAnnotation(PostMapping.class) != null) {
 
-                        RequestMappingInfo requestMappingInfo = (RequestMappingInfo) getMappingForMethod.invoke(requestMappingHandlerMapping, method, aClass);
-                        requestMappingHandlerMapping.registerMapping(requestMappingInfo, bean, method);
+                    RequestMappingInfo requestMappingInfo = (RequestMappingInfo) getMappingForMethod.invoke(requestMappingHandlerMapping, method, aClass);
+                    requestMappingHandlerMapping.registerMapping(requestMappingInfo, bean, method);
 
-                        if (method.getAnnotation(PassFastcms.class) != null) {
-                            Set<PathPattern> patterns = requestMappingInfo.getPathPatternsCondition().getPatterns();
-                            if (CollectionUtils.isNotEmpty(patterns)) {
-                                String url = patterns.toArray()[0].toString();
-                                FilterChainProxy filterChainProxy = (FilterChainProxy) beanFactory.getBean("springSecurityFilterChain");
-                                List<SecurityFilterChain> securityFilterChains = (List<SecurityFilterChain>) getProperty(filterChainProxy,"filterChains");
-                                if (securityFilterChains != null) {
-                                    securityFilterChains.add(0, new DefaultSecurityFilterChain(new AntPathRequestMatcher(url), new Filter[0]));
-                                }
+                    if (method.getAnnotation(PassFastcms.class) != null) {
+                        Set<PathPattern> patterns = requestMappingInfo.getPathPatternsCondition().getPatterns();
+                        if (CollectionUtils.isNotEmpty(patterns)) {
+                            String url = patterns.toArray()[0].toString();
+                            FilterChainProxy filterChainProxy = (FilterChainProxy) beanFactory.getBean("springSecurityFilterChain");
+                            List<SecurityFilterChain> securityFilterChains = (List<SecurityFilterChain>) getProperty(filterChainProxy, "filterChains");
+                            if (securityFilterChains != null) {
+                                securityFilterChains.add(0, new DefaultSecurityFilterChain(new AntPathRequestMatcher(url), new Filter[0]));
                             }
                         }
-
                     }
+
                 }
             }
         }
 
+    }
+
+    protected List<Class> getControllerClass(String pluginId) throws Exception {
+        return getPluginClasses(pluginId).stream().filter(aClass -> aClass.getAnnotation(Controller.class) != null || aClass.getAnnotation(RestController.class) != null).collect(Collectors.toList());
     }
 
     private Object getProperty(Object obj, String fieldName) {
@@ -105,9 +106,11 @@ public class ControllerRegister extends AbstractPluginRegister {
 
     @Override
     public void unRegistry(String pluginId) throws Exception {
+
         for (RequestMappingInfo requestMappingInfo : getRequestMappingInfo(pluginId)) {
             requestMappingHandlerMapping.unregisterMapping(requestMappingInfo);
         }
+
     }
 
     List<RequestMappingInfo> getRequestMappingInfo(String pluginId) throws Exception {
