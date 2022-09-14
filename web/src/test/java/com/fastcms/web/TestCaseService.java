@@ -129,8 +129,8 @@ public class TestCaseService {
         Object helloService = ApplicationUtils.getBean("com.fastcms.hello.HelloServiceImpl");
         for (Method method : helloService.getClass().getMethods()) {
             if (method.getName().equals("findByHelloId")) {
-                Object invoke = method.invoke(helloService, new Long(1));
-                System.out.println(invoke);
+                Object result = method.invoke(helloService, Long.valueOf(1));
+                System.out.println(result);
                 break;
             }
         }

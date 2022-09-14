@@ -47,6 +47,9 @@ public class HelloController {
         List<Hello> helloList = helloService.getHelloList();
         System.out.println(helloList);
 
+        HelloService.HelloVo byHelloId = helloService.findByHelloId(1l);
+        System.out.println(byHelloId);
+
         return "hello";
     }
 

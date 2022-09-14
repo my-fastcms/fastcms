@@ -31,10 +31,13 @@ import org.springframework.core.NestedIOException;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.ClassUtils;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -71,6 +74,8 @@ public class MyBatisMapperRegister extends AbstractPluginRegister {
 			removeMapperBeanDefinition(mapperClass);
 		}
 
+		removeMapperXml(pluginId);
+
 	}
 
 	List<Class<?>> getMapperClassList(String pluginId) throws Exception {
@@ -95,7 +100,7 @@ public class MyBatisMapperRegister extends AbstractPluginRegister {
 		 * {@see GenericTypeAwareAutowireCandidateResolver#checkGenericTypeMatch()}方法第98行，会去找root definition中的旧的Mapper class
 		 * {@see ResolvableType#isAssignableFrom()} 方法第348行 用来比较bean definition中的Mapper是否为同一个classloader加载的
 		 */
-//		definition.setTargetType(mapperClass);
+		definition.setTargetType(mapperClass);
 		definition.getPropertyValues().add("addToConfig", true);
 		definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
 		((GenericWebApplicationContext) this.pluginManger.getApplicationContext()).registerBeanDefinition(mapperClass.getName(), definition);
@@ -108,17 +113,14 @@ public class MyBatisMapperRegister extends AbstractPluginRegister {
 
 	void registerMapperXml(String pluginId) throws Exception {
 		PluginWrapper pluginWrapper = pluginManger.getPlugin(pluginId);
-		PathMatchingResourcePatternResolver pathMatchingResourcePatternResolver = new PathMatchingResourcePatternResolver(pluginWrapper.getPluginClassLoader());
-		String pluginBasePath = ClassUtils.classPackageAsResourcePath(pluginWrapper.getPlugin().getClass());
-		//扫描plugin所有的mapper.xml文件
-		Resource[] mapperXmlResources = pathMatchingResourcePatternResolver.getResources(PathMatchingResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + pluginBasePath + "/*Mapper.xml");
 
 		//注册mapper.xml
 		SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) beanFactory.getBean("sqlSessionFactory");
 		Configuration configuration = sqlSessionFactory.getConfiguration();
+
 		try {
 			Resources.setDefaultClassLoader(pluginWrapper.getPluginClassLoader());
-			for (Resource mapperXmlResource : Arrays.asList(mapperXmlResources)) {
+			for (Resource mapperXmlResource : getMapperXml(pluginId)) {
 				if(mapperXmlResource != null && mapperXmlResource.getFilename().endsWith("Mapper.xml")) {
 					try {
 						XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(mapperXmlResource.getInputStream(), configuration, mapperXmlResource.toString(), configuration.getSqlFragments());
@@ -133,6 +135,29 @@ public class MyBatisMapperRegister extends AbstractPluginRegister {
 		} finally {
 			Resources.setDefaultClassLoader(ClassUtils.getDefaultClassLoader());
 		}
+
+	}
+
+	void removeMapperXml(String pluginId) throws Exception {
+		SqlSessionFactory sqlSessionFactory = (SqlSessionFactory) beanFactory.getBean("sqlSessionFactory");
+		Configuration configuration = sqlSessionFactory.getConfiguration();
+
+		Field loadedResourcesField = ReflectionUtils.findField(Configuration.class, "loadedResources", Set.class);
+		loadedResourcesField.setAccessible(true);
+		Set<String> loadedResources = (Set<String>) loadedResourcesField.get(configuration);
+
+		List<Resource> mapperXml = getMapperXml(pluginId);
+		mapperXml.forEach(item -> loadedResources.remove(item.toString()));
+
+	}
+
+	List<Resource> getMapperXml(String pluginId) throws Exception {
+		PluginWrapper pluginWrapper = pluginManger.getPlugin(pluginId);
+		PathMatchingResourcePatternResolver pathMatchingResourcePatternResolver = new PathMatchingResourcePatternResolver(pluginWrapper.getPluginClassLoader());
+		String pluginBasePath = ClassUtils.classPackageAsResourcePath(pluginWrapper.getPlugin().getClass());
+		//扫描plugin所有的mapper.xml文件
+		Resource[] mapperXmlResources = pathMatchingResourcePatternResolver.getResources(PathMatchingResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + pluginBasePath + "/*Mapper.xml");
+		return Arrays.asList(mapperXmlResources);
 	}
 
 }
