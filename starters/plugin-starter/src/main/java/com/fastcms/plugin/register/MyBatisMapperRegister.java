@@ -101,7 +101,7 @@ public class MyBatisMapperRegister extends AbstractPluginRegister {
 		 * {@see ResolvableType#isAssignableFrom()} 方法第348行 用来比较bean definition中的Mapper是否为同一个classloader加载的
 		 */
 		definition.setTargetType(mapperClass);
-		definition.getPropertyValues().add("addToConfig", true);
+//		definition.getPropertyValues().add("addToConfig", false);
 		definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
 		((GenericWebApplicationContext) this.pluginManger.getApplicationContext()).registerBeanDefinition(mapperClass.getName(), definition);
 	}

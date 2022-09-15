@@ -123,14 +123,22 @@ public class TestCaseService {
         for (Method method : bean.getClass().getMethods()) {
             if (method.getName().equals("hello")) {
                 Object invoke = method.invoke(bean, null);
+                System.out.println(invoke);
+                break;
             }
         }
 
         Object helloService = ApplicationUtils.getBean("com.fastcms.hello.HelloServiceImpl");
         for (Method method : helloService.getClass().getMethods()) {
             if (method.getName().equals("findByHelloId")) {
-                Object result = method.invoke(helloService, Long.valueOf(1));
-                System.out.println(result);
+
+                try {
+                    Object result = method.invoke(helloService, Long.valueOf(1));
+                    System.out.println(result);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 break;
             }
         }
