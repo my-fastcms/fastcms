@@ -112,7 +112,7 @@ public class UserAmountPayoutServiceImpl extends ServiceImpl<UserAmountPayoutMap
 			save(userAmountPayout);
 
 			if (UserAmountUtils.isEnableAmountCashOutAudit()) {
-				return "您能的提现单正在审核中，预计需要3个工作日，请耐心等待";
+				return "您的提现单正在审核中，预计需要3个工作日，请耐心等待";
 			} else {
 				//无需审核的情况下
 				doCashOut(userAmount, userAmountPayout);
