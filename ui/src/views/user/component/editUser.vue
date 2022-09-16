@@ -69,6 +69,7 @@
 				<span class="dialog-footer">
 					<el-button @click="onCancel" size="small">取 消</el-button>
 					<el-button :loading="loading" @click="onSetSystemUser" size="small">设为员工</el-button>
+					<el-button :loading="loading" @click="onRestUserPassword" size="small">重置密码</el-button>
 					<el-button type="primary" @click="onSubmit" size="small">保 存</el-button>
 				</span>
 			</template>
@@ -79,7 +80,7 @@
 <script lang="ts">
 import { reactive, toRefs, getCurrentInstance, onMounted, onUpdated } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
-import { saveUser, getUserInfo, getTagList, changeUserType } from '/@/api/user/index';
+import { saveUser, getUserInfo, getTagList, changeUserType, resetPassword } from '/@/api/user/index';
 import qs from 'qs';
 
 export default {
@@ -170,6 +171,30 @@ export default {
 			.catch(() => {});
 		};
 
+		//重置密码
+		const onRestUserPassword = () => {
+			ElMessageBox.confirm('确定重置员工['+state.ruleForm.userName+']账号密码吗?', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning',
+			}).then(() => {
+				state.loading = true;
+				let params = qs.stringify({"userId": state.ruleForm.id}, {arrayFormat: 'repeat'});
+				resetPassword(params).then(() => {
+					state.loading = false;
+					ElMessage.success("操作成功");
+					closeDialog(); // 关闭弹窗
+					// 刷新菜单，未进行后端接口测试
+					initForm();
+					ctx.emit("reloadTable");
+				}).catch((res) => {
+					state.loading = false;
+					ElMessage.error(res.message);
+				});
+			})
+			.catch(() => {});
+		};
+
 		const loadRoleList = () => {
 			
 			getTagList().then((res) => {
@@ -223,6 +248,7 @@ export default {
 			onCancel,
 			onSubmit,
 			onSetSystemUser,
+			onRestUserPassword,
 			loadRoleList,
 			...toRefs(state),
 		};

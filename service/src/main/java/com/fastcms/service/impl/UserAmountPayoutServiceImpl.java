@@ -99,9 +99,11 @@ public class UserAmountPayoutServiceImpl extends ServiceImpl<UserAmountPayoutMap
 				throw new FastcmsException("余额满" + UserAmountUtils.getCashOutAmountDayBalanceMaxValue() + "才可以提现");
 			}
 
+			//获取用户未审核提现金额之和
 			BigDecimal userUnAuditAmountPayout = getBaseMapper().getUserUnAuditAmountPayout(userId);
-			if (userUnAuditAmountPayout.compareTo(userAmount.getAmount()) == 1) {
-				throw new FastcmsException("您有总金额" + userUnAuditAmountPayout + "的申请单未审批，已超过您的账户余额");
+			//提现金额 + 待审核金额不能超过用户当前余额
+			if (userUnAuditAmountPayout.add(amount).compareTo(userAmount.getAmount()) == 1) {
+				throw new FastcmsException("您有总金额为" + userUnAuditAmountPayout + "的申请单未审批，还剩下" + userAmount.getAmount().subtract(userUnAuditAmountPayout) + "元可提现");
 			}
 
 			UserAmountPayout userAmountPayout = new UserAmountPayout();

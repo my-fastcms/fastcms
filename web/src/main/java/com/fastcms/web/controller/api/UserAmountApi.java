@@ -78,7 +78,7 @@ public class UserAmountApi {
      */
     @GetMapping("income/list")
     public Object getUserAmountIncomeList(PageModel page) {
-        return RestResultUtils.success(userAmountStatementService.pageUserAmountStatement(page.toPage(), AuthUtils.getUserId(), UserAmountStatement.AMOUNT_ACTION_ADD, null));
+        return RestResultUtils.success(userAmountStatementService.pageUserAmountStatement(page.toPage(), UserAmountStatement.AMOUNT_ACTION_ADD, null));
     }
 
 }

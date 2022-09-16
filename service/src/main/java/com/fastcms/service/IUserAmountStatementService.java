@@ -16,12 +16,11 @@ public interface IUserAmountStatementService extends IService<UserAmountStatemen
 	/**
 	 * 获取用户账户变动流水
 	 * @param pageParam
-	 * @param userId
 	 * @param action
 	 * @param status
 	 * @return
 	 */
-	Page<UserAmountStatementVo> pageUserAmountStatement(Page pageParam, Long userId, String action, Integer status);
+	Page<UserAmountStatementVo> pageUserAmountStatement(Page pageParam, String action, Integer status);
 
 	class UserAmountStatementVo extends UserAmountStatement implements Serializable {
 
