@@ -1,0 +1,19 @@
+<#macro page>
+
+    <@adminPageTag>
+
+    <#if data??>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item"><a class="page-link" href="${data.prev.url!}">${data.prev.text!}</a></li>
+                <#list data.list as item>
+                    <li class="page-item <#if data.current?string == item.text>active</#if>"><a class="page-link" href="${item.url!}">${item.text!}</a></li>
+                </#list>
+                <li class="page-item"><a class="page-link" href="${data.next.url!}">${data.next.text!}</a></li>
+            </ul>
+        </nav>
+    </#if>
+
+    </@adminPageTag>
+
+</#macro>

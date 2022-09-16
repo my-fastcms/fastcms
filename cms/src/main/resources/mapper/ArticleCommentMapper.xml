@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastcms.cms.mapper.ArticleCommentMapper">
+
+    <resultMap id="ArticleCommentResult" type="com.fastcms.cms.service.IArticleCommentService$ArticleCommentVo">
+        <id property="id" column="id"/>
+        <result column="author" property="author"/>
+        <result column="authorAvatar" property="authorAvatar"/>
+        <result column="content" property="content"/>
+        <collection property="replyCommentList" ofType="com.fastcms.cms.service.IArticleCommentService$ArticleCommentVo"
+                    select="getReplyCommentByParentId" column="id">
+        </collection>
+    </resultMap>
+
+    <select id="pageArticleComment" resultType="com.fastcms.cms.service.IArticleCommentService$ArticleCommentVo">
+        select ac.*, u.user_name as author, u.head_img as authorAvatar, a.title as articleTitle, pac.content as parentComment from article_comment ac
+        left join `user` u on ac.create_user_id = u.id
+        left join article a on ac.article_id = a.id
+        left join article_comment pac on ac.parent_id = pac.id
+        ${ew.customSqlSegment}
+    </select>
+
+    <select id="getReplyCommentByParentId" resultMap="ArticleCommentResult">
+        select ac.*, u.user_name as author, u.head_img as authorAvatar from article_comment ac left join `user` u on ac.create_user_id = u.id where ac.`parent_id`=#{commentId}
+    </select>
+
+    <select id="pageArticleCommentByArticleId" resultMap="ArticleCommentResult">
+        select ac.*, u.user_name as author, u.head_img as authorAvatar
+        <if test="userId != null"> , (CASE WHEN ac.create_user_id != 1 THEN 1 ELSE 999 END) as sort_user </if>
+        from article_comment ac
+        left join `user` u on ac.create_user_id = u.id
+        where ac.article_id = #{articleId}
+        and ac.parent_id = 0
+        and (ac.status = 'public' <if test="userId != null"> or ac.create_user_id = #{userId} </if>)
+        order by ac.up_count desc, ac.sort_num desc, <if test="userId != null"> sort_user desc, </if> ac.created desc
+    </select>
+
+</mapper>

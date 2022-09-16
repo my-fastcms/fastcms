@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastcms.mapper.OrderMapper">
+
+    <resultMap type="com.fastcms.service.IOrderService$OrderDetailVo" id="OrderToResult">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="created" jdbcType="OTHER" property="created" typeHandler="org.apache.ibatis.type.LocalDateTimeTypeHandler"/>
+        <collection property="orderItemList" ofType="com.fastcms.service.IOrderService$OrderItemVo" column="id" select="getOrderItemList"/>
+    </resultMap>
+
+    <select id="getOrderItemList" resultType="com.fastcms.service.IOrderService$OrderItemVo">
+        select oi.*, p.title as productTitle, p.thumbnail as productThumbnail from order_item oi
+        join article p on oi.product_id = p.id
+        where oi.order_id = #{orderId}
+    </select>
+
+    <select id="getOrderDetail" resultMap="OrderToResult">
+        select o.*, u.user_name, u.nick_name from `order` o left join `user` u on o.create_user_id = u.id where o.id = #{orderId}
+    </select>
+
+    <select id="pageOrder" resultType="com.fastcms.service.IOrderService$OrderListVo">
+        select o.*, u.user_name, u.nick_name, oa.* from `order` o
+        left join `user` u on o.create_user_id = u.id
+        left join (
+            select oi.order_id, oi.product_count, oi.total_amount, a.title
+            from `order_item` oi left join `article` a on oi.product_id = a.id)
+            oa on oa.order_id = o.id
+        ${ew.customSqlSegment}
+    </select>
+
+    <select id="getOrderStatData" resultType="com.fastcms.service.IOrderService$OrderStatVo">
+        select count(1) as total_count, count(CASE WHEN DATE(updated) = CURDATE() THEN o.id ELSE NULL END) as today_count
+        from `order` o where o.pay_status = 1
+    </select>
+
+    <select id="getUCenterOrderCount" resultType="com.fastcms.service.IOrderService$OrderCountVo">
+        SELECT
+        COUNT(o.id) all_count,
+        COUNT( CASE WHEN o.pay_status = 0 THEN o.id ELSE NULL END ) AS unPay,
+        COUNT( CASE WHEN o.delivery_status = 1 THEN o.id ELSE NULL END ) AS toSend,
+        COUNT( CASE WHEN o.delivery_status = 2 THEN o.id ELSE NULL END ) AS send,
+        COUNT( CASE WHEN o.delivery_status = 4 and o.trade_status = 1 THEN o.id ELSE NULL END ) AS comment,
+        COUNT( CASE WHEN o.trade_status = 2 THEN o.id ELSE NULL END ) AS success,
+        COUNT( CASE WHEN o.trade_status = 9 THEN o.id ELSE NULL END ) AS `close`,
+        COUNT( CASE WHEN o.trade_status = 4 THEN o.id ELSE NULL END ) AS afterSale
+        FROM `order` o
+        WHERE o.create_user_id =#{userId} and o.trade_status !=3
+    </select>
+
+    <select id="getUnPayOrderByLimitTime" resultType="com.fastcms.entity.Order">
+        select * from `order` where TIMESTAMPDIFF(MINUTE, created, now()) > #{overTime} and pay_status = 0 and status = 1
+    </select>
+
+</mapper>

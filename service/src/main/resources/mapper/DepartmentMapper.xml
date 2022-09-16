@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastcms.mapper.DepartmentMapper">
+
+    <insert id="saveUserDepartment">
+        insert into department_user (user_id, dept_id) values
+        <foreach collection="deptIds" item="deptId" separator=",">
+            (#{userId}, #{deptId})
+        </foreach>
+    </insert>
+
+    <delete id="deleteDepartmentByUserId">
+        delete from department_user where user_id = #{userId}
+    </delete>
+
+    <select id="getUserDepartment" resultType="com.fastcms.entity.Department">
+        SELECT d.* FROM department d JOIN (select * from department_user du where du.user_id = #{userId}) dus on d.id = dus.dept_id where d.status = 1
+    </select>
+
+    <select id="getDepartmentUserIdList" resultType="java.lang.Long">
+        SELECT user_id FROM department_user where dept_id = #{deptId}
+    </select>
+
+</mapper>

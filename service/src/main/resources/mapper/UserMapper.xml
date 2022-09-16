@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastcms.mapper.UserMapper">
+
+    <select id="getUserTagList" resultType="com.fastcms.entity.UserTag">
+        SELECT ut.* from user_tag_relation utr JOIN user_tag ut on utr.tag_id = ut.id
+        where utr.user_id = #{userId}
+    </select>
+
+    <select id="getLastUserNum" resultType="java.lang.Long">
+        select id from `user` order by id desc limit 1
+    </select>
+
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 4.0//EN"
+        "http://www.tuckey.org/res/dtds/urlrewrite4.0.dtd">
+
+<urlrewrite>
+
+    <!-- 页面 -->
+    <rule>
+        <from>^/p/(\w+)\.html$</from>
+        <to>/p/$1/</to>
+    </rule>
+
+    <!-- 文章列表页，注意html后面没有加$，因为后面还有若干参数 -->
+    <rule>
+        <from>^/a/c/(\w+)\.html</from>
+        <to>/a/c/$1</to>
+    </rule>
+
+    <!-- 文章详情页 -->
+    <rule>
+        <from>^/a/(\w+)\.html$</from>
+        <to>/a/$1/</to>
+    </rule>
+
+    <!-- 静态网页 -->
+    <!--
+        <rule>
+            <from>^/static/(\w+)\.html$</from>
+            <to>/static/$1/</to>
+        </rule>
+    -->
+
+</urlrewrite>

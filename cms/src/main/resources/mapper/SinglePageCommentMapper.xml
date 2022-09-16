@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastcms.cms.mapper.SinglePageCommentMapper">
+
+    <select id="pageSinglePageComment"
+            resultType="com.fastcms.cms.service.ISinglePageCommentService$PageCommentVo">
+        select spc.*, u.user_name as author, s.title as pageTitle, pac.content as parentComment from single_page_comment spc
+        left join `user` u on spc.create_user_id = u.id
+        left join single_page s on spc.page_id = s.id
+        left join single_page_comment pac on spc.parent_id = pac.id
+        ${ew.customSqlSegment}
+    </select>
+</mapper>

@@ -1,0 +1,54 @@
+<#import "_layout.html" as layout>
+<@layout.header "文章列表"></@layout.header>
+<@layout.body>
+    <section id="feature1">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 wow fadeInUp" data-wow-delay="0.6s">
+                    <h2 class="text-uppercase">网站建设</h2>
+                    <#if articleVoPage??>
+                        <#list articleVoPage.records as item>
+                            <p>标题:<a href="${item.url!}">${item.title!}</a></p>
+                            <p>作者:${item.author!}</p>
+                            <p>摘要:${item.summary!}</p>
+                            <p>------------------------------------</p>
+                        </#list>
+                    </#if>
+                </div>
+                <@layout._articlePage/>
+            </div>
+
+            <div class="row">
+
+                <div class="category-title">
+                    <h3>最新插件</h3>
+                </div>
+                <#if category??>
+                    <@articleListTag categoryId=category.id!>
+                        <#if data??>
+                        <div class="category-content-wrap">
+                            <#list data as item>
+                            <div class="category-post-list">
+                                <div class="category-post-img">
+                                    <img src="${(item.thumbnail)!}" alt="">
+                                </div>
+                                <div class="category-post-content">
+                                    <h4><a href="${(item.url)!}">${(item.title)!}</a></h4>
+                                    <h4><a href="${(item.summary)!}">摘要：${(item.summary)!}</a></h4>
+                                    <p><@formatTime value=(item.created)! format="yyyy-MM-dd"/></p>
+                                </div>
+                            </div>
+                            </#list>
+                        </div>
+                        </#if>
+                    </@articleListTag>
+                </#if>
+
+            </div>
+
+        </div>
+    </section>
+
+</@layout.body>
+<@layout.script>
+</@layout.script>

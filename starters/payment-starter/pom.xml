@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>fastcms-starters</artifactId>
+        <groupId>com.fastcms</groupId>
+        <version>${revision}</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>fastcms-payment-starter</artifactId>
+    <name>fastcms-payment-starter-${project.version}</name>
+
+    <properties>
+        <pay-java.version>2.14.3-b2</pay-java.version>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.egzosn</groupId>
+            <artifactId>pay-java-common</artifactId>
+            <version>${pay-java.version}</version>
+        </dependency>
+
+    </dependencies>
+
+</project>

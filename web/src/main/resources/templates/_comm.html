@@ -1,0 +1,38 @@
+<#macro header title>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Fastcms，优质建站，微信开发，小程序开发，app开发">
+    <meta name="author" content="wjun_java@163.com">
+    <meta name="generator" content="Fastcms">
+    <title>Fastcms</title>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link href="/ares/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/ares/js/toastr/toastr.min.css">
+    <#nested/>
+</head>
+</#macro>
+<#macro body>
+
+<body class="bg-light">
+<div class="container">
+    <#nested/>
+    <#include "_footer.html">
+</div>
+</#macro>
+<#macro script>
+    <script>var token = "${token!}";</script>
+    <script src="/ares/js/jquery.min.js"></script>
+    <script src="/ares/js/toastr/toastr.min.js"></script>
+    <script src="/ares/js/jquery.form.min.js"></script>
+    <script src="/ares/js/jquery.validate.min.js"></script>
+    <script src="/ares/js/bootstrap.bundle.min.js"></script>
+    <script src="/ares/js/fastcms.js"></script>
+<#nested />
+</body>
+</html>
+</#macro>
+
+<#include "_page.html">

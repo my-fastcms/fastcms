@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  /**
+ * Copyright (c) 广州小橘灯信息科技有限公司 2016-2017, wjun_java@163.com.
+ * <p>
+ * Licensed under the GNU Lesser General Public License (LGPL) ,Version 3.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.gnu.org/licenses/lgpl-3.0.txt
+ * http://www.xjd2020.com
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+  -->
+
+<configuration>
+    
+    <springProperty scope="context" name="logPath" source="log.path" defaultValue="${user.home}/fastcms/logs"/>
+    
+    <property name="LOG_HOME" value="${logPath}"/>
+    
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    
+    <appender name="rootFile"
+        class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_HOME}/fastcms.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_HOME}/fastcms.log.%d{yyyy-MM-dd}.%i</fileNamePattern>
+            <maxFileSize>50MB</maxFileSize>
+            <maxHistory>15</maxHistory>
+            <totalSizeCap>512MB</totalSizeCap>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder>
+            <Pattern>%date %level %msg%n%n</Pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <springProfile name="dev">
+        <logger name="org.springframework">
+            <appender-ref ref="CONSOLE"/>
+            <level value="INFO"/>
+        </logger>
+        <logger name="org.apache.catalina.startup.DigesterFactory">
+            <appender-ref ref="CONSOLE"/>
+            <level value="INFO"/>
+        </logger>
+        <logger name="org.apache.catalina.util.LifecycleBase">
+            <appender-ref ref="CONSOLE"/>
+            <level value="ERROR"/>
+        </logger>
+        <logger name="org.apache.coyote.http11.Http11NioProtocol">
+            <appender-ref ref="CONSOLE"/>
+            <level value="WARN"/>
+        </logger>
+        <logger name="org.apache.tomcat.util.net.NioSelectorPool">
+            <appender-ref ref="CONSOLE"/>
+            <level value="WARN"/>
+        </logger>
+        <logger name="org.apache.ibatis">
+            <appender-ref ref="CONSOLE"/>
+            <level value="DEBUG"/>
+        </logger>
+        <logger name="com.baomidou.mybatisplus">
+            <appender-ref ref="CONSOLE"/>
+            <level value="DEBUG"/>
+        </logger>
+        <logger name="org.mybatis.spring">
+            <appender-ref ref="CONSOLE"/>
+            <level value="DEBUG"/>
+        </logger>
+        <logger name="org.pf4j">
+            <appender-ref ref="CONSOLE"/>
+            <level value="DEBUG"/>
+        </logger>
+        <logger name="com.fastcms">
+            <appender-ref ref="CONSOLE"/>
+            <level value="INFO"/>
+        </logger>
+        <logger name="freemarker.template">
+            <appender-ref ref="CONSOLE"/>
+            <level value="DEBUG"/>
+        </logger>
+    </springProfile>
+
+    <springProfile name="prod">
+        <logger name="org.springframework.boot.web.embedded.tomcat">
+            <appender-ref ref="CONSOLE"/>
+            <level value="INFO"/>
+        </logger>
+        <logger name="com.fastcms.web.Fastcms">
+            <appender-ref ref="CONSOLE"/>
+            <level value="INFO"/>
+        </logger>
+        <logger name="org.apache.catalina.startup.DigesterFactory">
+            <appender-ref ref="CONSOLE"/>
+            <level value="INFO"/>
+        </logger>
+        <logger name="org.apache.catalina.util.LifecycleBase">
+            <appender-ref ref="rootFile"/>
+            <level value="ERROR"/>
+        </logger>
+        <logger name="org.apache.coyote.http11.Http11NioProtocol">
+            <appender-ref ref="CONSOLE"/>
+            <level value="WARN"/>
+        </logger>
+        <logger name="org.apache.tomcat.util.net.NioSelectorPool">
+            <appender-ref ref="CONSOLE"/>
+            <level value="WARN"/>
+        </logger>
+        <logger name="org.apache.ibatis">
+            <appender-ref ref="rootFile"/>
+            <level value="ERROR"/>
+        </logger>
+        <logger name="com.baomidou.mybatisplus">
+            <appender-ref ref="rootFile"/>
+            <level value="ERROR"/>
+        </logger>
+        <logger name="org.mybatis.spring">
+            <appender-ref ref="rootFile"/>
+            <level value="ERROR"/>
+        </logger>
+        <logger name="com.fastcms">
+            <appender-ref ref="rootFile"/>
+            <level value="ERROR"/>
+        </logger>
+    </springProfile>
+
+    <root>
+        <level value="INFO"/>
+        <appender-ref ref="rootFile"/>
+    </root>
+
+</configuration>

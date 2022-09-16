@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastcms.mapper.PermissionMapper">
+
+    <select id="getPermissionByUserId" resultType="com.fastcms.entity.Permission">
+        select p.* from permission p JOIN
+        (select DISTINCT rp.permission_id from role_permission rp where rp.role_id in(select role_id from user_role ur JOIN `user` u on ur.user_id = u.id and u.user_type =1 where ur.user_id=${userId})) t
+        on p.id = t.permission_id
+    </select>
+
+</mapper>

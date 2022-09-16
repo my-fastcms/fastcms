@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastcms.mapper.UserAmountPayoutMapper">
+
+    <select id="getUserTodayPayoutCount" resultType="java.lang.Long">
+        select count(CASE WHEN DATE(created) = CURDATE() THEN t.id ELSE NULL END) as today_count
+            from `user_amount_payout` t where t.create_user_id = #{userId}
+    </select>
+
+    <select id="pageCashOut" resultType="com.fastcms.service.IUserAmountPayoutService$CashOutListVo">
+        select uas.*, u.id, u.user_name, u.nick_name from user_amount_payout uas
+        left join `user` u on uas.create_user_id = u.id
+        ${ew.customSqlSegment}
+    </select>
+
+    <select id="getCashOutDetail" resultType="com.fastcms.service.IUserAmountPayoutService$CashOutDetailVo">
+        select uas.*, u.id as user_id, u.user_name, u.nick_name from user_amount_payout uas
+        left join `user` u on uas.create_user_id = u.id
+        where uas.id = #{payoutId}
+    </select>
+
+    <select id="getUserUnAuditAmountPayout" resultType="java.math.BigDecimal">
+        select IFNULL(sum(uap.amount), 0) from user_amount_payout uap where uap.create_user_id = #{userId} and uap.`status` = 0
+    </select>
+
+    <select id="getUserCashOutList" resultType="com.fastcms.service.IUserAmountPayoutService$CashOutListVo">
+        select uas.*, u.id, u.user_name, u.nick_name from user_amount_payout uas
+        left join `user` u on uas.create_user_id = u.id
+        ${ew.customSqlSegment}
+    </select>
+
+</mapper>

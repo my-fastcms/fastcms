@@ -1,0 +1,22 @@
+<#import "_layout.html" as layout>
+<@layout.header "页面-${(singlePage.title!)}"></@layout.header>
+<@layout.body>
+    <section id="feature1">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 wow fadeInUp" data-wow-delay="0.6s">
+                    <h2 class="text-uppercase">页面id:${(singlePage.id)!}</h2>
+                    <p>标题:${(singlePage.title)!}</p>
+                    <p>缩略图:<img src="${(singlePage.thumbnail)!}"/></p>
+                    <p>浏览次数:${(singlePage.viewCount)!}</p>
+                    <p>创建时间:<@formatTime value=singlePage.created!/></p>
+
+                    ${(singlePage.contentHtml)!}
+
+                </div>
+            </div>
+        </div>
+    </section>
+</@layout.body>
+<@layout.script>
+</@layout.script>

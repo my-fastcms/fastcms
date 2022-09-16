@@ -1,0 +1,55 @@
+<#import "/_comm.html" as layout>
+<@layout.header "hello world plugin">
+    <style></style>
+</@layout.header>
+<@layout.body>
+    <div class="py-5 text-center">
+        <h2>Checkout form</h2>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 order-md-1">
+            <form id="myForm" class="needs-validation" method="post" action="/fastcms/api/admin/config/save">
+                <div class="mb-3">
+                    <label for="username">Username</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="hello_username" name="hello_username" placeholder="Username" required>
+                        <div class="invalid-feedback" style="width: 100%;">
+                            Your username is required.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="email">Email <span class="text-muted">(Optional)</span></label>
+                    <input type="email" class="form-control" id="hello_email" name="hello_email" placeholder="you@example.com">
+                    <div class="invalid-feedback">
+                        Please enter a valid email address for shipping updates.
+                    </div>
+                </div>
+
+                <hr class="mb-4">
+                <button class="btn btn-primary btn-lg btn-block" type="submit">保 存</button>
+            </form>
+        </div>
+    </div>
+</@layout.body>
+
+<@layout.script>
+    <script>
+        $(function () {
+            submitForm({
+                hello_username: { required: true},
+                hello_email: { required: true},
+            },{
+                hello_username: {required: "请输入用户名"},
+                hello_email: {required: "请输入密码"},
+            })
+
+            var params = new Array();
+            params.push("hello_username");
+            params.push("hello_email");
+            getConfigFormData(params);
+        });
+    </script>
+</@layout.script>

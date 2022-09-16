@@ -1,0 +1,43 @@
+{
+  "serverUrl": "http://127.0.0.1:8080",
+  "isStrict": false,
+  "allInOne": true,
+  "coverOld": true,
+  "apiConstants":[{
+    "constantsClassName":"com.fastcms.common.constants.FastcmsConstants"
+  }],
+  "groups": [
+    { "name": "基础-admin","apis": "com.fastcms.web.controller.admin.*" },
+    { "name": "基础-api","apis": "com.fastcms.web.controller.api.*" },
+    { "name": "CMS-admin","apis": "com.fastcms.cms.controller.admin.*" },
+    { "name": "CMS-api","apis": "com.fastcms.cms.controller.api.*" }
+  ],
+  "requestHeaders": [{
+    "name": "Authorization",
+    "type": "string",
+    "desc": "自定义请求头 - token",
+    "value":"token",
+    "required": false,
+    "since": "-",
+    "pathPatterns": "/fastcms/api/admin/**,/fastcms/api/client/**",
+    "excludePathPatterns":"/fastcms/api/admin/login"
+  },{
+    "name": "ClientId",
+    "type": "string",
+    "desc": "自定义请求头 - ClientId",
+    "value":"clientId",
+    "required": true,
+    "since": "-",
+    "pathPatterns": "/fastcms/api/admin/login"
+  }],
+  "responseBodyAdvice":{
+    "className":"com.fastcms.common.model.RestResult"
+  },
+  "packageFilters": "com.fastcms.web.controller.*,com.fastcms.cms.controller.*",
+  "outPath": "src/main/resources/static/doc",
+  "createDebugPage": true,
+  "showAuthor":false,
+  "style":"xt256",
+  "allInOneDocFileName":"index.html",
+  "projectName": "fastcms-doc"
+}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastcms.cms.mapper.ArticleCategoryMapper">
+
+    <delete id="deleteRelationByCategoryId">
+        delete from article_category_relation where category_id = #{articleCategoryId}
+    </delete>
+
+    <select id="getArticleCategoryListByArticleId" resultType="com.fastcms.cms.entity.ArticleCategory">
+        select ac.* from article_category_relation acr join article_category ac on acr.category_id = ac.id
+        where acr.article_id = #{articleId}
+        <if test="type != null">
+            and ac.type = #{type}
+        </if>
+    </select>
+
+</mapper>

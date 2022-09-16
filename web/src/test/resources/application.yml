@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: fastcms
+  profiles:
+    active: dev
+  cache:
+    type: ehcache
+  freemarker:
+    checkTemplateLocation: false
+
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/fastcms?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: root
+
+mybatis-plus:
+  global-config:
+    banner: false
+  mapper-locations: classpath*:/mapper/*Mapper.xml
+
+plugin:
+  path: ../plugins
+
+fastcms:
+  auth:
+    token:
+      expire:
+        seconds: 18000
+      secret-key: SecretKey012345678901234567890123456789012345678901234567890123456789
+
+
+
+

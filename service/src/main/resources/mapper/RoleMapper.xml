@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastcms.mapper.RoleMapper">
+
+    <insert id="saveRolePermission">
+        insert into role_permission (role_id, permission_id) values
+        <foreach collection="permissionIdList" item="permissionId" separator=",">
+            (#{roleId}, #{permissionId})
+        </foreach>
+    </insert>
+
+    <select id="getRolePermission" resultType="com.fastcms.service.IRoleService$RolePermission">
+        select p.*, t.role_id from permission p LEFT JOIN
+        (select rp.* from role_permission rp where rp.role_id=${roleId}) t
+        on p.id = t.permission_id order by p.parent_id
+    </select>
+
+    <delete id="deletePermissionByRoleId">
+        delete from role_permission where role_id = #{roleId}
+    </delete>
+
+    <select id="getRoleListByUserId" resultType="com.fastcms.service.IRoleService$UserRole">
+        SELECT r.*, urs.user_id FROM role r LEFT JOIN (select ur.* from user_role ur join `user` u on ur.user_id = u.id where ur.user_id = #{userId} and u.user_type = 1) urs on r.id = urs.role_id
+    </select>
+
+    <select id="getUserRoleList" resultType="com.fastcms.entity.Role">
+        SELECT r.* FROM role r JOIN (select ur.* from user_role ur join `user` u on ur.user_id = u.id where ur.user_id = #{userId} and u.user_type = 1) urs on r.id = urs.role_id
+    </select>
+
+    <select id="getRoleResource" resultType="com.fastcms.service.IRoleService$RoleResource">
+        select res.*, t.role_id from resource res LEFT JOIN
+        (select rr.* from role_resource rr where rr.role_id=#{roleId}) t
+        on res.resource_path = t.resource_path order by res.resource_path
+    </select>
+
+    <insert id="saveUserRole">
+        insert into user_role (user_id, role_id) values
+        <foreach collection="roleIds" item="roleId" separator=",">
+            (#{userId}, #{roleId})
+        </foreach>
+    </insert>
+
+    <insert id="saveRoleResource">
+        insert into role_resource (role_id, resource_path) values
+        <foreach collection="resourcePathList" item="resourcePath" separator=",">
+            (#{roleId}, #{resourcePath})
+        </foreach>
+    </insert>
+
+    <delete id="deleteRoleByUserId">
+        delete from user_role where user_id = #{userId}
+    </delete>
+
+    <delete id="deleteResourceByRoleId">
+        delete from role_resource where role_id = #{roleId}
+    </delete>
+
+</mapper>

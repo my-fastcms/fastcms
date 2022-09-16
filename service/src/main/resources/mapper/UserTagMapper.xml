@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fastcms.mapper.UserTagMapper">
+
+    <insert id="saveUserTagRelation">
+        insert into user_tag_relation (user_id, tag_id) values
+        <foreach collection="tagIds" item="tagId" separator=",">
+            (#{userId}, #{tagId})
+        </foreach>
+    </insert>
+
+    <delete id="deleteUserTagRelationByUserId">
+        delete from user_tag_relation where user_id = #{userId}
+    </delete>
+
+    <select id="getTagListByUserId" resultType="com.fastcms.entity.UserTag">
+        SELECT r.*, urs.user_id FROM user_tag r JOIN (select * from user_tag_relation ur where ur.user_id = #{userId}) urs on r.id = urs.tag_id
+    </select>
+
+</mapper>
