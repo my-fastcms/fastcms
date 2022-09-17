@@ -87,6 +87,7 @@ export default {
 				total: 0,
 				loading: false,
 				param: {
+					status: 'publish',
 					pageNum: 1,
 					pageSize: 10,
 				},
@@ -97,7 +98,7 @@ export default {
 		const initTableData = () => {
 			const categoryIdArray = state.tableData.param.categoryId;
 			if(categoryIdArray != null && categoryIdArray.length>0) {
-				state.tableData.param.categoryId = categoryIdArray[categoryIdArray.length];
+				state.tableData.param.categoryId = categoryIdArray[categoryIdArray.length - 1];
 			}
 			getArticleList(state.tableData.param).then((res) => {
 				state.tableData.data = res.data.records;

@@ -18,14 +18,12 @@ import com.fastcms.utils.ConfigUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.ArrayList;
 import java.util.Date;
@@ -328,7 +326,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
             user.setPassword(passwordEncoder.encode(password));
 
-        } catch (MailException | MessagingException e) {
+        } catch (Exception e) {
             throw new FastcmsException("邮件发送失败，请检查邮箱配置：" + user.getEmail());
         }
 
@@ -372,7 +370,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
             user.setPassword(passwordEncoder.encode(password));
 
-        } catch (MailException | MessagingException e) {
+        } catch (Exception e) {
             throw new FastcmsException("邮件发送失败，请检查邮箱配置：" + user.getEmail());
         }
 

@@ -51,5 +51,8 @@
 - 修复一些bug
 
 ## [v0.0.7] 2022.09.30
-- 
+- 修复邮件发送Bug
+- 修复提现Bug
+- 修复文章搜索Bug
+- 修复插件中PluginClassLoader加载Mapper的Bug
 
