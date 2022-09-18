@@ -221,6 +221,20 @@ export const userCenterRoutes: Array<RouteRecordRaw> = [
 					icon: 'el-icon-edit',
 				},
 			},
+			{
+				path: '/balance/index',
+				name: 'balanceManager',
+				component: () => import('/@/views/center/balance/index.vue'),
+				meta: {
+					title: 'message.centerRoutes.balanceManager',
+					isLink: '',
+					isHide: false,
+					isKeepAlive: true,
+					isAffix: false,
+					isIframe: false,
+					icon: 'el-icon-coin',
+				},
+			},
 		],
 	}
 ];

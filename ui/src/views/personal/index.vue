@@ -172,6 +172,7 @@ export default {
 			recommendList,
 			userInfo: {},
 			passwordForm: {
+				oldPassword: '',
 				password: '',
 				confirmPassword: ''
 			},

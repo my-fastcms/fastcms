@@ -21,7 +21,6 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.egzosn.pay.common.bean.PayMessage;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.utils.StrUtils;
-import com.fastcms.utils.PluginUtils;
 import com.fastcms.core.utils.RequestUtils;
 import com.fastcms.entity.Order;
 import com.fastcms.entity.OrderItem;
@@ -29,6 +28,7 @@ import com.fastcms.entity.PaymentRecord;
 import com.fastcms.service.IOrderItemService;
 import com.fastcms.service.IOrderService;
 import com.fastcms.service.IPaymentRecordService;
+import com.fastcms.utils.PluginUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
@@ -98,6 +98,7 @@ public abstract class AbstractFastcmsPayBackService implements IFastcmsPayBackSe
             paymentRecord.setPayerFee(BigDecimal.ZERO);
             paymentRecord.setPaySuccessAmount(item.getTotalAmount());
             paymentRecord.setCreateUserId(order.getCreateUserId());
+            paymentRecord.setCreated(LocalDateTime.now());
             paymentRecord.setPaySuccessTime(LocalDateTime.now());
             paymentRecord.setPayStatus(Order.STATUS_PAY_SUCCESS);
             processPaymentRecordBeforePersistence(paymentRecord, payMessage);

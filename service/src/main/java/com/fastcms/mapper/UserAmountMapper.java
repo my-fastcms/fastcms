@@ -2,6 +2,7 @@ package com.fastcms.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.fastcms.entity.UserAmount;
+import com.fastcms.service.IUserAmountService;
 
 /**
  * <p>
@@ -12,5 +13,7 @@ import com.fastcms.entity.UserAmount;
  * @since 2022-03-28
  */
 public interface UserAmountMapper extends BaseMapper<UserAmount> {
+
+	IUserAmountService.UserAmountVo getUserAmount();
 
 }

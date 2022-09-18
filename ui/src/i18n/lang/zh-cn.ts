@@ -59,6 +59,7 @@ export default {
 		commentManager: '我的评论',
 		orderManager: '我的订单',
 		articleWrite: '我要投稿',
+		balanceManager: '我的收益',
 	},
 	user: {
 		title0: '组件大小',

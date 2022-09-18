@@ -55,4 +55,5 @@
 - 修复提现Bug
 - 修复文章搜索Bug
 - 修复插件中PluginClassLoader加载Mapper的Bug
+- 增加资金账户提现功能
 

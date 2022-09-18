@@ -44,8 +44,54 @@ export function paymentOrder(id: string) {
  */
 export function checkOrderPayStatus(id: string) {
 	return request({
-        url: 'client/order/status/check/'+id,
+        url: '/client/order/status/check/'+id,
         method: 'get'
     })
 }
 
+/**
+ * 获取用户账户资金信息
+ * @param id 
+ * @returns 
+ */
+export function getUserAmount() {
+	return request({
+        url: '/client/user/amount/get',
+        method: 'get'
+    })
+}
+
+/**
+ * 用户提现
+ * @param amount
+ * @returns 
+ */
+export function cashoutAmount(amount: string) {
+	return request({
+		url: '/client/user/amount/cashout?amount='+amount,
+		method: 'post'
+	});
+}
+
+/**
+ * 获取用户提现记录
+ * @param id 
+ * @returns 
+ */
+ export function getUserCashoutList() {
+	return request({
+        url: '/client/user/amount/cashout/list',
+        method: 'get'
+    })
+}
+
+/**
+ * 用户收入记录
+ * @returns 
+ */
+export function getUserIncomeList() {
+	return request({
+        url: '/client/user/amount/income/list',
+        method: 'get'
+    })
+}

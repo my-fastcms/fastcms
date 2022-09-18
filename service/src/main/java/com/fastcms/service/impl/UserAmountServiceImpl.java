@@ -123,4 +123,9 @@ public class UserAmountServiceImpl extends ServiceImpl<UserAmountMapper, UserAmo
         updateUserAmount(userId, UserAmountStatement.AMOUNT_ACTION_DEL, changeAmount, orderId, desc);
     }
 
+    @Override
+    public UserAmountVo getUserAmount() {
+        return getBaseMapper().getUserAmount();
+    }
+
 }

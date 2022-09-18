@@ -3,6 +3,7 @@ package com.fastcms.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.entity.UserAmount;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
@@ -42,5 +43,54 @@ public interface IUserAmountService extends IService<UserAmount> {
      * @param desc
      */
     void delUserAmount(Long userId, BigDecimal changeAmount, Long orderId, String desc);
+
+    /**
+     * 获取用户余额
+     * @return
+     */
+    UserAmountVo getUserAmount();
+
+    class UserAmountVo implements Serializable {
+
+        /**
+         * 用户余额
+         */
+        BigDecimal amount;
+
+        /**
+         * 审核中的提现金额
+         */
+        BigDecimal unAuditAmount;
+
+        /**
+         * 用户可提现余额
+         * 用户余额 - 用户申请中待审核的余额
+         */
+        BigDecimal withInAmount;
+
+        public BigDecimal getAmount() {
+            return amount;
+        }
+
+        public void setAmount(BigDecimal amount) {
+            this.amount = amount;
+        }
+
+        public BigDecimal getUnAuditAmount() {
+            return unAuditAmount;
+        }
+
+        public void setUnAuditAmount(BigDecimal unAuditAmount) {
+            this.unAuditAmount = unAuditAmount;
+        }
+
+        public BigDecimal getWithInAmount() {
+            return amount.subtract(unAuditAmount).setScale(2, BigDecimal.ROUND_HALF_UP);
+        }
+
+        public void setWithInAmount(BigDecimal withInAmount) {
+            this.withInAmount = withInAmount;
+        }
+    }
 
 }

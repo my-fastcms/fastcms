@@ -2,4 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.fastcms.mapper.UserAmountMapper">
 
+    <select id="getUserAmount" resultType="com.fastcms.service.IUserAmountService$UserAmountVo">
+        select IFNULL(u.amount, 0) as amount,
+        (select IFNULL(sum(uap.amount), 0) from user_amount_payout uap where uap.`status` = 0) as unAuditAmount
+        from user_amount u
+    </select>
+
 </mapper>

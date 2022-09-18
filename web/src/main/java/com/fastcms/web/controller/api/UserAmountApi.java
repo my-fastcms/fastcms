@@ -25,6 +25,7 @@ import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.entity.UserAmountStatement;
 import com.fastcms.service.IUserAmountPayoutService;
+import com.fastcms.service.IUserAmountService;
 import com.fastcms.service.IUserAmountStatementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +43,9 @@ import java.math.BigDecimal;
 @RestController
 @RequestMapping(FastcmsConstants.API_MAPPING + "/user/amount")
 public class UserAmountApi {
+
+    @Autowired
+    private IUserAmountService userAmountService;
 
     @Autowired
     private IUserAmountPayoutService userAmountPayoutService;
@@ -79,6 +83,15 @@ public class UserAmountApi {
     @GetMapping("income/list")
     public Object getUserAmountIncomeList(PageModel page) {
         return RestResultUtils.success(userAmountStatementService.pageUserAmountStatement(page.toPage(), UserAmountStatement.AMOUNT_ACTION_ADD, null));
+    }
+
+    /**
+     * 用户账户资金
+     * @return
+     */
+    @GetMapping("get")
+    public Object getUserAmount() {
+        return RestResultUtils.success(userAmountService.getUserAmount());
     }
 
 }
