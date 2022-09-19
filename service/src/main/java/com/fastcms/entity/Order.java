@@ -1,5 +1,7 @@
 package com.fastcms.entity;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.annotation.*;
 import com.fastcms.service.IOrderService;
 
@@ -503,6 +505,15 @@ public class Order implements Serializable {
 
     public void setOrderItemList(List<IOrderService.OrderItemVo> orderItemList) {
         this.orderItemList = orderItemList;
+    }
+
+    public JSONObject getJsonExtObj() {
+        try {
+            JSONObject jsonExt = JSON.parseObject(getJsonExt());
+            return jsonExt;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     @Override

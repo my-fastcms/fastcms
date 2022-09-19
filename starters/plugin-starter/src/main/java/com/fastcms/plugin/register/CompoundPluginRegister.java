@@ -25,7 +25,7 @@ import java.util.List;
 
 /**
  * wjun_java@163.com
- * 插件主键注册管理器
+ * 插件组件注册管理器
  */
 public class CompoundPluginRegister extends AbstractPluginRegister implements PluginRegister {
 
