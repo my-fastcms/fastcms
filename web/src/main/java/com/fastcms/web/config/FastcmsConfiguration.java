@@ -19,6 +19,7 @@ package com.fastcms.web.config;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.utils.DirUtils;
 import com.fastcms.core.directive.BaseDirective;
+import com.fastcms.core.template.DefaultTemplateService;
 import com.fastcms.core.template.Template;
 import com.fastcms.core.template.TemplateService;
 import com.fastcms.core.utils.AttachUtils;
@@ -57,9 +58,9 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author： wjun_java@163.com
@@ -89,10 +90,12 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
+        DefaultTemplateService.resourceHandlerRegistry = registry;
+
         final String uploadDir = DirUtils.getUploadDir();
         final String templateDir = DirUtils.getTemplateDir();
 
-        List<String> locations = new ArrayList<>();
+        Set<String> locations = new HashSet<>();
         locations.add("classpath:/static/");
         locations.add(ResourceUtils.FILE_URL_PREFIX + uploadDir);
         for (Template template : templateService.getTemplateList()) {

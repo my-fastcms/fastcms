@@ -49,6 +49,7 @@ public class InterceptorRegister extends AbstractPluginRegister {
             handlerInterceptorList = (List<HandlerInterceptor>) adaptedInterceptorsField.get(handlerMapping);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
     }
 

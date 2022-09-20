@@ -29,6 +29,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 import java.io.File;
 import java.io.IOException;
@@ -60,6 +61,8 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
     @Autowired
     private IConfigService configService;
 
+    public static ResourceHandlerRegistry resourceHandlerRegistry;
+
     public DefaultTemplateService() {
         templateFinder = new DefaultTemplateFinder();
     }
@@ -85,9 +88,26 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
                 if(config == null) {
                     configService.saveConfig(FastcmsConstants.TEMPLATE_ENABLE_ID, templateList.get(0).getId());
                 }
+
+                if (resourceHandlerRegistry != null) {
+
+/*
+                    Set<String> locations = new HashSet<>();
+                    locations.add("classpath:/static/");
+                    for (Template template : templateList) {
+                        locations.add(ResourceUtils.FILE_URL_PREFIX + templateDir + template.getPath() + "/static/");
+                    }
+
+                    resourceHandlerRegistry.addResourceHandler("/**").addResourceLocations(locations.toArray(new String[]{}));
+
+                    HandlerMapping resourceHandlerMapping = ApplicationUtils.getBean("resourceHandlerMapping", HandlerMapping.class);
+                    ReflectionUtils.invokeMethod(ReflectionUtils.findMethod(SimpleUrlHandlerMapping.class, "registerHandlers"), resourceHandlerMapping);
+*/
+
+                }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
 
     }
