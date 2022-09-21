@@ -98,9 +98,9 @@ public class TemplateController {
     @Secured(name = "模板安装", resource = "templates:install", action = ActionTypes.WRITE)
 	public Object install(@RequestParam("file") MultipartFile file) {
 
-        if (ApplicationUtils.isDevelopment()) {
-            return RestResultUtils.failed("开发环境不允许安装模板");
-        }
+//        if (ApplicationUtils.isDevelopment()) {
+//            return RestResultUtils.failed("开发环境不允许安装模板");
+//        }
 
         String fileName = file.getOriginalFilename();
         String suffixName = fileName.substring(fileName.lastIndexOf("."));

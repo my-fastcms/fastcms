@@ -93,10 +93,10 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
         final String templateDir = DirUtils.getTemplateDir();
 
         Set<String> locations = new HashSet<>();
-        locations.add("classpath:/static/");
+        locations.add("classpath:" + FastcmsConstants.TEMPLATE_STATIC);
         locations.add(ResourceUtils.FILE_URL_PREFIX + uploadDir);
         for (Template template : templateService.getTemplateList()) {
-            locations.add(ResourceUtils.FILE_URL_PREFIX + templateDir + template.getPath() + "/static/");
+            locations.add(ResourceUtils.FILE_URL_PREFIX + templateDir + template.getPath() + FastcmsConstants.TEMPLATE_STATIC);
         }
 
         registry.addResourceHandler("/**").addResourceLocations(locations.toArray(new String[]{}));

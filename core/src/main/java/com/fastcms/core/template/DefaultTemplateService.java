@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.accept.ContentNegotiationManager;
+import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
 import org.springframework.web.util.UrlPathHelper;
@@ -40,6 +41,7 @@ import org.springframework.web.util.UrlPathHelper;
 import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -107,22 +109,25 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
      */
     private void refreshStaticMapping() throws Exception {
 
+        final HandlerMapping resourceHandlerMapping = ApplicationUtils.getBean("resourceHandlerMapping", HandlerMapping.class);
+
+        Field handlerMapField = ReflectionUtils.findField(SimpleUrlHandlerMapping.class, "handlerMap");
+        handlerMapField.setAccessible(true);
+        final Map<String, Object> handlerMap = (Map<String, Object>) handlerMapField.get(resourceHandlerMapping);
+        handlerMap.remove("/**");
+
         final UrlPathHelper mvcUrlPathHelper = ApplicationUtils.getBean("mvcUrlPathHelper", UrlPathHelper.class);
         final ContentNegotiationManager mvcContentNegotiationManager = ApplicationUtils.getBean("mvcContentNegotiationManager", ContentNegotiationManager.class);
         final ServletContext servletContext = ApplicationUtils.getBean(ServletContext.class);
-//        final HandlerMapping resourceHandlerMapping = ApplicationUtils.getBean("resourceHandlerMapping", HandlerMapping.class);
-
-//        final Map<String, Object> handlerMap = (Map<String, Object>) ReflectUtil.getFieldValue(resourceHandlerMapping, "handlerMap");
-//        handlerMap.remove("/**");
 
         final ResourceHandlerRegistry resourceHandlerRegistry = new ResourceHandlerRegistry(ApplicationUtils.getApplicationContext(), servletContext, mvcContentNegotiationManager, mvcUrlPathHelper);
 
         final String uploadDir = DirUtils.getUploadDir();
         Set<String> locations = new HashSet<>();
-        locations.add("classpath:/static/");
+        locations.add("classpath:" + FastcmsConstants.TEMPLATE_STATIC);
         locations.add(ResourceUtils.FILE_URL_PREFIX + uploadDir);
         for (Template template : getTemplateList()) {
-            locations.add(ResourceUtils.FILE_URL_PREFIX + templateDir + template.getPath() + "/static/");
+            locations.add(ResourceUtils.FILE_URL_PREFIX + templateDir + template.getPath() + FastcmsConstants.TEMPLATE_STATIC);
         }
 
         resourceHandlerRegistry.addResourceHandler("/**").addResourceLocations(locations.toArray(new String[]{}));
@@ -133,7 +138,7 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
 
         Method registerHandlers = ReflectionUtils.findMethod(SimpleUrlHandlerMapping.class, "registerHandlers", Map.class);
         registerHandlers.setAccessible(true);
-        ReflectionUtils.invokeMethod(registerHandlers, simpleUrlHandlerMapping, simpleUrlHandlerMapping.getUrlMap());
+        ReflectionUtils.invokeMethod(registerHandlers, resourceHandlerMapping, simpleUrlHandlerMapping.getUrlMap());
 
     }
 

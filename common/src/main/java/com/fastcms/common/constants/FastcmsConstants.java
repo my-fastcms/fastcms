@@ -41,6 +41,8 @@ public interface FastcmsConstants {
 
     String CREATE_USER_ID = "create_user_id";
 
+    String TEMPLATE_STATIC = "/static/";
+
     /**
      * 数据启用状态
      */
