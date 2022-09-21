@@ -71,6 +71,9 @@ public class ControllerRegister extends AbstractPluginRegister {
                     RequestMappingInfo requestMappingInfo = (RequestMappingInfo) getMappingForMethod.invoke(requestMappingHandlerMapping, method, aClass);
                     requestMappingHandlerMapping.registerMapping(requestMappingInfo, bean, method);
 
+                    /**
+                     * 对一些特殊controller方法进行放行
+                     */
                     if (method.getAnnotation(PassFastcms.class) != null) {
                         Set<PathPattern> patterns = requestMappingInfo.getPathPatternsCondition().getPatterns();
                         if (CollectionUtils.isNotEmpty(patterns)) {
@@ -78,6 +81,9 @@ public class ControllerRegister extends AbstractPluginRegister {
                             FilterChainProxy filterChainProxy = (FilterChainProxy) beanFactory.getBean("springSecurityFilterChain");
                             List<SecurityFilterChain> securityFilterChains = (List<SecurityFilterChain>) getProperty(filterChainProxy, "filterChains");
                             if (securityFilterChains != null) {
+                                /**
+                                 * 必须添加到最前面，spring security 拦截在最前面生效
+                                 */
                                 securityFilterChains.add(0, new DefaultSecurityFilterChain(new AntPathRequestMatcher(url), new Filter[0]));
                             }
                         }

@@ -25,6 +25,7 @@ import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.DirUtils;
 import com.fastcms.common.utils.FileUtils;
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.plugin.PluginBase;
 import com.fastcms.plugin.PluginManagerService;
@@ -74,7 +75,7 @@ public class PluginController {
      */
     @PostMapping("install")
     @Secured(name = "插件安装", resource = "plugin:install", action = ActionTypes.WRITE)
-    public Object install(@RequestParam("file") MultipartFile file) {
+    public Object install(@RequestParam("file") MultipartFile file) throws Exception {
 
         if (ApplicationUtils.isDevelopment()) {
             return RestResultUtils.failed("开发环境不允许安装插件");
@@ -101,6 +102,8 @@ public class PluginController {
             }
             if(uploadFile != null) {
                 uploadFile.delete();
+                //如果是zip包，删除解压后的文件目录
+                org.apache.commons.io.FileUtils.deleteDirectory(Paths.get(DirUtils.getPluginDir() + file.getOriginalFilename().substring(0, file.getOriginalFilename().lastIndexOf(StrUtils.DOT))).toFile());
             }
             return RestResultUtils.failed(e.getMessage());
         }
@@ -113,21 +116,14 @@ public class PluginController {
      */
     @PostMapping("unInstall/{pluginId}")
     @Secured(name = "插件卸载", resource = "plugin:unInstall", action = ActionTypes.WRITE)
-    public Object unInstall(@PathVariable(name = "pluginId") String pluginId) {
+    public Object unInstall(@PathVariable(name = "pluginId") String pluginId) throws Exception {
 
         if (ApplicationUtils.isDevelopment()) {
             return RestResultUtils.failed("开发环境不允许卸载插件");
         }
 
-        try {
-            pluginManagerService.unInstallPlugin(pluginId);
-            return RestResultUtils.success();
-        } catch (Exception e) {
-            if(e instanceof FastcmsException == false) {
-                e.printStackTrace();
-            }
-            return RestResultUtils.failed(e.getMessage());
-        }
+        pluginManagerService.unInstallPlugin(pluginId);
+        return RestResultUtils.success();
 
     }
 

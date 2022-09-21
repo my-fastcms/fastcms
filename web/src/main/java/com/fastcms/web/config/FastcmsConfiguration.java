@@ -19,7 +19,6 @@ package com.fastcms.web.config;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.utils.DirUtils;
 import com.fastcms.core.directive.BaseDirective;
-import com.fastcms.core.template.DefaultTemplateService;
 import com.fastcms.core.template.Template;
 import com.fastcms.core.template.TemplateService;
 import com.fastcms.core.utils.AttachUtils;
@@ -90,8 +89,6 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
 
-        DefaultTemplateService.resourceHandlerRegistry = registry;
-
         final String uploadDir = DirUtils.getUploadDir();
         final String templateDir = DirUtils.getTemplateDir();
 
@@ -103,6 +100,7 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
         }
 
         registry.addResourceHandler("/**").addResourceLocations(locations.toArray(new String[]{}));
+
     }
 
     @Override

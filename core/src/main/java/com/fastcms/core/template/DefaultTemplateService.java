@@ -24,15 +24,23 @@ import com.fastcms.common.utils.DirUtils;
 import com.fastcms.common.utils.FileUtils;
 import com.fastcms.entity.Config;
 import com.fastcms.service.IConfigService;
+import com.fastcms.utils.ApplicationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.util.ResourceUtils;
+import org.springframework.web.accept.ContentNegotiationManager;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
+import org.springframework.web.util.UrlPathHelper;
 
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -61,8 +69,6 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
     @Autowired
     private IConfigService configService;
 
-    public static ResourceHandlerRegistry resourceHandlerRegistry;
-
     public DefaultTemplateService() {
         templateFinder = new DefaultTemplateFinder();
     }
@@ -88,27 +94,46 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
                 if(config == null) {
                     configService.saveConfig(FastcmsConstants.TEMPLATE_ENABLE_ID, templateList.get(0).getId());
                 }
-
-                if (resourceHandlerRegistry != null) {
-
-/*
-                    Set<String> locations = new HashSet<>();
-                    locations.add("classpath:/static/");
-                    for (Template template : templateList) {
-                        locations.add(ResourceUtils.FILE_URL_PREFIX + templateDir + template.getPath() + "/static/");
-                    }
-
-                    resourceHandlerRegistry.addResourceHandler("/**").addResourceLocations(locations.toArray(new String[]{}));
-
-                    HandlerMapping resourceHandlerMapping = ApplicationUtils.getBean("resourceHandlerMapping", HandlerMapping.class);
-                    ReflectionUtils.invokeMethod(ReflectionUtils.findMethod(SimpleUrlHandlerMapping.class, "registerHandlers"), resourceHandlerMapping);
-*/
-
-                }
             }
+
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
+
+    }
+
+    /**
+     * 刷新静态资源目录
+     */
+    private void refreshStaticMapping() throws Exception {
+
+        final UrlPathHelper mvcUrlPathHelper = ApplicationUtils.getBean("mvcUrlPathHelper", UrlPathHelper.class);
+        final ContentNegotiationManager mvcContentNegotiationManager = ApplicationUtils.getBean("mvcContentNegotiationManager", ContentNegotiationManager.class);
+        final ServletContext servletContext = ApplicationUtils.getBean(ServletContext.class);
+//        final HandlerMapping resourceHandlerMapping = ApplicationUtils.getBean("resourceHandlerMapping", HandlerMapping.class);
+
+//        final Map<String, Object> handlerMap = (Map<String, Object>) ReflectUtil.getFieldValue(resourceHandlerMapping, "handlerMap");
+//        handlerMap.remove("/**");
+
+        final ResourceHandlerRegistry resourceHandlerRegistry = new ResourceHandlerRegistry(ApplicationUtils.getApplicationContext(), servletContext, mvcContentNegotiationManager, mvcUrlPathHelper);
+
+        final String uploadDir = DirUtils.getUploadDir();
+        Set<String> locations = new HashSet<>();
+        locations.add("classpath:/static/");
+        locations.add(ResourceUtils.FILE_URL_PREFIX + uploadDir);
+        for (Template template : getTemplateList()) {
+            locations.add(ResourceUtils.FILE_URL_PREFIX + templateDir + template.getPath() + "/static/");
+        }
+
+        resourceHandlerRegistry.addResourceHandler("/**").addResourceLocations(locations.toArray(new String[]{}));
+
+        Method getHandlerMapping = ReflectionUtils.findMethod(ResourceHandlerRegistry.class, "getHandlerMapping");
+        getHandlerMapping.setAccessible(true);
+        SimpleUrlHandlerMapping simpleUrlHandlerMapping = (SimpleUrlHandlerMapping) ReflectionUtils.invokeMethod(getHandlerMapping, resourceHandlerRegistry);
+
+        Method registerHandlers = ReflectionUtils.findMethod(SimpleUrlHandlerMapping.class, "registerHandlers", Map.class);
+        registerHandlers.setAccessible(true);
+        ReflectionUtils.invokeMethod(registerHandlers, simpleUrlHandlerMapping, simpleUrlHandlerMapping.getUrlMap());
 
     }
 
@@ -165,6 +190,15 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
         }
 
         initialize();
+
+        try {
+            refreshStaticMapping();
+        } catch (Exception e) {
+            org.apache.commons.io.FileUtils.deleteDirectory(Paths.get(templatePath).toFile());
+            templateMap.remove(template.getId());
+            throw new RuntimeException(e.getMessage());
+        }
+
     }
 
     boolean checkPath(String uploadPath) {
@@ -188,8 +222,16 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
         if(currTemplate != null && templateId.equals(currTemplate.getId())) {
             throw new FastcmsException(FastcmsException.CLIENT_INVALID_PARAM, "正在使用中的模板不能卸载");
         }
+
+        try {
+            refreshStaticMapping();
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+
         org.apache.commons.io.FileUtils.deleteDirectory(template.getTemplatePath().toFile());
         initialize();
+
     }
 
     @Override
