@@ -25,6 +25,7 @@ import com.fastcms.common.utils.FileUtils;
 import com.fastcms.entity.Config;
 import com.fastcms.service.IConfigService;
 import com.fastcms.utils.ApplicationUtils;
+import com.fastcms.utils.ReflectUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +42,6 @@ import org.springframework.web.util.UrlPathHelper;
 import javax.servlet.ServletContext;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -105,15 +105,12 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
     }
 
     /**
-     * 刷新静态资源目录
+     * 运行时刷新静态资源目录
      */
     private void refreshStaticMapping() throws Exception {
 
         final HandlerMapping resourceHandlerMapping = ApplicationUtils.getBean("resourceHandlerMapping", HandlerMapping.class);
-
-        Field handlerMapField = ReflectionUtils.findField(SimpleUrlHandlerMapping.class, "handlerMap");
-        handlerMapField.setAccessible(true);
-        final Map<String, Object> handlerMap = (Map<String, Object>) handlerMapField.get(resourceHandlerMapping);
+        final Map<String, Object> handlerMap = (Map<String, Object>) ReflectUtil.getFieldValue(resourceHandlerMapping, "handlerMap");
         handlerMap.remove("/**");
 
         final UrlPathHelper mvcUrlPathHelper = ApplicationUtils.getBean("mvcUrlPathHelper", UrlPathHelper.class);
@@ -131,14 +128,9 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
         }
 
         resourceHandlerRegistry.addResourceHandler("/**").addResourceLocations(locations.toArray(new String[]{}));
-
-        Method getHandlerMapping = ReflectionUtils.findMethod(ResourceHandlerRegistry.class, "getHandlerMapping");
-        getHandlerMapping.setAccessible(true);
-        SimpleUrlHandlerMapping simpleUrlHandlerMapping = (SimpleUrlHandlerMapping) ReflectionUtils.invokeMethod(getHandlerMapping, resourceHandlerRegistry);
-
+        SimpleUrlHandlerMapping simpleUrlHandlerMapping = (SimpleUrlHandlerMapping) ReflectUtil.invokeMethod(resourceHandlerRegistry, "getHandlerMapping");
         Method registerHandlers = ReflectionUtils.findMethod(SimpleUrlHandlerMapping.class, "registerHandlers", Map.class);
-        registerHandlers.setAccessible(true);
-        ReflectionUtils.invokeMethod(registerHandlers, resourceHandlerMapping, simpleUrlHandlerMapping.getUrlMap());
+        ReflectUtil.invokeMethod(resourceHandlerMapping, registerHandlers, simpleUrlHandlerMapping.getUrlMap());
 
     }
 

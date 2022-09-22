@@ -16,7 +16,11 @@ package com.fastcms.utils;
  * limitations under the License.
  */
 
+import org.springframework.lang.Nullable;
+import org.springframework.util.ReflectionUtils;
+
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /**
  * 给实体类动态添加属性
@@ -28,38 +32,66 @@ import java.lang.reflect.Field;
  */
 public class ReflectUtil {
 
+    private static final Class<?>[] EMPTY_CLASS_ARRAY = new Class<?>[0];
+
+    private static final Object[] EMPTY_OBJECT_ARRAY = new Object[0];
+
     /**
      * get filed value of  obj.
      *
-     * @param obj       obj.
+     * @param target       target.
      * @param fieldName file name to get value.
      * @return field value.
      */
-    public static Object getFieldValue(Object obj, String fieldName) {
-        try {
-            Field field = obj.getClass().getDeclaredField(fieldName);
-            field.setAccessible(true);
-            return field.get(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public static Object getFieldValue(@Nullable Object target, String fieldName) {
+        return getFieldValue(target, fieldName, null);
     }
 
     /**
      * get filed value of  obj.
      *
-     * @param obj       obj.
+     * @param target       obj.
      * @param fieldName file name to get value.
      * @return field value.
      */
-    public static Object getFieldValue(Object obj, String fieldName, Object defaultValue) {
+    public static Object getFieldValue(@Nullable Object target, String fieldName, Object defaultValue) {
+        final Field field = ReflectionUtils.findField(target.getClass(), fieldName);
+        field.setAccessible(true);
         try {
-            Field field = obj.getClass().getDeclaredField(fieldName);
-            field.setAccessible(true);
-            return field.get(obj);
-        } catch (Exception e) {
+            return field.get(target);
+        } catch (IllegalAccessException e) {
             return defaultValue;
         }
+    }
+
+    /**
+     * invoke method
+     * 通过反射调用类的protected，private方法
+     * @return
+     */
+    public static Object invokeMethod(@Nullable Object target, String methodName) {
+        return invokeMethod(target, methodName, EMPTY_OBJECT_ARRAY);
+    }
+
+    /**
+     * invoke method
+     * 通过反射调用类的protected，private方法
+     * @return
+     */
+    public static Object invokeMethod(@Nullable Object target, String methodName, @Nullable Object... args) {
+        Method method = ReflectionUtils.findMethod(target.getClass(), methodName);
+        method.setAccessible(true);
+        return ReflectionUtils.invokeMethod(method, target, args);
+    }
+
+    /**
+     * invoke method
+     * 通过反射调用类的protected，private方法
+     * @return
+     */
+    public static Object invokeMethod(@Nullable Object target, Method method, @Nullable Object... args) {
+        method.setAccessible(true);
+        return ReflectionUtils.invokeMethod(method, target, args);
     }
 
 }
