@@ -17,11 +17,8 @@
 
 package com.fastcms.web;
 
-import com.fastcms.cms.directive.MenuDirective;
-import com.fastcms.cms.directive.SeoDirective;
 import com.fastcms.core.template.Template;
 import com.fastcms.core.template.TemplateService;
-import com.fastcms.utils.ApplicationUtils;
 import freemarker.template.Configuration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +39,9 @@ import java.util.HashMap;
 @SpringBootTest
 public class TestTemplateStatic {
 
+    @Autowired
+    Configuration fastcmsConfiguration;
+
     static final Configuration configuration = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
 
     @Autowired
@@ -50,28 +50,14 @@ public class TestTemplateStatic {
     @Test
     public void test() throws Exception {
         Template currTemplate = templateService.getTemplate("www.fastcms.com");
-        System.out.println(currTemplate.getId());
-
-        System.out.println(currTemplate.getTemplatePath());
-
-        System.out.println(currTemplate.getTemplatePath().resolve("static"));
-
         configuration.setDirectoryForTemplateLoading(currTemplate.getTemplatePath().toFile());
-
         freemarker.template.Template template = configuration.getTemplate("index.html","utf-8");
-
-        System.out.println(template.getName());
-
         Writer out = new OutputStreamWriter(new FileOutputStream(currTemplate.getTemplatePath().resolve("static").toString() + "/index.htm"),"UTF-8");
-
         HashMap<String, Object> data = new HashMap<>();
-        data.put("seoTag", ApplicationUtils.getBean(SeoDirective.class));
-        data.put("menuTag", ApplicationUtils.getBean(MenuDirective.class));
-
+        fastcmsConfiguration.getSharedVariableNames().forEach(item -> data.put((String) item, fastcmsConfiguration.getSharedVariable((String) item)));
         template.process(data, out);
         out.flush();
         out.close();
-
     }
 
 }

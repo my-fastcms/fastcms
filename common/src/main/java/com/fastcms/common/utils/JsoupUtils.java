@@ -122,11 +122,6 @@ public abstract class JsoupUtils {
 		return html;
 	}
 
-	/**
-	 * 做自己的白名单，允许base64的图片通过等
-	 *
-	 * @author michael
-	 */
 	public static class MyWhitelist extends org.jsoup.safety.Whitelist {
 
 		public MyWhitelist() {
