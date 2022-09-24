@@ -136,7 +136,7 @@ public class WechatMiniUserApi {
 
 		final String sessionKey = (String) session.getAttribute(MINIAPP_SESSIONKEY);
 		final String openId = (String) session.getAttribute(MINIAPP_OPENID);
-		final String unionId = (String) session.getAttribute(MINIAPP_UNIONID);
+//		final String unionId = (String) session.getAttribute(MINIAPP_UNIONID);
 
 		if(StrUtils.isBlank(openId)) {
 			return RestResultUtils.failed("登录失败:获取不到用户的openId");
@@ -155,11 +155,9 @@ public class WechatMiniUserApi {
 		}
 
 		WxMaUserInfo userInfo = wxService.getUserService().getUserInfo(sessionKey, getEncryptedData(params), iv);
-		userInfo.setOpenId(openId);
-		userInfo.setUnionId(unionId);
 
 		try {
-			User user = userService.saveWxMaUserInfo(userInfo);
+			User user = userService.saveWxMaUserInfo(openId, userInfo);
 			return RestResultUtils.success(tokenManager.createToken(user.getId(), user.getUserName()));
 		} catch (FastcmsException e) {
 			e.printStackTrace();

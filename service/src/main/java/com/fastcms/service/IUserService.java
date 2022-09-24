@@ -51,7 +51,7 @@ public interface IUserService extends IService<User> {
      * @return
      * @throws FastcmsException
      */
-    User saveWxMaUserInfo(WxMaUserInfo userInfo) throws FastcmsException;
+    User saveWxMaUserInfo(String openid, WxMaUserInfo userInfo) throws FastcmsException;
 
     /**
      * 用户通过手机号授权登录后保存用户信息

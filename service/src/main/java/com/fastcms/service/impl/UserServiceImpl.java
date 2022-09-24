@@ -155,13 +155,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     @Transactional
-    public User saveWxMaUserInfo(WxMaUserInfo userInfo) throws FastcmsException {
+    public User saveWxMaUserInfo(String openid, WxMaUserInfo userInfo) throws FastcmsException {
 
-        if(userInfo == null || StringUtils.isBlank(userInfo.getOpenId())) {
+        if(userInfo == null || StringUtils.isBlank(openid)) {
             throw new FastcmsException(FastcmsException.INVALID_PARAM, "小程序用户参数异常");
         }
 
-        UserOpenid userOpenid = userOpenidService.getOne(Wrappers.<UserOpenid>lambdaQuery().eq(UserOpenid::getValue, userInfo.getOpenId()).eq(UserOpenid::getType, UserOpenid.TYPE_WECHAT_MINI));
+        UserOpenid userOpenid = userOpenidService.getOne(Wrappers.<UserOpenid>lambdaQuery().eq(UserOpenid::getValue, openid).eq(UserOpenid::getType, UserOpenid.TYPE_WECHAT_MINI));
         User user;
         if(userOpenid == null) {
             user = new User();
@@ -174,7 +174,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             userOpenid = new UserOpenid();
             userOpenid.setUserId(user.getId());
             userOpenid.setType(UserOpenid.TYPE_WECHAT_MINI);
-            userOpenid.setValue(userInfo.getOpenId());
+            userOpenid.setValue(openid);
             userOpenidService.save(userOpenid);
         }else {
             user = getById(userOpenid.getUserId());
