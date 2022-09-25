@@ -85,6 +85,14 @@ public interface IArticleService extends IService<Article> {
     List<ArticleVo> getArticleListByCategoryId(Long categoryId, Integer count, String orderBy);
 
     /**
+     * 根据分类id查询文章列表
+     * @param categoryId
+     * @param orderBy
+     * @return
+     */
+    List<ArticleVo> getArticleListByCategoryId(Long categoryId, String orderBy);
+
+    /**
      * 根据标签id获取文章列表
      * @param tagId
      * @return

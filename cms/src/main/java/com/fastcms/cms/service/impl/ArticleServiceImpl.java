@@ -166,9 +166,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("acr.category_id", categoryId);
         queryWrapper.eq("a.status", Article.STATUS_PUBLISH);
-        queryWrapper.last("limit 0," + count);
+        queryWrapper.last(count != null, "limit 0," + count);
         queryWrapper.orderByDesc(orderBy);
         return getBaseMapper().getArticleListByCategoryId(queryWrapper);
+    }
+
+    @Override
+    public List<ArticleVo> getArticleListByCategoryId(Long categoryId, String orderBy) {
+        return getArticleListByCategoryId(categoryId, null, orderBy);
     }
 
     @Override
