@@ -17,6 +17,9 @@
 package com.fastcms.plugin.register;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.fastcms.mybatis.IgnoreDataPermission;
+import com.fastcms.mybatis.IgnoreDataPermissionCache;
 import com.fastcms.plugin.FastcmsPluginManager;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.executor.ErrorContext;
@@ -35,6 +38,7 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -72,6 +76,13 @@ public class MyBatisMapperRegister extends AbstractPluginRegister {
 		//卸载mapper
 		for (Class<?> mapperClass : getMapperClassList(pluginId)) {
 			removeMapperBeanDefinition(mapperClass);
+
+			for (Method method : mapperClass.getMethods()) {
+				if (method.getAnnotation(IgnoreDataPermission.class) != null) {
+					IgnoreDataPermissionCache.remove(mapperClass.getName().concat(StringPool.DOT).concat(method.getName()));
+				}
+			}
+
 		}
 
 		removeMapperXml(pluginId);

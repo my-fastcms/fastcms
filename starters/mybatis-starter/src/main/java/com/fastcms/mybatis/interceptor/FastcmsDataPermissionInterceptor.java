@@ -19,6 +19,7 @@ package com.fastcms.mybatis.interceptor;
 
 import com.baomidou.mybatisplus.core.toolkit.PluginUtils;
 import com.fastcms.mybatis.DataPermissionSqlHandlerManager;
+import com.fastcms.mybatis.IgnoreDataPermissionCache;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;
 import org.apache.ibatis.executor.statement.StatementHandler;
@@ -71,6 +72,10 @@ public class FastcmsDataPermissionInterceptor implements Interceptor {
         }
 
         if (ignoreMappedStatementIds.stream().filter(item -> mappedStatement.getId().contains(item)).count() > 0) {
+            return invocation.proceed();
+        }
+
+        if (IgnoreDataPermissionCache.isIgnore(mappedStatement.getId())) {
             return invocation.proceed();
         }
 
