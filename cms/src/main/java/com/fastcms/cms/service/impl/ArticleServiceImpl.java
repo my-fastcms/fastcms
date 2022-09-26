@@ -30,6 +30,7 @@ import com.fastcms.cms.service.IArticleService;
 import com.fastcms.cms.service.IArticleTagService;
 import com.fastcms.cms.task.ArticleViewCountUpdateTask;
 import com.fastcms.common.exception.FastcmsException;
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.entity.Attachment;
 import com.fastcms.extension.IndexDataExtension;
 import com.fastcms.service.IAttachmentService;
@@ -167,7 +168,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         queryWrapper.eq("acr.category_id", categoryId);
         queryWrapper.eq("a.status", Article.STATUS_PUBLISH);
         queryWrapper.last(count != null, "limit 0," + count);
-        queryWrapper.orderByDesc(orderBy);
+        queryWrapper.orderByDesc(StrUtils.isBlank(orderBy), orderBy);
         return getBaseMapper().getArticleListByCategoryId(queryWrapper);
     }
 
