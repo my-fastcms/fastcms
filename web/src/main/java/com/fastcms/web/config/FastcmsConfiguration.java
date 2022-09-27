@@ -201,7 +201,7 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
         protected void loadUrlRewriter(FilterConfig filterConfig) throws ServletException {
             try {
                 // Create a UrlRewrite Conf object with the injected resource
-                Conf conf = new Conf(filterConfig.getServletContext(), resource.getInputStream(), resource.getFilename(), "@@traceability@@");
+                Conf conf = new Conf(filterConfig.getServletContext(), resource.getInputStream(), resource.getFilename(), "@@fastcms@@");
                 checkConf(conf);
             } catch (IOException ex) {
                 throw new ServletException("Unable to load URL rewrite configuration file from " + URL_REWRITE, ex);
