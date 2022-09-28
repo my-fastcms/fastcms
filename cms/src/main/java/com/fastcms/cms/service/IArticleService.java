@@ -25,7 +25,9 @@ import com.fastcms.cms.entity.ArticleTag;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.core.utils.AttachUtils;
+import com.fastcms.core.utils.StaticUtils;
 import com.fastcms.utils.ConfigUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -195,6 +197,10 @@ public interface IArticleService extends IService<Article> {
          */
         String author;
         /**
+         * 文章外部链接
+         */
+        String outLink;
+        /**
          * 文章地址
          */
         String url;
@@ -311,7 +317,23 @@ public interface IArticleService extends IService<Article> {
             this.tagList = tagList;
         }
 
+        public String getOutLink() {
+            return outLink;
+        }
+
+        public void setOutLink(String outLink) {
+            this.outLink = outLink;
+        }
+
         public String getUrl() {
+            if (StringUtils.isNotBlank(getOutLink())) {
+                return getOutLink();
+            }
+
+            if (StaticUtils.isEnableFakeStatic()) {
+                return ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + "/a/" + getId() + StaticUtils.getFakeStaticSuffix();
+            }
+
             return ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + "/a/" + getId();
         }
 

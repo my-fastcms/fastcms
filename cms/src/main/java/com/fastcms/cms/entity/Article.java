@@ -6,6 +6,7 @@ import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.utils.JsoupUtils;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.utils.AttachUtils;
+import com.fastcms.core.utils.StaticUtils;
 import com.fastcms.utils.ConfigUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang.StringUtils;
@@ -371,7 +372,17 @@ public class Article implements Serializable {
     }
 
     public String getUrl() {
-        return StringUtils.isBlank(getOutLink()) ? ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + "/a/" + getId() : getOutLink();
+
+        if (StringUtils.isNotBlank(getOutLink())) {
+            return getOutLink();
+        }
+
+        if (StaticUtils.isEnableFakeStatic()) {
+            return ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + "/a/" + getId() + StaticUtils.getFakeStaticSuffix();
+        }
+
+        return ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + "/a/" + getId();
+
     }
 
     public String getThumbnailUrl() {

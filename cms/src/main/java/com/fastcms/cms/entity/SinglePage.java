@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.core.utils.StaticUtils;
 import com.fastcms.utils.ConfigUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -123,7 +124,17 @@ public class SinglePage implements Serializable {
     private String url;
 
     public String getUrl() {
-        return StringUtils.isBlank(getOutLink()) ? ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + "/p/" + getId() : getOutLink();
+
+        if (StringUtils.isNotBlank(getOutLink())) {
+            return getOutLink();
+        }
+
+        if (StaticUtils.isEnableFakeStatic()) {
+            return ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + "/p/" + getId() + StaticUtils.getFakeStaticSuffix();
+        }
+
+        return ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + "/p/" + getId();
+
     }
 
     public Long getId() {

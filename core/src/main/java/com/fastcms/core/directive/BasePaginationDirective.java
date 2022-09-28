@@ -18,6 +18,7 @@ package com.fastcms.core.directive;
 
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fastcms.core.utils.StaticUtils;
 import freemarker.core.Environment;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -131,6 +132,9 @@ public abstract class BasePaginationDirective extends BaseDirective {
 		}
 
 		public String getUrl() {
+			if (StaticUtils.isEnableFakeStatic()) {
+				return url.substring(0, url.indexOf("?")).concat(StaticUtils.getFakeStaticSuffix()).concat(url.substring(url.indexOf("?")));
+			}
 			return url;
 		}
 

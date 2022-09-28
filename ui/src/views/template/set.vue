@@ -28,7 +28,7 @@
 							
 							<el-col class="mb20">
 								<el-form-item label="伪静态访问后缀">
-									<el-input v-model="ruleForm.fakeStaticSuffix" placeholder="请输入伪静态访问后缀" onkeyup="value=value.replace(/[^\d]/g,'')" clearable></el-input>
+									<el-input v-model="ruleForm.fakeStaticSuffix" placeholder="请输入伪静态访问后缀" clearable></el-input>
 								</el-form-item>
 							</el-col>
 							

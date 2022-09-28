@@ -56,6 +56,16 @@ public abstract class ArticleUtils {
      */
     public static final String ARTICLE_PRICE = "price";
 
+    /**
+     * 是否开启伪静态
+     */
+    public static String ENABLE_FAKE_STATIC = "enablefakestatic";
+
+    /**
+     * 静态化后缀
+     */
+    public static  String FAKE_STATIC_SUFFIX = "fakeStaticSuffix";
+
     public static boolean isEnableNeedToPay() {
         return ConfigUtils.getBool(GLOBAL_ARTICLE_ENABLE_NEED_TO_PAY, true);
     }

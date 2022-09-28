@@ -1,6 +1,7 @@
 package com.fastcms.cms.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fastcms.core.utils.StaticUtils;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
@@ -108,6 +109,12 @@ public class Menu implements Serializable {
     }
 
     public String getMenuUrl() {
+
+        if (menuUrl != null && !menuUrl.startsWith("http")
+                && StaticUtils.isEnableFakeStatic() && !menuUrl.endsWith(StaticUtils.getFakeStaticSuffix())) {
+            return menuUrl + StaticUtils.getFakeStaticSuffix();
+        }
+
         return menuUrl;
     }
 
