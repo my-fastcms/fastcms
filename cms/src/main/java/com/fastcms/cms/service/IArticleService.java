@@ -22,11 +22,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.entity.ArticleCategory;
 import com.fastcms.cms.entity.ArticleTag;
-import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
+import com.fastcms.core.template.StaticPathHelper;
 import com.fastcms.core.utils.AttachUtils;
-import com.fastcms.core.utils.StaticUtils;
-import com.fastcms.utils.ConfigUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
@@ -171,7 +169,7 @@ public interface IArticleService extends IService<Article> {
     /**
      * 文章
      */
-    class ArticleVo implements Serializable {
+    class ArticleVo implements Serializable, StaticPathHelper {
         /**
          * id
          */
@@ -200,10 +198,6 @@ public interface IArticleService extends IService<Article> {
          * 文章外部链接
          */
         String outLink;
-        /**
-         * 文章地址
-         */
-        String url;
         /**
          * 缩略图
          */
@@ -273,10 +267,6 @@ public interface IArticleService extends IService<Article> {
             this.author = author;
         }
 
-        public void setUrl(String url) {
-            this.url = url;
-        }
-
         public String getThumbnail() {
             return thumbnail;
         }
@@ -325,16 +315,17 @@ public interface IArticleService extends IService<Article> {
             this.outLink = outLink;
         }
 
+        @Override
         public String getUrl() {
             if (StringUtils.isNotBlank(getOutLink())) {
                 return getOutLink();
             }
 
-            if (StaticUtils.isEnableFakeStatic()) {
-                return ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + "/a/" + getId() + StaticUtils.getFakeStaticSuffix();
+            if (isEnableFakeStatic()) {
+                return getWebSiteDomain().concat(ARTICLE_PATH) + getId() + getFakeStaticSuffix();
             }
 
-            return ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + "/a/" + getId();
+            return getWebSiteDomain().concat(ARTICLE_PATH) + getId();
         }
 
         public String getStatusStr() {

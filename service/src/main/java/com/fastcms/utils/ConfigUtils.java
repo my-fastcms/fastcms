@@ -32,7 +32,12 @@ import java.math.BigDecimal;
 public final class ConfigUtils {
 
 	public static String getConfig(String key) {
-		return ApplicationUtils.getApplicationContext().getBean(IConfigService.class).getValue(key);
+		return getConfig(key, null);
+	}
+
+	public static String getConfig(String key, String defaultValue) {
+		return ApplicationUtils.getApplicationContext().getBean(IConfigService.class).getValue(key) == null
+				? defaultValue : ApplicationUtils.getApplicationContext().getBean(IConfigService.class).getValue(key);
 	}
 
 	public static Integer getInt(String key, Integer defaultValue) {

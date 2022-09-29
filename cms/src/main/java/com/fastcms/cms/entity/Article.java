@@ -2,12 +2,10 @@ package com.fastcms.cms.entity;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.annotation.*;
-import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.utils.JsoupUtils;
 import com.fastcms.common.utils.StrUtils;
+import com.fastcms.core.template.StaticPathHelper;
 import com.fastcms.core.utils.AttachUtils;
-import com.fastcms.core.utils.StaticUtils;
-import com.fastcms.utils.ConfigUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang.StringUtils;
 
@@ -23,7 +21,7 @@ import java.util.Set;
  * @author wjun_java@163.com
  * @since 2021-05-23
  */
-public class Article implements Serializable {
+public class Article implements Serializable, StaticPathHelper {
 
     private static final long serialVersionUID = 1L;
 
@@ -177,9 +175,6 @@ public class Article implements Serializable {
      */
     @TableField(exist = false)
     List<String> articleTag;
-
-    @TableField(exist = false)
-    String url;
 
     @TableField(exist = false)
     private String highlightTitle;
@@ -367,26 +362,23 @@ public class Article implements Serializable {
         this.articleTag = articleTag;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
+    @Override
     public String getUrl() {
 
         if (StringUtils.isNotBlank(getOutLink())) {
             return getOutLink();
         }
 
-        if (StaticUtils.isEnableFakeStatic()) {
-            return ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + "/a/" + getId() + StaticUtils.getFakeStaticSuffix();
+        if (isEnableFakeStatic()) {
+            return getWebSiteDomain().concat(ARTICLE_PATH) + getId() + getFakeStaticSuffix();
         }
 
-        return ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + "/a/" + getId();
+        return getWebSiteDomain().concat(ARTICLE_PATH) + getId();
 
     }
 
     public String getThumbnailUrl() {
-        return AttachUtils.getAttachFileDomain() == null ? getThumbnail() : AttachUtils.getAttachFileDomain() + getThumbnail();
+        return AttachUtils.getAttachFileDomain() == null ? getThumbnail() : AttachUtils.getAttachFileDomain().concat(getThumbnail());
     }
 
     public String getHighlightTitle() {

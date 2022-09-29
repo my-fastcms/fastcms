@@ -30,7 +30,7 @@ public abstract class StaticUtils {
 	/**
 	 * 是否开启伪静态
 	 */
-	public static String ENABLE_FAKE_STATIC = "enablefakestatic";
+	public static String ENABLE_FAKE_STATIC = "enableFakeStatic";
 
 	/**
 	 * 静态化后缀
@@ -43,7 +43,7 @@ public abstract class StaticUtils {
 	}
 
 	public static String getFakeStaticSuffix() {
-		return ConfigUtils.getConfig(FAKE_STATIC_SUFFIX);
+		return ConfigUtils.getConfig(FAKE_STATIC_SUFFIX, ".html");
 	}
 
 }

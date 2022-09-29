@@ -4,9 +4,8 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.core.template.StaticPathHelper;
 import com.fastcms.core.utils.StaticUtils;
-import com.fastcms.utils.ConfigUtils;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -16,7 +15,7 @@ import java.time.LocalDateTime;
  * @author wjun_java@163.com
  * @since 2021-05-23
  */
-public class ArticleCategory implements Serializable {
+public class ArticleCategory implements Serializable, StaticPathHelper {
 
     private static final long serialVersionUID = 1L;
 
@@ -81,17 +80,12 @@ public class ArticleCategory implements Serializable {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updated;
 
-    /**
-     * 分类访问地址
-     */
-    @TableField(exist = false)
-    private String url;
-
+    @Override
     public String getUrl() {
-        if (StaticUtils.isEnableFakeStatic()) {
-            return ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + "/a/c/" + getId() + StaticUtils.getFakeStaticSuffix();
+        if (isEnableFakeStatic()) {
+            return getWebSiteDomain().concat(CATEGORY_PATH) + getId() + StaticUtils.getFakeStaticSuffix();
         }
-        return ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + "/a/c/" + getId();
+        return getWebSiteDomain().concat(CATEGORY_PATH) + getId();
     }
 
     public Long getId() {
@@ -180,10 +174,6 @@ public class ArticleCategory implements Serializable {
 
     public void setUpdated(LocalDateTime updated) {
         this.updated = updated;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
 }

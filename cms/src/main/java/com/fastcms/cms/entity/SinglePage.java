@@ -4,9 +4,7 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.fastcms.common.constants.FastcmsConstants;
-import com.fastcms.core.utils.StaticUtils;
-import com.fastcms.utils.ConfigUtils;
+import com.fastcms.core.template.StaticPathHelper;
 import org.apache.commons.lang.StringUtils;
 
 import javax.validation.constraints.NotBlank;
@@ -18,7 +16,7 @@ import java.time.LocalDateTime;
  * @author wjun_java@163.com
  * @since 2021-05-25
  */
-public class SinglePage implements Serializable {
+public class SinglePage implements Serializable, StaticPathHelper {
 
     private static final long serialVersionUID = 1L;
 
@@ -120,20 +118,18 @@ public class SinglePage implements Serializable {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updated;
 
-    @TableField(exist = false)
-    private String url;
-
+    @Override
     public String getUrl() {
 
         if (StringUtils.isNotBlank(getOutLink())) {
             return getOutLink();
         }
 
-        if (StaticUtils.isEnableFakeStatic()) {
-            return ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + "/p/" + getId() + StaticUtils.getFakeStaticSuffix();
+        if (isEnableFakeStatic()) {
+            return getWebSiteDomain().concat(PAGE_PATH) + getId() + getFakeStaticSuffix();
         }
 
-        return ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + "/p/" + getId();
+        return getWebSiteDomain().concat(PAGE_PATH) + getId();
 
     }
 
@@ -271,10 +267,6 @@ public class SinglePage implements Serializable {
 
     public void setUpdated(LocalDateTime updated) {
         this.updated = updated;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 
 }
