@@ -1,7 +1,7 @@
 package com.fastcms.cms.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
-import com.fastcms.core.utils.StaticUtils;
+import com.fastcms.core.template.StaticPathHelper;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
  * @author wjun_java@163.com
  * @since 2021-05-27
  */
-public class Menu implements Serializable {
+public class Menu implements Serializable, StaticPathHelper {
 
     private static final long serialVersionUID = 1L;
 
@@ -109,13 +109,7 @@ public class Menu implements Serializable {
     }
 
     public String getMenuUrl() {
-
-        if (menuUrl != null && !menuUrl.startsWith("http")
-                && StaticUtils.isEnableFakeStatic() && !menuUrl.endsWith(StaticUtils.getFakeStaticSuffix())) {
-            return menuUrl + StaticUtils.getFakeStaticSuffix();
-        }
-
-        return menuUrl;
+        return getUrl();
     }
 
     public void setMenuUrl(String menuUrl) {
@@ -169,4 +163,16 @@ public class Menu implements Serializable {
     public void setUpdated(LocalDateTime updated) {
         this.updated = updated;
     }
+
+    @Override
+    public String getUrl() {
+
+        if (menuUrl != null && !menuUrl.startsWith("http")
+                && isEnableFakeStatic() && !menuUrl.endsWith(getFakeStaticSuffix())) {
+            return menuUrl + getFakeStaticSuffix();
+        }
+
+        return menuUrl;
+    }
+
 }

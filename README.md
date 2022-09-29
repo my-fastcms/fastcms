@@ -14,6 +14,12 @@
 ### 官网
 - [官网地址](https://www.xjd2020.com)
 
+### 体验账号
+- [管理后台地址](https://www.xjd2020.com/fastcms)
+- 体验账号：fastcms_test 
+- 密码：111111
+- 体验账号只有菜单权限，没有数据权限
+
 ### Fastcms拼团小程序
 ![输入图片说明](./doc/images/fastcms-pintuan.jpg "fastcms-pintuan.jpg")
 
