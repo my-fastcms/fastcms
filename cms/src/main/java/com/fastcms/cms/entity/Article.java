@@ -378,7 +378,7 @@ public class Article implements Serializable, StaticPathHelper {
     }
 
     public String getThumbnailUrl() {
-        return AttachUtils.getAttachFileDomain() == null ? getThumbnail() : AttachUtils.getAttachFileDomain().concat(getThumbnail());
+        return AttachUtils.getAttachFileDomain() == null ? getThumbnail() : AttachUtils.getAttachFileDomain().concat(getThumbnail() == null ? "" : getThumbnail());
     }
 
     public String getHighlightTitle() {

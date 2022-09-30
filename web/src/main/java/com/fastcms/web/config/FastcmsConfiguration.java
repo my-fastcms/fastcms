@@ -19,6 +19,7 @@ package com.fastcms.web.config;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.utils.DirUtils;
 import com.fastcms.core.directive.BaseDirective;
+import com.fastcms.core.template.FastcmsStaticHtmlManager;
 import com.fastcms.core.template.Template;
 import com.fastcms.core.template.TemplateService;
 import com.fastcms.core.utils.AttachUtils;
@@ -26,6 +27,7 @@ import com.fastcms.plugin.PluginInterceptor;
 import com.fastcms.plugin.view.FastcmsTemplateFreeMarkerConfig;
 import com.fastcms.plugin.view.PluginFreeMarkerConfig;
 import com.fastcms.service.IConfigService;
+import com.fastcms.utils.ApplicationUtils;
 import com.fastcms.web.filter.AuthInterceptor;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
@@ -51,8 +53,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.tuckey.web.filters.urlrewrite.Conf;
 import org.tuckey.web.filters.urlrewrite.UrlRewriteFilter;
 
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
+import javax.servlet.*;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -189,13 +190,24 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
     }
 
     @Configuration
-    public class UrlRewriteFilterConfig extends UrlRewriteFilter {
+    public class FastcmsUrlRewriteFilter extends UrlRewriteFilter {
 
         private static final String URL_REWRITE = "classpath:/urlrewrite.xml";
 
         // Inject the Resource from the given location
         @Value(URL_REWRITE)
         private Resource resource;
+
+        @Override
+        public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+
+            if (ApplicationUtils.getBean(FastcmsStaticHtmlManager.class).isFakeStaticEnable()) {
+                super.doFilter(request, response, chain);
+            } else {
+                chain.doFilter(request, response);
+            }
+
+        }
 
         // Override the loadUrlRewriter method, and write your own implementation
         protected void loadUrlRewriter(FilterConfig filterConfig) throws ServletException {

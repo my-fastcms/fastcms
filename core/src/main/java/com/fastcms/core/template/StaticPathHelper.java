@@ -18,7 +18,7 @@
 package com.fastcms.core.template;
 
 import com.fastcms.common.constants.FastcmsConstants;
-import com.fastcms.core.utils.StaticUtils;
+import com.fastcms.utils.ApplicationUtils;
 import com.fastcms.utils.ConfigUtils;
 
 /**
@@ -29,6 +29,7 @@ import com.fastcms.utils.ConfigUtils;
  * @modifiedBy：
  * @version: 1.0
  */
+@FunctionalInterface
 public interface StaticPathHelper {
 
     /**
@@ -46,16 +47,11 @@ public interface StaticPathHelper {
      */
     String CATEGORY_PATH = "/a/c";
 
-    String getUrl();
-
     /**
-     * 是否需要处理url
-     * @param url
+     * 获取访问的url
      * @return
      */
-    default boolean isNeedProcess(String url) {
-        return !url.endsWith(StaticUtils.getFakeStaticSuffix());
-    }
+    String getUrl();
 
     /**
      * 获取网站指定域名
@@ -70,7 +66,7 @@ public interface StaticPathHelper {
      * @return
      */
     default boolean isEnableFakeStatic() {
-        return StaticUtils.isEnableFakeStatic();
+        return ApplicationUtils.getBean(FastcmsStaticHtmlManager.class).isEnable();
     }
 
     /**
@@ -78,7 +74,7 @@ public interface StaticPathHelper {
      * @return
      */
     default String getFakeStaticSuffix() {
-        return StaticUtils.getFakeStaticSuffix();
+        return ApplicationUtils.getBean(FastcmsStaticHtmlManager.class).getFileSuffix();
     }
 
 }
