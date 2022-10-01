@@ -16,8 +16,15 @@
  */
 package com.fastcms.cms.directive;
 
+import com.fastcms.cms.entity.ArticleCategory;
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.directive.BasePaginationDirective;
+import freemarker.core.Environment;
+import freemarker.ext.beans.StringModel;
+import freemarker.template.TemplateModelException;
 import org.springframework.stereotype.Component;
+
+import java.util.Map;
 
 /**
  * @author： wjun_java@163.com
@@ -31,9 +38,46 @@ public class ArticlePageDirective extends BasePaginationDirective {
 
 	private static final String PAGE_ATTR = "articleVoPage";
 
+	private static final String CATEGORY_ATTR = "category";
+
+	Environment env;
+
+	@Override
+	public Object doExecute(Environment env, Map params) throws TemplateModelException {
+		this.env = env;
+		return super.doExecute(env, params);
+	}
+
 	@Override
 	protected String getPageAttr() {
 		return PAGE_ATTR;
+	}
+
+	@Override
+	protected String getPageLinkUrl(PageItem pageItem) {
+
+		ArticleCategory category;
+		try {
+			StringModel categoryModel = (StringModel) env.getDataModelOrSharedVariable(CATEGORY_ATTR);
+			category = (ArticleCategory) categoryModel.getWrappedObject();
+		} catch (TemplateModelException e) {
+			e.printStackTrace();
+			return pageItem.getPageUrl();
+		}
+
+		if (category == null) {
+			return pageItem.getPageUrl();
+		}
+
+		if (pageItem.isEnableStatic()) {
+			return pageItem.getWebSiteDomain().concat(pageItem.getCategoryStaticPath()).concat(category.getId().toString()).concat(StrUtils.UNDERLINE) + pageItem.getPageNo() + pageItem.getStaticSuffix();
+		}
+
+		if (pageItem.isEnableFakeStatic()) {
+			return pageItem.getPageUrl().substring(0, pageItem.getPageUrl().indexOf("?")).concat(pageItem.getStaticSuffix()).concat(pageItem.getPageUrl().substring(pageItem.getPageUrl().indexOf("?")));
+		}
+		return pageItem.getPageUrl();
+
 	}
 
 }

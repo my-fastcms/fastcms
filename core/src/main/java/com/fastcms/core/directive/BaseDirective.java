@@ -54,7 +54,7 @@ public abstract class BaseDirective implements TemplateDirectiveModel {
         }
     }
 
-    public abstract Object doExecute(Environment env, Map params);
+    public abstract Object doExecute(Environment env, Map params) throws TemplateModelException;
 
     protected Long getLong(String key, Map params, Long defaultValue) {
         SimpleNumber simpleNumber = null;

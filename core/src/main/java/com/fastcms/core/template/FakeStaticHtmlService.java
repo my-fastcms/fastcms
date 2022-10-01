@@ -31,6 +31,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class FakeStaticHtmlService implements FastcmsStaticHtmlService {
 
+    /**
+     * 文章访问路径
+     */
+    String ARTICLE_PATH = "/a/";
+
+    /**
+     * 页面访问路径
+     */
+    String PAGE_PATH = "/p/";
+
+    /**
+     * 分类访问路径
+     */
+    String CATEGORY_PATH = "/a/c/";
+
     @Override
     public boolean isEnable() {
         return StaticUtils.isEnableFakeStatic();
@@ -39,6 +54,21 @@ public class FakeStaticHtmlService implements FastcmsStaticHtmlService {
     @Override
     public String getFileSuffix() {
         return StaticUtils.getFakeStaticSuffix();
+    }
+
+    @Override
+    public String getArticleStaticPath() {
+        return ARTICLE_PATH;
+    }
+
+    @Override
+    public String getPageStaticPath() {
+        return PAGE_PATH;
+    }
+
+    @Override
+    public String getCategoryStaticPath() {
+        return CATEGORY_PATH;
     }
 
     @Override

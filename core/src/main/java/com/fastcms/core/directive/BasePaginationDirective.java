@@ -18,8 +18,11 @@ package com.fastcms.core.directive;
 
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.template.StaticPathHelper;
 import freemarker.core.Environment;
+import freemarker.ext.beans.StringModel;
+import freemarker.template.TemplateModelException;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -44,7 +47,7 @@ public abstract class BasePaginationDirective extends BaseDirective {
 	protected static final int SHOW_PAGE_NO_COUNT = 5;
 
 	@Override
-	public Object doExecute(Environment env, Map params) {
+	public Object doExecute(Environment env, Map params) throws TemplateModelException {
 		ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
 		HttpServletRequest request = attr.getRequest();
 
@@ -61,6 +64,13 @@ public abstract class BasePaginationDirective extends BaseDirective {
 		}
 
 		Page page = (Page) RequestContextHolder.getRequestAttributes().getAttribute(getPageAttr(), RequestAttributes.SCOPE_REQUEST);
+
+		if (page == null) {
+			StringModel pageModel = (StringModel) env.getDataModelOrSharedVariable(getPageAttr());
+			if (pageModel != null) {
+				page = (Page) pageModel.getWrappedObject();
+			}
+		}
 
 		Map<String, Object> result = new HashMap<>();
 
@@ -82,27 +92,33 @@ public abstract class BasePaginationDirective extends BaseDirective {
 		List<PaginationDirective.PageItem> pageItemList = new ArrayList<>();
 
 		String first = url.contains("?") ? url.concat("&"+PAGENO_PARAM + 1) : url + "?"+PAGENO_PARAM + 1;
-		result.put("prev", new PaginationDirective.PageItem("上一页", url.contains("?") ? url.concat("&"+PAGENO_PARAM + (current-1<1?1:current-1)) : url + "?"+PAGENO_PARAM + (current-1<1?1:current-1)));
-		result.put("first", new PaginationDirective.PageItem("首页", first));
+		result.put("prev", new PaginationDirective.PageItem("上一页", url.contains("?")
+				? url.concat("&"+PAGENO_PARAM + (current-1 <1 ? 1: current-1))
+				: url + "?"+PAGENO_PARAM + (current-1 < 1 ? 1: current-1), (current-1< 1 ? 1: current-1)));
+		result.put("first", new PaginationDirective.PageItem("首页", first, 1l));
 
 		if(start > 1) {
-			pageItemList.add(new PaginationDirective.PageItem(1 + "", first));
-			pageItemList.add(new PaginationDirective.PageItem("...", "javascript:void(0)"));
+			pageItemList.add(new PaginationDirective.PageItem(1 + "", first, 1l));
+			pageItemList.add(new PaginationDirective.PageItem("...", "javascript:void(0)", 0l));
 		}
 
 		for(long i=start; i<=end; i++) {
 			if(i>0){
-				pageItemList.add(new PaginationDirective.PageItem(i+"", url.contains("?") ? url.concat("&"+PAGENO_PARAM + i) : url + "?"+ PAGENO_PARAM + i));
+				pageItemList.add(new PaginationDirective.PageItem(i+"", url.contains("?") ? url.concat("&"+PAGENO_PARAM + i) : url + "?"+ PAGENO_PARAM + i, i));
 			}
 		}
 
 		String last = url.contains("?") ? url.concat("&"+PAGENO_PARAM + totalPage) : url + "?"+PAGENO_PARAM + totalPage;
-		result.put("next", new PaginationDirective.PageItem("下一页", url.contains("?") ? url.concat("&"+PAGENO_PARAM + (current+1>totalPage?totalPage:current+1)) : url + "?"+PAGENO_PARAM + (current+1>totalPage?totalPage:current+1)));
-		result.put("last", new PageItem("尾页", last));
+		result.put("next", new PaginationDirective.PageItem("下一页",
+				url.contains("?")
+						? url.concat("&"+PAGENO_PARAM + (current+1 > totalPage ? totalPage : current+1))
+						: url + "?"+PAGENO_PARAM + (current+1 > totalPage ? totalPage : current+1),
+				(current+1 > totalPage ? totalPage : current+1)));
+		result.put("last", new PageItem("尾页", last, 0l));
 
 		if(end < totalPage) {
-			pageItemList.add(new PaginationDirective.PageItem("...", "javascript:void(0)"));
-			pageItemList.add(new PaginationDirective.PageItem(totalPage + "", last));
+			pageItemList.add(new PaginationDirective.PageItem("...", "javascript:void(0)", 0l));
+			pageItemList.add(new PaginationDirective.PageItem(totalPage + "", last, totalPage));
 		}
 
 		result.put("list", pageItemList);
@@ -114,13 +130,15 @@ public abstract class BasePaginationDirective extends BaseDirective {
 
 	protected abstract String getPageAttr();
 
-	public static class PageItem implements StaticPathHelper {
+	public class PageItem implements StaticPathHelper {
 		private String text;
-		private String url;
+		private String pageUrl;
+		private Long pageNo;
 
-		public PageItem(String text, String url) {
+		public PageItem(String text, String url, Long pageNo) {
 			this.text = text;
-			this.url = url;
+			this.pageUrl = url;
+			this.pageNo = pageNo;
 		}
 
 		public String getText() {
@@ -131,17 +149,38 @@ public abstract class BasePaginationDirective extends BaseDirective {
 			this.text = text;
 		}
 
-		@Override
-		public String getUrl() {
-			if (isEnableFakeStatic()) {
-				return url.substring(0, url.indexOf("?")).concat(getFakeStaticSuffix()).concat(url.substring(url.indexOf("?")));
-			}
-			return url;
+		public String getPageUrl() {
+			return pageUrl;
 		}
 
-		public void setUrl(String url) {
-			this.url = url;
+		public void setPageUrl(String url) {
+			this.pageUrl = url;
 		}
+
+		public Long getPageNo() {
+			return pageNo;
+		}
+
+		public void setPageNo(Long pageNo) {
+			this.pageNo = pageNo;
+		}
+
+		@Override
+		public String getUrl() {
+			return getPageLinkUrl(this);
+		}
+
+	}
+
+	protected String getPageLinkUrl(PageItem pageItem) {
+		if (pageItem.isEnableStatic()) {
+			return pageItem.getWebSiteDomain().concat(pageItem.getCategoryStaticPath()).concat(StrUtils.UNDERLINE) + pageItem.pageNo + pageItem.getStaticSuffix();
+		}
+
+		if (pageItem.isEnableFakeStatic()) {
+			return pageItem.getPageUrl().substring(0, pageItem.getPageUrl().indexOf("?")).concat(pageItem.getStaticSuffix()).concat(pageItem.getPageUrl().substring(pageItem.getPageUrl().indexOf("?")));
+		}
+		return pageItem.getPageUrl();
 	}
 
 }

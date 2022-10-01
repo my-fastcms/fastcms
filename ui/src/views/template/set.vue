@@ -8,16 +8,8 @@
 					<el-form :model="ruleForm" :rules="rules" ref="myRefForm" size="small" label-width="150px" class="mt35 mb35">
                         
                         <el-row :gutter="35">
-							<el-col class="mb20">
-								<el-form-item label="是否开启网站静态化">
-									<el-switch
-										v-model="ruleForm.enableStaticWebSite"
-										active-color="#13ce66">
-									</el-switch>
-								</el-form-item>
-							</el-col>
 
-                            <el-col class="mb20">
+							<el-col class="mb20">
 								<el-form-item label="是否开启伪静态">
 									<el-switch
 										v-model="ruleForm.enableFakeStatic"
@@ -28,7 +20,7 @@
 							
 							<el-col class="mb20">
 								<el-form-item label="伪静态访问后缀">
-									<el-input v-model="ruleForm.fakeStaticSuffix" placeholder="请输入伪静态访问后缀" clearable></el-input>
+									<el-input v-model="ruleForm.fakeStaticSuffix" placeholder="请输入伪静态访问后缀" readonly clearable></el-input>
 								</el-form-item>
 							</el-col>
 							

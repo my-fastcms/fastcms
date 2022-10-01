@@ -41,4 +41,22 @@ public interface FastcmsStaticHtmlService extends Ordered {
      */
     String getFileSuffix();
 
+    /**
+     * 获取文章静态化访问路径
+     * @return
+     */
+    String getArticleStaticPath();
+
+    /**
+     * 获取页面静态化访问路径
+     * @return
+     */
+    String getPageStaticPath();
+
+    /**
+     * 获取分类静态化路径
+     * @return
+     */
+    String getCategoryStaticPath();
+
 }

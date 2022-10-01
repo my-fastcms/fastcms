@@ -20,6 +20,7 @@ package com.fastcms.core.template;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.utils.ApplicationUtils;
 import com.fastcms.utils.ConfigUtils;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * 生成静态化 url path
@@ -33,21 +34,6 @@ import com.fastcms.utils.ConfigUtils;
 public interface StaticPathHelper {
 
     /**
-     * 文章访问路径
-     */
-    String ARTICLE_PATH = "/a/";
-
-    /**
-     * 页面访问路径
-     */
-    String PAGE_PATH = "/p/";
-
-    /**
-     * 分类访问路径
-     */
-    String CATEGORY_PATH = "/a/c";
-
-    /**
      * 获取访问的url
      * @return
      */
@@ -57,6 +43,7 @@ public interface StaticPathHelper {
      * 获取网站指定域名
      * @return
      */
+    @JsonIgnore
     default String getWebSiteDomain() {
         return ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN);
     }
@@ -65,16 +52,73 @@ public interface StaticPathHelper {
      * 是否需要伪静态
      * @return
      */
+    @JsonIgnore
     default boolean isEnableFakeStatic() {
+        return ApplicationUtils.getBean(FastcmsStaticHtmlManager.class).isFakeStaticEnable();
+    }
+
+    /**
+     * 是否启用静态化
+     * @return
+     */
+    @JsonIgnore
+    default boolean isEnableStatic() {
         return ApplicationUtils.getBean(FastcmsStaticHtmlManager.class).isEnable();
     }
 
     /**
-     * 获取伪静态后缀名称
+     * 是否开启静态化
+     * 伪静态 + 真实静态化
      * @return
      */
-    default String getFakeStaticSuffix() {
+    @JsonIgnore
+    default boolean isEnable() {
+        return isEnableStatic() || isEnableFakeStatic();
+    }
+
+    /**
+     * 获取静态文件后缀名称
+     * @return
+     */
+    @JsonIgnore
+    default String getStaticSuffix() {
         return ApplicationUtils.getBean(FastcmsStaticHtmlManager.class).getFileSuffix();
+    }
+
+    /**
+     * 获取文章静态化访问路径
+     * @return
+     */
+    @JsonIgnore
+    default String getArticleStaticPath() {
+        return ApplicationUtils.getBean(FastcmsStaticHtmlManager.class).getArticleStaticPath();
+    }
+
+    /**
+     * 获取页面静态化访问路径
+     * @return
+     */
+    @JsonIgnore
+    default String getPageStaticPath() {
+        return ApplicationUtils.getBean(FastcmsStaticHtmlManager.class).getPageStaticPath();
+    }
+
+    /**
+     * 获取分类页面静态化访问路径
+     * @return
+     */
+    @JsonIgnore
+    default String getCategoryStaticPath() {
+        return ApplicationUtils.getBean(FastcmsStaticHtmlManager.class).getCategoryStaticPath();
+    }
+
+    /**
+     * 获取当前模板
+     * @return
+     */
+    @JsonIgnore
+    default Template getTemplate() {
+        return ApplicationUtils.getBean(DefaultTemplateService.class).getCurrTemplate();
     }
 
 }

@@ -20,6 +20,11 @@ public class Menu implements Serializable, StaticPathHelper {
     public static final String STATUS_SHOW = "show";
     public static final String STATUS_HIDDEN = "hidden";
 
+    public static final Integer ARTICLE_URL_TYPE = 1;
+    public static final Integer PAGE_URL_TYPE = 2;
+    public static final Integer CATEGORY_URL_TYPE = 3;
+    public static final Integer TAG_URL_TYPE = 4;
+
     /**
      * id
      */
@@ -66,6 +71,11 @@ public class Menu implements Serializable, StaticPathHelper {
     private String target;
 
     /**
+     * 菜单跳转url类型 1，文章，2，页面，3，分类， 4，标签
+     */
+    private Integer urlType;
+
+    /**
      * 状态
      */
     private String status;
@@ -109,7 +119,7 @@ public class Menu implements Serializable, StaticPathHelper {
     }
 
     public String getMenuUrl() {
-        return getUrl();
+        return menuUrl;
     }
 
     public void setMenuUrl(String menuUrl) {
@@ -140,6 +150,14 @@ public class Menu implements Serializable, StaticPathHelper {
         this.target = target;
     }
 
+    public Integer getUrlType() {
+        return urlType;
+    }
+
+    public void setUrlType(Integer urlType) {
+        this.urlType = urlType;
+    }
+
     public String getStatus() {
         return status;
     }
@@ -168,8 +186,18 @@ public class Menu implements Serializable, StaticPathHelper {
     public String getUrl() {
 
         if (menuUrl != null && !menuUrl.startsWith("http")
-                && isEnableFakeStatic() && !menuUrl.endsWith(getFakeStaticSuffix())) {
-            return menuUrl + getFakeStaticSuffix();
+                && isEnable() && !menuUrl.endsWith(getStaticSuffix())) {
+
+            String typePath = "";
+            if (getUrlType() == ARTICLE_URL_TYPE) {
+                typePath = getArticleStaticPath();
+            } else if (getUrlType() == PAGE_URL_TYPE) {
+                typePath = getPageStaticPath();
+            } else if (getUrlType() == CATEGORY_URL_TYPE) {
+                typePath = getCategoryStaticPath();
+            }
+
+            return getWebSiteDomain().concat(typePath).concat(menuUrl) + getStaticSuffix();
         }
 
         return menuUrl;

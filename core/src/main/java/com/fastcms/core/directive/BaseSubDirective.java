@@ -19,6 +19,7 @@ package com.fastcms.core.directive;
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateModel;
+import freemarker.template.TemplateModelException;
 
 import java.io.IOException;
 import java.util.Map;
@@ -36,7 +37,7 @@ public abstract class BaseSubDirective extends BaseDirective {
 
     @Override
     public void execute(Environment env, Map params, TemplateModel[] loopVars, TemplateDirectiveBody body)
-            throws IOException {
+            throws IOException, TemplateModelException {
         env.getOut().write((String) doExecute(env, params));
     }
 

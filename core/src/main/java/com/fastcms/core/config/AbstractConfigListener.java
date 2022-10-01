@@ -41,7 +41,8 @@ public abstract class AbstractConfigListener implements ConfigListener {
 	public boolean isMatch(Map<String, String> datasMap) {
 		for (Map.Entry<String, String> entry : datasMap.entrySet()) {
 			String key = entry.getKey();
-			if(StringUtils.isNotBlank(key) && key.trim().startsWith(getMatchKey())) {
+			if(StringUtils.isNotBlank(key) &&
+					(key.trim().equalsIgnoreCase(getMatchKey()) || key.trim().startsWith(getMatchKey()))) {
 				return true;
 			}
 		}

@@ -1,0 +1,1 @@
+import{s as i}from"./index.ac9b73cb.js";function o(t){return i({url:"/admin/config/save",data:t,method:"post"})}function a(t){return i({url:"/admin/config/list",data:t,method:"post"})}function e(){return i({url:"/admin/config/mail/test",method:"get"})}export{a as g,o as s,e as t};

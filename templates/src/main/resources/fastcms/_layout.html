@@ -48,7 +48,7 @@
                     <#if data?? &&(data?size>0)>
                         <#list data as item>
                             <li>
-                                <a href="${item.menuUrl!}" target="${item.target!"_self"}">${item.menuName!}</a>
+                                <a href="${item.url!}" target="${item.target!"_self"}">${item.menuName!}</a>
                             </li>
                         </#list>
                     </#if>
@@ -73,7 +73,7 @@
 <ul class="nav nav-treeview">
     <#list children as child>
     <li class="nav-item">
-        <a href="${child.menuUrl!'#'}" class="nav-link">
+        <a href="${child.url!'#'}" class="nav-link">
             <p>${child.menuName!}
                 <#if child.hasChildren>
                 <i class="fas fa-angle-left right"></i>

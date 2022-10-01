@@ -321,11 +321,12 @@ public interface IArticleService extends IService<Article> {
                 return getOutLink();
             }
 
-            if (isEnableFakeStatic()) {
-                return getWebSiteDomain().concat(ARTICLE_PATH) + getId() + getFakeStaticSuffix();
+            String url = getWebSiteDomain().concat(getArticleStaticPath()) + getId();
+            if (isEnable()) {
+                url = url + getStaticSuffix();
             }
 
-            return getWebSiteDomain().concat(ARTICLE_PATH) + getId();
+            return url;
         }
 
         public String getStatusStr() {

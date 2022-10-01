@@ -34,7 +34,7 @@ import java.util.*;
 @Component
 public class FastcmsStaticHtmlManager implements FastcmsStaticHtmlService, InitializingBean {
 
-    private FastcmsStaticHtmlService enableStaticHtmlService;
+    private FastcmsStaticHtmlService enableStaticHtmlService = ApplicationUtils.getBean(FakeStaticHtmlService.class);
 
     List<FastcmsStaticHtmlService> staticHtmlServiceList = Collections.synchronizedList(new ArrayList<>());
 
@@ -62,7 +62,7 @@ public class FastcmsStaticHtmlManager implements FastcmsStaticHtmlService, Initi
         /**
          * 查询是否有开启真正静态化插件，如果开启了，优先级高于伪静态
          */
-        for (int i=0; i < staticHtmlServiceList.size() - 1; i++) {
+        for (int i = 0; i < staticHtmlServiceList.size() - 1; i++) {
             if (staticHtmlServiceList.get(i).isEnable()) {
                 return false;
             }
@@ -86,18 +86,39 @@ public class FastcmsStaticHtmlManager implements FastcmsStaticHtmlService, Initi
     public boolean isEnable() {
 
         for (FastcmsStaticHtmlService fastcmsStaticHtmlService : staticHtmlServiceList) {
+
+            if (fastcmsStaticHtmlService instanceof FakeStaticHtmlService) {
+                continue;
+            }
+
             if (fastcmsStaticHtmlService.isEnable()) {
                 enableStaticHtmlService = fastcmsStaticHtmlService;
                 return true;
             }
         }
 
+        enableStaticHtmlService = ApplicationUtils.getBean(FakeStaticHtmlService.class);
         return false;
     }
 
     @Override
     public String getFileSuffix() {
-        return enableStaticHtmlService == null ? ".html" : enableStaticHtmlService.getFileSuffix();
+        return enableStaticHtmlService.getFileSuffix();
+    }
+
+    @Override
+    public String getArticleStaticPath() {
+        return enableStaticHtmlService.getArticleStaticPath();
+    }
+
+    @Override
+    public String getPageStaticPath() {
+        return enableStaticHtmlService.getPageStaticPath();
+    }
+
+    @Override
+    public String getCategoryStaticPath() {
+        return enableStaticHtmlService.getCategoryStaticPath();
     }
 
     @Override

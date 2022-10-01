@@ -29,7 +29,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 /**
  * @author： wjun_java@163.com
@@ -67,11 +66,11 @@ public class FastcmsGlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fastcms Database sql error");
     }
 
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<Object> mismatchErrorHandler(MethodArgumentTypeMismatchException e) {
-        log.error("CONSOLE", e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ExceptionUtil.getAllExceptionMsg(e));
-    }
+//    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+//    public ResponseEntity<Object> mismatchErrorHandler(MethodArgumentTypeMismatchException e) {
+//        log.error("CONSOLE", e);
+//        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ExceptionUtil.getAllExceptionMsg(e));
+//    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handleDataAccessException(Exception e) {

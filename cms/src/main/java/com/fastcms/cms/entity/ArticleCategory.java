@@ -4,8 +4,8 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fastcms.cms.utils.ArticleUtils;
 import com.fastcms.core.template.StaticPathHelper;
-import com.fastcms.core.utils.StaticUtils;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -82,10 +82,7 @@ public class ArticleCategory implements Serializable, StaticPathHelper {
 
     @Override
     public String getUrl() {
-        if (isEnableFakeStatic()) {
-            return getWebSiteDomain().concat(CATEGORY_PATH) + getId() + StaticUtils.getFakeStaticSuffix();
-        }
-        return getWebSiteDomain().concat(CATEGORY_PATH) + getId();
+        return ArticleUtils.getArticleCategoryUrl(this);
     }
 
     public Long getId() {

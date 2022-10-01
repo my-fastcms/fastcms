@@ -14,6 +14,16 @@
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
+						<el-form-item label="关联">
+							<el-select v-model="ruleForm.urlType" placeholder="请选择" clearable class="w100">
+								<el-option label="网址" value="0"></el-option>
+								<el-option label="文章" value="1"></el-option>
+								<el-option label="页面" value="2"></el-option>
+								<el-option label="分类" value="3"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-col>
+					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
 						<el-form-item label="菜单地址" prop="menuUrl">
 							<el-input v-model="ruleForm.menuUrl" placeholder="请输入菜单地址" clearable></el-input>
 						</el-form-item>
@@ -60,6 +70,7 @@ export default {
 				parentId: '',
 				menuName: '', 
 				menuUrl: '',
+				urlType: '0',
 				menuIcon: '', 
 				sortNum: '',
 				target: '',
@@ -77,6 +88,7 @@ export default {
 			state.ruleForm.menuUrl = row.menuUrl;
 			state.ruleForm.menuIcon = row.menuIcon;
 			state.ruleForm.target = row.target;
+			state.ruleForm.urlType = row.urlType.toString();
 			state.ruleForm.sortNum = row.sortNum;
 			state.isShowDialog = true;
 		};
@@ -112,6 +124,7 @@ export default {
 			state.ruleForm.parentId = '';
 			state.ruleForm.menuName = '';
 			state.ruleForm.menuUrl = '';
+			state.ruleForm.urlType = '0',
 			state.ruleForm.menuIcon = '';
 			state.ruleForm.target = '';
 			state.ruleForm.sortNum = '';

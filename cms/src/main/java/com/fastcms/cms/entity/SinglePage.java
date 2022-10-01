@@ -125,11 +125,13 @@ public class SinglePage implements Serializable, StaticPathHelper {
             return getOutLink();
         }
 
-        if (isEnableFakeStatic()) {
-            return getWebSiteDomain().concat(PAGE_PATH) + getId() + getFakeStaticSuffix();
+        String url = getWebSiteDomain().concat(getPageStaticPath()) + getId();
+
+        if (isEnable()) {
+            url = url + getStaticSuffix();
         }
 
-        return getWebSiteDomain().concat(PAGE_PATH) + getId();
+        return url;
 
     }
 

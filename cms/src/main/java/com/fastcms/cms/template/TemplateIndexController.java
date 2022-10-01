@@ -26,11 +26,14 @@ import com.fastcms.cms.service.IArticleCategoryService;
 import com.fastcms.cms.service.IArticleService;
 import com.fastcms.cms.service.ISinglePageService;
 import com.fastcms.common.utils.StrUtils;
+import com.fastcms.core.template.FastcmsStaticHtmlManager;
+import com.fastcms.utils.ApplicationUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 /**
  * @ignore
@@ -61,6 +64,9 @@ public class TemplateIndexController extends TemplateBaseController {
 
     @RequestMapping({"/", "index"})
     public String index() {
+        if (ApplicationUtils.getBean(FastcmsStaticHtmlManager.class).isEnable()) {
+            return UrlBasedViewResolver.REDIRECT_URL_PREFIX.concat(getTemplate().getPath()).concat("index.html");
+        }
         return getTemplatePath() + INDEX;
     }
 

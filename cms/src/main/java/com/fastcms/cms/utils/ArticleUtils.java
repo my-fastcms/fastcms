@@ -17,7 +17,9 @@
 package com.fastcms.cms.utils;
 
 import com.fastcms.cms.entity.Article;
+import com.fastcms.cms.entity.ArticleCategory;
 import com.fastcms.utils.ConfigUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.math.BigDecimal;
 
@@ -56,16 +58,6 @@ public abstract class ArticleUtils {
      */
     public static final String ARTICLE_PRICE = "price";
 
-    /**
-     * 是否开启伪静态
-     */
-    public static String ENABLE_FAKE_STATIC = "enablefakestatic";
-
-    /**
-     * 静态化后缀
-     */
-    public static  String FAKE_STATIC_SUFFIX = "fakeStaticSuffix";
-
     public static boolean isEnableNeedToPay() {
         return ConfigUtils.getBool(GLOBAL_ARTICLE_ENABLE_NEED_TO_PAY, true);
     }
@@ -98,6 +90,31 @@ public abstract class ArticleUtils {
 
     public static boolean isEnableArticleComment() {
         return ConfigUtils.getBool(ENABLE_ARTICLE_COMMENT);
+    }
+
+    public static String getUrl(Article article) {
+        if (StringUtils.isNotBlank(article.getOutLink())) {
+            return article.getOutLink();
+        }
+
+        String url = article.getWebSiteDomain().concat(article.getArticleStaticPath()) + article.getId();
+
+        if (article.isEnable()) {
+            url = url.concat(article.getStaticSuffix());
+        }
+
+        return url;
+    }
+
+    public static String getArticleCategoryUrl(ArticleCategory articleCategory) {
+
+        String url = articleCategory.getWebSiteDomain().concat(articleCategory.getCategoryStaticPath()) + articleCategory.getId();
+
+        if (articleCategory.isEnable()) {
+            url = url.concat(articleCategory.getStaticSuffix());
+        }
+
+        return url;
     }
 
 }

@@ -2,12 +2,12 @@ package com.fastcms.cms.entity;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.annotation.*;
+import com.fastcms.cms.utils.ArticleUtils;
 import com.fastcms.common.utils.JsoupUtils;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.template.StaticPathHelper;
 import com.fastcms.core.utils.AttachUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.commons.lang.StringUtils;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
@@ -364,17 +364,7 @@ public class Article implements Serializable, StaticPathHelper {
 
     @Override
     public String getUrl() {
-
-        if (StringUtils.isNotBlank(getOutLink())) {
-            return getOutLink();
-        }
-
-        if (isEnableFakeStatic()) {
-            return getWebSiteDomain().concat(ARTICLE_PATH) + getId() + getFakeStaticSuffix();
-        }
-
-        return getWebSiteDomain().concat(ARTICLE_PATH) + getId();
-
+        return ArticleUtils.getUrl(this);
     }
 
     public String getThumbnailUrl() {

@@ -48,6 +48,8 @@ public abstract class StrUtils extends StringUtils {
 
 	public static final String LF = "\n";
 
+	public static final String SLASH = "/";
+
 	public static final String ENCODE = "UTF-8";
 
 	private static final String[] htmlChars = new String[]{"&", "<", ">", "'", "\""};
@@ -211,13 +213,13 @@ public abstract class StrUtils extends StringUtils {
 		return escapeJavaStyleString(str, true, true);
 	}
 
-	private static String escapeJavaStyleString(String str, boolean escapeSingleQuotes, boolean escapeForwardSlash) {
+	private static String escapeJavaStyleString(String str, boolean escapeSingleQuotes, boolean escapeForwardSLASH) {
 		if (str == null) {
 			return null;
 		}
 		try {
 			StringWriter writer = new StringWriter(str.length() * 2);
-			escapeJavaStyleString(writer, str, escapeSingleQuotes, escapeForwardSlash);
+			escapeJavaStyleString(writer, str, escapeSingleQuotes, escapeForwardSLASH);
 			return writer.toString();
 		} catch (IOException ioe) {
 			// this should never ever happen while writing to a StringWriter
@@ -226,7 +228,7 @@ public abstract class StrUtils extends StringUtils {
 	}
 
 	private static void escapeJavaStyleString(Writer out, String str, boolean escapeSingleQuote,
-											  boolean escapeForwardSlash) throws IOException {
+											  boolean escapeForwardSLASH) throws IOException {
 		if (out == null) {
 			throw new IllegalArgumentException("The Writer must not be null");
 		}
@@ -292,7 +294,7 @@ public abstract class StrUtils extends StringUtils {
 						out.write('\\');
 						break;
 					case '/':
-						if (escapeForwardSlash) {
+						if (escapeForwardSLASH) {
 							out.write('\\');
 						}
 						out.write('/');

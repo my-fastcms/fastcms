@@ -49,6 +49,12 @@ const viteConfig: UserConfig = {
 		minify: 'esbuild',
 		sourcemap: false,
 		chunkSizeWarningLimit: 1500,
+		rollupOptions: {
+            input: {
+              //直接修改入口文件名字
+              index: resolve(__dirname, 'fastcms.html'),
+            },
+        }
 	},
 	define: {
 		__VUE_I18N_LEGACY_API__: JSON.stringify(false),
