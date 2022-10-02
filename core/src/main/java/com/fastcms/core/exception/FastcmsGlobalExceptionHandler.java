@@ -22,6 +22,7 @@ import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.monitor.MetricsMonitor;
 import com.fastcms.core.utils.ExceptionUtil;
+import com.fastcms.core.utils.RequestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -29,6 +30,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 /**
  * @author： wjun_java@163.com
@@ -73,10 +75,16 @@ public class FastcmsGlobalExceptionHandler {
 //    }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleDataAccessException(Exception e) {
+    public Object handleDataAccessException(Exception e) {
         MetricsMonitor.getDbException().increment();
         log.error("rootFile", e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fastcms Server error");
+
+        boolean ajaxRequest = RequestUtils.isAjaxRequest(RequestUtils.getRequest());
+        if (ajaxRequest) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fastcms Server error");
+        } else {
+            return UrlBasedViewResolver.FORWARD_URL_PREFIX.concat("/error/500.html");
+        }
     }
 
     /**

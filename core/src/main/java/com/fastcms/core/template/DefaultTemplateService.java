@@ -25,6 +25,7 @@ import com.fastcms.common.utils.FileUtils;
 import com.fastcms.entity.Config;
 import com.fastcms.service.IConfigService;
 import com.fastcms.utils.ApplicationUtils;
+import com.fastcms.utils.CollectionUtils;
 import com.fastcms.utils.ReflectUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
@@ -91,7 +92,7 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
             });
 
             List<Template> templateList = getTemplateList();
-            if(templateList != null && templateList.size() > 0) {
+            if(CollectionUtils.isNotEmpty(templateList)) {
                 Config config = configService.findByKey(FastcmsConstants.TEMPLATE_ENABLE_ID);
                 if(config == null) {
                     configService.saveConfig(FastcmsConstants.TEMPLATE_ENABLE_ID, templateList.get(0).getId());
@@ -99,6 +100,7 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
             }
 
         } catch (IOException e) {
+            e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
 
