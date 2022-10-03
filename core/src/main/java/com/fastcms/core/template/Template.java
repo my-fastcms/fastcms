@@ -51,6 +51,11 @@ public class Template implements Serializable {
     String path;
 
     /**
+     * i18n properties存储目录
+     */
+    String i18n;
+
+    /**
      * 模板路径名称
      * 去掉模板路径前后斜杠
      * 示例值                  fastcms
@@ -103,6 +108,14 @@ public class Template implements Serializable {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getI18n() {
+        return i18n;
+    }
+
+    public void setI18n(String i18n) {
+        this.i18n = i18n;
     }
 
     public String getVersion() {

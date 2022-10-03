@@ -17,6 +17,7 @@
 package com.fastcms.core.template;
 
 import org.pf4j.util.FileUtils;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,6 +33,7 @@ import java.util.Properties;
  * @modifiedBy：
  * @version: 1.0
  */
+@Service
 public class DefaultTemplateFinder implements TemplateFinder {
 
 	public static final String PROPERTIES_FILE_NAME = "_template.properties";
@@ -39,6 +41,7 @@ public class DefaultTemplateFinder implements TemplateFinder {
 	public static final String TEMPLATE_ID = "template.id";
 	public static final String TEMPLATE_NAME = "template.name";
 	public static final String TEMPLATE_PATH = "template.path";
+	public static final String TEMPLATE_I18N = "template.i18n";
 	public static final String TEMPLATE_VERSION = "template.version";
 	public static final String TEMPLATE_PROVIDER = "template.provider";
 	public static final String TEMPLATE_DESCRIPTION = "template.description";
@@ -89,6 +92,7 @@ public class DefaultTemplateFinder implements TemplateFinder {
 		template.setId(properties.getProperty(TEMPLATE_ID));
 		template.setName(properties.getProperty(TEMPLATE_NAME));
 		template.setPath(properties.getProperty(TEMPLATE_PATH));
+		template.setI18n(properties.getProperty(TEMPLATE_I18N));
 		template.setVersion(properties.getProperty(TEMPLATE_VERSION));
 		template.setProvider(properties.getProperty(TEMPLATE_PROVIDER));
 		template.setDescription(properties.getProperty(TEMPLATE_DESCRIPTION));

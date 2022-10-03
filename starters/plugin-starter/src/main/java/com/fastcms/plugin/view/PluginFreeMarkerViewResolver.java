@@ -17,6 +17,7 @@
 package com.fastcms.plugin.view;
 
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.AbstractUrlBasedView;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerView;
@@ -50,6 +51,11 @@ public class PluginFreeMarkerViewResolver extends FreeMarkerViewResolver impleme
         setSuffix(".html");
         setContentType("text/html;charset=UTF-8");
         setRequestContextAttribute("request");
+    }
+
+    @Override
+    public int getOrder() {
+        return Ordered.HIGHEST_PRECEDENCE;
     }
 
 }

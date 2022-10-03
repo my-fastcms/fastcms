@@ -22,6 +22,7 @@ import com.fastcms.common.model.TreeNode;
 import com.fastcms.common.model.TreeNodeConvert;
 import com.fastcms.common.utils.DirUtils;
 import com.fastcms.common.utils.FileUtils;
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.entity.Config;
 import com.fastcms.service.IConfigService;
 import com.fastcms.utils.ApplicationUtils;
@@ -30,6 +31,7 @@ import com.fastcms.utils.ReflectUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
@@ -62,48 +64,34 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
 
     private String templateDir = "./htmls";
 
+    private String i18nDir = "i18n";
+
     private Map<String, Template> templateMap = Collections.synchronizedMap(new HashMap<>());
 
     @Autowired
     private Environment environment;
 
+    @Autowired
     private TemplateFinder templateFinder;
 
     @Autowired
     private IConfigService configService;
 
-    public DefaultTemplateService() {
-        templateFinder = new DefaultTemplateFinder();
-    }
-
     @Override
-    public void initialize() {
+    public void initialize() throws IOException {
         templateMap.clear();
 
-        try {
-            List<Path> collect = Files.list(getTemplateRootPath()).collect(Collectors.toList());
-            collect.forEach(item -> {
-                if(Files.isDirectory(item)) {
-                    Template template = templateFinder.find(item);
-                    if(template != null) {
-                        templateMap.putIfAbsent(template.getId(), template);
-                    }
-                }
-            });
-
-            List<Template> templateList = getTemplateList();
-            if(CollectionUtils.isNotEmpty(templateList)) {
-                Config config = configService.findByKey(FastcmsConstants.TEMPLATE_ENABLE_ID);
-                if(config == null) {
-                    configService.saveConfig(FastcmsConstants.TEMPLATE_ENABLE_ID, templateList.get(0).getId());
+        List<Path> collect = Files.list(getTemplateRootPath()).collect(Collectors.toList());
+        collect.forEach(item -> {
+            if(Files.isDirectory(item)) {
+                Template template = templateFinder.find(item);
+                if(template != null) {
+                    templateMap.putIfAbsent(template.getId(), template);
                 }
             }
+        });
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
-        }
-
+        setDefaultTemplate();
     }
 
     /**
@@ -123,7 +111,7 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
 
         final String uploadDir = DirUtils.getUploadDir();
         Set<String> locations = new HashSet<>();
-        locations.add("classpath:" + FastcmsConstants.TEMPLATE_STATIC);
+        locations.add(ResourceUtils.CLASSPATH_URL_PREFIX + FastcmsConstants.TEMPLATE_STATIC);
         locations.add(ResourceUtils.FILE_URL_PREFIX + uploadDir);
         for (Template template : getTemplateList()) {
             locations.add(ResourceUtils.FILE_URL_PREFIX + templateDir + template.getPath() + FastcmsConstants.TEMPLATE_STATIC);
@@ -147,11 +135,26 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
         if(config == null) {
             //#I4NI6J https://gitee.com/xjd2020/fastcms/issues/I4NI6J
             List<Template> templateList = new ArrayList<>(templateMap.values());
-            Template template = templateList != null && templateList.size()>0 ? templateList.get(0) : null;
+            Template template = templateList != null && templateList.size() > 0 ? templateList.get(0) : null;
             if(template == null) return null;
             config = configService.saveConfig(FastcmsConstants.TEMPLATE_ENABLE_ID, template.getId());
         }
         return getTemplate(config.getValue());
+    }
+
+    @Override
+    public void setDefaultTemplate() {
+        List<Template> templateList = getTemplateList();
+        if(CollectionUtils.isNotEmpty(templateList)) {
+            String config = configService.getValue(FastcmsConstants.TEMPLATE_ENABLE_ID);
+            if(StrUtils.isBlank(config) || !containsKey(config)) {
+                configService.saveConfig(FastcmsConstants.TEMPLATE_ENABLE_ID, templateList.get(0).getId());
+            }
+        }
+    }
+
+    boolean containsKey(String templateId) {
+        return templateMap.containsKey(templateId);
     }
 
     @Override
@@ -171,7 +174,7 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
     public void install(File file) throws Exception {
         String name = file.getName();
         name = name.substring(0, name.lastIndexOf("."));
-        final String path = "/".concat(name).concat("/");
+        final String path = StrUtils.SLASH.concat(name).concat(StrUtils.SLASH);
 
         if(checkPath(path)) {
             throw new RuntimeException("模板[" + path + "]已存在");
@@ -188,9 +191,12 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
             throw new RuntimeException("模板[" + path + "]缺少必要文件或者属性");
         }
 
-        initialize();
-
         try {
+
+            //设置i18n
+            ApplicationUtils.getBean(ReloadableResourceBundleMessageSource.class).setBasenames(getI18nNames());
+
+            initialize();
             refreshStaticMapping();
         } catch (Exception e) {
             org.apache.commons.io.FileUtils.deleteDirectory(Paths.get(templatePath).toFile());
@@ -243,6 +249,21 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
                 .map(item -> new FileTreeNode(item))
                 .sorted(Comparator.comparing(FileTreeNode::getSortNum)).collect(Collectors.toList());
         return (List<FileTreeNode>) getTreeNodeList(treeNodeList);
+    }
+
+    @Override
+    public String[] getI18nNames() {
+        List<String> namesList = new ArrayList<>();
+        List<Template> templateList = getTemplateList();
+        for (Template template : templateList) {
+            Path i18nPath = template.getTemplatePath().resolve(i18nDir);
+            if (i18nPath.toFile().isDirectory() && i18nPath.toFile().exists()) {
+                String i18n = ResourceUtils.FILE_URL_PREFIX.concat(i18nPath.toString().concat(StrUtils.SLASH).concat(template.getI18n()));
+                namesList.add(i18n);
+            }
+        }
+        namesList.add(ResourceUtils.CLASSPATH_URL_PREFIX.concat("i18n/message"));
+        return namesList.toArray(new String[]{});
     }
 
     @Override

@@ -37,7 +37,7 @@ public interface TemplateService {
     /**
      * 初始化模板
      */
-    void initialize();
+    void initialize() throws IOException;
 
     /**
      * 根据id获取模板
@@ -51,6 +51,11 @@ public interface TemplateService {
      * @return
      */
     Template getCurrTemplate();
+
+    /**
+     * 设置默认使用的模板
+     */
+    void setDefaultTemplate();
 
     /**
      * 获取模板列表
@@ -77,6 +82,12 @@ public interface TemplateService {
      * @return
      */
     List<FileTreeNode> getTemplateTreeFiles() throws IOException;
+
+    /**
+     * 获取模板i18n加载文件
+     * @return
+     */
+    String[] getI18nNames();
 
     class FileTreeNode extends TreeNode {
 

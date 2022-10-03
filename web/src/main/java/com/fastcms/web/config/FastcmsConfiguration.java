@@ -39,8 +39,10 @@ import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilde
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.boot.web.context.WebServerInitializedEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ResourceUtils;
@@ -144,6 +146,16 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
             jacksonObjectMapperBuilder.deserializerByType(LocalDateTime.class,localDateTimeDeserializer());
             jacksonObjectMapperBuilder.simpleDateFormat(pattern);
         };
+    }
+
+    @Bean
+    public MessageSource messageSource(TemplateService templateService) {
+        ReloadableResourceBundleMessageSource messageBundle = new ReloadableResourceBundleMessageSource();
+        messageBundle.setBasenames(templateService.getI18nNames());
+        messageBundle.setCacheSeconds(300);
+        messageBundle.setUseCodeAsDefaultMessage(true);
+        messageBundle.setDefaultEncoding("UTF-8");
+        return messageBundle;
     }
 
     @Override
