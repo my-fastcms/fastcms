@@ -52,6 +52,7 @@ import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 import org.tuckey.web.filters.urlrewrite.Conf;
 import org.tuckey.web.filters.urlrewrite.UrlRewriteFilter;
 
@@ -110,6 +111,23 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new PluginInterceptor()).addPathPatterns("/fastcms/plugin/**");
         registry.addInterceptor(new AuthInterceptor()).addPathPatterns("/fastcms/api/**");
+//        registry.addInterceptor(new LocaleChangeInterceptor()).addPathPatterns("/**");
+    }
+
+    @Bean
+    public MessageSource messageSource(TemplateService templateService) {
+        ReloadableResourceBundleMessageSource messageBundle = new ReloadableResourceBundleMessageSource();
+        messageBundle.setBasenames(templateService.getI18nNames());
+        messageBundle.setCacheSeconds(300);
+        messageBundle.setUseCodeAsDefaultMessage(true);
+        messageBundle.setDefaultEncoding("UTF-8");
+        return messageBundle;
+    }
+
+    @Bean
+    public AcceptHeaderLocaleResolver cookieLocaleResolver() {
+        AcceptHeaderLocaleResolver acceptHeaderLocaleResolver = new AcceptHeaderLocaleResolver();
+        return acceptHeaderLocaleResolver;
     }
 
     @Bean
@@ -146,16 +164,6 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
             jacksonObjectMapperBuilder.deserializerByType(LocalDateTime.class,localDateTimeDeserializer());
             jacksonObjectMapperBuilder.simpleDateFormat(pattern);
         };
-    }
-
-    @Bean
-    public MessageSource messageSource(TemplateService templateService) {
-        ReloadableResourceBundleMessageSource messageBundle = new ReloadableResourceBundleMessageSource();
-        messageBundle.setBasenames(templateService.getI18nNames());
-        messageBundle.setCacheSeconds(300);
-        messageBundle.setUseCodeAsDefaultMessage(true);
-        messageBundle.setDefaultEncoding("UTF-8");
-        return messageBundle;
     }
 
     @Override
