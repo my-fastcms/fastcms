@@ -65,7 +65,7 @@ public class TemplateIndexController extends TemplateBaseController {
     @RequestMapping({"/", "index"})
     public String index() {
         if (ApplicationUtils.getBean(FastcmsStaticHtmlManager.class).isEnable()) {
-            return UrlBasedViewResolver.REDIRECT_URL_PREFIX.concat(getTemplate().getPath()).concat("index.html");
+            return UrlBasedViewResolver.FORWARD_URL_PREFIX.concat(getTemplate().getPath()).concat("index.html");
         }
         return getTemplatePath() + INDEX;
     }

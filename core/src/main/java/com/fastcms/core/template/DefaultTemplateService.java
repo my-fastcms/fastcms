@@ -192,12 +192,10 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
         }
 
         try {
-
-            //设置i18n
-            ApplicationUtils.getBean(ReloadableResourceBundleMessageSource.class).setBasenames(getI18nNames());
-
             initialize();
             refreshStaticMapping();
+            //设置i18n
+            ApplicationUtils.getBean(ReloadableResourceBundleMessageSource.class).setBasenames(getI18nNames());
         } catch (Exception e) {
             org.apache.commons.io.FileUtils.deleteDirectory(Paths.get(templatePath).toFile());
             templateMap.remove(template.getId());

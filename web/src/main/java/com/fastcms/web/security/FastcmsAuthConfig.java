@@ -69,7 +69,7 @@ public class FastcmsAuthConfig extends WebSecurityConfigurerAdapter implements A
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.formLogin().loginPage("/fastcms.html");
-        http.authorizeRequests().antMatchers("/fastcms/**").authenticated();
+        http.authorizeRequests().antMatchers("/cms/**").authenticated();
         http.csrf().disable().cors()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests().requestMatchers(CorsUtils::isPreFlightRequest).permitAll();
