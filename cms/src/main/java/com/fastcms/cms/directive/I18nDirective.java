@@ -19,13 +19,10 @@ package com.fastcms.cms.directive;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.directive.BaseFunction;
 import com.fastcms.core.utils.I18nUtils;
-import com.fastcms.core.utils.RequestUtils;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateModelException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.support.RequestContextUtils;
 
 import java.util.List;
 
@@ -46,10 +43,7 @@ public class I18nDirective extends BaseFunction {
 		if(StringUtils.isBlank(key)) {
 			return StrUtils.EMPTY;
 		}
-
-		LocaleResolver localeResolver = RequestContextUtils.getLocaleResolver(RequestUtils.getRequest());
-
-		return I18nUtils.getMessage(key, localeResolver.resolveLocale(RequestUtils.getRequest()));
+		return I18nUtils.getMessage(key);
 	}
 
 }

@@ -18,6 +18,8 @@ package com.fastcms.core.utils;
 
 import com.fastcms.utils.ApplicationUtils;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import java.util.Locale;
 
@@ -39,7 +41,8 @@ public final class I18nUtils {
 	}
 
 	public static String getMessage(String key) {
-		return getMessage(key, Locale.getDefault());
+		LocaleResolver localeResolver = RequestContextUtils.getLocaleResolver(RequestUtils.getRequest());
+		return getMessage(key, localeResolver.resolveLocale(RequestUtils.getRequest()));
 	}
 
 }
