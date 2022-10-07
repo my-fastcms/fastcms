@@ -38,7 +38,7 @@ public abstract class TemplateBaseController {
 
 	protected String getTemplatePath() {
 		Template template = getTemplate();
-		return template == null ? "/fastcms/" : template.getPath();
+		return template == null ? "/cms/" : template.getPath();
 	}
 
 }

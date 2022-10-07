@@ -31,8 +31,8 @@ import java.util.List;
  * @modifiedBy：
  * @version: 1.0
  */
-@Component("path")
-public class TemplatePathDirective extends BaseFunction {
+@Component("ctx")
+public class TemplateContextDirective extends BaseFunction {
 
 	@Resource
 	private TemplateService templateService;

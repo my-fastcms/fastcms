@@ -52,9 +52,9 @@ public class PluginFreeMarkerViewResolver extends FreeMarkerViewResolver impleme
         setRequestContextAttribute("request");
     }
 
-    @Override
-    public int getOrder() {
-        return Ordered.LOWEST_PRECEDENCE - 6;
-    }
+//    @Override
+//    public int getOrder() {
+//        return Ordered.LOWEST_PRECEDENCE - 6;
+//    }
 
 }
