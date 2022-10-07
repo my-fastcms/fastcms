@@ -97,20 +97,22 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
         final String templateDir = DirUtils.getTemplateDir();
 
         Set<String> locations = new HashSet<>();
-        locations.add("classpath:" + FastcmsConstants.TEMPLATE_STATIC);
+        locations.add(ResourceUtils.CLASSPATH_URL_PREFIX.concat(FastcmsConstants.TEMPLATE_STATIC));
         locations.add(ResourceUtils.FILE_URL_PREFIX + uploadDir);
-        for (Template template : templateService.getTemplateList()) {
-            locations.add(ResourceUtils.FILE_URL_PREFIX + templateDir + template.getPath() + FastcmsConstants.TEMPLATE_STATIC);
-        }
-
         registry.addResourceHandler("/**").addResourceLocations(locations.toArray(new String[]{}));
+
+        for (Template template : templateService.getTemplateList()) {
+            locations = new HashSet<>();
+            locations.add(ResourceUtils.FILE_URL_PREFIX + templateDir + template.getPath() + FastcmsConstants.TEMPLATE_STATIC);
+            registry.addResourceHandler(template.getPath().concat("**")).addResourceLocations(locations.toArray(new String[]{}));
+        }
 
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new PluginInterceptor()).addPathPatterns("/cms/plugin/**");
-        registry.addInterceptor(new AuthInterceptor()).addPathPatterns("/cms/api/**");
+        registry.addInterceptor(new PluginInterceptor()).addPathPatterns("/fastcms/plugin/**");
+        registry.addInterceptor(new AuthInterceptor()).addPathPatterns("/fastcms/api/**");
 //        registry.addInterceptor(new LocaleChangeInterceptor()).addPathPatterns("/**");
     }
 

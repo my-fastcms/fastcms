@@ -102,6 +102,7 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
         final HandlerMapping resourceHandlerMapping = ApplicationUtils.getBean("resourceHandlerMapping", HandlerMapping.class);
         final Map<String, Object> handlerMap = (Map<String, Object>) ReflectUtil.getFieldValue(resourceHandlerMapping, "handlerMap");
         handlerMap.remove("/**");
+        getTemplateList().forEach(item -> handlerMap.remove(item.getPath().concat("**")));
 
         final UrlPathHelper mvcUrlPathHelper = ApplicationUtils.getBean("mvcUrlPathHelper", UrlPathHelper.class);
         final ContentNegotiationManager mvcContentNegotiationManager = ApplicationUtils.getBean("mvcContentNegotiationManager", ContentNegotiationManager.class);
@@ -113,11 +114,13 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
         Set<String> locations = new HashSet<>();
         locations.add(ResourceUtils.CLASSPATH_URL_PREFIX + FastcmsConstants.TEMPLATE_STATIC);
         locations.add(ResourceUtils.FILE_URL_PREFIX + uploadDir);
+        resourceHandlerRegistry.addResourceHandler("/**").addResourceLocations(locations.toArray(new String[]{}));
         for (Template template : getTemplateList()) {
+            locations = new HashSet<>();
             locations.add(ResourceUtils.FILE_URL_PREFIX + templateDir + template.getPath() + FastcmsConstants.TEMPLATE_STATIC);
+            resourceHandlerRegistry.addResourceHandler(template.getPath().concat("**")).addResourceLocations(locations.toArray(new String[]{}));
         }
 
-        resourceHandlerRegistry.addResourceHandler("/**").addResourceLocations(locations.toArray(new String[]{}));
         SimpleUrlHandlerMapping simpleUrlHandlerMapping = (SimpleUrlHandlerMapping) ReflectUtil.invokeMethod(resourceHandlerRegistry, "getHandlerMapping");
         Method registerHandlers = ReflectionUtils.findMethod(SimpleUrlHandlerMapping.class, "registerHandlers", Map.class);
         ReflectUtil.invokeMethod(resourceHandlerMapping, registerHandlers, simpleUrlHandlerMapping.getUrlMap());
