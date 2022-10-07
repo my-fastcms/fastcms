@@ -20,7 +20,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.AbstractUrlBasedView;
-import org.springframework.web.servlet.view.freemarker.FreeMarkerView;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 
 /**
@@ -55,7 +54,7 @@ public class PluginFreeMarkerViewResolver extends FreeMarkerViewResolver impleme
 
     @Override
     public int getOrder() {
-        return Ordered.HIGHEST_PRECEDENCE;
+        return Ordered.LOWEST_PRECEDENCE - 6;
     }
 
 }

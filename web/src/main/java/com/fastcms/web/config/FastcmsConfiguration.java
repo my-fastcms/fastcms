@@ -125,7 +125,7 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
     }
 
     @Bean
-    public AcceptHeaderLocaleResolver cookieLocaleResolver() {
+    public AcceptHeaderLocaleResolver acceptHeaderLocaleResolver() {
         AcceptHeaderLocaleResolver acceptHeaderLocaleResolver = new AcceptHeaderLocaleResolver();
         return acceptHeaderLocaleResolver;
     }

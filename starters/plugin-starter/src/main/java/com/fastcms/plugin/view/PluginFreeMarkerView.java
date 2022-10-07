@@ -30,7 +30,6 @@ import org.springframework.util.Assert;
 import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.AbstractTemplateView;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfig;
-import org.springframework.web.servlet.view.freemarker.FreeMarkerView;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.plugin.view;
+package org.springframework.web.servlet.view.freemarker;
 
 import freemarker.core.ParseException;
 import freemarker.ext.jsp.TaglibFactory;
@@ -29,7 +29,6 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.AbstractTemplateView;
-import org.springframework.web.servlet.view.freemarker.FreeMarkerConfig;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -43,13 +42,15 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
+ * 复制FreeMarkerView类解决
+ * 由于ReloadableResourceBundleMessageSource导致TaglibFactory为空的问题
  * @author： wjun_java@163.com
- * @date： 2021/5/18
+ * @date： 2022/10/7
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-public class FastcmsTemplateView extends AbstractTemplateView {
+public class FreeMarkerView extends AbstractTemplateView {
 
 	@Nullable
 	private String encoding;
@@ -58,7 +59,11 @@ public class FastcmsTemplateView extends AbstractTemplateView {
 	private Configuration configuration;
 
 	@Nullable
+	private TaglibFactory taglibFactory;
+
+	@Nullable
 	private ServletContextHashModel servletContextHashModel;
+
 
 	/**
 	 * Set the encoding of the FreeMarker template file. Default is determined
@@ -122,34 +127,38 @@ public class FastcmsTemplateView extends AbstractTemplateView {
 	 */
 	@Override
 	protected void initServletContext(ServletContext servletContext) throws BeansException {
+		if (getConfiguration() != null) {
+			this.taglibFactory = new TaglibFactory(servletContext);
+		}
+		else {
+			FreeMarkerConfig config = autodetectConfiguration();
+			setConfiguration(config.getConfiguration());
+			// TODO 暂时处理国际化ReloadableResourceBundleMessageSource bean导致 taglibFactory为空的问题
+//			this.taglibFactory = config.getTaglibFactory();
+		}
 
-		FastcmsTemplateFreeMarkerConfig config = autodetectConfiguration();
-		setConfiguration(config.getConfiguration());
-
-		GenericServlet servlet = new FastcmsTemplateView.GenericServletAdapter();
+		GenericServlet servlet = new GenericServletAdapter();
 		try {
-			servlet.init(new FastcmsTemplateView.DelegatingServletConfig());
+			servlet.init(new DelegatingServletConfig());
 		}
 		catch (ServletException ex) {
 			throw new BeanInitializationException("Initialization of GenericServlet adapter failed", ex);
 		}
 		this.servletContextHashModel = new ServletContextHashModel(servlet, getObjectWrapper());
+
 	}
 
 	/**
 	 * Autodetect a {@link FreeMarkerConfig} object via the ApplicationContext.
-	 * @return the Configuration instance to use for fastcmsTemplateViews
+	 * @return the Configuration instance to use for FreeMarkerViews
 	 * @throws BeansException if no Configuration instance could be found
 	 * @see #getApplicationContext
 	 * @see #setConfiguration
 	 */
-	protected FastcmsTemplateFreeMarkerConfigurer autodetectConfiguration() throws BeansException {
-
+	protected FreeMarkerConfig autodetectConfiguration() throws BeansException {
 		try {
-
 			return BeanFactoryUtils.beanOfTypeIncludingAncestors(
-					obtainApplicationContext(), FastcmsTemplateFreeMarkerConfigurer.class, true, false);
-
+					obtainApplicationContext(), FreeMarkerConfig.class, true, false);
 		}
 		catch (NoSuchBeanDefinitionException ex) {
 			throw new ApplicationContextException(
@@ -242,8 +251,8 @@ public class FastcmsTemplateView extends AbstractTemplateView {
 	 * @throws IOException if the template file could not be retrieved
 	 * @throws Exception if rendering failed
 	 * @see #setUrl
-	 * @see RequestContextUtils#getLocale
-	 * @see #getTemplate(Locale)
+	 * @see org.springframework.web.servlet.support.RequestContextUtils#getLocale
+	 * @see #getTemplate(java.util.Locale)
 	 * @see #processTemplate
 	 * @see freemarker.ext.servlet.FreemarkerServlet
 	 */
@@ -272,6 +281,7 @@ public class FastcmsTemplateView extends AbstractTemplateView {
 											HttpServletResponse response) {
 
 		AllHttpScopesHashModel fmModel = new AllHttpScopesHashModel(getObjectWrapper(), getServletContext(), request);
+		fmModel.put(FreemarkerServlet.KEY_JSP_TAGLIBS, this.taglibFactory);
 		fmModel.put(FreemarkerServlet.KEY_APPLICATION, this.servletContextHashModel);
 		fmModel.put(FreemarkerServlet.KEY_SESSION, buildSessionModel(request, response));
 		fmModel.put(FreemarkerServlet.KEY_REQUEST, new HttpRequestHashModel(request, response, getObjectWrapper()));
@@ -306,9 +316,9 @@ public class FastcmsTemplateView extends AbstractTemplateView {
 	 * @return the FreeMarker template to render
 	 * @throws IOException if the template file could not be retrieved
 	 * @see #setUrl
-	 * @see #getTemplate(String, Locale)
+	 * @see #getTemplate(String, java.util.Locale)
 	 */
-	protected freemarker.template.Template getTemplate(Locale locale) throws IOException {
+	protected Template getTemplate(Locale locale) throws IOException {
 		String url = getUrl();
 		Assert.state(url != null, "'url' not set");
 		return getTemplate(url, locale);
@@ -324,7 +334,7 @@ public class FastcmsTemplateView extends AbstractTemplateView {
 	 * @return the FreeMarker template
 	 * @throws IOException if the template file could not be retrieved
 	 */
-	protected freemarker.template.Template getTemplate(String name, Locale locale) throws IOException {
+	protected Template getTemplate(String name, Locale locale) throws IOException {
 		return (getEncoding() != null ?
 				obtainConfiguration().getTemplate(name, locale, getEncoding()) :
 				obtainConfiguration().getTemplate(name, locale));
@@ -340,8 +350,9 @@ public class FastcmsTemplateView extends AbstractTemplateView {
 	 * @throws TemplateException if thrown by FreeMarker
 	 * @see freemarker.template.Template#process(Object, java.io.Writer)
 	 */
-	protected void processTemplate(freemarker.template.Template template, SimpleHash model, HttpServletResponse response)
+	protected void processTemplate(Template template, SimpleHash model, HttpServletResponse response)
 			throws IOException, TemplateException {
+
 		template.process(model, response.getWriter());
 	}
 
@@ -369,13 +380,13 @@ public class FastcmsTemplateView extends AbstractTemplateView {
 		@Override
 		@Nullable
 		public String getServletName() {
-			return FastcmsTemplateView.this.getBeanName();
+			return FreeMarkerView.this.getBeanName();
 		}
 
 		@Override
 		@Nullable
 		public ServletContext getServletContext() {
-			return FastcmsTemplateView.this.getServletContext();
+			return FreeMarkerView.this.getServletContext();
 		}
 
 		@Override
@@ -389,6 +400,5 @@ public class FastcmsTemplateView extends AbstractTemplateView {
 			return Collections.enumeration(Collections.emptySet());
 		}
 	}
-
 
 }

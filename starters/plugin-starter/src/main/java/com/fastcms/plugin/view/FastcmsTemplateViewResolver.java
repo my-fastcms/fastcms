@@ -51,7 +51,7 @@ public class FastcmsTemplateViewResolver extends FreeMarkerViewResolver implemen
 
     @Override
     public int getOrder() {
-        return Ordered.HIGHEST_PRECEDENCE;
+        return Ordered.LOWEST_PRECEDENCE - 7;
     }
 
 }
