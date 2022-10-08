@@ -111,6 +111,7 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
         final ResourceHandlerRegistry resourceHandlerRegistry = new ResourceHandlerRegistry(ApplicationUtils.getApplicationContext(), servletContext, mvcContentNegotiationManager, mvcUrlPathHelper);
 
         final String uploadDir = DirUtils.getUploadDir();
+        final String templateDir = DirUtils.getTemplateDir();
         Set<String> locations = new HashSet<>();
         locations.add(ResourceUtils.CLASSPATH_URL_PREFIX + FastcmsConstants.TEMPLATE_STATIC);
         locations.add(ResourceUtils.FILE_URL_PREFIX + uploadDir);

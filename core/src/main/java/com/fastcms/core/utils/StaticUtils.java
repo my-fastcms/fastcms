@@ -16,7 +16,17 @@
  */
 package com.fastcms.core.utils;
 
+import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.utils.DirUtils;
+import com.fastcms.core.template.Template;
+import com.fastcms.core.template.TemplateService;
+import com.fastcms.utils.ApplicationUtils;
 import com.fastcms.utils.ConfigUtils;
+import org.springframework.util.ResourceUtils;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author： wjun_java@163.com
@@ -44,6 +54,23 @@ public abstract class StaticUtils {
 
 	public static String getFakeStaticSuffix() {
 		return ConfigUtils.getConfig(FAKE_STATIC_SUFFIX, ".html");
+	}
+
+	public static void registerStaticResource(ResourceHandlerRegistry registry) {
+		final String uploadDir = DirUtils.getUploadDir();
+		final String templateDir = DirUtils.getTemplateDir();
+
+		Set<String> locations = new HashSet<>();
+		locations.add(ResourceUtils.CLASSPATH_URL_PREFIX.concat(FastcmsConstants.TEMPLATE_STATIC));
+		locations.add(ResourceUtils.FILE_URL_PREFIX + uploadDir);
+		registry.addResourceHandler("/**").addResourceLocations(locations.toArray(new String[]{}));
+
+		TemplateService templateService = ApplicationUtils.getBean(TemplateService.class);
+		for (Template template : templateService.getTemplateList()) {
+			locations = new HashSet<>();
+			locations.add(ResourceUtils.FILE_URL_PREFIX + templateDir + template.getPath() + FastcmsConstants.TEMPLATE_STATIC);
+			registry.addResourceHandler(template.getPath().concat("**")).addResourceLocations(locations.toArray(new String[]{}));
+		}
 	}
 
 }

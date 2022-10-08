@@ -17,12 +17,11 @@
 package com.fastcms.web.config;
 
 import com.fastcms.common.constants.FastcmsConstants;
-import com.fastcms.common.utils.DirUtils;
 import com.fastcms.core.directive.BaseDirective;
 import com.fastcms.core.template.FastcmsStaticHtmlManager;
-import com.fastcms.core.template.Template;
 import com.fastcms.core.template.TemplateService;
 import com.fastcms.core.utils.AttachUtils;
+import com.fastcms.core.utils.StaticUtils;
 import com.fastcms.plugin.PluginInterceptor;
 import com.fastcms.plugin.view.FastcmsTemplateFreeMarkerConfig;
 import com.fastcms.plugin.view.PluginFreeMarkerConfig;
@@ -45,7 +44,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -61,9 +59,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author： wjun_java@163.com
@@ -79,9 +75,6 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
     private IConfigService configService;
 
     @Autowired
-    private TemplateService templateService;
-
-    @Autowired
     private freemarker.template.Configuration configuration;
 
     @Autowired
@@ -92,21 +85,7 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-
-        final String uploadDir = DirUtils.getUploadDir();
-        final String templateDir = DirUtils.getTemplateDir();
-
-        Set<String> locations = new HashSet<>();
-        locations.add(ResourceUtils.CLASSPATH_URL_PREFIX.concat(FastcmsConstants.TEMPLATE_STATIC));
-        locations.add(ResourceUtils.FILE_URL_PREFIX + uploadDir);
-        registry.addResourceHandler("/**").addResourceLocations(locations.toArray(new String[]{}));
-
-        for (Template template : templateService.getTemplateList()) {
-            locations = new HashSet<>();
-            locations.add(ResourceUtils.FILE_URL_PREFIX + templateDir + template.getPath() + FastcmsConstants.TEMPLATE_STATIC);
-            registry.addResourceHandler(template.getPath().concat("**")).addResourceLocations(locations.toArray(new String[]{}));
-        }
-
+        StaticUtils.registerStaticResource(registry);
     }
 
     @Override
