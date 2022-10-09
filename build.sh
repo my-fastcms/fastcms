@@ -16,7 +16,7 @@ mkdir dist/logs
 # copy main program and config
 cp web/target/fastcms-web-*-exec.jar dist
 cp web/src/main/resources/application-prod.yml dist/config
-cp doc/sql/* dist/config
+# cp doc/sql/* dist/config
 
 # copy htmls
 cp -r templates/src/main/resources dist

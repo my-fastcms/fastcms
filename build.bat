@@ -19,7 +19,7 @@ mkdir .dist\logs
 REM copy main program
 xcopy web\target\fastcms-web-*-exec.jar .dist /s /i
 xcopy web\src\main\resources\application-prod.yml .dist\config /s
-xcopy doc\sql\* .dist\config /s
+REM xcopy doc\sql\* .dist\config /s
 
 REM copy htmls
 xcopy templates\src\main\resources .dist\htmls /s /i
