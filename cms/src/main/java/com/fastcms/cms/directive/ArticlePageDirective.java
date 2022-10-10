@@ -60,8 +60,7 @@ public class ArticlePageDirective extends BasePaginationDirective {
 		try {
 			StringModel categoryModel = (StringModel) env.getDataModelOrSharedVariable(CATEGORY_ATTR);
 			category = (ArticleCategory) categoryModel.getWrappedObject();
-		} catch (TemplateModelException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
 			return pageItem.getPageUrl();
 		}
 

@@ -16,6 +16,8 @@ spring:
     url: jdbc:mysql://localhost:3306/fastcms?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: root
     password: root
+  http:
+
 
 mybatis-plus:
   global-config:
@@ -49,3 +51,7 @@ fastcms:
 logging:
   config: classpath:META-INF/logback/fastcms.xml
 
+server:
+  servlet:
+    encoding:
+      force: true
