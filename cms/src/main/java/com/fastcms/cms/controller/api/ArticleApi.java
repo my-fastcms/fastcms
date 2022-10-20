@@ -26,31 +26,18 @@ import com.fastcms.cms.search.FastcmsSearcherManager;
 import com.fastcms.cms.service.IArticleCategoryService;
 import com.fastcms.cms.service.IArticleService;
 import com.fastcms.cms.service.IArticleTagService;
-import com.fastcms.cms.utils.ArticleUtils;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
-import com.fastcms.common.utils.DirUtils;
-import com.fastcms.common.utils.FileUtils;
-import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.mybatis.PageModel;
-import com.fastcms.entity.Attachment;
 import com.fastcms.service.IAttachmentService;
 import com.fastcms.service.IPaymentRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.math.BigDecimal;
-import java.net.URLEncoder;
 import java.util.List;
 import java.util.Objects;
 
@@ -155,67 +142,6 @@ public class ArticleApi {
 	@GetMapping("search")
 	public RestResult<Page<Article>> search(PageModel page, @RequestParam(name = "keyword") String keyword) {
 		return RestResultUtils.success(fastcmsSearcherManager.getSearcher().search(keyword, page.getPageNum().intValue(), page.getPageSize().intValue()));
-	}
-
-	/**
-	 * 下载附件
-	 * @param articleId
-	 * @param response
-	 */
-	@GetMapping("download/{articleId}")
-	public Object download(@PathVariable("articleId") Long articleId, HttpServletResponse response) throws IOException {
-		Article article = articleService.getById(articleId);
-		if(article == null) {
-			return RestResultUtils.failed("数据不存在");
-		}
-
-		Attachment attachment = attachmentService.getById(article.getAttachId());
-		if(attachment == null) {
-			return RestResultUtils.failed("不存在关联的附件");
-		}
-
-		if(StrUtils.isBlank(attachment.getFilePath())) {
-			return RestResultUtils.failed("附件路径为空");
-		}
-
-		String path = DirUtils.getUploadDir() + attachment.getFilePath().substring(1);
-		File file = new File(path);
-		if(!file.exists()) {
-			return RestResultUtils.failed("附件不存在");
-		}
-
-		//通过文章付费插件设置价格，以及是否开启付费
-		boolean enableNeedToPay = ArticleUtils.isEnableNeedToPay(article);
-		if(enableNeedToPay) {
-			BigDecimal price = ArticleUtils.getPrice(article);
-			if(price != null && price.compareTo(BigDecimal.ZERO) ==1) {
-				//检查是否需要支付
-				if(paymentRecordService.checkNeedPay(articleId, AuthUtils.getUserId())) {
-					return RestResultUtils.failed(FastcmsException.ARTICLE_NEED_TO_PAY_CODE, "需要先支付");
-				}
-			}
-		}
-
-		InputStream inputStream = null;
-		try {
-			inputStream = new FileInputStream(path);
-			response.reset();
-			response.setContentType("application/octet-stream");
-			String filename = StrUtils.uuid() + FileUtils.getSuffix(path);
-			response.addHeader("Content-Disposition", "attachment; filename=" + URLEncoder.encode(filename, "UTF-8"));
-			ServletOutputStream outputStream = response.getOutputStream();
-			byte[] b = new byte[1024];
-			int len;
-			while ((len = inputStream.read(b)) > 0) {
-				outputStream.write(b, 0, len);
-			}
-		} finally {
-			if(inputStream != null) {
-				inputStream.close();
-			}
-		}
-
-		return null;
 	}
 
 	/**
