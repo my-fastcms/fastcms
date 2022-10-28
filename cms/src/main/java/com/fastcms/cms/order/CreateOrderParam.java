@@ -53,6 +53,11 @@ public class CreateOrderParam implements Serializable {
     String orderTypeClass = "com.fastcms.cms.order.DefaultFastcmsOrderService";
 
     /**
+     * 价格逻辑处理类
+     */
+    String priceTypeClass;
+
+    /**
      * json扩展参数
      */
     String jsonExt;
@@ -87,6 +92,14 @@ public class CreateOrderParam implements Serializable {
 
     public void setOrderTypeClass(String orderTypeClass) {
         this.orderTypeClass = orderTypeClass;
+    }
+
+    public String getPriceTypeClass() {
+        return priceTypeClass;
+    }
+
+    public void setPriceTypeClass(String priceTypeClass) {
+        this.priceTypeClass = priceTypeClass;
     }
 
     public String getJsonExt() {

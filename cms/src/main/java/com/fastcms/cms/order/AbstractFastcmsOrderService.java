@@ -27,6 +27,7 @@ import com.fastcms.entity.OrderItem;
 import com.fastcms.service.IOrderItemService;
 import com.fastcms.service.IOrderService;
 import com.fastcms.utils.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,8 +76,13 @@ public abstract class AbstractFastcmsOrderService implements IFastcmsOrderServic
         List<OrderItem> orderItemList = new ArrayList<>();
 
         for (ProductParam item : productParams) {
-            final Long num = item.getNum();
+
             Article product = articleService.getById(item.getId());
+            if (StringUtils.isNotBlank(createOrderParam.getPriceTypeClass())) {
+                product.setPriceClass(createOrderParam.getPriceTypeClass());
+            }
+
+            final Long num = item.getNum();
 
             if(product != null && Article.STATUS_PUBLISH.equals(product.getStatus()) && ArticleUtils.getPrice(product) != null) {
                 BigDecimal productPrice = ArticleUtils.getPrice(product);

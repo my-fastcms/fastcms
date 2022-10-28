@@ -18,6 +18,8 @@ package com.fastcms.cms.utils;
 
 import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.entity.ArticleCategory;
+import com.fastcms.cms.order.FastcmsArticlePriceServiceManager;
+import com.fastcms.utils.ApplicationUtils;
 import com.fastcms.utils.ConfigUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -72,6 +74,14 @@ public abstract class ArticleUtils {
     }
 
     public static BigDecimal getPrice(Article article) {
+
+        if (article.getPriceClass() != null) {
+            BigDecimal price = ApplicationUtils.getBean(FastcmsArticlePriceServiceManager.class).getPrice(article);
+            if (price != null) {
+                return price;
+            }
+        }
+
         Object fieldProperty = getFieldProperty(article, ARTICLE_PRICE);
         try {
             return fieldProperty == null ? BigDecimal.ZERO : new BigDecimal((String) fieldProperty);

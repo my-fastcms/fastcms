@@ -176,11 +176,23 @@ public class Article implements Serializable, StaticPathHelper {
     @TableField(exist = false)
     List<String> articleTag;
 
+    /**
+     * 搜索高亮标题
+     */
     @TableField(exist = false)
     private String highlightTitle;
 
+    /**
+     * 搜索高亮内容
+     */
     @TableField(exist = false)
     private String highlightContent;
+
+    /**
+     * 价格服务
+     */
+    @TableField(exist = false)
+    private String priceClass;
 
     public Long getId() {
         return id;
@@ -408,4 +420,11 @@ public class Article implements Serializable, StaticPathHelper {
         return JsoupUtils.clean(getContentHtml());
     }
 
+    public String getPriceClass() {
+        return priceClass;
+    }
+
+    public void setPriceClass(String priceClass) {
+        this.priceClass = priceClass;
+    }
 }
