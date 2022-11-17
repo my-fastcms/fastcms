@@ -23,6 +23,7 @@ import org.pf4j.ExtensionPoint;
 import java.math.BigDecimal;
 
 /**
+ * Fastcms文章价格扩展器
  * @author： wjun_java@163.com
  * @date： 2022/10/25
  * @description：
