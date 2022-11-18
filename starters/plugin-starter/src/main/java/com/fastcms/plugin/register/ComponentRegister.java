@@ -68,6 +68,7 @@ public class ComponentRegister extends AbstractPluginRegister {
 			Component annotation = pluginClass.getAnnotation(Component.class);
 			if(annotation != null) {
 				classList.add(pluginClass);
+				continue;
 			}
 
 			Service service = pluginClass.getAnnotation(Service.class);

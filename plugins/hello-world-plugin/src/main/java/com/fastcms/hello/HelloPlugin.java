@@ -21,8 +21,11 @@ import com.fastcms.utils.PluginUtils;
 import org.pf4j.PluginWrapper;
 
 /**
- * hello world plugin
- * wjun_java@163.com
+ * @author： wjun_java@163.com
+ * @date： 2022/11/18
+ * @description：
+ * @modifiedBy：
+ * @version: 1.0
  */
 public class HelloPlugin extends PluginBase {
 

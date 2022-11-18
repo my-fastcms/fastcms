@@ -16,14 +16,6 @@
  */
 package com.fastcms.hello;
 
-import com.fastcms.plugin.InterceptPath;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.servlet.HandlerInterceptor;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 /**
  * @author： wjun_java@163.com
  * @date： 2022/11/18
@@ -31,15 +23,8 @@ import javax.servlet.http.HttpServletResponse;
  * @modifiedBy：
  * @version: 1.0
  */
-@InterceptPath({ "/**/plugin/hello/**" })
-public class HelloInterceptor implements HandlerInterceptor {
+public interface IHelloService {
 
-    private static final Logger log = LoggerFactory.getLogger(HelloInterceptor.class);
-
-    @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("=============>>>HelloInterceptor.preHandle");
-        return true;
-    }
+    String hello(String name);
 
 }
