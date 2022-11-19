@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.plugin.view;
+package com.fastcms.core.template;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.Ordered;

@@ -1,5 +1,6 @@
 package com.fastcms.core.listener;
 
+import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.utils.DirUtils;
 import com.fastcms.common.utils.VersionUtils;
 import com.fastcms.core.utils.AttachUtils;
@@ -34,6 +35,8 @@ public class FastcmsApplicationRunListener implements SpringApplicationRunListen
     private static File workDir;
     final static String [] dirNames = { "upload", "plugins", "htmls", "lucene" };
 
+    private Boolean isDev = false;
+
     static {
 
         try {
@@ -63,6 +66,13 @@ public class FastcmsApplicationRunListener implements SpringApplicationRunListen
     public void environmentPrepared(ConfigurableBootstrapContext bootstrapContext, ConfigurableEnvironment environment) {
         System.setProperty("application.version", VersionUtils.getFullClientVersion());
         System.setProperty("fastcms.local.ip", AttachUtils.getInternetIp());
+
+        String[] activeProfiles = environment.getActiveProfiles();
+        String profile = activeProfiles == null || activeProfiles.length <=0 ? FastcmsConstants.DEV_MODE : activeProfiles[0];
+
+        if(FastcmsConstants.DEV_MODE.equals(profile)) {
+            isDev = true;
+        }
 
         if (!environment.containsProperty(CONFIG_PROPERTY)) {
             System.setProperty(CONFIG_PROPERTY, DEFAULT_FASTCMS_LOGBACK_LOCATION);
@@ -118,6 +128,10 @@ public class FastcmsApplicationRunListener implements SpringApplicationRunListen
     }
 
     String getTemplateDir() {
+        if (isDev) {
+            String substring = workDir.getAbsolutePath().substring(0, workDir.getAbsolutePath().length() - 18);
+            return substring.concat("templates\\target\\classes\\");
+        }
         return workDir.getAbsolutePath() + File.separator + dirNames[2] + File.separator;
     }
 

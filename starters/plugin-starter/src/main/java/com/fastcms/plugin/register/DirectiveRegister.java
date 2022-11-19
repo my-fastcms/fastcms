@@ -18,12 +18,14 @@ package com.fastcms.plugin.register;
 
 import com.fastcms.plugin.Directive;
 import com.fastcms.plugin.FastcmsPluginManager;
-import com.fastcms.plugin.view.FastcmsTemplateFreeMarkerConfig;
-import com.fastcms.plugin.view.PluginFreeMarkerConfig;
+import com.fastcms.plugin.view.FastcmsFreeMarkerConfig;
+import freemarker.template.TemplateModelException;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfig;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -46,24 +48,27 @@ public class DirectiveRegister extends AbstractPluginRegister {
 		if (directiveClass.isEmpty()) return;
 
 		FreeMarkerConfig freeMarkerConfig = (FreeMarkerConfig) getBean(FreeMarkerConfig.class);
-		FastcmsTemplateFreeMarkerConfig fastcmsTemplateFreeMarkerConfig = (FastcmsTemplateFreeMarkerConfig) getBean(FastcmsTemplateFreeMarkerConfig.class);
-		PluginFreeMarkerConfig pluginFreeMarkerConfig = (PluginFreeMarkerConfig) getBean(PluginFreeMarkerConfig.class);
+
+		Map<String, FastcmsFreeMarkerConfig> matchingBeans = BeanFactoryUtils.beansOfTypeIncludingAncestors(getApplicationContext(), FastcmsFreeMarkerConfig.class, true, false);
 
 		for (Class aClass : directiveClass) {
 			Directive annotation = (Directive) aClass.getAnnotation(Directive.class);
 			if (annotation != null && StringUtils.isNotBlank(annotation.value())) {
 				registryBean(annotation.value(), aClass);
+
+				matchingBeans.values().forEach(item -> {
+					try {
+						freeMarkerConfig.getConfiguration().setSharedVariable(annotation.value(), getBean(aClass));
+					} catch (TemplateModelException e) {
+						e.printStackTrace();
+						throw new RuntimeException(e.getMessage());
+					}
+				});
+
 				if (freeMarkerConfig != null) {
 					freeMarkerConfig.getConfiguration().setSharedVariable(annotation.value(), getBean(aClass));
 				}
 
-				if (fastcmsTemplateFreeMarkerConfig != null) {
-					fastcmsTemplateFreeMarkerConfig.getConfiguration().setSharedVariable(annotation.value(), getBean(aClass));
-				}
-
-				if (pluginFreeMarkerConfig != null) {
-					pluginFreeMarkerConfig.getConfiguration().setSharedVariable(annotation.value(), getBean(aClass));
-				}
 			}
 		}
 

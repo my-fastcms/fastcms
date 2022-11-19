@@ -302,12 +302,6 @@ public class TemplateController {
                     uploadFile.getParentFile().mkdirs();
                 }
                 file.transferTo(uploadFile);
-                long fileSize = uploadFile.length();
-                if(fileSize > 1024 * 1024 * 5) {
-                    uploadFile.delete();
-                    errorFiles.add(file.getOriginalFilename());
-                    continue;
-                }
             } catch (IOException e) {
                 e.printStackTrace();
                 if(uploadFile != null) {

@@ -14,9 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.plugin.view;
+package com.fastcms.core.template;
 
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.utils.DirUtils;
 import freemarker.cache.TemplateLoader;
 import freemarker.ext.jsp.TaglibFactory;
 import freemarker.template.Configuration;
@@ -29,7 +30,6 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.freemarker.FreeMarkerConfigurationFactory;
 import org.springframework.util.Assert;
-import org.springframework.util.ClassUtils;
 import org.springframework.web.context.ServletContextAware;
 
 import javax.servlet.ServletContext;
@@ -91,7 +91,7 @@ public class FastcmsTemplateFreeMarkerConfigurer extends FreeMarkerConfiguration
             String profile = activeProfiles == null || activeProfiles.length <=0 ? FastcmsConstants.DEV_MODE : activeProfiles[0];
 
             if(FastcmsConstants.DEV_MODE.equals(profile)) {
-                this.configuration.setClassLoaderForTemplateLoading(ClassUtils.getDefaultClassLoader(), "/htmls/");
+                this.configuration.setDirectoryForTemplateLoading(new File(DirUtils.getTemplateDir()));
             }else {
                 this.configuration.setDirectoryForTemplateLoading(new File("./htmls"));
             }

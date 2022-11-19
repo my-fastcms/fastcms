@@ -16,8 +16,6 @@
  */
 package com.fastcms.plugin.view;
 
-import freemarker.template.Configuration;
-
 /**
  * @author： wjun_java@163.com
  * @date： 2021/4/23
@@ -25,8 +23,6 @@ import freemarker.template.Configuration;
  * @modifiedBy：
  * @version: 1.0
  */
-public interface PluginFreeMarkerConfig {
-
-    Configuration getConfiguration();
+public interface PluginFreeMarkerConfig extends FastcmsFreeMarkerConfig {
 
 }

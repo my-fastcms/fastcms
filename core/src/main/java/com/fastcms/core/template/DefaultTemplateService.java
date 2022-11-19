@@ -32,7 +32,6 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.ResourceUtils;
@@ -62,14 +61,14 @@ import java.util.stream.Collectors;
 @Service
 public class DefaultTemplateService<T extends TreeNode> implements TemplateService, TreeNodeConvert<T>, InitializingBean {
 
-    private String templateDir = "./htmls";
+//    private String templateDir = "./htmls";
 
     private String i18nDir = "i18n";
 
     private Map<String, Template> templateMap = Collections.synchronizedMap(new HashMap<>());
 
-    @Autowired
-    private Environment environment;
+//    @Autowired
+//    private Environment environment;
 
     @Autowired
     private TemplateFinder templateFinder;
@@ -287,17 +286,7 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
     }
 
     Path getTemplateRootPath() {
-        String[] activeProfiles = environment.getActiveProfiles();
-        String profile = activeProfiles == null || activeProfiles.length <=0 ? FastcmsConstants.DEV_MODE : activeProfiles[0];
-
-        Path rootPath;
-        if(FastcmsConstants.DEV_MODE.equals(profile)) {
-            String path = getClass().getResource("/").getPath() + templateDir;
-            rootPath = Paths.get(path.substring(1));
-        }else {
-            rootPath = Paths.get(DirUtils.getTemplateDir());
-        }
-        return rootPath;
+        return Paths.get(DirUtils.getTemplateDir());
     }
 
     @Override

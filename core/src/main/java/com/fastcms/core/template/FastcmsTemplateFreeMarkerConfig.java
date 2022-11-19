@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.plugin.view;
+package com.fastcms.core.template;
 
-import freemarker.template.Configuration;
+import com.fastcms.plugin.view.FastcmsFreeMarkerConfig;
 
 /**
  * @author： wjun_java@163.com
@@ -25,8 +25,6 @@ import freemarker.template.Configuration;
  * @modifiedBy：
  * @version: 1.0
  */
-public interface FastcmsTemplateFreeMarkerConfig {
-
-    Configuration getConfiguration();
+public interface FastcmsTemplateFreeMarkerConfig extends FastcmsFreeMarkerConfig {
 
 }

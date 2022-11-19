@@ -23,7 +23,7 @@ import com.fastcms.core.template.TemplateService;
 import com.fastcms.core.utils.AttachUtils;
 import com.fastcms.core.utils.StaticUtils;
 import com.fastcms.plugin.PluginInterceptor;
-import com.fastcms.plugin.view.FastcmsTemplateFreeMarkerConfig;
+import com.fastcms.core.template.FastcmsTemplateFreeMarkerConfig;
 import com.fastcms.plugin.view.PluginFreeMarkerConfig;
 import com.fastcms.service.IConfigService;
 import com.fastcms.utils.ApplicationUtils;
