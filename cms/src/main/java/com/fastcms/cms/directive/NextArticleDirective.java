@@ -27,6 +27,13 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 /**
+ *
+ * <@nextArticleTag articleId=(article.id)!>
+ *  <#if data??>
+ *  	<a href="${data.url!}">下一篇</a>
+ *  </#if>
+ * </@nextArticleTag>
+ *
  * @author： wjun_java@163.com
  * @date： 2021/5/29
  * @description：

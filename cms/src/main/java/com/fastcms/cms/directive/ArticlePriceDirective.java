@@ -31,6 +31,10 @@ import java.util.List;
 
 /**
  * 获取文章价格
+ * 参数1：文章id
+ * 参数2：文章价格实现类
+ * ${price("1", "com.fastcms.cms.IArticlePriceService")}
+ *
  * @author： wjun_java@163.com
  * @date： 2022/10/26
  * @description：

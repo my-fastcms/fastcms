@@ -46,6 +46,11 @@ public class FakeStaticHtmlService implements FastcmsStaticHtmlService {
      */
     String CATEGORY_PATH = "/a/c/";
 
+    /**
+     * 标签访问路径
+     */
+    String TAG_PATH = "/a/t/";
+
     @Override
     public boolean isEnable() {
         return StaticUtils.isEnableFakeStatic();
@@ -69,6 +74,11 @@ public class FakeStaticHtmlService implements FastcmsStaticHtmlService {
     @Override
     public String getCategoryStaticPath() {
         return CATEGORY_PATH;
+    }
+
+    @Override
+    public String getTagStaticPath() {
+        return TAG_PATH;
     }
 
     @Override

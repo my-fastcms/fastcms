@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fastcms.cms.utils.ArticleUtils;
+import com.fastcms.core.template.StaticPathHelper;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -13,7 +15,7 @@ import java.time.LocalDateTime;
  * @author wjun_java@163.com
  * @since 2021-12-16
  */
-public class ArticleTag implements Serializable {
+public class ArticleTag implements Serializable, StaticPathHelper {
 
     private static final long serialVersionUID = 1L;
 
@@ -96,6 +98,11 @@ public class ArticleTag implements Serializable {
             ", created=" + created +
             ", updated=" + updated +
         "}";
+    }
+
+    @Override
+    public String getUrl() {
+        return ArticleUtils.getArticleTagUrl(this);
     }
 
 }

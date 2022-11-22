@@ -21,9 +21,11 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.entity.ArticleCategory;
+import com.fastcms.cms.entity.ArticleTag;
 import com.fastcms.cms.entity.SinglePage;
 import com.fastcms.cms.service.IArticleCategoryService;
 import com.fastcms.cms.service.IArticleService;
+import com.fastcms.cms.service.IArticleTagService;
 import com.fastcms.cms.service.ISinglePageService;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.template.FastcmsStaticHtmlManager;
@@ -61,6 +63,9 @@ public class TemplateIndexController extends TemplateBaseController {
 
     @Autowired
     private IArticleCategoryService articleCategoryService;
+
+    @Autowired
+    private IArticleTagService articleTagService;
 
     @RequestMapping({"/", "index"})
     public String index() {
@@ -128,6 +133,26 @@ public class TemplateIndexController extends TemplateBaseController {
         if(articleCategory != null && StringUtils.isNotBlank(articleCategory.getSuffix())) {
             view = view.concat(UNDERLINE).concat(articleCategory.getSuffix());
         }
+
+        return view;
+    }
+
+    @RequestMapping("a/t/{id}")
+    public String tag(@PathVariable("id") String id,
+                           @RequestParam(name = "page", required = false, defaultValue = "1") int pageNo,
+                           @RequestParam(name = "pageSize", required = false, defaultValue = "15") int pageSize,
+                           Model model) {
+
+        ArticleTag articleTag = articleTagService.getById(id);
+
+        if(articleTag != null) {
+            model.addAttribute("tag", articleTag);
+            QueryWrapper<Object> queryWrapper = Wrappers.query().eq("acr.tag_id", articleTag.getId()).eq("a.status", Article.STATUS_PUBLISH);
+            Page<IArticleService.ArticleVo> articleVoPage = articleService.pageArticleByTagId(new Page(pageNo, pageSize), queryWrapper);
+            model.addAttribute("articleVoPage", articleVoPage);
+        }
+
+        String view = getTemplatePath() + DEFAULT_ARTICLE_LIST_VIEW;
 
         return view;
     }

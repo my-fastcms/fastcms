@@ -18,6 +18,7 @@ package com.fastcms.cms.utils;
 
 import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.entity.ArticleCategory;
+import com.fastcms.cms.entity.ArticleTag;
 import com.fastcms.cms.order.FastcmsArticlePriceServiceManager;
 import com.fastcms.utils.ApplicationUtils;
 import com.fastcms.utils.ConfigUtils;
@@ -122,6 +123,17 @@ public abstract class ArticleUtils {
 
         if (articleCategory.isEnable()) {
             url = url.concat(articleCategory.getStaticSuffix());
+        }
+
+        return url;
+    }
+
+    public static String getArticleTagUrl(ArticleTag articleTag) {
+
+        String url = articleTag.getWebSiteDomain().concat(articleTag.getTagStaticPath()) + articleTag.getId();
+
+        if (articleTag.isEnable()) {
+            url = url.concat(articleTag.getStaticSuffix());
         }
 
         return url;

@@ -25,13 +25,44 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 /**
+ * 文章标签: 根据文章id获取文章信息
+ * 字段说明：
+ * - url 				获取访问的url
+ * - id
+ * - createUserId 		创建用户
+ * - title 				文章标题
+ * - url				文章访问链接
+ * - contentHtml 		文章详情
+ * - summary 			文章摘要
+ * - seoKeywords 		seo关键字
+ * - seoDescription 	seo描述
+ * - outLink 			文章外链
+ * - sortNum 			文章排序，值越大越靠前
+ * - viewCount	 		浏览量
+ * - commentEnable 		是否开启评论
+ * - thumbnail 			文章缩略图
+ * - status 			状态
+ * - suffix 			模板前缀
+ * - attachId 			附件
+ * - attachTitle		附件名称
+ * - created 			创建时间		<@formatTime value=(item.created)!/>
+ * - updated 			更新时间		<@formatTime value=(item.updated)!/>
+ * - articleCategory 	分类id集合
+ * - articleTag 		标签名称集合
+ *
+ * <@article articleId=(article.id)!>
+ *  	<#if data??>
+ *  		<a href="${data.url!}">${data.title!}</a>
+ *  	</#if>
+ * </@article>
+ *
  * @author： wjun_java@163.com
  * @date： 2021/5/7
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-@Component("articleTag")
+@Component("article")
 public class ArticleDirective extends BaseDirective {
 
 	private static final String PARAM_ARTICLE_ID = "articleId";

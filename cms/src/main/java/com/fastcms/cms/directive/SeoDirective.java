@@ -30,6 +30,13 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
+ *
+ * "website_title";
+ * "website_seo";
+ * "website_domain";
+ *
+ * ${seoTag("website_title")!""}
+ *
  * @author： wjun_java@163.com
  * @date： 2021/5/28
  * @description：

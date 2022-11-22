@@ -32,6 +32,12 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
+ * 获取文章扩展字段属性值
+ * 参数1：文章id
+ * 参数2：文章字段
+ *
+ * ${fieldValue("1", "price")}
+ *
  * @author： wjun_java@163.com
  * @date： 2022/11/17
  * @description：

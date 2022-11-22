@@ -27,6 +27,10 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
+ *
+ * 获取国际化i18n值
+ * ${i18n("cms.test")}
+ *
  * @author： wjun_java@163.com
  * @date： 2022/10/3
  * @description：

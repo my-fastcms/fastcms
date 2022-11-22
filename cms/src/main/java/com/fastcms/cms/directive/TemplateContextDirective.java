@@ -25,6 +25,9 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
+ * 获取模板上下文路径
+ * ${ctx()}
+ *
  * @author： wjun_java@163.com
  * @date： 2022/10/7
  * @description：

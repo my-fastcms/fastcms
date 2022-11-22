@@ -26,6 +26,33 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 /**
+ * 根据分类或者标签id获取文章列表
+ * 参数分类id：categoryId
+ * 或者
+ * 参数标签id：tagId
+ * <@articleListTag categoryId=category.id! orderBy="created">
+ *   <#if data??>
+ *   	<div class="category-content-wrap">
+ *           <#list data as item>
+ *               <div class="category-post-list">
+ *                    <div class="category-post-img">
+ *                         <img src="${(item.thumbnail)!}" alt="">
+ *                    </div>
+ *                    <div class="category-post-content">
+ *                         <h4><a href="${(item.url)!}">${(item.title)!}</a></h4>
+ *                         <h4><a href="${(item.summary)!}">摘要：${(item.summary)!}</a></h4>
+ *                         <p><@formatTime value=(item.created)! format="yyyy-MM-dd"/></p>
+ *                    </div>
+ *               </div>
+ *           </#list>
+ *      </div>
+ *   </#if>
+ * </@articleListTag>
+ *
+ * <@articleListTag tagId=tag.id! orderBy="created">
+ *     show data ...
+ * </@articleListTag>
+ *
  * @author： wjun_java@163.com
  * @date： 2021/5/29
  * @description：
@@ -53,13 +80,13 @@ public class ArticleListDirective extends BaseDirective {
 		}
 
 		final Long tagId = getLong(ARTICLE_TAG_ID, params, DEFAULT_ID);
-		if (tagId != null) {
+		if (tagId != 0) {
 			return articleService.getArticleListByTagId(tagId, count, orderBy);
 		}
 
 		orderBy = getStr(PARAM_ORDER_BY, params, "created");
 		QueryWrapper wrapper = new QueryWrapper();
-		wrapper.last("limit 0," + count);
+		wrapper.last(count > 0, "limit 0," + count);
 		wrapper.orderByDesc(orderBy);
 
 		return articleService.list(wrapper);

@@ -178,6 +178,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
+    public Page<ArticleVo> pageArticleByTagId(Page pageParam, QueryWrapper queryWrapper) {
+        return getBaseMapper().pageArticleByTagId(pageParam, queryWrapper);
+    }
+
+    @Override
     public List<ArticleVo> getArticleListByTagId(Long tagId, Integer count, String orderBy) {
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq("acr.tag_id", tagId);

@@ -27,6 +27,26 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 /**
+ * 文章分页标签
+ *
+ * <@articlePageTag>
+ *
+ *     <div class="pagelist">
+ *         <a title="Total record">&nbsp;<b>${data.total}</b> </a>&nbsp;&nbsp;&nbsp;
+ *         <a href="${data.prev.url!}">${data.prev.text!}</a>&nbsp;
+ *         <#list data.list as item>
+ *             <#if data.current?string == item.text>
+ *                 <b>1</b>&nbsp;&nbsp;&nbsp;
+ *             <#else>
+ *                 <a href="${item.url!}">${item.text!}</a>&nbsp;&nbsp;
+ *             </#if>
+ *         </#list>
+ *         <a href="${data.next.url!}">${data.next.text!}</a>&nbsp;
+ *         <a href="${data.last.url!}">${data.last.text!}</a>
+ *     </div>
+ *
+ * </@articlePageTag>
+ *
  * @author： wjun_java@163.com
  * @date： 2021/5/29
  * @description：

@@ -112,6 +112,11 @@ public interface StaticPathHelper {
         return ApplicationUtils.getBean(FastcmsStaticHtmlManager.class).getCategoryStaticPath();
     }
 
+    @JsonIgnore
+    default String getTagStaticPath() {
+        return ApplicationUtils.getBean(FastcmsStaticHtmlManager.class).getTagStaticPath();
+    }
+
     /**
      * 获取当前模板
      * @return

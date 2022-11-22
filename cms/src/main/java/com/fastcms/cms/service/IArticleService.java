@@ -70,7 +70,7 @@ public interface IArticleService extends IService<Article> {
     ArticleInfoVo getArticleDetail(Long id);
 
     /**
-     * 网站获取文章分页列表
+     * 根据分类获取网站文章分页列表
       * @param pageParam
      * @param queryWrapper
      * @return
@@ -91,6 +91,14 @@ public interface IArticleService extends IService<Article> {
      * @return
      */
     List<ArticleVo> getArticleListByCategoryId(Long categoryId, String orderBy);
+
+    /**
+     * 根据标签获取网站文章分页列表
+     * @param pageParam
+     * @param queryWrapper
+     * @return
+     */
+    Page<ArticleVo> pageArticleByTagId(Page pageParam, QueryWrapper queryWrapper);
 
     /**
      * 根据标签id获取文章列表

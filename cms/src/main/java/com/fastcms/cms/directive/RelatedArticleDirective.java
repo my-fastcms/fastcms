@@ -31,6 +31,26 @@ import java.util.stream.Collectors;
 
 /**
  * 关联文章标签
+ *
+ * <@relatedArticleList articleId="1" count="10">
+ *     <#if data??>
+ *         <#list data as item>
+ *             ${(item.id)!}
+ *             ${(item.title)!}
+ *             ${(item.viewCount)!}
+ *             ${(item.status)!}
+ *             ${(item.author)!}
+ *             ${(item.outLink)!}
+ *             ${(item.thumbnailUrl)!}
+ *             ${(item.summary)!}
+ *             ${(item.status)!}
+ *             ${(item.url)!}
+ *             <@formatTime value=(item.created)!/>
+ *      		...
+ *         </#list>
+ *     </#if>
+ * </@relatedArticleList>
+ *
  * @author： wjun_java@163.com
  * @date： 2022/1/28
  * @description：

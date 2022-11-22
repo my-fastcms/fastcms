@@ -25,6 +25,16 @@ import org.springframework.stereotype.Component;
 import java.util.Map;
 
 /**
+ * <@menuTag>
+ *  <#if data?? &&(data?size>0)>
+ *       <#list data as item>
+ *       	${item.url!}
+ *          ${item.target!"_self"}
+ *          ${item.menuName!}
+ *       </#list>
+ *  </#if>
+ * </@menuTag>
+ *
  * @author： wjun_java@163.com
  * @date： 2021/5/27
  * @description：

@@ -122,6 +122,11 @@ public class FastcmsStaticHtmlManager implements FastcmsStaticHtmlService, Initi
     }
 
     @Override
+    public String getTagStaticPath() {
+        return enableStaticHtmlService.getTagStaticPath();
+    }
+
+    @Override
     public int getOrder() {
         return 0;
     }

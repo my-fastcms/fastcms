@@ -14,62 +14,60 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.fastcms.cms.directive;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fastcms.cms.entity.ArticleCategory;
-import com.fastcms.cms.service.IArticleCategoryService;
+import com.fastcms.cms.service.IArticleTagService;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.directive.BaseDirective;
 import freemarker.core.Environment;
+import freemarker.template.TemplateModelException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
 /**
- * 获取某个分类下的直接子分类
- * <@categoryList parentId=category.id! type="" orderBy="" count="10">
+ * 获取标签列表
+ *
+ * <@tagList type="" orderBy="" count="10">
  *     <#if data??>
  *         <#list data as item>
  *             ${(item.id)!}
- *             ${(item.title)!}
- *             ${(item.icon)!}
+ *             ${(item.tagName)!}
  *             ${(item.url)!}
  *      		...
  *         </#list>
  *     </#if>
- * </@categoryList>
+ * </@tagList>
  *
  * @author： wjun_java@163.com
- * @date： 2021/5/24
+ * @date： 2022/11/22
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-@Component("categoryList")
-public class CategoryListDirective extends BaseDirective {
+@Component("tagList")
+public class TagListDirective extends BaseDirective {
 
-	static final String PARAM_TYPE = "type";
-	static final String PARAM_PARENT_ID = "parentId";
+    static final String PARAM_TYPE = "type";
 
-	@Autowired
-	private IArticleCategoryService articleCategoryService;
+    @Autowired
+    private IArticleTagService articleTagService;
 
-	@Override
-	public Object doExecute(Environment env, Map params) {
-		final String type = getStr(PARAM_TYPE, params, ArticleCategory.CATEGORY_TYPE);
-		final Integer count = getInt(PARAM_COUNT, params, 10);
-		final String orderBy = getStr(PARAM_ORDER_BY, params, "created");
-		final Long parentId = getLong(PARAM_PARENT_ID, params, 0l);
+    @Override
+    public Object doExecute(Environment env, Map params) throws TemplateModelException {
+        final String type = getStr(PARAM_TYPE, params, ArticleCategory.CATEGORY_TYPE);
+        final Integer count = getInt(PARAM_COUNT, params, 10);
+        final String orderBy = getStr(PARAM_ORDER_BY, params, "created");
 
-		QueryWrapper queryWrapper = new QueryWrapper();
-		queryWrapper.eq(parentId != 0, "parent_id", parentId);
-		queryWrapper.eq(StrUtils.isNotBlank(type),"type", type);
-		queryWrapper.last(count > 0,"limit 0," + count);
-		queryWrapper.orderByDesc(orderBy);
-
-		return articleCategoryService.list(queryWrapper);
-	}
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq(StrUtils.isNotBlank(type),"type", type);
+        queryWrapper.last(count > 0,"limit 0," + count);
+        queryWrapper.orderByDesc(orderBy);
+        return articleTagService.list(queryWrapper);
+    }
 
 }

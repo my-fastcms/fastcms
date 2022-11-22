@@ -59,4 +59,10 @@ public interface FastcmsStaticHtmlService extends Ordered {
      */
     String getCategoryStaticPath();
 
+    /**
+     * 获取标签静态化路径
+     * @return
+     */
+    String getTagStaticPath();
+
 }
