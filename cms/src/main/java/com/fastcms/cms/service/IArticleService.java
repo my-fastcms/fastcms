@@ -78,8 +78,21 @@ public interface IArticleService extends IService<Article> {
     Page<ArticleVo> pageArticleByCategoryId(Page pageParam, QueryWrapper queryWrapper);
 
     /**
-     * 根据分类id查询文章列表
-     * @param categoryId
+     * 根据分类查询文章列表
+     * @param categoryId    查询具体分类
+     * @param includeIds    查询包含分类
+     * @param excludeIds    查询排查分类
+     * @param count         查询数量
+     * @param orderBy       排序条件
+     * @return
+     */
+    List<ArticleVo> getArticleListByCategoryId(Long categoryId, List<Long> includeIds, List<Long> excludeIds, Integer count, String orderBy);
+
+    /**
+     * 根据分类ID查询文章列表
+     * @param categoryId    查询具体分类
+     * @param count         查询数量
+     * @param orderBy       排序条件
      * @return
      */
     List<ArticleVo> getArticleListByCategoryId(Long categoryId, Integer count, String orderBy);
@@ -99,6 +112,17 @@ public interface IArticleService extends IService<Article> {
      * @return
      */
     Page<ArticleVo> pageArticleByTagId(Page pageParam, QueryWrapper queryWrapper);
+
+    /**
+     * 根据标签获取网站文章列表
+     * @param tagId
+     * @param includeIds
+     * @param excludeIds
+     * @param count
+     * @param orderBy
+     * @return
+     */
+    List<ArticleVo> getArticleListByTagId(Long tagId, List<Long> includeIds, List<Long> excludeIds, Integer count, String orderBy);
 
     /**
      * 根据标签id获取文章列表

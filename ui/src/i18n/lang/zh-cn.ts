@@ -19,6 +19,7 @@ export default {
 		articleWrite: '新建文章',
 		articleSet: '设置',
 		articleCategory: '分类',
+		articleTag: '标签',
 		articleComment: '评论',
 		page: '页面',
 		pageManager: '页面管理',

@@ -34,6 +34,7 @@ import com.fastcms.common.utils.StrUtils;
 import com.fastcms.entity.Attachment;
 import com.fastcms.extension.IndexDataExtension;
 import com.fastcms.service.IAttachmentService;
+import com.fastcms.utils.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.pf4j.Extension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -163,13 +164,20 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
-    public List<ArticleVo> getArticleListByCategoryId(Long categoryId, Integer count, String orderBy) {
+    public List<ArticleVo> getArticleListByCategoryId(Long categoryId, List<Long> includeIds, List<Long> excludeIds, Integer count, String orderBy) {
         QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("acr.category_id", categoryId);
+        queryWrapper.eq(categoryId != null && categoryId > 0, "acr.category_id", categoryId);
         queryWrapper.eq("a.status", Article.STATUS_PUBLISH);
+        queryWrapper.in(CollectionUtils.isNotEmpty(includeIds), "acr.category_id", includeIds);
+        queryWrapper.notIn(CollectionUtils.isNotEmpty(excludeIds), "acr.category_id", excludeIds);
         queryWrapper.last(count != null, "limit 0," + count);
         queryWrapper.orderByDesc(StrUtils.isBlank(orderBy), orderBy);
         return getBaseMapper().getArticleListByCategoryId(queryWrapper);
+    }
+
+    @Override
+    public List<ArticleVo> getArticleListByCategoryId(Long categoryId, Integer count, String orderBy) {
+        return getArticleListByCategoryId(categoryId, null, null, count, orderBy);
     }
 
     @Override
@@ -183,13 +191,20 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
-    public List<ArticleVo> getArticleListByTagId(Long tagId, Integer count, String orderBy) {
+    public List<ArticleVo> getArticleListByTagId(Long tagId, List<Long> includeIds, List<Long> excludeIds, Integer count, String orderBy) {
         QueryWrapper queryWrapper = new QueryWrapper();
-        queryWrapper.eq("acr.tag_id", tagId);
+        queryWrapper.eq(tagId != null && tagId > 0, "acr.tag_id", tagId);
         queryWrapper.eq("a.status", Article.STATUS_PUBLISH);
+        queryWrapper.in(CollectionUtils.isNotEmpty(includeIds), "acr.tag_id", includeIds);
+        queryWrapper.notIn(CollectionUtils.isNotEmpty(excludeIds), "acr.tag_id", excludeIds);
         queryWrapper.last("limit 0," + count);
         queryWrapper.orderByDesc(orderBy);
         return getBaseMapper().getArticleListByTagId(queryWrapper);
+    }
+
+    @Override
+    public List<ArticleVo> getArticleListByTagId(Long tagId, Integer count, String orderBy) {
+        return getArticleListByCategoryId(tagId, null, null, count, orderBy);
     }
 
     @Override

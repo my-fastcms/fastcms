@@ -7,7 +7,6 @@ import com.fastcms.cms.mapper.ArticleCategoryMapper;
 import com.fastcms.cms.service.IArticleCategoryService;
 import com.fastcms.common.model.TreeNode;
 import com.fastcms.common.model.TreeNodeConvert;
-import com.fastcms.core.auth.AuthUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,13 +20,6 @@ import java.util.List;
  */
 @Service
 public class ArticleCategoryServiceImpl<T extends TreeNode> extends ServiceImpl<ArticleCategoryMapper, ArticleCategory> implements IArticleCategoryService, TreeNodeConvert<T> {
-
-	@Override
-	public List<CategoryTreeNode> getCategoryList(Long userId) {
-		List<ArticleCategory> articleCategoryList = list(Wrappers.<ArticleCategory>lambdaQuery().eq(!AuthUtils.isAdmin(), ArticleCategory::getCreateUserId, userId).eq(ArticleCategory::getType, ArticleCategory.CATEGORY_TYPE));
-		articleCategoryList.sort(Comparator.comparing(ArticleCategory::getSortNum));
-		return (List<CategoryTreeNode>) getTreeNodeList(articleCategoryList);
-	}
 
 	@Override
 	public List<CategoryTreeNode> getCategoryList() {

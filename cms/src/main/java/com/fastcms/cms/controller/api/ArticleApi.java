@@ -151,7 +151,7 @@ public class ArticleApi {
 	 */
 	@GetMapping("category/list")
 	public RestResult<List<IArticleCategoryService.CategoryTreeNode>> listCategory() {
-		return RestResultUtils.success(articleCategoryService.getCategoryList(AuthUtils.getUserId()));
+		return RestResultUtils.success(articleCategoryService.getCategoryList());
 	}
 
 	/**

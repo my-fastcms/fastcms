@@ -18,19 +18,31 @@ package com.fastcms.cms.directive;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fastcms.cms.service.IArticleService;
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.directive.BaseDirective;
 import freemarker.core.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 根据分类或者标签id获取文章列表
  * 参数分类id：categoryId
  * 或者
  * 参数标签id：tagId
- * <@articleListTag categoryId=category.id! orderBy="created">
+ *
+ * 包含的分类ids: includeCategoryIds (必须有categoryId参数才生效)
+ * 不包含的分类ids：excludeCategoryIds (必须有categoryId参数才生效)
+ *
+ * 包含的标签ids：includeTagIds (必须有tagId参数才生效)
+ * 不包含的标签ids: excludeTagIds	(必须有tagId参数才生效)
+ *
+ * <@articleListTag categoryId=category.id! includeCategoryIds="1,2,3" excludeCategoryIds="4,5,6" orderBy="created">
  *   <#if data??>
  *   	<div class="category-content-wrap">
  *           <#list data as item>
@@ -49,7 +61,7 @@ import java.util.Map;
  *   </#if>
  * </@articleListTag>
  *
- * <@articleListTag tagId=tag.id! orderBy="created">
+ * <@articleListTag tagId=tag.id! includeTagIds="1,2,3" excludeTagIds="4,5,6" orderBy="created">
  *     show data ...
  * </@articleListTag>
  *
@@ -66,6 +78,26 @@ public class ArticleListDirective extends BaseDirective {
 
 	private static final String ARTICLE_TAG_ID = "tagId";
 
+	/**
+	 * 包含的分类id，多个用逗号隔开
+	 */
+	private static final String INCLUDE_CATEGORY_ID = "includeCategoryIds";
+
+	/**
+	 * 排除的分类id，多个用逗号隔开
+	 */
+	private static final String EXCLUDE_CATEGORY_ID = "excludeCategoryIds";
+
+	/**
+	 * 包含的标签id，多个用逗号隔开
+	 */
+	private static final String INCLUDE_TAG_ID = "includeTagIds";
+
+	/**
+	 * 排除的标签id。多个用逗号隔开
+	 */
+	private static final String EXCLUDE_TAG_ID = "excludeTagIds";
+
 	@Autowired
 	private IArticleService articleService;
 
@@ -74,14 +106,24 @@ public class ArticleListDirective extends BaseDirective {
 
 		final Long categoryId = getLong(ARTICLE_CATEGORY_ID, params, DEFAULT_ID);
 		final Integer count = getInt(PARAM_COUNT, params, 10);
+		final String includeCategoryIds = getStr(INCLUDE_CATEGORY_ID, params);
+		final String excludeCategoryIds = getStr(EXCLUDE_CATEGORY_ID, params);
+		final String includeTagIds = getStr(INCLUDE_TAG_ID, params);
+		final String excludeTagIds = getStr(EXCLUDE_TAG_ID, params);
+
+		List<Long> includeCategoryIdList = strArrayToList(includeCategoryIds);
+		List<Long> excludeCategoryIdList = strArrayToList(excludeCategoryIds);
+		List<Long> includeTagIdList = strArrayToList(includeTagIds);
+		List<Long> excludeTagIdList = strArrayToList(excludeTagIds);
+
 		String orderBy = getStr(PARAM_ORDER_BY, params, "a.created");
-		if(categoryId != 0) {
-			return articleService.getArticleListByCategoryId(categoryId, count, orderBy);
+		if(hasKey(ARTICLE_CATEGORY_ID, params) || hasKey(INCLUDE_CATEGORY_ID, params) || hasKey(EXCLUDE_CATEGORY_ID, params)) {
+			return articleService.getArticleListByCategoryId(categoryId, includeCategoryIdList, excludeCategoryIdList, count, orderBy);
 		}
 
 		final Long tagId = getLong(ARTICLE_TAG_ID, params, DEFAULT_ID);
-		if (tagId != 0) {
-			return articleService.getArticleListByTagId(tagId, count, orderBy);
+		if (hasKey(ARTICLE_TAG_ID, params) || hasKey(INCLUDE_TAG_ID, params) || hasKey(EXCLUDE_CATEGORY_ID, params)) {
+			return articleService.getArticleListByTagId(tagId, includeTagIdList, excludeTagIdList, count, orderBy);
 		}
 
 		orderBy = getStr(PARAM_ORDER_BY, params, "created");
@@ -90,6 +132,10 @@ public class ArticleListDirective extends BaseDirective {
 		wrapper.orderByDesc(orderBy);
 
 		return articleService.list(wrapper);
+	}
+
+	List<Long> strArrayToList(String ids) {
+		return StrUtils.isBlank(ids) ? new ArrayList<>() : Arrays.stream(ids.split(StrUtils.COMMA)).map(Long::valueOf).collect(Collectors.toList());
 	}
 
 }

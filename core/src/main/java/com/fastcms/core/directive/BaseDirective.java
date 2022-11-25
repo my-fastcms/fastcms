@@ -175,6 +175,10 @@ public abstract class BaseDirective implements TemplateDirectiveModel {
         return simpleScalar == null ? null : simpleScalar.getAsString() == null ? null : LocalDateTime.parse(simpleScalar.getAsString());
     }
 
+    protected Boolean hasKey(String key, Map params) {
+        return params.containsKey(key);
+    }
+
     protected HttpServletRequest getRequest() {
         return RequestUtils.getRequest();
     }

@@ -15,13 +15,6 @@ import java.util.List;
 public interface IArticleCategoryService extends IService<ArticleCategory> {
 
 	/**
-	 * 获取用户分类集合
-	 * @param userId
-	 * @return
-	 */
-	List<CategoryTreeNode> getCategoryList(Long userId);
-
-	/**
 	 * 获取分类列表
 	 * @return
 	 */
