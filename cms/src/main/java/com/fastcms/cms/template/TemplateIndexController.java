@@ -154,6 +154,10 @@ public class TemplateIndexController extends TemplateBaseController {
 
         String view = getTemplatePath() + DEFAULT_ARTICLE_LIST_VIEW;
 
+        if(articleTag != null && StringUtils.isNotBlank(articleTag.getSuffix())) {
+            view = view.concat(UNDERLINE).concat(articleTag.getSuffix());
+        }
+
         return view;
     }
 

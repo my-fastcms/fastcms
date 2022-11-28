@@ -4,8 +4,8 @@
 			<el-form :model="ruleForm" size="small" label-width="80px" :rules="rules" ref="myRefForm">
 				<el-row :gutter="35">
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="标签名称" prop="title">
-							<el-input v-model="ruleForm.title" placeholder="请输入标签名称" clearable></el-input>
+						<el-form-item label="标签名称" prop="tagName">
+							<el-input v-model="ruleForm.tagName" placeholder="请输入标签名称" clearable></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -40,7 +40,7 @@
 import { reactive, toRefs, getCurrentInstance } from 'vue';
 import IconSelector from '/@/components/iconSelector/index.vue';
 import { ElMessage } from 'element-plus';
-import { addArticleCategory } from '/@/api/article/index';
+import { addArticleTag } from '/@/api/article/index';
 export default {
 	name: 'articleEditTag',
 	components: { IconSelector },
@@ -50,24 +50,21 @@ export default {
 			isShowDialog: false,
 			ruleForm: {
 				id: '',
-				parentId: '',
-				title: '', 
+				tagName: '', 
 				suffix: '', 
 				path: '',
 				icon: '',
 				sortNum: '',
 			},
 			rules: {
-				"title": { required: true, message: '请输入分类名称', trigger: 'blur' },
+				"tagName": { required: true, message: '请输入标签名称', trigger: 'blur' },
 			},
 		});
 		// 打开弹窗
 		const openDialog = (row: any) => {
 			state.ruleForm.id = row.id
-			state.ruleForm.parentId = row.parentId;
-			state.ruleForm.title = row.title;
+			state.ruleForm.tagName = row.tagName;
 			state.ruleForm.suffix = row.suffix;
-			state.ruleForm.path = row.path;
 			state.ruleForm.icon = row.icon;
 			state.ruleForm.sortNum = row.sortNum;
 			state.isShowDialog = true;
@@ -88,7 +85,7 @@ export default {
 		const onSubmit = () => {
 			proxy.$refs['myRefForm'].validate((valid: any) => {
 				if (valid) {
-					addArticleCategory(state.ruleForm).then(() => {
+					addArticleTag(state.ruleForm).then(() => {
 						closeDialog(); // 关闭弹窗
 						ctx.emit("reloadTable");
 					}).catch((res) => {
@@ -101,11 +98,9 @@ export default {
 		// 表单初始化，方法：`resetFields()` 无法使用
 		const initForm = () => {
 			state.ruleForm.id = '',
-			state.ruleForm.parentId = '';
-			state.ruleForm.title = '';
+			state.ruleForm.tagName = '';
 			state.ruleForm.icon = '';
 			state.ruleForm.suffix = '';
-			state.ruleForm.path = '';
 			state.ruleForm.sortNum = '';
 		};
 		return {

@@ -663,9 +663,19 @@ ALTER TABLE user_amount_statement CHANGE user_id create_user_id bigint(20);
 -- ----------------------------
 
 -- ----------------------------
--- 0.0.8 表结构变更记录结束
+-- 0.0.8 表结构变更记录开始
 -- ----------------------------
 ALTER TABLE `menu` ADD COLUMN `url_type` tinyint(4)  DEFAULT '0' COMMENT '1，文章，2，页面，3，分类， 4，标签';
 -- ----------------------------
 -- 0.0.8 表结构变更记录结束
+-- ----------------------------
+
+-- ----------------------------
+-- 0.0.9 表结构变更记录开始
+-- ----------------------------
+INSERT INTO `permission`(`id`, `parent_id`, `name`, `path`, `component`, `title`, `icon`, `is_link`, `is_hide`, `is_keep_alive`, `is_affix`, `is_iframe`, `sort_num`, `category`, `created`, `updated`)
+ VALUES (41, 11, 'articleTag', '/article/tag', 'article/tag', 'message.router.articleTag', 'el-icon-price-tag', 0, 0, 0, 0, 0, 0, NULL, '2022-11-25 16:05:46', NULL);
+ALTER TABLE `article_tag` ADD COLUMN `suffix` varchar(64) DEFAULT NULL;
+-- ----------------------------
+-- 0.0.9 表结构变更记录结束
 -- ----------------------------

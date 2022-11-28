@@ -97,6 +97,17 @@ export function delArticleCategory(categoryId: string) {
 }
 
 /**
+ * 新增文章标签
+ */
+ export function addArticleTag(params: object) {
+	return request({
+		url: '/admin/article/tag/save',
+		method: 'post',
+		params: params,
+	});
+}
+
+/**
  * 获取文章标签列表
  * @returns 
  */
@@ -104,6 +115,16 @@ export function delArticleCategory(categoryId: string) {
 	return request({
 		url: '/admin/article/tag/list',
 		method: 'get'
+	});
+}
+
+/**
+ * 删除文章标签
+ */
+ export function delArticleTag(tagId: string) {
+	return request({
+		url: '/admin/article/tag/delete/' + tagId,
+		method: 'post'
 	});
 }
 

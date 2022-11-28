@@ -29,6 +29,16 @@ public class ArticleTag implements Serializable, StaticPathHelper {
 
     private String type;
 
+    /**
+     * 标签图标
+     */
+    private String icon;
+
+    /**
+     * 访问标识，模板名称，结合网站模板使用
+     */
+    private String suffix;
+
     private Integer sortNum;
 
     @TableField(fill = FieldFill.INSERT)
@@ -64,6 +74,20 @@ public class ArticleTag implements Serializable, StaticPathHelper {
 
     public void setType(String type) {
         this.type = type;
+    }
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+    public String getSuffix() {
+        return suffix;
+    }
+
+    public void setSuffix(String suffix) {
+        this.suffix = suffix;
     }
     public Integer getSortNum() {
         return sortNum;

@@ -24,7 +24,7 @@ public interface IArticleTagService extends IService<ArticleTag> {
      * 删除分类
      * @param articleTagId
      */
-    void deleteByCategoryId(Long articleTagId);
+    void deleteByTagId(Long articleTagId);
 
     /**
      * 获取文章已设置的分类

@@ -35,7 +35,6 @@ import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.StrUtils;
-import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.mybatis.PageModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -175,6 +174,17 @@ public class ArticleController {
     }
 
     /**
+     * 保存标签
+     * @param articleTag
+     * @return
+     */
+    @PostMapping("tag/save")
+    @Secured(name = "文章标签保存", resource = "articles:tag/save", action = ActionTypes.WRITE)
+    public RestResult<Boolean> saveCategory(@Validated ArticleTag articleTag) {
+        return RestResultUtils.success(articleTagService.saveOrUpdate(articleTag));
+    }
+
+    /**
      * 标签列表
      * @description
      * @return
@@ -182,6 +192,18 @@ public class ArticleController {
     @GetMapping("tag/list")
 	public RestResult<List<ArticleTag>> listTags() {
         return RestResultUtils.success(articleTagService.list());
+    }
+
+    /**
+     * 删除标签
+     * @param tagId
+     * @return
+     */
+    @PostMapping("tag/delete/{tagId}")
+    @Secured(name = "文章标签删除", resource = "articles:tag/delete", action = ActionTypes.WRITE)
+    public Object deleteTag(@PathVariable("tagId") Long tagId) {
+        articleTagService.deleteByTagId(tagId);
+        return RestResultUtils.success();
     }
 
     /**

@@ -6,6 +6,7 @@ import com.fastcms.cms.entity.ArticleTag;
 import com.fastcms.cms.mapper.ArticleTagMapper;
 import com.fastcms.cms.service.IArticleTagService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,7 +29,8 @@ public class ArticleTagServiceImpl extends ServiceImpl<ArticleTagMapper, Article
     }
 
     @Override
-    public void deleteByCategoryId(Long articleTagId) {
+    @Transactional
+    public void deleteByTagId(Long articleTagId) {
         removeById(articleTagId);
         getBaseMapper().deleteRelationByTagId(articleTagId);
     }

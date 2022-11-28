@@ -1,7 +1,7 @@
 <template>
 	<div class="system-Category-container">
 		<el-card shadow="hover">
-			<el-button @click="onOpenAddCategory" class="mt15" size="small" type="primary" icon="iconfont icon-shuxingtu">新建标签</el-button>
+			<el-button @click="onOpenAddTag" class="mt15" size="small" type="primary" icon="iconfont icon-shuxingtu">新建标签</el-button>
 			<el-table :data="menuTableData" stripe style="width: 100%" row-key="id">
 				<el-table-column prop="tagName" label="名称" show-overflow-tooltip>
 					<template #default="scope">
@@ -15,30 +15,30 @@
 				<el-table-column prop="created" label="创建时间" show-overflow-tooltip></el-table-column>
 				<el-table-column label="操作" show-overflow-tooltip width="125">
 					<template #default="scope">
-						<el-button size="mini" type="text" @click="onOpenEditCategory(scope.row)">修改</el-button>
+						<el-button size="mini" type="text" @click="onOpenEditTag(scope.row)">修改</el-button>
 						<el-button size="mini" type="text" @click="onTabelRowDel(scope.row)">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
 		</el-card>
-		<AddCategory ref="addCategoryRef" @reloadTable="loadCategoryList"/>
-		<EditCategory ref="editCategoryRef" @reloadTable="loadCategoryList"/>
+		<AddTag ref="addTagRef" @reloadTable="loadTagList"/>
+		<EditTag ref="editTagRef" @reloadTable="loadTagList"/>
 	</div>
 </template>
 
 <script lang="ts">
 import { ref, toRefs, reactive, computed, onMounted } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
-import { getArticleTagList, delArticleCategory } from '/@/api/article/index';
-import AddCategory from '/@/views/article/component/addCategory.vue';
-import EditCategory from '/@/views/article/component/editCategory.vue';
+import { getArticleTagList, delArticleTag } from '/@/api/article/index';
+import AddTag from '/@/views/article/component/addTag.vue';
+import EditTag from '/@/views/article/component/editTag.vue';
 
 export default {
 	name: 'articleTag',
-	components: { AddCategory, EditCategory },
+	components: { AddTag, EditTag },
 	setup() {
-		const addCategoryRef = ref();
-		const editCategoryRef = ref();
+		const addTagRef = ref();
+		const editTagRef = ref();
 		const state = reactive({
 			menuData: null
 		});
@@ -47,24 +47,24 @@ export default {
 			return state.menuData;
 		});
 		// 打开新增菜单弹窗
-		const onOpenAddCategory = (row: object) => {
-			addCategoryRef.value.openDialog(row);
+		const onOpenAddTag = (row: object) => {
+			addTagRef.value.openDialog(row);
 		};
 		// 打开编辑菜单弹窗
-		const onOpenEditCategory = (row: object) => {
-			editCategoryRef.value.openDialog(row);
+		const onOpenEditTag = (row: object) => {
+			editTagRef.value.openDialog(row);
 		};
 		// 删除当前行
 		const onTabelRowDel = (row: any) => {
-			ElMessageBox.confirm('此操作将永久删除菜单, 是否继续?', '提示', {
+			ElMessageBox.confirm('此操作将永久删除标签, 是否继续?', '提示', {
 				confirmButtonText: '删除',
 				cancelButtonText: '取消',
 				type: 'warning',
 			}).then(() => {
 				console.log(row);
-				delArticleCategory(row.id).then(() => {
+				delArticleTag(row.id).then(() => {
 					ElMessage.success("删除成功");
-					loadCategoryList();
+					loadTagList();
 				}).catch((res) => {
 					ElMessage.error(res.message);
 				});
@@ -83,10 +83,10 @@ export default {
 		});
 
 		return {
-			addCategoryRef,
-			editCategoryRef,
-			onOpenAddCategory,
-			onOpenEditCategory,
+			addTagRef,
+			editTagRef,
+			onOpenAddTag,
+			onOpenEditTag,
 			menuTableData,
 			onTabelRowDel,
 			loadTagList,
