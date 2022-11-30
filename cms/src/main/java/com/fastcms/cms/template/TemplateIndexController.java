@@ -123,7 +123,7 @@ public class TemplateIndexController extends TemplateBaseController {
 
         if(articleCategory != null) {
             model.addAttribute("category", articleCategory);
-            QueryWrapper<Object> queryWrapper = Wrappers.query().eq("acr.category_id", articleCategory.getId()).eq("a.status", Article.STATUS_PUBLISH);
+            QueryWrapper<Object> queryWrapper = Wrappers.query().eq("acr.category_id", articleCategory.getId()).eq("a.status", Article.STATUS_PUBLISH).orderByDesc("a.created");
             Page<IArticleService.ArticleVo> articleVoPage = articleService.pageArticleByCategoryId(new Page(pageNo, pageSize), queryWrapper);
             model.addAttribute("articleVoPage", articleVoPage);
         }
@@ -147,7 +147,7 @@ public class TemplateIndexController extends TemplateBaseController {
 
         if(articleTag != null) {
             model.addAttribute("tag", articleTag);
-            QueryWrapper<Object> queryWrapper = Wrappers.query().eq("acr.tag_id", articleTag.getId()).eq("a.status", Article.STATUS_PUBLISH);
+            QueryWrapper<Object> queryWrapper = Wrappers.query().eq("acr.tag_id", articleTag.getId()).eq("a.status", Article.STATUS_PUBLISH).orderByDesc("a.created");
             Page<IArticleService.ArticleVo> articleVoPage = articleService.pageArticleByTagId(new Page(pageNo, pageSize), queryWrapper);
             model.addAttribute("articleVoPage", articleVoPage);
         }

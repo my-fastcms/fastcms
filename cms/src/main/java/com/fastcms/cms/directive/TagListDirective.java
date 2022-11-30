@@ -18,7 +18,6 @@
 package com.fastcms.cms.directive;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.fastcms.cms.entity.ArticleCategory;
 import com.fastcms.cms.service.IArticleTagService;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.directive.BaseDirective;
@@ -59,7 +58,7 @@ public class TagListDirective extends BaseDirective {
 
     @Override
     public Object doExecute(Environment env, Map params) throws TemplateModelException {
-        final String type = getStr(PARAM_TYPE, params, ArticleCategory.CATEGORY_TYPE);
+        final String type = getStr(PARAM_TYPE, params, "");
         final Integer count = getInt(PARAM_COUNT, params, 10);
         final String orderBy = getStr(PARAM_ORDER_BY, params, "created");
 
