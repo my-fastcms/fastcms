@@ -22,8 +22,8 @@
 						-->
 					</el-tabs>
 					<div class="mt10">
-						<el-button type="text" size="small" @click="toRegister" v-if="false">{{ $t('message.link.one3') }}</el-button>
-						<el-button type="text" size="small" @click="toRestPassword" v-if="false">{{ $t('message.link.two6') }}</el-button>
+						<el-button type="text" size="small" @click="toRegister" v-if="true">{{ $t('message.link.one3') }}</el-button>
+						<el-button type="text" size="small" @click="toRestPassword" v-if="true">{{ $t('message.link.two6') }}</el-button>
 					</div>
 				</div>
 				<Scan v-else />
