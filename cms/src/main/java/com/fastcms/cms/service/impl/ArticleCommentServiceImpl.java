@@ -14,6 +14,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 文章评论服务实现类
  * @author wjun_java@163.com
@@ -36,7 +38,7 @@ public class ArticleCommentServiceImpl extends ServiceImpl<ArticleCommentMapper,
 	}
 
 	@Override
-	public void saveArticleComment(Long articleId, Long commentId, String content) throws FastcmsException {
+	public void saveArticleComment(@NotNull Long articleId, @NotNull Long commentId, @NotNull String content) throws FastcmsException {
 
 		if (!ArticleUtils.isEnableArticleComment()) {
 			throw new FastcmsException(FastcmsException.SERVER_ERROR, "系统已关闭文章评论功能");

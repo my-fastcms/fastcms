@@ -54,7 +54,7 @@ public class ArticleCommentApi {
 	 */
 	@GetMapping("user/list")
 	public Object getCommentList(PageModel page, String author, String content, Boolean isParent) {
-		QueryWrapper<Object> queryWrapper = Wrappers.query().eq(StringUtils.isNotBlank(author), "u.user_name", author)
+		QueryWrapper queryWrapper = Wrappers.query().eq(StringUtils.isNotBlank(author), "u.user_name", author)
 				.eq(isParent != null && isParent == true, "ac.parentId", 0)
 				.likeLeft(StringUtils.isNotBlank(content), "ac.content", content)
 				.orderByDesc("ac.created");
@@ -80,7 +80,9 @@ public class ArticleCommentApi {
 	 * @return
 	 */
 	@PostMapping("save")
-	public Object saveComment(Long articleId, Long commentId, String context) throws FastcmsException {
+	public Object saveComment(@RequestParam("articleId") Long articleId,
+							  @RequestParam("commentId") Long commentId,
+							  @RequestParam("context") String context) throws FastcmsException {
 		articleCommentService.saveArticleComment(articleId, commentId, context);
 		return RestResultUtils.success();
 	}
