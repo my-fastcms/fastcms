@@ -17,7 +17,7 @@
 package com.fastcms.core.captcha;
 
 import com.fastcms.common.utils.StrUtils;
-import com.fastcms.core.utils.RequestUtils;
+import com.fastcms.utils.RequestUtils;
 import com.wf.captcha.SpecCaptcha;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;

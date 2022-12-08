@@ -22,7 +22,7 @@ import com.fastcms.common.exception.FastcmsRuntimeException;
 import com.fastcms.common.utils.ArrayUtils;
 import com.fastcms.core.auth.condition.ParamRequestCondition;
 import com.fastcms.core.auth.condition.PathRequestCondition;
-import com.fastcms.core.utils.RequestUtils;
+import com.fastcms.utils.RequestUtils;
 import com.fastcms.utils.CollectionUtils;
 import org.reflections.Reflections;
 import org.slf4j.Logger;

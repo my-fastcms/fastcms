@@ -17,7 +17,7 @@
 package com.fastcms.web.security;
 
 import com.fastcms.core.auth.FastcmsUserDetails;
-import com.fastcms.core.utils.RequestUtils;
+import com.fastcms.utils.RequestUtils;
 import com.fastcms.entity.User;
 import com.fastcms.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;

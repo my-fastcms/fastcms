@@ -16,7 +16,7 @@
  */
 package com.fastcms.core.directive;
 
-import com.fastcms.core.utils.RequestUtils;
+import com.fastcms.utils.RequestUtils;
 import freemarker.core.Environment;
 import freemarker.template.*;
 import org.apache.commons.lang.StringUtils;

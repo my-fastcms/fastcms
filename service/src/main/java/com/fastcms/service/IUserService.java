@@ -102,6 +102,20 @@ public interface IUserService extends IService<User> {
     void resetPassword(Long userId) throws FastcmsException;
 
     /**
+     * 重置用户密码
+     * @param userName
+     * @throws FastcmsException
+     */
+    void resetPassword(String userName) throws FastcmsException;
+
+    /**
+     * 重置用户密码
+     * @param user
+     * @throws FastcmsException
+     */
+    void resetPassword(User user) throws FastcmsException;
+
+    /**
      * 根据openid获取用户信息
      * @param openId
      * @return

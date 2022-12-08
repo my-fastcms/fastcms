@@ -14,11 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.core.utils;
+package com.fastcms.utils;
 
 import com.fastcms.plugin.PassFastcms;
-import com.fastcms.utils.ApplicationUtils;
-import com.fastcms.utils.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;

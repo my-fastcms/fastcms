@@ -18,7 +18,7 @@ package com.fastcms.cms.directive;
 
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.directive.BaseFunction;
-import com.fastcms.core.utils.I18nUtils;
+import com.fastcms.utils.I18nUtils;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateModelException;
 import org.apache.commons.lang.StringUtils;

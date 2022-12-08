@@ -17,7 +17,7 @@
 package com.fastcms.web.security;
 
 import com.fastcms.core.auth.ControllerMethodsCache;
-import com.fastcms.core.utils.RequestUtils;
+import com.fastcms.utils.RequestUtils;
 import com.fastcms.web.filter.JwtAuthTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationStartedEvent;

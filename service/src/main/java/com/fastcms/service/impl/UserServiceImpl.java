@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.internet.MimeMessage;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -62,32 +63,34 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Autowired
     private JavaMailSenderImpl javaMailSender;
 
+    final String RANDOM_STR = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
     @Override
     public void updateUserPassword(UpdatePasswordParam updatePasswordParam) throws FastcmsException {
 
         if (StringUtils.isBlank(updatePasswordParam.getOldPassword())) {
-            throw new FastcmsException(FastcmsException.INVALID_PARAM, "旧密码不能为空");
+            throw new FastcmsException(FastcmsException.INVALID_PARAM, "fastcms.user.oldpassword.notnull");
         }
 
         if(StringUtils.isBlank(updatePasswordParam.getPassword())) {
-            throw new FastcmsException(FastcmsException.INVALID_PARAM, "请输入新密码");
+            throw new FastcmsException(FastcmsException.INVALID_PARAM, "fastcms.user.newpassword.notnull");
         }
 
         if(updatePasswordParam.getPassword().length()< 6) {
-            throw new FastcmsException(FastcmsException.INVALID_PARAM, "密码长度不能少于6位");
+            throw new FastcmsException(FastcmsException.INVALID_PARAM, "fastcms.user.password.length6");
         }
 
         if(!updatePasswordParam.getPassword().equals(updatePasswordParam.getConfirmPassword())) {
-            throw new FastcmsException(FastcmsException.INVALID_PARAM, "两次密码输入不一致");
+            throw new FastcmsException(FastcmsException.INVALID_PARAM, "fastcms.user.password.error2");
         }
 
         User user = getById(updatePasswordParam.getId());
         if(user == null) {
-            throw new FastcmsException(FastcmsException.SERVER_ERROR, "用户不存在");
+            throw new FastcmsException(FastcmsException.SERVER_ERROR, "fastcms.user.notexist");
         }
 
         if (!passwordEncoder.matches(updatePasswordParam.getOldPassword(), user.getPassword())) {
-            throw new FastcmsException(FastcmsException.SERVER_ERROR, "旧密码输入错误");
+            throw new FastcmsException(FastcmsException.SERVER_ERROR, "fastcms.user.oldpassword.error1");
         }
 
         user.setPassword(passwordEncoder.encode(updatePasswordParam.getPassword().trim()));
@@ -111,31 +114,31 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public Long saveUser(User user) throws FastcmsException {
 
         if (user == null) {
-            throw new FastcmsException(FastcmsException.INVALID_PARAM, "user is null");
+            throw new FastcmsException(FastcmsException.INVALID_PARAM, "fastcms.user.notexist");
         }
 
         if(user.getId() != null && Objects.equals(FastcmsConstants.ADMIN_USER_ID, user.getId())) {
-            throw new FastcmsException(FastcmsException.NO_RIGHT, "超级管理员不可修改");
+            throw new FastcmsException(FastcmsException.NO_RIGHT, "fastcms.user.admin.notmodify");
         }
 
         if(user.getId() == null) {
             final String userName = user.getUserName();
 
             if (StringUtils.isBlank(userName)) {
-                throw new FastcmsException(FastcmsException.INVALID_PARAM, "用户账号不能为空");
+                throw new FastcmsException(FastcmsException.INVALID_PARAM, "fastcms.user.account.notnull");
             }
 
             Pattern p = Pattern.compile("[0-9]*");
             Matcher m = p.matcher(userName);
             if (m.matches()) {
-                throw new FastcmsException(FastcmsException.INVALID_PARAM, "注册账号不能全是数字");
+                throw new FastcmsException(FastcmsException.INVALID_PARAM, "fastcms.user.account.register.allnumber");
             }
 
             User one = getOne(Wrappers.<User>lambdaQuery().eq(User::getUserName, user.getUserName()), false);
-            if(one != null) throw new FastcmsException(FastcmsException.SERVER_ERROR, "账号已存在");
+            if(one != null) throw new FastcmsException(FastcmsException.SERVER_ERROR, "fastcms.user.register.accountexist");
 
             if(StringUtils.isBlank(user.getPassword())) {
-                throw new FastcmsException(FastcmsException.SERVER_ERROR, "密码不能为空");
+                throw new FastcmsException(FastcmsException.SERVER_ERROR, "fastcms.user.password.notnull");
             }
         } else {
             //登录账号不可修改
@@ -158,7 +161,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public User saveWxMaUserInfo(String openid, WxMaUserInfo userInfo) throws FastcmsException {
 
         if(userInfo == null || StringUtils.isBlank(openid)) {
-            throw new FastcmsException(FastcmsException.INVALID_PARAM, "小程序用户参数异常");
+            throw new FastcmsException(FastcmsException.INVALID_PARAM, "fastcms.user.miniapp.params.error1");
         }
 
         UserOpenid userOpenid = userOpenidService.getOne(Wrappers.<UserOpenid>lambdaQuery().eq(UserOpenid::getValue, openid).eq(UserOpenid::getType, UserOpenid.TYPE_WECHAT_MINI));
@@ -188,7 +191,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public User saveUser(String openid, String unionId, String phone, String type) throws FastcmsException {
 
         if(openid == null || StringUtils.isBlank(phone)) {
-            throw new FastcmsException(FastcmsException.INVALID_PARAM, "小程序用户参数异常");
+            throw new FastcmsException(FastcmsException.INVALID_PARAM, "fastcms.user.miniapp.params.error1");
         }
 
         User userByPhone = getOne(Wrappers.<User>lambdaQuery().eq(User::getMobile, phone));
@@ -234,7 +237,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Transactional
     public Boolean deleteUser(Long userId) throws FastcmsException {
         if(userId != null && Objects.equals(userId, FastcmsConstants.ADMIN_USER_ID)) {
-            throw new FastcmsException(FastcmsException.NO_RIGHT, "超级管理员不可删除");
+            throw new FastcmsException(FastcmsException.NO_RIGHT, "fastcms.user.admin.notdelete");
         }
         ((RoleMapper) roleService.getBaseMapper()).deleteRoleByUserId(userId);
         ((UserTagMapper) userTagService.getBaseMapper()).deleteUserTagRelationByUserId(userId);
@@ -244,7 +247,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public synchronized Boolean register(String username, String password, String repeatPassword) throws FastcmsException {
+    public synchronized Boolean register(@NotNull String username, @NotNull String password, @NotNull String repeatPassword) throws FastcmsException {
         if(StrUtils.isBlank(username)) {
             throw new FastcmsException(FastcmsException.INVALID_PARAM, "请输入完成注册数据");
         }
@@ -305,29 +308,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             throw new FastcmsException("当前状态与修改状态相同，无需修改");
         }
 
-        if (StringUtils.isBlank(user.getEmail())) {
-            throw new FastcmsException("请补全用户邮箱地址，用来接收邮件");
-        }
-
-        try {
-            String password = RandomStringUtils.random(8, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
-            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-            helper.setFrom(ConfigUtils.getConfig(FastcmsConstants.EMAIL_USERNAME));
-            helper.setTo(user.getEmail());
-            helper.setSubject("Fastcms员工账号激活");
-            helper.setText(
-                    "<p>您的Fastcms账号为:" + user.getUserName() + "</p>" +
-                    "<p>您的Fastcms账号初始密码为:" + password + "</p>" +
-                    "<p>Fastcms官网：https://www.xjd2020.com</p>" +
-                    "<p>Fastcms文档：http://doc.xjd2020.com</p>", true);
-            helper.setSentDate(new Date());
-            javaMailSender.send(mimeMessage);
-
-            user.setPassword(passwordEncoder.encode(password));
-
-        } catch (Exception e) {
-            throw new FastcmsException("邮件发送失败，请检查邮箱配置：" + user.getEmail());
+        if (StrUtils.isBlank(user.getPassword())) {
+            try {
+                sendPasswordEmail(user);
+            } catch (Exception e) {
+                throw new FastcmsException("邮件发送失败，请检查邮箱配置：" + user.getEmail());
+            }
         }
 
         user.setUserType(userType);
@@ -335,12 +321,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public void resetPassword(Long userId) throws FastcmsException {
+    public void resetPassword(@NotNull Long userId) throws FastcmsException {
         if (userId != null && userId == FastcmsConstants.ADMIN_USER_ID) {
             throw new FastcmsException("超级管理员不可重置密码");
         }
 
         User user = getById(userId);
+        resetPassword(user);
+    }
+
+    @Override
+    public void resetPassword(@NotNull String userName) throws FastcmsException {
+        User user = getOne(Wrappers.<User>lambdaQuery().eq(User::getUserName, userName));
+        resetPassword(user);
+    }
+
+    @Override
+    public void resetPassword(@NotNull User user) throws FastcmsException {
         if (user == null) {
             throw new FastcmsException("用户不存在");
         }
@@ -349,39 +346,43 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             throw new FastcmsException("用户已禁用");
         }
 
-        if (StringUtils.isBlank(user.getEmail())) {
-            throw new FastcmsException("请补全用户邮箱地址，用来接收邮件");
-        }
-
         try {
-            String password = RandomStringUtils.random(8, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
-            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
-            helper.setFrom(ConfigUtils.getConfig(FastcmsConstants.EMAIL_USERNAME));
-            helper.setTo(user.getEmail());
-            helper.setSubject("Fastcms重置员工密码");
-            helper.setText(
-                    "<p>您的Fastcms账号为:" + user.getUserName() + "</p>" +
-                            "<p>您的Fastcms账号重置后的密码为:" + password + "</p>" +
-                            "<p>Fastcms官网：https://www.xjd2020.com</p>" +
-                            "<p>Fastcms文档：http://doc.xjd2020.com</p>", true);
-            helper.setSentDate(new Date());
-            javaMailSender.send(mimeMessage);
-
-            user.setPassword(passwordEncoder.encode(password));
-
+            sendPasswordEmail(user);
         } catch (Exception e) {
             throw new FastcmsException("邮件发送失败，请检查邮箱配置：" + user.getEmail());
         }
 
         updateById(user);
-
     }
 
     @Override
     public User getUserByOpenId(String openId) {
         UserOpenid userOpenid = userOpenidService.getOne(Wrappers.<UserOpenid>lambdaQuery().eq(UserOpenid::getValue, openId));
-        return userOpenid == null ? null : getById(userOpenid.getValue());
+        return userOpenid == null ? null : getById(userOpenid.getUserId());
+    }
+
+    void sendPasswordEmail(User user) throws Exception {
+
+        if (StringUtils.isBlank(user.getEmail())) {
+            throw new FastcmsException("请补全用户邮箱地址，用来接收邮件");
+        }
+
+        final String password = RandomStringUtils.random(8, RANDOM_STR);
+
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
+        helper.setFrom(ConfigUtils.getConfig(FastcmsConstants.EMAIL_USERNAME));
+        helper.setTo(user.getEmail());
+        helper.setSubject("Fastcms用户账号激活");
+        helper.setText(
+                "<p>您的Fastcms账号为:" + user.getUserName() + "</p>" +
+                        "<p>您的Fastcms账号初始密码为:" + password + "</p>" +
+                        "<p>Fastcms官网：https://www.xjd2020.com</p>" +
+                        "<p>Fastcms文档：http://doc.xjd2020.com</p>", true);
+        helper.setSentDate(new Date());
+        javaMailSender.send(mimeMessage);
+
+        user.setPassword(passwordEncoder.encode(password));
     }
 
 }
