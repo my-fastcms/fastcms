@@ -36,11 +36,15 @@ import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.mybatis.PageModel;
+import com.fastcms.utils.I18nUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.fastcms.cms.service.IArticleService.ArticleI18n.CMS_ARTICLE_CHILDREN_COMMENT_NOT_DELETE;
+import static com.fastcms.cms.service.IArticleService.ArticleI18n.CMS_ARTICLE_CHILDREN_NOT_DELETE;
 
 /**
  * 文章管理
@@ -166,7 +170,7 @@ public class ArticleController {
 
         List<ArticleCategory> categoryList = articleCategoryService.list(Wrappers.<ArticleCategory>lambdaQuery().eq(ArticleCategory::getParentId, categoryId));
         if(categoryList != null && categoryList.size() >0) {
-            return RestResultUtils.failed("请先删除子节点分类");
+            return RestResultUtils.failed(I18nUtils.getMessage(CMS_ARTICLE_CHILDREN_NOT_DELETE));
         }
 
         articleCategoryService.deleteByCategoryId(categoryId);
@@ -244,7 +248,7 @@ public class ArticleController {
 	public Object doDeleteComment(@PathVariable("commentId") Long commentId) {
         List<ArticleComment> articleCommentList = articleCommentService.list(Wrappers.<ArticleComment>lambdaQuery().eq(ArticleComment::getParentId, commentId));
         if(articleCommentList != null && articleCommentList.size() >0) {
-            return RestResultUtils.failed("该评论有回复内容，请先删除");
+            return RestResultUtils.failed(I18nUtils.getMessage(CMS_ARTICLE_CHILDREN_COMMENT_NOT_DELETE));
         }
         articleCommentService.removeById(commentId);
         return RestResultUtils.success();

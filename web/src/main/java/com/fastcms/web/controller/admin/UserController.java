@@ -35,6 +35,7 @@ import com.fastcms.service.IDepartmentService;
 import com.fastcms.service.IRoleService;
 import com.fastcms.service.IUserService;
 import com.fastcms.service.IUserTagService;
+import com.fastcms.utils.I18nUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -43,6 +44,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static com.fastcms.service.IRoleService.RoleI18n.ROLE_NOT_ALLOW_MODIFY_AUTH;
 
 /**
  * 用户管理
@@ -150,7 +153,7 @@ public class UserController {
     @Secured(name = "用户角色分配", resource = "users:roles/save", action = ActionTypes.WRITE)
     public Object saveUserRoles(@PathVariable("userId") Long userId, @RequestParam("roleIds") List<Long> roleIds) {
         if(userId != null && Objects.equals(userId, FastcmsConstants.ADMIN_USER_ID)) {
-            return RestResultUtils.failed("admin不允许修改权限");
+            return RestResultUtils.failed(I18nUtils.getMessage(ROLE_NOT_ALLOW_MODIFY_AUTH));
         }
         roleService.saveUserRole(userId, roleIds);
         return RestResultUtils.success();

@@ -32,4 +32,8 @@ public interface IPermissionService extends IService<Permission> {
      */
     List<RouterNode> getPermissions();
 
+    interface PermissionI18n {
+        String ROUTES_CHILDREN_NOT_DELETE = "fastcms.routes.children.not.delete";
+    }
+
 }

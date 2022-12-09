@@ -30,6 +30,7 @@ import com.fastcms.core.template.Template;
 import com.fastcms.core.template.TemplateService;
 import com.fastcms.service.IConfigService;
 import com.fastcms.utils.ApplicationUtils;
+import com.fastcms.utils.I18nUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FileCopyUtils;
@@ -48,6 +49,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.fastcms.common.constants.FastcmsConstants.FASTCMS_SYSTEM_ERROR;
 
 /**
  * 模板管理
@@ -115,7 +118,7 @@ public class TemplateController {
             templateService.install(uploadFile);
             return RestResultUtils.success();
         } catch (Exception e) {
-            return RestResultUtils.failed(e.getMessage() == null ? "系统异常" : e.getMessage());
+            return RestResultUtils.failed(e.getMessage() == null ? I18nUtils.getMessage(FASTCMS_SYSTEM_ERROR) : e.getMessage());
         } finally {
             if(uploadFile != null) {
                 uploadFile.delete();

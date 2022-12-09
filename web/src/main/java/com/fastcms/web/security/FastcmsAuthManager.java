@@ -23,12 +23,16 @@ import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.core.auth.AuthPermissionService;
 import com.fastcms.core.auth.FastcmsUserDetails;
 import com.fastcms.core.captcha.FastcmsCaptchaService;
+import com.fastcms.utils.I18nUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
+
+import static com.fastcms.service.IUserService.UserI18n.USER_ACCESS_NOT_ALLOW;
+import static com.fastcms.service.IUserService.UserI18n.USER_LOGIN_CAPTCHA_ERROR;
 
 /**
  *  @author： wjun_java@163.com
@@ -59,7 +63,7 @@ public class FastcmsAuthManager implements AuthManager {
     public FastcmsUser login(String username, String password, String code) throws AccessException {
 
         if(!fastcmsCaptchaService.checkCaptcha(code)) {
-            throw new AccessException(FastcmsException.INVALID_PARAM, "验证码错误");
+            throw new AccessException(FastcmsException.INVALID_PARAM, I18nUtils.getMessage(USER_LOGIN_CAPTCHA_ERROR));
         }
 
         try {
@@ -79,7 +83,7 @@ public class FastcmsAuthManager implements AuthManager {
     @Override
     public void auth(Permission permission, User user) throws AccessException {
         if(!userService.hasPermission(user, permission))
-            throw new AccessException(FastcmsException.NO_RIGHT, "没有访问权限");
+            throw new AccessException(FastcmsException.NO_RIGHT, I18nUtils.getMessage(USER_ACCESS_NOT_ALLOW));
     }
 
 }

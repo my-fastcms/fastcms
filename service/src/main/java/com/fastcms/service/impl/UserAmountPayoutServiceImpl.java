@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fastcms.common.exception.FastcmsException;
+import com.fastcms.common.exception.I18nFastcmsException;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.entity.UserAmount;
 import com.fastcms.entity.UserAmountPayout;
@@ -19,6 +20,7 @@ import com.fastcms.service.IUserAmountPayoutService;
 import com.fastcms.service.IUserAmountService;
 import com.fastcms.service.IUserAmountStatementService;
 import com.fastcms.service.IUserService;
+import com.fastcms.utils.I18nUtils;
 import com.fastcms.utils.UserAmountUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import static com.fastcms.service.IUserAmountPayoutService.UserAmountI18n.*;
 
 /**
  * 提现
@@ -66,12 +70,12 @@ public class UserAmountPayoutServiceImpl extends ServiceImpl<UserAmountPayoutMap
 	@Transactional(rollbackFor = Exception.class)
 	public String cashOut(Long userId, BigDecimal amount) throws FastcmsException {
 		if (amount == null) {
-			throw new FastcmsException("提现金额不能为空");
+			throw new I18nFastcmsException(USER_AMOUNT_PAYOUT_MONEY_NOT_NULL);
 		} else if (amount.compareTo(BigDecimal.ZERO) <=0) {
-			throw new FastcmsException("提现金额必须大于0元");
+			throw new I18nFastcmsException(USER_AMOUNT_CASHOUT_MONEY_GREATER_THAN_0);
 		} else if (UserAmountUtils.getCashOutAmountDayMaxValue().compareTo(BigDecimal.ZERO) == 1
 				&& amount.compareTo(UserAmountUtils.getCashOutAmountDayMaxValue()) == 1) {
-			throw new FastcmsException("提现金额必须小于或等于" + UserAmountUtils.getCashOutAmountDayMaxValue());
+			throw new I18nFastcmsException(USER_AMOUNT_CASHOUT_MONEY_LESS_THAN, UserAmountUtils.getCashOutAmountDayMaxValue().toString());
 		}
 
 		try {
@@ -80,30 +84,30 @@ public class UserAmountPayoutServiceImpl extends ServiceImpl<UserAmountPayoutMap
 			if (UserAmountUtils.getCashOutAmountDayMaxTimeValue() > 0) {
 				Long todayPayoutCount = getBaseMapper().getUserTodayPayoutCount(userId);
 				if (todayPayoutCount.intValue() > UserAmountUtils.getCashOutAmountDayMaxTimeValue()) {
-					throw new FastcmsException("单日最多提现" + UserAmountUtils.getCashOutAmountDayMaxTimeValue() + "次");
+					throw new I18nFastcmsException(USER_AMOUNT_CASHOUT_DAY_COUNT, UserAmountUtils.getCashOutAmountDayMaxTimeValue().toString());
 				}
 			}
 
 			UserAmount userAmount = userAmountService.getOne(Wrappers.<UserAmount>lambdaQuery().eq(UserAmount::getCreateUserId, userId));
 			if (userAmount == null) {
-				throw new FastcmsException("用户余额为空");
+				throw new I18nFastcmsException(USER_AMOUNT_CASHOUT_IS_NULL);
 			}
 
-			if (userAmount.getAmount().compareTo(amount) <0) {
-				throw new FastcmsException("用户余额不足");
+			if (userAmount.getAmount().compareTo(amount) < 0) {
+				throw new I18nFastcmsException(USER_AMOUNT_IS_NOT_ENOUGH);
 			}
 
 			if (UserAmountUtils.getCashOutAmountDayBalanceMaxValue().compareTo(BigDecimal.ZERO) == 1
 				&& userAmount.getAmount().compareTo(UserAmountUtils.getCashOutAmountDayBalanceMaxValue()) < 1) {
 				//余额满多少金额才允许提现
-				throw new FastcmsException("余额满" + UserAmountUtils.getCashOutAmountDayBalanceMaxValue() + "才可以提现");
+				throw new I18nFastcmsException(USER_AMOUNT_CASHOUT_MONEY_LIMIT, UserAmountUtils.getCashOutAmountDayBalanceMaxValue().toString());
 			}
 
 			//获取用户未审核提现金额之和
 			BigDecimal userUnAuditAmountPayout = getBaseMapper().getUserUnAuditAmountPayout(userId);
 			//提现金额 + 待审核金额不能超过用户当前余额
 			if (userUnAuditAmountPayout.add(amount).compareTo(userAmount.getAmount()) == 1) {
-				throw new FastcmsException("您有总金额为" + userUnAuditAmountPayout + "的申请单未审批，还剩下" + userAmount.getAmount().subtract(userUnAuditAmountPayout) + "元可提现");
+				throw new I18nFastcmsException(USER_AMOUNT_MONEY_APPROVAL_IS_NOT, userUnAuditAmountPayout.toString(), userAmount.getAmount().subtract(userUnAuditAmountPayout).toString());
 			}
 
 			UserAmountPayout userAmountPayout = new UserAmountPayout();
@@ -114,11 +118,11 @@ public class UserAmountPayoutServiceImpl extends ServiceImpl<UserAmountPayoutMap
 			save(userAmountPayout);
 
 			if (UserAmountUtils.isEnableAmountCashOutAudit()) {
-				return "您的提现单正在审核中，预计需要3个工作日，请耐心等待";
+				return I18nUtils.getMessage(USER_AMOUNT_MONEY_APPROVAL_IS_ING);
 			} else {
 				//无需审核的情况下
 				doCashOut(userAmount, userAmountPayout);
-				return "提现成功";
+				return I18nUtils.getMessage(USER_AMOUNT_CASHOUT_SUCCESS);
 			}
 
 		} finally {
@@ -135,33 +139,33 @@ public class UserAmountPayoutServiceImpl extends ServiceImpl<UserAmountPayoutMap
 
 			UserAmountPayout amountPayout = getById(payoutId);
 			if (amountPayout == null) {
-				throw new FastcmsException("提现审核单不存在");
+				throw new I18nFastcmsException(USER_AMOUNT_CASHOUT_VERIFY_NOT_EXIST);
 			} else if (amountPayout.getStatus() == UserAmountPayout.AMOUNT_STATUS_PASS) {
-				throw new FastcmsException("该提现申请已审核通过");
+				throw new I18nFastcmsException(USER_AMOUNT_CASHOUT_VERIFY_IS_PASS);
 			} else if (amountPayout.getStatus() == UserAmountPayout.AMOUNT_STATUS_REFUSE) {
-				throw new FastcmsException("该提现申请已拒绝");
+				throw new I18nFastcmsException(USER_AMOUNT_CASHOUT_VERIFY_IS_NOT_PASS);
 			}
 
 			if (UserAmountUtils.getCashOutAmountDayMaxTimeValue() > 0) {
 				Long todayPayoutCount = getBaseMapper().getUserTodayPayoutCount(amountPayout.getCreateUserId());
 				if (todayPayoutCount.intValue() > UserAmountUtils.getCashOutAmountDayMaxTimeValue()) {
-					throw new FastcmsException("单日最多提现" + UserAmountUtils.getCashOutAmountDayMaxTimeValue() + "次");
+					throw new I18nFastcmsException(USER_AMOUNT_CASHOUT_DAY_COUNT, UserAmountUtils.getCashOutAmountDayMaxTimeValue().toString());
 				}
 			}
 
 			UserAmount userAmount = userAmountService.getOne(Wrappers.<UserAmount>lambdaQuery().eq(UserAmount::getCreateUserId, amountPayout.getCreateUserId()));
 			if (userAmount == null) {
-				throw new FastcmsException("用户余额为空");
+				throw new I18nFastcmsException(USER_AMOUNT_CASHOUT_IS_NULL);
 			}
 
 			if (userAmount.getAmount().compareTo(amountPayout.getAmount()) <0) {
-				throw new FastcmsException("用户余额不足");
+				throw new I18nFastcmsException(USER_AMOUNT_IS_NOT_ENOUGH);
 			}
 
 			if (UserAmountUtils.getCashOutAmountDayBalanceMaxValue().compareTo(BigDecimal.ZERO) > 1
 					&& userAmount.getAmount().compareTo(UserAmountUtils.getCashOutAmountDayBalanceMaxValue()) < 1) {
 				//余额满多少金额才允许提现
-				throw new FastcmsException("余额满" + UserAmountUtils.getCashOutAmountDayBalanceMaxValue() + "才可以提现");
+				throw new I18nFastcmsException(USER_AMOUNT_CASHOUT_MONEY_LIMIT, UserAmountUtils.getCashOutAmountDayBalanceMaxValue().toString());
 			}
 
 			doCashOut(userAmount, amountPayout);
@@ -197,23 +201,23 @@ public class UserAmountPayoutServiceImpl extends ServiceImpl<UserAmountPayoutMap
 	void doCashOut(UserAmount userAmount, UserAmountPayout userAmountPayout) throws FastcmsException {
 		PaymentPlatform platform = paymentPlatformService.getPlatform(defaultPlatformName);
 		if (platform == null) {
-			throw new FastcmsException("未找到第三方支付平台，请安装支付插件");
+			throw new I18nFastcmsException(USER_AMOUNT_PAYMENT_PLATFORM_NOT_EXIST);
 		}
 
 		final String userOpenId = userService.getUserOpenId(userAmount.getCreateUserId(), UserOpenid.TYPE_WECHAT_MINI);
 		if (StrUtils.isBlank(userOpenId)) {
-			throw new FastcmsException("用户账户为空");
+			throw new I18nFastcmsException(USER_AMOUNT_OPENID_EMPTY);
 		}
 
 		FastcmsTransferService fastcmsTransferService = fastcmsTransferServiceManager.getFastcmsTransferService(userAmountPayout.getTransferClassName());
 		if (fastcmsTransferService == null) {
-			throw new FastcmsException("转账服务类不存在");
+			throw new I18nFastcmsException(USER_AMOUNT_TRANSFER_SERVICE_CLASS_NOT_EXIST);
 		}
 
 		Boolean transferResult = fastcmsTransferService.transfer(userOpenId, userAmountPayout.getAmount(), userAmountPayout.getRemarks());
 
 		if (!transferResult) {
-			throw new FastcmsException("调用第三方转账接口失败");
+			throw new I18nFastcmsException(USER_AMOUNT_TRANSFER_THIRD_FAIL);
 		}
 
 		//转账成功
@@ -222,7 +226,7 @@ public class UserAmountPayoutServiceImpl extends ServiceImpl<UserAmountPayoutMap
 		userAmountStatement.setAction(UserAmountStatement.AMOUNT_ACTION_DEL);
 		userAmountStatement.setCreateUserId(userAmount.getCreateUserId());
 		userAmountStatement.setActionType(UserAmountStatement.AMOUNT_ACTION_TYPE_CASHOUT);
-		userAmountStatement.setActionDesc("提现");
+		userAmountStatement.setActionDesc(I18nUtils.getMessage(USER_AMOUNT_CASHOUT));
 		userAmountStatement.setOldAmount(userAmount.getAmount());
 		userAmountStatement.setChangeAmount(userAmountPayout.getAmount());
 		userAmountStatement.setNewAmount(userAmount.getAmount().subtract(userAmountPayout.getAmount()));

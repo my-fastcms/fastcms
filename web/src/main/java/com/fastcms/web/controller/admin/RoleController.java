@@ -27,12 +27,15 @@ import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.entity.Role;
 import com.fastcms.service.IRoleService;
+import com.fastcms.utils.I18nUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
+
+import static com.fastcms.service.IRoleService.RoleI18n.*;
 
 /**
  * 角色管理
@@ -73,7 +76,7 @@ public class RoleController {
     public Object save(@Validated Role role) {
 
         if(role.getId() != null && Objects.equals(role.getId(), FastcmsConstants.ADMIN_ROLE_ID)) {
-            return RestResultUtils.failed("超级管理员角色不可修改");
+            return RestResultUtils.failed(I18nUtils.getMessage(ROLE_NOT_ALLOW_MODIFY));
         }
 
         roleService.saveOrUpdate(role);
@@ -89,7 +92,7 @@ public class RoleController {
     @Secured(name = "角色删除", resource = "roles:delete", action = ActionTypes.WRITE)
     public RestResult<Object> del(@PathVariable("roleId") Long roleId) {
         if(roleId != null && Objects.equals(roleId, FastcmsConstants.ADMIN_ROLE_ID)) {
-            return RestResultUtils.failed("超级管理员角色不可删除");
+            return RestResultUtils.failed(I18nUtils.getMessage(ROLE_NOT_ALLOW_DELETE));
         }
         return RestResultUtils.success(roleService.removeById(roleId));
     }
@@ -126,7 +129,7 @@ public class RoleController {
                                      @RequestParam(value = "permissionIdList", required = false) List<Long> permissionIdList,
                                      @RequestParam(value = "resourcePathList", required = false) List<String> resourcePathList) {
         if(roleId != null && Objects.equals(roleId, FastcmsConstants.ADMIN_ROLE_ID)) {
-            return RestResultUtils.failed("超级管理员不可修改权限");
+            return RestResultUtils.failed(I18nUtils.getMessage(ROLE_NOT_ALLOW_MODIFY_AUTH));
         }
         roleService.saveRolePermission(roleId, permissionIdList, resourcePathList);
         return RestResultUtils.success();

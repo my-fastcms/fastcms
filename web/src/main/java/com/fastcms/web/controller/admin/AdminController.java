@@ -25,6 +25,7 @@ import com.fastcms.core.captcha.FastcmsCaptcha;
 import com.fastcms.core.captcha.FastcmsCaptchaService;
 import com.fastcms.extension.IndexDataExtension;
 import com.fastcms.service.IUserService;
+import com.fastcms.utils.I18nUtils;
 import com.fastcms.utils.PluginUtils;
 import com.fastcms.web.security.AuthManager;
 import com.fastcms.web.security.FastcmsUser;
@@ -88,7 +89,7 @@ public class AdminController {
                                         @RequestParam String code) throws FastcmsException {
 
         if(!fastcmsCaptchaService.checkCaptcha(code)) {
-            return RestResultUtils.failed("验证码错误");
+            return RestResultUtils.failed(I18nUtils.getMessage(IUserService.UserI18n.USER_LOGIN_CAPTCHA_ERROR));
         }
 
         return RestResultUtils.success(userService.register(username, password, repeatPassword));

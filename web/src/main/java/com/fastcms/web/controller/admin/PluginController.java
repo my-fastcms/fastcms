@@ -30,6 +30,7 @@ import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.plugin.PluginBase;
 import com.fastcms.plugin.PluginManagerService;
 import com.fastcms.utils.ApplicationUtils;
+import com.fastcms.utils.I18nUtils;
 import org.apache.commons.lang.StringUtils;
 import org.pf4j.Plugin;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.nio.file.Paths;
+
+import static com.fastcms.plugin.PluginManagerService.PluginI18n.*;
 
 /**
  * 插件管理
@@ -78,17 +81,17 @@ public class PluginController {
     public Object install(@RequestParam("file") MultipartFile file) throws Exception {
 
         if (ApplicationUtils.isDevelopment()) {
-            return RestResultUtils.failed("开发环境不允许安装插件");
+            return RestResultUtils.failed(I18nUtils.getMessage(PLUGIN_DEV_NOT_ALLOW_INSTALL));
         }
 
         String suffixName = FileUtils.getSuffix(file.getOriginalFilename());
 
         //检查文件格式是否合法
         if(StringUtils.isEmpty(suffixName)) {
-            return RestResultUtils.failed("文件格式不合格，请上传jar或zip文件");
+            return RestResultUtils.failed(I18nUtils.getMessage(PLUGIN_UPLOAD_FILE_TYPE_NOT_ALLOW));
         }
         if(!".jar".equalsIgnoreCase(suffixName) && !".zip".equalsIgnoreCase(suffixName)) {
-            return RestResultUtils.failed("文件格式不合格，请上传jar或zip文件");
+            return RestResultUtils.failed(I18nUtils.getMessage(PLUGIN_UPLOAD_FILE_TYPE_NOT_ALLOW));
         }
 
         File uploadFile = new File(DirUtils.getPluginDir(), file.getOriginalFilename());
@@ -119,7 +122,7 @@ public class PluginController {
     public Object unInstall(@PathVariable(name = "pluginId") String pluginId) throws Exception {
 
         if (ApplicationUtils.isDevelopment()) {
-            return RestResultUtils.failed("开发环境不允许卸载插件");
+            return RestResultUtils.failed(I18nUtils.getMessage(PLUGIN_DEV_NOT_ALLOW_UNINSTALL));
         }
 
         pluginManagerService.unInstallPlugin(pluginId);

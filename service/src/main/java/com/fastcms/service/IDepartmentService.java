@@ -116,4 +116,8 @@ public interface IDepartmentService extends IService<Department> {
 		}
 	}
 
+	interface DepartmentI18n {
+		String DEPARTMENT_CHILDREN_NOT_DELETE = "fastcms.department.children.not.delete";
+	}
+
 }

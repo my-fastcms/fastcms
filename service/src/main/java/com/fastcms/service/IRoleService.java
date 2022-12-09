@@ -120,5 +120,11 @@ public interface IRoleService extends IService<Role> {
             this.roleResources = roleResources;
         }
     }
+    
+    interface RoleI18n {
+        String ROLE_NOT_ALLOW_DELETE = "fastcms.role.not.allow.delete";
+        String ROLE_NOT_ALLOW_MODIFY = "fastcms.role.not.allow.modify";
+        String ROLE_NOT_ALLOW_MODIFY_AUTH = "fastcms.role.not.allow.modify.auth";
+    }
 
 }

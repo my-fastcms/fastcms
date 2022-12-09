@@ -27,7 +27,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class FastcmsException extends Exception {
 
-	private int errCode;
+	protected int errCode;
 
 	private String errMsg;
 

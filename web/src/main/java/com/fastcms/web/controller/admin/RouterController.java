@@ -25,11 +25,14 @@ import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.model.RouterNode;
 import com.fastcms.entity.Permission;
 import com.fastcms.service.IPermissionService;
+import com.fastcms.utils.I18nUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.fastcms.service.IPermissionService.PermissionI18n.ROUTES_CHILDREN_NOT_DELETE;
 
 /**
  * 前端路由管理
@@ -77,7 +80,7 @@ public class RouterController {
 	public RestResult<Object> delMenu(@PathVariable("routerId") Long routerId) {
 		List<Permission> list = permissionService.list(Wrappers.<Permission>lambdaQuery().eq(Permission::getParentId, routerId));
 		if(list != null && list.size()>0) {
-			return RestResultUtils.failed("请先删除子菜单");
+			return RestResultUtils.failed(I18nUtils.getMessage(ROUTES_CHILDREN_NOT_DELETE));
 		}
 		return RestResultUtils.success(permissionService.removeById(routerId));
 	}

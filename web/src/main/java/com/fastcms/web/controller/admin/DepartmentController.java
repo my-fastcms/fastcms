@@ -25,11 +25,14 @@ import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.entity.Department;
 import com.fastcms.service.IDepartmentService;
+import com.fastcms.utils.I18nUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.fastcms.service.IDepartmentService.DepartmentI18n.DEPARTMENT_CHILDREN_NOT_DELETE;
 
 /**
  * 部门管理
@@ -78,7 +81,7 @@ public class DepartmentController {
     public RestResult<Object> delDepartment(@PathVariable("deptId") Long deptId) {
         List<Department> list = departmentService.list(Wrappers.<Department>lambdaQuery().eq(Department::getParentId, deptId));
         if(list != null && list.size()>0) {
-            return RestResultUtils.failed("请先删除子部门");
+            return RestResultUtils.failed(I18nUtils.getMessage(DEPARTMENT_CHILDREN_NOT_DELETE));
         }
         return RestResultUtils.success(departmentService.removeById(deptId));
     }

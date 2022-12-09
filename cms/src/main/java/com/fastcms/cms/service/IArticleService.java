@@ -413,4 +413,9 @@ public interface IArticleService extends IService<Article> {
 
     }
 
+    interface ArticleI18n {
+        String CMS_ARTICLE_CHILDREN_NOT_DELETE = "fastcms.cms.article.children.not.delete";
+        String CMS_ARTICLE_CHILDREN_COMMENT_NOT_DELETE = "fastcms.cms.article.children.comment.not.delete";
+    }
+
 }

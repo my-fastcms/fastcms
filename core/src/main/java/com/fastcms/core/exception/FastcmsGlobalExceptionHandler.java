@@ -19,9 +19,11 @@ package com.fastcms.core.exception;
 import com.egzosn.pay.common.exception.PayErrorException;
 import com.fastcms.common.exception.AccessException;
 import com.fastcms.common.exception.FastcmsException;
+import com.fastcms.common.exception.I18nFastcmsException;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.monitor.MetricsMonitor;
 import com.fastcms.core.utils.ExceptionUtil;
+import com.fastcms.utils.I18nUtils;
 import com.fastcms.utils.RequestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,6 +92,17 @@ public class FastcmsGlobalExceptionHandler {
     public ResponseEntity<Object> handleFastcmsException(FastcmsException e) {
         MetricsMonitor.getFastcmsException().increment();
         return ResponseEntity.status(HttpStatus.OK).body(RestResultUtils.failed(e.getErrMsg()));
+    }
+
+    @ExceptionHandler(I18nFastcmsException.class)
+    public ResponseEntity<Object> handleI18nFastcmsException(I18nFastcmsException e) {
+        MetricsMonitor.getFastcmsException().increment();
+
+        if (e.getParams() != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(RestResultUtils.failed(String.format(I18nUtils.getMessage(e.getI18nKey()), e.getParams())));
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(RestResultUtils.failed(I18nUtils.getMessage(e.getI18nKey())));
     }
 
     @ExceptionHandler(AccessException.class)

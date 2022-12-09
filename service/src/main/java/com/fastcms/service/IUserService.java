@@ -270,4 +270,28 @@ public interface IUserService extends IService<User> {
         }
     }
 
+    interface UserI18n {
+        String USER_OLD_PASSWORD_NOT_NULL = "fastcms.user.oldpassword.notnull";
+        String USER_NEW_PASSWORD_NOT_NULL = "fastcms.user.newpassword.notnull";
+        String USER_PASSWORD_LENGTH6 = "fastcms.user.password.length6";
+        String USER_PASSWORD_ERROR2 = "fastcms.user.password.error2";
+        String USER_NOT_EXIST = "fastcms.user.notexist";
+        String USER_OLD_PASSWORD_ERROR1 = "fastcms.user.oldpassword.error1";
+        String USER_ADMIN_NOT_MODIFY = "fastcms.user.admin.notmodify";
+        String USER_ADMIN_NOT_DELETE = "fastcms.user.admin.notdelete";
+        String USER_ADMIN_NOT_RESET_PASSWORD = "fastcms.user.admin.not.reset.passowrd";
+        String USER_ACCOUNT_NOT_NULL = "fastcms.user.account.notnull";
+        String USER_ACCOUNT_REGISTER_ALL_NUMBER = "fastcms.user.account.register.allnumber";
+        String USER_ACCOUNT_REGISTER_EXIST = "fastcms.user.register.accountexist";
+        String USER_MINIAPP_PARAMS_ERROR1 = "fastcms.user.miniapp.params.error1";
+        String USER_CONFIRM_PASSWORD_NOT_NULL = "fastcms.user.comfirm.password.not.null";
+        String USER_DISABLE = "fastcms.user.disable";
+        String USER_EMAIL_NOT_NULL = "fastcms.user.email.not.null";
+        String USER_EMAIL_ENABLE_SUBJECT = "fastcms.user.email.enable.subject";
+        String USER_EMAIL_ENABLE_CONTENT = "fastcms.user.email.enable.content";
+        String USER_TYPE_CHANGE_NOT_MODIFY = "fastcms.user.change.type.not.modify";
+        String USER_LOGIN_CAPTCHA_ERROR = "fastcms.user.login.captcha.error";
+        String USER_ACCESS_NOT_ALLOW= "fastcms.user.not.access";
+    }
+
 }

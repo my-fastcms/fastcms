@@ -251,4 +251,25 @@ public interface IUserAmountPayoutService extends IService<UserAmountPayout> {
 		}
 	}
 
+	interface UserAmountI18n {
+		String USER_AMOUNT_PAYOUT_MONEY_NOT_NULL = "fastcms.user.amount.payout.money.not.null";
+		String USER_AMOUNT_CASHOUT_MONEY_GREATER_THAN_0 = "fastcms.user.amount.cashout.money.greater.than.0";
+		String USER_AMOUNT_CASHOUT_MONEY_LESS_THAN = "fastcms.user.amount.cashout.money.less.than";
+		String USER_AMOUNT_CASHOUT_DAY_COUNT = "fastcms.user.amount.cashout.day.count";
+		String USER_AMOUNT_CASHOUT_IS_NULL = "fastcms.user.amount.is.null";
+		String USER_AMOUNT_IS_NOT_ENOUGH = "fastcms.user.amount.is.not.enough";
+		String USER_AMOUNT_CASHOUT_MONEY_LIMIT = "fastcms.user.amount.cashout.money.limit";
+		String USER_AMOUNT_MONEY_APPROVAL_IS_NOT = "fastcms.user.amount.money.approval.is.not";
+		String USER_AMOUNT_MONEY_APPROVAL_IS_ING = "fastcms.user.amount.money.approval.is.approvaling";
+		String USER_AMOUNT_CASHOUT_SUCCESS = "fastcms.user.amount.cashout.success";
+		String USER_AMOUNT_CASHOUT_VERIFY_NOT_EXIST = "fastcms.user.amount.cashout.verify.not.exist";
+		String USER_AMOUNT_CASHOUT_VERIFY_IS_PASS = "fastcms.user.amount.cashout.verify.is.pass";
+		String USER_AMOUNT_CASHOUT_VERIFY_IS_NOT_PASS = "fastcms.user.amount.cashout.verify.is.not.pass";
+		String USER_AMOUNT_PAYMENT_PLATFORM_NOT_EXIST = "fastcms.user.amount.payment.platform.not.exist";
+		String USER_AMOUNT_TRANSFER_SERVICE_CLASS_NOT_EXIST = "fastcms.user.amount.transfer.service.class.not.exist";
+		String USER_AMOUNT_TRANSFER_THIRD_FAIL = "fastcms.user.amount.transfer.third.fail";
+		String USER_AMOUNT_CASHOUT = "fastcms.user.amount.cashout";
+		String USER_AMOUNT_OPENID_EMPTY = "fastcms.user.amount.openid.empty";
+	}
+
 }

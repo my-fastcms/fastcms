@@ -5,7 +5,9 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
+import com.fastcms.common.exception.I18nFastcmsException;
 import com.fastcms.common.utils.StrUtils;
+import com.fastcms.email.autoconfigure.FastcmsJavaMailSender;
 import com.fastcms.entity.User;
 import com.fastcms.entity.UserOpenid;
 import com.fastcms.entity.UserTag;
@@ -15,6 +17,7 @@ import com.fastcms.mapper.UserMapper;
 import com.fastcms.mapper.UserTagMapper;
 import com.fastcms.service.*;
 import com.fastcms.utils.ConfigUtils;
+import com.fastcms.utils.I18nUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,28 +72,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public void updateUserPassword(UpdatePasswordParam updatePasswordParam) throws FastcmsException {
 
         if (StringUtils.isBlank(updatePasswordParam.getOldPassword())) {
-            throw new FastcmsException(FastcmsException.INVALID_PARAM, "fastcms.user.oldpassword.notnull");
+            throw new I18nFastcmsException(UserI18n.USER_OLD_PASSWORD_NOT_NULL);
         }
 
         if(StringUtils.isBlank(updatePasswordParam.getPassword())) {
-            throw new FastcmsException(FastcmsException.INVALID_PARAM, "fastcms.user.newpassword.notnull");
+            throw new I18nFastcmsException(UserI18n.USER_NEW_PASSWORD_NOT_NULL);
         }
 
         if(updatePasswordParam.getPassword().length()< 6) {
-            throw new FastcmsException(FastcmsException.INVALID_PARAM, "fastcms.user.password.length6");
+            throw new I18nFastcmsException(UserI18n.USER_PASSWORD_LENGTH6);
         }
 
         if(!updatePasswordParam.getPassword().equals(updatePasswordParam.getConfirmPassword())) {
-            throw new FastcmsException(FastcmsException.INVALID_PARAM, "fastcms.user.password.error2");
+            throw new I18nFastcmsException(UserI18n.USER_PASSWORD_ERROR2);
         }
 
         User user = getById(updatePasswordParam.getId());
         if(user == null) {
-            throw new FastcmsException(FastcmsException.SERVER_ERROR, "fastcms.user.notexist");
+            throw new I18nFastcmsException(FastcmsException.SERVER_ERROR, UserI18n.USER_NOT_EXIST);
         }
 
         if (!passwordEncoder.matches(updatePasswordParam.getOldPassword(), user.getPassword())) {
-            throw new FastcmsException(FastcmsException.SERVER_ERROR, "fastcms.user.oldpassword.error1");
+            throw new I18nFastcmsException(FastcmsException.SERVER_ERROR, UserI18n.USER_OLD_PASSWORD_ERROR1);
         }
 
         user.setPassword(passwordEncoder.encode(updatePasswordParam.getPassword().trim()));
@@ -114,31 +117,31 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public Long saveUser(User user) throws FastcmsException {
 
         if (user == null) {
-            throw new FastcmsException(FastcmsException.INVALID_PARAM, "fastcms.user.notexist");
+            throw new I18nFastcmsException(FastcmsException.SERVER_ERROR, UserI18n.USER_NOT_EXIST);
         }
 
         if(user.getId() != null && Objects.equals(FastcmsConstants.ADMIN_USER_ID, user.getId())) {
-            throw new FastcmsException(FastcmsException.NO_RIGHT, "fastcms.user.admin.notmodify");
+            throw new I18nFastcmsException(FastcmsException.NO_RIGHT, UserI18n.USER_ADMIN_NOT_MODIFY);
         }
 
         if(user.getId() == null) {
             final String userName = user.getUserName();
 
             if (StringUtils.isBlank(userName)) {
-                throw new FastcmsException(FastcmsException.INVALID_PARAM, "fastcms.user.account.notnull");
+                throw new I18nFastcmsException(FastcmsException.INVALID_PARAM, UserI18n.USER_ACCOUNT_NOT_NULL);
             }
 
             Pattern p = Pattern.compile("[0-9]*");
             Matcher m = p.matcher(userName);
             if (m.matches()) {
-                throw new FastcmsException(FastcmsException.INVALID_PARAM, "fastcms.user.account.register.allnumber");
+                throw new I18nFastcmsException(FastcmsException.INVALID_PARAM, UserI18n.USER_ACCOUNT_REGISTER_ALL_NUMBER);
             }
 
             User one = getOne(Wrappers.<User>lambdaQuery().eq(User::getUserName, user.getUserName()), false);
-            if(one != null) throw new FastcmsException(FastcmsException.SERVER_ERROR, "fastcms.user.register.accountexist");
+            if(one != null) throw new I18nFastcmsException(FastcmsException.SERVER_ERROR, UserI18n.USER_ACCOUNT_REGISTER_EXIST);
 
             if(StringUtils.isBlank(user.getPassword())) {
-                throw new FastcmsException(FastcmsException.SERVER_ERROR, "fastcms.user.password.notnull");
+                throw new I18nFastcmsException(FastcmsException.SERVER_ERROR, UserI18n.USER_NEW_PASSWORD_NOT_NULL);
             }
         } else {
             //登录账号不可修改
@@ -161,7 +164,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public User saveWxMaUserInfo(String openid, WxMaUserInfo userInfo) throws FastcmsException {
 
         if(userInfo == null || StringUtils.isBlank(openid)) {
-            throw new FastcmsException(FastcmsException.INVALID_PARAM, "fastcms.user.miniapp.params.error1");
+            throw new I18nFastcmsException(FastcmsException.INVALID_PARAM, UserI18n.USER_MINIAPP_PARAMS_ERROR1);
         }
 
         UserOpenid userOpenid = userOpenidService.getOne(Wrappers.<UserOpenid>lambdaQuery().eq(UserOpenid::getValue, openid).eq(UserOpenid::getType, UserOpenid.TYPE_WECHAT_MINI));
@@ -191,7 +194,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public User saveUser(String openid, String unionId, String phone, String type) throws FastcmsException {
 
         if(openid == null || StringUtils.isBlank(phone)) {
-            throw new FastcmsException(FastcmsException.INVALID_PARAM, "fastcms.user.miniapp.params.error1");
+            throw new I18nFastcmsException(UserI18n.USER_MINIAPP_PARAMS_ERROR1);
         }
 
         User userByPhone = getOne(Wrappers.<User>lambdaQuery().eq(User::getMobile, phone));
@@ -237,7 +240,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Transactional
     public Boolean deleteUser(Long userId) throws FastcmsException {
         if(userId != null && Objects.equals(userId, FastcmsConstants.ADMIN_USER_ID)) {
-            throw new FastcmsException(FastcmsException.NO_RIGHT, "fastcms.user.admin.notdelete");
+            throw new I18nFastcmsException(FastcmsException.NO_RIGHT, UserI18n.USER_ADMIN_NOT_DELETE);
         }
         ((RoleMapper) roleService.getBaseMapper()).deleteRoleByUserId(userId);
         ((UserTagMapper) userTagService.getBaseMapper()).deleteUserTagRelationByUserId(userId);
@@ -249,30 +252,30 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public synchronized Boolean register(@NotNull String username, @NotNull String password, @NotNull String repeatPassword) throws FastcmsException {
         if(StrUtils.isBlank(username)) {
-            throw new FastcmsException(FastcmsException.INVALID_PARAM, "请输入完成注册数据");
+            throw new I18nFastcmsException(UserI18n.USER_ACCOUNT_NOT_NULL);
         }
 
         final String userName = username.trim();
         Pattern p = Pattern.compile("[0-9]*");
         Matcher m = p.matcher(userName);
         if (m.matches()) {
-            throw new FastcmsException(FastcmsException.INVALID_PARAM, "注册账号不能全是数字");
+            throw new I18nFastcmsException(UserI18n.USER_ACCOUNT_REGISTER_ALL_NUMBER);
         }
 
         if (StrUtils.isBlank(password)) {
-            throw new FastcmsException(FastcmsException.INVALID_PARAM, "请输入密码");
+            throw new I18nFastcmsException(UserI18n.USER_NEW_PASSWORD_NOT_NULL);
         }
 
         if (StrUtils.isBlank(repeatPassword)) {
-            throw new FastcmsException(FastcmsException.INVALID_PARAM, "请输入确认密码");
+            throw new I18nFastcmsException(UserI18n.USER_CONFIRM_PASSWORD_NOT_NULL);
         }
 
         if(!repeatPassword.equals(password)) {
-            throw new FastcmsException(FastcmsException.INVALID_PARAM, "两次密码输入不一致");
+            throw new I18nFastcmsException(UserI18n.USER_PASSWORD_ERROR2);
         }
 
         User user = getOne(Wrappers.<User>lambdaQuery().eq(User::getUserName, username));
-        if(user != null) throw new FastcmsException(FastcmsException.INVALID_PARAM, "账号已存在");
+        if(user != null) throw new I18nFastcmsException(UserI18n.USER_ACCOUNT_REGISTER_EXIST);
 
         user = new User();
         user.setUserName(userName);
@@ -292,27 +295,27 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public void changeUserType(Long userId, Integer userType) throws FastcmsException {
         if (userId != null && userId == FastcmsConstants.ADMIN_USER_ID) {
-            throw new FastcmsException("超级管理员不可修改用户类型");
+            throw new I18nFastcmsException(UserI18n.USER_ADMIN_NOT_MODIFY);
         }
 
         User user = getById(userId);
         if (user == null) {
-            throw new FastcmsException("用户不存在");
+            throw new I18nFastcmsException(UserI18n.USER_NOT_EXIST);
         }
 
         if (user.getStatus() != null && user.getStatus() == 0) {
-            throw new FastcmsException("用户已禁用");
+            throw new I18nFastcmsException(UserI18n.USER_DISABLE);
         }
 
         if (user.getUserType() == userType) {
-            throw new FastcmsException("当前状态与修改状态相同，无需修改");
+            throw new I18nFastcmsException(UserI18n.USER_TYPE_CHANGE_NOT_MODIFY);
         }
 
         if (StrUtils.isBlank(user.getPassword())) {
             try {
                 sendPasswordEmail(user);
             } catch (Exception e) {
-                throw new FastcmsException("邮件发送失败，请检查邮箱配置：" + user.getEmail());
+                throw new FastcmsException(String.format(I18nUtils.getMessage(FastcmsJavaMailSender.EmailI18n.EMAIL_SEND_ERROR), user.getEmail()));
             }
         }
 
@@ -323,7 +326,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public void resetPassword(@NotNull Long userId) throws FastcmsException {
         if (userId != null && userId == FastcmsConstants.ADMIN_USER_ID) {
-            throw new FastcmsException("超级管理员不可重置密码");
+            throw new I18nFastcmsException(UserI18n.USER_ADMIN_NOT_RESET_PASSWORD);
         }
 
         User user = getById(userId);
@@ -339,17 +342,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public void resetPassword(@NotNull User user) throws FastcmsException {
         if (user == null) {
-            throw new FastcmsException("用户不存在");
+            throw new I18nFastcmsException(UserI18n.USER_NOT_EXIST);
         }
 
         if (user.getStatus() != null && user.getStatus() == 0) {
-            throw new FastcmsException("用户已禁用");
+            throw new I18nFastcmsException(UserI18n.USER_DISABLE);
         }
 
         try {
             sendPasswordEmail(user);
         } catch (Exception e) {
-            throw new FastcmsException("邮件发送失败，请检查邮箱配置：" + user.getEmail());
+            throw new I18nFastcmsException(String.format(I18nUtils.getMessage(FastcmsJavaMailSender.EmailI18n.EMAIL_SEND_ERROR), user.getEmail()));
         }
 
         updateById(user);
@@ -364,7 +367,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     void sendPasswordEmail(User user) throws Exception {
 
         if (StringUtils.isBlank(user.getEmail())) {
-            throw new FastcmsException("请补全用户邮箱地址，用来接收邮件");
+            throw new FastcmsException(UserI18n.USER_EMAIL_NOT_NULL);
         }
 
         final String password = RandomStringUtils.random(8, RANDOM_STR);
@@ -373,12 +376,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
         helper.setFrom(ConfigUtils.getConfig(FastcmsConstants.EMAIL_USERNAME));
         helper.setTo(user.getEmail());
-        helper.setSubject("Fastcms用户账号激活");
-        helper.setText(
-                "<p>您的Fastcms账号为:" + user.getUserName() + "</p>" +
-                        "<p>您的Fastcms账号初始密码为:" + password + "</p>" +
-                        "<p>Fastcms官网：https://www.xjd2020.com</p>" +
-                        "<p>Fastcms文档：http://doc.xjd2020.com</p>", true);
+        helper.setSubject(I18nUtils.getMessage(UserI18n.USER_EMAIL_ENABLE_SUBJECT));
+        helper.setText(String.format(I18nUtils.getMessage(UserI18n.USER_EMAIL_ENABLE_CONTENT), user.getUserName(), password), true);
         helper.setSentDate(new Date());
         javaMailSender.send(mimeMessage);
 

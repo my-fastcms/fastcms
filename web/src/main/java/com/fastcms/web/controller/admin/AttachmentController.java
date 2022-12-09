@@ -29,6 +29,7 @@ import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.core.utils.AttachUtils;
 import com.fastcms.entity.Attachment;
 import com.fastcms.service.IAttachmentService;
+import com.fastcms.utils.I18nUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -36,6 +37,8 @@ import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+
+import static com.fastcms.service.IAttachmentService.AttachmentI18n.ATTACHMENT_FILE_NOT_EXIST;
 
 /**
  * 附件管理
@@ -97,7 +100,7 @@ public class AttachmentController {
                                       @RequestParam(value = "fileDesc", required = false) String fileDesc) {
         Attachment attachment = attachmentService.getById(attachId);
         if(attachment == null) {
-            return RestResultUtils.failed("文件不存在");
+            return RestResultUtils.failed(I18nUtils.getMessage(ATTACHMENT_FILE_NOT_EXIST));
         }
 
         attachment.setFileName(fileName);
@@ -117,7 +120,7 @@ public class AttachmentController {
 
         Attachment attachment = attachmentService.getById(attachId);
         if(attachment == null) {
-            return RestResultUtils.failed("附件不存在");
+            return RestResultUtils.failed(I18nUtils.getMessage(ATTACHMENT_FILE_NOT_EXIST));
         }
 
         File attachmentFile = new File(DirUtils.getUploadDir(), attachment.getFilePath());
@@ -146,7 +149,7 @@ public class AttachmentController {
     @Secured(name = "附件删除", resource = "attachment:delete", action = ActionTypes.WRITE)
 	public Object delete(@PathVariable(name = "attachId") Long attachId) {
         Attachment attachment = attachmentService.getById(attachId);
-        if(attachment == null) return RestResultUtils.failed("文件不存在");
+        if(attachment == null) return RestResultUtils.failed(I18nUtils.getMessage(ATTACHMENT_FILE_NOT_EXIST));
         return AttachUtils.deleteAttachment(attachment, attachmentService);
     }
 

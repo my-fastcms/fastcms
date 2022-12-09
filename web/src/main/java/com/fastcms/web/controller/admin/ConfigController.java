@@ -25,6 +25,7 @@ import com.fastcms.core.config.ConfigListenerManager;
 import com.fastcms.entity.Config;
 import com.fastcms.service.IConfigService;
 import com.fastcms.utils.ApplicationUtils;
+import com.fastcms.utils.I18nUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -35,6 +36,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.fastcms.common.constants.FastcmsConstants.FASTCMS_SYSTEM_NO_DATA;
 
 /**
  * 配置
@@ -65,7 +68,7 @@ public class ConfigController {
 
 		Map<String, String[]> parameterMap = request.getParameterMap();
 		if (parameterMap == null || parameterMap.isEmpty()) {
-			return RestResultUtils.failed("没有数据提交");
+			return RestResultUtils.failed(I18nUtils.getMessage(FASTCMS_SYSTEM_NO_DATA));
 		}
 
 		Map<String, String> datasMap = new HashMap<>();

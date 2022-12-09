@@ -122,6 +122,12 @@ public interface FastcmsConstants {
     String JWT_EXPIRE = "jwt_expire";
 
     /**
+     * I18N KEY
+     */
+    String FASTCMS_SYSTEM_NO_DATA = "fastcms.system.no.data";
+    String FASTCMS_SYSTEM_ERROR = "fastcms.system.error";
+
+    /**
      * The constants in exception directory.
      */
     class Exception {
