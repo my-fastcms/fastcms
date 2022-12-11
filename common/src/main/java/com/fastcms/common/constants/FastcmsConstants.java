@@ -126,6 +126,10 @@ public interface FastcmsConstants {
      */
     String FASTCMS_SYSTEM_NO_DATA = "fastcms.system.no.data";
     String FASTCMS_SYSTEM_ERROR = "fastcms.system.error";
+    String FASTCMS_SYSTEM_SAVE_ERROR = "fastcms.system.save.error";
+    String FASTCMS_SYSTEM_UPDATE_ERROR = "fastcms.system.update.error";
+    String FASTCMS_SYSTEM_REQUEST_PARAMS_ERROR = "fastcms.system.request.params.error";
+    String FASTCMS_SYSTEM_REQUEST_ERROR = "fastcms.system.request.error";
 
     /**
      * The constants in exception directory.

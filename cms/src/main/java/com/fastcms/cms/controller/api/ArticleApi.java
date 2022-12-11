@@ -34,12 +34,15 @@ import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.service.IAttachmentService;
 import com.fastcms.service.IPaymentRecordService;
+import com.fastcms.utils.I18nUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
+
+import static com.fastcms.cms.service.IArticleService.ArticleI18n.*;
 
 /**
  * 文章接口
@@ -94,7 +97,7 @@ public class ArticleApi {
 			article.setStatus(Article.STATUS_AUDIT);
 		} else {
 			if(!Objects.equals(article.getCreateUserId(), AuthUtils.getUserId())) {
-				return RestResultUtils.failed("只能修改自己的文章");
+				return RestResultUtils.failed(I18nUtils.getMessage(CMS_ARTICLE_IS_ALLOW_SELF_UPDATE));
 			}
 		}
 
@@ -121,11 +124,11 @@ public class ArticleApi {
 	public Object delete(@PathVariable("articleId") Long articleId) {
 		Article article = articleService.getById(articleId);
 		if(article == null) {
-			return RestResultUtils.failed("文章不存在");
+			return RestResultUtils.failed(I18nUtils.getMessage(CMS_ARTICLE_IS_NOT_EXIST));
 		}
 
 		if(!Objects.equals(AuthUtils.getUserId(), article.getCreateUserId())) {
-			return RestResultUtils.failed("只能删除自己的文章");
+			return RestResultUtils.failed(I18nUtils.getMessage(CMS_ARTICLE_IS_ALLOW_SELF_DELETE));
 		}
 
 		article.setStatus(Article.STATUS_DELETE);

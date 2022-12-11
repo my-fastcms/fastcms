@@ -414,8 +414,16 @@ public interface IArticleService extends IService<Article> {
     }
 
     interface ArticleI18n {
+        String CMS_ARTICLE_IS_NOT_EXIST = "fastcms.cms.article.is.not.exist";
         String CMS_ARTICLE_CHILDREN_NOT_DELETE = "fastcms.cms.article.children.not.delete";
         String CMS_ARTICLE_CHILDREN_COMMENT_NOT_DELETE = "fastcms.cms.article.children.comment.not.delete";
+        String CMS_ARTICLE_IS_ALLOW_SELF_UPDATE = "fastcms.cms.article.is.allow.self.update";
+        String CMS_ARTICLE_IS_ALLOW_SELF_DELETE = "fastcms.cms.article.is.allow.self.delete";
+
+        String CMS_ARTICLE_COMMENT_DISABLE = "fastcms.cms.article.comment.disable";
+        String CMS_ARTICLE_COMMENT_ARTICLE_ID_NOT_ALLOW_NULL = "fastcms.cms.article.comment.article.id.is.not.allow.null";
+        String CMS_ARTICLE_COMMENT_CONTENT_IS_NOT_ALLOW_NULL = "fastcms.cms.article.comment.content.is.not.allow.null";
+        String CMS_ARTICLE_COMMENT_IS_DISABLE = "fastcms.cms.article.comment.is.not.allow.comment";
     }
 
 }

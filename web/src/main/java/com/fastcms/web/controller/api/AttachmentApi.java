@@ -28,6 +28,7 @@ import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.core.utils.AttachUtils;
 import com.fastcms.entity.Attachment;
 import com.fastcms.service.IAttachmentService;
+import com.fastcms.utils.I18nUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +36,8 @@ import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+
+import static com.fastcms.service.IAttachmentService.AttachmentI18n.*;
 
 /**
  * 附件
@@ -93,11 +96,11 @@ public class AttachmentApi {
 									  @RequestParam(value = "fileDesc", required = false) String fileDesc) {
 		Attachment attachment = attachmentService.getById(attachId);
 		if(attachment == null) {
-			return RestResultUtils.failed("文件不存在");
+			return RestResultUtils.failed(I18nUtils.getMessage(ATTACHMENT_FILE_NOT_EXIST));
 		}
 
 		if(attachment.getCreateUserId() != AuthUtils.getUserId()) {
-			return RestResultUtils.failed("只能修改自己的附件");
+			return RestResultUtils.failed(I18nUtils.getMessage(ATTACHMENT_FILE_ALLOW_EDIT_SELF_FILE));
 		}
 
 		attachment.setFileName(fileName);
@@ -116,7 +119,7 @@ public class AttachmentApi {
 
 		Attachment attachment = attachmentService.getById(attachId);
 		if(attachment == null) {
-			return RestResultUtils.failed("附件不存在");
+			return RestResultUtils.failed(I18nUtils.getMessage(ATTACHMENT_FILE_NOT_EXIST));
 		}
 
 		File attachmentFile = new File(DirUtils.getUploadDir(), attachment.getFilePath());
@@ -144,11 +147,14 @@ public class AttachmentApi {
 	@PostMapping("delete/{attachId}")
 	public Object delete(@PathVariable(name = "attachId") Long attachId) {
 		Attachment attachment = attachmentService.getById(attachId);
-		if(attachment == null) return RestResultUtils.failed("文件不存在");
+		if(attachment == null) {
+			return RestResultUtils.failed(I18nUtils.getMessage(ATTACHMENT_FILE_NOT_EXIST));
+		}
 
 		if(attachment.getCreateUserId() != AuthUtils.getUserId()) {
-			return RestResultUtils.failed("只能删除自己的附件");
+			return RestResultUtils.failed(I18nUtils.getMessage(ATTACHMENT_FILE_ALLOW_DELETE_SELF_FILE));
 		}
+
 		return AttachUtils.deleteAttachment(attachment, attachmentService);
 	}
 

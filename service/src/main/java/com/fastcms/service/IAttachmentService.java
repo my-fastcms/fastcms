@@ -12,6 +12,9 @@ public interface IAttachmentService extends IService<Attachment> {
 
     interface AttachmentI18n {
         String ATTACHMENT_FILE_NOT_EXIST = "fastcms.attachment.not.exist";
+        String ATTACHMENT_FILE_UPLOAD_LIST_FAIL = "fastcms.attachment.upload.list.fail";
+        String ATTACHMENT_FILE_ALLOW_EDIT_SELF_FILE = "fastcms.attachment.allow.edit.self.file";
+        String ATTACHMENT_FILE_ALLOW_DELETE_SELF_FILE = "fastcms.attachment.allow.delete.self.file";
     }
 
 }

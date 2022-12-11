@@ -51,6 +51,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.fastcms.common.constants.FastcmsConstants.FASTCMS_SYSTEM_ERROR;
+import static com.fastcms.core.template.TemplateService.TemplateI18n.*;
+import static com.fastcms.service.IAttachmentService.AttachmentI18n.ATTACHMENT_FILE_UPLOAD_LIST_FAIL;
 
 /**
  * 模板管理
@@ -102,14 +104,14 @@ public class TemplateController {
 	public Object install(@RequestParam("file") MultipartFile file) {
 
         if (ApplicationUtils.isDevelopment()) {
-            return RestResultUtils.failed("开发环境不允许安装模板");
+            return RestResultUtils.failed(I18nUtils.getMessage(CMS_TEMPLATE_DEV_NOT_ALLOW_INSTALL));
         }
 
         String fileName = file.getOriginalFilename();
         String suffixName = fileName.substring(fileName.lastIndexOf("."));
         //检查文件格式是否合法
         if(StringUtils.isEmpty(suffixName) || !".zip".equalsIgnoreCase(suffixName)) {
-            return RestResultUtils.failed("请上传zip文件");
+            return RestResultUtils.failed(I18nUtils.getMessage(CMS_TEMPLATE_FILE_ZIP_INSTALL));
         }
 
         File uploadFile = new File(DirUtils.getTemplateDir(), file.getOriginalFilename());
@@ -136,7 +138,7 @@ public class TemplateController {
 	public Object unInstall(@PathVariable("templateId") String templateId) {
 
         if (ApplicationUtils.isDevelopment()) {
-            return RestResultUtils.failed("开发环境不允许卸载模板");
+            return RestResultUtils.failed(I18nUtils.getMessage(CMS_TEMPLATE_DEV_NOT_ALLOW_UNINSTALL));
         }
 
         try {
@@ -157,7 +159,7 @@ public class TemplateController {
 	public Object treeList() {
         Template currTemplate = templateService.getCurrTemplate();
         if(currTemplate == null) {
-            return RestResultUtils.failed("模板不存在");
+            return RestResultUtils.failed(I18nUtils.getMessage(CMS_TEMPLATE_NOT_EXIST));
         }
 
         try {
@@ -177,30 +179,30 @@ public class TemplateController {
 	public Object getFileContent(@RequestParam("filePath") String filePath) {
 
         if (StringUtils.isBlank(filePath) || filePath.contains("..")) {
-            return RestResultUtils.failed("文件不存在");
+            return RestResultUtils.failed(I18nUtils.getMessage(CMS_TEMPLATE_FILE_NOT_EXIST));
         }
 
         Template currTemplate = templateService.getCurrTemplate();
         if (currTemplate == null) {
-            return RestResultUtils.failed("未找到目标模板");
+            return RestResultUtils.failed(I18nUtils.getMessage(CMS_TEMPLATE_DEFAULT_NOT_EXIST));
         }
 
         String suffix = filePath.substring(filePath.lastIndexOf("."));
         if (StringUtils.isBlank(suffix)) {
-            return RestResultUtils.failed("文件后缀不能为空");
+            return RestResultUtils.failed(I18nUtils.getMessage(CMS_TEMPLATE_FILE_SUFFIX_NOT_NULL));
         }
 
         if (!Arrays.asList(".html", ".js", ".css", ".txt").contains(suffix)) {
-            return RestResultUtils.failed("文件不支持编辑");
+            return RestResultUtils.failed(I18nUtils.getMessage(CMS_TEMPLATE_FILE_NOT_SUPPORT_EDIT));
         }
 
         Path file = getFilePath(filePath);
         if (Files.isDirectory(file)) {
-            return RestResultUtils.failed("请指定一个文件");
+            return RestResultUtils.failed(I18nUtils.getMessage(CMS_TEMPLATE_FILE_SURE_ONE));
         }
 
         if (!Files.exists(file)) {
-            return RestResultUtils.failed("文件不存在");
+            return RestResultUtils.failed(I18nUtils.getMessage(CMS_TEMPLATE_FILE_NOT_EXIST));
         }
 
         try {
@@ -234,27 +236,27 @@ public class TemplateController {
     @Secured(name = "模板文件保存", resource = "templates:file/save", action = ActionTypes.WRITE)
 	public Object save(@RequestParam("filePath") String filePath, @RequestParam("fileContent") String fileContent) {
         if(StringUtils.isBlank(filePath) || filePath.contains("..")) {
-            return RestResultUtils.failed("没有找到模板");
+            return RestResultUtils.failed(I18nUtils.getMessage(CMS_TEMPLATE_NOT_EXIST));
         }
 
         if(StringUtils.isBlank(fileContent)) {
-            return RestResultUtils.failed("文件内容不能为空");
+            return RestResultUtils.failed(I18nUtils.getMessage(CMS_TEMPLATE_FILE_CONTENT_NOT_NULL));
         }
 
         Template currTemplate = templateService.getCurrTemplate();
         if(currTemplate == null) {
-            return RestResultUtils.failed("没有找到模板");
+            return RestResultUtils.failed(I18nUtils.getMessage(CMS_TEMPLATE_NOT_EXIST));
         }
 
         Path currFile = getFilePath(filePath);
 
         if(currFile == null) {
-            return RestResultUtils.failed("文件不存在");
+            return RestResultUtils.failed(I18nUtils.getMessage(CMS_TEMPLATE_FILE_NOT_EXIST));
         }
 
         File file = currFile.toFile();
         if(!file.canWrite()) {
-            return RestResultUtils.failed("文件没有写入权限");
+            return RestResultUtils.failed(I18nUtils.getMessage(CMS_TEMPLATE_FILE_NOT_WRITE_AUTH));
         }
 
         FileUtils.writeString(file, fileContent);
@@ -274,21 +276,21 @@ public class TemplateController {
 	public Object upload(String dirName, @RequestParam("files") MultipartFile files[]) {
 
         if(StringUtils.isBlank(dirName) || dirName.contains("..")) {
-            return RestResultUtils.failed("请选择上传目录");
+            return RestResultUtils.failed(I18nUtils.getMessage(CMS_TEMPLATE_FILE_UPLOAD_DIR_NOT_NULL));
         }
 
         Template currTemplate = templateService.getCurrTemplate();
         if(currTemplate == null) {
-            return RestResultUtils.failed("没有找到模板");
+            return RestResultUtils.failed(I18nUtils.getMessage(CMS_TEMPLATE_NOT_EXIST));
         }
 
         if(files == null || files.length <=0) {
-            return RestResultUtils.failed("请选择需要上传的模板文件");
+            return RestResultUtils.failed(I18nUtils.getMessage(CMS_TEMPLATE_FILE_UPLOAD_EMPTY));
         }
 
         Path templatePath = getFilePath(dirName);
         if(templatePath == null || !Files.exists(templatePath)) {
-            return RestResultUtils.failed("目录不存在");
+            return RestResultUtils.failed(I18nUtils.getMessage(CMS_TEMPLATE_FILE_UPLOAD_DIR_NOT_EXIST));
         }
 
         List<String> errorFiles = new ArrayList<>();
@@ -315,7 +317,7 @@ public class TemplateController {
         }
 
         return errorFiles.isEmpty() ? RestResultUtils.success()
-                : RestResultUtils.failed(errorFiles.stream().collect(Collectors.joining(",")).concat(",以上文件上传失败"));
+                : RestResultUtils.failed(errorFiles.stream().collect(Collectors.joining(",")).concat(I18nUtils.getMessage(ATTACHMENT_FILE_UPLOAD_LIST_FAIL)));
     }
 
     /**
@@ -328,22 +330,22 @@ public class TemplateController {
 	public Object delFile(@RequestParam("filePath") String filePath) {
 
         if(StringUtils.isBlank(filePath)) {
-            return RestResultUtils.failed("文件路径为空");
+            return RestResultUtils.failed(I18nUtils.getMessage(CMS_TEMPLATE_FILE_PATH_IS_EMPTY));
         }
 
         if(filePath.contains("..")) {
-            return RestResultUtils.failed("文件路径不合法");
+            return RestResultUtils.failed(I18nUtils.getMessage(CMS_TEMPLATE_FILE_PATH_IS_ERROR));
         }
 
         Template currTemplate = templateService.getCurrTemplate();
         if(currTemplate == null) {
-            return RestResultUtils.failed("没有找到模板");
+            return RestResultUtils.failed(I18nUtils.getMessage(CMS_TEMPLATE_NOT_EXIST));
         }
         try {
             Path templateFilePath = getFilePath(filePath);
 
             if(Files.isDirectory(templateFilePath)) {
-                return RestResultUtils.failed("不可删除文件目录");
+                return RestResultUtils.failed(I18nUtils.getMessage(CMS_TEMPLATE_FILE_PATH_IS_NOT_ALLOW_DELETE));
             }
 
             templateFilePath.toFile().delete();
@@ -397,7 +399,7 @@ public class TemplateController {
 
         List<Menu> list = menuService.list(Wrappers.<Menu>lambdaQuery().eq(Menu::getParentId, menuId));
         if(list != null && !list.isEmpty()) {
-            return RestResultUtils.failed("请先删除该菜单的子菜单");
+            return RestResultUtils.failed(I18nUtils.getMessage(CMS_TEMPLATE_MENU_CHILDREN_IS_NOT_DELETE));
         }
 
         return RestResultUtils.success(menuService.removeById(menuId));

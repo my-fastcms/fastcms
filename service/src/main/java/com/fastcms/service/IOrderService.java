@@ -403,4 +403,12 @@ public interface IOrderService extends IService<Order> {
         }
     }
 
+    interface OrderI18n {
+        String ORDER_VIEW_SELF = "fastcms.order.view.self";
+        String ORDER_ALREADY_PAYED = "fastcms.order.already.payed";
+        String ORDER_UN_PAYED = "fastcms.order.unpayed";
+        String ORDER_NOT_EXIST = "fastcms.order.not.exist";
+        String ORDER_PAY_AMOUNT_ERROR= "fastcms.order.payamount.error";
+    }
+
 }

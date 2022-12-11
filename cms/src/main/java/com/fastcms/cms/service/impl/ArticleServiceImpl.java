@@ -30,6 +30,7 @@ import com.fastcms.cms.service.IArticleService;
 import com.fastcms.cms.service.IArticleTagService;
 import com.fastcms.cms.task.ArticleViewCountUpdateTask;
 import com.fastcms.common.exception.FastcmsException;
+import com.fastcms.common.exception.I18nFastcmsException;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.entity.Attachment;
 import com.fastcms.extension.IndexDataExtension;
@@ -46,6 +47,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static com.fastcms.common.constants.FastcmsConstants.FASTCMS_SYSTEM_SAVE_ERROR;
 
 /**
  * @author： wjun_java@163.com
@@ -73,7 +76,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
         try {
             if(!saveOrUpdate(article)) {
-                throw new FastcmsException(FastcmsException.SERVER_ERROR, "保存失败");
+                throw new I18nFastcmsException(FastcmsException.SERVER_ERROR, FASTCMS_SYSTEM_SAVE_ERROR);
             }
         } catch (Exception e) {
             throw new FastcmsException(FastcmsException.SERVER_ERROR, e.getMessage());

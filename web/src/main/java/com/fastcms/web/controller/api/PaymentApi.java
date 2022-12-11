@@ -26,6 +26,7 @@ import com.fastcms.entity.Order;
 import com.fastcms.payment.PayServiceManager;
 import com.fastcms.payment.bean.FastcmsPayOrder;
 import com.fastcms.service.IOrderService;
+import com.fastcms.utils.I18nUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +38,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Map;
+
+import static com.fastcms.service.IOrderService.OrderI18n.ORDER_NOT_EXIST;
+import static com.fastcms.service.IOrderService.OrderI18n.ORDER_PAY_AMOUNT_ERROR;
 
 /**
  * 支付
@@ -185,10 +189,10 @@ public class PaymentApi {
     Order getOrder(Long orderId) throws PayErrorException {
         Order order = orderService.getById(orderId);
         if (order == null) {
-            throw new PayErrorException(new PayException("500", "订单不存在,orderId：" + orderId));
+            throw new PayErrorException(new PayException("500", String.format(I18nUtils.getMessage(ORDER_NOT_EXIST), orderId)));
         }
         if (order.getPayAmount() == null || order.getPayAmount().compareTo(BigDecimal.ZERO) <=0) {
-            throw new PayErrorException(new PayException("500", "订单金额异常"));
+            throw new PayErrorException(new PayException("500", I18nUtils.getMessage(ORDER_PAY_AMOUNT_ERROR)));
         }
         return order;
     }

@@ -1,5 +1,6 @@
 package com.fastcms.web.controller.api;
 
+import com.fastcms.utils.I18nUtils;
 import me.chanjar.weixin.mp.api.WxMpMessageRouter;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.message.WxMpXmlMessage;
@@ -9,6 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import static com.fastcms.common.constants.FastcmsConstants.FASTCMS_SYSTEM_REQUEST_ERROR;
+import static com.fastcms.common.constants.FastcmsConstants.FASTCMS_SYSTEM_REQUEST_PARAMS_ERROR;
 
 /**
  * 接收微信消息
@@ -48,7 +52,7 @@ public class WechatMessageCallbackController {
 
         logger.info("\n接收到来自微信服务器的认证消息：[{}, {}, {}, {}]", signature, timestamp, nonce, echostr);
         if (StringUtils.isAnyBlank(signature, timestamp, nonce, echostr)) {
-            throw new IllegalArgumentException("请求参数非法，请核实!");
+            throw new IllegalArgumentException(I18nUtils.getMessage(FASTCMS_SYSTEM_REQUEST_PARAMS_ERROR));
         }
         this.wxService.switchoverTo(appId);
 
@@ -81,7 +85,7 @@ public class WechatMessageCallbackController {
 
         this.wxService.switchoverTo(appId);
         if (!wxService.checkSignature(timestamp, nonce, signature)) {
-            throw new IllegalArgumentException("非法请求");
+            throw new IllegalArgumentException(I18nUtils.getMessage(FASTCMS_SYSTEM_REQUEST_ERROR));
         }
 
         String out = null;

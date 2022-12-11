@@ -134,4 +134,25 @@ public interface TemplateService {
 
     }
 
+    interface TemplateI18n {
+        String CMS_TEMPLATE_DEV_NOT_ALLOW_INSTALL = "fastcms.cms.template.dev.not.allow.install";
+        String CMS_TEMPLATE_DEV_NOT_ALLOW_UNINSTALL = "fastcms.cms.template.dev.not.allow.uninstall";
+        String CMS_TEMPLATE_FILE_ZIP_INSTALL = "fastcms.cms.template.file.zip.install";
+        String CMS_TEMPLATE_FILE_NOT_EXIST = "fastcms.cms.template.file.not.exist";
+        String CMS_TEMPLATE_NOT_EXIST = "fastcms.cms.template.not.exist";
+        String CMS_TEMPLATE_DEFAULT_NOT_EXIST = "fastcms.cms.template.default.not.exist";
+        String CMS_TEMPLATE_FILE_SUFFIX_NOT_NULL = "fastcms.cms.template.file.suffix.not.null";
+        String CMS_TEMPLATE_FILE_NOT_SUPPORT_EDIT = "fastcms.cms.template.file.not.support.edit";
+        String CMS_TEMPLATE_FILE_SURE_ONE = "fastcms.cms.template.file.sure.one";
+        String CMS_TEMPLATE_FILE_CONTENT_NOT_NULL = "fastcms.cms.template.file.content.not.null";
+        String CMS_TEMPLATE_FILE_NOT_WRITE_AUTH = "fastcms.cms.template.file.not.write.auth";
+        String CMS_TEMPLATE_FILE_UPLOAD_DIR_NOT_NULL = "fastcms.cms.template.file.upload.dir.not.null";
+        String CMS_TEMPLATE_FILE_UPLOAD_EMPTY = "fastcms.cms.template.file.upload.empty";
+        String CMS_TEMPLATE_FILE_UPLOAD_DIR_NOT_EXIST = "fastcms.cms.template.file.upload.dir.not.exist";
+        String CMS_TEMPLATE_FILE_PATH_IS_EMPTY = "fastcms.cms.template.file.path.is.empty";
+        String CMS_TEMPLATE_FILE_PATH_IS_ERROR = "fastcms.cms.template.file.path.is.error";
+        String CMS_TEMPLATE_FILE_PATH_IS_NOT_ALLOW_DELETE = "fastcms.cms.template.file.path.is.not.allow.delete";
+        String CMS_TEMPLATE_MENU_CHILDREN_IS_NOT_DELETE = "fastcms.cms.template.menu.children.is.not.delete";
+    }
+
 }

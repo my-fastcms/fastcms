@@ -10,11 +10,14 @@ import com.fastcms.cms.service.IArticleCommentService;
 import com.fastcms.cms.service.IArticleService;
 import com.fastcms.cms.utils.ArticleUtils;
 import com.fastcms.common.exception.FastcmsException;
+import com.fastcms.common.exception.I18nFastcmsException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+
+import static com.fastcms.cms.service.IArticleService.ArticleI18n.*;
 
 /**
  * 文章评论服务实现类
@@ -41,24 +44,24 @@ public class ArticleCommentServiceImpl extends ServiceImpl<ArticleCommentMapper,
 	public void saveArticleComment(@NotNull Long articleId, @NotNull Long commentId, @NotNull String content) throws FastcmsException {
 
 		if (!ArticleUtils.isEnableArticleComment()) {
-			throw new FastcmsException(FastcmsException.SERVER_ERROR, "系统已关闭文章评论功能");
+			throw new I18nFastcmsException(CMS_ARTICLE_COMMENT_DISABLE);
 		}
 
 		if(articleId == null) {
-			throw new FastcmsException(FastcmsException.INVALID_PARAM, "文章id不能为空");
+			throw new I18nFastcmsException(CMS_ARTICLE_COMMENT_ARTICLE_ID_NOT_ALLOW_NULL);
 		}
 
 		if(StringUtils.isBlank(content)) {
-			throw new FastcmsException(FastcmsException.INVALID_PARAM, "评论内容不能为空");
+			throw new I18nFastcmsException(CMS_ARTICLE_COMMENT_CONTENT_IS_NOT_ALLOW_NULL);
 		}
 
 		Article article = articleService.getById(articleId);
 		if(article == null) {
-			throw new FastcmsException(FastcmsException.INVALID_PARAM, "文章不存在");
+			throw new I18nFastcmsException(CMS_ARTICLE_IS_NOT_EXIST);
 		}
 
 		if(!article.getCommentEnable()) {
-			throw new FastcmsException(FastcmsException.INVALID_PARAM, "文章不允许评论");
+			throw new I18nFastcmsException(CMS_ARTICLE_COMMENT_IS_DISABLE);
 		}
 
 		ArticleComment articleComment = new ArticleComment();

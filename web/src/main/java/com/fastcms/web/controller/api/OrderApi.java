@@ -28,10 +28,13 @@ import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.entity.Order;
 import com.fastcms.service.IOrderService;
+import com.fastcms.utils.I18nUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import static com.fastcms.service.IOrderService.OrderI18n.*;
 
 /**
  * 订单
@@ -91,7 +94,7 @@ public class OrderApi {
     public RestResult<IOrderService.OrderDetailVo> detail(@PathVariable(name = "orderId") Long orderId) {
         Order order = orderService.getById(orderId);
         if(order != null && AuthUtils.getUser() != null && order.getCreateUserId() != AuthUtils.getUserId()) {
-            return RestResultUtils.failed("只能查看自己的订单");
+            return RestResultUtils.failed(I18nUtils.getMessage(ORDER_VIEW_SELF));
         }
         return RestResultUtils.success(orderService.getOrderDetail(orderId));
     }
@@ -105,9 +108,9 @@ public class OrderApi {
     public Object checkOrderPayStatus(@PathVariable("orderId") Long orderId) {
         Order order = orderService.getById(orderId);
         if(order != null && order.getPayStatus() == Order.STATUS_PAY_SUCCESS) {
-            return RestResultUtils.success("订单已支付");
+            return RestResultUtils.success(I18nUtils.getMessage(ORDER_ALREADY_PAYED));
         }
-        return RestResultUtils.failed("订单未支付");
+        return RestResultUtils.failed(I18nUtils.getMessage(ORDER_UN_PAYED));
     }
 
 }
