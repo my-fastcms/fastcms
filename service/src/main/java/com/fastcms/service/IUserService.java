@@ -283,7 +283,6 @@ public interface IUserService extends IService<User> {
         String USER_ACCOUNT_NOT_NULL = "fastcms.user.account.notnull";
         String USER_ACCOUNT_REGISTER_ALL_NUMBER = "fastcms.user.account.register.allnumber";
         String USER_ACCOUNT_REGISTER_EXIST = "fastcms.user.register.accountexist";
-        String USER_MINIAPP_PARAMS_ERROR1 = "fastcms.user.miniapp.params.error1";
         String USER_CONFIRM_PASSWORD_NOT_NULL = "fastcms.user.comfirm.password.not.null";
         String USER_DISABLE = "fastcms.user.disable";
         String USER_EMAIL_NOT_NULL = "fastcms.user.email.not.null";
@@ -292,6 +291,18 @@ public interface IUserService extends IService<User> {
         String USER_TYPE_CHANGE_NOT_MODIFY = "fastcms.user.change.type.not.modify";
         String USER_LOGIN_CAPTCHA_ERROR = "fastcms.user.login.captcha.error";
         String USER_ACCESS_NOT_ALLOW= "fastcms.user.not.access";
+
+        String USER_MINIAPP_PARAMS_ERROR1 = "fastcms.user.miniapp.params.error1";
+        String USER_MINIAPP_CODE2SESSION_CODE_IS_NULL = "fastcms.user.miniapp.code2session.code.is.null";
+        String USER_MINIAPP_SESSIONKEY_OR_OPENID_IS_NULL = "fastcms.user.miniapp.sessionKey.or.openid.is.null";
+
+        String USER_MINIAPP_LOGIN_FAIL_FOR_EMPTY_SESSION = "fastcms.user.miniapp.login.fail.for.empty.session";
+        String USER_MINIAPP_LOGIN_FAIL_FOR_EMPTY_OPENID = "fastcms.user.miniapp.login.fail.for.empty.openid";
+        String USER_MINIAPP_LOGIN_FAIL_FOR_USER_INFO_CHECK_ERROR = "fastcms.user.miniapp.login.fail.for.userinfo.check.error";
+        String USER_MINIAPP_LOGIN_FAIL_FOR_USER_IS_NULL = "fastcms.user.miniapp.login.fail.for.user.is.null";
+        String USER_MINIAPP_LOGIN_FAIL_FOR_GET_PHONE_FAIL = "fastcms.user.miniapp.login.fail.get.phone.fail";
+        String USER_MINIAPP_GET_PHONE_FAIL_FOR_EMPTY_SESSION = "fastcms.user.miniapp.get.phone.fail.for.empty.session";
+
     }
 
 }

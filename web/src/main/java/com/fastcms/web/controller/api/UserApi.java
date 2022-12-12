@@ -23,9 +23,12 @@ import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.entity.User;
 import com.fastcms.service.IUserService;
+import com.fastcms.utils.I18nUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import static com.fastcms.service.IUserService.UserI18n.USER_NOT_EXIST;
 
 /**
  * 用户
@@ -52,7 +55,7 @@ public class UserApi {
 
         User userInfo = userService.getById(AuthUtils.getUserId());
         if(userInfo == null) {
-            return RestResultUtils.failed("user is null");
+            return RestResultUtils.failed(I18nUtils.getMessage(USER_NOT_EXIST));
         }
 
         userInfo.setRealName(user.getRealName());
