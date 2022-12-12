@@ -39,6 +39,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 
 import static com.fastcms.service.IAttachmentService.AttachmentI18n.ATTACHMENT_FILE_NOT_EXIST;
+import static com.fastcms.service.IResourceService.ResourceI18n.*;
 
 /**
  * 附件管理
@@ -62,7 +63,7 @@ public class AttachmentController {
      * @return
      */
     @RequestMapping("list")
-    @Secured(name = "附件列表", resource = "attachment:list", action = ActionTypes.READ)
+    @Secured(name = RESOURCE_NAME_ATTACHMENT_LIST, resource = "attachment:list", action = ActionTypes.READ)
 	public RestResult<Page<Attachment>> list(PageModel page,
                                              @RequestParam(value = "fileType", required = false) String fileType,
                                              @RequestParam(value = "fileName", required = false) String fileName) {
@@ -81,7 +82,7 @@ public class AttachmentController {
      */
     @PostMapping("upload")
     @ExceptionHandler(value = MultipartException.class)
-    @Secured(name = "附件上传", resource = "attachment:upload", action = ActionTypes.WRITE)
+    @Secured(name = RESOURCE_NAME_ATTACHMENT_UPLOAD, resource = "attachment:upload", action = ActionTypes.WRITE)
 	public Object upload(@RequestParam("files") MultipartFile files[]) {
         return AttachUtils.upload(files, attachmentService);
     }
@@ -94,7 +95,7 @@ public class AttachmentController {
      * @return
      */
     @PostMapping("update/{attachId}")
-    @Secured(name = "附件修改", resource = "attachment:update", action = ActionTypes.WRITE)
+    @Secured(name = RESOURCE_NAME_ATTACHMENT_EDIT, resource = "attachment:update", action = ActionTypes.WRITE)
 	public RestResult<Boolean> update(@PathVariable("attachId") Long attachId,
                                       @RequestParam("fileName") String fileName,
                                       @RequestParam(value = "fileDesc", required = false) String fileDesc) {
@@ -115,7 +116,7 @@ public class AttachmentController {
      * @return
      */
     @GetMapping("get/{attachId}")
-    @Secured(name = "附件详情", resource = "attachment:get", action = ActionTypes.READ)
+    @Secured(name = RESOURCE_NAME_ATTACHMENT_INFO, resource = "attachment:get", action = ActionTypes.READ)
 	public RestResult<Attachment> detail(@PathVariable(name = "attachId") Long attachId) {
 
         Attachment attachment = attachmentService.getById(attachId);
@@ -146,7 +147,7 @@ public class AttachmentController {
      * @return
      */
     @PostMapping("delete/{attachId}")
-    @Secured(name = "附件删除", resource = "attachment:delete", action = ActionTypes.WRITE)
+    @Secured(name = RESOURCE_NAME_ATTACHMENT_DELETE, resource = "attachment:delete", action = ActionTypes.WRITE)
 	public Object delete(@PathVariable(name = "attachId") Long attachId) {
         Attachment attachment = attachmentService.getById(attachId);
         if(attachment == null) return RestResultUtils.failed(I18nUtils.getMessage(ATTACHMENT_FILE_NOT_EXIST));

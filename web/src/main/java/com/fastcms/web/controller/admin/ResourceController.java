@@ -32,6 +32,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.fastcms.service.IResourceService.ResourceI18n.RESOURCE_NAME_RESOURCE_LIST;
+import static com.fastcms.service.IResourceService.ResourceI18n.RESOURCE_NAME_RESOURCE_SYNC;
+
 /**
  * 资源管理
  * @author： wjun_java@163.com
@@ -52,13 +55,13 @@ public class ResourceController {
 	 * @return
 	 */
 	@GetMapping("list")
-	@Secured(name = "资源列表", resource = "resource:list", action = ActionTypes.READ)
+	@Secured(name = RESOURCE_NAME_RESOURCE_LIST, resource = "resource:list", action = ActionTypes.READ)
 	public RestResult<List<Resource>> getResources() {
 		return RestResultUtils.success(resourceService.list(Wrappers.<Resource>lambdaQuery().orderByDesc(Resource::getResourcePath)));
 	}
 
 	@PostMapping("sync")
-	@Secured(name = "资源同步", resource = "resource:sync", action = ActionTypes.WRITE)
+	@Secured(name = RESOURCE_NAME_RESOURCE_SYNC, resource = "resource:sync", action = ActionTypes.WRITE)
 	public Object syncResource() {
 		resourceService.syncResources();
 		return RestResultUtils.success();

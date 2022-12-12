@@ -4,9 +4,7 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.fastcms.utils.RequestUtils;
-import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.support.RequestContextUtils;
+import com.fastcms.utils.I18nUtils;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -29,7 +27,7 @@ public class Resource implements Serializable {
         this.resourceName = resourceName;
         this.resourcePath = resourcePath;
         this.actionType = actionType;
-        setDefaultLanguage();
+        this.language = I18nUtils.getLanguage();
     }
 
     @TableId(value = "id", type = IdType.AUTO)
@@ -110,11 +108,6 @@ public class Resource implements Serializable {
 
     public void setLanguage(String language) {
         this.language = language;
-    }
-
-    void setDefaultLanguage() {
-        LocaleResolver localeResolver = RequestContextUtils.getLocaleResolver(RequestUtils.getRequest());
-        this.language = localeResolver == null ? null : localeResolver.resolveLocale(RequestUtils.getRequest()).getLanguage();
     }
 
     @Override

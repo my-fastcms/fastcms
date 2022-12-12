@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Objects;
 
+import static com.fastcms.service.IResourceService.ResourceI18n.*;
 import static com.fastcms.service.IRoleService.RoleI18n.*;
 
 /**
@@ -59,7 +60,7 @@ public class RoleController {
      * @return
      */
     @GetMapping("list")
-    @Secured(name = "角色列表", resource = "roles:list", action = ActionTypes.READ)
+    @Secured(name = RESOURCE_NAME_ROLE_LIST, resource = "roles:list", action = ActionTypes.READ)
     public RestResult<Page<Role>> list(PageModel page,
                                        @RequestParam(name = "roleName", required = false) String roleName) {
         Page<Role> pageData = roleService.page(page.toPage(), Wrappers.<Role>lambdaQuery().like(StrUtils.isNotBlank(roleName), Role::getRoleName, roleName));
@@ -72,7 +73,7 @@ public class RoleController {
      * @return
      */
     @PostMapping("save")
-    @Secured(name = "角色保存", resource = "roles:save", action = ActionTypes.WRITE)
+    @Secured(name = RESOURCE_NAME_ROLE_SAVE, resource = "roles:save", action = ActionTypes.WRITE)
     public Object save(@Validated Role role) {
 
         if(role.getId() != null && Objects.equals(role.getId(), FastcmsConstants.ADMIN_ROLE_ID)) {
@@ -89,7 +90,7 @@ public class RoleController {
      * @return
      */
     @PostMapping("delete/{roleId}")
-    @Secured(name = "角色删除", resource = "roles:delete", action = ActionTypes.WRITE)
+    @Secured(name = RESOURCE_NAME_ROLE_DELETE, resource = "roles:delete", action = ActionTypes.WRITE)
     public RestResult<Object> del(@PathVariable("roleId") Long roleId) {
         if(roleId != null && Objects.equals(roleId, FastcmsConstants.ADMIN_ROLE_ID)) {
             return RestResultUtils.failed(I18nUtils.getMessage(ROLE_NOT_ALLOW_DELETE));
@@ -112,7 +113,7 @@ public class RoleController {
      * @return
      */
     @GetMapping("{roleId}/permissions")
-    @Secured(name = "角色权限列表", resource = "roles:permissions/list", action = ActionTypes.READ)
+    @Secured(name = RESOURCE_NAME_ROLE_PERMISSION_LIST, resource = "roles:permissions/list", action = ActionTypes.READ)
     public RestResult<IRoleService.RolePermissions> getPermissionList(@PathVariable("roleId") Long roleId) {
         return RestResultUtils.success(roleService.getRolePermission(roleId));
     }
@@ -124,7 +125,7 @@ public class RoleController {
      * @return
      */
     @PostMapping("{roleId}/permissions/save")
-    @Secured(name = "角色权限保存", resource = "roles:permissions/save", action = ActionTypes.WRITE)
+    @Secured(name = RESOURCE_NAME_ROLE_PERMISSION_SAVE, resource = "roles:permissions/save", action = ActionTypes.WRITE)
     public Object saveRolePermission(@PathVariable("roleId") Long roleId,
                                      @RequestParam(value = "permissionIdList", required = false) List<Long> permissionIdList,
                                      @RequestParam(value = "resourcePathList", required = false) List<String> resourcePathList) {

@@ -38,6 +38,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.fastcms.common.constants.FastcmsConstants.FASTCMS_SYSTEM_NO_DATA;
+import static com.fastcms.service.IResourceService.ResourceI18n.RESOURCE_NAME_CONFIG_LIST;
+import static com.fastcms.service.IResourceService.ResourceI18n.RESOURCE_NAME_CONFIG_SAVE;
 
 /**
  * 配置
@@ -63,7 +65,7 @@ public class ConfigController {
 	 * @return
 	 */
 	@PostMapping("save")
-	@Secured(name = "配置保存", resource = "config:save", action = ActionTypes.WRITE)
+	@Secured(name = RESOURCE_NAME_CONFIG_SAVE, resource = "config:save", action = ActionTypes.WRITE)
 	public RestResult<Boolean> save(HttpServletRequest request) {
 
 		Map<String, String[]> parameterMap = request.getParameterMap();
@@ -111,7 +113,7 @@ public class ConfigController {
 	 * @return
 	 */
 	@PostMapping("list")
-	@Secured(name = "配置列表", resource = "config:list", action = ActionTypes.READ)
+	@Secured(name = RESOURCE_NAME_CONFIG_LIST, resource = "config:list", action = ActionTypes.READ)
 	public RestResult<List<Config>> getConfigList(@RequestParam("configKeys") List<String> configKeys) {
 		return RestResultUtils.success(configService.getConfigs(configKeys));
 	}

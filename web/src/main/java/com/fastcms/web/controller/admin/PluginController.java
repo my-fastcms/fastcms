@@ -41,6 +41,7 @@ import java.io.File;
 import java.nio.file.Paths;
 
 import static com.fastcms.plugin.PluginManagerService.PluginI18n.*;
+import static com.fastcms.service.IResourceService.ResourceI18n.*;
 
 /**
  * 插件管理
@@ -64,7 +65,7 @@ public class PluginController {
      * @return
      */
     @GetMapping("list")
-    @Secured(name = "插件列表", resource = "plugin:list", action = ActionTypes.READ)
+    @Secured(name = RESOURCE_NAME_PLUGIN_LIST, resource = "plugin:list", action = ActionTypes.READ)
     public RestResult<Page<PluginManagerService.PluginVo>> list(PageModel page, String pluginId, String provider) {
         PluginManagerService.PluginResult pluginResult = pluginManagerService.getPluginList(page.getPageNum().intValue(), page.getPageSize().intValue(), pluginId, provider);
         return RestResultUtils.success(new Page<PluginManagerService.PluginVo>(page.getPageNum(), page.getPageSize(), pluginResult.getTotal())
@@ -77,7 +78,7 @@ public class PluginController {
      * @return
      */
     @PostMapping("install")
-    @Secured(name = "插件安装", resource = "plugin:install", action = ActionTypes.WRITE)
+    @Secured(name = RESOURCE_NAME_PLUGIN_INSTALL, resource = "plugin:install", action = ActionTypes.WRITE)
     public Object install(@RequestParam("file") MultipartFile file) throws Exception {
 
         if (ApplicationUtils.isDevelopment()) {
@@ -118,7 +119,7 @@ public class PluginController {
      * @return
      */
     @PostMapping("unInstall/{pluginId}")
-    @Secured(name = "插件卸载", resource = "plugin:unInstall", action = ActionTypes.WRITE)
+    @Secured(name = RESOURCE_NAME_PLUGIN_UNINSTALL, resource = "plugin:unInstall", action = ActionTypes.WRITE)
     public Object unInstall(@PathVariable(name = "pluginId") String pluginId) throws Exception {
 
         if (ApplicationUtils.isDevelopment()) {
@@ -136,7 +137,7 @@ public class PluginController {
      * @return
      */
     @GetMapping("config/url/{pluginId}")
-    @Secured(name = "插件配置", resource = "plugin:config/url", action = ActionTypes.WRITE)
+    @Secured(name = RESOURCE_NAME_PLUGIN_CONFIG, resource = "plugin:config/url", action = ActionTypes.WRITE)
     public RestResult<String> getPluginConfigUrl(@PathVariable("pluginId") String pluginId) {
         Plugin plugin = pluginManagerService.getPluginManager().getPlugin(pluginId).getPlugin();
         if(plugin instanceof PluginBase) {

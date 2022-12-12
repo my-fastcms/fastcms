@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static com.fastcms.service.IDepartmentService.DepartmentI18n.DEPARTMENT_CHILDREN_NOT_DELETE;
+import static com.fastcms.service.IResourceService.ResourceI18n.*;
 
 /**
  * 部门管理
@@ -55,7 +56,7 @@ public class DepartmentController {
      * @return
      */
     @GetMapping("list")
-    @Secured(name = "部门列表", resource = "department:list", action = ActionTypes.READ)
+    @Secured(name = RESOURCE_NAME_DEPARTMENT_LIST, resource = "department:list", action = ActionTypes.READ)
     public RestResult<List<IDepartmentService.DepartmentNode>> list(@RequestParam(name = "status", required = false) Integer status) {
         return RestResultUtils.success(departmentService.getDepartmentList(status));
     }
@@ -66,7 +67,7 @@ public class DepartmentController {
      * @return
      */
     @PostMapping("save")
-    @Secured(name = "部门保存", resource = "department:save", action = ActionTypes.WRITE)
+    @Secured(name = RESOURCE_NAME_DEPARTMENT_SAVE, resource = "department:save", action = ActionTypes.WRITE)
     public RestResult<Boolean> save(@Validated Department department) {
         return RestResultUtils.success(departmentService.saveOrUpdate(department));
     }
@@ -77,7 +78,7 @@ public class DepartmentController {
      * @return
      */
     @PostMapping("delete/{deptId}")
-    @Secured(name = "部门删除", resource = "department:delete", action = ActionTypes.WRITE)
+    @Secured(name = RESOURCE_NAME_DEPARTMENT_DELETE, resource = "department:delete", action = ActionTypes.WRITE)
     public RestResult<Object> delDepartment(@PathVariable("deptId") Long deptId) {
         List<Department> list = departmentService.list(Wrappers.<Department>lambdaQuery().eq(Department::getParentId, deptId));
         if(list != null && list.size()>0) {

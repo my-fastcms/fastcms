@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static com.fastcms.service.IPermissionService.PermissionI18n.ROUTES_CHILDREN_NOT_DELETE;
+import static com.fastcms.service.IResourceService.ResourceI18n.*;
 
 /**
  * 前端路由管理
@@ -54,7 +55,7 @@ public class RouterController {
 	 * @return
 	 */
 	@GetMapping("list")
-	@Secured(name = "路由列表", resource = "routers:list", action = ActionTypes.READ)
+	@Secured(name = RESOURCE_NAME_ROUTER_LIST, resource = "routers:list", action = ActionTypes.READ)
 	public RestResult<List<RouterNode>> list() {
 		return RestResultUtils.success(permissionService.getPermissions());
 	}
@@ -65,7 +66,7 @@ public class RouterController {
 	 * @return
 	 */
 	@PostMapping("save")
-	@Secured(name = "路由保存", resource = "routers:save", action = ActionTypes.WRITE)
+	@Secured(name = RESOURCE_NAME_ROUTER_SAVE, resource = "routers:save", action = ActionTypes.WRITE)
 	public RestResult<Boolean> save(@Validated Permission permission) {
 		return RestResultUtils.success(permissionService.saveOrUpdate(permission));
 	}
@@ -76,7 +77,7 @@ public class RouterController {
 	 * @return
 	 */
 	@PostMapping("delete/{routerId}")
-	@Secured(name = "路由删除", resource = "routers:delete", action = ActionTypes.WRITE)
+	@Secured(name = RESOURCE_NAME_ROUTER_DELETE, resource = "routers:delete", action = ActionTypes.WRITE)
 	public RestResult<Object> delMenu(@PathVariable("routerId") Long routerId) {
 		List<Permission> list = permissionService.list(Wrappers.<Permission>lambdaQuery().eq(Permission::getParentId, routerId));
 		if(list != null && list.size()>0) {
