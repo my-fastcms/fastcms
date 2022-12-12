@@ -53,6 +53,7 @@ import java.util.stream.Collectors;
 import static com.fastcms.common.constants.FastcmsConstants.FASTCMS_SYSTEM_ERROR;
 import static com.fastcms.core.template.TemplateService.TemplateI18n.*;
 import static com.fastcms.service.IAttachmentService.AttachmentI18n.ATTACHMENT_FILE_UPLOAD_LIST_FAIL;
+import static com.fastcms.service.IResourceService.ResourceI18n.*;
 
 /**
  * 模板管理
@@ -80,7 +81,7 @@ public class TemplateController {
      * @return
      */
     @GetMapping("list")
-    @Secured(name = "模板列表", resource = "templates:list", action = ActionTypes.READ)
+    @Secured(name = RESOURCE_NAME_TEMPLATE_LIST, resource = "templates:list", action = ActionTypes.READ)
 	public RestResult<List<Template>> list() {
         return RestResultUtils.success(templateService.getTemplateList());
     }
@@ -100,7 +101,7 @@ public class TemplateController {
      * @return
      */
     @PostMapping("install")
-    @Secured(name = "模板安装", resource = "templates:install", action = ActionTypes.WRITE)
+    @Secured(name = RESOURCE_NAME_TEMPLATE_INSTALL, resource = "templates:install", action = ActionTypes.WRITE)
 	public Object install(@RequestParam("file") MultipartFile file) {
 
         if (ApplicationUtils.isDevelopment()) {
@@ -134,7 +135,7 @@ public class TemplateController {
      * @return
      */
     @PostMapping("unInstall/{templateId}")
-    @Secured(name = "模板卸载", resource = "templates:unInstall", action = ActionTypes.WRITE)
+    @Secured(name = RESOURCE_NAME_TEMPLATE_UNINSTALL, resource = "templates:unInstall", action = ActionTypes.WRITE)
 	public Object unInstall(@PathVariable("templateId") String templateId) {
 
         if (ApplicationUtils.isDevelopment()) {
@@ -155,7 +156,7 @@ public class TemplateController {
      * @return
      */
     @GetMapping("files/tree/list")
-    @Secured(name = "模板文件列表", resource = "templates:files/tree/list", action = ActionTypes.READ)
+    @Secured(name = RESOURCE_NAME_TEMPLATE_FILE_LIST, resource = "templates:files/tree/list", action = ActionTypes.READ)
 	public Object treeList() {
         Template currTemplate = templateService.getCurrTemplate();
         if(currTemplate == null) {
@@ -175,7 +176,7 @@ public class TemplateController {
      * @return
      */
     @GetMapping("files/get")
-    @Secured(name = "模板文件信息", resource = "templates:files/get", action = ActionTypes.READ)
+    @Secured(name = RESOURCE_NAME_TEMPLATE_FILE_INFO, resource = "templates:files/get", action = ActionTypes.READ)
 	public Object getFileContent(@RequestParam("filePath") String filePath) {
 
         if (StringUtils.isBlank(filePath) || filePath.contains("..")) {
@@ -219,7 +220,7 @@ public class TemplateController {
      * @return
      */
     @PostMapping("enable/{templateId}")
-    @Secured(name = "模板启用", resource = "templates:enable", action = ActionTypes.WRITE)
+    @Secured(name = RESOURCE_NAME_TEMPLATE_ENABLE, resource = "templates:enable", action = ActionTypes.WRITE)
 	public Object enable(@PathVariable("templateId") String templateId) {
         configService.saveConfig(FastcmsConstants.TEMPLATE_ENABLE_ID, templateId);
         return RestResultUtils.success();
@@ -233,7 +234,7 @@ public class TemplateController {
      * @throws IOException
      */
     @PostMapping("file/save")
-    @Secured(name = "模板文件保存", resource = "templates:file/save", action = ActionTypes.WRITE)
+    @Secured(name = RESOURCE_NAME_TEMPLATE_FILE_SAVE, resource = "templates:file/save", action = ActionTypes.WRITE)
 	public Object save(@RequestParam("filePath") String filePath, @RequestParam("fileContent") String fileContent) {
         if(StringUtils.isBlank(filePath) || filePath.contains("..")) {
             return RestResultUtils.failed(I18nUtils.getMessage(CMS_TEMPLATE_NOT_EXIST));
@@ -272,7 +273,7 @@ public class TemplateController {
      */
     @PostMapping("files/upload")
     @ExceptionHandler(value = MultipartException.class)
-    @Secured(name = "模板文件上传", resource = "templates:files/upload", action = ActionTypes.WRITE)
+    @Secured(name = RESOURCE_NAME_TEMPLATE_FILE_UPLOAD, resource = "templates:files/upload", action = ActionTypes.WRITE)
 	public Object upload(String dirName, @RequestParam("files") MultipartFile files[]) {
 
         if(StringUtils.isBlank(dirName) || dirName.contains("..")) {
@@ -326,7 +327,7 @@ public class TemplateController {
      * @return
      */
     @PostMapping("file/delete")
-    @Secured(name = "模板文件删除", resource = "templates:file/delete", action = ActionTypes.WRITE)
+    @Secured(name = RESOURCE_NAME_TEMPLATE_FILE_DELETE, resource = "templates:file/delete", action = ActionTypes.WRITE)
 	public Object delFile(@RequestParam("filePath") String filePath) {
 
         if(StringUtils.isBlank(filePath)) {
@@ -361,7 +362,7 @@ public class TemplateController {
      * @return
      */
     @RequestMapping("menu/list")
-    @Secured(name = "模板菜单列表", resource = "templates:menu/list", action = ActionTypes.READ)
+    @Secured(name = RESOURCE_NAME_TEMPLATE_MENU_LIST, resource = "templates:menu/list", action = ActionTypes.READ)
 	public RestResult<List<IMenuService.MenuNode> > menuList() {
         return RestResultUtils.success(menuService.getMenus());
     }
@@ -372,7 +373,7 @@ public class TemplateController {
      * @return
      */
     @RequestMapping("menu/get/{menuId}")
-    @Secured(name = "模板菜单详情", resource = "templates:menu/get", action = ActionTypes.READ)
+    @Secured(name = RESOURCE_NAME_TEMPLATE_MENU_INFO, resource = "templates:menu/get", action = ActionTypes.READ)
 	public RestResult<Menu> getMenu(@PathVariable("menuId") Long menuId) {
         return RestResultUtils.success(menuService.getById(menuId));
     }
@@ -383,7 +384,7 @@ public class TemplateController {
      * @return
      */
     @PostMapping("menu/save")
-    @Secured(name = "模板菜单保存", resource = "templates:menu/save", action = ActionTypes.WRITE)
+    @Secured(name = RESOURCE_NAME_TEMPLATE_MENU_SAVE, resource = "templates:menu/save", action = ActionTypes.WRITE)
 	public RestResult<Boolean> saveMenu(@Validated Menu menu) {
         return RestResultUtils.success(menuService.saveOrUpdate(menu));
     }
@@ -394,7 +395,7 @@ public class TemplateController {
      * @return
      */
     @PostMapping("menu/delete/{menuId}")
-    @Secured(name = "模板菜单删除", resource = "templates:menu/delete", action = ActionTypes.WRITE)
+    @Secured(name = RESOURCE_NAME_TEMPLATE_MENU_DELETE, resource = "templates:menu/delete", action = ActionTypes.WRITE)
 	public RestResult<Boolean> doDeleteMenu(@PathVariable("menuId") Long menuId) {
 
         List<Menu> list = menuService.list(Wrappers.<Menu>lambdaQuery().eq(Menu::getParentId, menuId));

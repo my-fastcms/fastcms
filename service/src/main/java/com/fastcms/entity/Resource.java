@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fastcms.utils.RequestUtils;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -26,6 +29,7 @@ public class Resource implements Serializable {
         this.resourceName = resourceName;
         this.resourcePath = resourcePath;
         this.actionType = actionType;
+        setDefaultLanguage();
     }
 
     @TableId(value = "id", type = IdType.AUTO)
@@ -45,6 +49,11 @@ public class Resource implements Serializable {
      * 读写类型
      */
     private String actionType;
+
+    /**
+     * 语言
+     */
+    private String language;
 
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime created;
@@ -95,12 +104,26 @@ public class Resource implements Serializable {
         this.updated = updated;
     }
 
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    void setDefaultLanguage() {
+        LocaleResolver localeResolver = RequestContextUtils.getLocaleResolver(RequestUtils.getRequest());
+        this.language = localeResolver == null ? null : localeResolver.resolveLocale(RequestUtils.getRequest()).getLanguage();
+    }
+
     @Override
     public String toString() {
         return "Resource{" +
             "id=" + id +
             ", resourceName=" + resourceName +
             ", resourcePath=" + resourcePath +
+            ", language=" + language +
             ", created=" + created +
             ", updated=" + updated +
         "}";

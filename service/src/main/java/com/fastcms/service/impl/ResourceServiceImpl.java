@@ -2,11 +2,13 @@ package com.fastcms.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fastcms.common.auth.Secured;
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.entity.Resource;
 import com.fastcms.mapper.ResourceMapper;
 import com.fastcms.service.IResourceService;
 import com.fastcms.utils.ApplicationUtils;
 import com.fastcms.utils.CollectionUtils;
+import com.fastcms.utils.I18nUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.method.HandlerMethod;
@@ -42,7 +44,10 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, Resource> i
 				Set<PathPattern> patterns = requestMappingInfo.getPathPatternsCondition().getPatterns();
 				if (CollectionUtils.isNotEmpty(patterns)) {
 					Secured secured = handlerMethod.getMethod().getAnnotation(Secured.class);
-					resourceList.add(new Resource(secured.name(), secured.resource(), secured.action().toString()));
+					String message = I18nUtils.getMessage(secured.name());
+					if (StrUtils.isNotBlank(message)) {
+						resourceList.add(new Resource(I18nUtils.getMessage(secured.name()), secured.resource(), secured.action().toString()));
+					}
 				}
 			}
 		}

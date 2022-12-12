@@ -45,6 +45,7 @@ import java.util.List;
 
 import static com.fastcms.cms.service.IArticleService.ArticleI18n.CMS_ARTICLE_CHILDREN_COMMENT_NOT_DELETE;
 import static com.fastcms.cms.service.IArticleService.ArticleI18n.CMS_ARTICLE_CHILDREN_NOT_DELETE;
+import static com.fastcms.service.IResourceService.ResourceI18n.*;
 
 /**
  * 文章管理
@@ -80,7 +81,7 @@ public class ArticleController {
      * @return
      */
     @RequestMapping("list")
-    @Secured(name = "文章列表", resource = "articles:list", action = ActionTypes.READ)
+    @Secured(name = RESOURCE_NAME_ARTICLE_LIST, resource = "articles:list", action = ActionTypes.READ)
 	public RestResult<Page<IArticleService.ArticleVo>> list(PageModel page,
                                                             @RequestParam(name = "title", required = false) String title,
                                                             @RequestParam(name = "status", required = false) String status,
@@ -105,7 +106,7 @@ public class ArticleController {
      * @return
      */
     @PostMapping("save")
-    @Secured(name = "文章保存", resource = "articles:save", action = ActionTypes.WRITE)
+    @Secured(name = RESOURCE_NAME_ARTICLE_SAVE, resource = "articles:save", action = ActionTypes.WRITE)
 	public RestResult<Long> save(@Validated Article article) throws FastcmsException {
         articleService.saveArticle(article);
         return RestResultUtils.success(article.getId());
@@ -117,7 +118,7 @@ public class ArticleController {
      * @return
      */
     @GetMapping("get/{articleId}")
-    @Secured(name = "文章详情", resource = "articles:get", action = ActionTypes.READ)
+    @Secured(name = RESOURCE_NAME_ARTICLE_DETAIL, resource = "articles:get", action = ActionTypes.READ)
 	public RestResult<Article> getArticle(@PathVariable("articleId") Long articleId) {
         return RestResultUtils.success(articleService.getArticle(articleId));
     }
@@ -128,7 +129,7 @@ public class ArticleController {
      * @return
      */
     @PostMapping("delete/{articleId}")
-    @Secured(name = "文章删除", resource = "articles:delete", action = ActionTypes.WRITE)
+    @Secured(name = RESOURCE_NAME_ARTICLE_DELETE, resource = "articles:delete", action = ActionTypes.WRITE)
 	public Object deleteArticle(@PathVariable("articleId") Long articleId) {
         Article article = articleService.getById(articleId);
         if(article != null) {
@@ -144,7 +145,7 @@ public class ArticleController {
      * @return
      */
     @PostMapping("category/save")
-    @Secured(name = "文章分类保存", resource = "articles:category/save", action = ActionTypes.WRITE)
+    @Secured(name = RESOURCE_NAME_ARTICLE_CATEGORY_SAVE, resource = "articles:category/save", action = ActionTypes.WRITE)
 	public RestResult<Boolean> saveCategory(@Validated ArticleCategory articleCategory) {
         return RestResultUtils.success(articleCategoryService.saveOrUpdate(articleCategory));
     }
@@ -165,7 +166,7 @@ public class ArticleController {
      * @return
      */
     @PostMapping("category/delete/{categoryId}")
-    @Secured(name = "文章分类删除", resource = "articles:category/delete", action = ActionTypes.WRITE)
+    @Secured(name = RESOURCE_NAME_ARTICLE_CATEGORY_DELETE, resource = "articles:category/delete", action = ActionTypes.WRITE)
 	public Object deleteCategory(@PathVariable("categoryId") Long categoryId) {
 
         List<ArticleCategory> categoryList = articleCategoryService.list(Wrappers.<ArticleCategory>lambdaQuery().eq(ArticleCategory::getParentId, categoryId));
@@ -183,7 +184,7 @@ public class ArticleController {
      * @return
      */
     @PostMapping("tag/save")
-    @Secured(name = "文章标签保存", resource = "articles:tag/save", action = ActionTypes.WRITE)
+    @Secured(name = RESOURCE_NAME_ARTICLE_TAG_SAVE, resource = "articles:tag/save", action = ActionTypes.WRITE)
     public RestResult<Boolean> saveCategory(@Validated ArticleTag articleTag) {
         return RestResultUtils.success(articleTagService.saveOrUpdate(articleTag));
     }
@@ -204,7 +205,7 @@ public class ArticleController {
      * @return
      */
     @PostMapping("tag/delete/{tagId}")
-    @Secured(name = "文章标签删除", resource = "articles:tag/delete", action = ActionTypes.WRITE)
+    @Secured(name = RESOURCE_NAME_ARTICLE_TAG_DELETE, resource = "articles:tag/delete", action = ActionTypes.WRITE)
     public Object deleteTag(@PathVariable("tagId") Long tagId) {
         articleTagService.deleteByTagId(tagId);
         return RestResultUtils.success();
@@ -218,7 +219,7 @@ public class ArticleController {
      * @return
      */
     @GetMapping("comment/list")
-    @Secured(name = "文章评论列表", resource = "articles:comment/list", action = ActionTypes.READ)
+    @Secured(name = RESOURCE_NAME_ARTICLE_COMMENT_LIST, resource = "articles:comment/list", action = ActionTypes.READ)
 	public Object getCommentList(PageModel page, String author, String content, Boolean isParent) {
         QueryWrapper<Object> queryWrapper = Wrappers.query().eq(StringUtils.isNotBlank(author), "u.user_name", author)
                 .eq(isParent != null && isParent == true, "ac.parentId", 0)
@@ -233,7 +234,7 @@ public class ArticleController {
      * @return
      */
     @PostMapping("comment/save")
-    @Secured(name = "文章评论保存", resource = "articles:comment/save", action = ActionTypes.WRITE)
+    @Secured(name = RESOURCE_NAME_ARTICLE_COMMENT_SAVE, resource = "articles:comment/save", action = ActionTypes.WRITE)
 	public RestResult<Boolean> saveComment(@Validated ArticleComment articleComment) {
         return RestResultUtils.success(articleCommentService.saveOrUpdate(articleComment));
     }
@@ -244,7 +245,7 @@ public class ArticleController {
      * @return
      */
     @PostMapping("comment/delete/{commentId}")
-    @Secured(name = "文章评论删除", resource = "articles:comment/delete/", action = ActionTypes.WRITE)
+    @Secured(name = RESOURCE_NAME_ARTICLE_COMMENT_DELETE, resource = "articles:comment/delete/", action = ActionTypes.WRITE)
 	public Object doDeleteComment(@PathVariable("commentId") Long commentId) {
         List<ArticleComment> articleCommentList = articleCommentService.list(Wrappers.<ArticleComment>lambdaQuery().eq(ArticleComment::getParentId, commentId));
         if(articleCommentList != null && articleCommentList.size() >0) {

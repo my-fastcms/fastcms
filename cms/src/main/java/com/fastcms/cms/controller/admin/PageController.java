@@ -40,6 +40,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static com.fastcms.cms.service.IArticleService.ArticleI18n.CMS_ARTICLE_CHILDREN_COMMENT_NOT_DELETE;
+import static com.fastcms.service.IResourceService.ResourceI18n.*;
 
 /**
  * 页面管理
@@ -65,7 +66,7 @@ public class PageController {
 	 * @return
 	 */
 	@GetMapping("list")
-	@Secured(name = "页面列表", resource = "pages:list", action = ActionTypes.READ)
+	@Secured(name = RESOURCE_NAME_PAGE_LIST, resource = "pages:list", action = ActionTypes.READ)
 	public RestResult<Page<ISinglePageService.SinglePageVo>> list(PageModel page,
 																  @RequestParam(name = "title", required = false) String title,
 																  @RequestParam(name = "status", required = false) String status) {
@@ -82,7 +83,7 @@ public class PageController {
 	 * @return
 	 */
 	@PostMapping("save")
-	@Secured(name = "页面保存", resource = "pages:save", action = ActionTypes.WRITE)
+	@Secured(name = RESOURCE_NAME_PAGE_SAVE, resource = "pages:save", action = ActionTypes.WRITE)
 	public Object save(@Validated SinglePage singlePage) {
 		try {
 			singlePageService.saveOrUpdate(singlePage);
@@ -98,7 +99,7 @@ public class PageController {
 	 * @return
 	 */
 	@GetMapping("get/{id}")
-	@Secured(name = "页面详情", resource = "pages:get", action = ActionTypes.READ)
+	@Secured(name = RESOURCE_NAME_PAGE_DETAIL, resource = "pages:get", action = ActionTypes.READ)
 	public RestResult<SinglePage> getPage(@PathVariable("id") String id) {
 		LambdaQueryWrapper<SinglePage> wrapper = Wrappers.<SinglePage>lambdaQuery()
 				.select(SinglePage.class, info -> !info.getColumn().equals("created") && !info.getColumn().equals("updated") && !info.getColumn().equals("version"))
@@ -112,7 +113,7 @@ public class PageController {
 	 * @return
 	 */
 	@PostMapping("delete/{id}")
-	@Secured(name = "页面删除", resource = "pages:delete", action = ActionTypes.WRITE)
+	@Secured(name = RESOURCE_NAME_PAGE_DELETE, resource = "pages:delete", action = ActionTypes.WRITE)
 	public Object delPage(@PathVariable("id") String id) {
 		SinglePage singlePage = singlePageService.getById(id);
 		if(singlePage != null) {
@@ -130,7 +131,7 @@ public class PageController {
 	 * @return
 	 */
 	@GetMapping("comment/list")
-	@Secured(name = "页面评论列表", resource = "pages:comment/list", action = ActionTypes.READ)
+	@Secured(name = RESOURCE_NAME_PAGE_COMMENT_LIST, resource = "pages:comment/list", action = ActionTypes.READ)
 	public Object getCommentList(PageModel page, String author, String content, Boolean isParent) {
 		QueryWrapper<Object> queryWrapper = Wrappers.query().eq(StringUtils.isNotBlank(author), "u.user_name", author)
 				.eq(isParent != null && isParent == true, "spc.parentId", 0)
@@ -145,7 +146,7 @@ public class PageController {
 	 * @return
 	 */
 	@PostMapping("comment/save")
-	@Secured(name = "页面评论保存", resource = "pages:comment/save", action = ActionTypes.WRITE)
+	@Secured(name = RESOURCE_NAME_PAGE_COMMENT_SAVE, resource = "pages:comment/save", action = ActionTypes.WRITE)
 	public Object saveComment(@Validated SinglePageComment singlePageComment) {
 		singlePageCommentService.saveOrUpdate(singlePageComment);
 		return RestResultUtils.success();
@@ -157,7 +158,7 @@ public class PageController {
 	 * @return
 	 */
 	@PostMapping("comment/delete/{commentId}")
-	@Secured(name = "页面评论删除", resource = "pages:comment/delete", action = ActionTypes.WRITE)
+	@Secured(name = RESOURCE_NAME_PAGE_COMMENT_DELETE, resource = "pages:comment/delete", action = ActionTypes.WRITE)
 	public RestResult<Boolean> deleteComment(@PathVariable("commentId") Long commentId) {
 		List<SinglePageComment> articleCommentList = singlePageCommentService.list(Wrappers.<SinglePageComment>lambdaQuery().eq(SinglePageComment::getParentId, commentId));
 		if(articleCommentList != null && articleCommentList.size() >0) {

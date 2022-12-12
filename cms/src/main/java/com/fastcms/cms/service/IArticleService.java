@@ -424,6 +424,7 @@ public interface IArticleService extends IService<Article> {
         String CMS_ARTICLE_COMMENT_ARTICLE_ID_NOT_ALLOW_NULL = "fastcms.cms.article.comment.article.id.is.not.allow.null";
         String CMS_ARTICLE_COMMENT_CONTENT_IS_NOT_ALLOW_NULL = "fastcms.cms.article.comment.content.is.not.allow.null";
         String CMS_ARTICLE_COMMENT_IS_DISABLE = "fastcms.cms.article.comment.is.not.allow.comment";
+
     }
 
 }

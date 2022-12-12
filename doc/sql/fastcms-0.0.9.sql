@@ -3,3 +3,6 @@ INSERT INTO `permission`(`id`, `parent_id`, `name`, `path`, `component`, `title`
 
 ALTER TABLE `article_tag` ADD COLUMN `suffix` varchar(64) DEFAULT NULL;
 ALTER TABLE `article_tag` ADD COLUMN `icon` varchar(255) DEFAULT NULL;
+
+ALTER TABLE `resource` ADD COLUMN `language` varchar(64) DEFAULT NULL COMMENT '语言';
+
