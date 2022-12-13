@@ -79,8 +79,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             throw new I18nFastcmsException(UserI18n.USER_NEW_PASSWORD_NOT_NULL);
         }
 
-        if(updatePasswordParam.getPassword().length()< 6) {
-            throw new I18nFastcmsException(UserI18n.USER_PASSWORD_LENGTH6);
+        if(updatePasswordParam.getPassword().length() < getPwdMinLengthConfig()) {
+            throw new I18nFastcmsException(UserI18n.USER_PASSWORD_LENGTH6, getPwdMinLengthConfig().toString());
         }
 
         if(!updatePasswordParam.getPassword().equals(updatePasswordParam.getConfirmPassword())) {
@@ -270,6 +270,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             throw new I18nFastcmsException(UserI18n.USER_CONFIRM_PASSWORD_NOT_NULL);
         }
 
+        if (password.length() < getPwdMinLengthConfig()) {
+            throw new I18nFastcmsException(UserI18n.USER_PASSWORD_LENGTH6, getPwdMinLengthConfig().toString());
+        }
+
+        if (repeatPassword.length() < getPwdMinLengthConfig()) {
+            throw new I18nFastcmsException(UserI18n.USER_PASSWORD_LENGTH6, getPwdMinLengthConfig().toString());
+        }
+
         if(!repeatPassword.equals(password)) {
             throw new I18nFastcmsException(UserI18n.USER_PASSWORD_ERROR2);
         }
@@ -382,6 +390,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
         javaMailSender.send(mimeMessage);
 
         user.setPassword(passwordEncoder.encode(password));
+    }
+
+    Integer getPwdMinLengthConfig() {
+        return ConfigUtils.getInt(FastcmsConstants.PWD_MIN_LENGTH, 6);
     }
 
 }

@@ -122,6 +122,17 @@ public interface FastcmsConstants {
     String JWT_EXPIRE = "jwt_expire";
 
     /**
+     * ================
+     * 系统密码配置相关
+     * ================
+     */
+
+    /**
+     * 密码最短长度
+     */
+    String PWD_MIN_LENGTH = "pwd_min_length";
+
+    /**
      * I18N KEY
      */
     String FASTCMS_SYSTEM_NO_DATA = "fastcms.system.no.data";

@@ -21,19 +21,23 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.egzosn.pay.common.bean.PayMessage;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.utils.StrUtils;
-import com.fastcms.utils.RequestUtils;
 import com.fastcms.entity.Order;
 import com.fastcms.entity.OrderItem;
 import com.fastcms.entity.PaymentRecord;
 import com.fastcms.service.IOrderItemService;
 import com.fastcms.service.IOrderService;
 import com.fastcms.service.IPaymentRecordService;
+import com.fastcms.utils.I18nUtils;
 import com.fastcms.utils.PluginUtils;
+import com.fastcms.utils.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import static com.fastcms.service.IOrderService.OrderI18n.ORDER_ALREADY_PAYED_SN;
+import static com.fastcms.service.IOrderService.OrderI18n.ORDER_NOT_EXIST;
 
 /**
  * 各支付平台支付回调逻辑处理基类
@@ -73,11 +77,11 @@ public abstract class AbstractFastcmsPayBackService implements IFastcmsPayBackSe
         final String orderSn = payMessage.getOutTradeNo();
         Order order = orderService.getOne(Wrappers.<Order>lambdaQuery().eq(Order::getOrderSn, orderSn));
         if(order == null) {
-            throw new FastcmsException(">>>can not find Order by orderSn:" + orderSn);
+            throw new FastcmsException(String.format(I18nUtils.getMessage(ORDER_NOT_EXIST), orderSn));
         }
 
         if (order.getPayStatus() == Order.STATUS_PAY_SUCCESS) {
-            throw new FastcmsException(">>>Order is already payed orderSn:" + orderSn);
+            throw new FastcmsException(String.format(I18nUtils.getMessage(ORDER_ALREADY_PAYED_SN), orderSn));
         }
 
         order.setPayStatus(Order.STATUS_PAY_SUCCESS);

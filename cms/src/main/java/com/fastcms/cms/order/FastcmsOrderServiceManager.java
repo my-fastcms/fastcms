@@ -17,9 +17,11 @@
 
 package com.fastcms.cms.order;
 
+import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.entity.Order;
 import com.fastcms.utils.ApplicationUtils;
+import com.fastcms.utils.I18nUtils;
 import com.fastcms.utils.PluginUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -30,6 +32,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.fastcms.service.IOrderService.OrderI18n.ORDER_CLASS_TYPE_IS_NULL;
+import static com.fastcms.service.IOrderService.OrderI18n.ORDER_TYPE_NOT_NULL;
 
 /**
  * 订单服务统一入口
@@ -45,14 +50,18 @@ public class FastcmsOrderServiceManager implements ApplicationListener<Applicati
     Map<String, IFastcmsOrderService> allOrderServiceMap = Collections.synchronizedMap(new HashMap<>());
 
     public Order createOrder(CreateOrderParam createOrderParam) throws FastcmsException {
-        if (createOrderParam == null) throw new FastcmsException("参数不能为空");
+        if (createOrderParam == null) {
+            throw new FastcmsException(I18nUtils.getMessage(FastcmsConstants.FASTCMS_SYSTEM_NO_DATA));
+        }
 
         if (StringUtils.isBlank(createOrderParam.getOrderTypeClass())) {
-            throw new FastcmsException("订单类型不能为空");
+            throw new FastcmsException(I18nUtils.getMessage(ORDER_TYPE_NOT_NULL));
         }
 
         IFastcmsOrderService fastcmsOrderService = allOrderServiceMap.get(createOrderParam.getOrderTypeClass());
-        if (fastcmsOrderService == null) throw new FastcmsException("找不到对应的订单处理类，order class type：" + createOrderParam.getOrderTypeClass());
+        if (fastcmsOrderService == null) {
+            throw new FastcmsException(String.format(I18nUtils.getMessage(ORDER_CLASS_TYPE_IS_NULL), createOrderParam.getOrderTypeClass()));
+        }
 
         return fastcmsOrderService.createOrder(createOrderParam);
 

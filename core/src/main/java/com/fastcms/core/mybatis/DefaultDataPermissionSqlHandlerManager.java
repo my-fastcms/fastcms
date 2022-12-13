@@ -60,7 +60,7 @@ public class DefaultDataPermissionSqlHandlerManager implements DataPermissionSql
         List<DataPermissionSqlHandler> collect = dataPermissionSqlHandlerList.stream().sorted(Comparator.comparing(DataPermissionSqlHandler::getOrder)).collect(Collectors.toList());
 
         dataPermissionSqlHandler = collect.get(0);
-        for (int i = collect.size() - 1; i > 0; i --) {
+        for (int i = collect.size() - 1; i >= 0; i --) {
             DataPermissionSqlHandler temp = collect.get(i);
             temp.setNext(dataPermissionSqlHandler);
             dataPermissionSqlHandler = temp;

@@ -26,7 +26,17 @@
 								</el-form-item>
 							</el-col>
 						</el-row>
-                        
+
+						<div class="personal-edit-title mb15">密码设置</div>
+                        <el-row :gutter="35">
+							<el-col class="mb20">
+								<el-form-item label="密码最短长度" prop="pwd_min_length">
+									<el-input v-model="ruleForm.pwd_min_length" placeholder="请输入密码最少长度，整数，默认6" onkeyup="value=value.replace(/[^\d]/g,'')" clearable></el-input>
+								</el-form-item>
+							</el-col>
+						</el-row>
+
+
                         <el-col>
                             <el-form-item>
                                 <el-button type="primary"  @click="onSubmit" icon="el-icon-position">保 存</el-button>
@@ -57,6 +67,7 @@ export default {
 			ruleForm: {
 				jwt_secret: '',
 				jwt_expire: '18000',
+				pwd_min_length: 6
 			},
 			rules: {
 				"jwt_secret": [

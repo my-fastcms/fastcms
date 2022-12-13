@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.fastcms.utils.I18nUtils;
+import com.fastcms.language.Language;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -15,7 +15,7 @@ import java.util.Objects;
  * @author wjun_java@163.com
  * @since 2022-05-01
  */
-public class Resource implements Serializable {
+public class Resource implements Serializable, Language {
 
     private static final long serialVersionUID = 1L;
 
@@ -27,7 +27,6 @@ public class Resource implements Serializable {
         this.resourceName = resourceName;
         this.resourcePath = resourcePath;
         this.actionType = actionType;
-        this.language = I18nUtils.getLanguage();
     }
 
     @TableId(value = "id", type = IdType.AUTO)
@@ -103,7 +102,7 @@ public class Resource implements Serializable {
     }
 
     public String getLanguage() {
-        return language;
+        return language == null ? getLang() : language;
     }
 
     public void setLanguage(String language) {

@@ -47,7 +47,7 @@ public class SelfDataPermissionSqlHandler extends AbstractDataPermissionSqlHandl
 
     @Override
     public int getOrder() {
-        return HIGHEST_PRECEDENCE;
+        return HIGHEST_PRECEDENCE + 100;
     }
 
 }

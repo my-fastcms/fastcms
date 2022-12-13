@@ -15,37 +15,21 @@
  * limitations under the License.
  */
 
-package com.fastcms.core.mybatis;
+package com.fastcms.language;
 
-import com.fastcms.core.auth.AuthUtils;
-import com.fastcms.mybatis.AbstractDataPermissionSqlHandler;
-import net.sf.jsqlparser.statement.Statement;
-import org.springframework.stereotype.Component;
+import com.fastcms.utils.I18nUtils;
 
 /**
- * fastcms 查看自身数据权限
  * @author： wjun_java@163.com
- * @date： 2022/8/1
+ * @date： 2022/12/13
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-@Component
-public class AllDataPermissionSqlHandler extends AbstractDataPermissionSqlHandler {
+public interface Language {
 
-    @Override
-    protected String doGetSqlSegment(String mappedStatementId, Statement statement) throws Exception {
-        return null;
-    }
-
-    @Override
-    public boolean isMatch(String mappedStatementId) {
-        return AuthUtils.getUser() == null || AuthUtils.isAdmin();
-    }
-
-    @Override
-    public int getOrder() {
-        return HIGHEST_PRECEDENCE + 200;
+    default String getLang() {
+        return I18nUtils.getLanguage();
     }
 
 }
