@@ -55,6 +55,12 @@ public class TemplateIndexController extends TemplateBaseController {
     static final String DEFAULT_ARTICLE_VIEW = "article";
     static final String DEFAULT_ARTICLE_LIST_VIEW = "article_list";
 
+    static final String SINGLE_PAGE_ATTR = "singlePage";
+    static final String ARTICLE_ATTR = "article";
+    static final String CATEGORY_ATTR = "category";
+    static final String ARTICLE_VO_PAGE_ATTR = "articleVoPage";
+    static final String TAG_ATTR = "tag";
+
     @Autowired
     private IArticleService articleService;
 
@@ -72,7 +78,8 @@ public class TemplateIndexController extends TemplateBaseController {
         if (ApplicationUtils.getBean(FastcmsStaticHtmlManager.class).isEnable()) {
             return UrlBasedViewResolver.FORWARD_URL_PREFIX.concat(getTemplate().getPath()).concat("index.html");
         }
-        return getTemplatePath() + INDEX;
+
+        return getTemplatePath().concat(INDEX);
     }
 
     @RequestMapping("p/{path}")
@@ -83,7 +90,7 @@ public class TemplateIndexController extends TemplateBaseController {
         }
 
         if(singlePage != null && SinglePage.STATUS_PUBLISH.equals(singlePage.getStatus())) {
-            model.addAttribute("singlePage", singlePage);
+            model.addAttribute(SINGLE_PAGE_ATTR, singlePage);
         }
 
         String view = getTemplatePath() + DEFAULT_PAGE_VIEW;
@@ -99,7 +106,7 @@ public class TemplateIndexController extends TemplateBaseController {
         IArticleService.ArticleInfoVo article = articleService.getArticleDetail(id);
 
         if(article != null && Article.STATUS_PUBLISH.equals(article.getStatus())) {
-            model.addAttribute("article", article);
+            model.addAttribute(ARTICLE_ATTR, article);
         }
 
         String view = getTemplatePath() + DEFAULT_ARTICLE_VIEW;
@@ -122,10 +129,10 @@ public class TemplateIndexController extends TemplateBaseController {
         }
 
         if(articleCategory != null) {
-            model.addAttribute("category", articleCategory);
+            model.addAttribute(CATEGORY_ATTR, articleCategory);
             QueryWrapper<Object> queryWrapper = Wrappers.query().eq("acr.category_id", articleCategory.getId()).eq("a.status", Article.STATUS_PUBLISH).orderByDesc("a.created");
             Page<IArticleService.ArticleVo> articleVoPage = articleService.pageArticleByCategoryId(new Page(pageNo, pageSize), queryWrapper);
-            model.addAttribute("articleVoPage", articleVoPage);
+            model.addAttribute(ARTICLE_VO_PAGE_ATTR, articleVoPage);
         }
 
         String view = getTemplatePath() + DEFAULT_ARTICLE_LIST_VIEW;
@@ -146,10 +153,10 @@ public class TemplateIndexController extends TemplateBaseController {
         ArticleTag articleTag = articleTagService.getById(id);
 
         if(articleTag != null) {
-            model.addAttribute("tag", articleTag);
+            model.addAttribute(TAG_ATTR, articleTag);
             QueryWrapper<Object> queryWrapper = Wrappers.query().eq("acr.tag_id", articleTag.getId()).eq("a.status", Article.STATUS_PUBLISH).orderByDesc("a.created");
             Page<IArticleService.ArticleVo> articleVoPage = articleService.pageArticleByTagId(new Page(pageNo, pageSize), queryWrapper);
-            model.addAttribute("articleVoPage", articleVoPage);
+            model.addAttribute(ARTICLE_VO_PAGE_ATTR, articleVoPage);
         }
 
         String view = getTemplatePath() + DEFAULT_ARTICLE_LIST_VIEW;

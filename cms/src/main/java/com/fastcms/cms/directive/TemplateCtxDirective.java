@@ -35,7 +35,7 @@ import java.util.List;
  * @version: 1.0
  */
 @Component("ctx")
-public class TemplateContextDirective extends BaseFunction {
+public class TemplateCtxDirective extends BaseFunction {
 
 	@Resource
 	private TemplateService templateService;

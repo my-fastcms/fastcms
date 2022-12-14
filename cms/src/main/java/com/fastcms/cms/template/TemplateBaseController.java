@@ -30,14 +30,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class TemplateBaseController {
 
 	@Autowired
-	private TemplateService templateService;
+	protected TemplateService templateService;
 
 	protected Template getTemplate() {
 		return templateService.getCurrTemplate();
 	}
 
 	protected String getTemplatePath() {
-		Template template = getTemplate();
+		return getTemplatePath(null);
+	}
+
+	protected String getTemplatePath(String id) {
+		Template template = templateService.getTemplate(id);
+		if (template == null) {
+			template = getTemplate();
+		}
 		return template == null ? "/cms/" : template.getPath();
 	}
 
