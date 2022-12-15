@@ -17,7 +17,7 @@
 package com.fastcms.core.template;
 
 import com.fastcms.common.constants.FastcmsConstants;
-import com.fastcms.common.exception.FastcmsException;
+import com.fastcms.common.exception.I18nFastcmsException;
 import com.fastcms.common.model.TreeNode;
 import com.fastcms.common.model.TreeNodeConvert;
 import com.fastcms.common.utils.DirUtils;
@@ -27,6 +27,7 @@ import com.fastcms.entity.Config;
 import com.fastcms.service.IConfigService;
 import com.fastcms.utils.ApplicationUtils;
 import com.fastcms.utils.CollectionUtils;
+import com.fastcms.utils.I18nUtils;
 import com.fastcms.utils.ReflectUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.InitializingBean;
@@ -50,6 +51,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.fastcms.core.template.TemplateService.TemplateI18n.*;
 
 /**
  * @author： wjun_java@163.com
@@ -180,7 +183,7 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
         final String path = StrUtils.SLASH.concat(name).concat(StrUtils.SLASH);
 
         if(checkPath(path)) {
-            throw new RuntimeException("模板[" + path + "]已存在");
+            throw new RuntimeException(String.format(I18nUtils.getMessage(CMS_TEMPLATE_PATH_IS_EXIST), path));
         }
 
         FileUtils.unzip(file.toPath(), DirUtils.getTemplateDir());
@@ -191,7 +194,7 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
         if (template == null || StringUtils.isBlank(template.getId()) || StringUtils.isBlank(template.getPath())) {
             //上传的zip文件包不符合规范 删除
             org.apache.commons.io.FileUtils.deleteDirectory(Paths.get(templatePath).toFile());
-            throw new RuntimeException("模板[" + path + "]缺少必要文件或者属性");
+            throw new RuntimeException(String.format(I18nUtils.getMessage(CMS_TEMPLATE_PATH_MISSING_REQUIRED_ATTR), path));
         }
 
         try {
@@ -221,12 +224,12 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
     public void unInstall(String templateId) throws Exception {
         Template template = getTemplate(templateId);
         if(template == null) {
-            throw new FastcmsException(FastcmsException.INVALID_PARAM, "模板不存在");
+            throw new I18nFastcmsException(CMS_TEMPLATE_NOT_EXIST);
         }
 
         Template currTemplate = getCurrTemplate();
         if(currTemplate != null && templateId.equals(currTemplate.getId())) {
-            throw new FastcmsException(FastcmsException.CLIENT_INVALID_PARAM, "正在使用中的模板不能卸载");
+            throw new I18nFastcmsException(CMS_TEMPLATE_USING_IS_NOT_ALLOW_UNINSTALL);
         }
 
         try {

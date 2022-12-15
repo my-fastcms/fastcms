@@ -138,6 +138,7 @@ public interface TemplateService {
         String CMS_TEMPLATE_DEV_NOT_ALLOW_INSTALL = "fastcms.cms.template.dev.not.allow.install";
         String CMS_TEMPLATE_DEV_NOT_ALLOW_UNINSTALL = "fastcms.cms.template.dev.not.allow.uninstall";
         String CMS_TEMPLATE_FILE_ZIP_INSTALL = "fastcms.cms.template.file.zip.install";
+        String CMS_TEMPLATE_USING_IS_NOT_ALLOW_UNINSTALL = "fastcms.cms.template.using.is.not.allow.uninstall";
         String CMS_TEMPLATE_FILE_NOT_EXIST = "fastcms.cms.template.file.not.exist";
         String CMS_TEMPLATE_NOT_EXIST = "fastcms.cms.template.not.exist";
         String CMS_TEMPLATE_DEFAULT_NOT_EXIST = "fastcms.cms.template.default.not.exist";
@@ -153,6 +154,8 @@ public interface TemplateService {
         String CMS_TEMPLATE_FILE_PATH_IS_ERROR = "fastcms.cms.template.file.path.is.error";
         String CMS_TEMPLATE_FILE_PATH_IS_NOT_ALLOW_DELETE = "fastcms.cms.template.file.path.is.not.allow.delete";
         String CMS_TEMPLATE_MENU_CHILDREN_IS_NOT_DELETE = "fastcms.cms.template.menu.children.is.not.delete";
+        String CMS_TEMPLATE_PATH_IS_EXIST = "fastcms.cms.template.path.is.exist";
+        String CMS_TEMPLATE_PATH_MISSING_REQUIRED_ATTR = "fastcms.cms.template.path.missing.required.attr";
     }
 
 }
