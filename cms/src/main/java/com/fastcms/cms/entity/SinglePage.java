@@ -39,19 +39,19 @@ public class SinglePage implements Serializable, StaticPathHelper {
     /**
      * 标题
      */
-    @NotBlank(message = "页面标题不能为空")
+    @NotBlank(message = "{fastcms.cms.page.title.is.not.allow.empty}")
     private String title;
 
     /**
      * 路径
      */
-    @NotBlank(message = "页面path不能为空")
+    @NotBlank(message = "{fastcms.cms.page.path.is.not.allow.empty}")
     private String path;
 
     /**
      * 内容
      */
-    @NotBlank(message = "页面内容不能为空")
+    @NotBlank(message = "{fastcms.cms.page.content.is.not.allow.empty}")
     private String contentHtml;
 
     /**
@@ -62,13 +62,13 @@ public class SinglePage implements Serializable, StaticPathHelper {
     /**
      * SEO关键字
      */
-    @NotBlank(message = "seo关键字不能为空")
+    @NotBlank(message = "{fastcms.cms.page.soe.keyword.is.not.allow.empty}")
     private String seoKeywords;
 
     /**
      * SEO描述信息
      */
-    @NotBlank(message = "seo描述信息不能为空")
+    @NotBlank(message = "{fastcms.cms.page.soe.remark.is.not.allow.empty}")
     private String seoDescription;
 
     /**

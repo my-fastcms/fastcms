@@ -212,17 +212,17 @@ public interface IUserService extends IService<User> {
         /**
          * 旧密码
          */
-        @NotBlank(message = "旧密码不能为空")
+        @NotBlank(message = "{fastcms.user.oldpassword.notnull}")
         String oldPassword;
         /**
          * 新密码
          */
-        @NotBlank(message = "密码不能为空")
+        @NotBlank(message = "{fastcms.user.password.notnull}")
         String password;
         /**
          * 旧密码
          */
-        @NotBlank(message = "确认密码不能为空")
+        @NotBlank(message = "{fastcms.user.comfirm.password.not.null}")
         String confirmPassword;
         /**
          * 手机验证码

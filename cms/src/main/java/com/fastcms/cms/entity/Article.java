@@ -71,19 +71,19 @@ public class Article implements Serializable, StaticPathHelper {
     /**
      * 文章标题
      */
-    @NotBlank(message = "文章标题不能为空")
+    @NotBlank(message = "{fastcms.cms.article.comment.title.is.not.allow.null}")
     private String title;
 
     /**
      * 文章详情
      */
-    @NotBlank(message = "文章详情不能为空")
+    @NotBlank(message = "{fastcms.cms.article.comment.content.is.not.allow.null}")
     private String contentHtml;
 
     /**
      * 文章摘要
      */
-    @NotBlank(message = "文章摘要不能为空")
+    @NotBlank(message = "{fastcms.cms.article.comment.summary.is.not.allow.null}")
     private String summary;
 
     /**
@@ -119,7 +119,7 @@ public class Article implements Serializable, StaticPathHelper {
     /**
      * 文章缩略图
      */
-    @NotBlank(message = "缩略图不能为空")
+    @NotBlank(message = "{fastcms.cms.article.comment.thumbnail.is.not.allow.null}")
     private String thumbnail;
 
     /**

@@ -72,7 +72,7 @@ public class ArticleComment implements Serializable {
     /**
      * 评论内容
      */
-    @NotBlank(message = "评论内容不能为空")
+    @NotBlank(message = "{fastcms.cms.article.comment.content.is.not.allow.null}")
     private String content;
 
     /**

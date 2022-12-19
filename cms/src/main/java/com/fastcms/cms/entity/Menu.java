@@ -46,13 +46,13 @@ public class Menu implements Serializable, StaticPathHelper {
     /**
      * 菜单名称
      */
-    @NotBlank(message = "菜单名称不能为空")
+    @NotBlank(message = "{fastcms.cms.template.menu.title.is.not.allow.empty}")
     private String menuName;
 
     /**
      * 菜单地址
      */
-    @NotBlank(message = "菜单URL不能为空")
+    @NotBlank(message = "{fastcms.cms.template.menu.url.is.not.allow.empty}")
     private String menuUrl;
 
     /**
