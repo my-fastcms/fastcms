@@ -66,7 +66,7 @@ import { useI18n } from 'vue-i18n';
 import { initFrontEndControlRoutes } from '/@/router/frontEnd';
 import { initBackEndControlRoutes } from '/@/router/backEnd';
 import { useStore } from '/@/store/index';
-import { Session } from '/@/utils/storage';
+import { Local, Session } from '/@/utils/storage';
 import { formatAxis } from '/@/utils/formatTime';
 import { signIn, getCaptcha } from '/@/api/login/index';
 import qs from 'qs';
@@ -170,10 +170,10 @@ export default defineComponent({
 				userType: res.data.userType,
 			};
 			// 存储 token 到浏览器缓存
-			Session.set('token', res.data.token);
-			Session.set('tokenTtl', res.data.tokenTtl);
+			Local.set('token', res.data.token);
+			Local.set('tokenTtl', res.data.tokenTtl);
 			// 存储用户信息到浏览器缓存
-			Session.set('userInfo', userInfos);
+			Local.set('userInfo', userInfos);
 			// 1、请注意执行顺序(存储用户信息到vuex)
 			store.dispatch('userInfos/setUserInfos', userInfos);
 

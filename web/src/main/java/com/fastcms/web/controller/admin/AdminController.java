@@ -96,6 +96,25 @@ public class AdminController {
     }
 
     /**
+     * 重置密码
+     * @param username
+     * @param code
+     * @return
+     * @throws FastcmsException
+     */
+    @PostMapping("reset/password")
+    public RestResult resetPassword(@RequestParam("username") String username,
+                                    @RequestParam("email") String email,
+                                    @RequestParam("code") String code) throws FastcmsException {
+
+        if(!fastcmsCaptchaService.checkCaptcha(code)) {
+            return RestResultUtils.failed(I18nUtils.getMessage(IUserService.UserI18n.USER_LOGIN_CAPTCHA_ERROR));
+        }
+        userService.resetPassword(username, email);
+        return RestResultUtils.success();
+    }
+
+    /**
      * 验证码
      * @return
      */

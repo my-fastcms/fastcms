@@ -27,6 +27,19 @@ export function getConfigList(params: string) {
 }
 
 /**
+ * 根据配置key值获取配置(无需登录)
+ * @param params 
+ * @returns 
+ */
+export function getPublicConfigList(params: string) {
+	return request({
+		url: '/admin/config/public/list',
+		data: params,
+		method: 'post'
+	});
+}
+
+/**
  * 测试邮件配置
  * @returns 
  */

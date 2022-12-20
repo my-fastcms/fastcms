@@ -157,6 +157,7 @@ export default {
 				})
 					.then(() => {
 						Session.clear(); // 清除缓存/token等
+						Local.clear();
 						// resetRoute(); // 删除/重置路由
 						// resetFrontRoute();
 						router.push('/login');

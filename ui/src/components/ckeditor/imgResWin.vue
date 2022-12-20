@@ -61,7 +61,7 @@ import {toRefs, reactive, onMounted } from "vue";
 import { getAttachList } from '/@/api/attach/index';
 import { getAttachList as getClientAttachList } from '/@/api/attach/client';
 import { ElMessage } from 'element-plus';
-import { Session } from '/@/utils/storage';
+import { Local, Session } from '/@/utils/storage';
 import insertImage from "./imgPlugin/insertImage";
 import connect from "./imgPlugin/connect";
 
@@ -89,7 +89,7 @@ export default {
 			max: 1,
 			limit: 3,
 			uploadUrl: _uploadUrl,
-			headers: {"Authorization": Session.get('token')},
+			headers: {"Authorization": Local.get('token')},
 			checkedObjs: [],	//选中的图片元素
 			tableData: {
 				data: [],

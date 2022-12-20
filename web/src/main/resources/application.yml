@@ -37,6 +37,8 @@ fastcms:
     ignore:
       urls: "/fastcms/api/admin/login,\
       /fastcms/api/admin/register,\
+      /fastcms/api/admin/reset/password,\
+      /fastcms/api/admin/config/public/list,\
       /fastcms/api/admin/captcha,\
       /fastcms/api/client/wechat/miniapp/user/code2session,\
       /fastcms/api/client/wechat/miniapp/user/login,\
@@ -46,7 +48,7 @@ fastcms:
       keys: "wechat_mch_secret"
   mybatis:
     ignore:
-      mappedStatementIds: "selectById, selectBatchIds"
+      mappedStatementIds: "selectById, selectBatchIds, getArticleById"
 
 logging:
   config: classpath:META-INF/logback/fastcms.xml

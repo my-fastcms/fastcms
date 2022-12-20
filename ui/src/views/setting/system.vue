@@ -26,9 +26,19 @@
 								</el-form-item>
 							</el-col>
 						</el-row>
+						
+						<div class="personal-edit-title mb15">注册</div>
 
-						<div class="personal-edit-title mb15">密码设置</div>
-                        <el-row :gutter="35">
+						<el-row :gutter="35">
+							<el-col class="mb20">
+								<el-form-item label="开启或关闭注册">
+									<el-switch
+										v-model="ruleForm.public_register_enable"
+										active-color="#13ce66">
+									</el-switch>
+								</el-form-item>
+							</el-col>
+
 							<el-col class="mb20">
 								<el-form-item label="密码最短长度" prop="pwd_min_length">
 									<el-input v-model="ruleForm.pwd_min_length" placeholder="请输入密码最少长度，整数，默认6" onkeyup="value=value.replace(/[^\d]/g,'')" clearable></el-input>
@@ -66,7 +76,8 @@ export default {
 			ruleForm: {
 				jwt_secret: '',
 				jwt_expire: '18000',
-				pwd_min_length: 6
+				pwd_min_length: 6,
+				public_register_enable: false
 			},
 			rules: {
 				"jwt_secret": [

@@ -51,7 +51,7 @@
 import { toRefs, ref, reactive, onMounted } from 'vue';
 import { getAttachList } from '/@/api/attach/index';
 import { ElMessage } from 'element-plus';
-import { Session } from '/@/utils/storage';
+import { Local, Session } from '/@/utils/storage';
 import Detail from '/@/views/attach/component/detail.vue';
 export default {
 	name: 'attachManager',
@@ -64,7 +64,7 @@ export default {
 			showSearch: true,
 			limit: 3,
 			uploadUrl: import.meta.env.VITE_API_URL + "/admin/attachment/upload",
-			headers: {"Authorization": Session.get('token')},
+			headers: {"Authorization": Local.get('token')},
 			tableData: {
 				data: [],
 				total: 0,

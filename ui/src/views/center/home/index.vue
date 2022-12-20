@@ -157,7 +157,7 @@ import { formatAxis } from '/@/utils/formatTime';
 import { newsInfoList, recommendList } from './mock';
 import { updatePassword } from '/@/api/user/index';
 import { updateUser, getUserInfo } from '/@/api/user/client';
-import { Session } from '/@/utils/storage';
+import { Local, Session } from '/@/utils/storage';
 import { useStore } from '/@/store/index';
 import qs from 'qs';
 
@@ -227,6 +227,7 @@ export default {
 					updatePassword(params).then(() => {
 						closeDialog();
 						Session.clear(); // 清除浏览器全部临时缓存
+						Local.clear();
 						ElMessageBox.alert('密码修改成功，请重新登录', '提示', {})
 							.then(() => {
 								window.location.href = '/'; // 去登录页

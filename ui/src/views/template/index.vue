@@ -37,7 +37,7 @@
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { toRefs, reactive, onMounted } from 'vue';
 import { getTemplateList, unInstallTemplate, enableTemplate } from '/@/api/template/index';
-import { Session } from '/@/utils/storage';
+import { Local, Session } from '/@/utils/storage';
 export default {
 	name: 'articleManager',
 	setup() {
@@ -45,7 +45,7 @@ export default {
 			tableData: [],
 			limit: 1,
 			uploadUrl: import.meta.env.VITE_API_URL + "/admin/template/install",
-			headers: {"Authorization": Session.get('token')},
+			headers: {"Authorization": Local.get('token')},
 		});
 
 		// 初始化表格数据

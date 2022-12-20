@@ -60,7 +60,7 @@
 import {ElMessage, ElMessageBox} from 'element-plus';
 import {onMounted, reactive, ref, toRefs} from 'vue';
 import {getPluginConfigUrl, getPluginList, unInstallPlugin} from '/@/api/plugin/index';
-import {Session} from '/@/utils/storage';
+import {Local, Session} from '/@/utils/storage';
 
 export default {
 	name: 'pluginManager',
@@ -71,7 +71,7 @@ export default {
 			pluginConfigUrl: '',
 			limit: 1,
 			uploadUrl: import.meta.env.VITE_API_URL + "/admin/plugin/install",
-			headers: {"Authorization": Session.get('token')},
+			headers: {"Authorization": Local.get('token')},
 			tableData: {
 				data: [],
 				total: 0,

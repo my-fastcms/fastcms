@@ -37,6 +37,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static com.fastcms.service.IUserService.UserI18n.*;
+
 /**
  * <p>
  * 用户 服务实现类
@@ -89,7 +91,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         User user = getById(updatePasswordParam.getId());
         if(user == null) {
-            throw new I18nFastcmsException(FastcmsException.SERVER_ERROR, UserI18n.USER_NOT_EXIST);
+            throw new I18nFastcmsException(FastcmsException.SERVER_ERROR, USER_NOT_EXIST);
         }
 
         if (!passwordEncoder.matches(updatePasswordParam.getOldPassword(), user.getPassword())) {
@@ -117,7 +119,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public Long saveUser(User user) throws FastcmsException {
 
         if (user == null) {
-            throw new I18nFastcmsException(FastcmsException.SERVER_ERROR, UserI18n.USER_NOT_EXIST);
+            throw new I18nFastcmsException(FastcmsException.SERVER_ERROR, USER_NOT_EXIST);
         }
 
         if(user.getId() != null && Objects.equals(FastcmsConstants.ADMIN_USER_ID, user.getId())) {
@@ -308,7 +310,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         User user = getById(userId);
         if (user == null) {
-            throw new I18nFastcmsException(UserI18n.USER_NOT_EXIST);
+            throw new I18nFastcmsException(USER_NOT_EXIST);
         }
 
         if (user.getStatus() != null && user.getStatus() == 0) {
@@ -342,15 +344,37 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public void resetPassword(@NotNull String userName) throws FastcmsException {
+    public void resetPassword(@NotNull String userName, @NotNull String email) throws FastcmsException {
+
+        if (StrUtils.isBlank(email)) {
+            throw new I18nFastcmsException(USER_EMAIL_NOT_NULL);
+        }
+
         User user = getOne(Wrappers.<User>lambdaQuery().eq(User::getUserName, userName));
+
+        if (user == null) {
+            throw new I18nFastcmsException(USER_NOT_EXIST);
+        }
+
+        if (user.getId() == FastcmsConstants.ADMIN_USER_ID) {
+            throw new I18nFastcmsException(USER_ADMIN_NOT_RESET_PASSWORD);
+        }
+
+        if (StrUtils.isBlank(user.getEmail())) {
+            throw new I18nFastcmsException(USER_EMAIL_NOT_SET);
+        }
+
+        if (!email.equals(user.getEmail())) {
+            throw new I18nFastcmsException(USER_EMAIL_ERROR_FOR_REGISTER);
+        }
+
         resetPassword(user);
     }
 
     @Override
     public void resetPassword(@NotNull User user) throws FastcmsException {
         if (user == null) {
-            throw new I18nFastcmsException(UserI18n.USER_NOT_EXIST);
+            throw new I18nFastcmsException(USER_NOT_EXIST);
         }
 
         if (user.getStatus() != null && user.getStatus() == 0) {

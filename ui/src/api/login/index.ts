@@ -50,3 +50,17 @@ export function register(params :string) {
 		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 	});
 }
+
+/**
+ * 重置密码
+ * @param params 
+ * @returns 
+ */
+ export function resetPassword(params :string) {
+	return request({
+		url: '/admin/reset/password',
+		method: 'post',
+		data: params,
+		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+	});
+}

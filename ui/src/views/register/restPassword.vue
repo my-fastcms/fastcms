@@ -79,7 +79,7 @@ import { useI18n } from 'vue-i18n';
 import { Session } from '/@/utils/storage';
 import { formatAxis } from '/@/utils/formatTime';
 import { useStore } from '/@/store/index';
-import { register, getCaptcha } from '/@/api/login/index';
+import { resetPassword, getCaptcha } from '/@/api/login/index';
 import qs from 'qs';
 
 export default {
@@ -137,15 +137,15 @@ export default {
 				proxy.$refs['myRefForm'].validate((valid) => {
 					if (valid) {
 						resolve(valid);
-						userRegister();
+						userRestPassowrd();
 					}
 				});
 			});
 		};
 
-		const userRegister = async() => {
-			register(qs.stringify(state.myForm)).then(() => {
-				registerInSuccess();
+		const userRestPassowrd = async() => {
+			resetPassword(qs.stringify(state.myForm)).then(() => {
+				resetInSuccess();
 			}).catch((res) => {
 				refreshCode();
 				ElMessage({showClose: true, message: res.message ? res.message : '系统错误' , type: 'error'});
@@ -153,10 +153,7 @@ export default {
 		}
 
 		// 登录成功后的跳转
-		const registerInSuccess = () => {
-			// 初始化登录成功时间问候语
-			let currentTimeInfo = currentTime.value;
-			// 登录成功，跳到转首页
+		const resetInSuccess = () => {
 			// 添加完动态路由，再进行 router 跳转，否则可能报错 No match found for location with path "/"
 			// 如果是复制粘贴的路径，非首页/登录页，那么登录成功后重定向到对应的路径中
 			if (route.query?.redirect) {
@@ -167,13 +164,6 @@ export default {
 			} else {
 				router.push('/login');
 			}
-			// 登录成功提示
-			setTimeout(() => {
-				// 关闭 loading
-				state.loading.registerIn = true;
-				const registerInText = t('message.registerInText');
-				ElMessage.success(`${currentTimeInfo}，${registerInText}`);
-			}, 300);
 		};
 
         const toLogin = () => {

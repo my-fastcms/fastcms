@@ -22,6 +22,12 @@ import java.util.stream.Collectors;
 public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> implements IConfigService, InitializingBean {
 
 	/**
+	 * 公共配置前缀，无需登录即可获取到的配置，约定所有该类型的配置前缀都是public_
+	 * 私密性强的配置key值不能使用public_前缀
+	 */
+	static final String PUBLIC_CONFIG_PREFIX = "public_";
+
+	/**
 	 * 缓存系统配置
 	 */
 	final Map<String, Config> configMap = new ConcurrentHashMap<>();
@@ -53,6 +59,11 @@ public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config> impleme
 	@Override
 	public List<Config> getConfigs(List<String> configKeys) {
 		return configMap.values().stream().filter(item -> configKeys.contains(item.getKey())).collect(Collectors.toList());
+	}
+
+	@Override
+	public List<Config> getPublicConfigs(List<String> configKeys) {
+		return getConfigs(configKeys.stream().filter(item -> item.startsWith(PUBLIC_CONFIG_PREFIX)).collect(Collectors.toList()));
 	}
 
 	@Override

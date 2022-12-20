@@ -22,7 +22,7 @@
 						-->
 					</el-tabs>
 					<div class="mt10">
-						<el-button type="text" size="small" @click="toRegister" v-if="true">{{ $t('message.link.one3') }}</el-button>
+						<el-button type="text" size="small" @click="toRegister" v-if="public_register_enable">{{ $t('message.link.one3') }}</el-button>
 						<el-button type="text" size="small" @click="toRestPassword" v-if="true">{{ $t('message.link.two6') }}</el-button>
 					</div>
 				</div>
@@ -43,12 +43,14 @@
 </template>
 
 <script lang="ts">
-import { toRefs, reactive, computed } from 'vue';
+import { toRefs, reactive, computed, onMounted } from 'vue';
 import Account from '/@/views/login/component/account.vue';
 import Mobile from '/@/views/login/component/mobile.vue';
 import Scan from '/@/views/login/component/scan.vue';
 import { useStore } from '/@/store/index';
 import { useRouter } from 'vue-router';
+import qs from 'qs';
+import { getPublicConfigList } from '/@/api/config/index';
 
 export default {
 	name: 'login',
@@ -60,6 +62,7 @@ export default {
 			tabsActiveName: 'account',
 			isTabPaneShow: true,
 			isScan: false,
+			public_register_enable: false,
 		});
 		// 获取布局配置信息
 		const getThemeConfig = computed(() => {
@@ -75,6 +78,17 @@ export default {
 		const toRestPassword = () => {
 			router.push('/rest/password');
 		}
+
+		onMounted(() => {
+			let paramKeys = new Array();
+			paramKeys.push("public_register_enable");
+			let params = qs.stringify( {"configKeys" : paramKeys}, {arrayFormat: 'repeat'});
+			getPublicConfigList(params).then((res) => {
+				res.data.forEach(item => {
+					state.public_register_enable = item.jsonValue	
+				});
+			});
+		})
 
 		return {
 			toRegister,
