@@ -33,7 +33,7 @@ import java.util.List;
  *
  * "website_title";
  * "website_seo";
- * "website_domain";
+ * "public_website_domain";
  *
  * ${seoTag("website_title")!""}
  *

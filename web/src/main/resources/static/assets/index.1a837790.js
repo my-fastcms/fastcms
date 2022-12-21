@@ -1,0 +1,1 @@
+import{s as t}from"./index.5d8bc6a4.js";function r(e){return t({url:"/admin/department/list",method:"get",params:e})}function d(e){return t({url:"/admin/department/save",method:"post",params:e})}function s(e){return t({url:"/admin/department/delete/"+e,method:"post"})}export{s as d,r as g,d as s};

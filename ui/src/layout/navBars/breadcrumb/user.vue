@@ -59,6 +59,7 @@
 			<template #dropdown>
 				<el-dropdown-menu>
 					<el-dropdown-item command="/home">{{ $t('message.user.dropdown1') }}</el-dropdown-item>
+					<el-dropdown-item command="/siteHome" v-if="website_domain != ''">{{ $t('message.user.dropdown7') }}</el-dropdown-item>
 					<el-dropdown-item command="/wareHouse">{{ $t('message.user.dropdown6') }}</el-dropdown-item>
 					<el-dropdown-item command="/personal" v-if="getUserInfos.userType == 1">{{ $t('message.user.dropdown2') }}</el-dropdown-item>
 					<el-dropdown-item divided command="logOut">{{ $t('message.user.dropdown5') }}</el-dropdown-item>
@@ -81,6 +82,9 @@ import { useTitle } from '/@/utils/setWebTitle';
 import { Session, Local } from '/@/utils/storage';
 import UserNews from '/@/layout/navBars/breadcrumb/userNews.vue';
 import Search from '/@/layout/navBars/breadcrumb/search.vue';
+import qs from 'qs';
+import { getPublicConfigList } from '/@/api/config/index';
+
 export default {
 	name: 'layoutBreadcrumbUser',
 	components: { UserNews, Search },
@@ -96,6 +100,7 @@ export default {
 			isShowUserNewsPopover: false,
 			disabledI18n: 'zh-cn',
 			disabledSize: '',
+			website_domain: '',
 		});
 		// 获取用户信息 vuex
 		const getUserInfos = computed(() => {
@@ -168,6 +173,8 @@ export default {
 					.catch(() => {});
 			} else if (path === '/wareHouse') {
 				window.open('https://gitee.com/xjd2020/fastcms.git');
+			} else if (path === '/siteHome') {
+				window.open(state.website_domain);
 			} else {
 				router.push(path);
 			}
@@ -245,6 +252,16 @@ export default {
 				initI18n();
 				initComponentSize();
 			}
+
+			let paramKeys = new Array();
+			paramKeys.push('public_website_domain');
+			let params = qs.stringify( {"configKeys" : paramKeys}, {arrayFormat: 'repeat'});
+			getPublicConfigList(params).then((res) => {
+				res.data.forEach(item => {
+					state.website_domain = item.jsonValue;
+				});
+			});
+
 		});
 		return {
 			getUserInfos,

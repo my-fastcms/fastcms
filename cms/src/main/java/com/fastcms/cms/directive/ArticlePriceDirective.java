@@ -21,6 +21,7 @@ import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.service.IArticleService;
 import com.fastcms.cms.utils.ArticleUtils;
 import com.fastcms.core.directive.BaseFunction;
+import com.fastcms.utils.I18nUtils;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateModelException;
 import org.apache.commons.lang.StringUtils;
@@ -28,6 +29,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+
+import static com.fastcms.cms.service.IArticleService.ArticleI18n.CMS_ARTICLE_IS_NOT_EXIST;
 
 /**
  * 获取文章价格
@@ -56,7 +59,7 @@ public class ArticlePriceDirective extends BaseFunction {
 
         Article article = articleService.getById(articleId);
         if (article == null) {
-            throw new TemplateModelException("文章不存在");
+            throw new TemplateModelException(I18nUtils.getMessage(CMS_ARTICLE_IS_NOT_EXIST));
         }
 
         if (arguments.size() == 2) {
