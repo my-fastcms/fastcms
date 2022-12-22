@@ -116,7 +116,7 @@ export default {
 		const onRowConfig = () => {
 		  if (!currentConfigRow) return;
       		getPluginConfigUrl(currentConfigRow.pluginId).then((res) => {
-				state.pluginConfigUrl = res.data + "?accessToken=" + Session.get('token');
+				state.pluginConfigUrl = res.data + "?accessToken=" + Local.get('token');
 				// state.pluginConfigUrl = "public/testIframe.html";
 
 				const iframe = iframeRef.value;
