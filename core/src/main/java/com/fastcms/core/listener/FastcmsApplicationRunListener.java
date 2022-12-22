@@ -129,8 +129,9 @@ public class FastcmsApplicationRunListener implements SpringApplicationRunListen
 
     String getTemplateDir() {
         if (isDev) {
-            String substring = workDir.getAbsolutePath().substring(0, workDir.getAbsolutePath().length() - 18);
-            return substring.concat("templates\\target\\classes\\");
+            String substring = workDir.getAbsolutePath().replace("\\target\\classes", "");
+            substring = substring.substring(0, substring.lastIndexOf("\\"));
+            return substring.concat("\\templates\\target\\classes\\");
         }
         return workDir.getAbsolutePath() + File.separator + dirNames[2] + File.separator;
     }

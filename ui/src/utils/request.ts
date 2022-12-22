@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import { Session } from '/@/utils/storage';
+import { Local, Session } from '/@/utils/storage';
 
 // 配置新建一个 axios 实例
 const service = axios.create({
@@ -12,8 +12,8 @@ const service = axios.create({
 service.interceptors.request.use(
 	(config) => {
 		// 在发送请求之前做些什么 token
-		if (Session.get('token')) {
-			config.headers.common['Authorization'] = `Bearer ${Session.get('token')}`;
+		if (Local.get('token')) {
+			config.headers.common['Authorization'] = `Bearer ${Local.get('token')}`;
 		}
 		if (Session.get('ClientId')) {
 			config.headers.common['ClientId'] = `${Session.get('ClientId')}`;
@@ -37,7 +37,8 @@ service.interceptors.response.use(
 		if (res.code && res.code !== 200) {
 			// `token` 过期或者账号已在别处登录
 			if (res.code === 401 || res.code === 4001) {
-				Session.clear(); // 清除浏览器全部临时缓存
+				Session.clear();
+				Local.clear(); // 清除浏览器全部临时缓存
 				window.location.href = '/'; // 去登录页
 				ElMessageBox.alert('你已被登出，请重新登录', '提示', {})
 					.then(() => {})
@@ -59,6 +60,7 @@ service.interceptors.response.use(
 			if (error.response.data) {
 				if (error.response.data.status === 401) {
 					Session.clear(); // 清除浏览器全部临时缓存
+					Local.clear();
 					ElMessageBox.alert('你已被登出，请重新登录', '提示', {})
 						.then(() => {
 							window.location.href = '/'; // 去登录页

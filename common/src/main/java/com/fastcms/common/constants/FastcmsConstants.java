@@ -73,7 +73,7 @@ public interface FastcmsConstants {
      */
     String WEBSITE_TITLE_KEY = "website_title";
     String WEBSITE_SEO = "website_seo";
-    String WEBSITE_DOMAIN = "website_domain";
+    String WEBSITE_DOMAIN = "public_website_domain";
 
     /**
      * 微信配置相关

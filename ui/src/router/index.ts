@@ -2,7 +2,7 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 import { store } from '/@/store/index.ts';
-import { Session } from '/@/utils/storage';
+import { Local, Session } from '/@/utils/storage';
 import { NextLoading } from '/@/utils/loading';
 import { staticRoutes, dynamicRoutes, userCenterRoutes } from '/@/router/route';
 import { initFrontEndControlRoutes } from '/@/router/frontEnd';
@@ -232,15 +232,15 @@ if (!isRequestRoutes) initFrontEndControlRoutes();
 router.beforeEach(async (to, from, next) => {
 	NProgress.configure({ showSpinner: false });
 	if (to.meta.title) NProgress.start();
-	const token = Session.get('token');
+	const token = Local.get('token');
 	if ((to.path === '/login' || to.path ==='/register' || to.path ==='/rest/password') && !token) {
 		next();
 		NProgress.done();
 	} else {
 		if (!token) {
 			next(`/login?redirect=${to.path}&params=${JSON.stringify(to.query ? to.query : to.params)}`);
-			const userType = Session.get("userInfo").userType;
-			Session.clear();
+			const userType = Local.get("userInfo").userType;
+			Local.clear();
 			if(userType == 2) {
 				resetFrontRoute();
 			} else {
@@ -248,7 +248,7 @@ router.beforeEach(async (to, from, next) => {
 			}
 			NProgress.done();
 		} else if (token && to.path === '/login') {
-			const userType = Session.get("userInfo").userType;
+			const userType = Local.get("userInfo").userType;
 			if(userType == 2) {
 				next('/personal');
 				NProgress.done();
@@ -258,7 +258,7 @@ router.beforeEach(async (to, from, next) => {
 			}
 		} else {
 			if (store.state.routesList.routesList.length === 0) {
-				const userType = Session.get("userInfo").userType;
+				const userType = Local.get("userInfo").userType;
 				if(userType == 2) {
 					await initFrontEndControlRoutes();
 					next({ ...to, replace: true });

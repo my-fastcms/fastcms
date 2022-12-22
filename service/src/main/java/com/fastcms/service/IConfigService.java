@@ -25,4 +25,11 @@ public interface IConfigService extends IService<Config> {
 	 */
 	List<Config> getConfigs(List<String> configKeys);
 
+	/**
+	 * 获取对外开放的配置
+	 * @param configKeys
+	 * @return
+	 */
+	List<Config> getPublicConfigs(List<String> configKeys);
+
 }

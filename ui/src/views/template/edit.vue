@@ -57,7 +57,7 @@
 <script lang="ts">
 import { toRefs, reactive, onMounted } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
-import { Session } from '/@/utils/storage';
+import { Local, Session } from '/@/utils/storage';
 import { getTemplateFileTree, getTemplateFile, saveTemplateFile, delTemplateFile } from '/@/api/template/index';
 import { VAceEditor } from 'vue3-ace-editor';
 import 'ace-builds/src-noconflict/mode-text';
@@ -90,7 +90,7 @@ export default {
             },
             limit: 3,
 			uploadUrl: import.meta.env.VITE_API_URL + "/admin/template/files/upload",
-			headers: {"Authorization": Session.get('token')},
+			headers: {"Authorization": Local.get('token')},
             uploadParam: {
                 dirName: ''
             },

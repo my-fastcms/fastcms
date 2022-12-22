@@ -1,5 +1,5 @@
 import { store } from '/@/store/index.ts';
-import { Session } from '/@/utils/storage';
+import { Local, Session } from '/@/utils/storage';
 import { NextLoading } from '/@/utils/loading';
 import { setAddRoute, setFilterMenuAndCacheTagsViewRoutes } from '/@/router/index';
 import { dynamicRoutes } from '/@/router/route';
@@ -26,7 +26,7 @@ export async function initBackEndControlRoutes() {
 	// 界面 loading 动画开始执行
 	if (window.nextLoading === undefined) NextLoading.start();
 	// 无 token 停止执行下一步
-	if (!Session.get('token')) return false;
+	if (!Local.get('token')) return false;
 	// 触发初始化用户信息
 	store.dispatch('userInfos/setUserInfos');
 	// 获取路由菜单数据

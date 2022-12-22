@@ -27,8 +27,8 @@
 								</el-form-item>
 							</el-col>
 							<el-col class="mb20">
-								<el-form-item label="网站域名" prop="website_domain">
-									<el-input v-model="ruleForm.website_domain" placeholder="请输入网站域名" clearable></el-input>
+								<el-form-item label="网站域名" prop="public_website_domain">
+									<el-input v-model="ruleForm.public_website_domain" placeholder="请输入网站域名" clearable></el-input>
 									<div class="sub-title">请填写http（或https）开头，结尾不要包含“/”。例如：http://www.xjd2020.com</div>
 								</el-form-item>
 							</el-col>
@@ -95,7 +95,7 @@ export default {
 			ruleForm: {
 				website_title: '',
 				website_name: '',
-				website_domain: '',
+				public_website_domain: '',
 				website_seo: '',
 				website_admin_mobile: '',
 				website_admin_wechat: '',
@@ -111,7 +111,7 @@ export default {
 				"website_name": [
 					{required: true, message: '请输入网站名称', trigger: 'blur'},
 				],
-				"website_domain": [
+				"public_website_domain": [
 					{required: true, message: '请输入网站域名', trigger: 'blur'}
 				]  
 			}

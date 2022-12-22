@@ -99,7 +99,7 @@ public class User implements Serializable {
     /**
      * 登录账号
      */
-    @NotBlank(message = "账号不能为空")
+    @NotBlank(message = "{fastcms.user.account.notnull}")
     private String userName;
 
     /**

@@ -119,6 +119,16 @@ public class ConfigController {
 	}
 
 	/**
+	 * 获取配置(无需登录)
+	 * @param configKeys	key数组
+	 * @return
+	 */
+	@PostMapping("public/list")
+	public RestResult<List<Config>> getPublicConfigList(@RequestParam("configKeys") List<String> configKeys) {
+		return RestResultUtils.success(configService.getPublicConfigs(configKeys));
+	}
+
+	/**
 	 * 测试邮件配置
 	 * @return
 	 */

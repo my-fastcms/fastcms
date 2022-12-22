@@ -27,7 +27,7 @@ public class Role implements Serializable {
     /**
      * 角色名称
      */
-    @NotBlank(message = "角色名称不能为空")
+    @NotBlank(message = "{fastcms.role.title.not.allow.empty}")
     private String roleName;
 
     /**

@@ -106,7 +106,7 @@ public interface IUserService extends IService<User> {
      * @param userName
      * @throws FastcmsException
      */
-    void resetPassword(String userName) throws FastcmsException;
+    void resetPassword(String userName, String email) throws FastcmsException;
 
     /**
      * 重置用户密码
@@ -212,17 +212,17 @@ public interface IUserService extends IService<User> {
         /**
          * 旧密码
          */
-        @NotBlank(message = "旧密码不能为空")
+        @NotBlank(message = "{fastcms.user.oldpassword.notnull}")
         String oldPassword;
         /**
          * 新密码
          */
-        @NotBlank(message = "密码不能为空")
+        @NotBlank(message = "{fastcms.user.password.notnull}")
         String password;
         /**
          * 旧密码
          */
-        @NotBlank(message = "确认密码不能为空")
+        @NotBlank(message = "{fastcms.user.comfirm.password.not.null}")
         String confirmPassword;
         /**
          * 手机验证码
@@ -286,6 +286,8 @@ public interface IUserService extends IService<User> {
         String USER_CONFIRM_PASSWORD_NOT_NULL = "fastcms.user.comfirm.password.not.null";
         String USER_DISABLE = "fastcms.user.disable";
         String USER_EMAIL_NOT_NULL = "fastcms.user.email.not.null";
+        String USER_EMAIL_NOT_SET = "fastcms.user.email.not.set";
+        String USER_EMAIL_ERROR_FOR_REGISTER = "fastcms.user.email.error.for.register";
         String USER_EMAIL_ENABLE_SUBJECT = "fastcms.user.email.enable.subject";
         String USER_EMAIL_ENABLE_CONTENT = "fastcms.user.email.enable.content";
         String USER_TYPE_CHANGE_NOT_MODIFY = "fastcms.user.change.type.not.modify";
