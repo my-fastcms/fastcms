@@ -19,7 +19,7 @@
                             >
                             </el-input>
                         </el-form-item>
-                        <el-form-item prop="email">
+                        <el-form-item prop="email" v-if="false">
                             <el-input
                                 type="text"
                                 :placeholder="$t('message.account.accountPlaceholder5')"
@@ -95,12 +95,12 @@ export default {
             captcha: '',
             myForm: {
 				username: '',
-				email: '',
+				//email: '',
 				code: '',
 			},
             rules: {
 				username: { required: true, message: '请输入账号', trigger: 'blur' },
-				email: { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+				// email: { required: true, message: '请输入邮箱地址', trigger: 'blur' },
                 code: { required: true, message: '请输入验证码', trigger: 'blur' },
 			},
             loading: {
