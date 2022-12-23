@@ -17,6 +17,7 @@
 package com.fastcms.cms.directive;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.service.IArticleService;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.directive.BaseDirective;
@@ -128,6 +129,7 @@ public class ArticleListDirective extends BaseDirective {
 
 		orderBy = getStr(PARAM_ORDER_BY, params, "created");
 		QueryWrapper wrapper = new QueryWrapper();
+		wrapper.eq("status", Article.STATUS_PUBLISH);
 		wrapper.last(count > 0, "limit 0," + count);
 		wrapper.orderByDesc(orderBy);
 
