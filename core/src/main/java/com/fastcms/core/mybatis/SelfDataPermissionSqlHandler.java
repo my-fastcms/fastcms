@@ -42,7 +42,7 @@ public class SelfDataPermissionSqlHandler extends AbstractDataPermissionSqlHandl
 
     @Override
     public boolean isMatch(String mappedStatementId) {
-        return !AuthUtils.isAdmin();
+        return !AuthUtils.isAdmin() && AuthUtils.getUserId() != null;
     }
 
     @Override

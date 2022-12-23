@@ -51,20 +51,22 @@ public class DefaultDataPermissionSqlHandlerManager implements DataPermissionSql
     @Override
     public DataPermissionSqlHandler getHandler() {
 
-        dataPermissionSqlHandlerList.clear();
-
         Map<String, DataPermissionSqlHandler> dataPermissionSqlHandlerMap = ApplicationUtils.getApplicationContext().getBeansOfType(DataPermissionSqlHandler.class);
+        dataPermissionSqlHandlerMap.values().forEach(item -> item.setNext(null));
         dataPermissionSqlHandlerList.addAll(dataPermissionSqlHandlerMap.values());
 
         // 排序
         List<DataPermissionSqlHandler> collect = dataPermissionSqlHandlerList.stream().sorted(Comparator.comparing(DataPermissionSqlHandler::getOrder)).collect(Collectors.toList());
 
-        dataPermissionSqlHandler = collect.get(0);
-        for (int i = collect.size() - 1; i >= 0; i --) {
+        dataPermissionSqlHandler = collect.get(collect.size() - 1);
+        for (int i = collect.size() - 2; i >= 0; i --) {
             DataPermissionSqlHandler temp = collect.get(i);
             temp.setNext(dataPermissionSqlHandler);
             dataPermissionSqlHandler = temp;
         }
+
+        dataPermissionSqlHandlerList.clear();
+
         return dataPermissionSqlHandler;
     }
 

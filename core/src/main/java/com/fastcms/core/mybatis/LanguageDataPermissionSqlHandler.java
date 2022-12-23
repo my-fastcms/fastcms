@@ -48,7 +48,13 @@ public class LanguageDataPermissionSqlHandler extends AbstractDataPermissionSqlH
 
 	@Override
 	public boolean isMatch(String mappedStatementId) {
-		return true;
+
+		try {
+			return I18nUtils.getLanguage() != null;
+		} catch (Exception e) {
+			return false;
+		}
+
 	}
 
 	@Override
