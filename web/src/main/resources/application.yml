@@ -16,8 +16,35 @@ spring:
     url: jdbc:mysql://localhost:3306/fastcms?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: root
     password: root
-  http:
-
+security:
+  oauth2:
+    client:
+      registration:
+        login-client:
+          provider: spring
+          client-id: login-client
+          client-secret: openid-connect
+          client-authentication-method: client_secret_basic
+          authorization-grant-type: authorization_code
+          redirect-uri: http://127.0.0.1:8080/login/oauth2/code/login-client
+          scope: openid,profile
+          client-name: Spring
+        google:
+          client-id: your-app-client-id
+          client-secret: your-app-client-secret
+        github:
+          client-id: your-app-client-id
+          client-secret: your-app-client-secret
+      provider:
+        spring:
+          authorization-uri: http://localhost:9000/oauth2/authorize
+          token-uri: http://localhost:9000/oauth2/token
+          jwk-set-uri: http://localhost:9000/oauth2/jwks
+        okta:
+          authorization-uri: https://your-subdomain.oktapreview.com/oauth2/v1/authorize
+          token-uri: https://your-subdomain.oktapreview.com/oauth2/v1/token
+          user-info-uri: https://your-subdomain.oktapreview.com/oauth2/v1/userinfo
+          jwk-set-uri: https://your-subdomain.oktapreview.com/oauth2/v1/keys
 
 mybatis-plus:
   global-config:

@@ -23,9 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -42,7 +42,7 @@ import org.springframework.web.cors.CorsUtils;
  *  * @modifiedBy：
  *  * @version: 1.0
  */
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@Configuration
 public class FastcmsAuthConfig extends WebSecurityConfigurerAdapter implements ApplicationListener<ApplicationStartedEvent> {
 
     @Autowired
@@ -73,11 +73,10 @@ public class FastcmsAuthConfig extends WebSecurityConfigurerAdapter implements A
         http.csrf().disable().cors()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests().requestMatchers(CorsUtils::isPreFlightRequest).permitAll();
+        //http.oauth2Client();
         http.headers().cacheControl();
         http.headers().frameOptions().disable();
-
         http.addFilterBefore(new JwtAuthTokenFilter(tokenManager, controllerMethodsCache), UsernamePasswordAuthenticationFilter.class);
-
     }
 
     @Bean
