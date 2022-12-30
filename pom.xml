@@ -19,7 +19,7 @@
 		<commons-io.version>2.7</commons-io.version>
 		<easy-captcha.version>1.6.2</easy-captcha.version>
 		<reflections.version>0.9.11</reflections.version>
-		<jsoup.version>1.11.3</jsoup.version>
+		<jsoup.version>1.15.3</jsoup.version>
 		<jjwt.version>0.11.2</jjwt.version>
 		<maven-flatten-version>1.1.0</maven-flatten-version>
 		<maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
