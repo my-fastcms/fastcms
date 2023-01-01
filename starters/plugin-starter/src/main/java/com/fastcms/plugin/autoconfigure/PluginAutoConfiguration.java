@@ -55,7 +55,7 @@ public class PluginAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(FastcmsPluginManager.class)
-    public FastcmsPluginManager pluginManager() {
+    public FastcmsPluginManager fastcmsPluginManager() {
 
         if(FastcmsConstants.DEV_MODE.equals(getProfile())) {
             System.setProperty(AbstractPluginManager.MODE_PROPERTY_NAME, RuntimeMode.DEVELOPMENT.toString());

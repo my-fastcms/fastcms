@@ -122,7 +122,7 @@ public abstract class JsoupUtils {
 		return html;
 	}
 
-	public static class MyWhitelist extends org.jsoup.safety.Whitelist {
+	public static class MyWhitelist extends org.jsoup.safety.Safelist {
 
 		public MyWhitelist() {
 

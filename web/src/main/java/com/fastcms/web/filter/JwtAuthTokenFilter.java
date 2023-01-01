@@ -17,7 +17,6 @@
 package com.fastcms.web.filter;
 
 import com.fastcms.common.constants.FastcmsConstants;
-import com.fastcms.core.auth.ControllerMethodsCache;
 import com.fastcms.web.security.JwtTokenManager;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
@@ -49,11 +48,8 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
 
     private final JwtTokenManager tokenManager;
 
-    private final ControllerMethodsCache controllerMethodsCache;
-
-    public JwtAuthTokenFilter(JwtTokenManager tokenManager, ControllerMethodsCache controllerMethodsCache) {
+    public JwtAuthTokenFilter(JwtTokenManager tokenManager) {
         this.tokenManager = tokenManager;
-        this.controllerMethodsCache = controllerMethodsCache;
     }
 
     @Override

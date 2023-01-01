@@ -20,8 +20,8 @@ import com.fastcms.plugin.FastcmsPluginManager;
 import com.fastcms.plugin.InterceptPath;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.handler.AbstractHandlerMapping;
 import org.springframework.web.servlet.handler.MappedInterceptor;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -37,12 +37,12 @@ import java.util.Objects;
  */
 public class InterceptorRegister extends AbstractPluginRegister {
 
-    AbstractHandlerMapping handlerMapping;
+    RequestMappingHandlerMapping handlerMapping;
     List<HandlerInterceptor> handlerInterceptorList;
 
     public InterceptorRegister(FastcmsPluginManager pluginManger) {
         super(pluginManger);
-        handlerMapping = pluginManger.getApplicationContext().getBean(AbstractHandlerMapping.class);
+        handlerMapping = pluginManger.getApplicationContext().getBean(RequestMappingHandlerMapping.class);
         Field adaptedInterceptorsField = ReflectionUtils.findField(handlerMapping.getClass(), "adaptedInterceptors", List.class);
         adaptedInterceptorsField.setAccessible(true);
         try {

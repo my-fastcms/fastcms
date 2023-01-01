@@ -33,10 +33,10 @@ import com.fastcms.utils.ApplicationUtils;
 import com.fastcms.utils.I18nUtils;
 import org.apache.commons.lang.StringUtils;
 import org.pf4j.Plugin;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.nio.file.Paths;
 
@@ -55,7 +55,7 @@ import static com.fastcms.service.IResourceService.ResourceI18n.*;
 @RequestMapping(FastcmsConstants.ADMIN_MAPPING + "/plugin")
 public class PluginController {
 
-    @Autowired
+    @Resource
     private PluginManagerService pluginManagerService;
 
     /**

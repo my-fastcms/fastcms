@@ -16,22 +16,20 @@
  */
 package com.fastcms.web.security;
 
-import com.fastcms.core.auth.ControllerMethodsCache;
 import com.fastcms.utils.RequestUtils;
 import com.fastcms.web.filter.JwtAuthTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.event.ApplicationStartedEvent;
-import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.BeanIds;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsUtils;
 
@@ -43,7 +41,8 @@ import org.springframework.web.cors.CorsUtils;
  *  * @version: 1.0
  */
 @Configuration
-public class FastcmsAuthConfig extends WebSecurityConfigurerAdapter implements ApplicationListener<ApplicationStartedEvent> {
+@EnableWebSecurity
+public class FastcmsAuthConfig {
 
     @Autowired
     private JwtTokenManager tokenManager;
@@ -51,45 +50,34 @@ public class FastcmsAuthConfig extends WebSecurityConfigurerAdapter implements A
     @Autowired
     private AuthConfigs authConfigs;
 
-    @Autowired
-    private ControllerMethodsCache controllerMethodsCache;
-
-    @Bean(name = BeanIds.AUTHENTICATION_MANAGER)
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
-    @Override
-    public void configure(WebSecurity web) {
-        web.ignoring().antMatchers(authConfigs.getIgnoreUrls().toArray(new String[] {}));
-        web.ignoring().antMatchers(RequestUtils.getIgnoreUrls().toArray(new String[] {}));
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring().antMatchers(authConfigs.getIgnoreUrls().toArray(new String[] {}))
+                .and().ignoring().antMatchers(RequestUtils.getIgnoreUrls().toArray(new String[] {}));
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.formLogin().loginPage("/fastcms.html");
         http.authorizeRequests().antMatchers("/fastcms/**").authenticated();
         http.csrf().disable().cors()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests().requestMatchers(CorsUtils::isPreFlightRequest).permitAll();
-        //http.oauth2Client();
+//        http.oauth2Client();
         http.headers().cacheControl();
         http.headers().frameOptions().disable();
-        http.addFilterBefore(new JwtAuthTokenFilter(tokenManager, controllerMethodsCache), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new JwtAuthTokenFilter(tokenManager), UsernamePasswordAuthenticationFilter.class);
+        return http.build();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    @Override
-    public void onApplicationEvent(ApplicationStartedEvent event) {
-//        controllerMethodsCache.initClassMethod("com.fastcms.web.controller.admin");
-//        controllerMethodsCache.initClassMethod("com.fastcms.web.controller.api");
-//        controllerMethodsCache.initClassMethod("com.fastcms.cms.controller.admin");
-//        controllerMethodsCache.initClassMethod("com.fastcms.cms.controller.api");
     }
 
 }
