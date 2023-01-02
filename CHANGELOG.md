@@ -77,7 +77,7 @@
 - 修复一些已知BUG
 
 ## [v0.1.0] 2022.12.30
-- 升级到SpringBoot 2.7.6
+- 升级到SpringBoot 2.7.7
 - 增加spring security auth2接入第三方授权登录
 - 修复开发环境模板目录错误导致启动失败的问题
 - 升级jsoup版本

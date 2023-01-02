@@ -68,7 +68,7 @@ public class FastcmsAuthConfig {
         http.csrf().disable().cors()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests().requestMatchers(CorsUtils::isPreFlightRequest).permitAll();
-//        http.oauth2Client();
+        http.oauth2Client();
         http.headers().cacheControl();
         http.headers().frameOptions().disable();
         http.addFilterBefore(new JwtAuthTokenFilter(tokenManager), UsernamePasswordAuthenticationFilter.class);
