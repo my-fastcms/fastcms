@@ -20,6 +20,7 @@
         <module>lucene-starter</module>
         <module>mybatis-starter</module>
         <module>email-starter</module>
+        <module>oauth2-starter</module>
     </modules>
 
     <dependencies>

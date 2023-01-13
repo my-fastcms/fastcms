@@ -152,6 +152,11 @@
 				<artifactId>fastcms-mybatis-starter</artifactId>
 				<version>${revision}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.fastcms</groupId>
+				<artifactId>fastcms-oauth2-starter</artifactId>
+				<version>${revision}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>io.jsonwebtoken</groupId>
