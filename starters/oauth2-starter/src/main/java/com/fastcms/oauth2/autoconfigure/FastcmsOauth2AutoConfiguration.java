@@ -17,10 +17,10 @@
 
 package com.fastcms.oauth2.autoconfigure;
 
-import org.springframework.boot.autoconfigure.security.oauth2.client.ClientsConfiguredCondition;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 
 /**
  * fastcms oauth2 config
@@ -31,10 +31,10 @@ import org.springframework.context.annotation.Configuration;
  * @version: 1.0
  */
 @Configuration(proxyBeanMethods = false)
-@Conditional(ClientsConfiguredCondition.class)
-public class Oauth2AutoConfiguration {
+public class FastcmsOauth2AutoConfiguration {
 
     @Bean
+    @ConditionalOnMissingBean(ClientRegistrationRepository.class)
     FastcmsInMemoryClientRegistrationRepository clientRegistrationRepository() {
         return new FastcmsInMemoryClientRegistrationRepository();
     }

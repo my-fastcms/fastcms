@@ -20,11 +20,15 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.util.Assert;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 覆写 Spring Security的InMemoryClientRegistrationRepository
+ * 增加支持动态注册 ClientRegistration
  * @author： wjun_java@163.com
  * @date： 2022/03/02
  * @description：
@@ -33,7 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class FastcmsInMemoryClientRegistrationRepository implements ClientRegistrationRepository, Iterable<ClientRegistration> {
 
-    private final Map<String, ClientRegistration> registrations;
+    private Map<String, ClientRegistration> registrations;
 
     /**
      * Constructs an {@code InMemoryClientRegistrationRepository} using the provided
@@ -54,17 +58,17 @@ public final class FastcmsInMemoryClientRegistrationRepository implements Client
     }
 
     private static Map<String, ClientRegistration> createRegistrationsMap(List<ClientRegistration> registrations) {
-        return toUnmodifiableConcurrentMap(registrations);
+        return toConcurrentMap(registrations);
     }
 
-    private static Map<String, ClientRegistration> toUnmodifiableConcurrentMap(List<ClientRegistration> registrations) {
+    private static Map<String, ClientRegistration> toConcurrentMap(List<ClientRegistration> registrations) {
         ConcurrentHashMap<String, ClientRegistration> result = new ConcurrentHashMap<>();
         for (ClientRegistration registration : registrations) {
             Assert.state(!result.containsKey(registration.getRegistrationId()),
                     () -> String.format("Duplicate key %s", registration.getRegistrationId()));
             result.put(registration.getRegistrationId(), registration);
         }
-        return Collections.unmodifiableMap(result);
+        return result;
     }
 
     /**
@@ -93,8 +97,20 @@ public final class FastcmsInMemoryClientRegistrationRepository implements Client
         return this.registrations.values().iterator();
     }
 
+    /**
+     * 添加client
+     * @param clientRegistration
+     */
     public void addClientRegistration(ClientRegistration clientRegistration) {
-        this.registrations.putIfAbsent(clientRegistration.getRegistrationId(), clientRegistration);
+        this.registrations.put(clientRegistration.getRegistrationId(), clientRegistration);
+    }
+
+    /**
+     * 移除client
+     * @param registrationId
+     */
+    public void removeClientRegistration(String registrationId) {
+        this.registrations.remove(registrationId);
     }
 
 }
