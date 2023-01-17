@@ -113,4 +113,13 @@ public final class FastcmsInMemoryClientRegistrationRepository implements Client
         this.registrations.remove(registrationId);
     }
 
+    /**
+     * 是否存在某个登录客户端
+     * @param registrationId
+     * @return
+     */
+    public Boolean hasRegistration(String registrationId) {
+        return findByRegistrationId(registrationId) != null;
+    }
+
 }

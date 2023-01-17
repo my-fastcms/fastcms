@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 插件抽象注册器
@@ -157,6 +158,17 @@ public abstract class AbstractPluginRegister implements PluginRegister {
      */
     protected ApplicationContext getApplicationContext() {
         return pluginManger.getApplicationContext();
+    }
+
+    /**
+     * 获取插件匹配的class
+     * @param pluginId
+     * @param baseClazz
+     * @return
+     * @throws Exception
+     */
+    protected List<Class<?>> getMatchClassList(String pluginId, Class baseClazz) throws Exception {
+        return getPluginClasses(pluginId).stream().filter(clazz -> baseClazz.isAssignableFrom(clazz)).collect(Collectors.toList());
     }
 
 }
