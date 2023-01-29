@@ -28,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 覆写 Spring Security的InMemoryClientRegistrationRepository
- * 增加支持动态注册 ClientRegistration
+ * 增加支持在插件中动态注册 ClientRegistration
  * @author： wjun_java@163.com
  * @date： 2022/03/02
  * @description：

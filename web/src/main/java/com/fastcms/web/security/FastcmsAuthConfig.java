@@ -16,9 +16,11 @@
  */
 package com.fastcms.web.security;
 
+import com.fastcms.oauth2.autoconfigure.FastcmsOAuth2AuthorizationRequestResolver;
 import com.fastcms.utils.RequestUtils;
 import com.fastcms.web.filter.JwtAuthTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,6 +31,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsUtils;
@@ -68,7 +72,11 @@ public class FastcmsAuthConfig {
         http.csrf().disable().cors()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests().requestMatchers(CorsUtils::isPreFlightRequest).permitAll();
-        http.oauth2Login();
+        http.oauth2Login(oAuth2LoginConfigurer
+                -> oAuth2LoginConfigurer.authorizationEndpoint(authorizationEndpointConfig
+                -> authorizationEndpointConfig.authorizationRequestResolver(
+                        new FastcmsOAuth2AuthorizationRequestResolver(http.getSharedObject(ApplicationContext.class).getBean(ClientRegistrationRepository.class),
+                                OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI))));
         http.headers().cacheControl();
         http.headers().frameOptions().disable();
         http.addFilterBefore(new JwtAuthTokenFilter(tokenManager), UsernamePasswordAuthenticationFilter.class);
