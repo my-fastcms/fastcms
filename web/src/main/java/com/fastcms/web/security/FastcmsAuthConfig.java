@@ -16,7 +16,7 @@
  */
 package com.fastcms.web.security;
 
-import com.fastcms.oauth2.autoconfigure.FastcmsOAuth2AuthorizationRequestResolver;
+import com.fastcms.oauth2.endpoint.FastcmsOAuth2AuthorizationRequestResolver;
 import com.fastcms.utils.RequestUtils;
 import com.fastcms.web.filter.JwtAuthTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;

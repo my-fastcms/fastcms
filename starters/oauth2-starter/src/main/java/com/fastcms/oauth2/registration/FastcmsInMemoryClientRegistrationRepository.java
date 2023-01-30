@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.oauth2.autoconfigure;
+package com.fastcms.oauth2.registration;
 
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
@@ -34,6 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @description：
  * @modifiedBy：
  * @version: 1.0
+ * @see org.springframework.security.oauth2.client.registration.InMemoryClientRegistrationRepository
  */
 public final class FastcmsInMemoryClientRegistrationRepository implements ClientRegistrationRepository, Iterable<ClientRegistration> {
 

@@ -17,12 +17,19 @@
 
 package com.fastcms.oauth2.autoconfigure;
 
+import com.fastcms.oauth2.registration.FastcmsInMemoryClientRegistrationRepository;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 
 /**
+ * spring security oauth2 重要的filter
+ * 1，OAuth2AuthorizationRequestRedirectFilter
+ *      负责拦截/oauth2/authorization授权请求，然后重定向到第三方确认授权页面
+ * 2，OAuth2LoginAuthenticationFilter
+ *      负责拦截用户在第三方确认授权之后的回调url地址：/login/oauth2/code/
+ *
  * fastcms oauth2 config
  * @author： wjun_java@163.com
  * @date： 2022/03/02

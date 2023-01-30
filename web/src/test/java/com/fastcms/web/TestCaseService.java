@@ -117,13 +117,13 @@ public class TestCaseService {
         installPlugin(pluginId);
 
         Object bean = ApplicationUtils.getBean("com.fastcms.hello.HelloComponent");
-        System.out.println(bean);
+        logger.info("bean:" + bean);
         Object bean1 = ApplicationUtils.getBean("com.fastcms.hello.HelloComponent2");
-        System.out.println(bean1);
+        logger.info("bean:" + bean1);
         for (Method method : bean.getClass().getMethods()) {
             if (method.getName().equals("hello")) {
                 Object invoke = method.invoke(bean, null);
-                System.out.println(invoke);
+                logger.info("bean:" + invoke);
                 break;
             }
         }
@@ -134,7 +134,7 @@ public class TestCaseService {
 
                 try {
                     Object result = method.invoke(helloService, Long.valueOf(1));
-                    System.out.println(result);
+                    logger.info("result:" + result);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

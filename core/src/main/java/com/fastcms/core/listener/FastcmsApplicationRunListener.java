@@ -131,12 +131,12 @@ public class FastcmsApplicationRunListener implements SpringApplicationRunListen
         if (isDev) {
             String osName = System.getProperty("os.name");
             if (osName.contains("Windows")) {
-                String substring = workDir.getAbsolutePath().replace("\\target\\classes", "");
+                String substring = workDir.getAbsolutePath().replace("\\target\\classes", "").replace("\\target\\test-classes", "");
                 substring = substring.substring(0, substring.lastIndexOf("\\"));
                 return substring.concat("\\templates\\target\\classes\\");
             }
             if (osName.contains("Mac")) {
-                String substring = workDir.getAbsolutePath().replace("/target/classes", "");
+                String substring = workDir.getAbsolutePath().replace("/target/classes", "").replace("/target/test-classes", "");
                 substring = substring.substring(0, substring.lastIndexOf("/"));
                 return substring.concat("/templates/target/classes/");
             }
