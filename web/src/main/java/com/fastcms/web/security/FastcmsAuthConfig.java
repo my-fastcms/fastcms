@@ -31,6 +31,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.web.SecurityFilterChain;
@@ -73,10 +74,15 @@ public class FastcmsAuthConfig {
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests().requestMatchers(CorsUtils::isPreFlightRequest).permitAll();
         http.oauth2Login(oAuth2LoginConfigurer
-                -> oAuth2LoginConfigurer.authorizationEndpoint(authorizationEndpointConfig
-                -> authorizationEndpointConfig.authorizationRequestResolver(
-                        new FastcmsOAuth2AuthorizationRequestResolver(http.getSharedObject(ApplicationContext.class).getBean(ClientRegistrationRepository.class),
-                                OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI))));
+                // 支持插件中重写第三方授权url
+                -> oAuth2LoginConfigurer.authorizationEndpoint(
+                        authorizationEndpointConfig -> authorizationEndpointConfig.authorizationRequestResolver(
+                                new FastcmsOAuth2AuthorizationRequestResolver(http.getSharedObject(ApplicationContext.class).getBean(ClientRegistrationRepository.class), OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI)
+                        ))
+                        .tokenEndpoint(tokenEndpointConfig -> {
+                            tokenEndpointConfig.accessTokenResponseClient(new DefaultAuthorizationCodeTokenResponseClient());
+                        })
+        );
         http.headers().cacheControl();
         http.headers().frameOptions().disable();
         http.addFilterBefore(new JwtAuthTokenFilter(tokenManager), UsernamePasswordAuthenticationFilter.class);
