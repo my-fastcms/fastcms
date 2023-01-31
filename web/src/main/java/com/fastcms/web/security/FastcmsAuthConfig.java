@@ -16,6 +16,7 @@
  */
 package com.fastcms.web.security;
 
+import com.fastcms.oauth2.endpoint.FastcmsAuthorizationCodeTokenResponseClient;
 import com.fastcms.oauth2.endpoint.FastcmsOAuth2AuthorizationRequestResolver;
 import com.fastcms.utils.RequestUtils;
 import com.fastcms.web.filter.JwtAuthTokenFilter;
@@ -31,8 +32,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -79,8 +80,9 @@ public class FastcmsAuthConfig {
                         authorizationEndpointConfig -> authorizationEndpointConfig.authorizationRequestResolver(
                                 new FastcmsOAuth2AuthorizationRequestResolver(http.getSharedObject(ApplicationContext.class).getBean(ClientRegistrationRepository.class), OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI)
                         ))
-                        .tokenEndpoint(tokenEndpointConfig -> {
-                            tokenEndpointConfig.accessTokenResponseClient(new DefaultAuthorizationCodeTokenResponseClient());
+                        .tokenEndpoint(tokenEndpointConfig -> tokenEndpointConfig.accessTokenResponseClient(new FastcmsAuthorizationCodeTokenResponseClient()))
+                        .userInfoEndpoint(userInfoEndpointConfig -> {
+                            userInfoEndpointConfig.userService(new DefaultOAuth2UserService());
                         })
         );
         http.headers().cacheControl();
