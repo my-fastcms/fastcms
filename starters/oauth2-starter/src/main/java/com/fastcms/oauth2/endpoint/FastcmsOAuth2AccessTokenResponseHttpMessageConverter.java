@@ -30,6 +30,7 @@ import org.springframework.security.oauth2.core.endpoint.DefaultOAuth2AccessToke
 import org.springframework.security.oauth2.core.endpoint.MapOAuth2AccessTokenResponseConverter;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponseMapConverter;
+import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
 import org.springframework.util.Assert;
 
 import java.nio.charset.Charset;
@@ -38,13 +39,14 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/** 重写OAuth2AccessTokenResponseHttpMessageConverter
+/** 重写 OAuth2AccessTokenResponseHttpMessageConverter
  * 增加对text/plain的支持
  * @author： wjun_java@163.com
  * @date： 2022/01/31
  * @description：
  * @modifiedBy：
  * @version: 1.0
+ * @see OAuth2AccessTokenResponseHttpMessageConverter
  */
 public class FastcmsOAuth2AccessTokenResponseHttpMessageConverter extends AbstractHttpMessageConverter<OAuth2AccessTokenResponse> {
 

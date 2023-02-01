@@ -54,7 +54,7 @@ public final class FastcmsAuthorizationCodeTokenResponseClient implements OAuth2
 
     private static final String INVALID_TOKEN_RESPONSE_ERROR_CODE = "invalid_token_response";
 
-    private Converter<OAuth2AuthorizationCodeGrantRequest, RequestEntity<?>> requestEntityConverter = new OAuth2AuthorizationCodeGrantRequestEntityConverter();
+    private Converter<OAuth2AuthorizationCodeGrantRequest, RequestEntity<?>> requestEntityConverter;
 
     private RestOperations restOperations;
 
@@ -73,11 +73,11 @@ public final class FastcmsAuthorizationCodeTokenResponseClient implements OAuth2
         /**
          * 支持插件动态添加
          */
-        AbstractOAuth2AuthorizationGrantRequestEntityConverter requestEntityConverter = OAuth2AuthorizationGrantRequestEntityConverterManager.getRequestEntityConverter(authorizationCodeGrantRequest.getClientRegistration().getRegistrationId());
-        if (requestEntityConverter != null) {
-            setRequestEntityConverter(requestEntityConverter);
+        Converter<OAuth2AuthorizationCodeGrantRequest, RequestEntity<?>> requestEntityConverter = OAuth2AuthorizationGrantRequestEntityConverterManager.getRequestEntityConverter(authorizationCodeGrantRequest.getClientRegistration().getRegistrationId());
+        if (requestEntityConverter == null) {
+            requestEntityConverter = new OAuth2AuthorizationCodeGrantRequestEntityConverter();
         }
-
+        setRequestEntityConverter(requestEntityConverter);
         RequestEntity<?> request = this.requestEntityConverter.convert(authorizationCodeGrantRequest);
         ResponseEntity<OAuth2AccessTokenResponse> response = getResponse(request);
         // As per spec, in Section 5.1 Successful Access Token Response

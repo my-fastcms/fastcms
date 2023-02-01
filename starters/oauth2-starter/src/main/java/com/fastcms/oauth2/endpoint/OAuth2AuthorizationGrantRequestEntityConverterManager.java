@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public final class OAuth2AuthorizationGrantRequestEntityConverterManager {
 
-    public static final Map<String, AbstractOAuth2AuthorizationGrantRequestEntityConverter> requestEntityConverterMap = Collections.synchronizedMap(new HashMap<>());
+    private static final Map<String, AbstractOAuth2AuthorizationGrantRequestEntityConverter> requestEntityConverterMap = Collections.synchronizedMap(new HashMap<>());
 
     public static final void addRequestEntityConverter(String registrationId, AbstractOAuth2AuthorizationGrantRequestEntityConverter oAuth2AuthorizationGrantRequestEntityConverter) {
         Assert.state(!hasRequestEntityConverter(registrationId), () -> String.format("Duplicate key %s", registrationId));

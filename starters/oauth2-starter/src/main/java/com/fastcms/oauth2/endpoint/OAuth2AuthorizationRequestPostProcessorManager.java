@@ -32,7 +32,7 @@ import java.util.Map;
  */
 public final class OAuth2AuthorizationRequestPostProcessorManager {
 
-    public static final Map<String, OAuth2AuthorizationRequestPostProcessor> postProcessorMap = Collections.synchronizedMap(new HashMap<>());
+    private static final Map<String, OAuth2AuthorizationRequestPostProcessor> postProcessorMap = Collections.synchronizedMap(new HashMap<>());
 
     public static final void addPostProcessor(String registrationId, OAuth2AuthorizationRequestPostProcessor oAuth2AuthorizationRequestPostProcessor) {
         Assert.state(!hasPostProcessor(registrationId), () -> String.format("Duplicate key %s", registrationId));

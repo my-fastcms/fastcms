@@ -18,6 +18,7 @@ package com.fastcms.web.security;
 
 import com.fastcms.oauth2.endpoint.FastcmsAuthorizationCodeTokenResponseClient;
 import com.fastcms.oauth2.endpoint.FastcmsOAuth2AuthorizationRequestResolver;
+import com.fastcms.oauth2.userinfo.FastcmsOAuth2UserService;
 import com.fastcms.utils.RequestUtils;
 import com.fastcms.web.filter.JwtAuthTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -82,7 +82,7 @@ public class FastcmsAuthConfig {
                         ))
                         .tokenEndpoint(tokenEndpointConfig -> tokenEndpointConfig.accessTokenResponseClient(new FastcmsAuthorizationCodeTokenResponseClient()))
                         .userInfoEndpoint(userInfoEndpointConfig -> {
-                            userInfoEndpointConfig.userService(new DefaultOAuth2UserService());
+                            userInfoEndpointConfig.userService(new FastcmsOAuth2UserService());
                         })
         );
         http.headers().cacheControl();
