@@ -16,6 +16,7 @@
  */
 package com.fastcms.web.security;
 
+import com.fastcms.oauth2.authentication.FastcmsSavedRequestAwareAuthenticationSuccessHandler;
 import com.fastcms.oauth2.endpoint.FastcmsAuthorizationCodeTokenResponseClient;
 import com.fastcms.oauth2.endpoint.FastcmsOAuth2AuthorizationRequestResolver;
 import com.fastcms.oauth2.userinfo.FastcmsOAuth2UserService;
@@ -75,15 +76,13 @@ public class FastcmsAuthConfig {
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests().requestMatchers(CorsUtils::isPreFlightRequest).permitAll();
         http.oauth2Login(oAuth2LoginConfigurer
-                // 支持插件中重写第三方授权url
                 -> oAuth2LoginConfigurer.authorizationEndpoint(
-                        authorizationEndpointConfig -> authorizationEndpointConfig.authorizationRequestResolver(
-                                new FastcmsOAuth2AuthorizationRequestResolver(http.getSharedObject(ApplicationContext.class).getBean(ClientRegistrationRepository.class), OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI)
-                        ))
-                        .tokenEndpoint(tokenEndpointConfig -> tokenEndpointConfig.accessTokenResponseClient(new FastcmsAuthorizationCodeTokenResponseClient()))
-                        .userInfoEndpoint(userInfoEndpointConfig -> {
-                            userInfoEndpointConfig.userService(new FastcmsOAuth2UserService());
-                        })
+                authorizationEndpointConfig -> authorizationEndpointConfig.authorizationRequestResolver(
+                        new FastcmsOAuth2AuthorizationRequestResolver(http.getSharedObject(ApplicationContext.class).getBean(ClientRegistrationRepository.class), OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI)
+                ))
+                .tokenEndpoint(tokenEndpointConfig -> tokenEndpointConfig.accessTokenResponseClient(new FastcmsAuthorizationCodeTokenResponseClient()))
+                .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig.userService(new FastcmsOAuth2UserService()))
+                .successHandler(new FastcmsSavedRequestAwareAuthenticationSuccessHandler())
         );
         http.headers().cacheControl();
         http.headers().frameOptions().disable();

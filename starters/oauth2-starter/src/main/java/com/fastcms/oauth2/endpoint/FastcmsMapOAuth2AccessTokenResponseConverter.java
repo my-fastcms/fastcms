@@ -29,6 +29,7 @@ import java.util.*;
 /**
  * 重写spring security DefaultMapOAuth2AccessTokenResponseConverter
  * 解决tokenType为空的问题
+ * 让 getAccessTokenType() 方法默认返回Bearer
  * @author： wjun_java@163.com
  * @date： 2022/01/29
  * @description：

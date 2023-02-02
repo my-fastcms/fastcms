@@ -17,9 +17,9 @@
 package com.fastcms.web.security;
 
 import com.fastcms.core.auth.FastcmsUserDetails;
-import com.fastcms.utils.RequestUtils;
 import com.fastcms.entity.User;
 import com.fastcms.service.IUserService;
+import com.fastcms.utils.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
@@ -38,7 +38,8 @@ public class LoginSuccessListener implements ApplicationListener<AuthenticationS
 
     @Override
     public void onApplicationEvent(AuthenticationSuccessEvent event) {
-        if(event.getSource() != null && event.getAuthentication().getPrincipal() != null) {
+        if(event.getSource() != null && event.getAuthentication().getPrincipal() != null
+                && event.getAuthentication().getPrincipal() instanceof FastcmsUserDetails) {
             FastcmsUserDetails principal = (FastcmsUserDetails) event.getAuthentication().getPrincipal();
             User user = userService.getById(principal.getUserId());
             if(user != null) {

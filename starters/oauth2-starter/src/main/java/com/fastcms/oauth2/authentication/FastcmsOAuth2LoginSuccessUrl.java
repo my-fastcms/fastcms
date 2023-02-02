@@ -14,20 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.oauth2.userinfo;
 
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.http.RequestEntity;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+package com.fastcms.oauth2.authentication;
 
 /**
- * 获取用户信息接口请求参数转换基类
+ * OAuth2 授权登录成功之后跳转的Url
  * @author： wjun_java@163.com
- * @date： 2022/01/31
+ * @date： 2022/02/02
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-@Deprecated
-public abstract class AbstractOAuth2UserRequestEntityConverter implements Converter<OAuth2UserRequest, RequestEntity<?>> {
+@FunctionalInterface
+public interface FastcmsOAuth2LoginSuccessUrl {
+
+    String getLoginSuccessUrl();
+
 }
