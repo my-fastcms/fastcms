@@ -39,6 +39,8 @@ public class FastcmsSavedRequestAwareAuthenticationSuccessHandler extends SavedR
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
 
+        setDefaultTargetUrl("/");
+
         final String registrationId = request.getRequestURI().substring(request.getRequestURI().lastIndexOf("/") + 1);
 
         FastcmsOAuth2LoginSuccessUrl oAuth2LoginSuccessUrl = FastcmsOAuth2LoginSuccessUrlManager.getOAuth2LoginSuccessUrl(registrationId);
