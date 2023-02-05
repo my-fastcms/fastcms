@@ -54,6 +54,20 @@ public interface IUserService extends IService<User> {
     User saveWxMaUserInfo(String openid, WxMaUserInfo userInfo) throws FastcmsException;
 
     /**
+     * 保存OAuth2授权用户信息
+     * @param openid
+     * @param nickname
+     * @param headimgurl
+     * @param sex
+     * @param unionid
+     * @param sourceType
+     * @param type
+     * @return
+     * @throws FastcmsException
+     */
+    User saveOAuth2UserInfo(String openid, String nickname, String headimgurl, Integer sex, String unionid, User.SourceType sourceType, String type) throws FastcmsException;
+
+    /**
      * 用户通过手机号授权登录后保存用户信息
      * @param openid
      * @param unionId

@@ -44,6 +44,10 @@ public class FastcmsUserDetails extends User {
 		this.userType = userType;
 	}
 
+	public FastcmsUserDetails(Long userId, String username, Integer userType, Collection<? extends GrantedAuthority> authorities) {
+		this(userId, username, null, userType, authorities);
+	}
+
 	public Long getUserId() {
 		return userId;
 	}

@@ -17,17 +17,29 @@
 
 package com.fastcms.oauth2.authentication;
 
+import org.springframework.security.core.Authentication;
+
 /**
- * OAuth2 授权登录成功之后跳转的Url
+ * OAuth2 授权登录成功处理逻辑
+ * 具体逻辑由插件实现
  * @author： wjun_java@163.com
  * @date： 2022/02/02
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-@FunctionalInterface
-public interface FastcmsOAuth2LoginSuccessUrl {
+public interface FastcmsOAuth2LoginSuccessHandler {
 
+    /**
+     * 获取登录成功后跳转地址
+     * @return
+     */
     String getLoginSuccessUrl();
+
+    /**
+     * 处理授权成功之后事项
+     * @param authentication
+     */
+    void handle(Authentication authentication) throws Exception;
 
 }

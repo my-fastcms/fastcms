@@ -31,9 +31,9 @@ import java.util.Map;
  */
 public final class FastcmsOAuth2LoginSuccessUrlManager {
 
-    private static final Map<String, FastcmsOAuth2LoginSuccessUrl> oAuth2LoginSuccessUrlMap = Collections.synchronizedMap(new HashMap<>());
+    private static final Map<String, FastcmsOAuth2LoginSuccessHandler> oAuth2LoginSuccessUrlMap = Collections.synchronizedMap(new HashMap<>());
 
-    public static final void addOAuth2LoginSuccessUrl(String registrationId, FastcmsOAuth2LoginSuccessUrl fastcmsOAuth2LoginSuccessUrl) {
+    public static final void addOAuth2LoginSuccessUrl(String registrationId, FastcmsOAuth2LoginSuccessHandler fastcmsOAuth2LoginSuccessUrl) {
         Assert.state(!hasOAuth2LoginSuccessUrl(registrationId), () -> String.format("Duplicate key %s", registrationId));
         oAuth2LoginSuccessUrlMap.put(registrationId, fastcmsOAuth2LoginSuccessUrl);
     }
@@ -42,7 +42,7 @@ public final class FastcmsOAuth2LoginSuccessUrlManager {
         oAuth2LoginSuccessUrlMap.remove(registrationId);
     }
 
-    public static final FastcmsOAuth2LoginSuccessUrl getOAuth2LoginSuccessUrl(String registrationId) {
+    public static final FastcmsOAuth2LoginSuccessHandler getOAuth2LoginSuccessUrl(String registrationId) {
         return oAuth2LoginSuccessUrlMap.get(registrationId);
     }
 

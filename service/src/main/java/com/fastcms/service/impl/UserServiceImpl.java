@@ -169,25 +169,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             throw new I18nFastcmsException(FastcmsException.INVALID_PARAM, UserI18n.USER_MINIAPP_PARAMS_ERROR1);
         }
 
-        UserOpenid userOpenid = userOpenidService.getOne(Wrappers.<UserOpenid>lambdaQuery().eq(UserOpenid::getValue, openid).eq(UserOpenid::getType, UserOpenid.TYPE_WECHAT_MINI));
-        User user;
-        if(userOpenid == null) {
+        int sex = "1".equals(userInfo.getGender()) ? 1 : 0;
+        return saveOAuth2UserInfo(openid, userInfo.getNickName(), userInfo.getAvatarUrl(), sex, userInfo.getUnionId(), User.SourceType.WX_MINI_PROGRAM, UserOpenid.TYPE_WECHAT_MINI);
+    }
+
+    @Override
+    @Transactional
+    public User saveOAuth2UserInfo(String openid, String nickname, String headimgurl, Integer sex, String unionid, User.SourceType sourceType, String type) throws FastcmsException {
+        User user = getUserByOpenId(openid);
+        if (user == null) {
             user = new User();
             user.setUserName(getLastUserNum());
-            user.setNickName(userInfo.getNickName());
-            user.setHeadImg(userInfo.getAvatarUrl());
-            user.setSource(User.SourceType.WX_MINI_PROGRAM.name().toLowerCase());
-            user.setUserType(User.USER_TYPE_CLIENT);
-            save(user);
-            userOpenid = new UserOpenid();
+            user.setNickName(nickname);
+            user.setHeadImg(headimgurl);
+            user.setSex(sex);
+            user.setSource(sourceType.name().toLowerCase());
+            saveUser(user);
+            UserOpenid userOpenid = new UserOpenid();
             userOpenid.setUserId(user.getId());
-            userOpenid.setType(UserOpenid.TYPE_WECHAT_MINI);
             userOpenid.setValue(openid);
+            userOpenid.setType(type);
             userOpenidService.save(userOpenid);
-        }else {
-            user = getById(userOpenid.getUserId());
         }
-
         return user;
     }
 
