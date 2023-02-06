@@ -17,8 +17,6 @@
 
 package com.fastcms.oauth2.authentication;
 
-import org.springframework.security.core.Authentication;
-
 /**
  * OAuth2 授权登录成功处理逻辑
  * 具体逻辑由插件实现
@@ -35,11 +33,5 @@ public interface FastcmsOAuth2LoginSuccessHandler {
      * @return
      */
     String getLoginSuccessUrl();
-
-    /**
-     * 处理授权成功之后事项
-     * @param authentication
-     */
-    void handle(Authentication authentication) throws Exception;
 
 }

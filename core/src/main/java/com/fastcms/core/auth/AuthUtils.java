@@ -28,16 +28,15 @@ import org.springframework.security.core.context.SecurityContextHolder;
 public final class AuthUtils {
 
     private AuthUtils() {
-
     }
 
     public static Long getUserId() {
         return getUser() == null ? null : getUser().getUserId();
     }
 
-    public static String getUsername() {
-        return getUser() == null ? null : getUser().getUsername();
-    }
+//    public static String getUsername() {
+//        return getUser() == null ? null : getUser().getUsername();
+//    }
 
     public static FastcmsUserDetails getUser() {
 
