@@ -14,6 +14,9 @@
 ### 官网
 - [官网地址](https://www.xjd2020.com)
 
+### 安装部署
+- [视频教程](https://www.bilibili.com/video/BV12G4y167vi/)
+
 ### 体验账号
 - [管理后台地址](https://www.xjd2020.com/fastcms)
 - 体验账号：fastcms_test 
