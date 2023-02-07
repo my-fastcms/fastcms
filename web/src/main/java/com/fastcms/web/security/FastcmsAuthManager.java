@@ -71,7 +71,7 @@ public class FastcmsAuthManager implements AuthManager {
             Authentication authenticate = authenticationManager.authenticate(authenticationToken);
 
             FastcmsUserDetails principal = (FastcmsUserDetails) authenticate.getPrincipal();
-            String token = tokenManager.createToken(principal.getUserId(), authenticate.getName(), principal.getAuthorities());
+            String token = tokenManager.createToken(authenticate.getName(), principal.getAuthorities());
 
             return new FastcmsUser(authenticate.getName(), token, authConfigs.getTokenValidityInSeconds(), principal.isAdmin(), principal.hasRole(), principal.getUserType());
 

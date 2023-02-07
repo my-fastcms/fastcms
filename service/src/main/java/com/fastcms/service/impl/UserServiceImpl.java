@@ -71,6 +71,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     final String RANDOM_STR = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
     @Override
+    public User getByUsername(String username) {
+        return getOne(Wrappers.<User>lambdaQuery().eq(User::getUserName, username));
+    }
+
+    @Override
     public void updateUserPassword(UpdatePasswordParam updatePasswordParam) throws FastcmsException {
 
         if (StringUtils.isBlank(updatePasswordParam.getOldPassword())) {
@@ -184,7 +189,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             user.setHeadImg(headimgurl);
             user.setSex(sex);
             user.setSource(sourceType.name().toLowerCase());
-            saveUser(user);
+            save(user);
             UserOpenid userOpenid = new UserOpenid();
             userOpenid.setUserId(user.getId());
             userOpenid.setValue(openid);

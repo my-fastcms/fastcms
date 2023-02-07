@@ -18,6 +18,13 @@ import java.util.List;
 public interface IUserService extends IService<User> {
 
     /**
+     * 根据登录账号获取用户信息
+     * @param username
+     * @return
+     */
+    User getByUsername(String username);
+
+    /**
      * 修改用户密码
      * @param updatePasswordParam
      */

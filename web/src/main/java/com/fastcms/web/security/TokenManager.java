@@ -16,28 +16,53 @@
  */
 package com.fastcms.web.security;
 
-import com.fastcms.core.auth.FastcmsUserDetails;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * @author： wjun_java@163.com
- * @date： 2021/10/23
+ * @date： 2023/02/7
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-@Component
-public class JwtTokenManager extends AbstractTokenManager {
+public interface TokenManager {
 
-	@Override
-	public Authentication doGetAuthentication(Long userId, String userName, List<GrantedAuthority> authorities) {
-		FastcmsUserDetails principal = new FastcmsUserDetails(userId, userName, "", 0, authorities);
-		return new UsernamePasswordAuthenticationToken(principal, "", authorities);
-	}
+    /**
+     * 根据授权信息生成token
+     * @param authentication
+     * @return
+     */
+    String createToken(Authentication authentication);
+
+    /**
+     * 根据账号以及权限信息生成token
+     * @param userName
+     * @param authorities
+     * @return
+     */
+    String createToken(String userName, Collection<? extends GrantedAuthority> authorities);
+
+    /**
+     * 根据账号生成token
+     * @param userName
+     * @return
+     */
+    String createToken(String userName);
+
+    /**
+     * 根据token获取授权信息
+     * @param token
+     * @return
+     */
+    Authentication getAuthentication(String token);
+
+    /**
+     * 验证token有效期
+     * @param token
+     */
+    void validateToken(String token);
 
 }

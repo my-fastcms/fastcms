@@ -161,7 +161,7 @@ public class WechatMiniUserApi {
 
 		try {
 			User user = userService.saveWxMaUserInfo(openId, userInfo);
-			return RestResultUtils.success(tokenManager.createToken(user.getId(), user.getUserName()));
+			return RestResultUtils.success(tokenManager.createToken(user.getUserName()));
 		} catch (FastcmsException e) {
 			e.printStackTrace();
 			return RestResultUtils.failed(I18nUtils.getMessage(USER_MINIAPP_LOGIN_FAIL_FOR_USER_IS_NULL));
@@ -225,7 +225,7 @@ public class WechatMiniUserApi {
 
 		try {
 			User user = userService.saveUser(openId, unionId, wxMaPhoneNumberInfo.getPurePhoneNumber(), UserOpenid.TYPE_WECHAT_MINI);
-			return RestResultUtils.success(tokenManager.createToken(user.getId(), user.getUserName()));
+			return RestResultUtils.success(tokenManager.createToken(user.getUserName()));
 		} catch (FastcmsException e) {
 			e.printStackTrace();
 			return RestResultUtils.failed(I18nUtils.getMessage(USER_MINIAPP_LOGIN_FAIL_FOR_USER_IS_NULL));
