@@ -24,7 +24,6 @@ import com.fastcms.service.IUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -59,11 +58,8 @@ public class FastcmsUserDetailsServiceImpl implements UserDetailsService {
 		if (StringUtils.isBlank(user.getPassword())) {
 			throw new BadCredentialsException(username);
 		}
-
 		List<Role> userRoleList = roleService.getUserRoleList(user.getId());
-		List<GrantedAuthority> collect = userRoleList.stream().map(item -> new SimpleGrantedAuthority(String.valueOf(item.getId()))).collect(Collectors.toList());
-
-		return new FastcmsUserDetails(user, collect);
+		return new FastcmsUserDetails(user, userRoleList.stream().map(item -> new SimpleGrantedAuthority(String.valueOf(item.getId()))).collect(Collectors.toList()));
 	}
 
 }
