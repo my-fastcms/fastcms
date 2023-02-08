@@ -34,43 +34,24 @@ import java.util.stream.Collectors;
  */
 public class FastcmsUserDetails extends User {
 
-	private Long userId;
+	private com.fastcms.entity.User user;
 
-	private Integer userType;
-
-	public FastcmsUserDetails(Long userId, String username, String password, Integer userType, Collection<? extends GrantedAuthority> authorities) {
-		super(username, password, authorities);
-		this.userId = userId;
-		this.userType = userType;
-	}
-
-	public FastcmsUserDetails(Long userId, String username, Integer userType, Collection<? extends GrantedAuthority> authorities) {
-		this(userId, username, null, userType, authorities);
-	}
-
-	public Long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
-
-	public Integer getUserType() {
-		return userType;
-	}
-
-	public void setUserType(Integer userType) {
-		this.userType = userType;
+	public FastcmsUserDetails(com.fastcms.entity.User user, Collection<? extends GrantedAuthority> authorities) {
+		super(user.getUserName(), user.getPassword(), authorities);
+		this.user = user;
 	}
 
 	public Boolean isAdmin() {
 		List<GrantedAuthority> collect = getAuthorities().stream().filter(item -> Objects.equals(Long.valueOf(item.getAuthority()), FastcmsConstants.ADMIN_ROLE_ID)).collect(Collectors.toList());
-		return FastcmsConstants.ADMIN_USER_ID == this.userId || (collect != null && !collect.isEmpty());
+		return FastcmsConstants.ADMIN_USER_ID == this.user.getId() || (collect != null && !collect.isEmpty());
 	}
 
 	public Boolean hasRole() {
-		return FastcmsConstants.ADMIN_USER_ID == this.userId || getAuthorities().size() > 0;
+		return FastcmsConstants.ADMIN_USER_ID == this.user.getId() || getAuthorities().size() > 0;
+	}
+
+	public com.fastcms.entity.User getUser() {
+		return user;
 	}
 
 }

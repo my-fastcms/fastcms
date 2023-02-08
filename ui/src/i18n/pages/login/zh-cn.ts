@@ -20,6 +20,7 @@ export default {
 		accountPlaceholder3: '请输入验证码',
 		accountPlaceholder4: '确认密码',
 		accountPlaceholder5: '邮箱',
+		accountPlaceholder6: '昵称',
 		accountBtnText: '登 录',
 		accountRegistBtnText: '注 册',
 		accountRestPasswordBtnText: '重置密码',

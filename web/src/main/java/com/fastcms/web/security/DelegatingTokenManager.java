@@ -14,28 +14,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.fastcms.oauth2.authentication;
+package com.fastcms.web.security;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
 
 /**
- * OAuth2 授权登录成功处理逻辑
- * 具体逻辑由插件实现
  * @author： wjun_java@163.com
- * @date： 2022/02/02
+ * @date： 2023/02/8
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-public interface FastcmsOAuth2LoginSuccessHandler {
+public class DelegatingTokenManager implements TokenManager {
 
-    /**
-     * 获取登录成功后跳转地址
-     * @return
-     */
-    String getLoginSuccessUrl(HttpServletRequest request, Authentication authentication);
+    @Override
+    public String createToken(Authentication authentication) {
+        return null;
+    }
+
+    @Override
+    public String createToken(String userName, Collection<? extends GrantedAuthority> authorities) {
+        return null;
+    }
+
+    @Override
+    public String createToken(String userName) {
+        return null;
+    }
+
+    @Override
+    public Authentication getAuthentication(String token) {
+        return null;
+    }
+
+    @Override
+    public void validateToken(String token) {
+
+    }
 
 }

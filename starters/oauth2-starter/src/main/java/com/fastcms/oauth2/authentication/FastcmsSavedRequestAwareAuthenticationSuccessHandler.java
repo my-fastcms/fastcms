@@ -45,7 +45,7 @@ public class FastcmsSavedRequestAwareAuthenticationSuccessHandler extends SavedR
 
         FastcmsOAuth2LoginSuccessHandler loginSuccessHandler = FastcmsOAuth2LoginSuccessUrlManager.getOAuth2LoginSuccessUrl(registrationId);
         if (loginSuccessHandler != null) {
-            setDefaultTargetUrl(loginSuccessHandler.getLoginSuccessUrl());
+            setDefaultTargetUrl(loginSuccessHandler.getLoginSuccessUrl(request, authentication));
         }
 
         super.onAuthenticationSuccess(request, response, authentication);

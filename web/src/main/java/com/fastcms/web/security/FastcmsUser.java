@@ -17,6 +17,7 @@
 package com.fastcms.web.security;
 
 import com.fastcms.common.utils.VersionUtils;
+import com.fastcms.entity.User;
 
 import java.io.Serializable;
 
@@ -76,13 +77,15 @@ public class FastcmsUser implements Serializable {
 	 */
 	private Integer userType;
 
-	public FastcmsUser(String username, String token, long tokenTtl, boolean superAdmin, boolean hasRole, Integer userType) {
-		this.username = username;
+	public FastcmsUser(User user, String token, long tokenTtl, boolean isAdmin, boolean hasRole) {
+		this.username = user.getUserName();
+		this.nickname = user.getNickName() == null ? user.getUserName() : user.getNickName();
+		this.headImg = user.getHeadImg();
 		this.token = token;
 		this.tokenTtl = tokenTtl;
-		this.superAdmin = superAdmin;
+		this.superAdmin = isAdmin;
 		this.hasRole = hasRole;
-		this.userType = userType;
+		this.userType = user.getUserType();
 		this.version = VersionUtils.getFullClientVersion();
 	}
 

@@ -84,6 +84,7 @@ public class AdminController {
      */
     @PostMapping("register")
     public RestResult<Boolean> register(@RequestParam("username") String username,
+                                        @RequestParam("nickName") String nickName,
                                         @RequestParam("password") String password,
                                         @RequestParam("repeatPassword") String repeatPassword,
                                         @RequestParam("code") String code) throws FastcmsException {
@@ -92,7 +93,7 @@ public class AdminController {
             return RestResultUtils.failed(I18nUtils.getMessage(IUserService.UserI18n.USER_LOGIN_CAPTCHA_ERROR));
         }
 
-        return RestResultUtils.success(userService.register(username, password, repeatPassword));
+        return RestResultUtils.success(userService.register(username, nickName, password, repeatPassword));
     }
 
     /**

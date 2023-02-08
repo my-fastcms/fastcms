@@ -17,6 +17,8 @@
 package com.fastcms.web.security;
 
 import com.fastcms.core.auth.FastcmsUserDetails;
+import com.fastcms.service.IUserService;
+import com.fastcms.utils.ApplicationUtils;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -35,8 +37,8 @@ import java.util.List;
 public class JwtTokenManager extends AbstractTokenManager {
 
 	@Override
-	public Authentication doGetAuthentication(Long userId, String userName, List<GrantedAuthority> authorities) {
-		FastcmsUserDetails principal = new FastcmsUserDetails(userId, userName, "", 0, authorities);
+	public Authentication doGetAuthentication(String userName, List<GrantedAuthority> authorities) {
+		FastcmsUserDetails principal = new FastcmsUserDetails(ApplicationUtils.getBean(IUserService.class).getByUsername(userName), authorities);
 		return new UsernamePasswordAuthenticationToken(principal, "", authorities);
 	}
 

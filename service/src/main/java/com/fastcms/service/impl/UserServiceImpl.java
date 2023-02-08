@@ -21,6 +21,7 @@ import com.fastcms.utils.I18nUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -50,6 +51,8 @@ import static com.fastcms.service.IUserService.UserI18n.*;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
+    private final String USER_BY_USER_NAME_CACHE_NAME = "user_by_user_name_cache_name";
+
     @Autowired
     private IRoleService roleService;
 
@@ -71,6 +74,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     final String RANDOM_STR = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
     @Override
+    @Cacheable(value = USER_BY_USER_NAME_CACHE_NAME, key = "#username")
     public User getByUsername(String username) {
         return getOne(Wrappers.<User>lambdaQuery().eq(User::getUserName, username));
     }
@@ -260,7 +264,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
-    public synchronized Boolean register(@NotNull String username, @NotNull String password, @NotNull String repeatPassword) throws FastcmsException {
+    public synchronized Boolean register(@NotNull String username, @NotNull String nickName, @NotNull String password, @NotNull String repeatPassword) throws FastcmsException {
         if(StrUtils.isBlank(username)) {
             throw new I18nFastcmsException(UserI18n.USER_ACCOUNT_NOT_NULL);
         }
@@ -297,6 +301,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
         user = new User();
         user.setUserName(userName);
+        user.setNickName(nickName);
         user.setSex(User.SEX_MAN);
         user.setPassword(passwordEncoder.encode(password));
         user.setSource(User.SourceType.WEB_REGISTER.name().toLowerCase());

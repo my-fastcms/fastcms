@@ -95,11 +95,12 @@ public interface IUserService extends IService<User> {
     /**
      * 用户注册
      * @param username
+     * @param nickName
      * @param password
      * @param repeatPassword
      * @return
      */
-    Boolean register(String username, String password, String repeatPassword) throws FastcmsException;
+    Boolean register(String username, String nickName, String password, String repeatPassword) throws FastcmsException;
 
     /**
      * 获取用户最大id值

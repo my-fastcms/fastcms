@@ -17,7 +17,7 @@
 package com.fastcms.web.filter;
 
 import com.fastcms.common.constants.FastcmsConstants;
-import com.fastcms.web.security.JwtTokenManager;
+import com.fastcms.web.security.TokenManager;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import org.apache.commons.lang.StringUtils;
@@ -46,9 +46,9 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
 
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
-    private final JwtTokenManager tokenManager;
+    private final TokenManager tokenManager;
 
-    public JwtAuthTokenFilter(JwtTokenManager tokenManager) {
+    public JwtAuthTokenFilter(TokenManager tokenManager) {
         this.tokenManager = tokenManager;
     }
 

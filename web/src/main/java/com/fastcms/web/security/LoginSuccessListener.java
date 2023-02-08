@@ -41,7 +41,7 @@ public class LoginSuccessListener implements ApplicationListener<AuthenticationS
         if(event.getSource() != null && event.getAuthentication().getPrincipal() != null
                 && event.getAuthentication().getPrincipal() instanceof FastcmsUserDetails) {
             FastcmsUserDetails principal = (FastcmsUserDetails) event.getAuthentication().getPrincipal();
-            User user = userService.getById(principal.getUserId());
+            User user = userService.getById(principal.getUser().getId());
             if(user != null) {
                 user.setAccessIp(RequestUtils.getIpAddress(RequestUtils.getRequest()));
                 user.setLoginTime(LocalDateTime.now());

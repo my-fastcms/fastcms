@@ -16,6 +16,18 @@
                                 v-model="myForm.username"
                                 clearable
                                 autocomplete="off"
+								@change="confirmUserName"
+                            >
+                            </el-input>
+                        </el-form-item>
+						<el-form-item prop="nickName">
+                            <el-input
+                                type="text"
+                                :placeholder="$t('message.account.accountPlaceholder6')"
+                                prefix-icon="el-icon-user"
+                                v-model="myForm.nickName"
+                                clearable
+                                autocomplete="off"
                             >
                             </el-input>
                         </el-form-item>
@@ -118,13 +130,15 @@ export default {
             isShowPassword: false,
             captcha: '',
             myForm: {
+				nickName: '',
 				username: '',
 				password: '',
                 repeatPassword: '',
 				code: '',
 			},
             rules: {
-				username: { required: true, message: '请输入用户名', trigger: 'blur' },
+				username: { required: true, message: '请输入账号', trigger: 'blur' },
+				nickName: { required: true, message: '请输入用户昵称', trigger: 'blur' },
 				password: { required: true, message: '请输入密码', trigger: 'blur' },
                 repeatPassword: { required: true, message: '请输入确认密码', trigger: 'blur' },
                 code: { required: true, message: '请输入验证码', trigger: 'blur' },
@@ -206,9 +220,17 @@ export default {
             router.push('/login');
         };
 
+		const confirmUserName = () => {
+			if (/[^a-z0-9_]/g.test(state.myForm.username)) {
+				state.myForm.username = '';
+				ElMessage({showClose: true, message: "只能输入英文字母数字", type: 'error'});
+			}
+		};
+
 		return {
 			getThemeConfig,
             currentTime,
+			confirmUserName,
 			onRegisterIn,
             toLogin,
 			refreshCode,

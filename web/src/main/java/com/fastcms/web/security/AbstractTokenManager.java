@@ -79,9 +79,8 @@ public abstract class AbstractTokenManager implements TokenManager {
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts.parserBuilder().setSigningKey(authConfigs.getSecretKeyBytes()).build().parseClaimsJws(token).getBody();
         List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get(AUTHORITIES_KEY));
-        Integer userId = (Integer) claims.get(USER_ID);
         String username = (String) claims.get(USER_NAME);
-        return doGetAuthentication(Long.valueOf(userId), username, authorities);
+        return doGetAuthentication(username, authorities);
     }
 
     @Override
@@ -89,6 +88,6 @@ public abstract class AbstractTokenManager implements TokenManager {
         Jwts.parserBuilder().setSigningKey(authConfigs.getSecretKeyBytes()).build().parseClaimsJws(token);
     }
 
-    public abstract Authentication doGetAuthentication(Long userId, String userName, List<GrantedAuthority> authorities);
+    public abstract Authentication doGetAuthentication(String userName, List<GrantedAuthority> authorities);
 
 }
