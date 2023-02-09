@@ -52,7 +52,7 @@ import org.springframework.web.cors.CorsUtils;
 public class FastcmsAuthConfig {
 
     @Autowired
-    private JwtTokenManager tokenManager;
+    private DelegatingTokenManager tokenManager;
 
     @Autowired
     private AuthConfigs authConfigs;

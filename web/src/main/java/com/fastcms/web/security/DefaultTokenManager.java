@@ -34,7 +34,7 @@ import java.util.List;
  * @version: 1.0
  */
 @Component
-public class JwtTokenManager extends AbstractTokenManager {
+public class DefaultTokenManager extends AbstractTokenManager {
 
 	@Override
 	public Authentication doGetAuthentication(String userName, List<GrantedAuthority> authorities) {

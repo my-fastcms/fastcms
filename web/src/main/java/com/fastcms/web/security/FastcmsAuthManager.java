@@ -21,7 +21,7 @@ import com.fastcms.common.auth.model.User;
 import com.fastcms.common.exception.AccessException;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.core.auth.AuthPermissionService;
-import com.fastcms.core.auth.FastcmsUserDetails;
+import com.fastcms.core.auth.FastcmsAuthUserInfo;
 import com.fastcms.core.captcha.FastcmsCaptchaService;
 import com.fastcms.utils.I18nUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,13 +45,10 @@ import static com.fastcms.service.IUserService.UserI18n.USER_LOGIN_CAPTCHA_ERROR
 public class FastcmsAuthManager implements AuthManager {
 
     @Autowired
-    private JwtTokenManager tokenManager;
+    private DelegatingTokenManager tokenManager;
 
     @Autowired
     private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private AuthConfigs authConfigs;
 
     @Autowired
     private FastcmsCaptchaService fastcmsCaptchaService;
@@ -69,11 +66,8 @@ public class FastcmsAuthManager implements AuthManager {
         try {
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
             Authentication authenticate = authenticationManager.authenticate(authenticationToken);
-
-            FastcmsUserDetails principal = (FastcmsUserDetails) authenticate.getPrincipal();
-            String token = tokenManager.createToken(authenticate.getName(), principal.getAuthorities());
-
-            return new FastcmsUser(principal.getUser(), token, authConfigs.getTokenValidityInSeconds(), principal.isAdmin(), principal.hasRole());
+            FastcmsAuthUserInfo principal = (FastcmsAuthUserInfo) authenticate.getPrincipal();
+            return tokenManager.createTokenUser(principal);
 
         } catch (AuthenticationException e) {
             throw new AccessException(FastcmsException.NO_RIGHT, e.getMessage());

@@ -16,6 +16,7 @@
  */
 package com.fastcms.web.security;
 
+import com.fastcms.core.auth.FastcmsAuthUserInfo;
 import com.fastcms.core.auth.FastcmsUserDetails;
 import com.fastcms.entity.User;
 import com.fastcms.service.IUserService;
@@ -40,8 +41,8 @@ public class LoginSuccessListener implements ApplicationListener<AuthenticationS
     public void onApplicationEvent(AuthenticationSuccessEvent event) {
         if(event.getSource() != null && event.getAuthentication().getPrincipal() != null
                 && event.getAuthentication().getPrincipal() instanceof FastcmsUserDetails) {
-            FastcmsUserDetails principal = (FastcmsUserDetails) event.getAuthentication().getPrincipal();
-            User user = userService.getById(principal.getUser().getId());
+            FastcmsAuthUserInfo principal = (FastcmsAuthUserInfo) event.getAuthentication().getPrincipal();
+            User user = principal.getUser();
             if(user != null) {
                 user.setAccessIp(RequestUtils.getIpAddress(RequestUtils.getRequest()));
                 user.setLoginTime(LocalDateTime.now());

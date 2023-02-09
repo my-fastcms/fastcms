@@ -14,57 +14,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.web.security;
+package com.fastcms.core.auth;
 
-import com.fastcms.core.auth.FastcmsAuthUserInfo;
 import com.fastcms.entity.User;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 
 /**
  * @author： wjun_java@163.com
- * @date： 2023/02/7
+ * @date： 2023/02/9
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-public interface TokenManager {
+public interface FastcmsAuthUserInfo {
 
     /**
-     * 根据账号以及权限信息生成token
-     * @param user
-     * @param authorities
+     * 授权用户是否为管理员
      * @return
      */
-    String createToken(User user, Collection<? extends GrantedAuthority> authorities);
+    Boolean isAdmin();
 
     /**
-     * 根据用户信息创建token
-     * @param user
+     * 授权用户是否有角色权限
      * @return
      */
-    String createToken(User user);
+    Boolean hasRole();
 
     /**
-     * 根据token获取授权信息
-     * @param token
+     * 当前授权用户信息
      * @return
      */
-    Authentication getAuthentication(String token);
+    User getUser();
 
     /**
-     * 验证token有效期
-     * @param token
-     */
-    void validateToken(String token);
-
-    /**
-     * 根据授权创建包含Token的授权用户信息
-     * @param fastcmsAuthUserInfo
+     * 获取授权用户权限信息
      * @return
      */
-    FastcmsUser createTokenUser(FastcmsAuthUserInfo fastcmsAuthUserInfo);
+    Collection<? extends GrantedAuthority> getAuthorities();
 
 }

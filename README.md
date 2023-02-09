@@ -17,11 +17,10 @@
 ### 安装部署
 - [视频教程](https://www.bilibili.com/video/BV12G4y167vi/)
 
-### 体验账号
-- [管理后台地址](https://www.xjd2020.com/fastcms)
-- 体验账号：fastcms_test 
-- 密码：111111
-- 体验账号只有菜单权限，没有数据权限
+### 本地运行
+- 网站访问地址: http://localhost:8080
+- 管理后台访问地址： http://localhost:8080/fastcms
+- 初始账号密码：admin/1
 
 ### Fastcms拼团小程序
 ![输入图片说明](./doc/images/fastcms-pintuan.jpg "fastcms-pintuan.jpg")

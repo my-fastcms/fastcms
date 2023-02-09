@@ -32,7 +32,7 @@ import com.fastcms.entity.User;
 import com.fastcms.entity.UserOpenid;
 import com.fastcms.service.IUserService;
 import com.fastcms.utils.I18nUtils;
-import com.fastcms.web.security.JwtTokenManager;
+import com.fastcms.web.security.DelegatingTokenManager;
 import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.common.session.WxSession;
 import me.chanjar.weixin.common.session.WxSessionManager;
@@ -68,7 +68,7 @@ public class WechatMiniUserApi {
 	private IUserService userService;
 
 	@Autowired
-	private JwtTokenManager tokenManager;
+	private DelegatingTokenManager tokenManager;
 
 	@Autowired
 	private WxMaQrcodeService wxMaQrcodeService;
@@ -161,7 +161,7 @@ public class WechatMiniUserApi {
 
 		try {
 			User user = userService.saveWxMaUserInfo(openId, userInfo);
-			return RestResultUtils.success(tokenManager.createToken(user.getUserName()));
+			return RestResultUtils.success(tokenManager.createToken(user));
 		} catch (FastcmsException e) {
 			e.printStackTrace();
 			return RestResultUtils.failed(I18nUtils.getMessage(USER_MINIAPP_LOGIN_FAIL_FOR_USER_IS_NULL));
@@ -225,7 +225,7 @@ public class WechatMiniUserApi {
 
 		try {
 			User user = userService.saveUser(openId, unionId, wxMaPhoneNumberInfo.getPurePhoneNumber(), UserOpenid.TYPE_WECHAT_MINI);
-			return RestResultUtils.success(tokenManager.createToken(user.getUserName()));
+			return RestResultUtils.success(tokenManager.createToken(user));
 		} catch (FastcmsException e) {
 			e.printStackTrace();
 			return RestResultUtils.failed(I18nUtils.getMessage(USER_MINIAPP_LOGIN_FAIL_FOR_USER_IS_NULL));

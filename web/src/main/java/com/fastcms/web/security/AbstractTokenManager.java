@@ -16,9 +16,8 @@
  */
 package com.fastcms.web.security;
 
+import com.fastcms.core.auth.FastcmsAuthUserInfo;
 import com.fastcms.entity.User;
-import com.fastcms.service.IUserService;
-import com.fastcms.utils.ApplicationUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -49,15 +48,13 @@ public abstract class AbstractTokenManager implements TokenManager {
     protected AuthConfigs authConfigs;
 
     @Override
-    public String createToken(String userName, Collection<? extends GrantedAuthority> authorities) {
-        IUserService userService = ApplicationUtils.getBean(IUserService.class);
-        User user = userService.getByUsername(userName);
+    public String createToken(User user, Collection<? extends GrantedAuthority> authorities) {
         long now = System.currentTimeMillis();
         Date validity;
         validity = new Date(now + authConfigs.getTokenValidityInSeconds() * 1000L);
         Map<String, Object> claims = new HashMap<>();
         claims.put(USER_ID, user.getId());
-        claims.put(USER_NAME, userName);
+        claims.put(USER_NAME, user.getUserName());
         if (authorities != null) {
             claims.put(AUTHORITIES_KEY, StringUtils.join(authorities.toArray(), ","));
         }
@@ -66,13 +63,8 @@ public abstract class AbstractTokenManager implements TokenManager {
     }
 
     @Override
-    public String createToken(String userName) {
-        return createToken(userName, null);
-    }
-
-    @Override
-    public String createToken(Authentication authentication) {
-        return createToken(authentication.getName(),  authentication.getAuthorities());
+    public String createToken(User user) {
+        return createToken(user, null);
     }
 
     @Override
@@ -86,6 +78,12 @@ public abstract class AbstractTokenManager implements TokenManager {
     @Override
     public void validateToken(String token) {
         Jwts.parserBuilder().setSigningKey(authConfigs.getSecretKeyBytes()).build().parseClaimsJws(token);
+    }
+
+    @Override
+    public FastcmsUser createTokenUser(FastcmsAuthUserInfo fastcmsAuthUserInfo) {
+        String token = createToken(fastcmsAuthUserInfo.getUser(), fastcmsAuthUserInfo.getAuthorities());
+        return new FastcmsUser(fastcmsAuthUserInfo.getUser(), token, authConfigs.getTokenValidityInSeconds(), fastcmsAuthUserInfo.isAdmin(), fastcmsAuthUserInfo.hasRole());
     }
 
     public abstract Authentication doGetAuthentication(String userName, List<GrantedAuthority> authorities);

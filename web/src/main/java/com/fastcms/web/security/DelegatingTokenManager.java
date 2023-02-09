@@ -16,8 +16,12 @@
  */
 package com.fastcms.web.security;
 
+import com.fastcms.core.auth.FastcmsAuthUserInfo;
+import com.fastcms.entity.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 
@@ -28,31 +32,35 @@ import java.util.Collection;
  * @modifiedBy：
  * @version: 1.0
  */
+@Component
 public class DelegatingTokenManager implements TokenManager {
 
+    @Autowired
+    DefaultTokenManager defaultTokenManager;
+
     @Override
-    public String createToken(Authentication authentication) {
-        return null;
+    public String createToken(User user, Collection<? extends GrantedAuthority> authorities) {
+        return defaultTokenManager.createToken(user, authorities);
     }
 
     @Override
-    public String createToken(String userName, Collection<? extends GrantedAuthority> authorities) {
-        return null;
-    }
-
-    @Override
-    public String createToken(String userName) {
-        return null;
+    public String createToken(User user) {
+        return defaultTokenManager.createToken(user);
     }
 
     @Override
     public Authentication getAuthentication(String token) {
-        return null;
+        return defaultTokenManager.getAuthentication(token);
     }
 
     @Override
     public void validateToken(String token) {
+        defaultTokenManager.validateToken(token);
+    }
 
+    @Override
+    public FastcmsUser createTokenUser(FastcmsAuthUserInfo fastcmsAuthUserInfo) {
+        return defaultTokenManager.createTokenUser(fastcmsAuthUserInfo);
     }
 
 }

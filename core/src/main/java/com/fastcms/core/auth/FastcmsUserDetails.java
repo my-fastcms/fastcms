@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  * @modifiedBy：
  * @version: 1.0
  */
-public class FastcmsUserDetails extends User {
+public class FastcmsUserDetails extends User implements FastcmsAuthUserInfo {
 
 	private com.fastcms.entity.User user;
 
@@ -41,15 +41,18 @@ public class FastcmsUserDetails extends User {
 		this.user = user;
 	}
 
+	@Override
 	public Boolean isAdmin() {
 		List<GrantedAuthority> collect = getAuthorities().stream().filter(item -> Objects.equals(Long.valueOf(item.getAuthority()), FastcmsConstants.ADMIN_ROLE_ID)).collect(Collectors.toList());
 		return FastcmsConstants.ADMIN_USER_ID == this.user.getId() || (collect != null && !collect.isEmpty());
 	}
 
+	@Override
 	public Boolean hasRole() {
 		return FastcmsConstants.ADMIN_USER_ID == this.user.getId() || getAuthorities().size() > 0;
 	}
 
+	@Override
 	public com.fastcms.entity.User getUser() {
 		return user;
 	}
