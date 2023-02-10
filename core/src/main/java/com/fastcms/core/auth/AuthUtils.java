@@ -35,8 +35,7 @@ public final class AuthUtils {
         return getUser() == null ? null : getUser().getUser().getId();
     }
 
-    public static FastcmsUserDetails getUser() {
-
+    public static FastcmsAuthUserInfo getUser() {
         if (SecurityContextHolder.getContext() == null) {
             return null;
         }
@@ -44,11 +43,10 @@ public final class AuthUtils {
             return null;
         }
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if(principal == null) {
-            return null;
+        if (principal != null && principal instanceof FastcmsAuthUserInfo) {
+            return (FastcmsAuthUserInfo) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         }
-
-        return principal instanceof FastcmsUserDetails ? (FastcmsUserDetails) principal : null;
+        return null;
     }
 
     public static Boolean isAdmin() {
