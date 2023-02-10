@@ -18,12 +18,19 @@ package com.fastcms.web.security;
 
 import com.fastcms.core.auth.FastcmsAuthUserInfo;
 import com.fastcms.entity.User;
+import com.fastcms.entity.UserOpenid;
+import com.fastcms.service.IUserService;
+import com.fastcms.utils.ApplicationUtils;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author： wjun_java@163.com
@@ -35,22 +42,32 @@ import java.util.Collection;
 @Component
 public class DelegatingTokenManager implements TokenManager {
 
+    private static final Map<String, TokenManager> tokenManagerMap = new ConcurrentHashMap<>();
+
+    static final String USER_NAME = "username";
+
+    @Autowired
+    protected AuthConfigs authConfigs;
+
     @Autowired
     DefaultTokenManager defaultTokenManager;
 
     @Override
     public String createToken(User user, Collection<? extends GrantedAuthority> authorities) {
-        return defaultTokenManager.createToken(user, authorities);
+        return getTokenManager(user).createToken(user, authorities);
     }
 
     @Override
     public String createToken(User user) {
-        return defaultTokenManager.createToken(user);
+        return getTokenManager(user).createToken(user);
     }
 
     @Override
     public Authentication getAuthentication(String token) {
-        return defaultTokenManager.getAuthentication(token);
+        Claims claims = Jwts.parserBuilder().setSigningKey(authConfigs.getSecretKeyBytes()).build().parseClaimsJws(token).getBody();
+        String username = (String) claims.get(USER_NAME);
+        User user = ApplicationUtils.getBean(IUserService.class).getByUsername(username);
+        return getTokenManager(user).getAuthentication(token);
     }
 
     @Override
@@ -60,7 +77,30 @@ public class DelegatingTokenManager implements TokenManager {
 
     @Override
     public FastcmsUser createTokenUser(FastcmsAuthUserInfo fastcmsAuthUserInfo) {
-        return defaultTokenManager.createTokenUser(fastcmsAuthUserInfo);
+        return getTokenManager(fastcmsAuthUserInfo.getUser()).createTokenUser(fastcmsAuthUserInfo);
+    }
+
+    TokenManager getTokenManager(User user) {
+        UserOpenid userOpenid = ApplicationUtils.getBean(IUserService.class).getUserOpenid(user);
+        if (userOpenid != null) {
+            TokenManager tokenManager = getTokenManager(userOpenid.getValue());
+            if (tokenManager != null) {
+                return tokenManager;
+            }
+        }
+        return defaultTokenManager;
+    }
+
+    TokenManager getTokenManager(String registrationId) {
+        return tokenManagerMap.get(registrationId);
+    }
+
+    public void addTokenManager(String registrationId, TokenManager tokenManager) {
+        tokenManagerMap.put(registrationId, tokenManager);
+    }
+
+    public void removeTokenManager(String registrationId) {
+        tokenManagerMap.remove(registrationId);
     }
 
 }

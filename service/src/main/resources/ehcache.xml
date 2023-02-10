@@ -290,4 +290,6 @@
     <cache name="web_code_cache" maxElementsInMemory="1000" eternal="false" timeToIdleSeconds="300" timeToLiveSeconds="300" overflowToDisk="true" />
     <cache name="admin_index_data" maxElementsInMemory="1000" eternal="false" timeToIdleSeconds="300" timeToLiveSeconds="300" overflowToDisk="true" />
     <cache name="user_by_user_name_cache_name" maxElementsInMemory="1000" eternal="false" timeToIdleSeconds="300" timeToLiveSeconds="300" overflowToDisk="true" />
+    <cache name="user_openid_by_user_cache_name" maxElementsInMemory="1000" eternal="false" timeToIdleSeconds="300" timeToLiveSeconds="300" overflowToDisk="true" />
+
 </ehcache>

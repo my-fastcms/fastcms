@@ -4,6 +4,7 @@ import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.entity.User;
+import com.fastcms.entity.UserOpenid;
 import com.fastcms.entity.UserTag;
 
 import javax.validation.constraints.NotBlank;
@@ -143,6 +144,13 @@ public interface IUserService extends IService<User> {
      * @return
      */
     User getUserByOpenId(String openId);
+
+    /**
+     * 获取第三方OAuth2授权用户openid
+     * @param user
+     * @return
+     */
+    UserOpenid getUserOpenid(User user);
 
     /**
      * 修改用户信息

@@ -16,30 +16,28 @@
  */
 package com.fastcms.web.security;
 
-import com.fastcms.core.auth.FastcmsUserDetails;
-import com.fastcms.service.IUserService;
 import com.fastcms.utils.ApplicationUtils;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.stereotype.Component;
-
-import java.util.Collection;
 
 /**
+ * TokenManager管理器
  * @author： wjun_java@163.com
- * @date： 2021/10/23
+ * @date： 2023/02/10
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-@Component
-public class DefaultTokenManager extends AbstractTokenManager {
+public final class TokenManagerUtil {
 
-	@Override
-	public Authentication doGetAuthentication(String userName, Collection<GrantedAuthority> authorities) {
-		FastcmsUserDetails principal = new FastcmsUserDetails(ApplicationUtils.getBean(IUserService.class).getByUsername(userName), authorities);
-		return new UsernamePasswordAuthenticationToken(principal, "", authorities);
-	}
+    private TokenManagerUtil() {
+
+    }
+
+    public static final void addTokenManager(String registrationId, TokenManager tokenManager) {
+        ApplicationUtils.getBean(DelegatingTokenManager.class).addTokenManager(registrationId, tokenManager);
+    }
+
+    public static final void removeTokenManager(String registrationId) {
+        ApplicationUtils.getBean(DelegatingTokenManager.class).removeTokenManager(registrationId);
+    }
 
 }

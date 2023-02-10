@@ -53,6 +53,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     private final String USER_BY_USER_NAME_CACHE_NAME = "user_by_user_name_cache_name";
 
+    private final String USER_OPENID_BY_USER_CACHE_NAME = "user_openid_by_user_cache_name";
+
     @Autowired
     private IRoleService roleService;
 
@@ -407,6 +409,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     public User getUserByOpenId(String openId) {
         UserOpenid userOpenid = userOpenidService.getOne(Wrappers.<UserOpenid>lambdaQuery().eq(UserOpenid::getValue, openId));
         return userOpenid == null ? null : getById(userOpenid.getUserId());
+    }
+
+    @Override
+    @Cacheable(value = USER_OPENID_BY_USER_CACHE_NAME, key = "#user.getUserName()")
+    public UserOpenid getUserOpenid(User user) {
+        return userOpenidService.getOne(Wrappers.<UserOpenid>lambdaQuery().eq(UserOpenid::getUserId, user.getId()));
     }
 
     void sendPasswordEmail(User user) throws Exception {

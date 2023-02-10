@@ -28,7 +28,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author： wjun_java@163.com
@@ -70,7 +73,7 @@ public abstract class AbstractTokenManager implements TokenManager {
     @Override
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts.parserBuilder().setSigningKey(authConfigs.getSecretKeyBytes()).build().parseClaimsJws(token).getBody();
-        List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get(AUTHORITIES_KEY));
+        Collection<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList((String) claims.get(AUTHORITIES_KEY));
         String username = (String) claims.get(USER_NAME);
         return doGetAuthentication(username, authorities);
     }
@@ -86,6 +89,6 @@ public abstract class AbstractTokenManager implements TokenManager {
         return new FastcmsUser(fastcmsAuthUserInfo.getUser(), token, authConfigs.getTokenValidityInSeconds(), fastcmsAuthUserInfo.isAdmin(), fastcmsAuthUserInfo.hasRole());
     }
 
-    public abstract Authentication doGetAuthentication(String userName, List<GrantedAuthority> authorities);
+    public abstract Authentication doGetAuthentication(String userName, Collection<GrantedAuthority> authorities);
 
 }

@@ -20,12 +20,10 @@ import com.baomidou.mybatisplus.annotation.*;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.security.core.GrantedAuthority;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -220,12 +218,6 @@ public class User implements Serializable {
      */
     @TableField(exist = false)
     private List<Long> deptList;
-
-    /**
-     * 用户权限
-     */
-    @TableField(exist = false)
-    Collection<? extends GrantedAuthority> authorities;
 
     public Long getId() {
         return id;
