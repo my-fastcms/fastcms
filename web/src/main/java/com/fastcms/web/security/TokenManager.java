@@ -21,6 +21,7 @@ import com.fastcms.entity.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 
 /**
@@ -66,5 +67,12 @@ public interface TokenManager {
      * @return
      */
     FastcmsUser createTokenUser(FastcmsAuthUserInfo fastcmsAuthUserInfo);
+
+    /**
+     * 从请求中获取token
+     * @param request
+     * @return
+     */
+    String resolveToken(HttpServletRequest request);
 
 }

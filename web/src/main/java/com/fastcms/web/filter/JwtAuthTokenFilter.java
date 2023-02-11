@@ -40,12 +40,6 @@ import java.io.IOException;
  */
 public class JwtAuthTokenFilter extends OncePerRequestFilter {
 
-    private static final String TOKEN_PREFIX = "Bearer ";
-
-    public static final String ACCESS_TOKEN = "accessToken";
-
-    public static final String AUTHORIZATION_HEADER = "Authorization";
-
     private final TokenManager tokenManager;
 
     public JwtAuthTokenFilter(TokenManager tokenManager) {
@@ -59,7 +53,7 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
         if (request.getRequestURI().startsWith(FastcmsConstants.API_PREFIX_MAPPING)
                 || request.getRequestURI().startsWith(FastcmsConstants.PLUGIN_MAPPING)) {
 
-            final String jwt = resolveToken(request);
+            final String jwt = tokenManager.resolveToken(request);
 
             if (StringUtils.isNotBlank(jwt) && SecurityContextHolder.getContext().getAuthentication() == null) {
                 try {
@@ -70,6 +64,7 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
                 } catch (ExpiredJwtException | SignatureException e) {
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
                 } catch (Exception e) {
+                    e.printStackTrace();
                     response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Server failed," + e.getMessage());
                 }
             } else {
@@ -79,20 +74,6 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         }
 
-    }
-
-    private String resolveToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-        if (StringUtils.isNotBlank(bearerToken)) {
-            return bearerToken.startsWith(TOKEN_PREFIX) ? bearerToken.substring(TOKEN_PREFIX.length()) : bearerToken;
-        }
-
-        final String token = request.getParameter(ACCESS_TOKEN);
-        if (StringUtils.isNotBlank(token)) {
-            return token.startsWith(TOKEN_PREFIX) ? token.substring(TOKEN_PREFIX.length()) : token;
-        }
-
-        return null;
     }
 
 }

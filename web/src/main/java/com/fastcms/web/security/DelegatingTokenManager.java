@@ -28,6 +28,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -80,10 +81,15 @@ public class DelegatingTokenManager implements TokenManager {
         return getTokenManager(fastcmsAuthUserInfo.getUser()).createTokenUser(fastcmsAuthUserInfo);
     }
 
+    @Override
+    public String resolveToken(HttpServletRequest request) {
+        return defaultTokenManager.resolveToken(request);
+    }
+
     TokenManager getTokenManager(User user) {
         UserOpenid userOpenid = ApplicationUtils.getBean(IUserService.class).getUserOpenid(user);
         if (userOpenid != null) {
-            TokenManager tokenManager = getTokenManager(userOpenid.getValue());
+            TokenManager tokenManager = getTokenManager(userOpenid.getType());
             if (tokenManager != null) {
                 return tokenManager;
             }

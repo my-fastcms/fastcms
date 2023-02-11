@@ -28,6 +28,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -46,6 +47,10 @@ public abstract class AbstractTokenManager implements TokenManager {
 
     public static final String USER_ID = "userId";
     public static final String USER_NAME = "username";
+
+    private static final String TOKEN_PREFIX = "Bearer ";
+    public static final String ACCESS_TOKEN = "accessToken";
+    public static final String AUTHORIZATION_HEADER = "Authorization";
 
     @Autowired
     protected AuthConfigs authConfigs;
@@ -78,6 +83,8 @@ public abstract class AbstractTokenManager implements TokenManager {
         return doGetAuthentication(username, authorities);
     }
 
+    public abstract Authentication doGetAuthentication(String userName, Collection<GrantedAuthority> authorities);
+
     @Override
     public void validateToken(String token) {
         Jwts.parserBuilder().setSigningKey(authConfigs.getSecretKeyBytes()).build().parseClaimsJws(token);
@@ -89,6 +96,18 @@ public abstract class AbstractTokenManager implements TokenManager {
         return new FastcmsUser(fastcmsAuthUserInfo.getUser(), token, authConfigs.getTokenValidityInSeconds(), fastcmsAuthUserInfo.isAdmin(), fastcmsAuthUserInfo.hasRole());
     }
 
-    public abstract Authentication doGetAuthentication(String userName, Collection<GrantedAuthority> authorities);
+    @Override
+    public String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+        if (StringUtils.isNotBlank(bearerToken)) {
+            return bearerToken.startsWith(TOKEN_PREFIX) ? bearerToken.substring(TOKEN_PREFIX.length()) : bearerToken;
+        }
+
+        final String token = request.getParameter(ACCESS_TOKEN);
+        if (StringUtils.isNotBlank(token)) {
+            return token.startsWith(TOKEN_PREFIX) ? token.substring(TOKEN_PREFIX.length()) : token;
+        }
+        return null;
+    }
 
 }

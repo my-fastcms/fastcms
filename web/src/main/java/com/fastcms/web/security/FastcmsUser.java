@@ -16,6 +16,7 @@
  */
 package com.fastcms.web.security;
 
+import com.alibaba.fastjson.JSON;
 import com.fastcms.common.utils.VersionUtils;
 import com.fastcms.entity.User;
 
@@ -161,4 +162,8 @@ public class FastcmsUser implements Serializable {
 		this.userType = userType;
 	}
 
+	@Override
+	public String toString() {
+		return JSON.toJSON(this).toString();
+	}
 }
