@@ -9,6 +9,7 @@ export default {
 		two4: '友情链接',
 		two5: '已有账号?现在登录',
 		two6: '找回密码',
+		two7: '微信授权登录',
 	},
 	copyright: {
 		one5: '版权所有：广州小橘灯信息科技有限公司',
