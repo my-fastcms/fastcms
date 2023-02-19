@@ -78,7 +78,8 @@ public class FastcmsAuthConfig {
         http.oauth2Login(oAuth2LoginConfigurer
                 -> oAuth2LoginConfigurer.authorizationEndpoint(
                 authorizationEndpointConfig -> authorizationEndpointConfig.authorizationRequestResolver(
-                        new FastcmsOAuth2AuthorizationRequestResolver(http.getSharedObject(ApplicationContext.class).getBean(ClientRegistrationRepository.class), OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI)
+                        new FastcmsOAuth2AuthorizationRequestResolver(http.getSharedObject(ApplicationContext.class).getBean(ClientRegistrationRepository.class),
+                                OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI)
                 ))
                 .tokenEndpoint(tokenEndpointConfig -> tokenEndpointConfig.accessTokenResponseClient(new FastcmsAuthorizationCodeTokenResponseClient()))
                 .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig.userService(new FastcmsOAuth2UserService()))
