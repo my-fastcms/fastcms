@@ -18,8 +18,8 @@ package com.fastcms.web.config;
 
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.core.directive.BaseDirective;
+import com.fastcms.core.site.DefaultSiteManager;
 import com.fastcms.core.site.SiteContextFilter;
-import com.fastcms.core.site.SiteManager;
 import com.fastcms.core.template.FastcmsStaticHtmlManager;
 import com.fastcms.core.template.FastcmsTemplateFreeMarkerConfig;
 import com.fastcms.core.template.TemplateService;
@@ -128,7 +128,7 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
     }
 
     @Bean
-    public FilterRegistrationBean filterRegistrationBean(SiteManager siteManager) {
+    public FilterRegistrationBean filterRegistrationBean(DefaultSiteManager siteManager) {
         FilterRegistrationBean frBean = new FilterRegistrationBean();
         frBean.setFilter(new SiteContextFilter(siteManager));
         frBean.addUrlPatterns("/*");

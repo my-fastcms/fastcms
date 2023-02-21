@@ -18,6 +18,7 @@
 package com.fastcms.core.template;
 
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.core.site.SiteContextHolder;
 import com.fastcms.utils.ApplicationUtils;
 import com.fastcms.utils.ConfigUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -45,6 +46,9 @@ public interface StaticPathHelper {
      */
     @JsonIgnore
     default String getWebSiteDomain() {
+        if (SiteContextHolder.getSite() != null) {
+            return SiteContextHolder.getSite().getDomain();
+        }
         return ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN);
     }
 

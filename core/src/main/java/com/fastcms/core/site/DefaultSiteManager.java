@@ -69,8 +69,8 @@ public class DefaultSiteManager implements SiteManager, ApplicationListener<Appl
         siteManagerList.addAll(extensions);
         siteManagerList.forEach(item -> siteList.addAll(item.loadSites()));
 
-        domainSiteMap.putAll(siteList.stream().collect(Collectors.toMap(Site::getDomain, t -> t)));
-        pathSiteMap.putAll(siteList.stream().collect(Collectors.toMap(Site::getPath, t -> t)));
+        domainSiteMap.putAll(siteList.stream().filter(item -> StrUtils.isNotBlank(item.getDomain())).collect(Collectors.toMap(Site::getDomain, t -> t)));
+        pathSiteMap.putAll(siteList.stream().filter(item -> StrUtils.isNotBlank(item.getPath())).collect(Collectors.toMap(Site::getPath, t -> t)));
         return siteList;
     }
 
