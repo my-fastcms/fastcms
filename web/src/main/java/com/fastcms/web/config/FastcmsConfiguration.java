@@ -18,12 +18,14 @@ package com.fastcms.web.config;
 
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.core.directive.BaseDirective;
+import com.fastcms.core.site.SiteContextFilter;
+import com.fastcms.core.site.SiteManager;
 import com.fastcms.core.template.FastcmsStaticHtmlManager;
+import com.fastcms.core.template.FastcmsTemplateFreeMarkerConfig;
 import com.fastcms.core.template.TemplateService;
 import com.fastcms.core.utils.AttachUtils;
 import com.fastcms.core.utils.StaticUtils;
 import com.fastcms.plugin.PluginInterceptor;
-import com.fastcms.core.template.FastcmsTemplateFreeMarkerConfig;
 import com.fastcms.plugin.view.PluginFreeMarkerConfig;
 import com.fastcms.service.IConfigService;
 import com.fastcms.utils.ApplicationUtils;
@@ -37,6 +39,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.boot.web.context.WebServerInitializedEvent;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -122,6 +125,14 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
+    }
+
+    @Bean
+    public FilterRegistrationBean filterRegistrationBean(SiteManager siteManager) {
+        FilterRegistrationBean frBean = new FilterRegistrationBean();
+        frBean.setFilter(new SiteContextFilter(siteManager));
+        frBean.addUrlPatterns("/*");
+        return frBean;
     }
 
     @Value("${spring.jackson.date-format:yyyy-MM-dd HH:mm:ss}")

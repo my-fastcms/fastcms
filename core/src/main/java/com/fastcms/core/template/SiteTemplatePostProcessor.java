@@ -14,34 +14,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.plugin;
+package com.fastcms.core.template;
 
-import com.fastcms.common.utils.StrUtils;
-import org.springframework.web.servlet.HandlerInterceptor;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import com.fastcms.core.site.SiteContextHolder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
- * 对所有 /fastcms/plugin/**的请求进行拦截，
- * 把用户token传递给plugin controller
  * @author： wjun_java@163.com
- * @date： 2022/1/1
+ * @date： 2023/2/21
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-public class PluginInterceptor implements HandlerInterceptor {
+@Component
+public class SiteTemplatePostProcessor implements TemplatePostProcessor {
 
-	static final String ACCESS_TOKEN = "accessToken";
+    @Autowired
+    private TemplateService templateService;
 
-	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		final String token = request.getParameter(ACCESS_TOKEN);
-		if (StrUtils.isNotBlank(token)) {
-			request.setAttribute("token", token);
-		}
-		return true;
-	}
+    @Override
+    public Template postProcess(Template template) {
+        return templateService.getTemplate(SiteContextHolder.getSite().getTemplateId());
+    }
+
+    @Override
+    public Boolean isSupport() {
+        return SiteContextHolder.getSite() != null;
+    }
 
 }

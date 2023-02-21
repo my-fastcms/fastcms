@@ -14,34 +14,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.plugin;
 
-import com.fastcms.common.utils.StrUtils;
-import org.springframework.web.servlet.HandlerInterceptor;
+package com.fastcms.core.site;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.core.NamedThreadLocal;
+import org.springframework.lang.Nullable;
 
 /**
- * 对所有 /fastcms/plugin/**的请求进行拦截，
- * 把用户token传递给plugin controller
  * @author： wjun_java@163.com
- * @date： 2022/1/1
+ * @date： 2023/2/21
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-public class PluginInterceptor implements HandlerInterceptor {
+public final class SiteContextHolder {
 
-	static final String ACCESS_TOKEN = "accessToken";
+    private static final ThreadLocal<Site> siteContextHolder = new NamedThreadLocal<>("SiteContext");
 
-	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		final String token = request.getParameter(ACCESS_TOKEN);
-		if (StrUtils.isNotBlank(token)) {
-			request.setAttribute("token", token);
-		}
-		return true;
-	}
+    private SiteContextHolder() {
+    }
+
+    public static void resetSite() {
+        siteContextHolder.remove();
+    }
+
+    public static void setSite(@Nullable Site site) {
+        if (site == null) {
+            resetSite();
+        }
+        else {
+            siteContextHolder.set(site);
+        }
+    }
+
+    @Nullable
+    public static Site getSite() {
+        return siteContextHolder.get();
+    }
 
 }

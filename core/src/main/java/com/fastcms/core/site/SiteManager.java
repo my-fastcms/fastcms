@@ -14,34 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.plugin;
+package com.fastcms.core.site;
 
-import com.fastcms.common.utils.StrUtils;
-import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
- * 对所有 /fastcms/plugin/**的请求进行拦截，
- * 把用户token传递给plugin controller
  * @author： wjun_java@163.com
- * @date： 2022/1/1
+ * @date： 2023/2/21
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-public class PluginInterceptor implements HandlerInterceptor {
+public interface SiteManager {
 
-	static final String ACCESS_TOKEN = "accessToken";
+    /**
+     * 从请求request中匹配站点数据
+     * @param request
+     * @return
+     */
+    default Site getSite(HttpServletRequest request) {
+        return null;
+    }
 
-	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		final String token = request.getParameter(ACCESS_TOKEN);
-		if (StrUtils.isNotBlank(token)) {
-			request.setAttribute("token", token);
-		}
-		return true;
-	}
+    /**
+     * 加载自定义Site数据
+     * @return
+     */
+    List<Site> loadSites();
 
 }
