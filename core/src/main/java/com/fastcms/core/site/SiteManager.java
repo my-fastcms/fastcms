@@ -27,14 +27,14 @@ import java.util.List;
  * @modifiedBy：
  * @version: 1.0
  */
-public interface SiteManager {
+public interface SiteManager<S extends Site> {
 
     /**
      * 从请求request中匹配站点数据
      * @param request
      * @return
      */
-    default Site getSite(HttpServletRequest request) {
+    default S getSite(HttpServletRequest request) {
         return null;
     }
 
@@ -42,6 +42,6 @@ public interface SiteManager {
      * 加载自定义Site数据
      * @return
      */
-    List<Site> loadSites();
+    List<S> loadSites();
 
 }
