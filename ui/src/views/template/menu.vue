@@ -2,7 +2,7 @@
 	<div class="system-menu-container">
 		<el-card shadow="hover">
 			<el-button @click="onOpenAddMenu" class="mt15" size="small" type="primary" icon="iconfont icon-shuxingtu">新建菜单</el-button>
-			<el-table :data="menuTableData" stripe style="width: 100%" row-key="menuUrl" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
+			<el-table :data="menuTableData" stripe style="width: 100%" row-key="id" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
 				<el-table-column prop="menuName" label="名称" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="menuUrl" label="跳转地址" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="sortNum" label="排序" show-overflow-tooltip></el-table-column>
