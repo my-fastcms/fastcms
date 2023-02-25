@@ -43,7 +43,7 @@ public class LanguageDataPermissionSqlHandler extends AbstractDataPermissionSqlH
 
 	@Override
 	protected String doGetSqlSegment(String mappedStatementId, Statement statement) throws Exception {
-		return PERMISSION_SQL_FIELD.concat(StringPool.EQUALS + I18nUtils.getLanguage());
+		return PERMISSION_SQL_FIELD.concat(StringPool.EQUALS + "'"+I18nUtils.getLanguage()+"'");
 	}
 
 	@Override
