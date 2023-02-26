@@ -18,8 +18,6 @@ package com.fastcms.utils;
 
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.plugin.FastcmsPluginManager;
-import com.fastcms.utils.ApplicationUtils;
-import com.fastcms.utils.ConfigUtils;
 
 import java.util.List;
 
@@ -34,7 +32,9 @@ public final class PluginUtils {
 
     public static final String PAGE_DATA_ATTR = "pageData";
 
-    private PluginUtils() {}
+    private PluginUtils() {
+
+    }
 
     /**
      * 获取插件扩展
@@ -59,7 +59,7 @@ public final class PluginUtils {
      * @return
      */
     public static String getConfigUrlHost() {
-        return ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN) + FastcmsConstants.PLUGIN_MAPPING;
+        return FastcmsConstants.PLUGIN_MAPPING;
     }
 
 }

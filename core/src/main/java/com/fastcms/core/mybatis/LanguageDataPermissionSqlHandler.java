@@ -21,6 +21,7 @@ import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.fastcms.mybatis.AbstractDataPermissionSqlHandler;
+import com.fastcms.mybatis.SqlSegment;
 import com.fastcms.utils.I18nUtils;
 import net.sf.jsqlparser.schema.Table;
 import net.sf.jsqlparser.statement.Statement;
@@ -42,8 +43,8 @@ public class LanguageDataPermissionSqlHandler extends AbstractDataPermissionSqlH
 	final String PERMISSION_SQL_FIELD = "language";
 
 	@Override
-	protected String doGetSqlSegment(String mappedStatementId, Statement statement) throws Exception {
-		return PERMISSION_SQL_FIELD.concat(StringPool.EQUALS + "'"+I18nUtils.getLanguage()+"'");
+	protected SqlSegment doGetSqlSegment(String mappedStatementId, Statement statement) throws Exception {
+		return new SqlSegment(PERMISSION_SQL_FIELD.concat(StringPool.EQUALS + "'"+I18nUtils.getLanguage()+"'"));
 	}
 
 	@Override

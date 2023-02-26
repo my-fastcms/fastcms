@@ -89,7 +89,7 @@
         </logger>
         <logger name="com.fastcms">
             <appender-ref ref="CONSOLE"/>
-            <level value="INFO"/>
+            <level value="DEBUG"/>
         </logger>
         <logger name="freemarker.template">
             <appender-ref ref="CONSOLE"/>

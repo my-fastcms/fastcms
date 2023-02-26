@@ -32,6 +32,8 @@ import org.apache.ibatis.plugin.Invocation;
 import org.apache.ibatis.plugin.Signature;
 import org.apache.ibatis.reflection.MetaObject;
 import org.apache.ibatis.reflection.SystemMetaObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -54,6 +56,8 @@ import java.util.List;
 )
 @Component
 public class FastcmsDataPermissionInterceptor implements Interceptor {
+
+    private static final Logger logger = LoggerFactory.getLogger(FastcmsDataPermissionInterceptor.class);
 
     @Autowired
     private DataPermissionSqlHandlerManager dataPermissionSqlHandlerManager;
@@ -81,8 +85,9 @@ public class FastcmsDataPermissionInterceptor implements Interceptor {
 
         BoundSql boundSql = (BoundSql) metaObject.getValue("delegate.boundSql");
         String originalSql = boundSql.getSql();
-
+        logger.debug("==> originalSql:" + originalSql);
         final String finalSql = handleSql(mappedStatement.getId(), originalSql);
+        logger.debug("==> finalSql:" + finalSql);
         metaObject.setValue("delegate.boundSql.sql", finalSql);
 
         return invocation.proceed();
@@ -95,11 +100,8 @@ public class FastcmsDataPermissionInterceptor implements Interceptor {
      * @throws Exception
      */
     protected String handleSql(String mappedStatementId, String originalSql) throws Exception {
-
         Statement statement = CCJSqlParserUtil.parse(originalSql);
-
         return dataPermissionSqlHandlerManager.getSqlSegment(mappedStatementId, statement);
-
     }
 
 }

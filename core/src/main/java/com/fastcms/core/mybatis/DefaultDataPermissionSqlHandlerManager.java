@@ -45,7 +45,7 @@ public class DefaultDataPermissionSqlHandlerManager implements DataPermissionSql
 
     @Override
     public String getSqlSegment(String mappedStatementId, Statement statement) throws Exception {
-        return dataPermissionSqlHandler == null ? statement.toString() : dataPermissionSqlHandler.getSqlSegment(mappedStatementId, statement);
+        return dataPermissionSqlHandler == null ? statement.toString() : dataPermissionSqlHandler.getSqlSegment(mappedStatementId, statement).getSqlSegment();
     }
 
     @Override

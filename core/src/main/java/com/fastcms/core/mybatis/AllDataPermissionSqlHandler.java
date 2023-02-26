@@ -19,6 +19,7 @@ package com.fastcms.core.mybatis;
 
 import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.mybatis.AbstractDataPermissionSqlHandler;
+import com.fastcms.mybatis.SqlSegment;
 import net.sf.jsqlparser.statement.Statement;
 import org.springframework.stereotype.Component;
 
@@ -34,7 +35,7 @@ import org.springframework.stereotype.Component;
 public class AllDataPermissionSqlHandler extends AbstractDataPermissionSqlHandler {
 
     @Override
-    protected String doGetSqlSegment(String mappedStatementId, Statement statement) throws Exception {
+    protected SqlSegment doGetSqlSegment(String mappedStatementId, Statement statement) throws Exception {
         return null;
     }
 

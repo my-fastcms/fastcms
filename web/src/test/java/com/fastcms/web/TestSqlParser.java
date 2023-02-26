@@ -23,6 +23,7 @@ import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.mybatis.DataPermissionSqlProcessor;
+import com.fastcms.mybatis.SqlSegment;
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
@@ -143,7 +144,7 @@ public class TestSqlParser {
 
         Statement statement = CCJSqlParserUtil.parse(sql);
 
-        DataPermissionSqlProcessor dataPermissionSqlProcessor = new DataPermissionSqlProcessor(null, "create_user_id = 37", statement);
+        DataPermissionSqlProcessor dataPermissionSqlProcessor = new DataPermissionSqlProcessor(null, new SqlSegment("create_user_id = 37"), statement);
         dataPermissionSqlProcessor.process();
 
         System.out.println(statement.toString());

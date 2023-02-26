@@ -16,6 +16,12 @@
  */
 package com.fastcms.oauth2.authentication;
 
+import org.springframework.beans.BeansException;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import java.util.Collections;
@@ -29,12 +35,18 @@ import java.util.Map;
  * @modifiedBy：
  * @version: 1.0
  */
-public final class FastcmsOAuth2LoginSuccessUrlManager {
+@Component
+public final class FastcmsOAuth2LoginSuccessUrlManager implements ApplicationContextAware, ApplicationListener<ApplicationReadyEvent> {
+
+    private static ApplicationContext applicationContext;
 
     private static final Map<String, FastcmsOAuth2LoginSuccessHandler> oAuth2LoginSuccessUrlMap = Collections.synchronizedMap(new HashMap<>());
 
     public static final void addOAuth2LoginSuccessUrl(String registrationId, FastcmsOAuth2LoginSuccessHandler fastcmsOAuth2LoginSuccessUrl) {
         Assert.state(!hasOAuth2LoginSuccessUrl(registrationId), () -> String.format("Duplicate key %s", registrationId));
+        if (hasOAuth2LoginSuccessUrl(registrationId)) {
+            removeOAuth2LoginSuccessUrl(registrationId);
+        }
         oAuth2LoginSuccessUrlMap.put(registrationId, fastcmsOAuth2LoginSuccessUrl);
     }
 
@@ -43,11 +55,32 @@ public final class FastcmsOAuth2LoginSuccessUrlManager {
     }
 
     public static final FastcmsOAuth2LoginSuccessHandler getOAuth2LoginSuccessUrl(String registrationId) {
+        if (hasOAuth2LoginSuccessUrl(registrationId)) {
+            return oAuth2LoginSuccessUrlMap.get(registrationId);
+        }
+
+        initFastcmsOAuth2LoginSuccessHandlerMap();
+
         return oAuth2LoginSuccessUrlMap.get(registrationId);
     }
 
     public static final Boolean hasOAuth2LoginSuccessUrl(String registrationId) {
         return oAuth2LoginSuccessUrlMap.containsKey(registrationId);
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
+    @Override
+    public void onApplicationEvent(ApplicationReadyEvent event) {
+        initFastcmsOAuth2LoginSuccessHandlerMap();
+    }
+
+    static void initFastcmsOAuth2LoginSuccessHandlerMap() {
+        Map<String, FastcmsOAuth2LoginSuccessHandler> fastcmsOAuth2LoginSuccessHandlerMap = applicationContext.getBeansOfType(FastcmsOAuth2LoginSuccessHandler.class);
+        fastcmsOAuth2LoginSuccessHandlerMap.values().forEach(item -> addOAuth2LoginSuccessUrl(item.getRegistrationId(), item));
     }
 
 }

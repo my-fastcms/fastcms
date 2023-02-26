@@ -38,16 +38,19 @@ import net.sf.jsqlparser.statement.select.*;
  */
 public class DataPermissionSqlProcessor extends StatementVisitorAdapter implements FromItemVisitor, SelectVisitor {
 
+    private SqlSegment sqlSegment;
+
     private String permissionSql;
 
     private Statement statement;
 
     private DataPermissionSqlHandler dataPermissionSqlHandler;
 
-    public DataPermissionSqlProcessor(DataPermissionSqlHandler dataPermissionSqlHandler, String permissionSql, Statement statement) {
+    public DataPermissionSqlProcessor(DataPermissionSqlHandler dataPermissionSqlHandler, SqlSegment sqlSegment, Statement statement) {
         this.dataPermissionSqlHandler = dataPermissionSqlHandler;
-        this.permissionSql = permissionSql;
+        this.sqlSegment = sqlSegment;
         this.statement = statement;
+        this.permissionSql = sqlSegment == null ? null : sqlSegment.getSqlSegment();
     }
 
     public void process() {
@@ -105,21 +108,30 @@ public class DataPermissionSqlProcessor extends StatementVisitorAdapter implemen
     @Override
     public void visit(PlainSelect plainSelect) {
 
+        if (sqlSegment == null) {
+            return;
+        }
+
         if (plainSelect.getFromItem() != null) {
             if (plainSelect.getFromItem() instanceof Table) {
-                processWhere((Table) plainSelect.getFromItem(), plainSelect);
+                if (!sqlSegment.isJoinTable()) {
+                    processWhere((Table) plainSelect.getFromItem(), plainSelect);
+                }
             }
             plainSelect.getFromItem().accept(this);
         }
 
-//        if (plainSelect.getJoins() != null) {
-//            for (Join join : plainSelect.getJoins()) {
-//                if (join.getRightItem() instanceof Table) {
-//                    processWhere((Table) join.getRightItem(), plainSelect);
-//                }
-//                join.getRightItem().accept(this);
-//            }
-//        }
+        if (plainSelect.getJoins() != null) {
+            for (Join join : plainSelect.getJoins()) {
+                if (join.getRightItem() instanceof Table) {
+                    Table table = (Table) join.getRightItem();
+                    if (sqlSegment.isJoinTable() && sqlSegment.getTableName() != null && sqlSegment.getTableName().equals(table.getName())) {
+                        processWhere(table, plainSelect);
+                    }
+                }
+                join.getRightItem().accept(this);
+            }
+        }
 
     }
 

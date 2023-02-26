@@ -48,7 +48,7 @@ public interface DataPermissionSqlHandler extends Ordered {
      * @param mappedStatementId
      * @return
      */
-    String getSqlSegment(String mappedStatementId, Statement statement) throws Exception;
+    SqlSegment getSqlSegment(String mappedStatementId, Statement statement) throws Exception;
 
     /**
      * 是否匹配

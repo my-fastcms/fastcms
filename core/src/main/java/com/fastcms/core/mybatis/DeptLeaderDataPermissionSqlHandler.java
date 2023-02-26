@@ -20,6 +20,7 @@ package com.fastcms.core.mybatis;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.mybatis.AbstractDataPermissionSqlHandler;
+import com.fastcms.mybatis.SqlSegment;
 import net.sf.jsqlparser.statement.Statement;
 import org.springframework.stereotype.Component;
 
@@ -35,9 +36,14 @@ import org.springframework.stereotype.Component;
 public class DeptLeaderDataPermissionSqlHandler extends AbstractDataPermissionSqlHandler {
 
     @Override
-    protected String doGetSqlSegment(String mappedStatementId, Statement statement) throws Exception {
+    protected SqlSegment doGetSqlSegment(String mappedStatementId, Statement statement) throws Exception {
         String permissionSql = FastcmsConstants.CREATE_USER_ID + " in (" + AuthUtils.getUserId() + ")";
-        return permissionSql;
+        return new SqlSegment(permissionSql);
+    }
+
+    @Override
+    public boolean isMatch(String mappedStatementId) {
+        return super.isMatch(mappedStatementId);
     }
 
     @Override

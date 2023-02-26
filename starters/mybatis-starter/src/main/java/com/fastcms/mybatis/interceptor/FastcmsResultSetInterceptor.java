@@ -55,10 +55,8 @@ public class FastcmsResultSetInterceptor implements Interceptor {
         Object[] args = invocation.getArgs();
 
         if (target instanceof ResultSetHandler) {
-            log.debug(">>>>>>result set target:" + target);
-
             if (args != null && args.length >0) {
-                log.debug(">>>>result set len:" + args.length);
+                //doSomeThings ...
             }
         }
 

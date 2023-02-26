@@ -21,6 +21,7 @@ import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.mybatis.AbstractDataPermissionSqlHandler;
+import com.fastcms.mybatis.SqlSegment;
 import net.sf.jsqlparser.statement.Statement;
 import org.springframework.stereotype.Component;
 
@@ -36,8 +37,8 @@ import org.springframework.stereotype.Component;
 public class SelfDataPermissionSqlHandler extends AbstractDataPermissionSqlHandler {
 
     @Override
-    protected String doGetSqlSegment(String mappedStatementId, Statement statement) throws Exception {
-        return FastcmsConstants.CREATE_USER_ID.concat(StringPool.EQUALS + AuthUtils.getUserId());
+    protected SqlSegment doGetSqlSegment(String mappedStatementId, Statement statement) throws Exception {
+        return new SqlSegment(FastcmsConstants.CREATE_USER_ID.concat(StringPool.EQUALS + AuthUtils.getUserId()));
     }
 
     @Override

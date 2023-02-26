@@ -39,16 +39,14 @@ public abstract class AbstractDataPermissionSqlHandler implements DataPermission
     protected DataPermissionSqlHandler dataPermissionSqlHandler;
 
     @Override
-    public String getSqlSegment(String mappedStatementId, Statement statement) throws Exception {
+    public SqlSegment getSqlSegment(String mappedStatementId, Statement statement) throws Exception {
         if (isFilter(mappedStatementId)) {
-            return statement.toString();
+            return getNext() == null ? new SqlSegment(statement.toString()) : getNext().getSqlSegment(mappedStatementId, statement);
         }
         if (isMatch(mappedStatementId)) {
             new DataPermissionSqlProcessor(this, doGetSqlSegment(mappedStatementId, statement), statement).process();
-            return statement.toString();
-        } else {
-            return getNext() == null ? statement.toString() : getNext().getSqlSegment(mappedStatementId, statement);
         }
+        return getNext() == null ? new SqlSegment(statement.toString()) : getNext().getSqlSegment(mappedStatementId, statement);
     }
 
     @Override
@@ -81,6 +79,6 @@ public abstract class AbstractDataPermissionSqlHandler implements DataPermission
         return dataPermissionSqlHandler;
     }
 
-    protected abstract String doGetSqlSegment(String mappedStatementId, Statement statement) throws Exception;
+    protected abstract SqlSegment doGetSqlSegment(String mappedStatementId, Statement statement) throws Exception;
 
 }

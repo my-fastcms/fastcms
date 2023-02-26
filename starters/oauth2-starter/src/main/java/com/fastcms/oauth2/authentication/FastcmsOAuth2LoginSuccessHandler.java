@@ -38,4 +38,10 @@ public interface FastcmsOAuth2LoginSuccessHandler {
      */
     String getLoginSuccessUrl(HttpServletRequest request, Authentication authentication);
 
+    /**
+     * 获取OAuth2 RegistrationId
+     * @return
+     */
+    String getRegistrationId();
+
 }
