@@ -14,26 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.fastcms.oauth2.endpoint;
 
-import com.fastcms.oauth2.registration.FastcmsOAuth2ClientRegistration;
-import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 /**
  * @author： wjun_java@163.com
- * @date： 2022/01/30
+ * @date： 2023/2/26
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-public interface OAuth2AuthorizationRequestPostProcessor extends FastcmsOAuth2ClientRegistration {
+public abstract class AbstractOAuth2AuthorizationRequestPostProcessor implements OAuth2AuthorizationRequestPostProcessor, ApplicationContextAware, InitializingBean {
 
-    /**
-     * 对OAuth2AuthorizationRequest属性进行包装处理
-     * @param oAuth2AuthorizationRequest
-     * @return
-     */
-    OAuth2AuthorizationRequest process(OAuth2AuthorizationRequest oAuth2AuthorizationRequest);
+	private ApplicationContext applicationContext;
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		applicationContext.getBean(OAuth2AuthorizationRequestPostProcessorManager.class).addPostProcessor(getRegistrationId(), this);
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
+	}
 
 }

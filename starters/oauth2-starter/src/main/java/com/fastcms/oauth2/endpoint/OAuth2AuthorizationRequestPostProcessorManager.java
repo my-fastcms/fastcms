@@ -17,7 +17,12 @@
 
 package com.fastcms.oauth2.endpoint;
 
-import org.springframework.util.Assert;
+import org.springframework.beans.BeansException;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,12 +35,19 @@ import java.util.Map;
  * @modifiedBy：
  * @version: 1.0
  */
-public final class OAuth2AuthorizationRequestPostProcessorManager {
+@Component
+public final class OAuth2AuthorizationRequestPostProcessorManager implements ApplicationContextAware, ApplicationListener<ApplicationReadyEvent> {
+
+    private static ApplicationContext applicationContext;
 
     private static final Map<String, OAuth2AuthorizationRequestPostProcessor> postProcessorMap = Collections.synchronizedMap(new HashMap<>());
 
     public static final void addPostProcessor(String registrationId, OAuth2AuthorizationRequestPostProcessor oAuth2AuthorizationRequestPostProcessor) {
-        Assert.state(!hasPostProcessor(registrationId), () -> String.format("Duplicate key %s", registrationId));
+
+        if (hasPostProcessor(registrationId)) {
+            removePostProcessor(registrationId);
+        }
+
         postProcessorMap.put(registrationId, oAuth2AuthorizationRequestPostProcessor);
     }
 
@@ -44,11 +56,30 @@ public final class OAuth2AuthorizationRequestPostProcessorManager {
     }
 
     public static final OAuth2AuthorizationRequestPostProcessor getPostProcessor(String registrationId) {
+        if (hasPostProcessor(registrationId)) {
+            return postProcessorMap.get(registrationId);
+        }
+        initOAuth2AuthorizationRequestPostProcessorMap();
         return postProcessorMap.get(registrationId);
     }
 
     public static final Boolean hasPostProcessor(String registrationId) {
         return postProcessorMap.containsKey(registrationId);
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
+    @Override
+    public void onApplicationEvent(ApplicationReadyEvent event) {
+        initOAuth2AuthorizationRequestPostProcessorMap();
+    }
+
+    static void initOAuth2AuthorizationRequestPostProcessorMap() {
+        Map<String, OAuth2AuthorizationRequestPostProcessor> oAuth2AuthorizationRequestPostProcessorMap = applicationContext.getBeansOfType(OAuth2AuthorizationRequestPostProcessor.class);
+        oAuth2AuthorizationRequestPostProcessorMap.values().forEach(item -> addPostProcessor(item.getRegistrationId(), item));
     }
 
 }

@@ -22,7 +22,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -43,7 +42,6 @@ public final class FastcmsOAuth2LoginSuccessUrlManager implements ApplicationCon
     private static final Map<String, FastcmsOAuth2LoginSuccessHandler> oAuth2LoginSuccessUrlMap = Collections.synchronizedMap(new HashMap<>());
 
     public static final void addOAuth2LoginSuccessUrl(String registrationId, FastcmsOAuth2LoginSuccessHandler fastcmsOAuth2LoginSuccessUrl) {
-        Assert.state(!hasOAuth2LoginSuccessUrl(registrationId), () -> String.format("Duplicate key %s", registrationId));
         if (hasOAuth2LoginSuccessUrl(registrationId)) {
             removeOAuth2LoginSuccessUrl(registrationId);
         }

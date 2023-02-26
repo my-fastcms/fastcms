@@ -18,6 +18,7 @@ package com.fastcms.web.security;
 
 import com.fastcms.core.auth.FastcmsAuthUserInfo;
 import com.fastcms.entity.User;
+import com.fastcms.oauth2.registration.FastcmsOAuth2ClientRegistration;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -41,7 +42,7 @@ import java.util.Map;
  * @modifiedBy：
  * @version: 1.0
  */
-public abstract class AbstractTokenManager implements TokenManager {
+public abstract class AbstractTokenManager implements TokenManager, FastcmsOAuth2ClientRegistration {
 
     protected static final String AUTHORITIES_KEY = "auth";
 

@@ -14,29 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.fastcms.oauth2.authentication;
 
-import com.fastcms.oauth2.registration.FastcmsOAuth2ClientRegistration;
-import org.springframework.security.core.Authentication;
-
-import javax.servlet.http.HttpServletRequest;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 /**
- * OAuth2 授权登录成功处理逻辑
- * 具体逻辑由插件实现
  * @author： wjun_java@163.com
- * @date： 2022/02/02
+ * @date： 2023/2/26
  * @description：
  * @modifiedBy：
  * @version: 1.0
  */
-public interface FastcmsOAuth2LoginSuccessHandler extends FastcmsOAuth2ClientRegistration {
+public abstract class AbstractFastcmsOAuth2LoginSuccessHandler implements FastcmsOAuth2LoginSuccessHandler, InitializingBean, ApplicationContextAware {
 
-    /**
-     * 获取登录成功后跳转地址
-     * @return
-     */
-    String getLoginSuccessUrl(HttpServletRequest request, Authentication authentication);
+	protected ApplicationContext applicationContext;
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		applicationContext.getBean(FastcmsOAuth2LoginSuccessUrlManager.class).addOAuth2LoginSuccessUrl(getRegistrationId(), this);
+	}
+
+	@Override
+	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		this.applicationContext = applicationContext;
+	}
 
 }

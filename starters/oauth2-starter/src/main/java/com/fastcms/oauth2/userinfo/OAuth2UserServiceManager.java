@@ -16,7 +16,13 @@
  */
 package com.fastcms.oauth2.userinfo;
 
+import org.springframework.beans.BeansException;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationListener;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,11 +35,17 @@ import java.util.concurrent.ConcurrentHashMap;
  * @modifiedBy：
  * @version: 1.0
  */
-public final class OAuth2UserServiceManager {
+@Component
+public final class OAuth2UserServiceManager implements ApplicationContextAware, ApplicationListener<ApplicationStartedEvent> {
+
+    private static ApplicationContext applicationContext;
 
     private static final Map<String, OAuth2UserService> userServicesMap = new ConcurrentHashMap<>();
 
     public static void addOAuth2UserService(String registrationId, OAuth2UserService oAuth2UserService) {
+        if (hasOAuth2UserService(registrationId)) {
+            removeOAuth2UserService(registrationId);
+        }
         userServicesMap.put(registrationId ,oAuth2UserService);
     }
 
@@ -50,7 +62,28 @@ public final class OAuth2UserServiceManager {
     }
 
     public static OAuth2UserService getOAuth2UserService(String registrationId) {
+        if (hasOAuth2UserService(registrationId)) {
+            return userServicesMap.get(registrationId);
+        }
+
+        initUserServiceMap();
+
         return userServicesMap.get(registrationId);
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+
+    @Override
+    public void onApplicationEvent(ApplicationStartedEvent event) {
+        initUserServiceMap();
+    }
+
+    static void initUserServiceMap() {
+        Map<String, AbstractOAuth2UserService> userServiceMap = applicationContext.getBeansOfType(AbstractOAuth2UserService.class);
+        userServiceMap.values().forEach(item -> addOAuth2UserService(item.getRegistrationId(), item));
     }
 
 }

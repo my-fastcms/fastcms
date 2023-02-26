@@ -24,6 +24,8 @@ import com.fastcms.utils.ApplicationUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -41,7 +43,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version: 1.0
  */
 @Component
-public class DelegatingTokenManager implements TokenManager {
+public class DelegatingTokenManager implements TokenManager, ApplicationListener<ApplicationStartedEvent> {
 
     private static final Map<String, TokenManager> tokenManagerMap = new ConcurrentHashMap<>();
 
@@ -102,11 +104,20 @@ public class DelegatingTokenManager implements TokenManager {
     }
 
     public void addTokenManager(String registrationId, TokenManager tokenManager) {
+        if (tokenManagerMap.get(registrationId) != null) {
+            removeTokenManager(registrationId);
+        }
         tokenManagerMap.put(registrationId, tokenManager);
     }
 
     public void removeTokenManager(String registrationId) {
         tokenManagerMap.remove(registrationId);
+    }
+
+    @Override
+    public void onApplicationEvent(ApplicationStartedEvent event) {
+        Map<String, AbstractTokenManager> abstractTokenManagerMap = event.getApplicationContext().getBeansOfType(AbstractTokenManager.class);
+        abstractTokenManagerMap.values().forEach(item -> addTokenManager(item.getRegistrationId(), item));
     }
 
 }

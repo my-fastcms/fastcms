@@ -42,4 +42,8 @@ public class DefaultTokenManager extends AbstractTokenManager {
 		return new UsernamePasswordAuthenticationToken(principal, "", authorities);
 	}
 
+	@Override
+	public String getRegistrationId() {
+		return DefaultTokenManager.class.getName();
+	}
 }

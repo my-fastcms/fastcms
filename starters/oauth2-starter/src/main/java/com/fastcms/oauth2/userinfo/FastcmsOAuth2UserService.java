@@ -44,12 +44,12 @@ public class FastcmsOAuth2UserService <R extends OAuth2UserRequest, U extends OA
 
         Map<String, OAuth2UserService> userServicesMap = OAuth2UserServiceManager.getUserServicesMap();
 
-        OAuth2UserService<R, U> ruoAuth2UserService = userServicesMap.get(userRequest.getClientRegistration().getRegistrationId());
-        if (ruoAuth2UserService == null) {
-            ruoAuth2UserService = (OAuth2UserService<R, U>) new DefaultOAuth2UserService();
+        OAuth2UserService<R, U> oAuth2UserService = userServicesMap.get(userRequest.getClientRegistration().getRegistrationId());
+        if (oAuth2UserService == null) {
+            oAuth2UserService = (OAuth2UserService<R, U>) new DefaultOAuth2UserService();
         }
 
-        U u = ruoAuth2UserService.loadUser(userRequest);
+        U u = oAuth2UserService.loadUser(userRequest);
 
         return u != null ? u : (U) userServicesMap.values().stream()
                 .map((userService) -> userService.loadUser(userRequest))

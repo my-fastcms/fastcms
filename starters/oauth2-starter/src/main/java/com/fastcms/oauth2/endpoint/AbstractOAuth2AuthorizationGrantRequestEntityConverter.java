@@ -16,6 +16,8 @@
  */
 package com.fastcms.oauth2.endpoint;
 
+import com.fastcms.oauth2.registration.FastcmsOAuth2ClientRegistration;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -38,7 +40,7 @@ import java.net.URI;
  * @version: 1.0
  */
 public abstract class AbstractOAuth2AuthorizationGrantRequestEntityConverter<T extends AbstractOAuth2AuthorizationGrantRequest>
-        implements Converter<T, RequestEntity<?>> {
+        implements Converter<T, RequestEntity<?>>, FastcmsOAuth2ClientRegistration, InitializingBean {
 
     // @formatter:off
     private Converter<T, HttpHeaders> headersConverter =
@@ -166,6 +168,11 @@ public abstract class AbstractOAuth2AuthorizationGrantRequestEntityConverter<T e
             }
             return parameters;
         };
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        OAuth2AuthorizationGrantRequestEntityConverterManager.addRequestEntityConverter(getRegistrationId(), this);
     }
 
 }

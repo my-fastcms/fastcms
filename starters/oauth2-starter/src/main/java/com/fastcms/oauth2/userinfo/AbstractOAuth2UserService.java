@@ -17,6 +17,11 @@
 package com.fastcms.oauth2.userinfo;
 
 import com.fastcms.oauth2.endpoint.FastcmsMappingJackson2HttpMessageConverter;
+import com.fastcms.oauth2.registration.FastcmsOAuth2ClientRegistration;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.RequestEntity;
@@ -53,7 +58,9 @@ import java.util.Set;
  * @version: 1.0
  * @see org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService
  */
-public abstract class AbstractOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+public abstract class AbstractOAuth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User>, FastcmsOAuth2ClientRegistration, ApplicationContextAware, InitializingBean {
+
+    private ApplicationContext applicationContext;
 
     private static final String MISSING_USER_INFO_URI_ERROR_CODE = "missing_user_info_uri";
 
@@ -185,6 +192,16 @@ public abstract class AbstractOAuth2UserService implements OAuth2UserService<OAu
     public final void setRestOperations(RestOperations restOperations) {
         Assert.notNull(restOperations, "restOperations cannot be null");
         this.restOperations = restOperations;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        applicationContext.getBean(OAuth2UserServiceManager.class).addOAuth2UserService(getRegistrationId(), this);
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 
 }

@@ -103,6 +103,9 @@ public final class FastcmsInMemoryClientRegistrationRepository implements Client
      * @param clientRegistration
      */
     public void addClientRegistration(ClientRegistration clientRegistration) {
+        if (hasRegistration(clientRegistration.getRegistrationId())) {
+            removeClientRegistration(clientRegistration.getRegistrationId());
+        }
         this.registrations.put(clientRegistration.getRegistrationId(), clientRegistration);
     }
 
