@@ -90,3 +90,7 @@
 - 优化数据权限handler链，可以支持多个handler组合权限sql片段
 - 优化OAuth2第三方授权，让插件中的OAuth2组件可以自动注册
 - 修复一些已知BUG
+
+## [v0.1.2] 2023.3.30
+- 修复TokenManager注册失败的问题
+- 修复一些已知BUG
