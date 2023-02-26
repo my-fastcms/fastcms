@@ -19,11 +19,13 @@ package com.fastcms.web.security;
 import com.fastcms.core.auth.FastcmsAuthUserInfo;
 import com.fastcms.entity.User;
 import com.fastcms.oauth2.registration.FastcmsOAuth2ClientRegistration;
+import com.fastcms.utils.ApplicationUtils;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -42,7 +44,7 @@ import java.util.Map;
  * @modifiedBy：
  * @version: 1.0
  */
-public abstract class AbstractTokenManager implements TokenManager, FastcmsOAuth2ClientRegistration {
+public abstract class AbstractTokenManager implements TokenManager, FastcmsOAuth2ClientRegistration, InitializingBean {
 
     protected static final String AUTHORITIES_KEY = "auth";
 
@@ -109,6 +111,13 @@ public abstract class AbstractTokenManager implements TokenManager, FastcmsOAuth
             return token.startsWith(TOKEN_PREFIX) ? token.substring(TOKEN_PREFIX.length()) : token;
         }
         return null;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        if (this instanceof DefaultTokenManager == false) {
+            ApplicationUtils.getBean(DelegatingTokenManager.class).addTokenManager(getRegistrationId(), this);
+        }
     }
 
 }
