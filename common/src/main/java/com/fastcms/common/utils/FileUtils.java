@@ -16,21 +16,19 @@
  */
 package com.fastcms.common.utils;
 
-import org.apache.commons.compress.archivers.ArchiveEntry;
-import org.apache.commons.compress.archivers.ArchiveInputStream;
-import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
-import org.apache.commons.compress.utils.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.zeroturnaround.zip.ZipUtil;
 
-import java.io.*;
-import java.nio.file.Files;
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author： wjun_java@163.com
@@ -141,44 +139,18 @@ public abstract class FileUtils {
         }
     }
 
-    public static void unzip(Path path, String destDir) {
-        try (InputStream fis = Files.newInputStream(path);
-             InputStream bis = new BufferedInputStream(fis);
-             ArchiveInputStream ais = new ZipArchiveInputStream(bis)) {
+    public static void unzip(Path path, String destDir) throws IOException {
 
-            ArchiveEntry entry;
-            while (Objects.nonNull(entry = ais.getNextEntry())) {
-                if (!ais.canReadEntryData(entry)) {
-                    continue;
-                }
-
-                String name = filename(destDir, entry.getName());
-                File f = new File(name);
-                if (entry.isDirectory()) {
-                    if (!f.isDirectory() && !f.mkdirs()) {
-                        f.mkdirs();
-                    }
-                } else {
-                    File parent = f.getParentFile();
-                    if (!parent.isDirectory() && !parent.mkdirs()) {
-                        throw new IOException("failed to create directory " + parent);
-                    }
-                    try (OutputStream o = Files.newOutputStream(f.toPath())) {
-                        IOUtils.copy(ais, o);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        try {
+            ZipUtil.unpack(path.toFile(), new File(destDir));
+        } catch (Exception e) {
+            throw new IOException(e.getMessage());
         }
+
     }
 
-    public static void unzip(String zipFileName, String destDir) {
+    public static void unzip(String zipFileName, String destDir) throws IOException {
         unzip(Paths.get(zipFileName), destDir);
-    }
-
-    private static String filename(String destDir, String name) {
-        return destDir + File.separator + name;
     }
 
 }

@@ -61,6 +61,12 @@
             <version>0.4.8</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.zeroturnaround</groupId>
+            <artifactId>zt-zip</artifactId>
+            <version>1.15</version>
+        </dependency>
+
     </dependencies>
 
     <build>

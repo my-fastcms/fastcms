@@ -186,10 +186,16 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
             throw new RuntimeException(String.format(I18nUtils.getMessage(CMS_TEMPLATE_PATH_IS_EXIST), path));
         }
 
-        FileUtils.unzip(file.toPath(), DirUtils.getTemplateDir());
+        String templatePath = getTemplateRootPath().toString().concat(path);
+
+        try {
+            FileUtils.unzip(file.toPath(), DirUtils.getTemplateDir());
+        } catch (IOException e) {
+            org.apache.commons.io.FileUtils.deleteDirectory(Paths.get(templatePath).toFile());
+            throw new RuntimeException(e.getMessage());
+        }
 
         //check properties
-        String templatePath = getTemplateRootPath().toString().concat(path);
         Template template = templateFinder.find(Paths.get(templatePath));
         if (template == null || StringUtils.isBlank(template.getId()) || StringUtils.isBlank(template.getPath())) {
             //上传的zip文件包不符合规范 删除
