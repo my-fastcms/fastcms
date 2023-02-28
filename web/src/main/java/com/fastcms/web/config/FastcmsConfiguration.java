@@ -16,6 +16,7 @@
  */
 package com.fastcms.web.config;
 
+import cn.binarywang.wx.miniapp.util.WxMaConfigHolder;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.core.directive.BaseDirective;
 import com.fastcms.core.site.DefaultSiteManager;
@@ -29,6 +30,7 @@ import com.fastcms.plugin.PluginInterceptor;
 import com.fastcms.plugin.view.PluginFreeMarkerConfig;
 import com.fastcms.service.IConfigService;
 import com.fastcms.utils.ApplicationUtils;
+import com.fastcms.utils.ConfigUtils;
 import com.fastcms.web.filter.AuthInterceptor;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
@@ -50,6 +52,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -58,11 +61,15 @@ import org.tuckey.web.filters.urlrewrite.Conf;
 import org.tuckey.web.filters.urlrewrite.UrlRewriteFilter;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
+
+import static com.fastcms.common.constants.FastcmsConstants.WECHAT_MINIAPP_APP_ID;
 
 /**
  * @author： wjun_java@163.com
@@ -132,6 +139,14 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
         FilterRegistrationBean frBean = new FilterRegistrationBean();
         frBean.setFilter(new SiteContextFilter(siteManager));
         frBean.addUrlPatterns("/*");
+        return frBean;
+    }
+
+    @Bean
+    public FilterRegistrationBean wechatMiniAppFilterRegistrationBean() {
+        FilterRegistrationBean frBean = new FilterRegistrationBean();
+        frBean.setFilter(new WechatMiniAppFilter());
+        frBean.addUrlPatterns("/fastcms/api/*");
         return frBean;
     }
 
@@ -231,6 +246,25 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
                 throw new ServletException("Unable to load URL rewrite configuration file from " + URL_REWRITE, ex);
             }
         }
+    }
+
+    public class WechatMiniAppFilter extends OncePerRequestFilter {
+
+        @Override
+        protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+            String appId = request.getHeader("appId") == null ? ConfigUtils.getConfig(WECHAT_MINIAPP_APP_ID) : request.getHeader("appId");
+
+            WxMaConfigHolder.set(appId);
+
+            try {
+                filterChain.doFilter(request, response);
+            } finally {
+                WxMaConfigHolder.remove();
+            }
+
+        }
+
     }
 
 }
