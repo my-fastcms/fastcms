@@ -37,7 +37,7 @@ public class FastcmsUserDetails extends User implements FastcmsAuthUserInfo {
 	private com.fastcms.entity.User user;
 
 	public FastcmsUserDetails(com.fastcms.entity.User user, Collection<? extends GrantedAuthority> authorities) {
-		super(user.getUserName(), user.getPassword(), authorities);
+		super(user.getUserName(), user.getPassword() == null ? "" : user.getPassword(), authorities);
 		this.user = user;
 	}
 

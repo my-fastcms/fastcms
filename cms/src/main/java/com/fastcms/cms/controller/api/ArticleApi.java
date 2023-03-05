@@ -32,8 +32,6 @@ import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.mybatis.PageModel;
-import com.fastcms.service.IAttachmentService;
-import com.fastcms.service.IPaymentRecordService;
 import com.fastcms.utils.I18nUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -58,12 +56,6 @@ public class ArticleApi {
 
 	@Autowired
 	private IArticleService articleService;
-
-	@Autowired
-	private IPaymentRecordService paymentRecordService;
-
-	@Autowired
-	private IAttachmentService attachmentService;
 
 	@Autowired
 	private FastcmsSearcherManager fastcmsSearcherManager;

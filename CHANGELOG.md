@@ -96,3 +96,7 @@
 - 修复模板上传zip slip漏洞
 - 修复TokenManager注册失败的问题
 - 修复一些已知BUG
+
+## [v0.1.3] 2023.4.30
+- 优化小程序登录逻辑，去掉code2session接口
+- 修复一些已知BUG
