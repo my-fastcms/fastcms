@@ -27,6 +27,7 @@ import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.mybatis.PageModel;
+import com.fastcms.plugin.PassFastcms;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -68,6 +69,7 @@ public class ArticleCommentApi {
 	 * @return
 	 */
 	@GetMapping("list/{articleId}")
+	@PassFastcms
 	public RestResult<Page<IArticleCommentService.ArticleCommentVo>> list(PageModel page, @PathVariable("articleId") Long articleId) {
 		return RestResultUtils.success(articleCommentService.pageArticleCommentByArticleId(page.toPage(), articleId, AuthUtils.getUserId()));
 	}
