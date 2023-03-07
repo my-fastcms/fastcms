@@ -13,13 +13,13 @@
 								<Account v-show="isTabPaneShow" />
 							</transition>
 						</el-tab-pane>
-						<!-- 
-						<el-tab-pane :label="$t('message.label.two2')" name="mobile" :disabled="tabsActiveName === 'mobile'" ref="mobileTab">
+						 
+						<!-- <el-tab-pane :label="$t('message.label.two2')" name="mobile" :disabled="tabsActiveName === 'mobile'" ref="mobileTab">
 							<transition name="el-zoom-in-center">
 								<Mobile v-show="!isTabPaneShow" />
 							</transition>
-						</el-tab-pane>
-						-->
+						</el-tab-pane> -->
+						
 					</el-tabs>
 					<div class="mt10">
 						<el-button type="text" size="small" @click="toRegister" v-if="public_register_enable">{{ $t('message.link.one3') }}</el-button>
@@ -28,12 +28,12 @@
 					</div>
 				</div>
 				<Scan v-else />
-				<!--
-				<div class="login-content-main-sacn" @click="isScan = !isScan" ref="scanDiv">
+				
+				<div class="login-content-main-sacn" v-if="true" @click="isScan = !isScan" ref="scanDiv">
 					<i class="iconfont" :class="isScan ? 'icon-diannao1' : 'icon-barcode-qr'"></i>
 					<div class="login-content-main-sacn-delta"></div>
 				</div>
-				-->
+				
 			</div>
 		</div>
 		<div class="login-copyright">

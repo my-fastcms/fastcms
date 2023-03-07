@@ -20,6 +20,7 @@ import com.fastcms.common.constants.FastcmsConstants;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -39,6 +40,10 @@ public class FastcmsUserDetails extends User implements FastcmsAuthUserInfo {
 	public FastcmsUserDetails(com.fastcms.entity.User user, Collection<? extends GrantedAuthority> authorities) {
 		super(user.getUserName(), user.getPassword() == null ? "" : user.getPassword(), authorities);
 		this.user = user;
+	}
+
+	public FastcmsUserDetails(com.fastcms.entity.User user) {
+		this(user, new ArrayList<>());
 	}
 
 	@Override
