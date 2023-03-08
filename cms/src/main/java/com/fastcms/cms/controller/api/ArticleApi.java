@@ -32,6 +32,7 @@ import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.mybatis.PageModel;
+import com.fastcms.plugin.PassFastcms;
 import com.fastcms.utils.I18nUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -66,7 +67,15 @@ public class ArticleApi {
 	@Autowired
 	private IArticleCategoryService articleCategoryService;
 
+	/**
+	 * 文章列表
+	 * @param page
+	 * @param categoryId
+	 * @param status
+	 * @return
+	 */
 	@GetMapping("list")
+	@PassFastcms
 	public RestResult<Page<IArticleService.ArticleVo>> list(PageModel page,
 															@RequestParam(name = "categoryId", required = false) String categoryId,
 															@RequestParam(name = "status", required = false) String status) {
@@ -103,6 +112,7 @@ public class ArticleApi {
 	 * @return
 	 */
 	@GetMapping("get/{articleId}")
+	@PassFastcms
 	public RestResult<Article> getArticle(@PathVariable("articleId") Long articleId) {
 		return RestResultUtils.success(articleService.getArticle(articleId));
 	}
@@ -145,6 +155,7 @@ public class ArticleApi {
 	 * @return
 	 */
 	@GetMapping("category/list")
+	@PassFastcms
 	public RestResult<List<IArticleCategoryService.CategoryTreeNode>> listCategory() {
 		return RestResultUtils.success(articleCategoryService.getCategoryList());
 	}
@@ -154,6 +165,7 @@ public class ArticleApi {
 	 * @return
 	 */
 	@GetMapping("tag/list")
+	@PassFastcms
 	public RestResult<List<ArticleTag>> listTags() {
 		return RestResultUtils.success(articleTagService.list());
 	}

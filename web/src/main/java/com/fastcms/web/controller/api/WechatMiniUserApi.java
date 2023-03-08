@@ -28,11 +28,13 @@ import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.auth.AuthUtils;
+import com.fastcms.core.auth.FastcmsUserDetails;
 import com.fastcms.entity.User;
 import com.fastcms.entity.UserOpenid;
 import com.fastcms.service.IUserService;
 import com.fastcms.utils.I18nUtils;
 import com.fastcms.web.security.DelegatingTokenManager;
+import com.fastcms.web.security.FastcmsUser;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +79,7 @@ public class WechatMiniUserApi {
 	 * @return
 	 */
 	@PostMapping("login")
-	public RestResult<String> login(@RequestBody Map<String, Object> params) {
+	public RestResult<FastcmsUser> login(@RequestBody Map<String, Object> params) {
 
 		try {
 			WxMaJscode2SessionResult wxMaJscode2SessionResult = code2Session(params);
@@ -104,7 +106,8 @@ public class WechatMiniUserApi {
 
 			try {
 				User user = userService.saveWxMaUserInfo(openId, userInfo);
-				return RestResultUtils.success(tokenManager.createToken(user));
+				FastcmsUser tokenUser = tokenManager.createTokenUser(new FastcmsUserDetails(user));
+				return RestResultUtils.success(tokenUser);
 			} catch (FastcmsException e) {
 				e.printStackTrace();
 				return RestResultUtils.failed(I18nUtils.getMessage(USER_MINIAPP_LOGIN_FAIL_FOR_USER_IS_NULL));
@@ -151,7 +154,7 @@ public class WechatMiniUserApi {
 	 * @return
 	 */
 	@PostMapping("login/phone")
-	public Object loginByPhone(@RequestBody Map<String, Object> params) {
+	public RestResult<FastcmsUser> loginByPhone(@RequestBody Map<String, Object> params) {
 		try {
 			WxMaJscode2SessionResult wxMaJscode2SessionResult = code2Session(params);
 			String sessionKey = wxMaJscode2SessionResult.getSessionKey();
@@ -165,7 +168,8 @@ public class WechatMiniUserApi {
 			}
 			try {
 				User user = userService.saveUser(openId, unionId, wxMaPhoneNumberInfo.getPurePhoneNumber(), UserOpenid.TYPE_WECHAT_MINI);
-				return RestResultUtils.success(tokenManager.createToken(user));
+				FastcmsUser tokenUser = tokenManager.createTokenUser(new FastcmsUserDetails(user));
+				return RestResultUtils.success(tokenUser);
 			} catch (FastcmsException e) {
 				e.printStackTrace();
 				return RestResultUtils.failed(I18nUtils.getMessage(USER_MINIAPP_LOGIN_FAIL_FOR_USER_IS_NULL));
