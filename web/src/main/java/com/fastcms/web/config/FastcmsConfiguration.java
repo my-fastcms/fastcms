@@ -250,10 +250,20 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
 
     public class WechatMiniAppFilter extends OncePerRequestFilter {
 
+        final String APP_ID = "appId";
+
         @Override
         protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-            String appId = request.getHeader("appId") == null ? ConfigUtils.getConfig(WECHAT_MINIAPP_APP_ID) : request.getHeader("appId");
+            String appId = ConfigUtils.getConfig(WECHAT_MINIAPP_APP_ID);
+
+            if (request.getHeader(APP_ID) != null) {
+                appId = request.getHeader(APP_ID);
+            } else {
+                if (request.getParameter(APP_ID) != null) {
+                    appId = request.getParameter(APP_ID);
+                }
+            }
 
             WxMaConfigHolder.set(appId);
 
