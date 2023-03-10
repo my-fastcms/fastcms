@@ -40,22 +40,17 @@ public class SearchIndexAspect {
     private FastcmsSearcherManager fastcmsSearcherManager;
 
     @Around("execution(* com.fastcms.cms.service.IArticleService.saveArticle(..))")
-    public Boolean addIndex(ProceedingJoinPoint joinPoint) {
-        try {
-            final Object[] args = joinPoint.getArgs();
-            if(args != null && args.length ==1) {
-                if ((Boolean) joinPoint.proceed()) {
-                    Article article = (Article) args[0];
-                    if(Article.STATUS_PUBLISH.equals(article.getStatus())) {
-                        new NameThreadFactory("createSearchIndexThread").newThread(() -> fastcmsSearcherManager.getSearcher().updateIndex((Article) args[0])).start();
-                    }
+    public Boolean addIndex(ProceedingJoinPoint joinPoint) throws Throwable {
+        final Object[] args = joinPoint.getArgs();
+        if(args != null && args.length ==1) {
+            if ((Boolean) joinPoint.proceed()) {
+                Article article = (Article) args[0];
+                if(Article.STATUS_PUBLISH.equals(article.getStatus())) {
+                    new NameThreadFactory("createSearchIndexThread").newThread(() -> fastcmsSearcherManager.getSearcher().updateIndex((Article) args[0])).start();
                 }
             }
-            return true;
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-            return false;
         }
+        return true;
     }
 
 }

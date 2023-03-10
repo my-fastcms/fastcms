@@ -39,15 +39,10 @@ public class TemplatePostProcessorAspect {
 	private TemplatePostProcessorManager templatePostProcessorManager;
 
 	@Around("execution(* com.fastcms.core.template.TemplateService.getCurrTemplate())")
-	public Template getTemplate(ProceedingJoinPoint joinPoint) {
-		try {
-			Template template = (Template) joinPoint.proceed();
-			TemplatePostProcessor templatePostProcessor = templatePostProcessorManager.getTemplatePostProcessor();
-			return templatePostProcessor.postProcess(template);
-		} catch (Throwable throwable) {
-			throwable.printStackTrace();
-			return null;
-		}
+	public Template getTemplate(ProceedingJoinPoint joinPoint) throws Throwable {
+		Template template = (Template) joinPoint.proceed();
+		TemplatePostProcessor templatePostProcessor = templatePostProcessorManager.getTemplatePostProcessor();
+		return templatePostProcessor.postProcess(template);
 	}
 
 }

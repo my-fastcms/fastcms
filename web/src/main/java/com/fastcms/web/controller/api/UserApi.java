@@ -60,6 +60,7 @@ public class UserApi {
 
         userInfo.setRealName(user.getRealName());
         userInfo.setNickName(user.getNickName());
+        userInfo.setHeadImg(user.getHeadImg());
         userInfo.setEmail(user.getEmail());
         userInfo.setMobile(user.getMobile());
         userInfo.setSex(user.getSex());

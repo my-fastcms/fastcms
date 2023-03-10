@@ -44,7 +44,7 @@ public class WaterMarkAspect implements ApplicationListener<ApplicationReadyEven
     List<WaterMarkProcessor> waterMarkProcessorList;
 
     @Around("execution(* com.fastcms.service.IAttachmentService.saveBatch(..))")
-    public Boolean addWaterMark(ProceedingJoinPoint joinPoint) {
+    public Boolean addWaterMark(ProceedingJoinPoint joinPoint) throws Throwable {
 
         if(AttachUtils.enableWaterMark()) {
             if(waterMarkProcessorList !=null && waterMarkProcessorList.size() > 0) {
@@ -66,12 +66,7 @@ public class WaterMarkAspect implements ApplicationListener<ApplicationReadyEven
             }
         }
 
-        try {
-            return (Boolean) joinPoint.proceed();
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-            return false;
-        }
+        return (Boolean) joinPoint.proceed();
     }
 
     @Override

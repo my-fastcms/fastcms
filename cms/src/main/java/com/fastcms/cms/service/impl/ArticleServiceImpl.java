@@ -74,12 +74,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     @Transactional
     public boolean saveArticle(Article article) throws FastcmsException {
 
-        try {
-            if(!saveOrUpdate(article)) {
-                throw new I18nFastcmsException(FastcmsException.SERVER_ERROR, FASTCMS_SYSTEM_SAVE_ERROR);
-            }
-        } catch (Exception e) {
-            throw new FastcmsException(FastcmsException.SERVER_ERROR, e.getMessage());
+        if(!saveOrUpdate(article)) {
+            throw new I18nFastcmsException(FastcmsException.SERVER_ERROR, FASTCMS_SYSTEM_SAVE_ERROR);
         }
 
         //删除文章分类以及标签

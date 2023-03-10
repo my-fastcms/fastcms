@@ -162,6 +162,11 @@ public interface IUserService extends IService<User> {
         String nickName;
 
         /**
+         * 头像
+         */
+        String headImg;
+
+        /**
          * 用户姓名
          */
         String realName;
@@ -184,6 +189,14 @@ public interface IUserService extends IService<User> {
 
         public String getNickName() {
             return nickName;
+        }
+
+        public String getHeadImg() {
+            return headImg;
+        }
+
+        public void setHeadImg(String headImg) {
+            this.headImg = headImg;
         }
 
         public void setNickName(String nickName) {
