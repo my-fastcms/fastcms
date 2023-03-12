@@ -83,8 +83,6 @@ public class WechatMessageCallbackController {
                        @RequestParam(name = "encrypt_type", required = false) String encType,
                        @RequestParam(name = "msg_signature", required = false) String msgSignature) {
 
-        System.out.println("======================>mp:" + appId);
-
         this.wxService.switchoverTo(appId);
         if (!wxService.checkSignature(timestamp, nonce, signature)) {
             throw new IllegalArgumentException(I18nUtils.getMessage(FASTCMS_SYSTEM_REQUEST_ERROR));
@@ -111,10 +109,11 @@ public class WechatMessageCallbackController {
             WxMpXmlMessage inMessage = WxMpXmlMessage.fromEncryptedXml(requestBody, wxService.getWxMpConfigStorage(),
                     timestamp, nonce, msgSignature);
             logger.debug("\n消息解密后内容为：\n{} ", inMessage.toString());
-            System.out.println("\n消息解密后内容为：\n{} " + inMessage.toString());
             WxMpXmlOutMessage outMessage;
             try {
                 outMessage = messageRouter.route(appId, inMessage);
+                String s = outMessage.toString();
+                System.out.println("=========>out:" + s);
             } catch (Exception e) {
                 e.printStackTrace();
                 outMessage = null;
@@ -126,6 +125,7 @@ public class WechatMessageCallbackController {
             out = outMessage.toEncryptedXml(wxService.getWxMpConfigStorage());
         }
 
+        System.out.println("===================组装回复信息：" + out);
         logger.debug("\n组装回复信息：{}", out);
         return out;
     }
