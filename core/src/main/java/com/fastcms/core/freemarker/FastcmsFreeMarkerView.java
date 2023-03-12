@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.springframework.web.servlet.view.freemarker;
+package com.fastcms.core.freemarker;
 
 import freemarker.core.ParseException;
 import freemarker.ext.jsp.TaglibFactory;
@@ -29,6 +29,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.AbstractTemplateView;
+import org.springframework.web.servlet.view.freemarker.FreeMarkerConfig;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -50,7 +51,7 @@ import java.util.Map;
  * @modifiedBy：
  * @version: 1.0
  */
-public class FreeMarkerView extends AbstractTemplateView {
+public class FastcmsFreeMarkerView extends AbstractTemplateView {
 
 	@Nullable
 	private String encoding;
@@ -88,7 +89,7 @@ public class FreeMarkerView extends AbstractTemplateView {
 	 * <p>If this is not set, the default lookup will occur: a single {@link FreeMarkerConfig}
 	 * is expected in the current web application context, with any bean name.
 	 * <strong>Note:</strong> using this method will cause a new instance of {@link TaglibFactory}
-	 * to created for every single {@link FreeMarkerView} instance. This can be quite expensive
+	 * to created for every single {@link FastcmsFreeMarkerView} instance. This can be quite expensive
 	 * in terms of memory and initial CPU usage. In production it is recommended that you use
 	 * a {@link FreeMarkerConfig} which exposes a single shared {@link TaglibFactory}.
 	 */
@@ -380,13 +381,13 @@ public class FreeMarkerView extends AbstractTemplateView {
 		@Override
 		@Nullable
 		public String getServletName() {
-			return FreeMarkerView.this.getBeanName();
+			return FastcmsFreeMarkerView.this.getBeanName();
 		}
 
 		@Override
 		@Nullable
 		public ServletContext getServletContext() {
-			return FreeMarkerView.this.getServletContext();
+			return FastcmsFreeMarkerView.this.getServletContext();
 		}
 
 		@Override

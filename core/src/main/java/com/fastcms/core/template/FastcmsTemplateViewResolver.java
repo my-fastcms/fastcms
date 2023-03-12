@@ -49,9 +49,4 @@ public class FastcmsTemplateViewResolver extends FreeMarkerViewResolver implemen
         setRequestContextAttribute("request");
     }
 
-//    @Override
-//    public int getOrder() {
-//        return Ordered.LOWEST_PRECEDENCE - 7;
-//    }
-
 }

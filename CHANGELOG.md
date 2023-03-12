@@ -102,4 +102,5 @@
 - 修复保存文章事务不生效的问题
 - 支持websocket
 - 插件支持微信扫码关注公众号登录
+- 重写freemarker，自定义FastcmsFreeMarkerView
 - 修复一些已知BUG
