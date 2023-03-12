@@ -112,8 +112,6 @@ public class WechatMessageCallbackController {
             WxMpXmlOutMessage outMessage;
             try {
                 outMessage = messageRouter.route(appId, inMessage);
-                String s = outMessage.toString();
-                System.out.println("=========>out:" + s);
             } catch (Exception e) {
                 e.printStackTrace();
                 outMessage = null;
@@ -121,7 +119,8 @@ public class WechatMessageCallbackController {
             if (outMessage == null) {
                 return "";
             }
-
+            String s = outMessage.toString();
+            System.out.println("=========>out:" + s);
             out = outMessage.toEncryptedXml(wxService.getWxMpConfigStorage());
         }
 
