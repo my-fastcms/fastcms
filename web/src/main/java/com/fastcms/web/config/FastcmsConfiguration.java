@@ -59,6 +59,10 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
 import org.tuckey.web.filters.urlrewrite.Conf;
 import org.tuckey.web.filters.urlrewrite.UrlRewriteFilter;
 
@@ -81,7 +85,8 @@ import static com.fastcms.common.constants.FastcmsConstants.WECHAT_MINIAPP_APP_I
  * @version: 1.0
  */
 @Configuration
-public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListener<WebServerInitializedEvent> {
+@EnableWebSocket
+public class FastcmsConfiguration implements WebMvcConfigurer, WebSocketConfigurer, ApplicationListener<WebServerInitializedEvent> {
 
     @Autowired
     private IConfigService configService;
@@ -213,6 +218,11 @@ public class FastcmsConfiguration implements WebMvcConfigurer, ApplicationListen
             fastcmsTemplateFreeMarkerConfig.getConfiguration().setSharedVariable(item, matchingBeans.get(item));
             pluginFreeMarkerConfig.getConfiguration().setSharedVariable(item, matchingBeans.get(item));
         });
+    }
+
+    @Override
+    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+        registry.addHandler(new TextWebSocketHandler(), "/websocket").setAllowedOrigins("*").withSockJS();
     }
 
     @Component

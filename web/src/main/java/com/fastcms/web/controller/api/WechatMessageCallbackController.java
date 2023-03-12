@@ -119,12 +119,9 @@ public class WechatMessageCallbackController {
             if (outMessage == null) {
                 return "";
             }
-            String s = outMessage.toString();
-            System.out.println("=========>out:" + s);
             out = outMessage.toEncryptedXml(wxService.getWxMpConfigStorage());
         }
 
-        System.out.println("===================组装回复信息：" + out);
         logger.debug("\n组装回复信息：{}", out);
         return out;
     }
