@@ -171,4 +171,12 @@ public abstract class AbstractPluginRegister implements PluginRegister {
         return getPluginClasses(pluginId).stream().filter(clazz -> baseClazz.isAssignableFrom(clazz)).collect(Collectors.toList());
     }
 
+    /**
+     * 获取插件Bean工厂
+     * @return
+     */
+    protected AbstractAutowireCapableBeanFactory getBeanFactory() {
+        return beanFactory;
+    }
+
 }

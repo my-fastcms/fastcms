@@ -48,7 +48,10 @@ public class ProcessExtensionsRegister extends ExtensionsRegister {
             try {
                 Class<?> pluginExtensionClass = getPluginExtensionClass(pluginId, item);
                 annotationAwareAspectJAutoProxyCreator.setBeanClassLoader(getPlugin(pluginId).getPluginClassLoader());
-                annotationAwareAspectJAutoProxyCreator.postProcessAfterInitialization(getBean(pluginExtensionClass), pluginExtensionClass.getName());
+                String simpleName = pluginExtensionClass.getName();
+                Object o = annotationAwareAspectJAutoProxyCreator.postProcessAfterInitialization(getBean(pluginExtensionClass), simpleName);
+                getBeanFactory().destroySingleton(simpleName);
+                getBeanFactory().registerSingleton(simpleName, o);
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e.getMessage());
             } finally {

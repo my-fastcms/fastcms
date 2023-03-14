@@ -20,6 +20,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.pf4j.Extension;
 import org.pf4j.ExtensionPoint;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -37,9 +38,13 @@ public class HelloServiceImpl extends ServiceImpl<HelloPluginMapper, Hello> impl
     private HelloComponent helloComponent;
 
     @Override
+    @Transactional
     public void sayHello() {
         System.out.println("=============sayHello");
         System.out.println(helloComponent);
+        Hello hello = new Hello();
+        hello.setName("hello fastcms 2023");
+        save(hello);
     }
 
     @Override

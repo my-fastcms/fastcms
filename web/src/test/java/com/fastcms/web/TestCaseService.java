@@ -132,10 +132,10 @@ public class TestCaseService {
         System.out.println(helloService);
 
         for (Method method : helloService.getClass().getMethods()) {
-            if (method.getName().equals("findByHelloId")) {
+            if (method.getName().equals("sayHello")) {
 
                 try {
-                    Object result = method.invoke(helloService, Long.valueOf(1));
+                    Object result = method.invoke(helloService);
                     logger.info("result:" + result);
                 } catch (Exception e) {
                     e.printStackTrace();

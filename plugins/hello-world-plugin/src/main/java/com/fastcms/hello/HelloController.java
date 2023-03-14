@@ -57,6 +57,7 @@ public class HelloController {
     @GetMapping("say")
     @ResponseBody
     public Object say() {
+        helloService.sayHello();
         return RestResultUtils.success("hello fastcms");
     }
 
