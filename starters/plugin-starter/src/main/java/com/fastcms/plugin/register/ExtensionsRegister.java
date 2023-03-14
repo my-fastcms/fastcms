@@ -52,11 +52,11 @@ public class ExtensionsRegister extends AbstractPluginRegister {
         }
     }
 
-    Set<String> getExtensionClassNames(String pluginId) {
+    protected Set<String> getExtensionClassNames(String pluginId) {
         return pluginManger.getExtensionClassNames(pluginId);
     }
 
-    Class<?> getPluginExtensionClass(String pluginId, String extensionClassName) throws ClassNotFoundException {
+    protected Class<?> getPluginExtensionClass(String pluginId, String extensionClassName) throws ClassNotFoundException {
         return pluginManger.getPlugin(pluginId).getPluginClassLoader().loadClass(extensionClassName);
     }
 

@@ -43,6 +43,7 @@ public class CompoundPluginRegister extends AbstractPluginRegister implements Pl
         addRegister(new DirectiveRegister(pluginManger));
         addRegister(new FreeMarkerViewRegister(pluginManger));
         addRegister(new FastcmsTaskRegister(pluginManger));
+        addRegister(new ProcessExtensionsRegister(pluginManger));
 
     }
 

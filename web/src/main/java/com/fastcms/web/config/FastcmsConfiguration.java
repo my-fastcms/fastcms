@@ -154,6 +154,7 @@ public class FastcmsConfiguration implements WebMvcConfigurer, WebSocketConfigur
         FilterRegistrationBean frBean = new FilterRegistrationBean();
         frBean.setFilter(new WechatMiniAppFilter());
         frBean.addUrlPatterns("/fastcms/api/*");
+        frBean.addUrlPatterns("/fastcms/plugin/*");
         return frBean;
     }
 
