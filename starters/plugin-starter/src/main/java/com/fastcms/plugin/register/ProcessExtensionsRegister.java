@@ -17,6 +17,7 @@
 
 package com.fastcms.plugin.register;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.plugin.FastcmsPluginManager;
 import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator;
 import org.springframework.util.ClassUtils;
@@ -47,11 +48,14 @@ public class ProcessExtensionsRegister extends ExtensionsRegister {
         extensionClassNames.forEach(item -> {
             try {
                 Class<?> pluginExtensionClass = getPluginExtensionClass(pluginId, item);
-                annotationAwareAspectJAutoProxyCreator.setBeanClassLoader(getPlugin(pluginId).getPluginClassLoader());
-                String simpleName = pluginExtensionClass.getName();
-                Object o = annotationAwareAspectJAutoProxyCreator.postProcessAfterInitialization(getBean(pluginExtensionClass), simpleName);
-                getBeanFactory().destroySingleton(simpleName);
-                getBeanFactory().registerSingleton(simpleName, o);
+                if (IService.class.isAssignableFrom(pluginExtensionClass)) {
+                    annotationAwareAspectJAutoProxyCreator.setBeanClassLoader(getPlugin(pluginId).getPluginClassLoader());
+                    String simpleName = pluginExtensionClass.getName();
+                    Object o = annotationAwareAspectJAutoProxyCreator.postProcessAfterInitialization(getBean(pluginExtensionClass), simpleName);
+                    getBeanFactory().destroySingleton(simpleName);
+                    getBeanFactory().registerSingleton(simpleName, o);
+                }
+
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException(e.getMessage());
             } finally {
