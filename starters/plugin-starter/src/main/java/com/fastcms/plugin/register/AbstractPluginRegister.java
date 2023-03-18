@@ -16,6 +16,7 @@
  */
 package com.fastcms.plugin.register;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.plugin.FastcmsPluginManager;
 import com.fastcms.plugin.PluginBase;
 import com.fastcms.plugin.PluginRegister;
@@ -26,6 +27,7 @@ import org.pf4j.Plugin;
 import org.pf4j.PluginWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator;
 import org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
@@ -58,9 +60,12 @@ public abstract class AbstractPluginRegister implements PluginRegister {
     protected final FastcmsPluginManager pluginManger;
     protected final AbstractAutowireCapableBeanFactory beanFactory;
 
+    AnnotationAwareAspectJAutoProxyCreator annotationAwareAspectJAutoProxyCreator;
+
     public AbstractPluginRegister(FastcmsPluginManager pluginManger) {
         this.pluginManger = pluginManger;
         this.beanFactory = (AbstractAutowireCapableBeanFactory) this.pluginManger.getApplicationContext().getAutowireCapableBeanFactory();
+        annotationAwareAspectJAutoProxyCreator = (AnnotationAwareAspectJAutoProxyCreator) getBean(AnnotationAwareAspectJAutoProxyCreator.class);
     }
 
     protected PluginWrapper getPlugin(String pluginId) {
@@ -109,6 +114,14 @@ public abstract class AbstractPluginRegister implements PluginRegister {
         Map<String, ?> extensionBeanMap = pluginManger.getApplicationContext().getBeansOfType(aClass);
         if (extensionBeanMap.isEmpty()) {
             Object extension = pluginManger.getExtensionFactory().create(aClass);
+            if (IService.class.isAssignableFrom(aClass)) {
+                try {
+                    annotationAwareAspectJAutoProxyCreator.setBeanClassLoader(aClass.getClassLoader());
+                    extension = annotationAwareAspectJAutoProxyCreator.postProcessAfterInitialization(extension,  beanName);
+                } finally {
+                    annotationAwareAspectJAutoProxyCreator.setBeanClassLoader(ClassUtils.getDefaultClassLoader());
+                }
+            }
             beanFactory.registerSingleton(beanName, extension);
         } else {
             log.info("Bean registeration aborted! Extension '{}' already existed as bean!", beanName);

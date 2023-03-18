@@ -133,6 +133,27 @@ public interface FastcmsConstants {
     String PWD_MIN_LENGTH = "pwd_min_length";
 
     /**
+     * 是否开启公众号扫码登录
+     */
+    String PUBLIC_MP_SCAN_QRCODE_LOGIN_ENABLE= "public_mp_scan_qrcode_login_enable";
+
+    /**
+     * 是否默认使用公众号扫码登录
+     */
+    String PUBLIC_MP_SCAN_QRCODE_LOGIN_IS_DEFAULT = "public_mp_scan_qrcode_login_is_default";
+
+    /**
+     * 允许错误密码输入最大次数
+     */
+    String ALLOW_PWD_ERROR_COUNT = "allow_pwd_error_count";
+
+    /**
+     * 是否启用找回密码功能
+     */
+    String public_forgot_password_enable = "public_forgot_password_enable";
+
+
+    /**
      * I18N KEY
      */
     String FASTCMS_SYSTEM_NO_DATA = "fastcms.system.no.data";

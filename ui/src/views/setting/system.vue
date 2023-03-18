@@ -26,12 +26,49 @@
 								</el-form-item>
 							</el-col>
 						</el-row>
+
+						<div class="personal-edit-title mb15">登录</div>
+						<el-row :gutter="35">
+							<el-col class="mb20">
+								<el-form-item label="是否开启公众号扫码登录">
+									<el-switch
+										v-model="ruleForm.public_mp_scan_qrcode_login_enable"
+										active-color="#13ce66">
+									</el-switch>
+								</el-form-item>
+							</el-col>
+							<el-col class="mb20">
+								<el-form-item label="是否默认使用公众号扫码登录">
+									<el-switch
+										v-model="ruleForm.public_mp_scan_qrcode_login_is_default"
+										active-color="#13ce66">
+									</el-switch>
+								</el-form-item>
+							</el-col>
+
+							<el-col class="mb20">
+								<el-form-item label="允许错误密码输入最大次数" prop="allow_pwd_error_count">
+									<el-input v-model="ruleForm.allow_pwd_error_count" placeholder="" onkeyup="value=value.replace(/[^\d]/g,'')" clearable></el-input>
+								</el-form-item>
+							</el-col>
+
+							<el-col class="mb20">
+								<el-form-item label="是否启用找回密码功能">
+									<el-switch
+										v-model="ruleForm.public_forgot_password_enable"
+										active-color="#13ce66">
+									</el-switch>
+								</el-form-item>
+							</el-col>
+
+						</el-row>
+
 						
 						<div class="personal-edit-title mb15">注册</div>
 
 						<el-row :gutter="35">
 							<el-col class="mb20">
-								<el-form-item label="开启或关闭注册">
+								<el-form-item label="是否开启注册功能">
 									<el-switch
 										v-model="ruleForm.public_register_enable"
 										active-color="#13ce66">
@@ -77,7 +114,11 @@ export default {
 				jwt_secret: '',
 				jwt_expire: '18000',
 				pwd_min_length: 6,
-				public_register_enable: false
+				public_register_enable: false,
+				public_mp_scan_qrcode_login_enable: false,
+				public_mp_scan_qrcode_login_is_default: false,
+				public_forgot_password_enable: true,
+				allow_pwd_error_count: 10
 			},
 			rules: {
 				"jwt_secret": [

@@ -52,12 +52,15 @@ public class FastcmsUserDetailsServiceImpl implements UserDetailsService {
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userService.getOne(Wrappers.<User>lambdaQuery().eq(User::getUserName, username));
+
 		if (user == null) {
 			throw new UsernameNotFoundException(username);
 		}
+
 		if (StringUtils.isBlank(user.getPassword())) {
 			throw new BadCredentialsException(username);
 		}
+
 		List<Role> userRoleList = roleService.getUserRoleList(user.getId());
 		return new FastcmsUserDetails(user, userRoleList.stream().map(item -> new SimpleGrantedAuthority(String.valueOf(item.getId()))).collect(Collectors.toList()));
 	}

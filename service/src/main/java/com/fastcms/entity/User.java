@@ -202,6 +202,11 @@ public class User implements Serializable {
     private Integer version;
 
     /**
+     * 密码输入错误次数
+     */
+    private Integer errorCount;
+
+    /**
      * 标签名称集合
      */
     @TableField(exist = false)
@@ -338,6 +343,13 @@ public class User implements Serializable {
 
     public void setUpdated(LocalDateTime updated) {
         this.updated = updated;
+    }
+    public Integer getErrorCount() {
+        return errorCount;
+    }
+
+    public void setErrorCount(Integer errorCount) {
+        this.errorCount = errorCount;
     }
     public Integer getVersion() {
         return version;

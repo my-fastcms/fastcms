@@ -23,13 +23,13 @@
 					</el-tabs>
 					<div class="mt10">
 						<el-button type="text" size="small" @click="toRegister" v-if="public_register_enable">{{ $t('message.link.one3') }}</el-button>
-						<el-button type="text" size="small" @click="toRestPassword" v-if="true">{{ $t('message.link.two6') }}</el-button>
+						<el-button type="text" size="small" @click="toRestPassword" v-if="public_forgot_password_enable">{{ $t('message.link.two6') }}</el-button>
 						<el-button type="text" size="small" @click="toWechatMpOAuth" v-if="isWechatBrowser">{{ $t('message.link.two7') }}</el-button>
 					</div>
 				</div>
-				<Scan v-else />
+				<Scan :domain="public_website_domain" v-else />
 				
-				<div class="login-content-main-sacn" v-if="true" @click="isScan = !isScan" ref="scanDiv">
+				<div class="login-content-main-sacn" v-if="public_mp_scan_qrcode_login_enable" @click="isScan = !isScan" ref="scanDiv">
 					<i class="iconfont" :class="isScan ? 'icon-diannao1' : 'icon-barcode-qr'"></i>
 					<div class="login-content-main-sacn-delta"></div>
 				</div>
@@ -61,11 +61,14 @@ export default {
 		const router = useRouter();
 		const state = reactive({
 			tabsActiveName: 'account',
+			isWechatBrowser: false,
 			isTabPaneShow: true,
 			isScan: false,
 			public_register_enable: false,
-			isWechatBrowser: false,
-			public_website_domain: ''
+			public_website_domain: '',
+			public_mp_scan_qrcode_login_enable: false,		//是否开启公众号扫码登录功能
+			public_mp_scan_qrcode_login_is_default: false,	//是否默认使用公众号扫码登录功能
+			public_forgot_password_enable: true,			//是否启用找回密码功能
 		});
 		// 获取布局配置信息
 		const getThemeConfig = computed(() => {
@@ -82,7 +85,6 @@ export default {
 			router.push('/rest/password');
 		}
 		const toWechatMpOAuth = () => {
-			console.log("===========toWechatMpOAuth")
 			console.log("url:" + state.public_website_domain + "/oauth2/authorization/wechat-mp")
 			window.location.href = state.public_website_domain + "/oauth2/authorization/wechat-mp"
 		}
@@ -103,6 +105,9 @@ export default {
 			let paramKeys = new Array();
 			paramKeys.push("public_register_enable");
 			paramKeys.push("public_website_domain");
+			paramKeys.push("public_mp_scan_qrcode_login_enable");
+			paramKeys.push("public_forgot_password_enable");
+			paramKeys.push("public_mp_scan_qrcode_login_is_default");
 			let params = qs.stringify( {"configKeys" : paramKeys}, {arrayFormat: 'repeat'});
 			getPublicConfigList(params).then((res) => {
 				res.data.forEach(item => {
@@ -112,7 +117,18 @@ export default {
 					if(item.key == 'public_website_domain') {
 						state.public_website_domain = item.jsonValue
 					}
+					if(item.key == 'public_mp_scan_qrcode_login_enable') {
+						state.public_mp_scan_qrcode_login_enable = item.jsonValue
+					}
+					if(item.key == 'public_forgot_password_enable') {
+						state.public_forgot_password_enable = item.jsonValue
+					}
 				});
+
+				if (state.public_mp_scan_qrcode_login_enable && state.public_mp_scan_qrcode_login_is_default) {
+					state.isScan = true
+				}
+
 			});
 		})
 

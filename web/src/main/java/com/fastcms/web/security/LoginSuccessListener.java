@@ -29,7 +29,11 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 /**
- * wjun_java@163.com
+ * @author： wjun_java@163.com
+ * @date： 2023/3/18
+ * @description：
+ * @modifiedBy：
+ * @version: 1.0
  */
 @Component
 public class LoginSuccessListener implements ApplicationListener<AuthenticationSuccessEvent> {
@@ -46,6 +50,7 @@ public class LoginSuccessListener implements ApplicationListener<AuthenticationS
             if(user != null) {
                 user.setAccessIp(RequestUtils.getIpAddress(RequestUtils.getRequest()));
                 user.setLoginTime(LocalDateTime.now());
+                user.setErrorCount(0);
                 userService.updateById(user);
             }
         }

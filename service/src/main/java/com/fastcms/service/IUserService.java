@@ -320,6 +320,7 @@ public interface IUserService extends IService<User> {
         String USER_PASSWORD_ERROR2 = "fastcms.user.password.error2";
         String USER_NOT_EXIST = "fastcms.user.notexist";
         String USER_OLD_PASSWORD_ERROR1 = "fastcms.user.oldpassword.error1";
+        String USER_PASSWORD_ERROR_COUNT_LIMT = "fastcms.user.password.error.count.limt";
         String USER_ADMIN_NOT_MODIFY = "fastcms.user.admin.notmodify";
         String USER_ADMIN_NOT_DELETE = "fastcms.user.admin.notdelete";
         String USER_ADMIN_NOT_RESET_PASSWORD = "fastcms.user.admin.not.reset.passowrd";

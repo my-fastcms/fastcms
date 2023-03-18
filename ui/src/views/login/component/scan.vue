@@ -9,14 +9,21 @@ import { toRefs, reactive, defineComponent, onMounted, getCurrentInstance } from
 import QRCode from 'qrcodejs2-fixes';
 export default defineComponent({
 	name: 'login11',
-	setup() {
+	props: {
+		domain: {
+			type: String,
+			default: () => '',
+		},
+	},
+	setup(props) {
 		const { proxy } = getCurrentInstance() as any;
 		const state = reactive({});
 		// 初始化生成二维码
 		const initQrcode = () => {
+			const host = props.domain;
 			proxy.$refs.qrcodeRef.innerHTML = '';
 			new QRCode(proxy.$refs.qrcodeRef, {
-				text: `https://qm.qq.com/cgi-bin/qm/qr?k=RdUY97Vx0T0vZ_1OOu-X1yFNkWgDwbjC&jump_from=webapi`,
+				text: host + `/fastcms/plugin/wechat/mp/scan/qrcode/login/getLoginQrcode`,
 				width: 260,
 				height: 260,
 				colorDark: '#000000',

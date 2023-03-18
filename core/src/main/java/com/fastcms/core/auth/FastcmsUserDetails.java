@@ -62,4 +62,9 @@ public class FastcmsUserDetails extends User implements FastcmsAuthUserInfo {
 		return user;
 	}
 
+	@Override
+	public boolean isEnabled() {
+		return getUser().getStatus() == FastcmsConstants.STATUS_NORMAL;
+	}
+
 }

@@ -103,4 +103,6 @@
 - 支持websocket
 - 插件支持微信扫码关注公众号登录
 - 重写freemarker，自定义FastcmsFreeMarkerView
+- 修复插件中service事务不生效的问题
+- 增加暴力破解账号密码限制账号使用的功能
 - 修复一些已知BUG
