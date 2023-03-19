@@ -3,7 +3,6 @@ import { Module } from 'vuex';
 import { ThemeConfigState, RootStateTypes } from '/@/store/interface/index';
 
 /**
- * 2020.05.28 by lyt 优化
  * 修改一下配置时，需要每次都清理 `window.localStorage` 浏览器永久缓存，配置才会生效
  * 哪个大佬有解决办法，欢迎pr，感谢💕！
  */

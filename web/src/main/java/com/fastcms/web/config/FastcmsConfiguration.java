@@ -59,6 +59,9 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
@@ -223,7 +226,26 @@ public class FastcmsConfiguration implements WebMvcConfigurer, WebSocketConfigur
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new TextWebSocketHandler(), "/websocket").setAllowedOrigins("*").withSockJS();
+        registry.addHandler(new FastcmsWebSocketHandler(), "/fastcms/websocket").setAllowedOrigins("http://localhost:8082").withSockJS();
+    }
+
+    public class FastcmsWebSocketHandler extends TextWebSocketHandler {
+
+        @Override
+        public void afterConnectionEstablished(WebSocketSession session) {
+            System.out.println("Opened new session in instance " + this);
+        }
+
+        @Override
+        public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+            session.sendMessage(new TextMessage(message.getPayload()));
+        }
+
+        @Override
+        public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
+            session.close(CloseStatus.SERVER_ERROR);
+        }
+
     }
 
     @Component

@@ -6,6 +6,7 @@
 
 <script lang="ts">
 import { toRefs, reactive, defineComponent, onMounted, getCurrentInstance } from 'vue';
+import {creatWebSocket, sendWebSocket, closeWebSocket} from '/@/utils/websocket';
 import QRCode from 'qrcodejs2-fixes';
 export default defineComponent({
 	name: 'login11',
@@ -33,6 +34,7 @@ export default defineComponent({
 		// 页面加载时
 		onMounted(() => {
 			initQrcode();
+			creatWebSocket();
 		});
 		return {
 			...toRefs(state),

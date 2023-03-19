@@ -40,7 +40,8 @@ fastcms:
       /fastcms/api/admin/captcha,\
       /fastcms/api/client/wechat/miniapp/user/code2session,\
       /fastcms/api/client/wechat/miniapp/user/login,\
-      /fastcms/api/client/wechat/miniapp/user/login/phone"
+      /fastcms/api/client/wechat/miniapp/user/login/phone,\
+      /fastcms/websocket/**"
   config:
     ignore:
       keys: "wechat_mch_secret"
