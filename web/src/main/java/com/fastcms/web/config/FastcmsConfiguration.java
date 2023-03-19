@@ -226,7 +226,7 @@ public class FastcmsConfiguration implements WebMvcConfigurer, WebSocketConfigur
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(new FastcmsWebSocketHandler(), "/fastcms/websocket").setAllowedOrigins("http://localhost:8082").withSockJS();
+        registry.addHandler(new FastcmsWebSocketHandler(), "/fastcms/websocket").setAllowedOriginPatterns("*").withSockJS();
     }
 
     public class FastcmsWebSocketHandler extends TextWebSocketHandler {
