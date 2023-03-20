@@ -9,6 +9,7 @@ import Essentials from '@ckeditor/ckeditor5-essentials/src/essentials';
 import UploadAdapter from '@ckeditor/ckeditor5-adapter-ckfinder/src/uploadadapter';
 import Autoformat from '@ckeditor/ckeditor5-autoformat/src/autoformat';
 import Bold from '@ckeditor/ckeditor5-basic-styles/src/bold';
+import Code from '@ckeditor/ckeditor5-basic-styles/src/code';
 import Italic from '@ckeditor/ckeditor5-basic-styles/src/italic';
 import BlockQuote from '@ckeditor/ckeditor5-block-quote/src/blockquote';
 import CKFinder from '@ckeditor/ckeditor5-ckfinder/src/ckfinder';
@@ -32,6 +33,8 @@ import Table from '@ckeditor/ckeditor5-table/src/table';
 import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 import TextTransformation from '@ckeditor/ckeditor5-typing/src/texttransformation';
 import CloudServices from '@ckeditor/ckeditor5-cloud-services/src/cloudservices';
+import SourceEditing from '@ckeditor/ckeditor5-source-editing/src/sourceediting';
+import Markdown from '@ckeditor/ckeditor5-markdown-gfm/src/markdown';
 
 import CKEditorInspector from '@ckeditor/ckeditor5-inspector';
 
@@ -67,11 +70,16 @@ export default defineComponent({
       const ckeditorDiv = ckeditorDom.value;
       DecoupledEditor
           .create(ckeditorDiv.querySelector('.CKEditorContent'), {
+            language: {
+                ui: 'zh-cn'
+            },
             plugins: [
+                SourceEditing,
                 Essentials,
                 UploadAdapter,
                 Autoformat,
                 Bold,
+                Code,
                 Italic,
                 BlockQuote,
                 CKFinder,
@@ -95,9 +103,12 @@ export default defineComponent({
                 Table,
                 TableToolbar,
                 TextTransformation,
+                Markdown,
                 ImgCustom
             ],
             toolbar: [
+                'sourceEditing',
+                '|',
                 'heading',
                 '|',
                 'bold',

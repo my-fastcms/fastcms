@@ -40,6 +40,8 @@
     "@ckeditor/ckeditor5-ui": "^31.1.0",
     "@ckeditor/ckeditor5-utils": "^31.1.0",
     "@ckeditor/ckeditor5-widget": "^31.1.0",
+    "@ckeditor/ckeditor5-source-editing": "^31.1.0",
+    "@ckeditor/ckeditor5-markdown-gfm": "^31.1.0",
     "@element-plus/icons-vue": "^0.2.4",
     "axios": "^0.23.0",
     "countup.js": "^2.0.8",

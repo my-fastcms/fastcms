@@ -10,6 +10,9 @@ export default class ImgToolbarUI extends Plugin {
     }
     createToolbarButton() {
         const editor = this.editor;
+
+        console.log(Array.from( editor.ui.componentFactory.names()));
+
         const command = editor.commands.get(COMMAND_NAME_IMG);
         connect.editorObj = editor;
         window.dd = editor.model;
