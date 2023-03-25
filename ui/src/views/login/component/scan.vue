@@ -121,13 +121,8 @@ export default defineComponent({
 			}
 			// 登录成功提示
 			setTimeout(() => {
-				
-				// 关闭 loading
-				state.loading.signIn = true;
 				const signInText = t('message.signInText');
 				ElMessage.success(`${currentTimeInfo}，${signInText}`);
-				// 修复防止退出登录再进入界面时，需要刷新样式才生效的问题，初始化布局样式等(登录的时候触发，目前方案)
-				proxy.mittBus.emit('onSignInClick');
 			}, 300);
 		}
 
@@ -140,9 +135,9 @@ export default defineComponent({
 				console.log("qrcodeUrl:" + state.qrcodeUrl)
 				initQrcode();
 
-				setInterval(() => {
+				let timer = setInterval(() => {
 					getLoginUser(state.sceneId).then((res) => {
-						clearInterval()
+						clearInterval(timer)
 						doLogin(res)
 					}).catch(() => {
 						console.log("=====no login user find=====");
