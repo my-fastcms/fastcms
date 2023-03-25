@@ -13,10 +13,10 @@ import { initFrontEndControlRoutes } from '/@/router/frontEnd';
 import { initBackEndControlRoutes } from '/@/router/backEnd';
 import { useStore } from '/@/store/index';
 import { Local } from '/@/utils/storage';
+import { useI18n } from 'vue-i18n';
 import {creatWebSocket, sendWebSocket, closeWebSocket} from '/@/utils/websocket';
 import { getLoginQrcode, getLoginUser } from '/@/api/login/index';
 import QRCode from 'qrcodejs2-fixes';
-import { stat } from 'fs';
 export default defineComponent({
 	name: 'login11',
 	props: {
@@ -26,7 +26,11 @@ export default defineComponent({
 		},
 	},
 	setup(props) {
+		const { t } = useI18n();
 		const { proxy } = getCurrentInstance() as any;
+		const store = useStore();
+		const route = useRoute();
+		const router = useRouter();
 		const state = reactive({
 			sceneId: null,
 			qrcodeUrl: "",
