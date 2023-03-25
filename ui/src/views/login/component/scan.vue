@@ -1,6 +1,6 @@
 <template>
 	<div class="login-scan-container">
-		<div class="login-scan-qrcode" ref="qrcodeRef"></div>
+		<el-image class="login-scan-qrcode" ref="qrcodeRef" :src="qrcodeUrl"></el-image>
 	</div>
 </template>
 
@@ -29,18 +29,19 @@ export default defineComponent({
 		const { proxy } = getCurrentInstance() as any;
 		const state = reactive({
 			sceneId: null,
-			qrcodeUrl: null,
+			qrcodeUrl: "",
 		});
 		// 初始化生成二维码
 		const initQrcode = () => {
-			proxy.$refs.qrcodeRef.innerHTML = '';
-			new QRCode(proxy.$refs.qrcodeRef, {
-				text: state.qrcodeUrl,
-				width: 260,
-				height: 260,
-				colorDark: '#000000',
-				colorLight: '#ffffff',
-			});
+			//proxy.$refs.qrcodeRef.src = state.qrcodeUrl;
+			// new QRCode(proxy.$refs.qrcodeRef, {
+			// 	text: state.qrcodeUrl,
+			// 	width: 260,
+			// 	height: 260,
+			// 	colorDark: '#000000',
+			// 	colorLight: '#ffffff',
+			// 	typeNumber: 0
+			// });
 		};
 
 		
