@@ -64,3 +64,31 @@ export function register(params :string) {
 		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 	});
 }
+
+/**
+ * 公众号扫码登录（需要安装公众号扫码登录插件https://www.xjd2020.com/a/c/plugins.html）
+ * 获取登录二维码
+ * @returns 
+ */
+ export function getLoginQrcode() {
+	return request({
+		baseURL: import.meta.env.VITE_PLUGIN_URL as any,
+		url: '/wechat/mp/scan/qrcode/login/getLoginQrcode',
+		method: 'get',
+		headers: { 'Content-Type': 'application/json' },
+	});
+}
+
+/**
+ * 公众号扫码登录（需要安装公众号扫码登录插件https://www.xjd2020.com/a/c/plugins.html）
+ * 获取二维码登录用户
+ * @param sceneId 
+ * @returns 
+ */
+export function getLoginUser(sceneId: string) {
+	return request({
+		baseURL: import.meta.env.VITE_PLUGIN_URL as any,
+		url: '/wechat/mp/scan/qrcode/login/getLoginUser?sceneId=' + sceneId,
+		method: 'get',
+	});
+}

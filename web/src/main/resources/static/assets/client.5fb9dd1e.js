@@ -1,1 +1,0 @@
-import{s as e}from"./index.b48d3751.js";function a(t){return e({url:"/client/attachment/list",method:"get",params:t})}function c(t){return e({url:"/client/attachment/get/"+t,method:"get"})}function r(t){return e({url:"/client/attachment/delete/"+t,method:"post"})}export{c as a,r as d,a as g};

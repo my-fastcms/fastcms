@@ -1,1 +1,0 @@
-import{s as e}from"./index.b48d3751.js";function r(t){return e({url:"/admin/attachment/list",method:"get",params:t})}function d(t){return e({url:"/admin/attachment/get/"+t,method:"get"})}function u(t,a){return e({url:"/admin/attachment/update/"+t,method:"post",params:a})}function m(t){return e({url:"/admin/attachment/delete/"+t,method:"post"})}export{d as a,m as d,r as g,u};
