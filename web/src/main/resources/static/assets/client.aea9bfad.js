@@ -1,1 +1,0 @@
-import{s as e}from"./index.5f776db4.js";function n(t){return e({url:"/client/user/save",method:"post",data:t,headers:{"Content-Type":"application/x-www-form-urlencoded"}})}function o(){return e({url:"/client/user/get",method:"get"})}export{o as g,n as u};

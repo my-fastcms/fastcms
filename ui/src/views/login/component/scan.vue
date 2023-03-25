@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { toRefs, reactive, defineComponent, onMounted, getCurrentInstance } from 'vue';
+import { toRefs, reactive, defineComponent, computed, onMounted, getCurrentInstance } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { dynamicRoutes } from '/@/router/route';
@@ -13,6 +13,7 @@ import { initFrontEndControlRoutes } from '/@/router/frontEnd';
 import { initBackEndControlRoutes } from '/@/router/backEnd';
 import { useStore } from '/@/store/index';
 import { Local } from '/@/utils/storage';
+import { formatAxis } from '/@/utils/formatTime';
 import { useI18n } from 'vue-i18n';
 import {creatWebSocket, sendWebSocket, closeWebSocket} from '/@/utils/websocket';
 import { getLoginQrcode, getLoginUser } from '/@/api/login/index';
@@ -48,6 +49,10 @@ export default defineComponent({
 			// });
 		};
 
+		// 时间获取
+		const currentTime = computed(() => {
+			return formatAxis(new Date());
+		});
 		
 		const doLogin = async(res: any) => {
 
@@ -149,6 +154,7 @@ export default defineComponent({
 		});
 
 		return {
+			currentTime,
 			...toRefs(state),
 		};
 	},
