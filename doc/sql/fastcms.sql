@@ -685,7 +685,7 @@ ALTER TABLE `resource` ADD COLUMN `language` varchar(64) DEFAULT NULL COMMENT '�
 -- ----------------------------
 -- 0.1.0 表结构变更记录开始
 -- ----------------------------
-alter  table  `user`  add  index  `user_name_index`  (`user_name`)
+alter  table  `user`  add  index  `user_name_index`  (`user_name`);
 -- ----------------------------
 -- 0.1.0 表结构变更记录结束
 -- ----------------------------
