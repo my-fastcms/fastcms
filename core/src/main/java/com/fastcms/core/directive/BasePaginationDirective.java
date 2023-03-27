@@ -18,6 +18,7 @@ package com.fastcms.core.directive;
 
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.template.StaticPathHelper;
 import freemarker.core.Environment;
@@ -173,6 +174,11 @@ public abstract class BasePaginationDirective extends BaseDirective {
 	}
 
 	protected String getPageLinkUrl(PageItem pageItem) {
+
+		if (pageItem.getPageUrl().contains(FastcmsConstants.PLUGIN_MAPPING)) {
+			return pageItem.getPageUrl();
+		}
+
 		if (pageItem.isEnableStatic()) {
 			return pageItem.getWebSiteDomain().concat(pageItem.getCategoryStaticPath()).concat(StrUtils.UNDERLINE) + pageItem.pageNo + pageItem.getStaticSuffix();
 		}
