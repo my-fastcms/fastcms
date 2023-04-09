@@ -98,6 +98,9 @@ public class FastcmsStaticHtmlManager implements FastcmsStaticHtmlService, Initi
         }
 
         enableStaticHtmlService = ApplicationUtils.getBean(FakeStaticHtmlService.class);
+        /**
+         * 是否开启静态化，伪静态不算
+         */
         return false;
     }
 

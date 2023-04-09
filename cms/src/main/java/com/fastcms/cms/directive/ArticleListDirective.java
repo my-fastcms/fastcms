@@ -19,17 +19,13 @@ package com.fastcms.cms.directive;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.service.IArticleService;
-import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.directive.BaseDirective;
 import freemarker.core.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 根据分类或者标签id获取文章列表
@@ -134,10 +130,6 @@ public class ArticleListDirective extends BaseDirective {
 		wrapper.orderByDesc(orderBy);
 
 		return articleService.list(wrapper);
-	}
-
-	List<Long> strArrayToList(String ids) {
-		return StrUtils.isBlank(ids) ? new ArrayList<>() : Arrays.stream(ids.split(StrUtils.COMMA)).map(Long::valueOf).collect(Collectors.toList());
 	}
 
 }

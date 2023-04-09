@@ -7,7 +7,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fastcms.cms.entity.SinglePage;
 import com.fastcms.cms.mapper.SinglePageMapper;
 import com.fastcms.cms.service.ISinglePageService;
+import com.fastcms.utils.CollectionUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 单页服务实现类
@@ -25,6 +28,14 @@ public class SinglePageServiceImpl extends ServiceImpl<SinglePageMapper, SingleP
 	@Override
 	public Page<SinglePageVo> pageSinglePage(Page pageParam, QueryWrapper queryWrapper) {
 		return getBaseMapper().pageSinglePage(pageParam, queryWrapper);
+	}
+
+	@Override
+	public List<SinglePage> getSinglePageByIds(List<Long> ids) {
+		if (CollectionUtils.isEmpty(ids)) {
+			return null;
+		}
+		return list(Wrappers.<SinglePage>lambdaQuery().in(SinglePage::getId, ids));
 	}
 
 }

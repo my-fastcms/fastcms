@@ -84,6 +84,14 @@ public class TemplateIndexController extends TemplateBaseController {
 
     @RequestMapping("p/{path}")
     public String path(@PathVariable("path") String path, Model model) {
+
+        /**
+         * 检查是否开启伪静态
+         */
+        if (ApplicationUtils.getBean(FastcmsStaticHtmlManager.class).isFakeStaticEnable() && path.indexOf(StrUtils.DOT) != -1) {
+            path = path.substring(0, path.indexOf(StrUtils.DOT));
+        }
+
         SinglePage singlePage = singlePageService.getPageByPath(path);
         if(singlePage == null) {
             singlePage = singlePageService.getById(path);

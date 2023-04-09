@@ -1,6 +1,7 @@
 package com.fastcms.cms.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.template.StaticPathHelper;
 
 import javax.validation.constraints.NotBlank;
@@ -185,22 +186,30 @@ public class Menu implements Serializable, StaticPathHelper {
     @Override
     public String getUrl() {
 
-        if (menuUrl != null && !menuUrl.startsWith("http")
-                && isEnable() && !menuUrl.endsWith(getStaticSuffix())) {
-
-            String typePath = "";
-            if (getUrlType() == ARTICLE_URL_TYPE) {
-                typePath = getArticleStaticPath();
-            } else if (getUrlType() == PAGE_URL_TYPE) {
-                typePath = getPageStaticPath();
-            } else if (getUrlType() == CATEGORY_URL_TYPE) {
-                typePath = getCategoryStaticPath();
-            }
-
-            return getWebSiteDomain().concat(typePath).concat(menuUrl) + getStaticSuffix();
+        if (StrUtils.isBlank(menuUrl)) {
+            return menuUrl;
         }
 
-        return menuUrl;
+        if(menuUrl.startsWith("http")) {
+            return menuUrl;
+        }
+
+        String typePath = "";
+        if (getUrlType() == ARTICLE_URL_TYPE) {
+            typePath = getArticleStaticPath();
+        } else if (getUrlType() == PAGE_URL_TYPE) {
+            typePath = getPageStaticPath();
+        } else if (getUrlType() == CATEGORY_URL_TYPE) {
+            typePath = getCategoryStaticPath();
+        } else if (getUrlType() == TAG_URL_TYPE) {
+            typePath = getTagStaticPath();
+        }
+
+        if (isEnable() && !menuUrl.endsWith(getStaticSuffix())) {
+            return getWebSiteDomain().concat(typePath).concat(menuUrl).concat(getStaticSuffix());
+        }
+
+        return getWebSiteDomain().concat(typePath).concat(menuUrl);
     }
 
 }

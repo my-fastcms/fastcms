@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.template.StaticPathHelper;
 import org.apache.commons.lang.StringUtils;
 
@@ -125,7 +126,7 @@ public class SinglePage implements Serializable, StaticPathHelper {
             return getOutLink();
         }
 
-        String url = getWebSiteDomain().concat(getPageStaticPath()) + getId();
+        String url = getWebSiteDomain().concat(getPageStaticPath()) + (StrUtils.isNotBlank(getPath()) ? getPath() : getId());
 
         if (isEnable()) {
             url = url + getStaticSuffix();

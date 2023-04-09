@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.cms.entity.SinglePage;
 
+import java.util.List;
+
 /**
  * 单页服务类
  * @author wjun_java@163.com
@@ -26,6 +28,13 @@ public interface ISinglePageService extends IService<SinglePage> {
 	 * @return
 	 */
 	Page<ISinglePageService.SinglePageVo> pageSinglePage(Page pageParam, QueryWrapper queryWrapper);
+
+	/**
+	 * 根据id获取数据
+	 * @param ids
+	 * @return
+	 */
+	List<SinglePage> getSinglePageByIds(List<Long> ids);
 
 	class SinglePageVo extends SinglePage {
 

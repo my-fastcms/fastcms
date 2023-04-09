@@ -16,6 +16,7 @@
  */
 package com.fastcms.core.directive;
 
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.utils.RequestUtils;
 import freemarker.core.Environment;
 import freemarker.template.*;
@@ -25,7 +26,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author： wjun_java@163.com
@@ -181,6 +186,10 @@ public abstract class BaseDirective implements TemplateDirectiveModel {
 
     protected HttpServletRequest getRequest() {
         return RequestUtils.getRequest();
+    }
+
+    protected List<Long> strArrayToList(String ids) {
+        return StrUtils.isBlank(ids) ? new ArrayList<>() : Arrays.stream(ids.split(StrUtils.COMMA)).map(Long::valueOf).collect(Collectors.toList());
     }
 
 }
