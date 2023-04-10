@@ -39,9 +39,7 @@ import java.util.Map;
  * @version: 1.0
  */
 @Component("singlePageList")
-public class SinglePageDirective extends BaseDirective {
-
-	private static final String PAGE_IDS = "ids";
+public class SinglePageListDirective extends BaseDirective {
 
 	@Autowired
 	private ISinglePageService singlePageService;
@@ -49,7 +47,7 @@ public class SinglePageDirective extends BaseDirective {
 	@Override
 	public Object doExecute(Environment env, Map params) throws TemplateModelException {
 
-		final String pageIdParams = getStr(PAGE_IDS, params);
+		final String pageIdParams = getStr(IDS, params);
 
 		List<Long> pageIds = strArrayToList(pageIdParams);
 

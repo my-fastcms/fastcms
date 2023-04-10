@@ -21,10 +21,12 @@ import com.fastcms.cms.entity.ArticleCategory;
 import com.fastcms.cms.service.IArticleCategoryService;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.directive.BaseDirective;
+import com.fastcms.utils.CollectionUtils;
 import freemarker.core.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -63,9 +65,12 @@ public class CategoryListDirective extends BaseDirective {
 		final String orderBy = getStr(PARAM_ORDER_BY, params, "created");
 		final Long parentId = getLong(PARAM_PARENT_ID, params, 0l);
 
+		final List<Long> ids = strArrayToList(getStr(IDS, params));
+
 		QueryWrapper queryWrapper = new QueryWrapper();
 		queryWrapper.eq(parentId != 0, "parent_id", parentId);
 		queryWrapper.eq(StrUtils.isNotBlank(type),"type", type);
+		queryWrapper.in(CollectionUtils.isNotEmpty(ids), "id", ids);
 		queryWrapper.last(count > 0,"limit 0," + count);
 		queryWrapper.orderByDesc(orderBy);
 

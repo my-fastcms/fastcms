@@ -21,11 +21,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fastcms.cms.service.IArticleTagService;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.directive.BaseDirective;
+import com.fastcms.utils.CollectionUtils;
 import freemarker.core.Environment;
 import freemarker.template.TemplateModelException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -53,6 +55,8 @@ public class TagListDirective extends BaseDirective {
 
     static final String PARAM_TYPE = "type";
 
+    static final String EXCLUDE_ID = "excludeIds";
+
     @Autowired
     private IArticleTagService articleTagService;
 
@@ -61,9 +65,11 @@ public class TagListDirective extends BaseDirective {
         final String type = getStr(PARAM_TYPE, params, "");
         final Integer count = getInt(PARAM_COUNT, params, 10);
         final String orderBy = getStr(PARAM_ORDER_BY, params, "created");
+        final List<Long> excludeIds = strArrayToList(getStr(EXCLUDE_ID, params));
 
         QueryWrapper queryWrapper = new QueryWrapper();
         queryWrapper.eq(StrUtils.isNotBlank(type),"type", type);
+        queryWrapper.notIn(CollectionUtils.isNotEmpty(excludeIds), "id", excludeIds);
         queryWrapper.last(count > 0,"limit 0," + count);
         queryWrapper.orderByDesc(orderBy);
         return articleTagService.list(queryWrapper);
