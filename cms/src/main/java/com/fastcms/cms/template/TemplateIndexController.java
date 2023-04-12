@@ -131,6 +131,10 @@ public class TemplateIndexController extends TemplateBaseController {
                            @RequestParam(name = "pageSize", required = false, defaultValue = "15") int pageSize,
                            Model model) {
 
+        if (ApplicationUtils.getBean(FastcmsStaticHtmlManager.class).isFakeStaticEnable() && id.indexOf(StrUtils.DOT) != -1) {
+            id = id.substring(0, id.indexOf(StrUtils.DOT));
+        }
+
         ArticleCategory articleCategory = articleCategoryService.getById(id);
         if(articleCategory == null) {
             articleCategory = articleCategoryService.getOne(Wrappers.<ArticleCategory>lambdaQuery().eq(ArticleCategory::getPath, id), false);
