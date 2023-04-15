@@ -32,6 +32,14 @@
 									<div class="sub-title">请填写http（或https）开头，结尾不要包含“/”。例如：http://www.xjd2020.com</div>
 								</el-form-item>
 							</el-col>
+							<el-col class="mb20">
+								<el-form-item label="是否显示网站logo">
+									<el-switch
+										v-model="ruleForm.is_show_fastcms_logo"
+										active-color="#13ce66">
+									</el-switch>
+								</el-form-item>
+							</el-col>
 						</el-row>
 
                         <div class="personal-edit-title mb15">管理员</div>
@@ -56,12 +64,12 @@
                         <el-row :gutter="35">
 							<el-col class="mb20">
 								<el-form-item label="备案号">
-									<el-input v-model="ruleForm.website_case_num" placeholder="请输入备案号" clearable></el-input>
+									<el-input v-model="ruleForm.public_website_case_num" placeholder="请输入备案号" clearable></el-input>
 								</el-form-item>
 							</el-col>
 							<el-col class="mb20">
 								<el-form-item label="版权信息">
-									<el-input v-model="ruleForm.website_copyright" placeholder="请输入版权信息" clearable></el-input>
+									<el-input v-model="ruleForm.public_website_copyright" placeholder="请输入版权信息" clearable></el-input>
 								</el-form-item>
 							</el-col>
 						</el-row>
@@ -101,8 +109,9 @@ export default {
 				website_admin_wechat: '',
 				website_admin_qq: '',
 				website_admin_email: '',
-				website_case_num: '',
-				website_copyright: ''
+				public_website_case_num: '',
+				public_website_copyright: '',
+				is_show_fastcms_logo: false
 			},
 			rules: {
 				"website_title": [

@@ -1,7 +1,7 @@
 <template>
 	<div class="layout-logo" v-if="setShowLogo" @click="onThemeConfigChange">
-		<img src="/logo-mini.png" class="layout-logo-medium-img" />
-		<span>{{ getThemeConfig.globalTitle }}</span>
+		<img src="/logo-mini.png" v-if="showFastcmsLog" class="layout-logo-medium-img" />
+		<span>{{ website_title }}</span>
 	</div>
 	<div class="layout-logo-size" v-else @click="onThemeConfigChange">
 		<img src="/logo-mini.png" class="layout-logo-size-img" />
@@ -9,17 +9,27 @@
 </template>
 
 <script lang="ts">
-import { computed, getCurrentInstance } from 'vue';
+import { computed, toRefs, getCurrentInstance, reactive, onMounted } from 'vue';
 import { useStore } from '/@/store/index';
+import { getConfigList } from '/@/api/config/index';
+import qs from 'qs';
 export default {
 	name: 'layoutLogo',
 	setup() {
 		const { proxy } = getCurrentInstance() as any;
 		const store = useStore();
-		// 获取布局配置信息
+
+				// 获取布局配置信息
 		const getThemeConfig = computed(() => {
 			return store.state.themeConfig.themeConfig;
 		});
+
+		const state = reactive({
+			isDelayFooter: true,
+			showFastcmsLog: false,
+			website_title: store.state.themeConfig.themeConfig
+		});
+		
 		// 设置 logo 的显示。classic 经典布局默认显示 logo
 		const setShowLogo = computed(() => {
 			let { isCollapse, layout } = store.state.themeConfig.themeConfig;
@@ -31,7 +41,24 @@ export default {
 			proxy.mittBus.emit('onMenuClick');
 			store.state.themeConfig.themeConfig.isCollapse = !store.state.themeConfig.themeConfig.isCollapse;
 		};
+		onMounted(() => {
+			let paramKeys = new Array();
+			paramKeys.push("website_title");
+			paramKeys.push("is_show_fastcms_logo");
+			let params = qs.stringify( {"configKeys" : paramKeys}, {arrayFormat: 'repeat'});
+			getConfigList(params).then((res) => {
+				res.data.forEach(item => {
+					if(item.key == 'website_title' && item.jsonValue != null) {
+						state.website_title = item.jsonValue;	
+					}
+					if (item.key == 'is_show_fastcms_logo' && item.jsonValue != null) {
+						state.showFastcmsLog = item.jsonValue;
+					}
+				});
+			});
+		});
 		return {
+			...toRefs(state),
 			setShowLogo,
 			getThemeConfig,
 			onThemeConfigChange,

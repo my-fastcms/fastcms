@@ -21,6 +21,7 @@ import com.fastcms.common.auth.Secured;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.config.ConfigListenerManager;
 import com.fastcms.entity.Config;
 import com.fastcms.service.IConfigService;
@@ -86,7 +87,10 @@ public class ConfigController {
 
 				//值不发生变化的，不处理
 				String oldValue = configService.getValue(entry.getKey());
-				if(StringUtils.isNotBlank(value) && !value.equals(oldValue)) {
+				if (StrUtils.isBlank(oldValue)) {
+					oldValue = "";
+				}
+				if(!oldValue.equals(value)) {
 					datasMap.put(entry.getKey(), value);
 				}
 			}
