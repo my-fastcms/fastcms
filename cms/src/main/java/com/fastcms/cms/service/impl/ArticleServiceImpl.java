@@ -170,7 +170,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         queryWrapper.in(CollectionUtils.isNotEmpty(includeIds), "acr.category_id", includeIds);
         queryWrapper.notIn(CollectionUtils.isNotEmpty(excludeIds), "acr.category_id", excludeIds);
         queryWrapper.last(count != null, "limit 0," + count);
-        queryWrapper.orderByDesc(StrUtils.isBlank(orderBy), orderBy);
+        queryWrapper.orderByDesc(StrUtils.isNotBlank(orderBy), orderBy);
         return getBaseMapper().getArticleListByCategoryId(queryWrapper);
     }
 
@@ -197,7 +197,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         queryWrapper.in(CollectionUtils.isNotEmpty(includeIds), "acr.tag_id", includeIds);
         queryWrapper.notIn(CollectionUtils.isNotEmpty(excludeIds), "acr.tag_id", excludeIds);
         queryWrapper.last("limit 0," + count);
-        queryWrapper.orderByDesc(orderBy);
+        queryWrapper.orderByDesc(StrUtils.isNotBlank(orderBy), orderBy);
         return getBaseMapper().getArticleListByTagId(queryWrapper);
     }
 
