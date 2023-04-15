@@ -12,12 +12,12 @@
 						<el-row :gutter="35">
 							<el-col class="mb20">
 								<el-form-item label="网站名称" prop="website_name">
-									<el-input v-model="ruleForm.website_name" placeholder="请输入网站名称" clearable></el-input>
+									<el-input v-model="ruleForm.public_website_name" placeholder="请输入网站名称" clearable></el-input>
 								</el-form-item>
 							</el-col>
 							<el-col class="mb20">
 								<el-form-item label="网站标题" prop="website_title">
-									<el-input v-model="ruleForm.website_title" placeholder="请输入网站标题" clearable></el-input>
+									<el-input v-model="ruleForm.public_website_title" placeholder="请输入网站标题" clearable></el-input>
 								</el-form-item>
 							</el-col>
 							<el-col class="mb20">
@@ -101,8 +101,8 @@ export default {
 		const state = reactive({
 			fit: "fill",
 			ruleForm: {
-				website_title: '',
-				website_name: '',
+				public_website_title: '',
+				public_website_name: '',
 				public_website_domain: '',
 				website_seo: '',
 				website_admin_mobile: '',
@@ -114,10 +114,10 @@ export default {
 				is_show_fastcms_logo: false
 			},
 			rules: {
-				"website_title": [
+				"public_website_title": [
 					{required: true, message: '请输入网站标题', trigger: 'blur'},
 				],
-				"website_name": [
+				"public_website_name": [
 					{required: true, message: '请输入网站名称', trigger: 'blur'},
 				],
 				"public_website_domain": [

@@ -71,7 +71,7 @@ public interface FastcmsConstants {
     /**
      * 系统配置相关key
      */
-    String WEBSITE_TITLE_KEY = "website_title";
+    String WEBSITE_TITLE_KEY = "public_website_title";
     String WEBSITE_SEO = "website_seo";
     String WEBSITE_DOMAIN = "public_website_domain";
 

@@ -5,7 +5,7 @@
 		</div>
 		<div class="login-content">
 			<div class="login-content-main">
-				<h4 class="login-content-title">{{ getThemeConfig.globalTitle }}</h4>
+				<h4 class="login-content-title">{{ public_website_title }}</h4>
 				<div>
 					<el-form class="login-content-form" :model="myForm" :rules="rules" ref="myRefForm">
                         <el-form-item prop="username">
@@ -81,6 +81,7 @@ import { formatAxis } from '/@/utils/formatTime';
 import { useStore } from '/@/store/index';
 import { resetPassword, getCaptcha } from '/@/api/login/index';
 import qs from 'qs';
+import { getPublicConfigList } from '/@/api/config/index';
 
 export default {
 	name: 'restPassword',
@@ -92,6 +93,7 @@ export default {
 		const router = useRouter();
 		const state = reactive({
             isShowPassword: false,
+			public_website_title: store.state.themeConfig.themeConfig.globalTitle,
             captcha: '',
             myForm: {
 				username: '',
@@ -128,6 +130,18 @@ export default {
 
 		onMounted(() => {
 			refreshCode();
+
+			let paramKeys = new Array();
+			paramKeys.push("public_website_title");
+			let params = qs.stringify( {"configKeys" : paramKeys}, {arrayFormat: 'repeat'});
+			getPublicConfigList(params).then((res) => {
+				res.data.forEach(item => {
+					if (item.key == 'public_website_title' && item.jsonValue != null) {
+						state.public_website_title = item.jsonValue
+					}
+				});
+			});
+
 		});
 
         // 登录

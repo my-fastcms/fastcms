@@ -5,7 +5,7 @@
 		</div>
 		<div class="login-content" :class="{ 'login-content-mobile': tabsActiveName === 'mobile' }">
 			<div class="login-content-main">
-				<h4 class="login-content-title">{{ getThemeConfig.globalTitle }}</h4>
+				<h4 class="login-content-title">{{ public_website_title }}</h4>
 				<div v-if="!isScan">
 					<el-tabs v-model="tabsActiveName" @tab-click="onTabsClick">
 						<el-tab-pane :label="$t('message.label.one1')" name="account" :disabled="tabsActiveName === 'account'">
@@ -37,8 +37,8 @@
 			</div>
 		</div>
 		<div class="login-copyright">
-			<div class="mb5 login-copyright-company">{{ $t('message.copyright.one5') }}</div>
-			<div class="login-copyright-msg">{{ $t('message.copyright.two6') }}</div>
+			<div class="mb5 login-copyright-company">{{ public_website_copyright }}</div>
+			<div v-if="false" class="login-copyright-msg">{{ $t('message.copyright.two6') }}</div>
 		</div>
 	</div>
 </template>
@@ -69,6 +69,8 @@ export default {
 			public_mp_scan_qrcode_login_enable: false,		//是否开启公众号扫码登录功能
 			public_mp_scan_qrcode_login_is_default: false,	//是否默认使用公众号扫码登录功能
 			public_forgot_password_enable: true,			//是否启用找回密码功能
+			public_website_copyright: "",
+			public_website_title: store.state.themeConfig.themeConfig.globalTitle
 		});
 		// 获取布局配置信息
 		const getThemeConfig = computed(() => {
@@ -108,6 +110,8 @@ export default {
 			paramKeys.push("public_mp_scan_qrcode_login_enable");
 			paramKeys.push("public_forgot_password_enable");
 			paramKeys.push("public_mp_scan_qrcode_login_is_default");
+			paramKeys.push("public_website_copyright");
+			paramKeys.push("public_website_title");
 			let params = qs.stringify( {"configKeys" : paramKeys}, {arrayFormat: 'repeat'});
 			getPublicConfigList(params).then((res) => {
 				res.data.forEach(item => {
@@ -122,6 +126,12 @@ export default {
 					}
 					if(item.key == 'public_forgot_password_enable') {
 						state.public_forgot_password_enable = item.jsonValue
+					}
+					if(item.key == 'public_website_copyright') {
+						state.public_website_copyright = item.jsonValue
+					}
+					if (item.key == 'public_website_title') {
+						state.public_website_title = item.jsonValue
 					}
 				});
 

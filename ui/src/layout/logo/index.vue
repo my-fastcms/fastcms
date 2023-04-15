@@ -27,7 +27,7 @@ export default {
 		const state = reactive({
 			isDelayFooter: true,
 			showFastcmsLog: false,
-			website_title: store.state.themeConfig.themeConfig
+			website_title: store.state.themeConfig.themeConfig.globalTitle
 		});
 		
 		// 设置 logo 的显示。classic 经典布局默认显示 logo
@@ -43,12 +43,12 @@ export default {
 		};
 		onMounted(() => {
 			let paramKeys = new Array();
-			paramKeys.push("website_title");
+			paramKeys.push("public_website_title");
 			paramKeys.push("is_show_fastcms_logo");
 			let params = qs.stringify( {"configKeys" : paramKeys}, {arrayFormat: 'repeat'});
 			getConfigList(params).then((res) => {
 				res.data.forEach(item => {
-					if(item.key == 'website_title' && item.jsonValue != null) {
+					if(item.key == 'public_website_title' && item.jsonValue != null) {
 						state.website_title = item.jsonValue;	
 					}
 					if (item.key == 'is_show_fastcms_logo' && item.jsonValue != null) {
