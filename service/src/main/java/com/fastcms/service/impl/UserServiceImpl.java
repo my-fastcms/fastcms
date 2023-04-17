@@ -201,10 +201,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             userOpenid.setValue(openid);
             userOpenid.setType(type);
             userOpenidService.save(userOpenid);
-        } else {
-            user.setNickName(nickname);
-            user.setHeadImg(headimgurl);
-            updateById(user);
         }
         return user;
     }
