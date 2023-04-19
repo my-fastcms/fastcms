@@ -22,7 +22,7 @@ public class SinglePageServiceImpl extends ServiceImpl<SinglePageMapper, SingleP
 
 	@Override
 	public SinglePage getPageByPath(String path) {
-		return getOne(Wrappers.<SinglePage>lambdaQuery().eq(SinglePage::getPath, path));
+		return getOne(Wrappers.<SinglePage>lambdaQuery().eq(SinglePage::getPath, path).eq(SinglePage::getStatus, SinglePage.STATUS_PUBLISH));
 	}
 
 	@Override
