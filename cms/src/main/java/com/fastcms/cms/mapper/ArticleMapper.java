@@ -23,6 +23,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.cms.entity.Article;
 import com.fastcms.cms.entity.ArticleCategory;
 import com.fastcms.cms.service.IArticleService;
+import com.fastcms.mybatis.IgnoreDataPermission;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -45,6 +46,9 @@ public interface ArticleMapper extends BaseMapper<Article> {
 	void saveArticleTagRelation(@Param("articleId") Long articleId, @Param("articleTagIdList") List<Long> articleTagIdList);
 
 	Page<IArticleService.ArticleVo> pageArticle(Page pageParam, @Param(Constants.WRAPPER) QueryWrapper queryWrapper);
+
+	@IgnoreDataPermission
+	Page<IArticleService.ArticleVo> pageArticleOpen(Page pageParam, @Param(Constants.WRAPPER) QueryWrapper queryWrapper);
 
 	List<ArticleCategory> getArticleCategoriesByArticleId(Long articleId);
 
