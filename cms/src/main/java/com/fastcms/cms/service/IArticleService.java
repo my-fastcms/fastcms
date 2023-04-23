@@ -63,6 +63,14 @@ public interface IArticleService extends IService<Article> {
     Page<ArticleVo> pageArticle(Page pageParam, QueryWrapper queryWrapper);
 
     /**
+     * 分页查询文章列表数据，开放数据，无权限
+     * @param pageParam
+     * @param queryWrapper
+     * @return
+     */
+    Page<ArticleVo> pageArticleOpen(Page pageParam, QueryWrapper queryWrapper);
+
+    /**
      * 获取文章详情
      * @param id
      * @return

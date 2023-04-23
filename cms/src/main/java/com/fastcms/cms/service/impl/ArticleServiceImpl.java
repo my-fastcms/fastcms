@@ -152,6 +152,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     }
 
     @Override
+    public Page<ArticleVo> pageArticleOpen(Page pageParam, QueryWrapper queryWrapper) {
+        return this.getBaseMapper().pageArticleOpen(pageParam, queryWrapper);
+    }
+
+    @Override
     public ArticleInfoVo getArticleDetail(Long id) {
         ArticleViewCountUpdateTask.recordCount(id);
         return getBaseMapper().getArticleById(id);

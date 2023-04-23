@@ -70,18 +70,15 @@ public class ArticleApi {
 	 * 文章列表
 	 * @param page
 	 * @param categoryId
-	 * @param status
 	 * @return
 	 */
 	@GetMapping("list")
-	public RestResult<Page<IArticleService.ArticleVo>> list(PageModel page,
-															@RequestParam(name = "categoryId", required = false) String categoryId,
-															@RequestParam(name = "status", required = false) String status) {
+	public RestResult<Page<IArticleService.ArticleVo>> list(PageModel page, @RequestParam(name = "categoryId", required = false) String categoryId) {
 		QueryWrapper<Object> queryWrapper = Wrappers.query()
 				.eq(StringUtils.isNotBlank(categoryId), "acr.category_id", categoryId)
-				.eq("a.status", StringUtils.isNotBlank(status) ? status : Article.STATUS_PUBLISH)
+				.eq("a.status", Article.STATUS_PUBLISH)
 				.orderByDesc("a.created");
-		Page<IArticleService.ArticleVo> articleVoPage = articleService.pageArticle(page.toPage(), queryWrapper);
+		Page<IArticleService.ArticleVo> articleVoPage = articleService.pageArticleOpen(page.toPage(), queryWrapper);
 		return RestResultUtils.success(articleVoPage);
 	}
 

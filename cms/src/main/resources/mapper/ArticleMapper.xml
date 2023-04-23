@@ -57,6 +57,15 @@
         ${ew.customSqlSegment}
     </select>
 
+    <select id="pageArticleOpen" resultMap="ArticleToResult">
+        select distinct a.id, a.title, a.status, a.created, a.view_count, a.thumbnail, a.json_ext, a.summary, a.out_link,
+        u.user_name from article a
+        LEFT JOIN `user` u on a.create_user_id = u.id
+        LEFT JOIN article_category_relation acr on acr.article_id = a.id
+        LEFT JOIN article_tag_relation atr on atr.article_id = a.id
+        ${ew.customSqlSegment}
+    </select>
+
     <select id="getArticleCategoriesByArticleId" resultType="com.fastcms.cms.entity.ArticleCategory">
         select ac.* from article_category_relation acr join article_category ac on acr.category_id = ac.id
         where acr.article_id = #{articleId}
@@ -75,28 +84,32 @@
     </select>
 
     <select id="pageArticleByCategoryId" resultType="com.fastcms.cms.service.IArticleService$ArticleVo">
-        select DISTINCT a.id, a.title, a.status, a.created, a.view_count, a.thumbnail, a.summary, u.user_name as author from article_category_relation acr
+        select DISTINCT a.id, a.title, a.status, a.created, a.view_count, a.thumbnail, a.summary, u.user_name as author
+        from article_category_relation acr
         join article a on acr.article_id = a.id
         LEFT JOIN `user` u on a.create_user_id = u.id
         ${ew.customSqlSegment}
     </select>
 
     <select id="getArticleListByCategoryId" resultType="com.fastcms.cms.service.IArticleService$ArticleVo">
-        select a.id, a.title, a.status, a.created, a.view_count, a.thumbnail, a.summary, u.user_name as author from article_category_relation acr
+        select a.id, a.title, a.status, a.created, a.view_count, a.thumbnail, a.summary, u.user_name as author
+        from article_category_relation acr
         join article a on acr.article_id = a.id
         LEFT JOIN `user` u on a.create_user_id = u.id
         ${ew.customSqlSegment}
     </select>
 
     <select id="pageArticleByTagId" resultType="com.fastcms.cms.service.IArticleService$ArticleVo">
-        select DISTINCT a.id, a.title, a.status, a.created, a.view_count, a.thumbnail, a.summary, u.user_name as author from article_tag_relation acr
+        select DISTINCT a.id, a.title, a.status, a.created, a.view_count, a.thumbnail, a.summary, u.user_name as author
+        from article_tag_relation acr
         join article a on acr.article_id = a.id
         LEFT JOIN `user` u on a.create_user_id = u.id
         ${ew.customSqlSegment}
     </select>
 
     <select id="getArticleListByTagId" resultType="com.fastcms.cms.service.IArticleService$ArticleVo">
-        select a.id, a.title, a.status, a.created, a.view_count, a.thumbnail, a.summary, u.user_name as author from article_tag_relation acr
+        select a.id, a.title, a.status, a.created, a.view_count, a.thumbnail, a.summary, u.user_name as author
+        from article_tag_relation acr
         join article a on acr.article_id = a.id
         LEFT JOIN `user` u on a.create_user_id = u.id
         ${ew.customSqlSegment}

@@ -56,7 +56,8 @@
 <script lang="ts">
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { toRefs, reactive, onMounted } from 'vue';
-import { delArticle, getArticleList } from '/@/api/article/client';
+import { delArticle } from '/@/api/article/client';
+import { getArticleList } from '/@/api/article/index';
 import { useRouter } from 'vue-router';
 
 export default {
