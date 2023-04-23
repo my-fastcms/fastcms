@@ -1,6 +1,7 @@
 <template>
 	<div class="list-adapt-container">
 		<el-upload 
+			ref="uploadRef"
 			class="upload-btn"
 			:action="uploadUrl"
 			name="files"
@@ -58,11 +59,12 @@ export default {
 	components: { Detail },
 	setup() {
 		const detailRef = ref();
+		const uploadRef = ref();
 		const state = reactive({
 			fit: "fill",
 			queryParams: {},
 			showSearch: true,
-			limit: 3,
+			limit: 5,
 			uploadUrl: import.meta.env.VITE_API_URL + "/admin/attachment/upload",
 			headers: {"Authorization": Local.get('token')},
 			tableData: {
@@ -85,6 +87,7 @@ export default {
 
 		const uploadSuccess = (res: any) => {
 			if (res.code == 200) {
+				uploadRef.value!.clearFiles();
 				initTableData();
 			}else {
 				ElMessage.error(res.message);	
@@ -120,6 +123,7 @@ export default {
 		};
 		return {
 			detailRef,
+			uploadRef,
 			initTableData,
 			onTableItemClick,
 			onHandleSizeChange,
