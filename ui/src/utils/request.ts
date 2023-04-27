@@ -1,11 +1,17 @@
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Local, Session } from '/@/utils/storage';
+import qs from 'qs';
 
 // 配置新建一个 axios 实例
-const service = axios.create({
+const service: AxiosInstance = axios.create({
 	baseURL: import.meta.env.VITE_API_URL as any,
 	timeout: 50000,
+	paramsSerializer: {
+		serialize(params) {
+			return qs.stringify(params, { allowDots: true });
+		},
+	},
 });
 
 // 添加请求拦截器
@@ -13,14 +19,11 @@ service.interceptors.request.use(
 	(config) => {
 		// 在发送请求之前做些什么 token
 		if (Local.get('token')) {
-			config.headers.common['Authorization'] = `Bearer ${Local.get('token')}`;
+			config.headers!['Authorization'] = `Bearer ${Local.get('token')}`;
 		}
 		if (Session.get('ClientId')) {
-			config.headers.common['ClientId'] = `${Session.get('ClientId')}`;
+			config.headers!['ClientId'] = `${Session.get('ClientId')}`;
 		}
-		// if (config.method === "GET"){
-        //     config.headers.common['Content-Type'] = 'application/json';
-        // }
 		return config;
 	},
 	(error) => {
@@ -50,14 +53,14 @@ service.interceptors.response.use(
 		}
 	},
 	(error) => {
-		
+		console.log("==========error:" + error)
 		// 对响应错误做点什么
 		if (error.message.indexOf('timeout') != -1) {
 			ElMessage.error('网络超时');
 		} else if (error.message == 'Network Error') {
 			ElMessage.error('网络连接错误');
 		} else {
-			if (error.response.data) {
+			if (error.response && error.response.data) {
 				if (error.response.data.status === 401) {
 					Session.clear(); // 清除浏览器全部临时缓存
 					Local.clear();
@@ -74,7 +77,7 @@ service.interceptors.response.use(
 				// 	ElMessage.error("系统错误");
 				// }
 			} else {
-				ElMessage.error('接口路径找不到');
+				ElMessage.error(error + "");
 			}
 		}
 		return Promise.reject(error);
