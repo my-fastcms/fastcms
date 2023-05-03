@@ -22,10 +22,13 @@ import com.egzosn.pay.common.util.MatrixToImageWriter;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.entity.Order;
+import com.fastcms.entity.UserOpenid;
 import com.fastcms.payment.PayServiceManager;
 import com.fastcms.payment.bean.FastcmsPayOrder;
 import com.fastcms.service.IOrderService;
+import com.fastcms.service.IUserService;
 import com.fastcms.utils.I18nUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,6 +62,9 @@ public class PaymentApi {
 
     @Autowired
     private IOrderService orderService;
+
+    @Autowired
+    private IUserService userService;
 
     /**
      * 扫码支付 | 返回图片流
@@ -103,9 +109,14 @@ public class PaymentApi {
      * @return
      */
     @RequestMapping(value = "{platform}/{type}/jsapi")
-    public RestResult<Map<String, Object>> toPay(@PathVariable("platform") String platform, @PathVariable("type") String type, @RequestParam("orderId") Long orderId, @RequestParam("openid") String openid) throws PayErrorException {
+    public RestResult<Map<String, Object>> toPay(@PathVariable("platform") String platform, @PathVariable("type") String type, @RequestParam("orderId") Long orderId, @RequestParam(value = "openid", required = false) String openid) throws PayErrorException {
 
         Order order = getOrder(orderId);
+
+        if (StrUtils.isBlank(openid)) {
+            UserOpenid userOpenid = userService.getUserOpenid(userService.getById(order.getCreateUserId()));
+            openid = userOpenid.getValue();
+        }
 
         FastcmsPayOrder fastcmsPayOrder = new FastcmsPayOrder(platform, type, order.getOrderTitle(), order.getRemarks(), order.getPayAmount(), order.getOrderSn());
         fastcmsPayOrder.setOpenid(openid);
@@ -165,9 +176,14 @@ public class PaymentApi {
      * @return 支付结果
      */
     @RequestMapping(value = "{platform}/{type}/facePay")
-    public RestResult<Map<String, Object>> facePay(@PathVariable("platform") String platform, @PathVariable("type") String type, @RequestParam("orderId") Long orderId, @RequestParam("authCode") String authCode, @RequestParam("openid") String openid) throws PayErrorException {
+    public RestResult<Map<String, Object>> facePay(@PathVariable("platform") String platform, @PathVariable("type") String type, @RequestParam("orderId") Long orderId, @RequestParam("authCode") String authCode, @RequestParam(value = "openid", required = false) String openid) throws PayErrorException {
 
         Order order = getOrder(orderId);
+
+        if (StrUtils.isBlank(openid)) {
+            UserOpenid userOpenid = userService.getUserOpenid(userService.getById(order.getCreateUserId()));
+            openid = userOpenid.getValue();
+        }
 
         //获取对应的支付账户操作工具（可根据账户id）
         FastcmsPayOrder fastcmsPayOrder = new FastcmsPayOrder(platform, type, order.getOrderTitle(), order.getRemarks(), order.getPayAmount(), order.getOrderSn());

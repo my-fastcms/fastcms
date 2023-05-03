@@ -17,7 +17,6 @@
 package com.fastcms.cms.controller.api;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.cms.entity.Article;
@@ -30,6 +29,7 @@ import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.utils.I18nUtils;
@@ -37,8 +37,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.fastcms.cms.service.IArticleService.ArticleI18n.*;
 
@@ -73,13 +76,34 @@ public class ArticleApi {
 	 * @return
 	 */
 	@GetMapping("list")
-	public RestResult<Page<IArticleService.ArticleVo>> list(PageModel page, @RequestParam(name = "categoryId", required = false) String categoryId) {
+	public RestResult<Page<IArticleService.ArticleVo>> list(PageModel page,
+															@RequestParam(name = "categoryId", required = false) String categoryId,
+															@RequestParam(name = "tagId", required = false) String tagId) {
 		QueryWrapper<Object> queryWrapper = Wrappers.query()
-				.eq(StringUtils.isNotBlank(categoryId), "acr.category_id", categoryId)
+				.eq(StrUtils.isNotBlank(categoryId), "acr.category_id", categoryId)
+				.eq(StrUtils.isNotBlank(tagId), "atr.tag_id", tagId)
 				.eq("a.status", Article.STATUS_PUBLISH)
 				.orderByDesc("a.created");
 		Page<IArticleService.ArticleVo> articleVoPage = articleService.pageArticleOpen(page.toPage(), queryWrapper);
 		return RestResultUtils.success(articleVoPage);
+	}
+
+	/**
+	 * 根据标签获取文章列表
+	 * @param tagId
+	 * @param includeTagIds 	多个以逗号隔开
+	 * @param excludeTagIds 	多个以逗号隔开
+	 * @param count
+	 * @return
+	 */
+	@GetMapping("list/tagId")
+	public RestResult<List<IArticleService.ArticleVo>> list(@RequestParam(name = "tagId") Long tagId,
+															@RequestParam(required = false) String includeTagIds,
+															@RequestParam(required = false) String excludeTagIds,
+															@RequestParam(name = "count", required = false) Integer count) {
+		List<Long> includeTagIdsList = StrUtils.isBlank(includeTagIds) ? new ArrayList<>() : Arrays.stream(includeTagIds.split(StrUtils.COMMA)).map(Long::valueOf).collect(Collectors.toList());
+		List<Long> excludeTagIdsList = StrUtils.isBlank(excludeTagIds) ? new ArrayList<>() : Arrays.stream(excludeTagIds.split(StrUtils.COMMA)).map(Long::valueOf).collect(Collectors.toList());
+		return RestResultUtils.success(articleService.getArticleListByTagId(tagId, includeTagIdsList, excludeTagIdsList, count, "a.created"));
 	}
 
 	/**
@@ -108,7 +132,7 @@ public class ArticleApi {
 	 */
 	@GetMapping("get/{articleId}")
 	public RestResult<Article> getArticle(@PathVariable("articleId") Long articleId) {
-		return RestResultUtils.success(articleService.getArticle(articleId));
+		return RestResultUtils.success(articleService.getArticleDetail(articleId));
 	}
 
 	/**

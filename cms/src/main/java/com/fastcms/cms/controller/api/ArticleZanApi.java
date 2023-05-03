@@ -16,23 +16,20 @@
  */
 package com.fastcms.cms.controller.api;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.fastcms.cms.service.IArticleCommentService;
+import com.fastcms.cms.entity.ArticleZan;
+import com.fastcms.cms.service.IArticleZanService;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.exception.FastcmsException;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
 import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.mybatis.PageModel;
-import com.fastcms.plugin.PassFastcms;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * 文章评论
+ * 文章点赞
  * @author： wjun_java@163.com
  * @date： 2021/6/7
  * @description：
@@ -40,53 +37,52 @@ import org.springframework.web.bind.annotation.*;
  * @version: 1.0
  */
 @RestController
-@RequestMapping(FastcmsConstants.API_MAPPING + "/article/comment")
-public class ArticleCommentApi {
+@RequestMapping(FastcmsConstants.API_MAPPING + "/article/zan")
+public class ArticleZanApi {
 
 	@Autowired
-	IArticleCommentService articleCommentService;
+	IArticleZanService articleZanService;
 
 	/**
-	 * 用户评论列表
+	 * 文章点赞列表
 	 * @param page
-	 * @param author
-	 * @param content
 	 * @return
 	 */
-	@GetMapping("user/list")
-	public Object getCommentList(PageModel page, String author, String content, Boolean isParent) {
-		QueryWrapper queryWrapper = Wrappers.query().eq(StringUtils.isNotBlank(author), "u.user_name", author)
-				.eq(isParent != null && isParent == true, "ac.parentId", 0)
-				.likeLeft(StringUtils.isNotBlank(content), "ac.content", content)
-				.orderByDesc("ac.created");
-		return RestResultUtils.success(articleCommentService.pageArticleComment(page.toPage(), queryWrapper));
+	@GetMapping("list")
+	public RestResult<Page> getZanList(PageModel page, @RequestParam("articleId") Long articleId) {
+		return RestResultUtils.success(articleZanService.pageArticleZan(page.toPage(), articleId));
 	}
 
 	/**
-	 * 文章评论列表
-	 * @param page
+	 * 用户点赞
 	 * @param articleId
-	 * @return
-	 */
-	@GetMapping("list/{articleId}")
-	@PassFastcms
-	public RestResult<Page<IArticleCommentService.ArticleCommentVo>> list(PageModel page, @PathVariable("articleId") Long articleId) {
-		return RestResultUtils.success(articleCommentService.pageArticleCommentByArticleId(page.toPage(), articleId, AuthUtils.getUserId()));
-	}
-
-	/**
-	 * 保存评论
-	 * @param articleId
-	 * @param commentId
-	 * @param context
 	 * @return
 	 */
 	@PostMapping("save")
-	public Object saveComment(@RequestParam("articleId") Long articleId,
-							  @RequestParam("commentId") Long commentId,
-							  @RequestParam("context") String context) throws FastcmsException {
-		articleCommentService.saveArticleComment(articleId, commentId, context);
-		return RestResultUtils.success();
+	public RestResult<ArticleZan> saveZan(@RequestParam("articleId") Long articleId) throws FastcmsException {
+		return RestResultUtils.success(articleZanService.saveZan(AuthUtils.getUserId(), articleId));
+	}
+
+	/**
+	 * 用户取消点赞
+	 * @param articleId
+	 * @return
+	 * @throws FastcmsException
+	 */
+	@PostMapping("cancel")
+	public RestResult<Boolean> cancelZan(@RequestParam("articleId") Long articleId) throws FastcmsException {
+		return RestResultUtils.success(articleZanService.cancelZan(AuthUtils.getUserId(), articleId));
+	}
+
+	/**
+	 * 用户是否点过赞
+	 * @param articleId
+	 * @return
+	 * @throws FastcmsException
+	 */
+	@GetMapping("user/had/zan")
+	public RestResult<Boolean> userHadZan(@RequestParam("articleId") Long articleId) throws FastcmsException {
+		return RestResultUtils.success(articleZanService.isUserHadZan(AuthUtils.getUserId(), articleId));
 	}
 
 }

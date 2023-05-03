@@ -246,6 +246,17 @@ public interface IArticleService extends IService<Article> {
          * 文章摘要
          */
         String summary;
+
+        /**
+         * 点赞数
+         */
+        Integer zanCount;
+
+        /**
+         * 评论数
+         */
+        Integer commentCount;
+
         /**
          * 扩展字段
          */
@@ -323,6 +334,22 @@ public interface IArticleService extends IService<Article> {
             this.summary = summary;
         }
 
+        public Integer getZanCount() {
+            return zanCount;
+        }
+
+        public void setZanCount(Integer zanCount) {
+            this.zanCount = zanCount;
+        }
+
+        public Integer getCommentCount() {
+            return commentCount;
+        }
+
+        public void setCommentCount(Integer commentCount) {
+            this.commentCount = commentCount;
+        }
+
         public String getJsonExt() {
             return jsonExt;
         }
@@ -382,9 +409,35 @@ public interface IArticleService extends IService<Article> {
      * 文章详情
      */
     class ArticleInfoVo extends Article {
+
+        /**
+         * 作者
+         */
         String author;
+
+        /**
+         * 头像
+         */
         String headImg;
+
+        /**
+         * 点赞数
+         */
+        Integer zanCount;
+
+        /**
+         * 评论数
+         */
+        Integer commentCount;
+
+        /**
+         * 分类
+         */
         List<ArticleCategory> categoryList;
+
+        /**
+         * 标签
+         */
         List<ArticleTag> tagList;
 
         public String getAuthor() {
@@ -401,6 +454,22 @@ public interface IArticleService extends IService<Article> {
 
         public void setHeadImg(String headImg) {
             this.headImg = headImg;
+        }
+
+        public Integer getZanCount() {
+            return zanCount;
+        }
+
+        public void setZanCount(Integer zanCount) {
+            this.zanCount = zanCount;
+        }
+
+        public Integer getCommentCount() {
+            return commentCount;
+        }
+
+        public void setCommentCount(Integer commentCount) {
+            this.commentCount = commentCount;
         }
 
         public List<ArticleCategory> getCategoryList() {
@@ -432,6 +501,9 @@ public interface IArticleService extends IService<Article> {
         String CMS_ARTICLE_COMMENT_ARTICLE_ID_NOT_ALLOW_NULL = "fastcms.cms.article.comment.article.id.is.not.allow.null";
         String CMS_ARTICLE_COMMENT_CONTENT_IS_NOT_ALLOW_NULL = "fastcms.cms.article.comment.content.is.not.allow.null";
         String CMS_ARTICLE_COMMENT_IS_DISABLE = "fastcms.cms.article.comment.is.not.allow.comment";
+
+        String CMS_ARTICLE_ZAN_DISABLE = "fastcms.cms.article.zan.disable";
+        String CMS_ARTICLE_USER_HAD_ZAN = "fastcms.cms.article.user.had.zan";
 
     }
 

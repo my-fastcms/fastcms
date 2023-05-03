@@ -21,11 +21,14 @@
     </select>
 
     <select id="getReplyCommentByParentId" resultMap="ArticleCommentResult">
-        select ac.*, u.user_name as author, u.head_img as authorAvatar from article_comment ac left join `user` u on ac.create_user_id = u.id where ac.`parent_id`=#{commentId}
+        select ac.*, u.nick_name as author, u.head_img as authorAvatar
+        from article_comment ac left join `user` u on ac.create_user_id = u.id
+        where ac.`parent_id`=#{commentId}
+        order by ac.up_count desc, ac.sort_num desc, ac.created desc
     </select>
 
     <select id="pageArticleCommentByArticleId" resultMap="ArticleCommentResult">
-        select ac.*, u.user_name as author, u.head_img as authorAvatar
+        select ac.*, u.nick_name as author, u.head_img as authorAvatar
         <if test="userId != null"> , (CASE WHEN ac.create_user_id != 1 THEN 1 ELSE 999 END) as sort_user </if>
         from article_comment ac
         left join `user` u on ac.create_user_id = u.id

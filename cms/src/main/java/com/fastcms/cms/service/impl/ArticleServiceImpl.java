@@ -201,14 +201,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         queryWrapper.eq("a.status", Article.STATUS_PUBLISH);
         queryWrapper.in(CollectionUtils.isNotEmpty(includeIds), "acr.tag_id", includeIds);
         queryWrapper.notIn(CollectionUtils.isNotEmpty(excludeIds), "acr.tag_id", excludeIds);
-        queryWrapper.last("limit 0," + count);
+        queryWrapper.last(count != null, "limit 0," + count);
         queryWrapper.orderByDesc(StrUtils.isNotBlank(orderBy), orderBy);
         return getBaseMapper().getArticleListByTagId(queryWrapper);
     }
 
     @Override
     public List<ArticleVo> getArticleListByTagId(Long tagId, Integer count, String orderBy) {
-        return getArticleListByCategoryId(tagId, null, null, count, orderBy);
+        return getArticleListByTagId(tagId, null, null, count, orderBy);
     }
 
     @Override

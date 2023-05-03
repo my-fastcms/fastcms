@@ -41,7 +41,7 @@ public class ArticleCommentServiceImpl extends ServiceImpl<ArticleCommentMapper,
 	}
 
 	@Override
-	public void saveArticleComment(@NotNull Long articleId, @NotNull Long commentId, @NotNull String content) throws FastcmsException {
+	public Boolean saveArticleComment(@NotNull Long articleId, @NotNull Long commentId, @NotNull String content) throws FastcmsException {
 
 		if (!ArticleUtils.isEnableArticleComment()) {
 			throw new I18nFastcmsException(CMS_ARTICLE_COMMENT_DISABLE);
@@ -75,7 +75,7 @@ public class ArticleCommentServiceImpl extends ServiceImpl<ArticleCommentMapper,
 			articleComment.setStatus(ArticleComment.STATUS_NORMAL);
 		}
 
-		save(articleComment);
+		return save(articleComment);
 	}
 
 }

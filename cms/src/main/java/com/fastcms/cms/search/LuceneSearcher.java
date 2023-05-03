@@ -20,7 +20,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fastcms.cms.entity.Article;
 import com.fastcms.utils.ConfigUtils;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.document.*;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.StringField;
+import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.*;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
@@ -33,9 +36,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -58,6 +60,7 @@ public class LuceneSearcher implements FastcmsSearcher {
     private static final String ARTICLE_TITLE = "title";
     private static final String ARTICLE_CONTENT = "content";
     private static final String ARTICLE_CREATED = "created";
+    private static final String ARTICLE_VIEW_COUNT = "viewCount";
 
     /**
      * 是否启用lucene搜索器
@@ -169,9 +172,9 @@ public class LuceneSearcher implements FastcmsSearcher {
         doc.add(new TextField(ARTICLE_CONTENT, article.getContent(), Field.Store.YES));
         doc.add(new TextField(ARTICLE_TEXT, article.getText(), Field.Store.YES));
         doc.add(new TextField(ARTICLE_TITLE, article.getTitle(), Field.Store.YES));
+        doc.add(new TextField(ARTICLE_VIEW_COUNT, String.valueOf(article.getViewCount() == null ? 0 : article.getViewCount()), Field.Store.YES));
         LocalDateTime createdDate = article.getUpdated() == null ? LocalDateTime.now() : article.getUpdated();
-        Date created = Date.from(createdDate.atZone(ZoneId.systemDefault()).toInstant());
-        doc.add(new StringField(ARTICLE_CREATED, DateTools.dateToString(created, DateTools.Resolution.YEAR), Field.Store.NO));
+        doc.add(new StringField(ARTICLE_CREATED, createdDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), Field.Store.YES));
         return doc;
     }
 
@@ -213,6 +216,8 @@ public class LuceneSearcher implements FastcmsSearcher {
             article.setId(Long.valueOf(doc.get(ARTICLE_ID)));
             article.setTitle(title);
             article.setContentHtml(content);
+            article.setViewCount(Integer.valueOf(doc.get(ARTICLE_VIEW_COUNT)));
+            article.setCreated(LocalDateTime.parse(doc.get(ARTICLE_CREATED), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 
             //关键字高亮
             try {

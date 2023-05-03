@@ -39,7 +39,7 @@ public interface IArticleCommentService extends IService<ArticleComment> {
 	 * @param commentId
 	 * @param content
 	 */
-	void saveArticleComment(Long articleId, Long commentId, String content) throws FastcmsException;
+	Boolean saveArticleComment(Long articleId, Long commentId, String content) throws FastcmsException;
 
 	class ArticleCommentVo implements Serializable {
 

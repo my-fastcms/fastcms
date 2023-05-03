@@ -27,7 +27,7 @@ public class CmsCodeGen extends AbstractCodeGen {
 
 	@Override
 	String getOutputDir() {
-		return System.getProperty("user.dir") + "/cms";
+		return "/cms";
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class CmsCodeGen extends AbstractCodeGen {
 
 	@Override
 	String[] getTableNames() {
-		return new String[] {"article", "article_category", "article_tag", "article_comment", "single_page", "single_page_comment", "menu"};
+		return new String[] {"article", "article_category", "article_tag", "article_comment", "article_zan", "single_page", "single_page_comment", "menu"};
 	}
 
 	public static void main(String[] args) throws Exception {

@@ -118,4 +118,5 @@
 - 升级vite到4.2.1
 - 升级element-plus到2.3.3
 - 升级typescript到5.0.4
+- 增加文章点赞功能
 - 修复一些已知BUG
