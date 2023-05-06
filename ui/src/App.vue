@@ -76,6 +76,9 @@ export default defineComponent({
 			() => route.path,
 			() => {
 				title();
+			},
+			{
+				deep: true,
 			}
 		);
 		return {

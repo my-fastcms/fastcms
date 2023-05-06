@@ -78,12 +78,14 @@ public class ArticleApi {
 	@GetMapping("list")
 	public RestResult<Page<IArticleService.ArticleVo>> list(PageModel page,
 															@RequestParam(name = "categoryId", required = false) String categoryId,
-															@RequestParam(name = "tagId", required = false) String tagId) {
+															@RequestParam(name = "tagId", required = false) String tagId,
+															@RequestParam(name = "orderBy", required = false, defaultValue = "a.created") String orderBy) {
 		QueryWrapper<Object> queryWrapper = Wrappers.query()
 				.eq(StrUtils.isNotBlank(categoryId), "acr.category_id", categoryId)
 				.eq(StrUtils.isNotBlank(tagId), "atr.tag_id", tagId)
 				.eq("a.status", Article.STATUS_PUBLISH)
-				.orderByDesc("a.created");
+				.orderByDesc(orderBy);
+
 		Page<IArticleService.ArticleVo> articleVoPage = articleService.pageArticleOpen(page.toPage(), queryWrapper);
 		return RestResultUtils.success(articleVoPage);
 	}
