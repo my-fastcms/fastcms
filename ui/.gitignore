@@ -17,3 +17,6 @@ npm-debug.log*
 test/uirecorder.log
 test/reports
 test/screenshots/*
+
+# package
+package-lock.json
