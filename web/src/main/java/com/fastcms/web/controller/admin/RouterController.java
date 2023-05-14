@@ -72,6 +72,17 @@ public class RouterController {
 	}
 
 	/**
+	 * 获取路由
+	 * @param id
+	 * @return
+	 */
+	@GetMapping("get")
+	@Secured(name = RESOURCE_NAME_ROUTER_GET, resource = "routers:get", action = ActionTypes.READ)
+	public RestResult<Permission> get(String id) {
+		return RestResultUtils.success(permissionService.getById(id));
+	}
+
+	/**
 	 * 删除路由
 	 * @param routerId
 	 * @return

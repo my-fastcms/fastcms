@@ -98,6 +98,7 @@ public interface IResourceService extends IService<Resource> {
 
 		String RESOURCE_NAME_ROUTER_LIST = "fastcms.resource.name.router.list";
 		String RESOURCE_NAME_ROUTER_SAVE = "fastcms.resource.name.router.save";
+		String RESOURCE_NAME_ROUTER_GET = "fastcms.resource.name.router.get";
 		String RESOURCE_NAME_ROUTER_DELETE = "fastcms.resource.name.router.delete";
 
 		String RESOURCE_NAME_USER_LIST = "fastcms.resource.name.user.list";
