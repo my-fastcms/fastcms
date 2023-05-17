@@ -697,3 +697,17 @@ ALTER TABLE `user` ADD COLUMN `error_count` int(11) DEFAULT '0';
 -- ----------------------------
 -- 0.1.3 表结构变更记录结束
 -- ----------------------------
+
+-- ----------------------------
+-- 0.1.5 表结构变更记录开始
+-- ----------------------------
+CREATE TABLE `article_zan` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `create_user_id` bigint(20) DEFAULT NULL,
+  `article_id` bigint(20) DEFAULT NULL,
+  `created` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
+-- ----------------------------
+-- 0.1.5 表结构变更记录结束
+-- ----------------------------
