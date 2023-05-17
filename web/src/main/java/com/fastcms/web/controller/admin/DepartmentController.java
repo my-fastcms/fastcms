@@ -73,6 +73,17 @@ public class DepartmentController {
     }
 
     /**
+     * 获取部门
+     * @param deptId
+     * @return
+     */
+    @GetMapping("get/{deptId}")
+    @Secured(name = RESOURCE_NAME_DEPARTMENT_GET, resource = "department:get", action = ActionTypes.READ)
+    public RestResult<Department> get(@PathVariable("deptId") Long deptId) {
+        return RestResultUtils.success(departmentService.getById(deptId));
+    }
+
+    /**
      * 删除部门
      * @param deptId
      * @return

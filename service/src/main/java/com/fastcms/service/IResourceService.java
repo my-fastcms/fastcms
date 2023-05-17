@@ -70,6 +70,7 @@ public interface IResourceService extends IService<Resource> {
 
 		String RESOURCE_NAME_DEPARTMENT_LIST = "fastcms.resource.name.department.list";
 		String RESOURCE_NAME_DEPARTMENT_SAVE ="fastcms.resource.name.department.save";
+		String RESOURCE_NAME_DEPARTMENT_GET = "fastcms.resource.name.department.get";
 		String RESOURCE_NAME_DEPARTMENT_DELETE = "fastcms.resource.name.department.delete";
 
 		String RESOURCE_NAME_ORDER_LIST = "fastcms.resource.name.order.list";
