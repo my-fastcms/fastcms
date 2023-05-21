@@ -11,6 +11,7 @@ import com.fastcms.utils.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 部门服务实现类
@@ -35,7 +36,7 @@ public class DepartmentServiceImpl<T extends TreeNode> extends ServiceImpl<Depar
     public void saveUserDepartments(Long userId, List<Long> deptIdList) {
         getBaseMapper().deleteDepartmentByUserId(userId);
         if (CollectionUtils.isNotEmpty(deptIdList)) {
-            getBaseMapper().saveUserDepartment(userId, deptIdList);
+            getBaseMapper().saveUserDepartment(userId, deptIdList.stream().distinct().collect(Collectors.toList()));
         }
     }
 

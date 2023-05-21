@@ -59,7 +59,7 @@ public final class PluginUtils {
      * @return
      */
     public static String getConfigUrlHost() {
-        return FastcmsConstants.PLUGIN_MAPPING;
+        return ConfigUtils.getConfig(FastcmsConstants.WEBSITE_DOMAIN).concat(FastcmsConstants.PLUGIN_MAPPING);
     }
 
 }
