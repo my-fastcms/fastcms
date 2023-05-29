@@ -73,6 +73,35 @@ public class WechatMiniUserApi {
 
 	static final String MINIAPP_RAW_DATA = "rawData";
 
+	static final String SESSION_KEY = "sessionKey";
+
+	static final String OPEN_ID = "openId";
+
+	static final String UNION_ID = "unionId";
+
+	/**
+	 * code2Session
+	 * @param code
+	 * @return
+	 * @throws WxErrorException
+	 */
+	@GetMapping("code2Session")
+	public RestResult<WxMaJscode2SessionResult> code2Session(@RequestParam("code") String code) throws WxErrorException {
+		WxMaJscode2SessionResult wxMaJscode2SessionResult = wxService.getUserService().getSessionInfo(code);
+		String sessionKey = wxMaJscode2SessionResult.getSessionKey();
+		String openId = wxMaJscode2SessionResult.getOpenid();
+
+		if (StrUtils.isBlank(openId)) {
+			return RestResultUtils.failed(I18nUtils.getMessage(USER_MINIAPP_LOGIN_FAIL_FOR_EMPTY_OPENID));
+		}
+
+		if (StrUtils.isBlank(sessionKey)) {
+			return RestResultUtils.failed(I18nUtils.getMessage(USER_MINIAPP_LOGIN_FAIL_FOR_EMPTY_SESSION));
+		}
+
+		return RestResultUtils.success(wxMaJscode2SessionResult);
+	}
+
 	/**
 	 * 登录
 	 * @param params
@@ -81,14 +110,8 @@ public class WechatMiniUserApi {
 	@PostMapping("login")
 	public RestResult<FastcmsUser> login(@RequestBody Map<String, Object> params) {
 
-		try {
-			WxMaJscode2SessionResult wxMaJscode2SessionResult = code2Session(params);
-			String sessionKey = wxMaJscode2SessionResult.getSessionKey();
-			String openId = wxMaJscode2SessionResult.getOpenid();
-
-			if(StrUtils.isBlank(openId)) {
-				return RestResultUtils.failed(I18nUtils.getMessage(USER_MINIAPP_LOGIN_FAIL_FOR_EMPTY_OPENID));
-			}
+			String sessionKey = getSessionKey(params);
+			String openId = getOpenId(params);
 
 			//不包括敏感信息的原始数据字符串，用于计算签名
 			String rawData = (String) params.get(MINIAPP_RAW_DATA);
@@ -112,11 +135,6 @@ public class WechatMiniUserApi {
 				e.printStackTrace();
 				return RestResultUtils.failed(I18nUtils.getMessage(USER_MINIAPP_LOGIN_FAIL_FOR_USER_IS_NULL));
 			}
-
-		} catch (WxErrorException e) {
-			return RestResultUtils.failed(e.getMessage());
-		}
-
 	}
 
 	/**
@@ -155,27 +173,21 @@ public class WechatMiniUserApi {
 	 */
 	@PostMapping("login/phone")
 	public RestResult<FastcmsUser> loginByPhone(@RequestBody Map<String, Object> params) {
+		String sessionKey = getSessionKey(params);
+		String openId = getOpenId(params);
+		String encryptedData = getEncryptedData(params);
+		String iv = (String) params.get("iv");
+		WxMaPhoneNumberInfo wxMaPhoneNumberInfo = wxService.getUserService().getPhoneNoInfo(sessionKey, encryptedData, iv);
+		if(wxMaPhoneNumberInfo == null || StrUtils.isBlank(wxMaPhoneNumberInfo.getPhoneNumber())) {
+			return RestResultUtils.failed(I18nUtils.getMessage(USER_MINIAPP_LOGIN_FAIL_FOR_GET_PHONE_FAIL));
+		}
 		try {
-			WxMaJscode2SessionResult wxMaJscode2SessionResult = code2Session(params);
-			String sessionKey = wxMaJscode2SessionResult.getSessionKey();
-			String openId = wxMaJscode2SessionResult.getOpenid();
-			String unionId = wxMaJscode2SessionResult.getUnionid();
-			String encryptedData = getEncryptedData(params);
-			String iv = (String) params.get("iv");
-			WxMaPhoneNumberInfo wxMaPhoneNumberInfo = wxService.getUserService().getPhoneNoInfo(sessionKey, encryptedData, iv);
-			if(wxMaPhoneNumberInfo == null || StrUtils.isBlank(wxMaPhoneNumberInfo.getPhoneNumber())) {
-				return RestResultUtils.failed(I18nUtils.getMessage(USER_MINIAPP_LOGIN_FAIL_FOR_GET_PHONE_FAIL));
-			}
-			try {
-				User user = userService.saveUser(openId, unionId, wxMaPhoneNumberInfo.getPurePhoneNumber(), UserOpenid.TYPE_WECHAT_MINI);
-				FastcmsUser tokenUser = tokenManager.createTokenUser(new FastcmsUserDetails(user));
-				return RestResultUtils.success(tokenUser);
-			} catch (FastcmsException e) {
-				e.printStackTrace();
-				return RestResultUtils.failed(I18nUtils.getMessage(USER_MINIAPP_LOGIN_FAIL_FOR_USER_IS_NULL));
-			}
-		} catch (WxErrorException e) {
-			return RestResultUtils.failed(e.getMessage());
+			User user = userService.saveUser(openId, getUnionId(params), wxMaPhoneNumberInfo.getPurePhoneNumber(), UserOpenid.TYPE_WECHAT_MINI);
+			FastcmsUser tokenUser = tokenManager.createTokenUser(new FastcmsUserDetails(user));
+			return RestResultUtils.success(tokenUser);
+		} catch (FastcmsException e) {
+			e.printStackTrace();
+			return RestResultUtils.failed(I18nUtils.getMessage(USER_MINIAPP_LOGIN_FAIL_FOR_USER_IS_NULL));
 		}
 	}
 
@@ -204,17 +216,20 @@ public class WechatMiniUserApi {
 
 	}
 
-	String getCode(Map<String, Object> params) {
-		return (String) params.get("code");
-	}
-
-	WxMaJscode2SessionResult code2Session(Map<String, Object> params) throws WxErrorException {
-		String code = getCode(params);
-		return wxService.getUserService().getSessionInfo(code);
-	}
-
 	String getEncryptedData(Map<String, Object> params) {
 		return (String) params.get(MINIAPP_ENCRYPTED_DATA);
+	}
+
+	String getSessionKey(Map<String, Object> params) {
+		return (String) params.get(SESSION_KEY);
+	}
+
+	String getOpenId(Map<String, Object> params) {
+		return (String) params.get(OPEN_ID);
+	}
+
+	String getUnionId(Map<String, Object> params) {
+		return (String) params.get(UNION_ID);
 	}
 
 }
