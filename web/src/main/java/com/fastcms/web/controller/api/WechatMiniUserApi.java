@@ -85,8 +85,8 @@ public class WechatMiniUserApi {
 	 * @return
 	 * @throws WxErrorException
 	 */
-	@GetMapping("code2Session")
-	public RestResult<WxMaJscode2SessionResult> code2Session(@RequestParam("code") String code) throws WxErrorException {
+	@GetMapping("code2session")
+	public RestResult<WxMaJscode2SessionResult> code2session(@RequestParam("code") String code) throws WxErrorException {
 		WxMaJscode2SessionResult wxMaJscode2SessionResult = wxService.getUserService().getSessionInfo(code);
 		String sessionKey = wxMaJscode2SessionResult.getSessionKey();
 		String openId = wxMaJscode2SessionResult.getOpenid();
