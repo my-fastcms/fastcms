@@ -30,8 +30,8 @@
 		</el-row>
 		<el-row :gutter="15">
 			<el-col :xs="24" :sm="14" :md="14" :lg="16" :xl="16" class="home-warning-media">
-				<el-card shadow="hover" :header="$t('message.card.title3')" class="home-warning-card">
-					<el-table :data="state.articleListData" style="width: 100%;height: 300px;" stripe>
+				<el-card shadow="hover" style="height: 450px;" :header="$t('message.card.title3')" class="home-warning-card">
+					<el-table :data="state.articleListData" style="width: 100%;height: 450px;" stripe>
 						<el-table-column prop="title" min-width="80%" :label="$t('message.table.th1')">
 						<template #default="scope">
 							<a :href="scope.row.url" target="_blank">
@@ -43,7 +43,7 @@
 				</el-card>
 			</el-col>
 			<el-col :xs="24" :sm="10" :md="10" :lg="8" :xl="8" class="home-dynamic-media">
-				<el-card shadow="hover" :header="$t('message.card.title4')">
+				<el-card shadow="hover" style="height: 450px;" :header="$t('message.card.title4')">
 					<div class="home-dynamic">
 						<el-scrollbar>
 							<div class="home-dynamic-item" v-for="(v, k) in activitiesList" :key="k">

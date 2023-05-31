@@ -28,7 +28,7 @@ export async function initFrontEndControlRoutes() {
 	await useUserInfo(pinia).setUserInfos();
 	// 无登录权限时，添加判断
 	// https://gitee.com/lyt-top/vue-next-admin/issues/I64HVO
-	if (useUserInfo().userInfos.roles.length <= 0) return Promise.resolve(true);
+	// if (useUserInfo().userInfos.roles.length <= 0) return Promise.resolve(true);
 	// 添加动态路由
 	await setAddRoute();
 	// 设置递归过滤有权限的路由到 pinia routesList 中（已处理成多级嵌套路由）及缓存多级嵌套数组处理后的一维数组
@@ -81,19 +81,19 @@ export function setFilterRouteEnd() {
  * @returns 返回有当前用户权限标识的路由数组
  */
 export function setFilterRoute(chil: any) {
-	const stores = useUserInfo(pinia);
-	const { userInfos } = storeToRefs(stores);
-	let filterRoute: any = [];
-	chil.forEach((route: any) => {
-		if (route.meta.roles) {
-			route.meta.roles.forEach((metaRoles: any) => {
-				userInfos.value.roles.forEach((roles: any) => {
-					if (metaRoles === roles) filterRoute.push({ ...route });
-				});
-			});
-		}
-	});
-	return filterRoute;
+	// const stores = useUserInfo(pinia);
+	// const { userInfos } = storeToRefs(stores);
+	// let filterRoute: any = [];
+	// chil.forEach((route: any) => {
+	// 	if (route.meta.roles) {
+	// 		route.meta.roles.forEach((metaRoles: any) => {
+	// 			userInfos.value.roles.forEach((roles: any) => {
+	// 				if (metaRoles === roles) filterRoute.push({ ...route });
+	// 			});
+	// 		});
+	// 	}
+	// });
+	return chil;
 }
 
 /**
@@ -144,10 +144,10 @@ export function setFilterHasRolesMenu(routes: any, roles: any) {
 	const menu: any = [];
 	routes.forEach((route: any) => {
 		const item = { ...route };
-		if (hasRoles(roles, item)) {
+		// if (hasRoles(roles, item)) {
 			if (item.children) item.children = setFilterHasRolesMenu(item.children, roles);
 			menu.push(item);
-		}
+		// }
 	});
 	return menu;
 }

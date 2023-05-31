@@ -106,7 +106,7 @@
         </el-row>
         <el-row>
           <el-form-item>
-            <el-button type="primary" @click="onSubmit" size="small">保 存</el-button>
+            <el-button type="primary" @click="onSubmit" size="default">保 存</el-button>
           </el-form-item>
         </el-row>
       </el-form>

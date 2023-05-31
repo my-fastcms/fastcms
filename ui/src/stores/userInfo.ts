@@ -1,4 +1,3 @@
-import { el } from 'element-plus/es/locale';
 import { defineStore } from 'pinia';
 import { Session, Local } from '/@/utils/storage';
 

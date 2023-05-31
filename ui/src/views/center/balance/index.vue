@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <el-card>
     <el-tabs v-model="state.activeName" class="demo-tabs" @tab-click="handleClick">
       <el-tab-pane label="资金总览" name="balance" :active="1">
         <div class="home-container">
@@ -17,19 +17,19 @@
           </el-row>
           <el-row :gutter="15" class="home-card-one mb15">
             <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="home-media-sm">
-              <el-button type="primary" @click="onCashOutDialog">提现</el-button>
+              <el-button type="primary" @click="onCashOutDialog" size="default">提现</el-button>
             </el-col>
           </el-row>
         </div>
       </el-tab-pane>
       <el-tab-pane label="提现记录" name="cashout" :active="2">
         <div class="mb15">
-          <el-select size="small" style="max-width: 180px" v-model="state.cashoutTableData.param.status" placeholder="状态" clearable class="ml10">
-            <el-option label="待审核" value="0"></el-option>
-            <el-option label="审核通过" value="1"></el-option>
-            <el-option label="审核拒绝" value="2"></el-option>
+          <el-select size="default" style="max-width: 180px" v-model="state.cashoutTableData.param.status" placeholder="状态" clearable class="ml10">
+            <el-option label="待审核" :value="0"></el-option>
+            <el-option label="审核通过" :value="1"></el-option>
+            <el-option label="审核拒绝" :value="2"></el-option>
           </el-select>
-          <el-button size="small" type="primary" class="ml10" @click="initCashoutTableData">查询</el-button>
+          <el-button size="default" type="primary" class="ml10" @click="initCashoutTableData">查询</el-button>
         </div>
         <el-table :data="state.cashoutTableData.data" stripe style="width: 100%">
           <el-table-column prop="id" label="ID" show-overflow-tooltip></el-table-column>
@@ -72,7 +72,7 @@
     </el-tabs>
 
     <el-dialog v-model="state.dialogFormVisible" title="提现">
-      <el-form :model="state.cashOutForm" size="small" label-width="80px" :rules="state.cashOutFormRules" ref="myRefCashOutForm">
+      <el-form :model="state.cashOutForm" size="default" label-width="80px" :rules="state.cashOutFormRules" ref="myRefCashOutForm">
         <el-row :gutter="35">
           <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
             <el-form-item label="提现金额" prop="cashOutAmount">
@@ -86,12 +86,12 @@
       </el-form>
       <template #footer>
       <span class="dialog-footer">
-        <el-button @click="state.dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="onCashOut">确 定</el-button>
+        <el-button @click="state.dialogFormVisible = false" size="default">取 消</el-button>
+        <el-button type="primary" @click="onCashOut" size="default">确 定</el-button>
       </span>
       </template>
     </el-dialog>
-  </div>
+  </el-card>
   
 </template>
 <script lang="ts" name="balanceManager" setup>

@@ -1,20 +1,19 @@
 <template>
-	<div class="list-adapt-container">
-		<el-upload 
-			class="upload-btn"
-			:action="state.uploadUrl"
-			name="files"
-			multiple
-			:headers="state.headers"
-			:show-file-list="false"
-			:on-success="uploadSuccess"
-			:on-exceed="onHandleExceed"
-			:on-error="onHandleUploadError"
-			:limit="state.limit">
-			<el-button type="primary">上传附件</el-button>
-		</el-upload>
-		
+	<div class="list-adapt-container">		
 		<el-card shadow="hover">
+			<el-upload 
+				class="upload-btn"
+				:action="state.uploadUrl"
+				name="files"
+				multiple
+				:headers="state.headers"
+				:show-file-list="false"
+				:on-success="uploadSuccess"
+				:on-exceed="onHandleExceed"
+				:on-error="onHandleUploadError"
+				:limit="state.limit">
+				<el-button type="primary" size="default"><el-icon><ele-Plus /></el-icon>上传附件</el-button>
+			</el-upload>
 			<div v-if="state.tableData.data.length > 0">
 				<el-row :gutter="15">
 					<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb15" v-for="(v, k) in state.tableData.data" :key="k" @click="onTableItemClick(v)">

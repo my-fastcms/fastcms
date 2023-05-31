@@ -2,8 +2,8 @@
 	<div>
 		<el-card shadow="hover">
 			<div class="mb15">
-				<el-input placeholder="请输入评论内容" prefix-icon="el-icon-search" style="max-width: 180px" class="ml10"></el-input>
-				<el-button type="primary" class="ml10">查询</el-button>
+				<el-input placeholder="请输入评论内容" size="default" prefix-icon="el-icon-search" style="max-width: 180px" class="ml10"></el-input>
+				<el-button type="primary" class="ml10" size="default">查询</el-button>
 			</div>
 			<el-table :data="state.tableData.data" stripe style="width: 100%">
 				<el-table-column prop="id" label="ID" show-overflow-tooltip></el-table-column>
