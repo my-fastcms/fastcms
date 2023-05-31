@@ -1,25 +1,25 @@
 <template>
-  <el-dialog title="选择附件" fullscreen v-model="isShowDialog">
+  <el-dialog title="选择附件" fullscreen v-model="state.isShowDialog">
 		<div>
 			<el-upload 
 				class="upload-btn"
-				:action="uploadUrl"
+				:action="state.uploadUrl"
 				name="files"
 				multiple
-				:headers="headers"
+				:headers="state.headers"
 				:show-file-list="false"
 				:on-success="uploadSuccess"
 				:on-exceed="onHandleExceed"
 				:on-error="onHandleUploadError"
-				:limit="limit">
-				<el-button size="small" type="primary">上传附件</el-button>
+				:limit="state.limit">
+				<el-button type="primary"><el-icon><ele-Plus /></el-icon>上传附件</el-button>
 			</el-upload>
 			
 			<el-card shadow="hover">
-				<div v-if="tableData.data.length > 0">
+				<div v-if="state.tableData.data.length > 0">
 					<el-row :gutter="15">
-						<el-checkbox-group :max="max" v-model="checkedObjs">
-							<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb15" v-for="(v, k) in tableData.data" :key="k" @click="onTableItemClick(v)">
+						<el-checkbox-group :max="state.max" v-model="state.checkedObjs">
+							<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb15" v-for="(v, k) in state.tableData.data" :key="k" @click="onTableItemClick(v)">
 								<el-card :body-style="{ padding: '0px' }">
 									<img :src="v.path" class="image">
 									<div style="padding: 14px;">
@@ -31,17 +31,17 @@
 					</el-row>
 				</div>
 				<el-empty v-else description="暂无数据"></el-empty>
-				<template v-if="tableData.data.length > 0">
+				<template v-if="state.tableData.data.length > 0">
 					<el-pagination
 						style="text-align: right"
 						background
 						@size-change="onHandleSizeChange"
 						@current-change="onHandleCurrentChange"
 						:page-sizes="[10, 20, 30]"
-						:current-page="tableData.param.pageNum"
-						:page-size="tableData.param.pageSize"
+						:current-page="state.tableData.param.pageNum"
+						:page-size="state.tableData.param.pageSize"
 						layout="total, sizes, prev, pager, next, jumper"
-						:total="tableData.total"
+						:total="state.tableData.total"
 					>
 					</el-pagination>
 				</template>
@@ -49,138 +49,125 @@
 		</div>
 		<template #footer>
 				<span class="dialog-footer">
-					<el-button @click="closeDialog" size="small">取 消</el-button>
-					<el-button type="primary" @click="onSubmit" size="small">确 定</el-button>
+					<el-button @click="closeDialog">取 消</el-button>
+					<el-button type="primary" @click="onSubmit">确 定</el-button>
 				</span>
 			</template>
 	</el-dialog>
 </template>
 
-<script lang="ts">
-import {toRefs, reactive, onMounted } from "vue";
-import { getAttachList } from '/@/api/attach/index';
-import { getAttachList as getClientAttachList } from '/@/api/attach/client';
+<script lang="ts" setup name="ckeditorAttachDialog">
+import {reactive, onMounted } from "vue";
+import { AttachApi } from '/@/api/attach/index';
+import { ClientAttachApi } from '/@/api/attach/client';
 import { ElMessage } from 'element-plus';
-import { Local, Session } from '/@/utils/storage';
+import { Local } from '/@/utils/storage';
 import insertImage from "./imgPlugin/insertImage";
 import connect from "./imgPlugin/connect";
 
-export default {
-//   emits: ["attachHandler"],
-  name: 'ckeditorAttachDialog',
-  props: {
+
+const articleApi = AttachApi();
+const clientAttachApi = ClientAttachApi();
+
+const props = defineProps({
 	fileType: String,
 	isClient: {
 		type: Boolean,
 		default: false,
 	},
-  },
-  setup(props, ctx) {
-    
-	let _uploadUrl = import.meta.env.VITE_API_URL + "/admin/attachment/upload";
-	if(props.isClient && props.isClient == true) {
-		_uploadUrl = import.meta.env.VITE_API_URL + "/client/attachment/upload";
-	}
+}) 
 
-    const state = reactive({
-			isShowDialog: false,
-			queryParams: {},
-			showSearch: true,
-			max: 1,
-			limit: 3,
-			uploadUrl: _uploadUrl,
-			headers: {"Authorization": Local.get('token')},
-			checkedObjs: [],	//选中的图片元素
-			tableData: {
-				data: [],
-				total: 99,
-				loading: false,
-				param: {
-					pageNum: 1,
-					pageSize: 10,
-				},
-			},
-		});
+let _uploadUrl = import.meta.env.VITE_API_URL + "/admin/attachment/upload";
+if(props.isClient && props.isClient == true) {
+	_uploadUrl = import.meta.env.VITE_API_URL + "/client/attachment/upload";
+}
 
-		const openDialog = (max) => {
-			state.isShowDialog = true;
-			state.max = max;
-		};
-		// 关闭弹窗
-		const closeDialog = () => {
-			state.isShowDialog = false;
-			state.max = 1;
-		};
+const state = reactive({
+	isShowDialog: false,
+	queryParams: {},
+	showSearch: true,
+	max: 1,
+	limit: 3,
+	uploadUrl: _uploadUrl,
+	headers: {"Authorization": Local.get('token')},
+	checkedObjs: [],	//选中的图片元素
+	tableData: {
+		data: [],
+		total: 99,
+		loading: false,
+		param: {
+			pageNum: 1,
+			pageSize: 10,
+		},
+	},
+});
 
-		const initTableData = () => {
-			if(props.isClient && props.isClient == true) {
-				getClientAttachList(state.tableData.param).then((res) => {
-					state.tableData.data = res.data.records;
-					state.tableData.total = res.data.total;
-				});
-			} else {
-				getAttachList(state.tableData.param).then((res) => {
-					state.tableData.data = res.data.records;
-					state.tableData.total = res.data.total;
-				});
-			}
-		};
-
-		const uploadSuccess = () => {
-			initTableData();
-		}
-
-		const onHandleExceed = () => {
-			ElMessage.error("上传文件数量不能超过 "+state.limit+" 个!");
-		}
-		// 上传失败
-		const onHandleUploadError = () => {
-			ElMessage.error("上传失败");
-		}
-
-		onMounted(() => {
-			initTableData();
-		});
-
-		// 当前列表项点击
-		const onTableItemClick = (v: object) => {
-			console.log(v);
-		};
-		// 分页点击
-		const onHandleSizeChange = (val: number) => {
-			state.tableData.param.pageSize = val;
-			initTableData();
-		};
-		// 分页点击
-		const onHandleCurrentChange = (val: number) => {
-			state.tableData.param.pageNum = val;
-			initTableData();
-		};
-		
-		const onSubmit = () => {
-			let selectData: any= [];
-			//把选中的附件传递给父组件
-			state.checkedObjs.forEach(item => selectData.push({src: item.path}));
-			selectData.forEach(item => insertImage(connect.editorObj.model, item));
-			closeDialog();
-		};
-
-    return {
-    	openDialog,
-	  	closeDialog,
-	  	initTableData,
-		onTableItemClick,
-		onHandleSizeChange,
-		onHandleCurrentChange,
-		onHandleExceed,
-		onHandleUploadError,
-		uploadSuccess,
-		onSubmit,
-      	confirm,
-      	...toRefs(state),
-    }
-  }
+const openDialog = (max: number) => {
+	state.isShowDialog = true;
+	state.max = max;
 };
+// 关闭弹窗
+const closeDialog = () => {
+	state.isShowDialog = false;
+	state.max = 1;
+};
+
+const initTableData = () => {
+	if(props.isClient && props.isClient == true) {
+		clientAttachApi.getAttachList(state.tableData.param).then((res) => {
+			state.tableData.data = res.data.records;
+			state.tableData.total = res.data.total;
+		});
+	} else {
+		articleApi.getAttachList(state.tableData.param).then((res) => {
+			state.tableData.data = res.data.records;
+			state.tableData.total = res.data.total;
+		});
+	}
+};
+
+const uploadSuccess = () => {
+	initTableData();
+}
+
+const onHandleExceed = () => {
+	ElMessage.error("上传文件数量不能超过 "+state.limit+" 个!");
+}
+// 上传失败
+const onHandleUploadError = () => {
+	ElMessage.error("上传失败");
+}
+
+onMounted(() => {
+	initTableData();
+});
+
+// 当前列表项点击
+const onTableItemClick = (v: object) => {
+	console.log(v);
+};
+// 分页点击
+const onHandleSizeChange = (val: number) => {
+	state.tableData.param.pageSize = val;
+	initTableData();
+};
+// 分页点击
+const onHandleCurrentChange = (val: number) => {
+	state.tableData.param.pageNum = val;
+	initTableData();
+};
+
+const onSubmit = () => {
+	let selectData: any= [];
+	//把选中的附件传递给父组件
+	state.checkedObjs.forEach(item => selectData.push({src: item.path}));
+	selectData.forEach(item => insertImage(connect.editorObj.model, item));
+	closeDialog();
+};
+
+defineExpose({
+	openDialog
+})
 </script>
 
 <style scoped lang="scss">

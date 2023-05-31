@@ -78,7 +78,7 @@ export default {
 	},
 	noAccess: {
 		accessTitle: 'You are not authorized to operate~',
-		accessMsg: 'Contact information: add QQ group discussion 665452019',
+		accessMsg: 'Contact information: add Wechat discussion 13533109940',
 		accessBtn: 'Reauthorization',
 	},
 	layout: {
@@ -132,5 +132,13 @@ export default {
 		resetText: 'restore default',
 		copyTextSuccess: 'Copy succeeded!',
 		copyTextError: 'Copy failed!',
+	},
+	upgrade: {
+		title: 'New version',
+		msg: 'The new version is available, please update it now! Dont worry, the update is fast!',
+		desc: 'Prompt: Update will restore the default configuration',
+		btnOne: 'Cruel refusal',
+		btnTwo: 'Update now',
+		btnTwoLoading: 'Updating',
 	},
 };

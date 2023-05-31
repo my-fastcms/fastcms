@@ -1,5 +1,5 @@
-<script lang="ts">
-import {defineComponent, onMounted, ref, watch, reactive} from "vue";
+<script lang="ts" setup name ="fastcmsCkeditor">
+import {onMounted, ref, watch, reactive} from "vue";
 
 import connect from "./imgPlugin/connect";
 
@@ -36,172 +36,161 @@ import CloudServices from '@ckeditor/ckeditor5-cloud-services/src/cloudservices'
 import SourceEditing from '@ckeditor/ckeditor5-source-editing/src/sourceediting';
 // import Markdown from '@ckeditor/ckeditor5-markdown-gfm/src/markdown';
 
-import CKEditorInspector from '@ckeditor/ckeditor5-inspector';
+// import CKEditorInspector from '@ckeditor/ckeditor5-inspector/inspector.js';
 
 import ImgCustom from './imgPlugin/main';
 
 import imgResWin from "./imgResWin.vue";
 
-export default defineComponent({
-  props: {
-    isClient: {
+const props = defineProps({
+  isClient: {
       type: Boolean,
       default: false,
     },
     modelValue: {
       type: String
     }
-  },
-  components: {
-    imgResWin
-  },
-  setup(props, {emit}) {
-    let attachDialog = ref();
-    let ckeditorDom = ref();
-    let editorExample: { setData: (arg0: string | undefined) => any; } | null = null;
-    let isPrint = false;
-
-    const state = reactive({
-      isClient: props.isClient || false
-    })
-
-    onMounted(() => {
-      connect.dialogObj = attachDialog.value;
-      const ckeditorDiv = ckeditorDom.value;
-      DecoupledEditor
-          .create(ckeditorDiv.querySelector('.CKEditorContent'), {
-            language: {
-                ui: 'zh-cn'
-            },
-            plugins: [
-                SourceEditing,
-                Essentials,
-                UploadAdapter,
-                Autoformat,
-                Bold,
-                Code,
-                Italic,
-                BlockQuote,
-                CKFinder,
-	              CloudServices,
-                EasyImage,
-                Heading,
-                Image,
-                ImageCaption,
-                ImageStyle,
-                ImageToolbar,
-                ImageUpload,
-                ImageResize,
-                ImageResizeEditing,
-                ImageResizeHandles,
-                Indent,
-                Link,
-                List,
-                MediaEmbed,
-                Paragraph,
-                PasteFromOffice,
-                Table,
-                TableToolbar,
-                TextTransformation,
-                // Markdown,
-                ImgCustom
-            ],
-            toolbar: [
-                'sourceEditing',
-                '|',
-                'heading',
-                '|',
-                'bold',
-                'italic',
-                'link',
-                'bulletedList',
-                'numberedList',
-                '|',
-                'outdent',
-                'indent',
-                '|',
-                ImgCustom.pluginName,
-                'blockQuote',
-                'insertTable',
-                'mediaEmbed',
-                'undo',
-                'redo',
-            ],
-            image: {        // Configure the available styles.
-              styles: ["alignLeft", "alignCenter", "alignRight"],
-
-              // Configure the available image resize options.
-              resizeOptions: [
-                {
-                  name: "imageResize:original",
-                  label: "Original",
-                  value: null,
-                },
-                {
-                  name: "imageResize:25",
-                  label: "25%",
-                  value: "25",
-                },
-                {
-                  name: "imageResize:50",
-                  label: "50%",
-                  value: "50",
-                },
-                {
-                  name: "imageResize:75",
-                  label: "75%",
-                  value: "75",
-                },
-              ],
-              toolbar: [
-                'imageStyle:inline',
-                'imageStyle:block',
-                'imageStyle:side',
-                "|",
-                "imageStyle:alignLeft",
-                "imageStyle:alignCenter",
-                "imageStyle:alignRight",
-                "|",
-                "imageResize",
-                "imageTextAlternative",
-                'toggleImageCaption',
-              ]
-            },
-            table: {
-              contentToolbar: [
-                'tableColumn',
-                'tableRow',
-                'mergeTableCells'
-              ]
-            },
-          })
-      .then((editor: any) => {
-        const toolbar = ckeditorDiv.querySelector(".CKEditorToolbar");
-        toolbar && (toolbar.innerHTML = "");
-        setTimeout(() => toolbar.appendChild( editor.ui.view.toolbar.element ), 0);
-        editorExample = editor;
-        editor.setData(props.modelValue);
-        editor.model.document.on("change", function() {
-          isPrint = true;
-          emit("update:modelValue", editor.getData());
-        });
-        // CKEditorInspector.attach(editor); // CKEditor 调试器
-      })
-      .catch((error: any) => {
-        console.log(error);
-      });
-    });
-    watch(() => props.modelValue, val => {
-      if (isPrint) return isPrint = false;
-      editorExample && editorExample.setData(val);
-    })
-    return {
-      ckeditorDom,
-      attachDialog,
-      state
-    }
-  }
 });
+
+const emit = defineEmits(["update:modelValue"]);
+
+let attachDialog = ref();
+let ckeditorDom = ref();
+let editorExample: { setData: (arg0: string | undefined) => any; } | null = null;
+let isPrint = false;
+
+const state = reactive({
+  isClient: props.isClient || false
+})
+const editorConfig = reactive({
+    language: {
+        ui: 'zh-cn'
+    },
+    plugins: [
+        SourceEditing,
+        Essentials,
+        UploadAdapter,
+        Autoformat,
+        Bold,
+        Code,
+        Italic,
+        BlockQuote,
+        CKFinder,
+        CloudServices,
+        EasyImage,
+        Heading,
+        Image,
+        ImageCaption,
+        ImageStyle,
+        ImageToolbar,
+        ImageUpload,
+        ImageResize,
+        ImageResizeEditing,
+        ImageResizeHandles,
+        Indent,
+        Link,
+        List,
+        MediaEmbed,
+        // Paragraph,
+        PasteFromOffice,
+        Table,
+        TableToolbar,
+        TextTransformation,
+        // Markdown,
+        ImgCustom
+    ],
+    toolbar: [
+        'sourceEditing',
+        '|',
+        'heading',
+        '|',
+        'bold',
+        'italic',
+        'link',
+        'bulletedList',
+        'numberedList',
+        '|',
+        'outdent',
+        'indent',
+        '|',
+        ImgCustom.pluginName,
+        'blockQuote',
+        'insertTable',
+        'mediaEmbed',
+        'undo',
+        'redo',
+    ],
+    image: {
+      styles: ["alignLeft", "alignCenter", "alignRight"],
+      resizeOptions: [
+        {
+          name: "imageResize:original",
+          label: "Original",
+          value: null,
+        },
+        {
+          name: "imageResize:25",
+          label: "25%",
+          value: "25",
+        },
+        {
+          name: "imageResize:50",
+          label: "50%",
+          value: "50",
+        },
+        {
+          name: "imageResize:75",
+          label: "75%",
+          value: "75",
+        },
+      ],
+      toolbar: [
+        'imageStyle:inline',
+        'imageStyle:block',
+        'imageStyle:side',
+        "|",
+        "imageStyle:alignLeft",
+        "imageStyle:alignCenter",
+        "imageStyle:alignRight",
+        "|",
+        "imageResize",
+        "imageTextAlternative",
+        'toggleImageCaption',
+      ]
+    },
+    table: {
+      contentToolbar: [
+        'tableColumn',
+        'tableRow',
+        'mergeTableCells'
+      ]
+    },
+  })
+onMounted(() => {
+  connect.dialogObj = attachDialog.value;
+  const ckeditorDiv = ckeditorDom.value;
+  DecoupledEditor.create(ckeditorDiv.querySelector('.CKEditorContent'), editorConfig)
+  .then((editor: any) => {
+    const toolbar = ckeditorDiv.querySelector(".CKEditorToolbar");
+    toolbar && (toolbar.innerHTML = "");
+    setTimeout(() => toolbar.appendChild( editor.ui.view.toolbar.element ), 0);
+    editorExample = editor;
+    editor.setData(props.modelValue);
+    editor.model.document.on("change", function() {
+      isPrint = true;
+      emit("update:modelValue", editor.getData());
+    });
+    // CKEditorInspector.attach(editor); // CKEditor 调试器
+  })
+  .catch((error: any) => {
+    console.log(error);
+  });
+});
+watch(() => props.modelValue, val => {
+  if (isPrint) return isPrint = false;
+  editorExample && editorExample.setData(val);
+})
+
 </script>
 
 <template>
@@ -210,7 +199,7 @@ export default defineComponent({
       <div class="CKEditorToolbar"></div>
       <div class="CKEditorContent"></div>
     </div>
-    <imgResWin ref="attachDialog" :isClient=isClient />
+    <imgResWin ref="attachDialog" :isClient=state.isClient />
   </div>
 </template>
 

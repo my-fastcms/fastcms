@@ -1,69 +1,32 @@
 <template>
 	<div class="layout-logo" v-if="setShowLogo" @click="onThemeConfigChange">
-		<img src="/logo-mini.png" v-if="showFastcmsLog" class="layout-logo-medium-img" />
-		<span>{{ website_title }}</span>
+		<img :src="logoMini" class="layout-logo-medium-img" />
+		<span>{{ themeConfig.globalTitle }}</span>
 	</div>
 	<div class="layout-logo-size" v-else @click="onThemeConfigChange">
-		<img src="/logo-mini.png" class="layout-logo-size-img" />
+		<img :src="logoMini" class="layout-logo-size-img" />
 	</div>
 </template>
 
-<script lang="ts">
-import { computed, toRefs, getCurrentInstance, reactive, onMounted } from 'vue';
-import { useStore } from '/@/store/index';
-import { getConfigList } from '/@/api/config/index';
-import qs from 'qs';
-export default {
-	name: 'layoutLogo',
-	setup() {
-		const { proxy } = getCurrentInstance() as any;
-		const store = useStore();
+<script setup lang="ts" name="layoutLogo">
+import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useThemeConfig } from '/@/stores/themeConfig';
+import logoMini from '/@/assets/logo-mini.svg';
 
-				// 获取布局配置信息
-		const getThemeConfig = computed(() => {
-			return store.state.themeConfig.themeConfig;
-		});
+// 定义变量内容
+const storesThemeConfig = useThemeConfig();
+const { themeConfig } = storeToRefs(storesThemeConfig);
 
-		const state = reactive({
-			isDelayFooter: true,
-			showFastcmsLog: false,
-			website_title: store.state.themeConfig.themeConfig.globalTitle
-		});
-		
-		// 设置 logo 的显示。classic 经典布局默认显示 logo
-		const setShowLogo = computed(() => {
-			let { isCollapse, layout } = store.state.themeConfig.themeConfig;
-			return !isCollapse || layout === 'classic' || document.body.clientWidth < 1000;
-		});
-		// logo 点击实现菜单展开/收起
-		const onThemeConfigChange = () => {
-			if (store.state.themeConfig.themeConfig.layout === 'transverse') return false;
-			proxy.mittBus.emit('onMenuClick');
-			store.state.themeConfig.themeConfig.isCollapse = !store.state.themeConfig.themeConfig.isCollapse;
-		};
-		onMounted(() => {
-			let paramKeys = new Array();
-			paramKeys.push("public_website_title");
-			paramKeys.push("is_show_fastcms_logo");
-			let params = qs.stringify( {"configKeys" : paramKeys}, {arrayFormat: 'repeat'});
-			getConfigList(params).then((res) => {
-				res.data.forEach(item => {
-					if(item.key == 'public_website_title' && item.jsonValue != null) {
-						state.website_title = item.jsonValue;	
-					}
-					if (item.key == 'is_show_fastcms_logo' && item.jsonValue != null) {
-						state.showFastcmsLog = item.jsonValue;
-					}
-				});
-			});
-		});
-		return {
-			...toRefs(state),
-			setShowLogo,
-			getThemeConfig,
-			onThemeConfigChange,
-		};
-	},
+// 设置 logo 的显示。classic 经典布局默认显示 logo
+const setShowLogo = computed(() => {
+	let { isCollapse, layout } = themeConfig.value;
+	return !isCollapse || layout === 'classic' || document.body.clientWidth < 1000;
+});
+// logo 点击实现菜单展开/收起
+const onThemeConfigChange = () => {
+	if (themeConfig.value.layout === 'transverse') return false;
+	themeConfig.value.isCollapse = !themeConfig.value.isCollapse;
 };
 </script>
 
@@ -75,10 +38,14 @@ export default {
 	align-items: center;
 	justify-content: center;
 	box-shadow: rgb(0 21 41 / 2%) 0px 1px 4px;
-	color: var(--color-primary);
+	color: var(--el-color-primary);
 	font-size: 16px;
 	cursor: pointer;
 	animation: logoAnimation 0.3s ease-in-out;
+	span {
+		white-space: nowrap;
+		display: inline-block;
+	}
 	&:hover {
 		span {
 			color: var(--color-primary-light-2);

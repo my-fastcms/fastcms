@@ -7,6 +7,10 @@
 	.el-message-box {
 		width: 80% !important;
 	}
+	// 锁屏页
+	.layout-lock-screen-date-top {
+		display: none;
+	}
 }
 
 /* 页面宽度小于768px
@@ -51,5 +55,9 @@
 			background: rgba(255, 255, 255, 0.9);
 			color: #666666;
 		}
+	}
+	// pagination 分页中的工具栏
+	.table-footer-tool {
+		display: none !important;
 	}
 }

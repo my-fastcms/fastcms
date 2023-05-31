@@ -38,7 +38,7 @@
 ------------------------------- */
 .breadcrumb-enter-active,
 .breadcrumb-leave-active {
-	transition: all 0.3s;
+	transition: all 0.5s ease;
 }
 .breadcrumb-enter-from,
 .breadcrumb-leave-active {
@@ -47,6 +47,7 @@
 }
 .breadcrumb-leave-active {
 	position: absolute;
+	z-index: -1;
 }
 
 /* logo 过渡动画
@@ -81,5 +82,66 @@
 	}
 	100% {
 		opacity: 1;
+	}
+}
+@keyframes error-img-two {
+	0% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+	}
+}
+
+/* 登录页动画
+------------------------------- */
+@keyframes loginLeft {
+	0% {
+		left: -100%;
+	}
+	50%,
+	100% {
+		left: 100%;
+	}
+}
+@keyframes loginTop {
+	0% {
+		top: -100%;
+	}
+	50%,
+	100% {
+		top: 100%;
+	}
+}
+@keyframes loginRight {
+	0% {
+		right: -100%;
+	}
+	50%,
+	100% {
+		right: 100%;
+	}
+}
+@keyframes loginBottom {
+	0% {
+		bottom: -100%;
+	}
+	50%,
+	100% {
+		bottom: 100%;
+	}
+}
+
+/* 左右左 link.vue
+------------------------------- */
+@keyframes toRight {
+	0% {
+		left: -5px;
+	}
+	50% {
+		left: 100%;
+	}
+	100% {
+		left: -5px;
 	}
 }

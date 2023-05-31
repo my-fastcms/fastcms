@@ -7,18 +7,18 @@
 					<div class="personal-user">
 						<div class="personal-user-left">
 							<el-upload class="h100 personal-user-left-upload" action="https://jsonplaceholder.typicode.com/posts/" multiple :limit="1">
-								<img src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1813762643,1914315241&fm=26&gp=0.jpg" />
+								<img :src="state.userInfo.photo" />
 							</el-upload>
 						</div>
 						<div class="personal-user-right">
 							<el-row>
 								<el-col :span="24" class="personal-title mb18">{{ currentTime }}，admin </el-col>
-								<el-col :span="24" class="personal-title mb18" v-if="userInfo.autograph !=null">{{userInfo.autograph}}</el-col>
+								<el-col :span="24" class="personal-title mb18" v-if="state.userInfo.autograph !=null">{{state.userInfo.autograph}}</el-col>
 								<el-col :span="24">
 									<el-row>
 										<el-col :xs="24" :sm="8" class="personal-item mb6">
 											<div class="personal-item-label">昵称：</div>
-											<div class="personal-item-value">{{ userInfo.nickName }}</div>
+											<div class="personal-item-value">{{ state.userInfo.nickName }}</div>
 										</el-col>
 										<!-- <el-col :xs="24" :sm="16" class="personal-item mb6">
 											<div class="personal-item-label">身份：</div>
@@ -30,11 +30,11 @@
 									<el-row>
 										<el-col :xs="24" :sm="8" class="personal-item mb6">
 											<div class="personal-item-label">登录IP：</div>
-											<div class="personal-item-value">{{ userInfo.accessIp }}</div>
+											<div class="personal-item-value">{{ state.userInfo.accessIp }}</div>
 										</el-col>
 										<el-col :xs="24" :sm="16" class="personal-item mb6">
 											<div class="personal-item-label">登录时间：</div>
-											<div class="personal-item-value">{{ userInfo.loginTime }}</div>
+											<div class="personal-item-value">{{ state.userInfo.loginTime }}</div>
 										</el-col>
 									</el-row>
 								</el-col>
@@ -65,26 +65,26 @@
 			<el-col :span="24">
 				<el-card shadow="hover" class="mt15 personal-edit" header="更新信息">
 					<div class="personal-edit-title">基本信息</div>
-					<el-form :model="personalForm" :rules="personalFormRules" ref="myRefPersonalForm" size="small" label-width="80px" class="mt35 mb35">
+					<el-form :model="state.personalForm" :rules="state.personalFormRules" ref="myRefPersonalForm" label-width="80px" class="mt35 mb35">
 						<el-row :gutter="35">
 							<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
 								<el-form-item label="昵称" prop="nickName">
-									<el-input v-model="personalForm.nickName" placeholder="请输入昵称" clearable></el-input>
+									<el-input v-model="state.personalForm.nickName" placeholder="请输入昵称" clearable></el-input>
 								</el-form-item>
 							</el-col>
 							<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
 								<el-form-item label="邮箱" prop="email">
-									<el-input v-model="personalForm.email" placeholder="请输入邮箱" clearable></el-input>
+									<el-input v-model="state.personalForm.email" placeholder="请输入邮箱" clearable></el-input>
 								</el-form-item>
 							</el-col>
 							<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
 								<el-form-item label="手机" prop="mobile">
-									<el-input v-model="personalForm.mobile" placeholder="请输入手机" clearable></el-input>
+									<el-input v-model="state.personalForm.mobile" placeholder="请输入手机" clearable></el-input>
 								</el-form-item>
 							</el-col>
 							<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
 								<el-form-item label="性别" prop="sex">
-									<el-select v-model="personalForm.sex" placeholder="请选择性别" clearable class="w100">
+									<el-select v-model="state.personalForm.sex" placeholder="请选择性别" clearable class="w100">
 										<el-option label="男" value="1"></el-option>
 										<el-option label="女" value="2"></el-option>
 									</el-select>
@@ -92,13 +92,13 @@
 							</el-col>
 							<el-col :xs="24" :sm="12" :md="8" :lg="12" :xl="12" class="mb20">
 								<el-form-item label="签名" prop="autograph">
-									<el-input v-model="personalForm.autograph" placeholder="请输入签名" clearable></el-input>
+									<el-input v-model="state.personalForm.autograph" placeholder="请输入签名" clearable></el-input>
 								</el-form-item>
 							</el-col>
 							
 							<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
 								<el-form-item>
-									<el-button type="primary" @click="onUpdateUserInfo" icon="el-icon-position">更新个人信息</el-button>
+									<el-button type="primary" @click="onUpdateUserInfo">更新个人信息</el-button>
 								</el-form-item>
 							</el-col>
 						</el-row>
@@ -111,7 +111,7 @@
 								<div class="personal-edit-safe-item-left-value">当前密码强度：中</div>
 							</div>
 							<div class="personal-edit-safe-item-right">
-								<el-button type="text" @click="dialogFormVisible = true">立即修改</el-button>
+								<el-button type="text" @click="state.dialogFormVisible = true">立即修改</el-button>
 							</div>
 						</div>
 					</div>
@@ -119,29 +119,29 @@
 				</el-card>
 			</el-col>
 		</el-row>
-		<el-dialog v-model="dialogFormVisible" title="修改密码">
-			<el-form :model="passwordForm" size="small" label-width="80px" :rules="passwordFormRules" ref="myRefPasswordForm">
+		<el-dialog v-model="state.dialogFormVisible" title="修改密码">
+			<el-form :model="state.passwordForm" label-width="80px" :rules="state.passwordFormRules" ref="myRefPasswordForm">
 				<el-row :gutter="35">
 					<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
 						<el-form-item label="旧密码" prop="oldPassword">
-							<el-input type="password" v-model="passwordForm.oldPassword" placeholder="请输入旧密码" clearable></el-input>
+							<el-input type="password" v-model="state.passwordForm.oldPassword" placeholder="请输入旧密码" clearable></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
 						<el-form-item label="新密码" prop="password">
-							<el-input type="password" v-model="passwordForm.password" placeholder="请输入新密码" clearable></el-input>
+							<el-input type="password" v-model="state.passwordForm.password" placeholder="请输入新密码" clearable></el-input>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="mb20">
 						<el-form-item label="确认密码" prop="confirmPassword">
-							<el-input type="password" v-model="passwordForm.confirmPassword" placeholder="请再次输入新密码" clearable></el-input>
+							<el-input type="password" v-model="state.passwordForm.confirmPassword" placeholder="请再次输入新密码" clearable></el-input>
 						</el-form-item>
 					</el-col>
 				</el-row>
 			</el-form>
 			<template #footer>
 			<span class="dialog-footer">
-				<el-button @click="dialogFormVisible = false">取 消</el-button>
+				<el-button @click="state.dialogFormVisible = false">取 消</el-button>
 				<el-button type="primary" @click="onUpdatePassword">确 定</el-button>
 			</span>
 			</template>
@@ -151,123 +151,124 @@
 
 </template>
 
-<script lang="ts">
-import { toRefs, reactive, computed, getCurrentInstance, onMounted } from 'vue';
+<script lang="ts" name="personal" setup>
+import { ref, reactive, computed, onMounted } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { formatAxis } from '/@/utils/formatTime';
 import { newsInfoList, recommendList } from './mock';
-import { updatePassword } from '/@/api/user/index';
-import { updateUser, getUserInfo } from '/@/api/user/client';
+import { UserApi } from '/@/api/user/index';
+import { ClientUserApi } from '/@/api/user/client';
 import { Local, Session } from '/@/utils/storage';
 import qs from 'qs';
 
-export default {
-	name: 'personal',
-	setup() {
-		const { proxy } = getCurrentInstance() as any;
-		const state = reactive({
-			dialogFormVisible: false,
-			formLabelWidth: '120px',
-			newsInfoList,
-			recommendList,
-			userInfo: {},
-			passwordForm: {
-				oldPassword: '',
-				password: '',
-				confirmPassword: ''
-			},
-			passwordFormRules: {
-				"oldPassword": { required: true, message: '请输入旧密码', trigger: 'blur' },
-				"password": { required: true, message: '请输入新密码', trigger: 'blur' },
-				"confirmPassword": { required: true, message: '请再次输入新密码', trigger: 'blur' },
-			},
-			personalForm: {
-				nickName: '',
-				email: '',
-				mobile: '',
-				sex: '',
-				autograph: '',
-			},
-			personalFormRules: {
-				"nickName": { required: true, message: '请输入昵称', trigger: 'blur' },
-				"email": { required: true, message: '请输入邮箱地址', trigger: 'blur' },
-				"autograph": { required: true, message: '请输入个性签名', trigger: 'blur' },
-			},
-		});
-
-		const onUpdateUserInfo = () => {
-			proxy.$refs['myRefPersonalForm'].validate((valid: any) => {
-				
-				if (valid) {
-					let params = qs.stringify(state.personalForm, {arrayFormat: 'repeat'});
-					console.info("doUpdate User info")
-					updateUser(params).then(() => {
-						ElMessage.success("保存成功")
-					}).catch((res) => {
-						ElMessage({showClose: true, message: res.message ? res.message : '系统错误' , type: 'error'});
-					})
-				}
-			});
-
-		}
-
-		// 关闭弹窗
-		const closeDialog = () => {
-			state.dialogFormVisible = false; 
-			state.passwordForm.password = "";
-			state.passwordForm.confirmPassword = "";
-		}
-
-		const onUpdatePassword = () => {
-
-			proxy.$refs['myRefPasswordForm'].validate((valid: any) => {
-				
-				if (valid) {
-					let params = qs.stringify(state.passwordForm, {arrayFormat: 'repeat'});
-					updatePassword(params).then(() => {
-						closeDialog();
-						Session.clear(); // 清除浏览器全部临时缓存
-						Local.clear();
-						ElMessageBox.alert('密码修改成功，请重新登录', '提示', {})
-							.then(() => {
-								window.location.href = '/'; // 去登录页
-							})
-							.catch(() => {});
-					}).catch((res) => {
-						ElMessage({showClose: true, message: res.message ? res.message : '系统错误' , type: 'error'});
-					})
-				}
-			});
-
-		};
-		// 当前时间提示语
-		const currentTime = computed(() => {
-			return formatAxis(new Date());
-		});
-
-		onMounted(() => {
-			getUserInfo().then((res => {
-				state.personalForm.nickName = res.data.nickName;
-				state.personalForm.email = res.data.email;
-				state.personalForm.mobile = res.data.mobile;
-				state.personalForm.autograph = res.data.autograph;
-				state.personalForm.sex = res.data.sex + "";
-				state.userInfo = res.data;
-			})).catch(()=>{})
-		})
-
-		return {
-			currentTime,
-			onUpdateUserInfo,
-			onUpdatePassword,
-			...toRefs(state),
-		};
+const myRefPersonalForm = ref();
+const myRefPasswordForm = ref();
+const userApi = UserApi();
+const clientUserApi = ClientUserApi();
+const state = reactive({
+	dialogFormVisible: false,
+	formLabelWidth: '120px',
+	newsInfoList,
+	recommendList,
+	userInfo: {},
+	passwordForm: {
+		oldPassword: '',
+		password: '',
+		confirmPassword: ''
 	},
+	passwordFormRules: {
+		"oldPassword": { required: true, message: '请输入旧密码', trigger: 'blur' },
+		"password": { required: true, message: '请输入新密码', trigger: 'blur' },
+		"confirmPassword": { required: true, message: '请再次输入新密码', trigger: 'blur' },
+	},
+	personalForm: {
+		nickName: '',
+		email: '',
+		mobile: '',
+		sex: '',
+		autograph: '',
+	},
+	personalFormRules: {
+		"nickName": { required: true, message: '请输入昵称', trigger: 'blur' },
+		"email": { required: true, message: '请输入邮箱地址', trigger: 'blur' },
+		"autograph": { required: true, message: '请输入个性签名', trigger: 'blur' },
+	},
+});
+
+const onUpdateUserInfo = () => {
+	myRefPersonalForm.value.validate((valid: any) => {
+		
+		if (valid) {
+			clientUserApi.updateUser(state.personalForm).then(() => {
+				ElMessage.success("保存成功");
+			}).catch((res) => {
+				ElMessage({showClose: true, message: res.message ? res.message : '系统错误' , type: 'error'});
+			})
+		}
+	});
+
+}
+
+// 关闭弹窗
+const closeDialog = () => {
+	state.dialogFormVisible = false; 
+	state.passwordForm.password = "";
+	state.passwordForm.confirmPassword = "";
+}
+
+const onUpdatePassword = () => {
+
+	myRefPasswordForm.value.validate((valid: any) => {
+		
+		if (valid) {
+			let params = qs.stringify(state.passwordForm, {arrayFormat: 'repeat'});
+			userApi.updatePassword(params).then(() => {
+				closeDialog();
+				Session.clear(); // 清除浏览器全部临时缓存
+				Local.clear();
+				ElMessageBox.alert('密码修改成功，请重新登录', '提示', {})
+					.then(() => {
+						window.location.href = '/'; // 去登录页
+					})
+					.catch(() => {});
+			}).catch((res) => {
+				ElMessage({showClose: true, message: res.message ? res.message : '系统错误' , type: 'error'});
+			})
+		}
+	});
+
 };
+// 当前时间提示语
+const currentTime = computed(() => {
+	return formatAxis(new Date());
+});
+
+onMounted(() => {
+	clientUserApi.getUserInfo().then((res => {
+		state.personalForm.nickName = res.data.nickName;
+		state.personalForm.email = res.data.email;
+		state.personalForm.mobile = res.data.mobile;
+		state.personalForm.autograph = res.data.autograph;
+		state.personalForm.sex = res.data.sex + "";
+		
+		const userInfos = {
+			username: res.data.userName,
+			photo: res.data.headImg === null ? '/header.jpg' : res.data.headImg,
+			time: new Date().getTime(),
+			nickName: res.data.nickName,
+			accessIp: res.data.accessIp,
+			autograph: res.data.autograph,
+			loginTime: res.data.loginTime,
+		};
+
+		state.userInfo = userInfos;
+
+	})).catch(()=>{})
+})
 </script>
 
 <style scoped lang="scss">
-@import '../../theme/mixins/mixins.scss';
+// @import '../../theme/mixins/mixins.scss';
 .personal {
 	.personal-user {
 		height: 130px;
@@ -298,7 +299,7 @@ export default {
 			padding: 0 15px;
 			.personal-title {
 				font-size: 18px;
-				@include text-ellipsis(1);
+				// @include text-ellipsis(1);
 			}
 			.personal-item {
 				display: flex;
@@ -306,10 +307,10 @@ export default {
 				font-size: 13px;
 				.personal-item-label {
 					color: var(--el-text-color-secondary);
-					@include text-ellipsis(1);
+					// @include text-ellipsis(1);
 				}
 				.personal-item-value {
-					@include text-ellipsis(1);
+					// @include text-ellipsis(1);
 				}
 			}
 		}
@@ -334,7 +335,7 @@ export default {
 					padding-bottom: 10px;
 					.personal-info-li-title {
 						display: inline-block;
-						@include text-ellipsis(1);
+						// @include text-ellipsis(1);
 						color: var(--el-text-color-secondary);
 						text-decoration: none;
 					}
@@ -416,7 +417,7 @@ export default {
 					}
 					.personal-edit-safe-item-left-value {
 						color: var(--el-text-color-secondary);
-						@include text-ellipsis(1);
+						// @include text-ellipsis(1);
 						margin-right: 15px;
 					}
 				}

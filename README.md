@@ -37,6 +37,7 @@
 - elementui-plus
 - typescript
 - vite
+- 来自开源项目：https://gitee.com/lyt-top/vue-next-admin.git
 
 ### 核心功能
 - 完整的用户权限管理

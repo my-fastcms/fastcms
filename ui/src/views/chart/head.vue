@@ -2,7 +2,7 @@
 	<div class="big-data-up mb15">
 		<div class="up-left">
 			<i class="el-icon-time mr5"></i>
-			<span>{{ time.txt }}</span>
+			<span>{{ state.time.txt }}</span>
 		</div>
 		<div class="up-center">
 			<span>智慧农业系统平台</span>
@@ -10,38 +10,33 @@
 	</div>
 </template>
 
-<script lang="ts">
-import { reactive, toRefs, onBeforeMount, onUnmounted } from 'vue';
+<script setup lang="ts" name="chartHead">
+import { reactive, onBeforeMount, onUnmounted } from 'vue';
 import { formatDate } from '/@/utils/formatTime';
-export default {
-	name: 'chartHead',
-	setup() {
-		const state = reactive({
-			time: {
-				txt: '',
-				fun: 0,
-			},
-		});
-		// 初始化时间
-		const initTime = () => {
-			state.time.txt = formatDate(new Date(), 'YYYY-mm-dd HH:MM:SS WWW QQQQ');
-			state.time.fun = window.setInterval(() => {
-				state.time.txt = formatDate(new Date(), 'YYYY-mm-dd HH:MM:SS WWW QQQQ');
-			}, 1000);
-		};
-		// 页面加载前
-		onBeforeMount(() => {
-			initTime();
-		});
-		// 页面卸载时
-		onUnmounted(() => {
-			window.clearInterval(state.time.fun);
-		});
-		return {
-			...toRefs(state),
-		};
+
+// 定义变量内容
+const state = reactive({
+	time: {
+		txt: '',
+		fun: 0,
 	},
+});
+
+// 初始化时间
+const initTime = () => {
+	state.time.txt = formatDate(new Date(), 'YYYY-mm-dd HH:MM:SS WWW QQQQ');
+	state.time.fun = window.setInterval(() => {
+		state.time.txt = formatDate(new Date(), 'YYYY-mm-dd HH:MM:SS WWW QQQQ');
+	}, 1000);
 };
+// 页面加载前
+onBeforeMount(() => {
+	initTime();
+});
+// 页面卸载时
+onUnmounted(() => {
+	window.clearInterval(state.time.fun);
+});
 </script>
 
 <style scoped lang="scss">
@@ -51,7 +46,7 @@ export default {
 	display: flex;
 	align-items: center;
 	padding: 0 15px;
-	color: var(--color-primary);
+	color: var(--el-color-primary);
 	overflow: hidden;
 	position: relative;
 	.up-left {
@@ -65,11 +60,11 @@ export default {
 		letter-spacing: 5px;
 		background-image: -webkit-linear-gradient(
 			left,
-			var(--color-primary),
-			var(--color-primary-light-1) 25%,
-			var(--color-primary) 50%,
-			var(--color-primary-light-1) 75%,
-			var(--color-primary)
+			var(--el-color-primary),
+			var(--el-color-primary-light-3) 25%,
+			var(--el-color-primary) 50%,
+			var(--el-color-primary-light-3) 75%,
+			var(--el-color-primary)
 		);
 		-webkit-text-fill-color: transparent;
 		-webkit-background-clip: text;
@@ -96,7 +91,7 @@ export default {
 			left: 50%;
 			transform: translateX(-50%);
 			border: 1px transparent solid;
-			border-image: linear-gradient(to right, var(--color-primary-light-9), var(--color-primary)) 1 10;
+			border-image: linear-gradient(to right, var(--el-color-primary-light-9), var(--el-color-primary)) 1 10;
 		}
 		span {
 			cursor: pointer;

@@ -1,261 +1,253 @@
 <template>
-	<div class="login-container">
-		<div class="login-logo">
-			<span>{{ getThemeConfig.globalViceTitle }}</span>
+	<div class="login-container flex">
+		<div class="login-left">
+			<div class="login-left-logo">
+				<!-- <img :src="logoMini" v-if="false" /> -->
+				<div class="login-left-logo-text">
+					<span>{{ getThemeConfig.globalViceTitle }}</span>
+					<span class="login-left-logo-text-msg">{{ getThemeConfig.globalViceTitleMsg }}</span>
+				</div>
+			</div>
+			<div class="login-left-img">
+				<img :src="loginMain" />
+			</div>
+			<img :src="loginBg" class="login-left-waves" />
 		</div>
-		<div class="login-content" :class="{ 'login-content-mobile': tabsActiveName === 'mobile' }">
-			<div class="login-content-main">
-				<h4 class="login-content-title">{{ public_website_title }}</h4>
-				<div v-if="!isScan">
-					<el-tabs v-model="tabsActiveName" @tab-click="onTabsClick">
-						<el-tab-pane :label="$t('message.label.one1')" name="account" :disabled="tabsActiveName === 'account'">
-							<transition name="el-zoom-in-center">
-								<Account v-show="isTabPaneShow" />
-							</transition>
-						</el-tab-pane>
-						 
-						<!-- <el-tab-pane :label="$t('message.label.two2')" name="mobile" :disabled="tabsActiveName === 'mobile'" ref="mobileTab">
-							<transition name="el-zoom-in-center">
-								<Mobile v-show="!isTabPaneShow" />
-							</transition>
-						</el-tab-pane> -->
-						
-					</el-tabs>
-					<div class="mt10">
-						<el-button type="text" size="small" @click="toRegister" v-if="public_register_enable">{{ $t('message.link.one3') }}</el-button>
-						<el-button type="text" size="small" @click="toRestPassword" v-if="public_forgot_password_enable">{{ $t('message.link.two6') }}</el-button>
-						<el-button type="text" size="small" @click="toWechatMpOAuth" v-if="isWechatBrowser">{{ $t('message.link.two7') }}</el-button>
+		<div class="login-right flex">
+			<div class="login-right-warp flex-margin">
+				<span class="login-right-warp-one"></span>
+				<span class="login-right-warp-two"></span>
+				<div class="login-right-warp-mian">
+					<div class="login-right-warp-main-title">{{ getThemeConfig.globalTitle }} 欢迎您！</div>
+					<div class="login-right-warp-main-form">
+						<div v-if="!state.isScan">
+							<el-tabs v-model="state.tabsActiveName">
+								<el-tab-pane :label="$t('message.label.one1')" name="account">
+									<Account />
+								</el-tab-pane>
+								<el-tab-pane :label="$t('message.label.two2')" name="mobile">
+									<Mobile />
+								</el-tab-pane>
+							</el-tabs>
+						</div>
+						<Scan v-if="state.isScan" />
+						<div class="login-content-main-sacn" @click="state.isScan = !state.isScan">
+							<i class="iconfont" :class="state.isScan ? 'icon-diannao1' : 'icon-barcode-qr'"></i>
+							<div class="login-content-main-sacn-delta"></div>
+						</div>
 					</div>
 				</div>
-				<Scan :domain="public_website_domain" v-else />
-				
-				<div class="login-content-main-sacn" v-if="public_mp_scan_qrcode_login_enable" @click="isScan = !isScan" ref="scanDiv">
-					<i class="iconfont" :class="isScan ? 'icon-diannao1' : 'icon-barcode-qr'"></i>
-					<div class="login-content-main-sacn-delta"></div>
-				</div>
-				
 			</div>
-		</div>
-		<div class="login-copyright">
-			<div class="mb5 login-copyright-company">{{ public_website_copyright }}</div>
-			<div v-if="false" class="login-copyright-msg">{{ $t('message.copyright.two6') }}</div>
 		</div>
 	</div>
 </template>
 
-<script lang="ts">
-import { toRefs, reactive, computed, onMounted } from 'vue';
-import Account from '/@/views/login/component/account.vue';
-import Mobile from '/@/views/login/component/mobile.vue';
-import Scan from '/@/views/login/component/scan.vue';
-import { useStore } from '/@/store/index';
-import { useRouter } from 'vue-router';
-import qs from 'qs';
-import { getPublicConfigList } from '/@/api/config/index';
+<script setup lang="ts" name="loginIndex">
+import { defineAsyncComponent, onMounted, reactive, computed } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useThemeConfig } from '/@/stores/themeConfig';
+import { NextLoading } from '/@/utils/loading';
+// import logoMini from '/@/assets/logo-mini.svg';
+import loginMain from '/@/assets/login-main.svg';
+import loginBg from '/@/assets/login-bg.svg';
 
-export default {
-	name: 'login',
-	components: { Account, Mobile, Scan },
-	setup() {
-		const store = useStore();
-		const router = useRouter();
-		const state = reactive({
-			tabsActiveName: 'account',
-			isWechatBrowser: false,
-			isTabPaneShow: true,
-			isScan: false,
-			public_register_enable: false,
-			public_website_domain: '',
-			public_mp_scan_qrcode_login_enable: false,		//是否开启公众号扫码登录功能
-			public_mp_scan_qrcode_login_is_default: false,	//是否默认使用公众号扫码登录功能
-			public_forgot_password_enable: true,			//是否启用找回密码功能
-			public_website_copyright: "",
-			public_website_title: store.state.themeConfig.themeConfig.globalTitle
-		});
-		// 获取布局配置信息
-		const getThemeConfig = computed(() => {
-			return store.state.themeConfig.themeConfig;
-		});
-		// 切换密码、手机登录
-		const onTabsClick = () => {
-			state.isTabPaneShow = !state.isTabPaneShow;
-		};
-		const toRegister = () => {
-			router.push('/register');
-		}
-		const toRestPassword = () => {
-			router.push('/rest/password');
-		}
-		const toWechatMpOAuth = () => {
-			console.log("url:" + state.public_website_domain + "/oauth2/authorization/wechat-mp")
-			window.location.href = state.public_website_domain + "/oauth2/authorization/wechat-mp"
-		}
-		const judgeWechatBrowser = () => {
-			const ua = window.navigator.userAgent.toLowerCase();
-			const match = ua.match(/MicroMessenger/i);
-			if (match === null) {
-				return false;
-			}
-			if (match.includes('micromessenger')) {
-				return true;
-			}
-			return false;
-		}
+// 引入组件
+const Account = defineAsyncComponent(() => import('/@/views/login/component/account.vue'));
+const Mobile = defineAsyncComponent(() => import('/@/views/login/component/mobile.vue'));
+const Scan = defineAsyncComponent(() => import('/@/views/login/component/scan.vue'));
 
-		onMounted(() => {
-			state.isWechatBrowser = judgeWechatBrowser();
-			let paramKeys = new Array();
-			paramKeys.push("public_register_enable");
-			paramKeys.push("public_website_domain");
-			paramKeys.push("public_mp_scan_qrcode_login_enable");
-			paramKeys.push("public_forgot_password_enable");
-			paramKeys.push("public_mp_scan_qrcode_login_is_default");
-			paramKeys.push("public_website_copyright");
-			paramKeys.push("public_website_title");
-			let params = qs.stringify( {"configKeys" : paramKeys}, {arrayFormat: 'repeat'});
-			getPublicConfigList(params).then((res) => {
-				res.data.forEach(item => {
-					if(item.key == 'public_register_enable') {
-						state.public_register_enable = item.jsonValue	
-					}
-					if(item.key == 'public_website_domain') {
-						state.public_website_domain = item.jsonValue
-					}
-					if(item.key == 'public_mp_scan_qrcode_login_enable') {
-						state.public_mp_scan_qrcode_login_enable = item.jsonValue
-					}
-					if(item.key == 'public_forgot_password_enable') {
-						state.public_forgot_password_enable = item.jsonValue
-					}
-					if(item.key == 'public_website_copyright') {
-						state.public_website_copyright = item.jsonValue
-					}
-					if (item.key == 'public_website_title') {
-						state.public_website_title = item.jsonValue
-					}
-				});
+// 定义变量内容
+const storesThemeConfig = useThemeConfig();
+const { themeConfig } = storeToRefs(storesThemeConfig);
+const state = reactive({
+	tabsActiveName: 'account',
+	isScan: false,
+});
 
-				if (state.public_mp_scan_qrcode_login_enable && state.public_mp_scan_qrcode_login_is_default) {
-					state.isScan = true
-				}
-
-			});
-		})
-
-		return {
-			toRegister,
-			toRestPassword,
-			judgeWechatBrowser,
-			toWechatMpOAuth,
-			onTabsClick,
-			getThemeConfig,
-			...toRefs(state),
-		};
-	},
-};
+// 获取布局配置信息
+const getThemeConfig = computed(() => {
+	return themeConfig.value;
+});
+// 页面加载时
+onMounted(() => {
+	NextLoading.done();
+});
 </script>
 
 <style scoped lang="scss">
 .login-container {
-	width: 100%;
 	height: 100%;
-	background: url('/bg-login.png') no-repeat;
-	background-size: 100% 100%;
-	.login-logo {
-		position: absolute;
-		top: 30px;
-		left: 50%;
-		height: 50px;
-		display: flex;
-		align-items: center;
-		font-size: 20px;
-		color: var(--color-primary);
-		letter-spacing: 2px;
-		width: 90%;
-		transform: translateX(-50%);
-	}
-	.login-content {
-		width: 500px;
-		padding: 20px;
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		transform: translate(-50%, -50%) translate3d(0, 0, 0);
-		background-color: rgba(255, 255, 255, 0.99);
-		border: 5px solid var(--color-primary-light-8);
-		border-radius: 4px;
-		transition: height 0.2s linear;
-		height: 480px;
-		overflow: hidden;
-		z-index: 1;
-		.login-content-main {
-			margin: 0 auto;
-			width: 80%;
-			.login-content-title {
-				color: #333;
-				font-weight: 500;
-				font-size: 22px;
-				text-align: center;
-				letter-spacing: 4px;
-				margin: 15px 0 30px;
-				white-space: nowrap;
-				z-index: 5;
-				position: relative;
-				transition: all 0.3s ease;
+	background: var(--el-color-white);
+	.login-left {
+		flex: 1;
+		position: relative;
+		background-color: rgba(211, 239, 255, 1);
+		margin-right: 100px;
+		.login-left-logo {
+			display: flex;
+			align-items: center;
+			position: absolute;
+			top: 50px;
+			left: 80px;
+			z-index: 1;
+			animation: logoAnimation 0.3s ease;
+			img {
+				width: 52px;
+				height: 52px;
+			}
+			.login-left-logo-text {
+				display: flex;
+				flex-direction: column;
+				span {
+					margin-left: 10px;
+					font-size: 28px;
+					color: #26a59a;
+				}
+				.login-left-logo-text-msg {
+					font-size: 12px;
+					color: #32a99e;
+				}
 			}
 		}
-		.login-content-main-sacn {
+		.login-left-img {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 100%;
+			height: 52%;
+			img {
+				width: 100%;
+				height: 100%;
+				animation: error-num 0.6s ease;
+			}
+		}
+		.login-left-waves {
 			position: absolute;
 			top: 0;
-			right: 0;
-			width: 50px;
-			height: 50px;
+			right: -100px;
+		}
+	}
+	.login-right {
+		width: 700px;
+		.login-right-warp {
+			border: 1px solid var(--el-color-primary-light-3);
+			border-radius: 3px;
+			width: 500px;
+			height: 500px;
+			position: relative;
 			overflow: hidden;
-			cursor: pointer;
-			transition: all ease 0.3s;
-			&-delta {
+			background-color: var(--el-color-white);
+			.login-right-warp-one,
+			.login-right-warp-two {
 				position: absolute;
-				width: 35px;
-				height: 70px;
-				z-index: 2;
-				top: 2px;
-				right: 21px;
-				background: var(--el-color-white);
-				transform: rotate(-45deg);
+				display: block;
+				width: inherit;
+				height: inherit;
+				&::before,
+				&::after {
+					content: '';
+					position: absolute;
+					z-index: 1;
+				}
 			}
-			&:hover {
-				opacity: 1;
-				transition: all ease 0.3s;
-				color: var(--color-primary);
+			.login-right-warp-one {
+				&::before {
+					filter: hue-rotate(0deg);
+					top: 0px;
+					left: 0;
+					width: 100%;
+					height: 3px;
+					background: linear-gradient(90deg, transparent, var(--el-color-primary));
+					animation: loginLeft 3s linear infinite;
+				}
+				&::after {
+					filter: hue-rotate(60deg);
+					top: -100%;
+					right: 2px;
+					width: 3px;
+					height: 100%;
+					background: linear-gradient(180deg, transparent, var(--el-color-primary));
+					animation: loginTop 3s linear infinite;
+					animation-delay: 0.7s;
+				}
 			}
-			i {
-				width: 47px;
-				height: 50px;
-				display: inline-block;
-				font-size: 48px;
-				position: absolute;
-				right: 2px;
-				top: -1px;
+			.login-right-warp-two {
+				&::before {
+					filter: hue-rotate(120deg);
+					bottom: 2px;
+					right: -100%;
+					width: 100%;
+					height: 3px;
+					background: linear-gradient(270deg, transparent, var(--el-color-primary));
+					animation: loginRight 3s linear infinite;
+					animation-delay: 1.4s;
+				}
+				&::after {
+					filter: hue-rotate(300deg);
+					bottom: -100%;
+					left: 0px;
+					width: 3px;
+					height: 100%;
+					background: linear-gradient(360deg, transparent, var(--el-color-primary));
+					animation: loginBottom 3s linear infinite;
+					animation-delay: 2.1s;
+				}
 			}
-		}
-	}
-	.login-content-mobile {
-		height: 418px;
-	}
-	.login-copyright {
-		position: absolute;
-		left: 50%;
-		transform: translateX(-50%);
-		bottom: 30px;
-		text-align: center;
-		color: var(--color-whites);
-		font-size: 12px;
-		opacity: 0.8;
-		.login-copyright-company {
-			white-space: nowrap;
-		}
-		.login-copyright-msg {
-			@extend .login-copyright-company;
+			.login-right-warp-mian {
+				display: flex;
+				flex-direction: column;
+				height: 100%;
+				.login-right-warp-main-title {
+					height: 130px;
+					line-height: 130px;
+					font-size: 27px;
+					text-align: center;
+					letter-spacing: 3px;
+					animation: logoAnimation 0.3s ease;
+					animation-delay: 0.3s;
+					color: var(--el-text-color-primary);
+				}
+				.login-right-warp-main-form {
+					flex: 1;
+					padding: 0 50px 50px;
+					.login-content-main-sacn {
+						position: absolute;
+						top: 0;
+						right: 0;
+						width: 50px;
+						height: 50px;
+						overflow: hidden;
+						cursor: pointer;
+						transition: all ease 0.3s;
+						color: var(--el-color-primary);
+						&-delta {
+							position: absolute;
+							width: 35px;
+							height: 70px;
+							z-index: 2;
+							top: 2px;
+							right: 21px;
+							background: var(--el-color-white);
+							transform: rotate(-45deg);
+						}
+						&:hover {
+							opacity: 1;
+							transition: all ease 0.3s;
+							color: var(--el-color-primary) !important;
+						}
+						i {
+							width: 47px;
+							height: 50px;
+							display: inline-block;
+							font-size: 48px;
+							position: absolute;
+							right: 1px;
+							top: 0px;
+						}
+					}
+				}
+			}
 		}
 	}
 }

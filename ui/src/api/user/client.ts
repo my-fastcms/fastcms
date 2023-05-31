@@ -1,27 +1,30 @@
 import request from '/@/utils/request';
 
-/**
- * 保存用户数据
- * @param params 
- * @returns 
- */
-export function updateUser(params?: string) {
-	return request({
-		url: '/client/user/save',
-		method: 'post',
-		data: params,
-		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-	});
-}
+export function ClientUserApi() {
+	return {
+		/**
+		 * 保存用户数据
+		 * @param params 
+		 * @returns 
+		 */
+		updateUser(params?: object) {
+			return request({
+				url: '/client/user/save',
+				method: 'post',
+				data: params,
+			});
+		},
 
-/**
- * 获取用户信息
- * @param params 
- * @returns 
- */
- export function getUserInfo() {
-	return request({
-		url: '/client/user/get',
-		method: 'get',
-	});
+		/**
+		 * 获取用户信息
+		 * @param params 
+		 * @returns 
+		 */
+		getUserInfo() {
+			return request({
+				url: '/client/user/get',
+				method: 'get',
+			});
+		}
+	};
 }

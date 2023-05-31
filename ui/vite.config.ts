@@ -1,20 +1,15 @@
 import vue from '@vitejs/plugin-vue';
+import vueJsx from "@vitejs/plugin-vue-jsx";
 import { resolve } from 'path';
 import { defineConfig, loadEnv, ConfigEnv } from 'vite';
-// import { loadEnv } from './src/utils/viteBuild';
-import CKEditorSvgLoader from "./CKEditorSvgLoader";
 import vueSetupExtend from 'vite-plugin-vue-setup-extend-plus';
 import viteCompression from 'vite-plugin-compression';
 import { buildConfig } from './src/utils/build';
-import postcssPartialImport from "postcss-partial-import";
-import postcssMixins from "postcss-mixins";
-import postcssNesting from "postcss-nesting";
+import CKEditorSvgLoader from "./CKEditorSvgLoader";
 
-const pathResolve = (dir: string): any => {
+const pathResolve = (dir: string) => {
 	return resolve(__dirname, '.', dir);
 };
-
-// const { VITE_PORT, VITE_OPEN, VITE_PUBLIC_PATH } = loadEnv();
 
 const alias: Record<string, string> = {
 	'/@': pathResolve('./src/'),
@@ -24,7 +19,7 @@ const alias: Record<string, string> = {
 const viteConfig = defineConfig((mode: ConfigEnv) => {
 	const env = loadEnv(mode.mode, process.cwd());
 	return {
-		plugins: [vue(), CKEditorSvgLoader(), vueSetupExtend(), viteCompression(), JSON.parse(env.VITE_OPEN_CDN) ? buildConfig.cdn() : null],
+		plugins: [vue(), vueJsx(), CKEditorSvgLoader(), vueSetupExtend(), viteCompression(), JSON.parse(env.VITE_OPEN_CDN) ? buildConfig.cdn() : null],
 		root: process.cwd(),
 		resolve: { alias },
 		base: mode.command === 'serve' ? './' : env.VITE_PUBLIC_PATH,
@@ -33,6 +28,7 @@ const viteConfig = defineConfig((mode: ConfigEnv) => {
 			host: '0.0.0.0',
 			port: env.VITE_PORT as unknown as number,
 			open: JSON.parse(env.VITE_OPEN),
+			hmr: true,
 			proxy: {
 				'/gitee': {
 					target: 'https://gitee.com',
@@ -57,18 +53,12 @@ const viteConfig = defineConfig((mode: ConfigEnv) => {
 					},
 				},
 				input: {
-					//直接修改入口文件名字
 					index: resolve(__dirname, 'fastcms.html'),
 				},
 				...(JSON.parse(env.VITE_OPEN_CDN) ? { external: buildConfig.external } : {}),
-			},		
+			},
 		},
-		css: {
-			// postcss:{
-			// 	plugins: [postcssPartialImport, postcssMixins, postcssNesting]
-			// },
-			preprocessorOptions: { css: { charset: false } }
-		},
+		css: { preprocessorOptions: { css: { charset: false } } },
 		define: {
 			__VUE_I18N_LEGACY_API__: JSON.stringify(false),
 			__VUE_I18N_FULL_INSTALL__: JSON.stringify(false),
@@ -76,7 +66,7 @@ const viteConfig = defineConfig((mode: ConfigEnv) => {
 			__NEXT_VERSION__: JSON.stringify(process.env.npm_package_version),
 			__NEXT_NAME__: JSON.stringify(process.env.npm_package_name),
 		},
-	}	
+	};
 });
 
 export default viteConfig;

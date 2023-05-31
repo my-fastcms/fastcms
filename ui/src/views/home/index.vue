@@ -4,13 +4,13 @@
 			<el-col :sm="6" class="mb15">
 				<div class="home-card-item home-card-first">
 					<div class="flex-margin flex">
-						<img :src="getUserInfos.photo" />
+						<img :src="userInfos.photo" />
 						<div class="home-card-first-right ml15">
 							<div class="flex-margin">
 								<div class="home-card-first-right-title">
-									{{ currentTime }}，{{ getUserInfos.username === '' ? '游客' : getUserInfos.username }}！
+									{{ currentTime }}，{{ userInfos.username === '' ? '游客' : userInfos.username }}！
 								</div>
-								<div class="home-card-first-right-msg mt5">{{ getUserInfos.username === 'admin' ? '超级管理' : '' }}</div>
+								<div class="home-card-first-right-msg mt5">{{ userInfos.username === 'admin' ? '超级管理' : '' }}</div>
 							</div>
 						</div>
 					</div>
@@ -31,7 +31,7 @@
 		<el-row :gutter="15">
 			<el-col :xs="24" :sm="14" :md="14" :lg="16" :xl="16" class="home-warning-media">
 				<el-card shadow="hover" :header="$t('message.card.title3')" class="home-warning-card">
-					<el-table :data="articleListData" style="width: 100%;height: 300px;" stripe>
+					<el-table :data="state.articleListData" style="width: 100%;height: 300px;" stripe>
 						<el-table-column prop="title" min-width="80%" :label="$t('message.table.th1')">
 						<template #default="scope">
 							<a :href="scope.row.url" target="_blank">
@@ -70,82 +70,78 @@
 	</div>
 </template>
 
-<script lang="ts">
-import { toRefs, reactive, onMounted, nextTick, computed, getCurrentInstance, watch, onActivated } from 'vue';
+<script lang="ts" name="home" setup>
+import { reactive, onMounted, nextTick, computed, watch, onActivated } from 'vue';
 import { CountUp } from 'countup.js';
 import { formatAxis } from '/@/utils/formatTime';
-import { useStore } from '/@/store/index';
-import { getIndexData } from '/@/api/home/index';
+import { storeToRefs } from 'pinia';
+import { useUserInfo } from '/@/stores/userInfo';
+import { IndexApi } from '/@/api/home/index';
 import { topCardItemList, activitiesList } from './data';
-export default {
-	name: 'home',
-	setup() {
-		const { proxy } = getCurrentInstance() as any;
-		const store = useStore();
-		const state = reactive({
-			topCardItemList,
-			activitiesList,
-			articleListData: [],
-			myCharts: [],
-		});
-		// 获取用户信息 vuex
-		const getUserInfos = computed(() => {
-			return store.state.userInfos.userInfos;
-		});
-		// 当前时间提示语
-		const currentTime = computed(() => {
-			return formatAxis(new Date());
-		});
-		
-		// 批量设置 echarts resize
-		const initEchartsResizeFun = () => {
-			nextTick(() => {
-				for (let i = 0; i < state.myCharts.length; i++) {
-					state.myCharts[i].resize();
-				}
-			});
-		};
-		// 批量设置 echarts resize
-		const initEchartsResize = () => {
-			window.addEventListener('resize', initEchartsResizeFun);
-		};
+import { useTagsViewRoutes } from '/@/stores/tagsViewRoutes';
 
-		const getHomeData = () => {
-			getIndexData().then((res) => {
-				let articleStat = res.data.articleStatData;
-				let orderStat = res.data.orderStatData;
-				new CountUp('titleNum1', 0).update(articleStat.todayCount);
-				new CountUp('titleNum2', 0).update(articleStat.todayViewCount);
-				new CountUp('titleNum3', 0).update(orderStat.todayCount);
-				new CountUp('tipNum1', 0).update(articleStat.totalCount);
-				new CountUp('tipNum2', 0).update(articleStat.totalViewCount);
-				new CountUp('tipNum3', 0).update(orderStat);
-				state.articleListData = res.data.newArticleList;
-			});
+const indexApi = IndexApi();
+const stores = useUserInfo();
+const store = useTagsViewRoutes();
+
+// 获取用户信息 vuex
+const { userInfos } = storeToRefs(stores);
+
+const state = reactive({
+	topCardItemList,
+	activitiesList,
+	articleListData: [],
+	myCharts: [],
+});
+
+// 当前时间提示语
+const currentTime = computed(() => {
+	return formatAxis(new Date());
+});
+
+// 批量设置 echarts resize
+const initEchartsResizeFun = () => {
+	nextTick(() => {
+		for (let i = 0; i < state.myCharts.length; i++) {
+			state.myCharts[i].resize();
 		}
-		// 页面加载时
-		onMounted(() => {
-			getHomeData();
-			initEchartsResize();
-		});
-		// 由于页面缓存原因，keep-alive
-		onActivated(() => {
-			initEchartsResizeFun();
-		});
-		// 监听 vuex 中的 tagsview 开启全屏变化，重新 resize 图表，防止不出现/大小不变等
-		watch(
-			() => store.state.tagsViewRoutes.isTagsViewCurrenFull,
-			() => {
-				initEchartsResizeFun();
-			}
-		);
-		return {
-			getUserInfos,
-			currentTime,
-			...toRefs(state),
-		};
-	},
+	});
 };
+// 批量设置 echarts resize
+const initEchartsResize = () => {
+	window.addEventListener('resize', initEchartsResizeFun);
+};
+
+const getHomeData = () => {
+	indexApi.getIndexData().then((res) => {
+		let articleStat = res.data.articleStatData;
+		let orderStat = res.data.orderStatData;
+		new CountUp('titleNum1', 0).update(articleStat.todayCount);
+		new CountUp('titleNum2', 0).update(articleStat.todayViewCount);
+		new CountUp('titleNum3', 0).update(orderStat.todayCount);
+		new CountUp('tipNum1', 0).update(articleStat.totalCount);
+		new CountUp('tipNum2', 0).update(articleStat.totalViewCount);
+		new CountUp('tipNum3', 0).update(orderStat);
+		state.articleListData = res.data.newArticleList;
+	});
+}
+// 页面加载时
+onMounted(() => {
+	getHomeData();
+	initEchartsResize();
+});
+// 由于页面缓存原因，keep-alive
+onActivated(() => {
+	initEchartsResizeFun();
+});
+// 监听 vuex 中的 tagsview 开启全屏变化，重新 resize 图表，防止不出现/大小不变等
+watch(
+	() => store.isTagsViewCurrenFull,
+	() => {
+		initEchartsResizeFun();
+	}
+);
+
 </script>
 
 <style scoped lang="scss">

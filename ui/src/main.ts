@@ -1,28 +1,19 @@
 import { createApp } from 'vue';
-import App from './App.vue';
-import router from './router';
-import { store, key } from './store';
-import { directive } from '/@/utils/directive';
+import pinia from '/@/stores/index';
+import App from '/@/App.vue';
+import router from '/@/router';
+import { directive } from '/@/directive/index';
 import { i18n } from '/@/i18n/index';
+import other from '/@/utils/other';
 
 import ElementPlus from 'element-plus';
-import 'element-plus/dist/index.css';
 import '/@/theme/index.scss';
 import "./theme/ck-vite.css";
-import mitt from 'mitt';
-import screenShort from 'vue-web-screen-shot';
 import VueGridLayout from 'vue-grid-layout';
 
 const app = createApp(App);
- app.use(router)
-	.use(store, key)
-	.use(ElementPlus)
-	.use(i18n)
-	.use(screenShort, { enableWebRtc: false })
-	.use(VueGridLayout)
-	.mount('#app');
-
-app.config.globalProperties.mittBus = mitt();
-console.log(app);
 
 directive(app);
+other.elSvg(app);
+
+app.use(pinia).use(router).use(ElementPlus).use(i18n).use(VueGridLayout).mount('#app');

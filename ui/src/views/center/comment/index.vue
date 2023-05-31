@@ -2,10 +2,10 @@
 	<div>
 		<el-card shadow="hover">
 			<div class="mb15">
-				<el-input size="small" placeholder="请输入评论内容" prefix-icon="el-icon-search" style="max-width: 180px" class="ml10"></el-input>
-				<el-button size="small" type="primary" class="ml10">查询</el-button>
+				<el-input placeholder="请输入评论内容" prefix-icon="el-icon-search" style="max-width: 180px" class="ml10"></el-input>
+				<el-button type="primary" class="ml10">查询</el-button>
 			</div>
-			<el-table :data="tableData.data" stripe style="width: 100%">
+			<el-table :data="state.tableData.data" stripe style="width: 100%">
 				<el-table-column prop="id" label="ID" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="content" label="评论内容" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="parentComment" label="回复评论" show-overflow-tooltip></el-table-column>
@@ -20,70 +20,56 @@
 				class="mt15"
 				:pager-count="5"
 				:page-sizes="[10, 20, 30]"
-				v-model:current-page="tableData.param.pageNum"
+				v-model:current-page="state.tableData.param.pageNum"
 				background
-				v-model:page-size="tableData.param.pageSize"
+				v-model:page-size="state.tableData.param.pageSize"
 				layout="total, sizes, prev, pager, next, jumper"
-				:total="tableData.total"
+				:total="state.tableData.total"
 			>
 			</el-pagination>
 		</el-card>
 	</div>
 </template>
 
-<script lang="ts">
-import { toRefs, reactive, onMounted } from 'vue';
-import { getArticleCommentList } from '/@/api/article/client';
+<script lang="ts" name="articleCommentManager" setup>
+import { reactive, onMounted } from 'vue';
+import { ClientArticleApi } from '/@/api/article/client';
 
-export default {
-	name: 'articleCommentManager',
-	components: { },
-	setup() {
-
-		const state = reactive({
-			tableData: {
-				data: [],
-				total: 0,
-				loading: false,
-				param: {
-					pageNum: 1,
-					pageSize: 10,
-				},
-			},
-		});
-
-		// 初始化表格数据
-		const initTableData = () => {
-			getArticleCommentList(state.tableData.param).then((res) => {
-				state.tableData.data = res.data.records;
-				state.tableData.total = res.data.total;
-			}).catch(() => {
-			})
-		};
-
-		// 分页改变
-		const onHandleSizeChange = (val: number) => {
-			state.tableData.param.pageSize = val;
-			initTableData();
-		};
-		// 分页改变
-		const onHandleCurrentChange = (val: number) => {
-			state.tableData.param.pageNum = val;
-			initTableData();
-		};
-        
-		// 页面加载时
-		onMounted(() => {
-			initTableData();
-		});
-		return {
-        	onHandleSizeChange,
-			onHandleCurrentChange,
-			initTableData,
-			...toRefs(state),
-		};
+const clientArticleApi = ClientArticleApi();
+const state = reactive({
+	tableData: {
+		data: [],
+		total: 0,
+		loading: false,
+		param: {
+			pageNum: 1,
+			pageSize: 10,
+		},
 	},
+});
 
-	
+// 初始化表格数据
+const initTableData = () => {
+	clientArticleApi.getArticleCommentList(state.tableData.param).then((res) => {
+		state.tableData.data = res.data.records;
+		state.tableData.total = res.data.total;
+	}).catch(() => {
+	})
 };
+
+// 分页改变
+const onHandleSizeChange = (val: number) => {
+	state.tableData.param.pageSize = val;
+	initTableData();
+};
+// 分页改变
+const onHandleCurrentChange = (val: number) => {
+	state.tableData.param.pageNum = val;
+	initTableData();
+};
+
+// 页面加载时
+onMounted(() => {
+	initTableData();
+});
 </script>

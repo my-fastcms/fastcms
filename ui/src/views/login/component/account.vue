@@ -1,268 +1,225 @@
 <template>
-	<el-form class="login-content-form" :model="myForm" :rules="rules" ref="myRefForm">
-		<el-form-item prop="username">
-			<el-input
-				type="text"
-				:placeholder="$t('message.account.accountPlaceholder1')"
-				prefix-icon="el-icon-user"
-				v-model="myForm.username"
-				clearable
-				autocomplete="off"
-			>
+	<el-form size="large" class="login-content-form" :model="state.myForm" :rules="state.rules" ref="myRefForm">
+		<el-form-item class="login-animation1" prop="username">
+			<el-input text :placeholder="$t('message.account.accountPlaceholder1')" v-model="state.myForm.username" clearable autocomplete="off">
+				<template #prefix>
+					<el-icon class="el-input__icon"><ele-User /></el-icon>
+				</template>
 			</el-input>
 		</el-form-item>
-		<el-form-item prop="password">
+		<el-form-item class="login-animation2" prop="password">
 			<el-input
-				:type="isShowPassword ? 'text' : 'password'"
+				:type="state.isShowPassword ? 'text' : 'password'"
 				:placeholder="$t('message.account.accountPlaceholder2')"
-				prefix-icon="el-icon-lock"
-				v-model="myForm.password"
+				v-model="state.myForm.password"
 				autocomplete="off"
 			>
+				<template #prefix>
+					<el-icon class="el-input__icon"><ele-Unlock /></el-icon>
+				</template>
 				<template #suffix>
 					<i
 						class="iconfont el-input__icon login-content-password"
-						:class="isShowPassword ? 'icon-yincangmima' : 'icon-xianshimima'"
-						@click="isShowPassword = !isShowPassword"
+						:class="state.isShowPassword ? 'icon-yincangmima' : 'icon-xianshimima'"
+						@click="state.isShowPassword = !state.isShowPassword"
 					>
 					</i>
 				</template>
 			</el-input>
 		</el-form-item>
-		<el-form-item prop="code">
-			<el-row :gutter="15">
-				<el-col :span="14">
-					<el-input
-						type="text"
-						maxlength="5"
-						:placeholder="$t('message.account.accountPlaceholder3')"
-						prefix-icon="el-icon-position"
-						v-model="myForm.code"
-						clearable
-						autocomplete="off"
-					></el-input>
-				</el-col>
-				<el-col :span="10">
-					<div class="login-content-code">
-						<img class="login-content-code-img" alt="fastcms" @click="refreshCode" :src="captcha">
-					</div>
-				</el-col>
-			</el-row>
+		<el-form-item class="login-animation3" prop="code">
+			<el-col :span="15">
+				<el-input
+					text
+					maxlength="4"
+					:placeholder="$t('message.account.accountPlaceholder3')"
+					v-model="state.myForm.code"
+					clearable
+					autocomplete="off"
+				>
+					<template #prefix>
+						<el-icon class="el-input__icon"><ele-Position /></el-icon>
+					</template>
+				</el-input>
+			</el-col>
+			<el-col :span="1"></el-col>
+			<el-col :span="8">
+				<el-button class="login-content-code" v-waves><img class="login-content-code-img" alt="fastcms" @click="refreshCode" :src="state.captcha"></el-button>
+			</el-col>
 		</el-form-item>
-		<el-form-item>
-			<el-button type="primary" class="login-content-submit" round @click="onSignIn" :loading="loading.signIn">
+		<el-form-item class="login-animation4">
+			<el-button type="primary" class="login-content-submit" round v-waves @click="onSignIn" :loading="state.loading.signIn">
 				<span>{{ $t('message.account.accountBtnText') }}</span>
 			</el-button>
 		</el-form-item>
 	</el-form>
 </template>
 
-<script lang="ts">
-import { toRefs, reactive, defineComponent, computed, getCurrentInstance, onMounted } from 'vue';
+<script setup lang="ts" name="loginAccount">
+import { reactive, computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
-import { dynamicRoutes } from '/@/router/route';
 import { useI18n } from 'vue-i18n';
+// import Cookies from 'js-cookie';
+import { storeToRefs } from 'pinia';
+import { useThemeConfig } from '/@/stores/themeConfig';
 import { initFrontEndControlRoutes } from '/@/router/frontEnd';
 import { initBackEndControlRoutes } from '/@/router/backEnd';
-import { useStore } from '/@/store/index';
-import { Local, Session } from '/@/utils/storage';
+import { Session, Local } from '/@/utils/storage';
 import { formatAxis } from '/@/utils/formatTime';
-import { signIn, getCaptcha } from '/@/api/login/index';
-import qs from 'qs';
+import { NextLoading } from '/@/utils/loading';
+import { LoginApi } from '/@/api/login/index';
 
-export default defineComponent({
-	name: 'login',
-	setup() {
-		const { t } = useI18n();
-		const { proxy } = getCurrentInstance() as any;
-		const store = useStore();
-		const route = useRoute();
-		const router = useRouter();
-		
-		const state = reactive({
-			isShowPassword: false,
-			captcha: '',
-			captchaKey: '',
-			myForm: {
-				username: '',
-				password: '',
-				code: '',
-			},
-			rules: {
-				username: { required: true, message: '请输入用户名', trigger: 'blur' },
-				password: { required: true, message: '请输入密码', trigger: 'blur' },
-				code: { required: true, message: '请输入验证码', trigger: 'blur' },
-			},
-			loading: {
-				signIn: false,
-			},
-		});
-		// 时间获取
-		const currentTime = computed(() => {
-			return formatAxis(new Date());
-		});
 
-		const refreshCode = async () => {
-			getCaptcha().then(res => {
-				state.captcha = res.data.image;
-				state.captchaKey = res.data.codeUuid;
-				Session.set('ClientId', state.captchaKey);
-			}).catch(() => {
-			});
-		};
-
-		onMounted(() => {
-			refreshCode();
-		});
-
-		// 登录
-		const onSignIn = async () => {
-
-			new Promise((resolve) => {
-				proxy.$refs['myRefForm'].validate((valid) => {
-					if (valid) {
-						resolve(valid);
-						signLogin();
-					}
-				});
-			});
-		};
-
-		const signLogin = async() => {
-			state.loading.signIn = true;
-			signIn(qs.stringify(state.myForm)).then(res => {
-				state.loading.signIn = false;
-				doLogin(res);
-			}).catch((res) => {
-				state.loading.signIn = false;
-				refreshCode();
-				ElMessage({showClose: true, message: res.message ? res.message : '系统错误' , type: 'error'});
-			})
-		}
-
-		const doLogin = async(res: any) => {
-
-			//let defaultAuthPageList: Array<string> = ['admin'];
-			//let defaultAuthBtnList: Array<string> = ['btn.add', 'btn.del', 'btn.edit', 'btn.link'];
-			if(res.data.userType != 1 && res.data.userType != 2) {
-				ElMessage.error("未知用户类型");
-				return;
-			}
-
-			if(res.data.userType === 1 && res.data.hasRole == false) {
-				ElMessage.error("请联系管理员授权");
-			} else {
-				signInSuccess(res);				
-			}
-
-		}
-
-		// 登录成功后的跳转
-		const signInSuccess = async(res: any) => {
-
-			const userInfos = {
-				username: res.data.username,
-				photo: res.data.headImg === null ? '/header.jpg' : res.data.headImg,
-				time: new Date().getTime(),
-				hasRole: res.data.hasRole,
-				version: res.data.version,
-				userType: res.data.userType,
-			};
-			// 存储 token 到浏览器缓存
-			Local.set('token', res.data.token);
-			Local.set('tokenTtl', res.data.tokenTtl);
-			// 存储用户信息到浏览器缓存
-			Local.set('userInfo', userInfos);
-			// 1、请注意执行顺序(存储用户信息到vuex)
-			store.dispatch('userInfos/setUserInfos', userInfos);
-
-			if (!store.state.themeConfig.themeConfig.isRequestRoutes) {
-				// 前端控制路由，2、请注意执行顺序
-				await initFrontEndControlRoutes();
-			} else {
-				if(res.data.userType === 1) {
-					// 后端管理用户初始化后端动态路由
-					await initBackEndControlRoutes();					
-				} else if(res.data.userType === 2) {
-					// 前台用户初始化前端静态路由
-					await initFrontEndControlRoutes();
-				}
-			}
-
-			// 初始化登录成功时间问候语
-			let currentTimeInfo = currentTime.value;
-			// 登录成功，跳到转首页
-			// 添加完动态路由，再进行 router 跳转，否则可能报错 No match found for location with path "/"
-			// 如果是复制粘贴的路径，非首页/登录页，那么登录成功后重定向到对应的路径中
-			if (route.query?.redirect) {
-				console.log(route.query)
-				router.push({
-					path: route.query?.redirect,
-					query: Object.keys(route.query?.params).length > 0 ? JSON.parse(route.query?.params) : '',
-				});
-			} else {
-				const views = dynamicRoutes[0].children;
-				const gotoPath = views[0].path || '/'
-				router.push(gotoPath);
-			}
-			// 登录成功提示
-			setTimeout(() => {
-				
-				// 关闭 loading
-				state.loading.signIn = true;
-				const signInText = t('message.signInText');
-				ElMessage.success(`${currentTimeInfo}，${signInText}`);
-				// 修复防止退出登录再进入界面时，需要刷新样式才生效的问题，初始化布局样式等(登录的时候触发，目前方案)
-				proxy.mittBus.emit('onSignInClick');
-			}, 300);
-		};
-		return {
-			currentTime,
-			onSignIn,
-			refreshCode,
-			...toRefs(state),
-		};
+// 定义变量内容
+const myRefForm = ref();
+const loginApi = LoginApi();
+const { t } = useI18n();
+const storesThemeConfig = useThemeConfig();
+const { themeConfig } = storeToRefs(storesThemeConfig);
+const route = useRoute();
+const router = useRouter();
+const state = reactive({
+	isShowPassword: false,
+	captcha: '',
+	captchaKey: '',
+	myForm: {
+		username: '',
+		password: '',
+		code: '',
+	},
+	rules: {
+		username: { required: true, message: '请输入用户名', trigger: 'blur' },
+		password: { required: true, message: '请输入密码', trigger: 'blur' },
+		code: { required: true, message: '请输入验证码', trigger: 'blur' },
+	},
+	loading: {
+		signIn: false,
 	},
 });
+
+// 时间获取
+const currentTime = computed(() => {
+	return formatAxis(new Date());
+});
+
+const refreshCode = async () => {
+	loginApi.getCaptcha().then(res => {
+		state.captcha = res.data.image;
+		state.captchaKey = res.data.codeUuid;
+		Session.set('ClientId', state.captchaKey);
+	}).catch(() => {
+	});
+};
+
+// 登录
+const onSignIn = async () => {
+
+	new Promise((resolve) => {
+		myRefForm.value.validate((valid: boolean) => {
+			if (valid) {
+				resolve(valid);
+				state.loading.signIn = true;
+				loginApi.signIn(state.myForm).then(async res => {
+					Session.set('token', res.data.token);
+					Session.set('tokenTtl', res.data.tokenTtl);
+					Local.set('tokenTtl', res.data.tokenTtl);
+					Local.set('token', res.data.token);
+					// 模拟数据，对接接口时，记得删除多余代码及对应依赖的引入。用于 `/src/stores/userInfo.ts` 中不同用户登录判断（模拟数据）
+					// Cookies.set('userName', state.ruleForm.userName);
+
+					const userInfos = {
+						username: res.data.username,
+						photo: res.data.headImg === null ? '/header.jpg' : res.data.headImg,
+						time: new Date().getTime(),
+						hasRole: res.data.hasRole,
+						version: res.data.version,
+						userType: res.data.userType,
+					};
+
+					Local.set('userInfo', userInfos);
+					Session.set('userInfo', userInfos);
+
+					if(res.data.userType === 1) {
+						// 后端管理用户初始化后端动态路由
+						const isNoPower = await initBackEndControlRoutes();
+						// 执行完 initBackEndControlRoutes，再执行 signInSuccess
+						signInSuccess(isNoPower);
+					} else if(res.data.userType === 2) {
+						// 前台用户初始化前端静态路由
+						const isNoPower = await initFrontEndControlRoutes();
+						signInSuccess(isNoPower);
+					}
+					
+				}).catch(error => {
+					state.loading.signIn = false;
+					refreshCode();
+					ElMessage.error(error.message ? error.message : '系统错误' );
+				})
+			}
+		});
+	});
+	
+};
+// 登录成功后的跳转
+const signInSuccess = (isNoPower: boolean | undefined) => {
+	if (isNoPower) {
+		ElMessage.warning('抱歉，您没有登录权限');
+		Session.clear();
+		Local.clear();
+	} else {
+		// 初始化登录成功时间问候语
+		let currentTimeInfo = currentTime.value;
+		// 登录成功，跳到转首页
+		// 如果是复制粘贴的路径，非首页/登录页，那么登录成功后重定向到对应的路径中
+		if (route.query?.redirect) {
+			router.push({
+				path: <string>route.query?.redirect,
+				query: Object.keys(<string>route.query?.params).length > 0 ? JSON.parse(<string>route.query?.params) : '',
+			});
+		} else {
+			router.push('/');
+		}
+		// 登录成功提示
+		const signInText = t('message.signInText');
+		ElMessage.success(`${currentTimeInfo}，${signInText}`);
+		// 添加 loading，防止第一次进入界面时出现短暂空白
+		NextLoading.start();
+	}
+	state.loading.signIn = false;
+};
+
+onMounted(() => {
+	refreshCode();
+});
+
 </script>
 
 <style scoped lang="scss">
 .login-content-form {
 	margin-top: 20px;
+	@for $i from 1 through 4 {
+		.login-animation#{$i} {
+			opacity: 0;
+			animation-name: error-num;
+			animation-duration: 0.5s;
+			animation-fill-mode: forwards;
+			animation-delay: calc($i/10) + s;
+		}
+	}
 	.login-content-password {
 		display: inline-block;
-		width: 25px;
+		width: 20px;
 		cursor: pointer;
 		&:hover {
 			color: #909399;
 		}
 	}
 	.login-content-code {
-		display: flex;
-		align-items: center;
-		justify-content: space-around;
-		.login-content-code-img {
-			width: 100%;
-			height: 40px;
-			line-height: 40px;
-			background-color: #ffffff;
-			border: 1px solid rgb(220, 223, 230);
-			color: #333;
-			font-size: 16px;
-			font-weight: 700;
-			letter-spacing: 5px;
-			text-indent: 5px;
-			text-align: center;
-			cursor: pointer;
-			transition: all ease 0.2s;
-			border-radius: 4px;
-			user-select: none;
-			&:hover {
-				border-color: #c0c4cc;
-				transition: all ease 0.2s;
-			}
-		}
+		width: 100%;
+		padding: 0;
+		font-weight: bold;
+		letter-spacing: 5px;
 	}
 	.login-content-submit {
 		width: 100%;
