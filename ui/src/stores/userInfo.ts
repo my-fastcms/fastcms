@@ -1,5 +1,6 @@
+import { el } from 'element-plus/es/locale';
 import { defineStore } from 'pinia';
-import { Session } from '/@/utils/storage';
+import { Session, Local } from '/@/utils/storage';
 
 /**
  * 用户信息
@@ -20,6 +21,8 @@ export const useUserInfo = defineStore('userInfo', {
 			// 存储用户信息到浏览器缓存
 			if (Session.get('userInfo')) {
 				this.userInfos = Session.get('userInfo');
+			} else if(Local.get('userInfo')) {
+				this.userInfos = Local.get('userInfo');
 			} else {
 				const userInfos = <UserInfos>await this.getApiUserInfo();
 				this.userInfos = userInfos;
@@ -29,7 +32,10 @@ export const useUserInfo = defineStore('userInfo', {
 		async getApiUserInfo() {
 			return new Promise((resolve) => {
 				setTimeout(() => {
-					const userInfos = Session.get('userInfo');
+					let userInfos = Session.get('userInfo');
+					if(!userInfos) {
+						userInfos = Local.get('userInfo');
+					}
 					resolve(userInfos);
 				}, 0);
 			});

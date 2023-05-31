@@ -1,5 +1,5 @@
 <template>
-	<div class="layout-footer pb15">
+	<div class="layout-footer pb15" style="padding-top: 10px;">
 		<div class="layout-footer-warp">
 			<div>Fastcms</div>
 			<div class="mt5">广州小橘灯信息科技有限公司</div>

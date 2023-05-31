@@ -61,8 +61,6 @@ import { useRoute, useRouter } from 'vue-router';
 import { ElMessage } from 'element-plus';
 import { useI18n } from 'vue-i18n';
 // import Cookies from 'js-cookie';
-import { storeToRefs } from 'pinia';
-import { useThemeConfig } from '/@/stores/themeConfig';
 import { initFrontEndControlRoutes } from '/@/router/frontEnd';
 import { initBackEndControlRoutes } from '/@/router/backEnd';
 import { Session, Local } from '/@/utils/storage';
@@ -75,8 +73,6 @@ import { LoginApi } from '/@/api/login/index';
 const myRefForm = ref();
 const loginApi = LoginApi();
 const { t } = useI18n();
-const storesThemeConfig = useThemeConfig();
-const { themeConfig } = storeToRefs(storesThemeConfig);
 const route = useRoute();
 const router = useRouter();
 const state = reactive({

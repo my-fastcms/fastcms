@@ -20,7 +20,7 @@
 				<el-table-column prop="provider" label="作者" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="pluginState" label="状态" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="description" label="描述" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="path" label="操作" width="90">
+				<el-table-column prop="path" label="操作" width="180">
 					<template #default="scope">
 						<el-button size="small" text type="primary" @click="beforeOnRowConfig(scope.row)">配置</el-button>
 						<el-button size="small" text type="primary" @click="onRowUnInstall(scope.row)">卸载</el-button>
