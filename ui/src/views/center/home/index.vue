@@ -202,7 +202,6 @@ const onUpdateUserInfo = () => {
 		
 		if (valid) {
 			let params = qs.stringify(state.personalForm, {arrayFormat: 'repeat'});
-			console.info("doUpdate User info")
 			clientUserApi.updateUser(params).then(() => {
 				ElMessage.success("保存成功")
 			}).catch((res) => {

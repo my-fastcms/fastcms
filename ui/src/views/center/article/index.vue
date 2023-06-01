@@ -2,21 +2,20 @@
   <div>
     <el-card shadow="hover">
       <div class="mb15">
-        <el-button
-          class="mt15"
-          size="small"
-          @click="addArticle()"
-          type="primary"
-        >新建文章</el-button>
         <el-input
-          size="small"
+          size="default"
           v-model="state.tableData.param.title"
           placeholder="请输入文章标题"
           prefix-icon="el-icon-search"
           style="max-width: 180px"
           class="ml10"
         ></el-input>
-        <el-button type="primary" class="ml10" @click="initTableData">查询</el-button>
+        <el-button type="primary" class="ml10" size="default" @click="initTableData">查询</el-button>
+        <el-button
+          size="default"
+          @click="addArticle()"
+          type="primary"
+        ><el-icon><ele-Plus /></el-icon>新建文章</el-button>
       </div>
       <el-table :data="state.tableData.data" stripe style="width: 100%">
         <el-table-column prop="id" label="ID" show-overflow-tooltip></el-table-column>

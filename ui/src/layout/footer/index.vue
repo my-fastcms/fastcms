@@ -1,14 +1,18 @@
 <template>
 	<div class="layout-footer pb15" style="padding-top: 10px;">
 		<div class="layout-footer-warp">
-			<div>Fastcms</div>
+			<div>{{ userInfos.version }}</div>
 			<div class="mt5">广州小橘灯信息科技有限公司</div>
 		</div>
 	</div>
 </template>
 
 <script setup lang="ts" name="layoutFooter">
-// 此处需有内容（注释也得），否则缓存将失败
+import { storeToRefs } from 'pinia';
+import { useUserInfo } from '/@/stores/userInfo';
+
+const stores = useUserInfo();
+const { userInfos } = storeToRefs(stores);
 </script>
 
 <style scoped lang="scss">
