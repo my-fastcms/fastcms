@@ -231,6 +231,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             userOpenidService.save(userOpenid);
         }else {
             user = getById(userOpenid.getUserId());
+            user.setMobile(phone);
+            updateById(user);
         }
         return user;
     }
