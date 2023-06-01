@@ -192,7 +192,7 @@ export const userCenterRoutes: Array<RouteRecordRaw> = [
 					isKeepAlive: true,
 					isAffix: false,
 					isIframe: false,
-					icon: 'ele-icon-s-fold',
+					icon: 'ele-DocumentCopy',
 				},
 			},
 			{
@@ -206,7 +206,7 @@ export const userCenterRoutes: Array<RouteRecordRaw> = [
 					isKeepAlive: true,
 					isAffix: false,
 					isIframe: false,
-					icon: 'el-icon-chat-dot-square',
+					icon: 'ele-Comment',
 				},
 			},
 			{
@@ -220,7 +220,7 @@ export const userCenterRoutes: Array<RouteRecordRaw> = [
 					isKeepAlive: true,
 					isAffix: false,
 					isIframe: false,
-					icon: 'el-icon-s-shop',
+					icon: 'ele-ShoppingTrolley',
 				},
 			},
 			{
@@ -234,7 +234,7 @@ export const userCenterRoutes: Array<RouteRecordRaw> = [
 					isKeepAlive: true,
 					isAffix: false,
 					isIframe: false,
-					icon: 'el-icon-picture-outline',
+					icon: 'ele-Folder',
 				},
 			},
 			{
@@ -248,7 +248,7 @@ export const userCenterRoutes: Array<RouteRecordRaw> = [
 					isKeepAlive: true,
 					isAffix: false,
 					isIframe: false,
-					icon: 'el-icon-edit',
+					icon: 'ele-DocumentAdd',
 				},
 			},
 			{
@@ -262,7 +262,7 @@ export const userCenterRoutes: Array<RouteRecordRaw> = [
 					isKeepAlive: true,
 					isAffix: false,
 					isIframe: false,
-					icon: 'el-icon-coin',
+					icon: 'ele-ScaleToOriginal',
 				},
 			},
 		],

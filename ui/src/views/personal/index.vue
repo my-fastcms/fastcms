@@ -6,7 +6,7 @@
 				<el-card shadow="hover" header="个人信息">
 					<div class="personal-user">
 						<div class="personal-user-left">
-							<el-upload class="h100 personal-user-left-upload" action="https://jsonplaceholder.typicode.com/posts/" multiple :limit="1">
+							<el-upload class="h100 personal-user-left-upload" action="" multiple :limit="1">
 								<img :src="state.userInfo.photo" />
 							</el-upload>
 						</div>

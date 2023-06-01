@@ -7,23 +7,23 @@
 					<div class="personal-user">
 						<div class="personal-user-left">
 							<el-upload class="h100 personal-user-left-upload" action="https://jsonplaceholder.typicode.com/posts/" multiple :limit="1">
-								<img :src="getUserInfos.photo" />
+								<img :src="state.userInfo.photo" />
 							</el-upload>
 						</div>
 						<div class="personal-user-right">
 							<el-row>
-								<el-col :span="24" class="personal-title mb18">{{ currentTime }}，{{ getUserInfos.username }}，
+								<el-col :span="24" class="personal-title mb18">{{ currentTime }}，{{ state.userInfo.username }}，
 								生活变的再糟糕，也不妨碍我变得更好！ 
 								</el-col>
 								<el-col :span="24">
 									<el-row>
 										<el-col :xs="24" :sm="8" class="personal-item mb6">
 											<div class="personal-item-label">昵称：</div>
-											<div class="personal-item-value">{{ state.personalForm.nickName }}</div>
+											<div class="personal-item-value">{{ state.userInfo.nickName }}</div>
 										</el-col>
 										<el-col :xs="24" :sm="16" class="personal-item mb6">
 											<div class="personal-item-label">签名：</div>
-											<div class="personal-item-value">{{ state.personalForm.autograph }}</div>
+											<div class="personal-item-value">{{ state.userInfo.autograph }}</div>
 										</el-col>
 									</el-row>
 								</el-col>
@@ -66,7 +66,7 @@
 			<el-col :span="24">
 				<el-card shadow="hover" class="mt15 personal-edit" header="更新信息">
 					<div class="personal-edit-title">基本信息</div>
-					<el-form :model="state.personalForm" :rules="state.personalFormRules" ref="myRefPersonalForm" label-width="80px" class="mt35 mb35">
+					<el-form :model="state.personalForm" :rules="state.personalFormRules" size="default" ref="myRefPersonalForm" label-width="80px" class="mt35 mb35">
 						<el-row :gutter="35">
 							<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
 								<el-form-item label="昵称" prop="nickName">
@@ -99,7 +99,7 @@
 							
 							<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
 								<el-form-item>
-									<el-button type="primary" @click="onUpdateUserInfo" icon="el-icon-position">更新个人信息</el-button>
+									<el-button type="primary" @click="onUpdateUserInfo" size="default">更新个人信息</el-button>
 								</el-form-item>
 							</el-col>
 						</el-row>
@@ -158,7 +158,7 @@ import { newsInfoList, recommendList } from './mock';
 import { UserApi } from '/@/api/user/index';
 import { ClientUserApi } from '/@/api/user/client';
 import { Local, Session } from '/@/utils/storage';
-import { useUserInfo } from '/@/stores/userInfo';
+// import { useUserInfo } from '/@/stores/userInfo';
 import qs from 'qs';
 
 const clientUserApi = ClientUserApi();
@@ -167,12 +167,13 @@ const userApi = UserApi();
 const myRefPersonalForm = ref();
 const myRefPasswordForm = ref();
 
-const store = useUserInfo();
+// const store = useUserInfo();
 const state = reactive({
 	dialogFormVisible: false,
 	formLabelWidth: '120px',
 	newsInfoList,
 	recommendList,
+	userInfo: {},
 	passwordForm: {
 		oldPassword: '',
 		password: '',
@@ -246,10 +247,6 @@ const onUpdatePassword = () => {
 const currentTime = computed(() => {
 	return formatAxis(new Date());
 });
-// 获取用户信息 vuex
-const getUserInfos = computed(() => {
-	return store.getApiUserInfo();
-});
 
 onMounted(() => {
 	clientUserApi.getUserInfo().then((res => {
@@ -258,6 +255,19 @@ onMounted(() => {
 		state.personalForm.mobile = res.data.mobile;
 		state.personalForm.autograph = res.data.autograph;
 		state.personalForm.sex = res.data.sex + "";
+		
+		const userInfos = {
+			username: res.data.userName,
+			photo: res.data.headImg === null ? '/header.jpg' : res.data.headImg,
+			time: new Date().getTime(),
+			nickName: res.data.nickName,
+			accessIp: res.data.accessIp,
+			autograph: res.data.autograph,
+			loginTime: res.data.loginTime,
+		};
+
+		state.userInfo = userInfos;
+
 	})).catch(()=>{})
 })
 
