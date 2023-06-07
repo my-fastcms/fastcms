@@ -14,10 +14,10 @@
             :on-error="onHandleUploadError"
             :before-upload="onBeforeUpload"
             :limit="state.limit">
-            <el-button size="small" type="primary">上传模板文件</el-button>
+            <el-button size="default" type="primary">上传模板文件</el-button>
             <div class="el-upload__tip" v-html="state.uploadParam.dirName"></div>
         </el-upload>
-        <el-form size="small" label-width="100px" ref="myRefForm">
+        <el-form style="padding-top: 5px;" size="default" label-width="100px" ref="myRefForm">
             <el-row :gutter="35">
                 <el-col :sm="5" class="mb20">
                     <div class="tree-container">
@@ -36,16 +36,14 @@
                     </div>
                 </el-col>
                 <el-col :sm="7" class="mb20">
-                    <!-- <v-ace-editor
-                            v-model:value="state.content"
-                            lang="html"
-                            theme="chrome"
-                            @init="editorInit"
-                            :options="state.aceOptions"
-                            style="height: 550px;width: 1000px; overflow: auto;" /> -->
-                        <div class="mb15">
-                            <el-button type="primary" @click="onSaveFile" size="small">保 存</el-button>
-                            <el-button type="danger" @click="onDelFile" size="small" v-if="state.content != ''">删 除</el-button>
+                    <Codemirror
+                            :model-value="state.content" 
+                            :style="{ height: '100%', width: '100%' }" 
+                            :autofocus="true"
+                            :extensions="extensions" />
+                        <div class="mb15" style="padding-top: 3px;">
+                            <el-button type="primary" @click="onSaveFile" size="default">保 存</el-button>
+                            <el-button type="danger" @click="onDelFile" size="default" v-if="state.content != ''">删 除</el-button>
                         </div>
                 </el-col>
             </el-row>    
@@ -59,13 +57,12 @@ import { reactive, onMounted } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { Local } from '/@/utils/storage';
 import { TemplateApi } from '/@/api/template/index';
-// import { VAceEditor } from 'vue3-ace-editor';
-// import 'ace-builds/src-noconflict/mode-text';
-// import 'ace-builds/src-noconflict/mode-html';
-// import 'ace-builds/src-noconflict/mode-javascript';
-// import 'ace-builds/src-noconflict/mode-css';
-// import 'ace-builds/src-noconflict/theme-chrome';
 import qs from 'qs';
+import { Codemirror } from "vue-codemirror";
+import { javascript } from "@codemirror/lang-javascript";
+import { oneDark } from "@codemirror/theme-one-dark";
+
+const extensions = [javascript(), oneDark];
 
 const templateApi = TemplateApi();
 const state = reactive({
@@ -153,10 +150,6 @@ const onNodeClick = (node: any) => {
     }
 }
 
-const editorInit = () => {
-    console.log("====editorInit");
-}
-
 const uploadSuccess = () => {
     ElMessage.success("上传成功");
     getFileTree();
@@ -180,5 +173,19 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-.ck-content { height:500px; }
+.CodeMirror-scroll {
+  overflow: scroll !important;
+  margin-bottom: 0;
+  margin-right: 0;
+  padding-bottom: 0;
+  height: 100%;
+  outline: none;
+  position: relative;
+  border: 1px solid #dddddd;
+}
+.code-mirror{
+  font-size : 13px;
+  line-height : 150%;
+  text-align: left;
+}
 </style>
