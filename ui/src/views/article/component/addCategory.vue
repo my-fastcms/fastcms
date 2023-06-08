@@ -9,14 +9,19 @@
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="分类图片" prop="icon">
-							<!-- <IconSelector placeholder="请输入分类图标" v-model="state.ruleForm.icon" /> -->
-							<el-image
-                            style="width: 100px; height: 100px;margin-right: 10px;"
+						<el-form-item label="分类图片" prop="icon" >
+							<div style="display:flex;flex-direction: column;">
+								<el-image
+                            style="width: 100px; height: 100px;margin-bottom: 10px;"
                             :src="state.ruleForm.thumbnailUrl"
-                            :fit="state.fit"></el-image>
+                            :fit="state.fit"
+							:preview-src-list="[state.ruleForm.thumbnailUrl]"
+							></el-image>
 						
-							<el-button type="primary" size="mini" plain @click="onThumbnailDialogOpen">选择图片</el-button>
+							<el-button style="" type="primary" size="mini" plain @click="onThumbnailDialogOpen">选择图片</el-button>
+							</div>
+							<!-- <IconSelector placeholder="请输入分类图标" v-model="state.ruleForm.icon" /> -->
+							
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">

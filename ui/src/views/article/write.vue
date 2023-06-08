@@ -18,7 +18,9 @@
                         <el-image
                             style="width: 100px; height: 100px"
                             :src="state.ruleForm.thumbnailUrl"
-                            :fit="state.fit"></el-image>
+                            :fit="state.fit"
+                            :preview-src-list="[state.ruleForm.thumbnailUrl]"
+                            ></el-image>
                     </el-form-item>
                     <el-form-item>
                         <el-link type="primary" @click="onThumbnailDialogOpen">选择图片</el-link>
