@@ -72,11 +72,11 @@ export function TemplateApi() {
 		 * @param params 
 		 * @returns 
 		 */
-		saveTemplateFile(params: string) {
+		saveTemplateFile(params: object) {
 			return request({
 				url: "/admin/template/file/save",
 				method: 'post',
-				data: params
+				params: params
 			});
 		},
 
