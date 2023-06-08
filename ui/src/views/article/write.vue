@@ -10,7 +10,7 @@
                 </el-col>
                 <el-col class="mb20">
                     <el-form-item label="文章详情" prop="contentHtml">
-                        <ckeditor v-model="state.ruleForm.contentHtml"></ckeditor>
+                        <ckeditor style="width:100%" v-model="state.ruleForm.contentHtml"></ckeditor>
                     </el-form-item>
                 </el-col>
                 <el-col class="mb20">

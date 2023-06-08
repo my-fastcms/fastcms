@@ -1,57 +1,53 @@
 <template>
-	<el-dialog title="选择附件" fullscreen v-model="state.isShowDialog">
-		<div>			
-			<el-card shadow="hover">
-				<el-upload 
-					class="upload-btn"
-					:action="state.uploadUrl"
-					name="files"
-					multiple
-					:headers="state.headers"
-					:show-file-list="false"
-					:on-success="uploadSuccess"
-					:on-exceed="onHandleExceed"
-					:on-error="onHandleUploadError"
-					:limit="state.limit">
-					<el-button type="primary"><el-icon><ele-Plus /></el-icon>上传附件</el-button>
-				</el-upload>
-				<div v-if="state.tableData.data.length > 0">
-					<el-row :gutter="15">
-						<el-checkbox-group :max="state.max" v-model="state.checkedObjs">
-							<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb10" v-for="(v, k) in state.tableData.data" :key="k" @click="onTableItemClick(v)">
-								<el-card :body-style="{ padding: '0px' }">
-									<img :src="v.path" :fit="state.fit" class="image">
-									<div style="padding: 14px;">
-										<el-checkbox :label="v"><span>{{ v.fileName }}</span></el-checkbox>
-									</div>
-								</el-card>
-							</el-col>
-						</el-checkbox-group>
-					</el-row>
-				</div>
-				<el-empty v-else description="暂无数据"></el-empty>
-				<template v-if="state.tableData.data.length > 0">
-					<el-pagination
-						style="text-align: right"
-						background
-						@size-change="onHandleSizeChange"
-						@current-change="onHandleCurrentChange"
-						:page-sizes="[10, 20, 30]"
-						:current-page="state.tableData.param.pageNum"
-						:page-size="state.tableData.param.pageSize"
-						layout="total, sizes, prev, pager, next, jumper"
-						:total="state.tableData.total"
-					>
-					</el-pagination>
-				</template>
-			</el-card>
+	<el-dialog title="选择附件" fullscreen v-model="state.isShowDialog" :append-to-body="true">
+		<div style="width:100%">			
+			<el-upload 
+				class="upload-btn"
+				:action="state.uploadUrl"
+				name="files"
+				multiple
+				:headers="state.headers"
+				:show-file-list="false"
+				:on-success="uploadSuccess"
+				:on-exceed="onHandleExceed"
+				:on-error="onHandleUploadError"
+				:limit="state.limit">
+				<el-button type="primary"><el-icon><ele-Plus /></el-icon>上传附件</el-button>
+			</el-upload>
+			<template v-if="state.tableData.data.length > 0">
+					<el-checkbox-group :max="state.max" v-model="state.checkedObjs" class="imgWrap">
+						<div class="mb10" v-for="(v, k) in state.tableData.data" :key="k" @click="onTableItemClick(v)">
+							<el-card :body-style="{ padding: '0px' }">
+								<img :src="v.path" :fit="state.fit" class="image">
+								<div style="padding: 14px;">
+									<el-checkbox :label="v"><span>{{ v.fileName }}</span></el-checkbox>
+								</div>
+							</el-card>
+						</div>
+					</el-checkbox-group>
+			</template>
+			<el-empty v-else description="暂无数据"></el-empty>
+			<template v-if="state.tableData.data.length > 0">
+				<el-pagination
+					style="text-align: right"
+					background
+					@size-change="onHandleSizeChange"
+					@current-change="onHandleCurrentChange"
+					:page-sizes="[10, 20, 30]"
+					:current-page="state.tableData.param.pageNum"
+					:page-size="state.tableData.param.pageSize"
+					layout="total, sizes, prev, pager, next, jumper"
+					:total="state.tableData.total"
+				>
+				</el-pagination>
+			</template>
 		</div>
 		<template #footer>
 				<span class="dialog-footer">
 					<el-button @click="closeDialog">取 消</el-button>
 					<el-button type="primary" @click="onSubmit">确 定</el-button>
 				</span>
-			</template>
+		</template>
 	</el-dialog>
 </template>
 
@@ -204,5 +200,17 @@ defineExpose({
   
 .clearfix:after {
 	clear: both
+}
+.imgWrap {
+	width: 100%;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr ;
+	grid-template-rows:auto;
+	grid-row-gap: 10px;
+	grid-column-gap: 20px;
+	justify-content: space-between;
+}
+.mb10 {
+	// width: 300px;
 }
 </style>

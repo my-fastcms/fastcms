@@ -35,7 +35,7 @@
                         </el-card>
                     </div>
                 </el-col>
-                <el-col :sm="7" class="mb20">
+                <el-col :sm="19" class="mb20">
                     <Codemirror
                             :model-value="state.content" 
                             :style="{ height: '100%', width: '100%' }" 
