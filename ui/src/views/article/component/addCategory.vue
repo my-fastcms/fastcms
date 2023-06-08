@@ -9,8 +9,14 @@
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
-						<el-form-item label="分类图标" prop="icon">
-							<IconSelector placeholder="请输入分类图标" v-model="state.ruleForm.icon" />
+						<el-form-item label="分类图片" prop="icon">
+							<!-- <IconSelector placeholder="请输入分类图标" v-model="state.ruleForm.icon" /> -->
+							<el-image
+                            style="width: 100px; height: 100px;margin-right: 10px;"
+                            :src="state.ruleForm.thumbnailUrl"
+                            :fit="state.fit"></el-image>
+						
+							<el-button type="primary" size="mini" plain @click="onThumbnailDialogOpen">选择图片</el-button>
 						</el-form-item>
 					</el-col>
 					<el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -37,6 +43,7 @@
 					<el-button type="primary" @click="onSubmit" size="default">新 增</el-button>
 				</span>
 			</template>
+			<AttachDialog ref="thumbnailDialogRef" @attachHandler="getSelectThumbnail" :fileType="state.fileType"/>
 		</el-dialog>
 	</div>
 </template>
@@ -46,10 +53,14 @@ import { reactive, ref } from 'vue';
 import { ElMessage } from 'element-plus';
 import IconSelector from '/@/components/iconSelector/index.vue';
 import { ArticleApi } from '/@/api/article/index';
+import AttachDialog from '/@/components/attach/index.vue';
+
 
 const emit = defineEmits(["reloadTable"])
 const articleApi = ArticleApi();
 const myRefForm = ref();
+
+const thumbnailDialogRef = ref();
 
 const state = reactive({
 	isShowDialog: false,
@@ -86,6 +97,16 @@ const onCancel = () => {
 	initForm();
 };
 
+//打开缩略图弹出框
+const onThumbnailDialogOpen = () => {
+    thumbnailDialogRef.value.openDialog(1);
+};
+
+//获取弹出框选中的图片
+const getSelectThumbnail = (value) => {
+    state.ruleForm.thumbnail = value[0].filePath;
+    state.ruleForm.thumbnailUrl = value[0].path;
+};
 // 新增
 const onSubmit = () => {
 
