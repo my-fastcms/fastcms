@@ -14,6 +14,7 @@
 				:limit="state.limit">
 				<el-button type="primary"><el-icon><ele-Plus /></el-icon>上传附件</el-button>
 			</el-upload>
+			<el-card shadow="hover">
 			<template v-if="state.tableData.data.length > 0">
 					<el-checkbox-group :max="state.max" v-model="state.checkedObjs" class="imgWrap">
 						<div class="mb10" v-for="(v, k) in state.tableData.data" :key="k" @click="onTableItemClick(v)">
@@ -45,6 +46,7 @@
 				>
 				</el-pagination>
 			</template>
+			</el-card>
 		</div>
 		<template #footer>
 				<span class="dialog-footer">
@@ -221,7 +223,7 @@ defineExpose({
 	overflow:hidden;
 	text-overflow:ellipsis;
 }
-::v-deep .el-checkbox__label {
+:deep .el-checkbox__label {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;

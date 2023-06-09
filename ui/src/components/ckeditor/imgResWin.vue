@@ -16,20 +16,22 @@
 			</el-upload>
 			
 			<el-card shadow="hover">
-				<div v-if="state.tableData.data.length > 0">
-					<el-row :gutter="15">
-						<el-checkbox-group :max="state.max" v-model="state.checkedObjs">
-							<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb15" v-for="(v, k) in state.tableData.data" :key="k" @click="onTableItemClick(v)">
-								<el-card :body-style="{ padding: '0px' }">
-									<img :src="v.path" class="image">
-									<div style="padding: 14px;">
-										<el-checkbox :label="v"><span>{{ v.fileName }}</span></el-checkbox>
-									</div>
-								</el-card>
-							</el-col>
-						</el-checkbox-group>
-					</el-row>
-				</div>
+				<template v-if="state.tableData.data.length > 0">
+					<el-checkbox-group :max="state.max" v-model="state.checkedObjs" class="imgWrap">
+						<div class="mb10" v-for="(v, k) in state.tableData.data" :key="k" @click="onTableItemClick(v)">
+							<el-card :body-style="{ padding: '6px' }">
+								<img :src="v.path" :fit="state.fit" class="image">
+								<div style="padding: 14px;">
+									<el-checkbox :label="v" style="width:100%">
+										<el-tooltip class="item" effect="dark" :content="v.fileName" placement="top-start">
+											<div class="filename">{{ v.fileName }}</div>
+    									</el-tooltip>
+									</el-checkbox>
+								</div>
+							</el-card>/
+						</div>
+					</el-checkbox-group>
+			</template>
 				<el-empty v-else description="暂无数据"></el-empty>
 				<template v-if="state.tableData.data.length > 0">
 					<el-pagination
@@ -198,5 +200,27 @@ defineExpose({
   
 .clearfix:after {
 	clear: both
+}
+.imgWrap {
+	width: 100%;
+	display: grid;
+	// grid-template-columns: repeat(5,1fr);
+	grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+	grid-template-rows:auto;
+	grid-row-gap: 10px;
+	grid-column-gap: 20px;
+	justify-content: space-between;
+}
+
+.filename{
+	white-space:nowrap;
+	overflow:hidden;
+	text-overflow:ellipsis;
+}
+:deep .el-checkbox__label {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	line-height: 30px;
 }
 </style>
