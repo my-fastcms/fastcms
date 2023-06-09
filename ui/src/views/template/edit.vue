@@ -24,7 +24,7 @@
                         <el-card shadow="hover" header="模板文件树">
                             <div v-loading="state.treeLoading">
                                 <el-tree :data="state.treeTableData" 
-                                    :default-expand-all="true" 
+                                    :default-expand-all="false" 
                                     node-key="filePath" 
                                     :props="state.treeDefaultProps" 
                                     @node-click="onNodeClick"
@@ -57,7 +57,6 @@ import { reactive, onMounted } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { Local } from '/@/utils/storage';
 import { TemplateApi } from '/@/api/template/index';
-import qs from 'qs';
 import { Codemirror } from "vue-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { oneDark } from "@codemirror/theme-one-dark";
@@ -105,10 +104,8 @@ const onSaveFile = () => {
         return;
     }
 
-    templateApi.saveTemplateFile(qs.stringify({"filePath": state.currEditFile, "fileContent": state.content})).then(() => {
+    templateApi.saveTemplateFile({"filePath": state.currEditFile, "fileContent": state.content}).then(() => {
         ElMessage.success("保存成功");
-    }).catch((res) => {
-        ElMessage.error(res.message);
     })
 
 };

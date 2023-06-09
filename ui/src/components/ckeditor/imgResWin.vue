@@ -1,6 +1,6 @@
 <template>
-  <el-dialog title="选择附件" fullscreen v-model="state.isShowDialog">
-		<div>
+  <el-dialog title="选择附件" fullscreen v-model="state.isShowDialog" :append-to-body="true">
+		<div style="width:100%">
 			<el-upload 
 				class="upload-btn"
 				:action="state.uploadUrl"
@@ -85,6 +85,7 @@ if(props.isClient && props.isClient == true) {
 }
 
 const state = reactive({
+	fit: "fill",
 	isShowDialog: false,
 	queryParams: {},
 	showSearch: true,
@@ -162,8 +163,8 @@ const onHandleCurrentChange = (val: number) => {
 const onSubmit = () => {
 	let selectData: any= [];
 	//把选中的附件传递给父组件
-	state.checkedObjs.forEach(item => selectData.push({src: item.path}));
-	selectData.forEach(item => insertImage(connect.editorObj.model, item));
+	state.checkedObjs.forEach((item: any) => selectData.push({src: item.path}));
+	selectData.forEach((item: any) => insertImage(connect.editorObj.model, item));
 	closeDialog();
 };
 
