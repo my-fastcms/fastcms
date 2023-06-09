@@ -1,6 +1,6 @@
 <template>
-  <el-dialog title="选择附件" fullscreen v-model="state.isShowDialog">
-		<div>
+  <el-dialog title="选择附件" fullscreen v-model="state.isShowDialog" :append-to-body="true">
+		<div style="width:100%">
 			<el-upload 
 				class="upload-btn"
 				:action="state.uploadUrl"
@@ -15,37 +15,37 @@
 				<el-button type="primary"><el-icon><ele-Plus /></el-icon>上传附件</el-button>
 			</el-upload>
 			
-			<el-card shadow="hover">
-				<div v-if="state.tableData.data.length > 0">
-					<el-row :gutter="15">
-						<el-checkbox-group :max="state.max" v-model="state.checkedObjs">
-							<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb15" v-for="(v, k) in state.tableData.data" :key="k" @click="onTableItemClick(v)">
-								<el-card :body-style="{ padding: '0px' }">
-									<img :src="v.path" class="image">
-									<div style="padding: 14px;">
-										<el-checkbox :label="v"><span>{{ v.fileName }}</span></el-checkbox>
-									</div>
-								</el-card>
-							</el-col>
-						</el-checkbox-group>
-					</el-row>
-				</div>
-				<el-empty v-else description="暂无数据"></el-empty>
-				<template v-if="state.tableData.data.length > 0">
-					<el-pagination
-						style="text-align: right"
-						background
-						@size-change="onHandleSizeChange"
-						@current-change="onHandleCurrentChange"
-						:page-sizes="[10, 20, 30]"
-						:current-page="state.tableData.param.pageNum"
-						:page-size="state.tableData.param.pageSize"
-						layout="total, sizes, prev, pager, next, jumper"
-						:total="state.tableData.total"
-					>
-					</el-pagination>
-				</template>
-			</el-card>
+			<template v-if="state.tableData.data.length > 0">
+				<el-checkbox-group :max="state.max" v-model="state.checkedObjs" class="imgWrap">
+					<div class="mb10" v-for="(v, k) in state.tableData.data" :key="k" @click="onTableItemClick(v)">
+						<el-card :body-style="{ padding: '6px' }">
+							<img :src="v.path" :fit="state.fit" class="image">
+							<div style="padding: 14px;">
+								<el-checkbox :label="v" style="width:100%">
+									<el-tooltip class="item" effect="dark" :content="v.fileName" placement="top-start">
+										<div class="filename">{{ v.fileName }}</div>
+									</el-tooltip>
+								</el-checkbox>
+							</div>
+						</el-card>/
+					</div>
+				</el-checkbox-group>
+			</template>
+			<el-empty v-else description="暂无数据"></el-empty>
+			<template v-if="state.tableData.data.length > 0">
+				<el-pagination
+					style="text-align: right"
+					background
+					@size-change="onHandleSizeChange"
+					@current-change="onHandleCurrentChange"
+					:page-sizes="[10, 20, 30]"
+					:current-page="state.tableData.param.pageNum"
+					:page-size="state.tableData.param.pageSize"
+					layout="total, sizes, prev, pager, next, jumper"
+					:total="state.tableData.total"
+				>
+				</el-pagination>
+			</template>
 		</div>
 		<template #footer>
 				<span class="dialog-footer">
@@ -83,6 +83,7 @@ if(props.isClient && props.isClient == true) {
 }
 
 const state = reactive({
+	fit: "fill",
 	isShowDialog: false,
 	queryParams: {},
 	showSearch: true,
@@ -160,8 +161,8 @@ const onHandleCurrentChange = (val: number) => {
 const onSubmit = () => {
 	let selectData: any= [];
 	//把选中的附件传递给父组件
-	state.checkedObjs.forEach(item => selectData.push({src: item.path}));
-	selectData.forEach(item => insertImage(connect.editorObj.model, item));
+	state.checkedObjs.forEach((item: any) => selectData.push({src: item.path}));
+	selectData.forEach((item: any) => insertImage(connect.editorObj.model, item));
 	closeDialog();
 };
 
