@@ -73,10 +73,32 @@ public class ArticleApi {
 	 * 文章列表
 	 * @param page
 	 * @param categoryId
+	 * @param tagId
+	 * @param orderBy
 	 * @return
 	 */
 	@GetMapping("list")
 	public RestResult<Page<IArticleService.ArticleVo>> list(PageModel page,
+															@RequestParam(name = "categoryId", required = false) String categoryId,
+															@RequestParam(name = "tagId", required = false) String tagId,
+															@RequestParam(name = "orderBy", required = false, defaultValue = "a.created") String orderBy) {
+		QueryWrapper<Object> queryWrapper = Wrappers.query()
+				.eq(StrUtils.isNotBlank(categoryId), "acr.category_id", categoryId)
+				.eq(StrUtils.isNotBlank(tagId), "atr.tag_id", tagId)
+				.orderByDesc(orderBy);
+
+		Page<IArticleService.ArticleVo> articleVoPage = articleService.pageArticle(page.toPage(), queryWrapper);
+		return RestResultUtils.success(articleVoPage);
+	}
+
+	/**
+	 * 文章列表（open）
+	 * @param page
+	 * @param categoryId
+	 * @return
+	 */
+	@GetMapping("list/open")
+	public RestResult<Page<IArticleService.ArticleVo>> listOpen(PageModel page,
 															@RequestParam(name = "categoryId", required = false) String categoryId,
 															@RequestParam(name = "tagId", required = false) String tagId,
 															@RequestParam(name = "orderBy", required = false, defaultValue = "a.created") String orderBy) {

@@ -37,9 +37,12 @@
                 </el-col>
                 <el-col :sm="19" class="mb20">
                     <Codemirror
-                            :model-value="state.content" 
+                            ref="codeMirror"
+                            v-model="state.content" 
                             :style="{ height: '100%', width: '100%' }" 
                             :autofocus="true"
+                            @change="onChange"
+                            v-bind="$attrs"
                             :extensions="extensions" />
                         <div class="mb15" style="padding-top: 3px;">
                             <el-button type="primary" @click="onSaveFile" size="default">保 存</el-button>
@@ -53,15 +56,16 @@
 </template>
 
 <script lang="ts" name="templateEdit" setup>
-import { reactive, onMounted } from 'vue';
+import { reactive, onMounted, ref } from 'vue';
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { Local } from '/@/utils/storage';
 import { TemplateApi } from '/@/api/template/index';
 import { Codemirror } from "vue-codemirror";
-import { javascript } from "@codemirror/lang-javascript";
+import { html } from "@codemirror/lang-html";
 import { oneDark } from "@codemirror/theme-one-dark";
 
-const extensions = [javascript(), oneDark];
+const codeMirror = ref()
+const extensions = [html(), oneDark];
 
 const templateApi = TemplateApi();
 const state = reactive({
@@ -163,7 +167,10 @@ const onBeforeUpload = () => {
         return false;
     }
 }
-
+const onChange = (value: string) => {
+    // console.log("value:" + value)
+    state.content = value;
+}
 onMounted(() => {
     getFileTree();
 });

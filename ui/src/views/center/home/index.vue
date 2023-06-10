@@ -6,39 +6,38 @@
 				<el-card shadow="hover" header="个人信息">
 					<div class="personal-user">
 						<div class="personal-user-left">
-							<el-upload class="h100 personal-user-left-upload" action="https://jsonplaceholder.typicode.com/posts/" multiple :limit="1">
+							<el-upload class="h100 personal-user-left-upload" action="" multiple :limit="1">
 								<img :src="state.userInfo.photo" />
 							</el-upload>
 						</div>
 						<div class="personal-user-right">
 							<el-row>
-								<el-col :span="24" class="personal-title mb18">{{ currentTime }}，{{ state.userInfo.username }}，
-								生活变的再糟糕，也不妨碍我变得更好！ 
-								</el-col>
+								<el-col :span="24" class="personal-title mb18">{{ currentTime }}，{{ state.userInfo.username }} </el-col>
+								<el-col :span="24" class="personal-title mb18" v-if="state.userInfo.autograph !=null">{{state.userInfo.autograph}}</el-col>
 								<el-col :span="24">
 									<el-row>
 										<el-col :xs="24" :sm="8" class="personal-item mb6">
 											<div class="personal-item-label">昵称：</div>
 											<div class="personal-item-value">{{ state.userInfo.nickName }}</div>
 										</el-col>
-										<el-col :xs="24" :sm="16" class="personal-item mb6">
-											<div class="personal-item-label">签名：</div>
-											<div class="personal-item-value">{{ state.userInfo.autograph }}</div>
-										</el-col>
+										<!-- <el-col :xs="24" :sm="16" class="personal-item mb6">
+											<div class="personal-item-label">身份：</div>
+											<div class="personal-item-value">超级管理</div>
+										</el-col> -->
 									</el-row>
 								</el-col>
-								<!-- <el-col :span="24">
+								<el-col :span="24">
 									<el-row>
 										<el-col :xs="24" :sm="8" class="personal-item mb6">
 											<div class="personal-item-label">登录IP：</div>
-											<div class="personal-item-value">192.168.1.1</div>
+											<div class="personal-item-value">{{ state.userInfo.accessIp }}</div>
 										</el-col>
 										<el-col :xs="24" :sm="16" class="personal-item mb6">
 											<div class="personal-item-label">登录时间：</div>
-											<div class="personal-item-value">2021-02-05 18:47:26</div>
+											<div class="personal-item-value">{{ state.userInfo.loginTime }}</div>
 										</el-col>
 									</el-row>
-								</el-col> -->
+								</el-col>
 							</el-row>
 						</div>
 					</div>
@@ -66,7 +65,7 @@
 			<el-col :span="24">
 				<el-card shadow="hover" class="mt15 personal-edit" header="更新信息">
 					<div class="personal-edit-title">基本信息</div>
-					<el-form :model="state.personalForm" :rules="state.personalFormRules" size="default" ref="myRefPersonalForm" label-width="80px" class="mt35 mb35">
+					<el-form :model="state.personalForm" :rules="state.personalFormRules" ref="myRefPersonalForm" label-width="80px" class="mt35 mb35">
 						<el-row :gutter="35">
 							<el-col :xs="24" :sm="12" :md="8" :lg="6" :xl="4" class="mb20">
 								<el-form-item label="昵称" prop="nickName">
@@ -99,7 +98,7 @@
 							
 							<el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24">
 								<el-form-item>
-									<el-button type="primary" @click="onUpdateUserInfo" size="default">更新个人信息</el-button>
+									<el-button type="primary" @click="onUpdateUserInfo">更新个人信息</el-button>
 								</el-form-item>
 							</el-col>
 						</el-row>
@@ -109,17 +108,17 @@
 						<div class="personal-edit-safe-item">
 							<div class="personal-edit-safe-item-left">
 								<div class="personal-edit-safe-item-left-label">账户密码</div>
-								<div class="personal-edit-safe-item-left-value">当前密码强度：强</div>
+								<div class="personal-edit-safe-item-left-value">当前密码强度：中</div>
 							</div>
 							<div class="personal-edit-safe-item-right">
-								<el-button type="text"  @click="state.dialogFormVisible = true">立即修改</el-button>
+								<el-button @click="state.dialogFormVisible = true">立即修改</el-button>
 							</div>
 						</div>
 					</div>
+					
 				</el-card>
 			</el-col>
 		</el-row>
-
 		<el-dialog v-model="state.dialogFormVisible" title="修改密码">
 			<el-form :model="state.passwordForm" label-width="80px" :rules="state.passwordFormRules" ref="myRefPasswordForm">
 				<el-row :gutter="35">
@@ -147,10 +146,12 @@
 			</span>
 			</template>
 		</el-dialog>
+
 	</div>
+
 </template>
 
-<script lang="ts" name="centerPersonal" setup>
+<script lang="ts" name="personal" setup>
 import { ref, reactive, computed, onMounted } from 'vue';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { formatAxis } from '/@/utils/formatTime';
@@ -158,16 +159,12 @@ import { newsInfoList, recommendList } from './mock';
 import { UserApi } from '/@/api/user/index';
 import { ClientUserApi } from '/@/api/user/client';
 import { Local, Session } from '/@/utils/storage';
-// import { useUserInfo } from '/@/stores/userInfo';
 import qs from 'qs';
-
-const clientUserApi = ClientUserApi();
-const userApi = UserApi();
 
 const myRefPersonalForm = ref();
 const myRefPasswordForm = ref();
-
-// const store = useUserInfo();
+const userApi = UserApi();
+const clientUserApi = ClientUserApi();
 const state = reactive({
 	dialogFormVisible: false,
 	formLabelWidth: '120px',
@@ -202,9 +199,8 @@ const onUpdateUserInfo = () => {
 	myRefPersonalForm.value.validate((valid: any) => {
 		
 		if (valid) {
-			let params = qs.stringify(state.personalForm, {arrayFormat: 'repeat'});
-			clientUserApi.updateUser(params).then(() => {
-				ElMessage.success("保存成功")
+			clientUserApi.updateUser(state.personalForm).then(() => {
+				ElMessage.success("保存成功");
 			}).catch((res) => {
 				ElMessage({showClose: true, message: res.message ? res.message : '系统错误' , type: 'error'});
 			})
@@ -242,7 +238,6 @@ const onUpdatePassword = () => {
 	});
 
 };
-
 // 当前时间提示语
 const currentTime = computed(() => {
 	return formatAxis(new Date());
@@ -258,7 +253,7 @@ onMounted(() => {
 		
 		const userInfos = {
 			username: res.data.userName,
-			photo: res.data.headImg === null ? '/header.jpg' : res.data.headImg,
+			photo: res.data.headImg === null || res.data.headImg == '' ? '/header.jpg' : res.data.headImg,
 			time: new Date().getTime(),
 			nickName: res.data.nickName,
 			accessIp: res.data.accessIp,
@@ -270,11 +265,10 @@ onMounted(() => {
 
 	})).catch(()=>{})
 })
-
 </script>
 
 <style scoped lang="scss">
-// @import '../../../theme/mixins/mixins.scss';
+// @import '../../theme/mixins/mixins.scss';
 .personal {
 	.personal-user {
 		height: 130px;

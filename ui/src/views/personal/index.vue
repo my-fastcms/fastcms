@@ -12,7 +12,7 @@
 						</div>
 						<div class="personal-user-right">
 							<el-row>
-								<el-col :span="24" class="personal-title mb18">{{ currentTime }}，admin </el-col>
+								<el-col :span="24" class="personal-title mb18">{{ currentTime }}，{{ state.userInfo.username }} </el-col>
 								<el-col :span="24" class="personal-title mb18" v-if="state.userInfo.autograph !=null">{{state.userInfo.autograph}}</el-col>
 								<el-col :span="24">
 									<el-row>

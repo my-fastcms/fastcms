@@ -96,6 +96,7 @@
 </template>
 <script lang="ts" name="balanceManager" setup>
 import { reactive, onMounted } from 'vue';
+import { ElMessage } from 'element-plus';
 import type { TabsPaneContext } from 'element-plus';
 import { ClientOrderApi } from '/@/api/order/client';
 
@@ -144,14 +145,12 @@ const handleClick = (tab: TabsPaneContext) => {
 
 const initCashoutTableData = () => {
   clientOrderApi.getUserCashoutList().then(res => {
-    console.log(res.data)
     state.cashoutTableData.data = res.data;
   })
 }
 
 const initUserIncomeTableData = () => {
   clientOrderApi.getUserIncomeList().then(res => {
-    console.log(res.data)
     state.incomeTableData.data = res.data.records;
     state.incomeTableData.total = res.data.total;
   })
@@ -178,6 +177,8 @@ const onCashOut = () => {
   }
   clientOrderApi.cashoutAmount(state.cashOutForm.cashOutAmount).then(() => {
     closeDialog()
+  }).catch(error => {
+    ElMessage.error(error);
   })
 }
 

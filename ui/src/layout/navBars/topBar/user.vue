@@ -73,6 +73,7 @@
 			<template #dropdown>
 				<el-dropdown-menu>
 					<el-dropdown-item command="/home">{{ $t('message.user.dropdown1') }}</el-dropdown-item>
+					<el-dropdown-item command="/siteHome" v-if="state.website_domain != ''">{{ $t('message.user.dropdown7') }}</el-dropdown-item>
 					<el-dropdown-item command="wareHouse">{{ $t('message.user.dropdown6') }}</el-dropdown-item>
 					<el-dropdown-item command="/personal">{{ $t('message.user.dropdown2') }}</el-dropdown-item>
 					<el-dropdown-item command="/404" v-if="false">{{ $t('message.user.dropdown3') }}</el-dropdown-item>
@@ -97,11 +98,14 @@ import { useThemeConfig } from '/@/stores/themeConfig';
 import other from '/@/utils/other';
 import mittBus from '/@/utils/mitt';
 import { Session, Local } from '/@/utils/storage';
+import qs from 'qs';
+import { ConfigApi } from '/@/api/config/index';
 
 // 引入组件
 const UserNews = defineAsyncComponent(() => import('/@/layout/navBars/topBar/userNews.vue'));
 const Search = defineAsyncComponent(() => import('/@/layout/navBars/topBar/search.vue'));
 
+const configApi = ConfigApi();
 // 定义变量内容
 const userNewsRef = ref();
 const userNewsBadgeRef = ref();
@@ -113,6 +117,7 @@ const { userInfos } = storeToRefs(stores);
 const { themeConfig } = storeToRefs(storesThemeConfig);
 const searchRef = ref();
 const state = reactive({
+	website_domain: '',
 	isScreenfull: false,
 	disabledI18n: 'zh-cn',
 	disabledSize: 'large',
@@ -184,6 +189,8 @@ const onHandleCommandClick = (path: string) => {
 			.catch(() => {});
 	} else if (path === 'wareHouse') {
 		window.open('https://gitee.com/xjd2020/fastcms.git');
+	} else if (path === '/siteHome') {
+		window.open(state.website_domain);
 	} else {
 		router.push(path);
 	}
@@ -219,6 +226,16 @@ onMounted(() => {
 		initI18nOrSize('globalComponentSize', 'disabledSize');
 		initI18nOrSize('globalI18n', 'disabledI18n');
 	}
+
+	let paramKeys = new Array();
+	paramKeys.push('public_website_domain');
+	let params = qs.stringify( {"configKeys" : paramKeys}, {arrayFormat: 'repeat'});
+	configApi.getPublicConfigList(params).then((res) => {
+		res.data.forEach((item: any) => {
+			state.website_domain = item.jsonValue;
+		});
+	});
+
 });
 </script>
 

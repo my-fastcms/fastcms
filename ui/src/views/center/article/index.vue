@@ -18,7 +18,7 @@
         ><el-icon><ele-Plus /></el-icon>新建文章</el-button>
       </div>
       <el-table :data="state.tableData.data" stripe style="width: 100%">
-        <el-table-column prop="id" label="ID" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="id" label="ID" show-overflow-tooltip width="60"></el-table-column>
         <el-table-column prop="title" label="标题" show-overflow-tooltip>
           <template #default="scope">
             <a :href="scope.row.url" target="_blank">{{ scope.row.title }}</a>
@@ -28,10 +28,10 @@
         <el-table-column prop="status" label="状态" show-overflow-tooltip></el-table-column>
         <el-table-column prop="viewCount" label="浏览次数" show-overflow-tooltip></el-table-column>
         <el-table-column prop="created" label="创建时间" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="path" label="操作" width="90">
+        <el-table-column prop="path" label="操作" width="160">
           <template #default="scope">
-            <el-button size="mini" type="text" @click="onRowUpdate(scope.row)">修改</el-button>
-            <el-button size="mini" type="text" @click="onRowDel(scope.row)">删除</el-button>
+            <el-button size="small" text type="primary" @click="onRowUpdate(scope.row)">修改</el-button>
+            <el-button size="small" text type="primary" @click="onRowDel(scope.row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -55,12 +55,10 @@
 import { ElMessageBox, ElMessage } from 'element-plus';
 import { reactive, onMounted } from 'vue';
 import { ClientArticleApi } from '/@/api/article/client';
-import { ArticleApi } from '/@/api/article/index';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
 const clientArticleApi = ClientArticleApi();
-const articleApi = ArticleApi();
 
 const state = reactive({
   tableData: {
@@ -77,7 +75,7 @@ const state = reactive({
 
 // 初始化表格数据
 const initTableData = () => {
-  articleApi.getArticleList(state.tableData.param).then((res) => {
+  clientArticleApi.getArticleList(state.tableData.param).then((res) => {
     state.tableData.data = res.data.records;
     state.tableData.total = res.data.total;
   }).catch(() => {

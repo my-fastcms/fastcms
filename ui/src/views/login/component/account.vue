@@ -126,7 +126,7 @@ const onSignIn = async () => {
 
 					const userInfos = {
 						username: res.data.username,
-						photo: res.data.headImg === null ? '/header.jpg' : res.data.headImg,
+						photo: res.data.headImg === null || res.data.headImg == '' ? '/header.jpg' : res.data.headImg,
 						time: new Date().getTime(),
 						hasRole: res.data.hasRole,
 						version: res.data.version,
