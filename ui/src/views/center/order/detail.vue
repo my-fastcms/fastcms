@@ -98,7 +98,7 @@
 
 <script lang="ts" setup name="attachDetail">
 import { reactive, getCurrentInstance, onUpdated } from 'vue';
-// import { ElMessageBox, ElMessage } from 'element-plus';
+import { ElMessage } from 'element-plus';
 import { ClientOrderApi } from '/@/api/order/client';
 import QRCode from 'qrcodejs2-fixes';
 
@@ -152,6 +152,8 @@ const getOrder = () => {
 	if(state.ruleForm.id && state.ruleForm.id != null) {
 		clinetOrderApi.getOrderDetail(state.ruleForm.id).then((res) => {
 			state.ruleForm = res.data;
+		}).catch(error => {
+			ElMessage.error(error);
 		})
 	}
 }

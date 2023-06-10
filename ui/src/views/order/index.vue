@@ -1,5 +1,5 @@
 <template>
-	<div class="list-adapt-container">
+	<div class="">
 		<el-card shadow="hover">
 			<div class="mb15">
 				<el-input size="default" v-model="state.tableData.param.orderSn" placeholder="订单编号" style="max-width: 180px" class="ml10"></el-input>
@@ -31,7 +31,7 @@
 				<el-table-column prop="created" label="创建时间" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="path" label="操作" width="90">
 					<template #default="scope">
-						<el-button size="mini" type="text" @click="onRowInfo(scope.row)">详情</el-button>
+						<el-button size="small" text type="primary" @click="onRowInfo(scope.row)">详情</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -113,33 +113,5 @@ const onHandleCurrentChange = (val: number) => {
 </script>
 
 <style scoped lang="scss">
-.upload-btn {
-	padding-bottom: 10px;
-}
 
-.bottom {
-    margin-top: 13px;
-    line-height: 12px;
-}
-
-.button {
-	padding: 0;
-	float: right;
-}
-
-.image {
-    width: 100%;
-	height: 200px;
-    display: block;
-}
-
-.clearfix:before,
-.clearfix:after {
-    display: table;
-    content: "";
-}
-  
-.clearfix:after {
-	clear: both
-}
 </style>

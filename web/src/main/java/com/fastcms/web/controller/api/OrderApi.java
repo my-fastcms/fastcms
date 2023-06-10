@@ -34,6 +34,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
+
 import static com.fastcms.service.IOrderService.OrderI18n.*;
 
 /**
@@ -93,7 +95,7 @@ public class OrderApi {
     @GetMapping("detail/{orderId}")
     public RestResult<IOrderService.OrderDetailVo> detail(@PathVariable(name = "orderId") Long orderId) {
         Order order = orderService.getById(orderId);
-        if(order != null && AuthUtils.getUser() != null && order.getCreateUserId() != AuthUtils.getUserId()) {
+        if (order != null && AuthUtils.getUser() != null && !Objects.equals(order.getCreateUserId(), AuthUtils.getUserId())) {
             return RestResultUtils.failed(I18nUtils.getMessage(ORDER_VIEW_SELF));
         }
         return RestResultUtils.success(orderService.getOrderDetail(orderId));
@@ -107,7 +109,7 @@ public class OrderApi {
     @GetMapping("status/check/{orderId}")
     public Object checkOrderPayStatus(@PathVariable("orderId") Long orderId) {
         Order order = orderService.getById(orderId);
-        if(order != null && order.getPayStatus() == Order.STATUS_PAY_SUCCESS) {
+        if (order != null && order.getPayStatus() == Order.STATUS_PAY_SUCCESS) {
             return RestResultUtils.success(I18nUtils.getMessage(ORDER_ALREADY_PAYED));
         }
         return RestResultUtils.failed(I18nUtils.getMessage(ORDER_UN_PAYED));

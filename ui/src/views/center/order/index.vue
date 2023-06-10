@@ -6,12 +6,12 @@
 				<el-table-column prop="orderSn" label="订单编号" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="title" label="商品" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="totalAmount" label="金额" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="nickName" label="买家" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="nickName" v-if="false" label="买家" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="statusStr" label="状态" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="created" label="创建时间" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="path" label="操作" width="90">
 					<template #default="scope">
-						<el-button size="small" type="text" @click="onRowInfo(scope.row)">详情</el-button>
+						<el-button size="small" text type="primary" @click="onRowInfo(scope.row)">详情</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
