@@ -1,1 +1,0 @@
-import{s as i}from"./index.b56fc134.js";function o(t){return i({url:"/admin/config/save",data:t,method:"post"})}function a(t){return i({url:"/admin/config/list",data:t,method:"post"})}function s(t){return i({url:"/admin/config/public/list",data:t,method:"post"})}function e(){return i({url:"/admin/config/mail/test",method:"get"})}export{s as a,a as g,o as s,e as t};

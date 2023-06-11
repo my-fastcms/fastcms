@@ -1,0 +1,1 @@
+import{_ as e}from"./_plugin-vue_export-helper-c27b6911.js";import{o,c as t}from"./@vue-6dabbe94.js";const n={name:"centerHome"};function r(c,s,a,p,_,m){return o(),t("div",null,"优惠券")}const d=e(n,[["render",r]]);export{d as default};
