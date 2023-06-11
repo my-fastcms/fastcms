@@ -81,6 +81,9 @@ public class ArticleCategory implements Serializable, StaticPathHelper {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updated;
 
+    @TableField(exist = false)
+    private String iconUrl;
+
     @Override
     public String getUrl() {
         return ArticleUtils.getArticleCategoryUrl(this);
