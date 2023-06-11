@@ -97,12 +97,14 @@ public class TemplateIndexController extends TemplateBaseController {
             singlePage = singlePageService.getById(path);
         }
 
-        if(singlePage != null && SinglePage.STATUS_PUBLISH.equals(singlePage.getStatus())) {
-            model.addAttribute(SINGLE_PAGE_ATTR, singlePage);
+        if (singlePage == null || !SinglePage.STATUS_PUBLISH.equals(singlePage.getStatus())) {
+            return UrlBasedViewResolver.FORWARD_URL_PREFIX.concat("404");
         }
 
+        model.addAttribute(SINGLE_PAGE_ATTR, singlePage);
+
         String view = getTemplatePath() + DEFAULT_PAGE_VIEW;
-        if(singlePage != null && StringUtils.isNotBlank(singlePage.getSuffix())) {
+        if (singlePage != null && StringUtils.isNotBlank(singlePage.getSuffix())) {
             view = view.concat(UNDERLINE).concat(singlePage.getSuffix());
         }
 
@@ -113,9 +115,11 @@ public class TemplateIndexController extends TemplateBaseController {
     public String article(@PathVariable("id") Long id, Model model) {
         IArticleService.ArticleInfoVo article = articleService.getArticleDetail(id);
 
-        if(article != null && Article.STATUS_PUBLISH.equals(article.getStatus())) {
-            model.addAttribute(ARTICLE_ATTR, article);
+        if (article == null || !Article.STATUS_PUBLISH.equals(article.getStatus())) {
+            return UrlBasedViewResolver.FORWARD_URL_PREFIX.concat("404");
         }
+
+        model.addAttribute(ARTICLE_ATTR, article);
 
         String view = getTemplatePath() + DEFAULT_ARTICLE_VIEW;
         if(article != null && StringUtils.isNotBlank(article.getSuffix())) {

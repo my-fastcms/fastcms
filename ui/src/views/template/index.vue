@@ -11,7 +11,7 @@
 					:on-error="onHandleUploadError"
 					:on-exceed="onHandleExceed"
 					accept=".zip">
-					<el-button class="mt15" type="primary">安装模板</el-button>
+					<el-button class="mt15" type="primary" size="default"><el-icon><ele-Plus /></el-icon>安装模板</el-button>
 				</el-upload>
 			</div>
 			<el-table :data="state.tableData" stripe style="width: 100%">

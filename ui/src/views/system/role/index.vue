@@ -2,7 +2,7 @@
 	<div class="system-role-container">
 		<el-card shadow="hover">
 			<div class="system-role-search mb15">
-				<el-button @click="onOpenAddRole" class="mt10" type="primary"><el-icon><ele-Plus /></el-icon>新建角色</el-button>
+				<el-button @click="onOpenAddRole" size="default" class="mt10" type="primary"><el-icon><ele-Plus /></el-icon>新建角色</el-button>
 			</div>
 			<el-table :data="state.tableData.data" stripe style="width: 100%">
 				<el-table-column prop="roleName" label="角色名" show-overflow-tooltip></el-table-column>

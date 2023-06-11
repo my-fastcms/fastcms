@@ -9,12 +9,12 @@
 						{{scope.row.title}}
 					</a></template>
 				</el-table-column>
-				<el-table-column prop="id" label="id" show-overflow-tooltip></el-table-column>
+				<el-table-column prop="id" label="id" show-overflow-tooltip width="60"></el-table-column>
 				<el-table-column prop="path" label="路径" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="suffix" label="模板" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="sortNum" label="排序" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="created" label="创建时间" show-overflow-tooltip></el-table-column>
-				<el-table-column label="操作" show-overflow-tooltip width="125">
+				<el-table-column label="操作" show-overflow-tooltip width="160">
 					<template #default="scope">
 						<el-button size="small" text type="primary" @click="onOpenAddCategory(scope.row)">新增</el-button>
 						<el-button size="small" text type="primary" @click="onOpenEditCategory(scope.row)">修改</el-button>
@@ -45,11 +45,11 @@ const menuTableData = computed(() => {
 });
 // 打开新增菜单弹窗
 const onOpenAddCategory = (row: object) => {
-	addCategoryRef.value.openDialog(row);
+	addCategoryRef.value.openDialog("add", row);
 };
 // 打开编辑菜单弹窗
 const onOpenEditCategory = (row: object) => {
-	addCategoryRef.value.openDialog(row);
+	addCategoryRef.value.openDialog("edit", row);
 };
 // 删除当前行
 const onTabelRowDel = (row: any) => {

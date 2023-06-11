@@ -88,8 +88,8 @@
 			</div>
 			<template #footer>
 				<span class="dialog-footer">
-					<el-button type="success" @click="onPayment" v-if="state.ruleForm.payStatus !=1 ? true : false">支 付</el-button>
-                    <el-button @click="onCancel">取 消</el-button>
+					<el-button type="success" size="default" @click="onPayment" v-if="state.ruleForm.payStatus !=1 ? true : false">支 付</el-button>
+                    <el-button @click="onCancel" size="default">取 消</el-button>
 				</span>
 			</template>
 		</el-dialog>

@@ -2,9 +2,9 @@
 	<div class="list-adapt-container">
 		<el-card shadow="hover">
 			<div class="mb15">
-				<el-input v-model="state.tableData.param.trxNo" placeholder="支付编号" style="max-width: 180px" class="ml10"></el-input>
-				<el-input v-model="state.tableData.param.userName" placeholder="支付用户" style="max-width: 180px" class="ml10"></el-input>
-				<el-button type="primary" class="ml10" @click="initTableData"><el-icon><ele-Search /></el-icon>查询</el-button>
+				<el-input size="default" v-model="state.tableData.param.trxNo" placeholder="支付编号" style="max-width: 180px" class="ml10"></el-input>
+				<el-input size="default" v-model="state.tableData.param.userName" placeholder="支付用户" style="max-width: 180px" class="ml10"></el-input>
+				<el-button size="default" type="primary" class="ml10" @click="initTableData"><el-icon><ele-Search /></el-icon>查询</el-button>
 			</div>
 			<el-table :data="state.tableData.data" stripe style="width: 100%">
 				<el-table-column prop="id" label="ID" show-overflow-tooltip width="60"></el-table-column>

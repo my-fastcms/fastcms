@@ -13,12 +13,12 @@
 							<div style="display:flex;flex-direction: column;">
 								<el-image
                             style="width: 100px; height: 100px;margin-bottom: 10px;"
-                            :src="state.ruleForm.thumbnailUrl"
+                            :src="state.ruleForm.iconUrl"
                             :fit="state.fit"
-							:preview-src-list="[state.ruleForm.thumbnailUrl]"
+							:preview-src-list="[state.ruleForm.iconUrl]"
 							></el-image>
 						
-							<el-button style="" type="primary" size="mini" plain @click="onThumbnailDialogOpen">选择图片</el-button>
+							<el-link  style="" type="primary" size="small" plain @click="onThumbnailDialogOpen">选择图片</el-link>
 							</div>
 							<!-- <IconSelector placeholder="请输入分类图标" v-model="state.ruleForm.icon" /> -->
 							
@@ -45,7 +45,7 @@
 			<template #footer>
 				<span class="dialog-footer">
 					<el-button @click="onCancel" size="default">取 消</el-button>
-					<el-button type="primary" @click="onSubmit" size="default">新 增</el-button>
+					<el-button type="primary" @click="onSubmit" size="default">保 存</el-button>
 				</span>
 			</template>
 			<AttachDialog ref="thumbnailDialogRef" @attachHandler="getSelectThumbnail" :fileType="state.fileType"/>
@@ -54,9 +54,9 @@
 </template>
 
 <script lang="ts" setup name="articleAddCategory">
-import { reactive, ref } from 'vue';
+import { reactive, ref, nextTick } from 'vue';
 import { ElMessage } from 'element-plus';
-import IconSelector from '/@/components/iconSelector/index.vue';
+// import IconSelector from '/@/components/iconSelector/index.vue';
 import { ArticleApi } from '/@/api/article/index';
 import AttachDialog from '/@/components/attach/index.vue';
 
@@ -69,6 +69,8 @@ const thumbnailDialogRef = ref();
 
 const state = reactive({
 	isShowDialog: false,
+	title: '',
+	fit: 'fill',
 	ruleForm: {
 		id: '',
 		parentId: '',
@@ -77,23 +79,37 @@ const state = reactive({
 		suffix: '', 
 		icon: '',
 		sortNum: '',
+		iconUrl: '',
 	},
 	rules: {
 		"title": { required: true, message: '请输入分类名称', trigger: 'blur' },
 	},
 });
 // 打开弹窗
-const openDialog = (row?: object) => {
-	console.log(row);
-	state.isShowDialog = true;
-	if(row) {
-		state.ruleForm.parentId=row.id;
+const openDialog = (type: string, row?: any) => {
+	if (type === 'edit') {
+		state.title = '修改分类';
+		articleApi.getArticleCategory(row.id).then(res => {
+			delete res.data.created;
+			delete res.data.updated;
+			state.ruleForm = res.data;
+		})
+	} else {
+		state.title = '新增分类';
+		nextTick(() => {
+			// 清空表单，此项需加表单验证才能使用
+			myRefForm.value.resetFields();
+			state.ruleForm.id = '';
+			// 设置菜单上级
+			state.ruleForm.parentId = row == null ? 0 : (row.id || 0);
+		});
 	}
+	state.isShowDialog = true;
 };
 // 关闭弹窗
-const closeDialog = (row?: object) => {
-	console.log(row);
+const closeDialog = () => {
 	state.isShowDialog = false;
+	initForm();
 };
 
 // 取消
@@ -108,9 +124,9 @@ const onThumbnailDialogOpen = () => {
 };
 
 //获取弹出框选中的图片
-const getSelectThumbnail = (value) => {
-    state.ruleForm.thumbnail = value[0].filePath;
-    state.ruleForm.thumbnailUrl = value[0].path;
+const getSelectThumbnail = (value: any) => {
+    state.ruleForm.icon = value[0].filePath;
+    state.ruleForm.iconUrl = value[0].path;
 };
 // 新增
 const onSubmit = () => {
@@ -132,13 +148,10 @@ const onSubmit = () => {
 
 // 表单初始化，方法：`resetFields()` 无法使用
 const initForm = () => {
-	state.ruleForm.id = '',
-	state.ruleForm.parentId = '';
-	state.ruleForm.title = '';
-	state.ruleForm.icon = '';
-	state.ruleForm.suffix = '';
-	state.ruleForm.path = '';
-	state.ruleForm.sortNum = '';
+	state.ruleForm.iconUrl = '',
+	nextTick(()=> {
+		myRefForm.value.resetFields();
+	})
 };
 
 defineExpose({

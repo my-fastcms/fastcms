@@ -30,6 +30,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * @author： wjun_java@163.com
@@ -49,6 +50,12 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
+
+        Map<String, String[]> parameterMap = request.getParameterMap();
+        for (String s : parameterMap.keySet()) {
+            String[] value = parameterMap.get(s);
+            System.out.println(value);
+        }
 
         if (request.getRequestURI().startsWith(FastcmsConstants.API_PREFIX_MAPPING)
                 || request.getRequestURI().startsWith(FastcmsConstants.PLUGIN_MAPPING)) {

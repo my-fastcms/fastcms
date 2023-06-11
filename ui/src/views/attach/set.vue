@@ -82,7 +82,7 @@
 						</el-row>
                         <el-col>
                             <el-form-item>
-                                <el-button type="primary"  @click="onSubmit" icon="el-icon-position">保 存</el-button>
+                                <el-button type="primary" size="default" @click="onSubmit">保 存</el-button>
                             </el-form-item>
 						</el-col>
 					</el-form>

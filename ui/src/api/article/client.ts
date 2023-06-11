@@ -20,6 +20,7 @@ export function ClientArticleApi() {
 				url: '/client/article/save',
 				method: 'post',
 				data: params,
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 			});
 		},
 

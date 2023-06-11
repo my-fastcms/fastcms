@@ -184,8 +184,8 @@ const onSubmit = () => {
             // categoryCascaderRef.value.getCheckedNodes(true).map(item => {
             //     state.ruleForm.articleCategory.push(item.value);
             // });
-            let params = qs.stringify(state.ruleForm, {arrayFormat: 'repeat'});
-            articleApi.addArticle(params).then((res) => {
+            // let params = qs.stringify(state.ruleForm, {arrayFormat: 'repeat'});
+            articleApi.addArticle(state.ruleForm).then((res) => {
                 state.ruleForm.id = res.data;
                 ElMessage.success("保存成功");
             }).catch((res) => {

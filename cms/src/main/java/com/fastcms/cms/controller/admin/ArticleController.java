@@ -161,6 +161,16 @@ public class ArticleController {
     }
 
     /**
+     * 获取分类
+     * @param categoryId
+     * @return
+     */
+    @GetMapping("category/get/{categoryId}")
+    public RestResult<ArticleCategory> getCategory(@PathVariable("categoryId") Long categoryId) {
+        return RestResultUtils.success(articleCategoryService.getById(categoryId));
+    }
+
+    /**
      * 删除分类
      * @param categoryId
      * @return
@@ -197,6 +207,16 @@ public class ArticleController {
     @GetMapping("tag/list")
 	public RestResult<List<ArticleTag>> listTags() {
         return RestResultUtils.success(articleTagService.list());
+    }
+
+    /**
+     * 获取标签
+     * @param tagId
+     * @return
+     */
+    @GetMapping("tag/get/{tagId}")
+    public RestResult<ArticleTag> getTag(@PathVariable("tagId") Long tagId) {
+        return RestResultUtils.success(articleTagService.getById(tagId));
     }
 
     /**

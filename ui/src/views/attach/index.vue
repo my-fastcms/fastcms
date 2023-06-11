@@ -13,7 +13,7 @@
 				:on-exceed="onHandleExceed"
 				:on-error="onHandleUploadError"
 				:limit="state.limit">
-				<el-button type="primary"><el-icon><ele-Plus /></el-icon>上传附件</el-button>
+				<el-button size="default" type="primary"><el-icon><ele-Plus /></el-icon>上传附件</el-button>
 			</el-upload>
 			<div v-if="state.tableData.data.length > 0">
 				<el-row :gutter="15">

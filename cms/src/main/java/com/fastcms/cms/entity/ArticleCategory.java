@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fastcms.cms.utils.ArticleUtils;
 import com.fastcms.core.template.StaticPathHelper;
+import com.fastcms.core.utils.AttachUtils;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -171,6 +172,10 @@ public class ArticleCategory implements Serializable, StaticPathHelper {
 
     public void setUpdated(LocalDateTime updated) {
         this.updated = updated;
+    }
+
+    public String getIconUrl() {
+        return AttachUtils.getAttachFileDomain() == null ? getIcon() : AttachUtils.getAttachFileDomain().concat(getIcon() == null ? "" : getIcon());
     }
 
 }

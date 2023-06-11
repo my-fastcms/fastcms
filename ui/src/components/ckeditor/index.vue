@@ -34,7 +34,7 @@ import TableToolbar from '@ckeditor/ckeditor5-table/src/tabletoolbar';
 import TextTransformation from '@ckeditor/ckeditor5-typing/src/texttransformation';
 import CloudServices from '@ckeditor/ckeditor5-cloud-services/src/cloudservices';
 import SourceEditing from '@ckeditor/ckeditor5-source-editing/src/sourceediting';
-// import Markdown from '@ckeditor/ckeditor5-markdown-gfm/src/markdown';
+import Markdown from '@ckeditor/ckeditor5-markdown-gfm/src/markdown';
 
 // import CKEditorInspector from '@ckeditor/ckeditor5-inspector/inspector.js';
 
@@ -114,6 +114,7 @@ const editorConfig = reactive({
         'indent',
         '|',
         ImgCustom.pluginName,
+        // Markdown.pluginName,
         'blockQuote',
         'insertTable',
         'mediaEmbed',

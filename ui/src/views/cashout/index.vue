@@ -2,13 +2,13 @@
 	<div class="list-adapt-container">
 		<el-card shadow="hover">
 			<div class="mb15">
-				<el-input v-model="state.tableData.param.userName" placeholder="用户" style="max-width: 180px" class="ml10"></el-input>
-				<el-select style="max-width: 180px" v-model="state.tableData.param.status" placeholder="状态" clearable class="ml10">
-					<el-option label="待审核" value="0"></el-option>
-					<el-option label="审核通过" value="1"></el-option>
-					<el-option label="审核拒绝" value="2"></el-option>
+				<el-input size="default" v-model="state.tableData.param.userName" placeholder="用户" style="max-width: 180px" class="ml10"></el-input>
+				<el-select size="default" style="max-width: 180px" v-model="state.tableData.param.status" placeholder="状态" clearable class="ml10">
+					<el-option label="待审核" :value="0"></el-option>
+					<el-option label="审核通过" :value="1"></el-option>
+					<el-option label="审核拒绝" :value="2"></el-option>
 				</el-select>
-				<el-button type="primary" class="ml10" @click="initTableData"><el-icon><ele-Search /></el-icon>查询</el-button>
+				<el-button size="default" type="primary" class="ml10" @click="initTableData"><el-icon><ele-Search /></el-icon>查询</el-button>
 			</div>
 			<el-table :data="state.tableData.data" stripe style="width: 100%">
 				<el-table-column prop="id" label="ID" show-overflow-tooltip width="60"></el-table-column>

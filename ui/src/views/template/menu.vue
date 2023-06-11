@@ -1,17 +1,17 @@
 <template>
 	<div >
 		<el-card shadow="hover">
-			<el-button @click="onOpenAddMenu" class="mt15" size="small" type="primary" icon="iconfont icon-shuxingtu">新建菜单</el-button>
+			<el-button @click="onOpenAddMenu" class="mt15" size="default" type="primary"><el-icon><ele-Plus /></el-icon>新建菜单</el-button>
 			<el-table :data="menuTableData" stripe style="width: 100%" row-key="id" :tree-props="{ children: 'children', hasChildren: 'hasChildren' }">
 				<el-table-column prop="menuName" label="名称" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="menuUrl" label="跳转地址" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="sortNum" label="排序" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="target" label="打开方式" show-overflow-tooltip></el-table-column>
-				<el-table-column label="操作" show-overflow-tooltip width="125">
+				<el-table-column label="操作" show-overflow-tooltip width="160">
 					<template #default="scope">
-						<el-button size="mini" type="text" @click="onOpenAddMenu(scope.row)">新增</el-button>
-						<el-button size="mini" type="text" @click="onOpenEditMenu(scope.row)">修改</el-button>
-						<el-button size="mini" type="text" @click="onTabelRowDel(scope.row)">删除</el-button>
+						<el-button size="small" text type="primary" @click="onOpenAddMenu(scope.row)">新增</el-button>
+						<el-button size="small" text type="primary" @click="onOpenEditMenu(scope.row)">修改</el-button>
+						<el-button size="small" text type="primary" @click="onTabelRowDel(scope.row)">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -37,11 +37,11 @@ const menuTableData = computed(() => {
 });
 // 打开新增菜单弹窗
 const onOpenAddMenu = (row: object) => {
-	addMenuRef.value.openDialog(row);
+	addMenuRef.value.openDialog("add", row);
 };
 // 打开编辑菜单弹窗
 const onOpenEditMenu = (row: object) => {
-	addMenuRef.value.openDialog(row);
+	addMenuRef.value.openDialog("edit", row);
 };
 // 删除当前行
 const onTabelRowDel = (row: any) => {
@@ -50,7 +50,6 @@ const onTabelRowDel = (row: any) => {
 		cancelButtonText: '取消',
 		type: 'warning',
 	}).then(() => {
-		console.log(row);
 		templateApi.delTemplateMenu(row.id).then(() => {
 			ElMessage.success("删除成功");
 			loadMenuList();

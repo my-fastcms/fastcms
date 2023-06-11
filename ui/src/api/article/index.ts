@@ -64,6 +64,16 @@ export function ArticleApi() {
 		},
 
 		/**
+		 * 获取文章分类
+		 */
+		getArticleCategory: (categoryId: string) => {
+			return request({
+				url: '/admin/article/category/get/' + categoryId,
+				method: 'get'
+			});
+		},
+
+		/**
 		 * 删除文章分类
 		 */
 		delArticleCategory: (categoryId: string) => {
@@ -91,6 +101,16 @@ export function ArticleApi() {
 		getArticleTagList() {
 			return request({
 				url: '/admin/article/tag/list',
+				method: 'get'
+			});
+		},
+
+		/**
+		 * 删除文章标签
+		 */
+		getArticleTag(tagId: string) {
+			return request({
+				url: '/admin/article/tag/get/' + tagId,
 				method: 'get'
 			});
 		},

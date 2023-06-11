@@ -3,9 +3,9 @@
 		
 		<el-card shadow="hover">
 			<div class="system-dept-search mb15">
-				<el-input v-model="state.tableData.param.username" placeholder="请输入账号" clearable style="max-width: 180px" class="ml10"></el-input>
-				<el-input v-model="state.tableData.param.phone" placeholder="请输入手机号" clearable style="max-width: 180px" class="ml10"></el-input>
-				<el-cascader v-model="state.tableData.param.deptId" :show-all-levels="true" :options="state.deptList" :props="{ checkStrictly: true, expandTrigger:'hover',label: 'label', value: 'id', children: 'children' }" placeholder="部门" clearable class="ml10"/>
+				<el-input size="default" v-model="state.tableData.param.username" placeholder="请输入账号" clearable style="max-width: 180px" class="ml10"></el-input>
+				<el-input size="default" v-model="state.tableData.param.phone" placeholder="请输入手机号" clearable style="max-width: 180px" class="ml10"></el-input>
+				<el-cascader size="default" v-model="state.tableData.param.deptId" :show-all-levels="true" :options="state.deptList" :props="{ checkStrictly: true, expandTrigger:'hover',label: 'label', value: 'id', children: 'children' }" placeholder="部门" clearable class="ml10"/>
 				<el-button size="default" type="primary" class="ml10" @click="initTableData">
 					<el-icon><ele-Search /></el-icon>查询
 				</el-button>

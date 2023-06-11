@@ -2,8 +2,8 @@
 	<div class="system-user-container">
 		<el-card shadow="hover">
 			<div class="system-role-search mb15">
-				<el-input v-model="state.tableData.param.username" placeholder="请输入账号" style="max-width: 180px" class="ml10"></el-input>
-				<el-input v-model="state.tableData.param.phone" placeholder="请输入手机号" style="max-width: 180px" class="ml10"></el-input>
+				<el-input size="default" v-model="state.tableData.param.username" placeholder="请输入账号" style="max-width: 180px" class="ml10"></el-input>
+				<el-input size="default" v-model="state.tableData.param.phone" placeholder="请输入手机号" style="max-width: 180px" class="ml10"></el-input>
 				<el-button size="default" type="primary" class="ml10" @click="initTableData">
 					<el-icon><ele-Search /></el-icon>查询
 				</el-button>
