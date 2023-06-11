@@ -54,9 +54,14 @@ public interface IArticleCategoryService extends IService<ArticleCategory> {
 		private String path;
 
 		/**
-		 * 菜单图标
+		 * 分类图标
 		 */
 		private String icon;
+
+		/**
+		 * 图片路径
+		 */
+		private String iconUrl;
 
 		/**
 		 * 创建时间
@@ -73,6 +78,7 @@ public interface IArticleCategoryService extends IService<ArticleCategory> {
 			this.setSortNum(articleCategory.getSortNum());
 			this.title = articleCategory.getTitle();
 			this.icon = articleCategory.getIcon();
+			this.iconUrl = articleCategory.getIconUrl();
 			this.suffix = articleCategory.getSuffix();
 			this.path = articleCategory.getPath();
 			this.created = articleCategory.getCreated();
@@ -110,6 +116,14 @@ public interface IArticleCategoryService extends IService<ArticleCategory> {
 
 		public void setIcon(String icon) {
 			this.icon = icon;
+		}
+
+		public String getIconUrl() {
+			return iconUrl;
+		}
+
+		public void setIconUrl(String iconUrl) {
+			this.iconUrl = iconUrl;
 		}
 
 		public LocalDateTime getCreated() {
