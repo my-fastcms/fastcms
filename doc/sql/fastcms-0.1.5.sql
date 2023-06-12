@@ -12,6 +12,7 @@ ALTER TABLE `article_comment` ADD COLUMN `language` varchar(64) DEFAULT NULL COM
 ALTER TABLE `article_tag` ADD COLUMN `language` varchar(64) DEFAULT NULL COMMENT '语言';
 ALTER TABLE `single_page` ADD COLUMN `language` varchar(64) DEFAULT NULL COMMENT '语言';
 ALTER TABLE `single_page_comment` ADD COLUMN `language` varchar(64) DEFAULT NULL COMMENT '语言';
+ALTER TABLE `menu` ADD COLUMN `language` varchar(64) DEFAULT NULL COMMENT '语言';
 
 delete from `permission`;
 INSERT INTO `permission` (`id`, `parent_id`, `name`, `path`, `component`, `title`, `icon`, `is_link`, `is_hide`, `is_keep_alive`, `is_affix`, `is_iframe`, `sort_num`, `category`, `created`, `updated`) VALUES ('1', '0', 'home', '/home', 'home/index', 'message.router.home', 'iconfont icon-shouye', '0', '0', '1', '1', '0', '0', 'admin', '2021-10-31 23:48:10', '2022-02-19 13:30:50');

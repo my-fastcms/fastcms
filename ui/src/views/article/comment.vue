@@ -14,7 +14,7 @@
 				<el-table-column prop="articleTitle" label="评论文章" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="status" label="状态" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="created" label="创建时间" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="path" label="操作" width="90">
+				<el-table-column prop="path" label="操作" width="160">
 					<template #default="scope">
 						<el-button size="small" text type="primary" @click="onRowUpdate(scope.row)">修改</el-button>
 						<el-button size="small" text type="primary" @click="onRowDel(scope.row)">删除</el-button>

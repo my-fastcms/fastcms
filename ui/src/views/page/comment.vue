@@ -14,7 +14,7 @@
 				<el-table-column prop="pageTitle" label="评论页面" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="status" label="状态" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="created" label="创建时间" show-overflow-tooltip></el-table-column>
-				<el-table-column prop="path" label="操作" width="90">
+				<el-table-column prop="path" label="操作" width="160">
 					<template #default="scope">
 						<el-button size="mini" type="text" @click="onRowUpdate(scope.row)">修改</el-button>
 						<el-button size="mini" type="text" @click="onRowDel(scope.row)">删除</el-button>
@@ -87,7 +87,6 @@ const onRowDel = (row: any) => {
 };
 
 const onRowUpdate = (row: any) => {
-	console.log(row);
 	editCommentRef.value.openDialog(row);
 }
 

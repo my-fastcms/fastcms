@@ -3,6 +3,7 @@ package com.fastcms.cms.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.template.StaticPathHelper;
+import com.fastcms.language.Language;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
  * @author wjun_java@163.com
  * @since 2021-05-27
  */
-public class Menu implements Serializable, StaticPathHelper {
+public class Menu implements Serializable, StaticPathHelper, Language {
 
     private static final long serialVersionUID = 1L;
 
@@ -80,6 +81,11 @@ public class Menu implements Serializable, StaticPathHelper {
      * 状态
      */
     private String status;
+
+    /**
+     * 语言
+     */
+    private String language;
 
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime created;
@@ -165,6 +171,14 @@ public class Menu implements Serializable, StaticPathHelper {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getLanguage() {
+        return language == null ? getLang() : language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     public LocalDateTime getCreated() {
