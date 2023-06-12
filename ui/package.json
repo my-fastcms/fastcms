@@ -100,7 +100,7 @@
 		"not dead"
 	],
 	"bugs": {
-		"url": "https://gitee.com/lyt-top/vue-next-admin/issues"
+		"url": "https://gitee.com/xjd2020/fastcms/issues"
 	},
 	"engines": {
 		"node": ">=16.0.0",
@@ -112,11 +112,11 @@
 		"vuejs/vue-next",
 		"element-ui",
 		"element-plus",
-		"vue-next-admin",
-		"next-admin"
+		"Fastcms",
+		"springboot"
 	],
 	"repository": {
 		"type": "git",
-		"url": "https://gitee.com/lyt-top/vue-next-admin.git"
+		"url": "https://gitee.com/xjd2020/fastcms.git"
 	}
 }

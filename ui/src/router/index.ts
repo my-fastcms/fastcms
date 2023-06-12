@@ -114,7 +114,7 @@ router.beforeEach(async (to, from, next) => {
 
 				const userInfos = Local.get('userInfo');
 
-				if (userInfos.userType == 1) {
+				if (userInfos != null && userInfos.userType && userInfos.userType == 1) {
 					// 后端控制路由：路由数据初始化，防止刷新时丢失
 					await initBackEndControlRoutes();
 					// 解决刷新时，一直跳 404 页面问题，关联问题 No match found for location with path 'xxx'

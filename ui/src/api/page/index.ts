@@ -25,6 +25,7 @@ export function PageApi() {
 				url: '/admin/page/save',
 				method: 'post',
 				data: params,
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
 			});
 		},
 
