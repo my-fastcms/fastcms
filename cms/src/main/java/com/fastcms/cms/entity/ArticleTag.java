@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fastcms.cms.utils.ArticleUtils;
 import com.fastcms.core.template.StaticPathHelper;
+import com.fastcms.language.Language;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
  * @author wjun_java@163.com
  * @since 2021-12-16
  */
-public class ArticleTag implements Serializable, StaticPathHelper {
+public class ArticleTag implements Serializable, StaticPathHelper, Language {
 
     private static final long serialVersionUID = 1L;
 
@@ -40,6 +41,11 @@ public class ArticleTag implements Serializable, StaticPathHelper {
     private String suffix;
 
     private Integer sortNum;
+
+    /**
+     * 语言
+     */
+    private String language;
 
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime created;
@@ -98,6 +104,14 @@ public class ArticleTag implements Serializable, StaticPathHelper {
     }
     public LocalDateTime getCreated() {
         return created;
+    }
+
+    public String getLanguage() {
+        return language == null ? getLang() : language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     public void setCreated(LocalDateTime created) {

@@ -7,6 +7,7 @@ import com.fastcms.common.utils.JsoupUtils;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.template.StaticPathHelper;
 import com.fastcms.core.utils.AttachUtils;
+import com.fastcms.language.Language;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.validation.constraints.NotBlank;
@@ -21,7 +22,7 @@ import java.util.Set;
  * @author wjun_java@163.com
  * @since 2021-05-23
  */
-public class Article implements Serializable, StaticPathHelper {
+public class Article implements Serializable, StaticPathHelper, Language {
 
     private static final long serialVersionUID = 1L;
 
@@ -136,6 +137,11 @@ public class Article implements Serializable, StaticPathHelper {
      * 附件
      */
     private Long attachId;
+
+    /**
+     * 语言
+     */
+    private String language;
 
     /**
      * 附件名称
@@ -316,6 +322,14 @@ public class Article implements Serializable, StaticPathHelper {
 
     public void setAttachId(Long attachId) {
         this.attachId = attachId;
+    }
+
+    public String getLanguage() {
+        return language == null ? getLang() : language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     public String getAttachTitle() {

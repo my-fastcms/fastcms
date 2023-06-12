@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.template.StaticPathHelper;
+import com.fastcms.language.Language;
 import org.apache.commons.lang.StringUtils;
 
 import javax.validation.constraints.NotBlank;
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
  * @author wjun_java@163.com
  * @since 2021-05-25
  */
-public class SinglePage implements Serializable, StaticPathHelper {
+public class SinglePage implements Serializable, StaticPathHelper, Language {
 
     private static final long serialVersionUID = 1L;
 
@@ -106,6 +107,11 @@ public class SinglePage implements Serializable, StaticPathHelper {
      * 是否开启评论
      */
     private Boolean commentEnable = true;
+
+    /**
+     * 语言
+     */
+    private String language;
 
     /**
      * 创建日期
@@ -254,6 +260,14 @@ public class SinglePage implements Serializable, StaticPathHelper {
 
     public void setCommentEnable(Boolean commentEnable) {
         this.commentEnable = commentEnable;
+    }
+
+    public String getLanguage() {
+        return language == null ? getLang() : language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     public LocalDateTime getCreated() {

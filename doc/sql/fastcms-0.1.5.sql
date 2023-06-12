@@ -6,6 +6,13 @@ CREATE TABLE `article_zan` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4;
 
+ALTER TABLE `article` ADD COLUMN `language` varchar(64) DEFAULT NULL COMMENT '语言';
+ALTER TABLE `article_category` ADD COLUMN `language` varchar(64) DEFAULT NULL COMMENT '语言';
+ALTER TABLE `article_comment` ADD COLUMN `language` varchar(64) DEFAULT NULL COMMENT '语言';
+ALTER TABLE `article_tag` ADD COLUMN `language` varchar(64) DEFAULT NULL COMMENT '语言';
+ALTER TABLE `single_page` ADD COLUMN `language` varchar(64) DEFAULT NULL COMMENT '语言';
+ALTER TABLE `single_page_comment` ADD COLUMN `language` varchar(64) DEFAULT NULL COMMENT '语言';
+
 delete from `permission`;
 INSERT INTO `permission` (`id`, `parent_id`, `name`, `path`, `component`, `title`, `icon`, `is_link`, `is_hide`, `is_keep_alive`, `is_affix`, `is_iframe`, `sort_num`, `category`, `created`, `updated`) VALUES ('1', '0', 'home', '/home', 'home/index', 'message.router.home', 'iconfont icon-shouye', '0', '0', '1', '1', '0', '0', 'admin', '2021-10-31 23:48:10', '2022-02-19 13:30:50');
 INSERT INTO `permission` (`id`, `parent_id`, `name`, `path`, `component`, `title`, `icon`, `is_link`, `is_hide`, `is_keep_alive`, `is_affix`, `is_iframe`, `sort_num`, `category`, `created`, `updated`) VALUES ('2', '0', 'system', '/system', 'layout/routerView/parent', 'message.router.system', 'ele-Lollipop', '0', '0', '0', '0', '0', '0', 'admin', '2021-11-07 18:16:47', '2023-05-16 00:15:02');

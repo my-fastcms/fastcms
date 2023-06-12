@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fastcms.language.Language;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
  * @author wjun_java@163.com
  * @since 2021-05-23
  */
-public class ArticleComment implements Serializable {
+public class ArticleComment implements Serializable, Language {
 
     private static final long serialVersionUID = 1L;
 
@@ -99,6 +100,11 @@ public class ArticleComment implements Serializable {
      * 状态
      */
     private String status;
+
+    /**
+     * 语言
+     */
+    private String language;
 
     /**
      * 创建时间
@@ -190,6 +196,14 @@ public class ArticleComment implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getLanguage() {
+        return language == null ? getLang() : language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 
     public String getStatusStr() {
