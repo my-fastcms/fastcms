@@ -102,10 +102,10 @@ export function setFilterRoute(chil: any) {
  */
 export function setCacheTagsViewRoutes() {
 	// 获取有权限的路由，否则 tagsView、菜单搜索中无权限的路由也将显示
-	const stores = useUserInfo(pinia);
+	// const stores = useUserInfo(pinia);
 	const storesTagsView = useTagsViewRoutes(pinia);
-	const { userInfos } = storeToRefs(stores);
-	let rolesRoutes = setFilterHasRolesMenu(userCenterRoutes, userInfos.value.roles);
+	// const { userInfos } = storeToRefs(stores);
+	let rolesRoutes = setFilterHasRolesMenu(userCenterRoutes);
 	// 添加到 pinia setTagsViewRoutes 中
 	storesTagsView.setTagsViewRoutes(formatTwoStageRoutes(formatFlatteningRoutes(rolesRoutes))[0].children);
 }
@@ -116,10 +116,10 @@ export function setCacheTagsViewRoutes() {
  * @description 用于 tagsView、菜单搜索中：未过滤隐藏的(isHide)
  */
 export function setFilterMenuAndCacheTagsViewRoutes() {
-	const stores = useUserInfo(pinia);
+	// const stores = useUserInfo(pinia);
 	const storesRoutesList = useRoutesList(pinia);
-	const { userInfos } = storeToRefs(stores);
-	storesRoutesList.setRoutesList(setFilterHasRolesMenu(userCenterRoutes[0].children, userInfos.value.roles));
+	// const { userInfos } = storeToRefs(stores);
+	storesRoutesList.setRoutesList(setFilterHasRolesMenu(userCenterRoutes[0].children));
 	setCacheTagsViewRoutes();
 }
 
@@ -129,10 +129,10 @@ export function setFilterMenuAndCacheTagsViewRoutes() {
  * @param route 当前循环时的路由项
  * @returns 返回对比后有权限的路由项
  */
-export function hasRoles(roles: any, route: any) {
-	if (route.meta && route.meta.roles) return roles.some((role: any) => route.meta.roles.includes(role));
-	else return true;
-}
+// export function hasRoles(roles: any, route: any) {
+// 	if (route.meta && route.meta.roles) return roles.some((role: any) => route.meta.roles.includes(role));
+// 	else return true;
+// }
 
 /**
  * 获取当前用户权限标识去比对路由表，设置递归过滤有权限的路由
@@ -140,14 +140,14 @@ export function hasRoles(roles: any, route: any) {
  * @param roles 用户权限标识，在 userInfos（用户信息）的 roles（登录页登录时缓存到浏览器）数组
  * @returns 返回有权限的路由数组 `meta.roles` 中控制
  */
-export function setFilterHasRolesMenu(routes: any, roles: any) {
+export function setFilterHasRolesMenu(routes: any) {
 	const menu: any = [];
 	routes.forEach((route: any) => {
 		const item = { ...route };
-		// if (hasRoles(roles, item)) {
-			if (item.children) item.children = setFilterHasRolesMenu(item.children, roles);
-			menu.push(item);
-		// }
+		if (item.children) {
+			item.children = setFilterHasRolesMenu(item.children);
+		} 
+		menu.push(item);
 	});
 	return menu;
 }

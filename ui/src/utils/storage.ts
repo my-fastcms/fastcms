@@ -42,18 +42,18 @@ export const Local = {
 export const Session = {
 	// 设置临时缓存
 	set<T>(key: string, val: T) {
-		if (key === 'token') return Cookies.set(key, val);
+		// if (key === 'token') return Cookies.set(key, val);
 		window.sessionStorage.setItem(Local.setKey(key), JSON.stringify(val));
 	},
 	// 获取临时缓存
 	get(key: string) {
-		if (key === 'token') return Cookies.get(key);
+		// if (key === 'token') return Cookies.get(key);
 		let json = <string>window.sessionStorage.getItem(Local.setKey(key));
 		return JSON.parse(json);
 	},
 	// 移除临时缓存
 	remove(key: string) {
-		if (key === 'token') return Cookies.remove(key);
+		// if (key === 'token') return Cookies.remove(key);
 		window.sessionStorage.removeItem(Local.setKey(key));
 	},
 	// 移除全部临时缓存
