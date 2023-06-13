@@ -21,11 +21,11 @@
 				<el-table-column prop="version" label="版本" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="provider" label="作者" show-overflow-tooltip></el-table-column>
 				<el-table-column prop="description" label="描述" show-overflow-tooltip></el-table-column>
-				<el-table-column label="操作" width="90">
+				<el-table-column label="操作" width="160">
 					<template #default="scope">
 						<el-tag v-if="scope.row.active == true" type="success">使用中</el-tag>
-						<el-button v-if="scope.row.active == false" size="mini" type="text" @click="onRowEnable(scope.row)">启用</el-button>
-						<el-button v-if="scope.row.active == false" size="mini" type="text" @click="onRowUnInstall(scope.row)">卸载</el-button>
+						<el-button v-if="scope.row.active == false" size="small" text type="primary" @click="onRowEnable(scope.row)">启用</el-button>
+						<el-button v-if="scope.row.active == false" size="small" text type="primary" @click="onRowUnInstall(scope.row)">卸载</el-button>
 					</template>
 				</el-table-column>
 			</el-table>

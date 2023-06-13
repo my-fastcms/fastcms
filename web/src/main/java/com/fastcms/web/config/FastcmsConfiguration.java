@@ -58,7 +58,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
+import org.springframework.web.servlet.i18n.CookieLocaleResolver;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
@@ -109,7 +110,7 @@ public class FastcmsConfiguration implements WebMvcConfigurer, WebSocketConfigur
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new PluginInterceptor()).addPathPatterns("/fastcms/plugin/**");
         registry.addInterceptor(new AuthInterceptor()).addPathPatterns("/fastcms/api/**");
-//        registry.addInterceptor(new LocaleChangeInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(new LocaleChangeInterceptor()).addPathPatterns("/**");
     }
 
     @Bean
@@ -123,9 +124,9 @@ public class FastcmsConfiguration implements WebMvcConfigurer, WebSocketConfigur
     }
 
     @Bean
-    public AcceptHeaderLocaleResolver acceptHeaderLocaleResolver() {
-        AcceptHeaderLocaleResolver acceptHeaderLocaleResolver = new AcceptHeaderLocaleResolver();
-        return acceptHeaderLocaleResolver;
+    public CookieLocaleResolver localeResolver() {
+        CookieLocaleResolver cookieLocaleResolver = new CookieLocaleResolver();
+        return cookieLocaleResolver;
     }
 
     @Bean
