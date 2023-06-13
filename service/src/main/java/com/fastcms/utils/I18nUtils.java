@@ -46,7 +46,7 @@ public final class I18nUtils {
 
 	public static String getLanguage() {
 		LocaleResolver localeResolver = RequestContextUtils.getLocaleResolver(RequestUtils.getRequest());
-		return localeResolver == null ? null : localeResolver.resolveLocale(RequestUtils.getRequest()).getLanguage();
+		return localeResolver == null ? null : localeResolver.resolveLocale(RequestUtils.getRequest()).toLanguageTag();
 	}
 
 }

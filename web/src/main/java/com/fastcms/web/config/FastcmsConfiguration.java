@@ -18,6 +18,7 @@ package com.fastcms.web.config;
 
 import cn.binarywang.wx.miniapp.util.WxMaConfigHolder;
 import com.fastcms.common.constants.FastcmsConstants;
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.directive.BaseDirective;
 import com.fastcms.core.freemarker.FastcmsFreeMarkerViewResolver;
 import com.fastcms.core.site.DefaultSiteManager;
@@ -51,15 +52,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
@@ -110,7 +114,7 @@ public class FastcmsConfiguration implements WebMvcConfigurer, WebSocketConfigur
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new PluginInterceptor()).addPathPatterns("/fastcms/plugin/**");
         registry.addInterceptor(new AuthInterceptor()).addPathPatterns("/fastcms/api/**");
-        registry.addInterceptor(new LocaleChangeInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(new FastcmsLocaleChangeInterceptor(FastcmsLocaleChangeInterceptor.DEFAULT_PARAM_NAME)).addPathPatterns("/**");
     }
 
     @Bean
@@ -294,6 +298,63 @@ public class FastcmsConfiguration implements WebMvcConfigurer, WebSocketConfigur
                 WxMaConfigHolder.remove();
             }
 
+        }
+
+    }
+
+    public class FastcmsLocaleChangeInterceptor extends LocaleChangeInterceptor {
+
+        public FastcmsLocaleChangeInterceptor(String paramName) {
+            setParamName(paramName);
+        }
+
+        @Override
+        public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+                throws ServletException {
+
+            String newLocale = request.getParameter(getParamName());
+
+            if (StrUtils.isBlank(newLocale)) {
+                newLocale = request.getHeader("FastcmsLang");
+            }
+
+            if (newLocale != null) {
+                if (checkHttpMethod(request.getMethod())) {
+                    LocaleResolver localeResolver = RequestContextUtils.getLocaleResolver(request);
+                    if (localeResolver == null) {
+                        throw new IllegalStateException(
+                                "No LocaleResolver found: not in a DispatcherServlet request?");
+                    }
+                    try {
+                        localeResolver.setLocale(request, response, parseLocaleValue(newLocale));
+                    }
+                    catch (IllegalArgumentException ex) {
+                        if (isIgnoreInvalidLocale()) {
+                            if (logger.isDebugEnabled()) {
+                                logger.debug("Ignoring invalid locale value [" + newLocale + "]: " + ex.getMessage());
+                            }
+                        }
+                        else {
+                            throw ex;
+                        }
+                    }
+                }
+            }
+            // Proceed in any case.
+            return true;
+        }
+
+        private boolean checkHttpMethod(String currentMethod) {
+            String[] configuredMethods = getHttpMethods();
+            if (ObjectUtils.isEmpty(configuredMethods)) {
+                return true;
+            }
+            for (String configuredMethod : configuredMethods) {
+                if (configuredMethod.equalsIgnoreCase(currentMethod)) {
+                    return true;
+                }
+            }
+            return false;
         }
 
     }

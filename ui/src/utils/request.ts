@@ -2,6 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import { Local, Session } from '/@/utils/storage';
 import qs from 'qs';
+import Cookies from 'js-cookie';
 
 // 配置新建一个 axios 实例
 const service: AxiosInstance = axios.create({
@@ -24,6 +25,9 @@ service.interceptors.request.use(
 		}
 		if (Session.get('ClientId')) {
 			config.headers!['ClientId'] = `${Session.get('ClientId')}`;
+		}
+		if (Cookies.get('fastcms.lang.LOCALE')) {
+			config.headers!['FastcmsLang'] = `${Cookies.get('fastcms.lang.LOCALE')}`;
 		}
 		return config;
 	},

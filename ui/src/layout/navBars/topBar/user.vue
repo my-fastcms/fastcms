@@ -100,6 +100,7 @@ import mittBus from '/@/utils/mitt';
 import { Session, Local } from '/@/utils/storage';
 import qs from 'qs';
 import { ConfigApi } from '/@/api/config/index';
+import Cookies from 'js-cookie';
 
 // 引入组件
 const UserNews = defineAsyncComponent(() => import('/@/layout/navBars/topBar/userNews.vue'));
@@ -213,6 +214,7 @@ const onLanguageChange = (lang: string) => {
 	themeConfig.value.globalI18n = lang;
 	Local.set('themeConfig', themeConfig.value);
 	locale.value = lang;
+	Cookies.set('fastcms.lang.LOCALE', lang);
 	other.useTitle();
 	initI18nOrSize('globalI18n', 'disabledI18n');
 };
@@ -225,6 +227,10 @@ onMounted(() => {
 	if (Local.get('themeConfig')) {
 		initI18nOrSize('globalComponentSize', 'disabledSize');
 		initI18nOrSize('globalI18n', 'disabledI18n');
+		const lang = Cookies.get('fastcms.lang.LOCALE');
+		if(lang) {
+			themeConfig.value.globalI18n = lang;
+		}
 	}
 
 	let paramKeys = new Array();
