@@ -126,6 +126,7 @@ public class FastcmsConfiguration implements WebMvcConfigurer, WebSocketConfigur
     @Bean
     public CookieLocaleResolver localeResolver() {
         CookieLocaleResolver cookieLocaleResolver = new CookieLocaleResolver();
+        cookieLocaleResolver.setCookieName("fastcms.lang.LOCALE");
         return cookieLocaleResolver;
     }
 
