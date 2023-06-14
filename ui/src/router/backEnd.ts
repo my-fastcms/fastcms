@@ -3,7 +3,7 @@ import { RouteRecordRaw } from 'vue-router';
 import pinia from '/@/stores/index';
 import { useUserInfo } from '/@/stores/userInfo';
 import { useRequestOldRoutes } from '/@/stores/requestOldRoutes';
-import { Session } from '/@/utils/storage';
+import { Local, Session } from '/@/utils/storage';
 import { NextLoading } from '/@/utils/loading';
 import { dynamicRoutes, notFoundAndNoPower } from '/@/router/route';
 import { formatTwoStageRoutes, formatFlatteningRoutes, router } from '/@/router/index';
@@ -37,7 +37,7 @@ export async function initBackEndControlRoutes() {
 	// 界面 loading 动画开始执行
 	if (window.nextLoading === undefined) NextLoading.start();
 	// 无 token 停止执行下一步
-	if (!Session.get('token')) return false;
+	if (!Local.get('token')) return false;
 	// 触发初始化用户信息 pinia
 	// https://gitee.com/lyt-top/vue-next-admin/issues/I5F1HP
 	await useUserInfo().setUserInfos();
