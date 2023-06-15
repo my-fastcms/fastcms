@@ -42,10 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.fastcms.common.constants.FastcmsConstants.FASTCMS_SYSTEM_SAVE_ERROR;
@@ -176,7 +173,20 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         queryWrapper.notIn(CollectionUtils.isNotEmpty(excludeIds), "acr.category_id", excludeIds);
         queryWrapper.last(count != null, "limit 0," + count);
         queryWrapper.orderByDesc(StrUtils.isNotBlank(orderBy), orderBy);
-        return getBaseMapper().getArticleListByCategoryId(queryWrapper);
+        List<ArticleVo> articleList = getBaseMapper().getArticleListByCategoryId(queryWrapper);
+        Set<ArticleVo> result = new HashSet<>();
+        result.addAll(articleList);
+        return result.stream().collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ArticleVo> getArticleListByCategoryId(List<Long> includeIds, List<Long> excludeIds, Integer count, String orderBy) {
+        return getArticleListByCategoryId(null, includeIds, excludeIds, count, orderBy);
+    }
+
+    @Override
+    public List<ArticleVo> getArticleListByCategoryId(List<Long> includeIds, Integer count, String orderBy) {
+        return getArticleListByCategoryId(includeIds, null, count, orderBy);
     }
 
     @Override
@@ -204,6 +214,16 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         queryWrapper.last(count != null, "limit 0," + count);
         queryWrapper.orderByDesc(StrUtils.isNotBlank(orderBy), orderBy);
         return getBaseMapper().getArticleListByTagId(queryWrapper);
+    }
+
+    @Override
+    public List<ArticleVo> getArticleListByTagId(List<Long> includeIds, List<Long> excludeIds, Integer count, String orderBy) {
+        return getArticleListByTagId(null, includeIds, excludeIds, count, orderBy);
+    }
+
+    @Override
+    public List<ArticleVo> getArticleListByTagId(List<Long> includeIds, Integer count, String orderBy) {
+        return getArticleListByTagId(includeIds, null, count, orderBy);
     }
 
     @Override

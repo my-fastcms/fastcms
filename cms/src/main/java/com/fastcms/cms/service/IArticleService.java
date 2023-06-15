@@ -30,6 +30,7 @@ import org.apache.commons.lang.StringUtils;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author： wjun_java@163.com
@@ -97,6 +98,25 @@ public interface IArticleService extends IService<Article> {
     List<ArticleVo> getArticleListByCategoryId(Long categoryId, List<Long> includeIds, List<Long> excludeIds, Integer count, String orderBy);
 
     /**
+     * 根据分类查询文章列表
+     * @param includeIds    查询包含分类
+     * @param excludeIds    查询排查分类
+     * @param count         查询数量
+     * @param orderBy       排序条件
+     * @return
+     */
+    List<ArticleVo> getArticleListByCategoryId(List<Long> includeIds, List<Long> excludeIds, Integer count, String orderBy);
+
+    /**
+     * 根据分类查询文章列表
+     * @param includeIds    查询包含分类
+     * @param count         查询数量
+     * @param orderBy       排序条件
+     * @return
+     */
+    List<ArticleVo> getArticleListByCategoryId(List<Long> includeIds, Integer count, String orderBy);
+
+    /**
      * 根据分类ID查询文章列表
      * @param categoryId    查询具体分类
      * @param count         查询数量
@@ -131,6 +151,25 @@ public interface IArticleService extends IService<Article> {
      * @return
      */
     List<ArticleVo> getArticleListByTagId(Long tagId, List<Long> includeIds, List<Long> excludeIds, Integer count, String orderBy);
+
+    /**
+     * 根据标签获取网站文章列表
+     * @param includeIds
+     * @param excludeIds
+     * @param count
+     * @param orderBy
+     * @return
+     */
+    List<ArticleVo> getArticleListByTagId(List<Long> includeIds, List<Long> excludeIds, Integer count, String orderBy);
+
+    /**
+     * 根据标签获取网站文章列表
+     * @param includeIds
+     * @param count
+     * @param orderBy
+     * @return
+     */
+    List<ArticleVo> getArticleListByTagId(List<Long> includeIds, Integer count, String orderBy);
 
     /**
      * 根据标签id获取文章列表
@@ -403,6 +442,20 @@ public interface IArticleService extends IService<Article> {
         public String getThumbnailUrl() {
             return AttachUtils.getAttachFileDomain() + getThumbnail();
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ArticleVo articleVo = (ArticleVo) o;
+            return Objects.equals(id, articleVo.id);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id);
+        }
+
     }
 
     /**

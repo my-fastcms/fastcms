@@ -22,11 +22,15 @@ import com.fastcms.cms.service.IArticleCategoryService;
 import com.fastcms.cms.service.IArticleService;
 import com.fastcms.cms.service.IArticleTagService;
 import com.fastcms.core.directive.BaseDirective;
+import com.fastcms.utils.CollectionUtils;
 import freemarker.core.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -78,25 +82,21 @@ public class RelatedArticleDirective extends BaseDirective {
 
 		List<ArticleCategory> articleCategoryList = articleCategoryService.getArticleCategoryListByArticleId(articleId);
 
-		List<IArticleService.ArticleVo> result = new ArrayList<>();
-		for (ArticleCategory articleCategory : articleCategoryList) {
-			List<IArticleService.ArticleVo> articleList = articleService.getArticleListByCategoryId(articleCategory.getId(), count, "a.created");
-			if(articleList.size() >= count) break;
+		Set<IArticleService.ArticleVo> result = new HashSet<>();
+		if (CollectionUtils.isNotEmpty(articleCategoryList)) {
+			List<Long> categoryIds = articleCategoryList.stream().map(ArticleCategory::getId).collect(Collectors.toList());
+			List<IArticleService.ArticleVo> articleList = articleService.getArticleListByCategoryId(categoryIds, count, "a.created");
 			result.addAll(articleList);
 		}
 
 		List<ArticleTag> articleTagList = articleTagService.getArticleTagListByArticleId(articleId);
-		for (ArticleTag articleTag : articleTagList) {
-			List<IArticleService.ArticleVo> articleList = articleService.getArticleListByTagId(articleTag.getId(), count, "a.created");
-			if(articleList.size() >= count) break;
+		if (CollectionUtils.isNotEmpty(articleTagList)) {
+			List<Long> tagIds = articleTagList.stream().map(ArticleTag::getId).collect(Collectors.toList());
+			List<IArticleService.ArticleVo> articleList = articleService.getArticleListByTagId(tagIds, count, "a.created");
 			result.addAll(articleList);
 		}
 
-		//去重
-		List<IArticleService.ArticleVo> unique = result.stream().collect(Collectors.collectingAndThen(
-				Collectors.toCollection(() -> new TreeSet<>(Comparator.comparingLong(IArticleService.ArticleVo::getId))), ArrayList::new)
-		);
-		return unique;
+		return result.stream().collect(Collectors.toList());
 	}
 
 }

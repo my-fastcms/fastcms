@@ -113,6 +113,38 @@ public class ArticleApi {
 	}
 
 	/**
+	 * 根据多个分类获取文章列表
+	 * @param categoryIds 多个分类以英文逗号隔开
+	 * @param count
+	 * @param orderBy
+	 * @return
+	 */
+	@GetMapping("list/category/ids")
+	public RestResult<List<IArticleService.ArticleVo>> listCategories(
+																@RequestParam(name = "categoryIds") String categoryIds,
+																@RequestParam(name = "count", required = false, defaultValue = "20") Integer count,
+																@RequestParam(name = "orderBy", required = false, defaultValue = "a.created") String orderBy) {
+		List<IArticleService.ArticleVo> articleVoList = articleService.getArticleListByCategoryId(Arrays.stream(categoryIds.split(StrUtils.COMMA)).map(Long::valueOf).collect(Collectors.toList()), count, orderBy);
+		return RestResultUtils.success(articleVoList);
+	}
+
+	/**
+	 * 根据多个标签获取文章列表
+	 * @param tagIds 多个标签以英文逗号隔开
+	 * @param count
+	 * @param orderBy
+	 * @return
+	 */
+	@GetMapping("list/tag/ids")
+	public RestResult<List<IArticleService.ArticleVo>> listTags(
+			@RequestParam(name = "tagIds") String tagIds,
+			@RequestParam(name = "count", required = false, defaultValue = "20") Integer count,
+			@RequestParam(name = "orderBy", required = false, defaultValue = "a.created") String orderBy) {
+		List<IArticleService.ArticleVo> articleVoList = articleService.getArticleListByTagId(Arrays.stream(tagIds.split(StrUtils.COMMA)).map(Long::valueOf).collect(Collectors.toList()), count, orderBy);
+		return RestResultUtils.success(articleVoList);
+	}
+
+	/**
 	 * 根据标签获取文章列表
 	 * @param tagId
 	 * @param includeTagIds 	多个以逗号隔开
