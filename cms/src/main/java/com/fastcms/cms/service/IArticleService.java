@@ -31,6 +31,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author： wjun_java@163.com
@@ -441,6 +442,14 @@ public interface IArticleService extends IService<Article> {
 
         public String getThumbnailUrl() {
             return AttachUtils.getAttachFileDomain() + getThumbnail();
+        }
+
+        public List<Long> getCategoryIdList() {
+            return getCategoryList().stream().map(ArticleCategory::getId).collect(Collectors.toList());
+        }
+
+        public List<Long> getTagIdList() {
+            return getTagList().stream().map(ArticleTag::getId).collect(Collectors.toList());
         }
 
         @Override

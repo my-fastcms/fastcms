@@ -99,7 +99,7 @@
         ${ew.customSqlSegment}
     </select>
 
-    <select id="getArticleListByCategoryId" resultType="com.fastcms.cms.service.IArticleService$ArticleVo">
+    <select id="getArticleListByCategoryId" resultMap="ArticleToResult">
         select a.id, a.title, a.status, a.created, a.view_count, a.thumbnail, a.summary, u.user_name as author
         from article_category_relation acr
         join article a on acr.article_id = a.id
@@ -107,7 +107,7 @@
         ${ew.customSqlSegment}
     </select>
 
-    <select id="pageArticleByTagId" resultType="com.fastcms.cms.service.IArticleService$ArticleVo">
+    <select id="pageArticleByTagId" resultMap="ArticleToResult">
         select DISTINCT a.id, a.title, a.status, a.created, a.view_count, a.thumbnail, a.summary, u.user_name as author
         from article_tag_relation acr
         join article a on acr.article_id = a.id
