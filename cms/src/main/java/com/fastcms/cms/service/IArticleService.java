@@ -29,6 +29,7 @@ import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -399,7 +400,7 @@ public interface IArticleService extends IService<Article> {
         }
 
         public List<ArticleCategory> getCategoryList() {
-            return categoryList;
+            return categoryList == null ? Collections.EMPTY_LIST : categoryList;
         }
 
         public void setCategoryList(List<ArticleCategory> categoryList) {
@@ -407,7 +408,7 @@ public interface IArticleService extends IService<Article> {
         }
 
         public List<ArticleTag> getTagList() {
-            return tagList;
+            return tagList == null ? Collections.EMPTY_LIST : tagList;
         }
 
         public void setTagList(List<ArticleTag> tagList) {
