@@ -12,6 +12,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+import static com.fastcms.common.constants.FastcmsConstants.FILE_DOMAIN;
+
 /**
  * 订单服务类
  * @author wjun_java@163.com
@@ -256,7 +258,7 @@ public interface IOrderService extends IService<Order> {
         }
 
         public String getThumbnailUrl() {
-            return ConfigUtils.getConfig("file_domain") == null ? getThumbnail() : ConfigUtils.getConfig("file_domain").concat(getThumbnail() == null ? "" : getThumbnail());
+            return ConfigUtils.getConfig(FILE_DOMAIN) == null ? getThumbnail() : ConfigUtils.getConfig(FILE_DOMAIN).concat(getThumbnail() == null ? "" : getThumbnail());
         }
 
     }
@@ -320,6 +322,11 @@ public interface IOrderService extends IService<Order> {
         public void setProductThumbnail(String productThumbnail) {
             this.productThumbnail = productThumbnail;
         }
+
+        public String getThumbnailUrl() {
+            return ConfigUtils.getConfig(FILE_DOMAIN) == null ? getProductThumbnail() : ConfigUtils.getConfig(FILE_DOMAIN).concat(getProductThumbnail() == null ? "" : getProductThumbnail());
+        }
+
     }
 
     class OrderCountVo implements Serializable {
