@@ -22,7 +22,7 @@
         select o.*, u.user_name, u.nick_name, oa.* from `order` o
         left join `user` u on o.create_user_id = u.id
         left join (
-            select oi.order_id, oi.product_count, oi.total_amount, a.title
+            select oi.order_id, oi.product_count, oi.total_amount, a.title, a.thumbnail
             from `order_item` oi left join `article` a on oi.product_id = a.id)
             oa on oa.order_id = o.id
         ${ew.customSqlSegment}

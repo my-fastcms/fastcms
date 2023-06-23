@@ -24,6 +24,7 @@ import com.fastcms.cms.order.FastcmsOrderServiceManager;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.model.RestResult;
 import com.fastcms.common.model.RestResultUtils;
+import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.auth.AuthUtils;
 import com.fastcms.core.mybatis.PageModel;
 import com.fastcms.entity.Order;
@@ -80,9 +81,11 @@ public class OrderApi {
      * @return
      */
     @GetMapping("list")
-    public RestResult<Page<IOrderService.OrderListVo>> list(PageModel page) {
+    public RestResult<Page<IOrderService.OrderListVo>> list(PageModel page,
+                                                            @RequestParam(name = "payStatus", required = false, defaultValue = "0") String payStatus) {
         QueryWrapper queryWrapper = Wrappers.query()
                 .eq("o.status", Order.ORDER_STATUS_NORMAL)
+                .eq(StrUtils.isNotBlank(payStatus),"o.pay_status", payStatus)
                 .orderByDesc("o.created");
         return RestResultUtils.success(orderService.pageOrder(page.toPage(), queryWrapper));
     }

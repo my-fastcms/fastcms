@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.fastcms.entity.Order;
 import com.fastcms.entity.OrderItem;
+import com.fastcms.utils.ConfigUtils;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -133,6 +134,11 @@ public interface IOrderService extends IService<Order> {
         BigDecimal payAmount;
 
         /**
+         * 商品缩略图
+         */
+        String thumbnail;
+
+        /**
          * 创建时间
          */
         LocalDate created;
@@ -239,6 +245,18 @@ public interface IOrderService extends IService<Order> {
 
         public void setCreated(LocalDate created) {
             this.created = created;
+        }
+
+        public String getThumbnail() {
+            return thumbnail;
+        }
+
+        public void setThumbnail(String thumbnail) {
+            this.thumbnail = thumbnail;
+        }
+
+        public String getThumbnailUrl() {
+            return ConfigUtils.getConfig("file_domain") == null ? getThumbnail() : ConfigUtils.getConfig("file_domain").concat(getThumbnail() == null ? "" : getThumbnail());
         }
 
     }
