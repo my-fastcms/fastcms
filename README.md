@@ -22,8 +22,8 @@
 - 管理后台访问地址： http://localhost:8080/fastcms
 - 初始账号密码：admin/1
 
-### Fastcms拼团小程序
-![输入图片说明](./doc/images/fastcms-pintuan.jpg "fastcms-pintuan.jpg")
+### Fastcms小程序
+![输入图片说明](./doc/images/fastcms.jpg "fastcms.jpg")
 
 ### 后端技术
 - SpringBoot作为底层框架
