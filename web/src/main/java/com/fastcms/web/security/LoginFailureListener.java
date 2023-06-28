@@ -27,6 +27,8 @@ import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 import static com.fastcms.service.IUserService.UserI18n.USER_PASSWORD_ERROR_COUNT_LIMT;
 
 /**
@@ -50,6 +52,10 @@ public class LoginFailureListener implements ApplicationListener<AuthenticationF
 			User user = userService.getByUsername(username);
 			if (user != null) {
 
+				if (Objects.equals(FastcmsConstants.STATUS_DEL, user.getStatus())) {
+					return;
+				}
+
 				if (user.getErrorCount() >= getLimitErrorCount()) {
 					user.setStatus(FastcmsConstants.STATUS_DEL);
 				}
@@ -59,7 +65,8 @@ public class LoginFailureListener implements ApplicationListener<AuthenticationF
 
 				if (user.getErrorCount() > getLimitErrorCount() / 2) {
 					String message = I18nUtils.getMessage(USER_PASSWORD_ERROR_COUNT_LIMT);
-					throw new LockedException(String.format(message, username, getLimitErrorCount() - user.getErrorCount()));
+					Integer leftCount = getLimitErrorCount() - user.getErrorCount();
+					throw new LockedException(String.format(message, username, leftCount <= 0 ? 0 : leftCount));
 				}
 
 			}
