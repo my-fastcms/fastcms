@@ -67,7 +67,7 @@
                 </el-col>
                 <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
                     <el-form-item label="分类" prop="categories">
-                        <el-cascader ref="categoryCascader" v-model="state.ruleForm.articleCategory" :options="state.categories" :props="{ multiple: true, label: 'label', value: 'id', children: 'children' }" collapse-tags clearable />
+                        <el-cascader ref="categoryCascader" @change="onCategoryChange" v-model="state.ruleForm.articleCategory" :options="state.categories" :props="{ multiple: true, label: 'label', value: 'id', children: 'children' }" collapse-tags clearable />
                     </el-form-item>
                 </el-col>
                 <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12" class="mb20">
@@ -127,7 +127,7 @@ const myRefForm = ref();
 const articleApi = ArticleApi();
 const thumbnailDialogRef = ref();
 const attachDialogRef = ref();
-// const categoryCascaderRef = ref();
+const categoryCascader = ref();
 const route = useRoute();
 const state = reactive({
     fileType: "image",
@@ -152,7 +152,7 @@ const state = reactive({
         thumbnail: '',
         suffix: '',
         status: 'publish',
-        articleCategory: null,
+        articleCategory: [],
         attachId: null,
     },
     rules: {
@@ -181,11 +181,11 @@ const getCategoryList = () => {
 const onSubmit = () => {
     myRefForm.value.validate((valid: any) => {
         if (valid) {
-            // categoryCascaderRef.value.getCheckedNodes(true).map(item => {
-            //     state.ruleForm.articleCategory.push(item.value);
-            // });
-            // let params = qs.stringify(state.ruleForm, {arrayFormat: 'repeat'});
-            articleApi.addArticle(state.ruleForm).then((res) => {
+            categoryCascader.value.getCheckedNodes(true).map(item => {
+                state.ruleForm.articleCategory.push(item.value);
+            });
+            let params = qs.stringify(state.ruleForm, {arrayFormat: 'repeat'});
+            articleApi.addArticle(params).then((res) => {
                 state.ruleForm.id = res.data;
                 ElMessage.success("保存成功");
             }).catch((res) => {
@@ -225,6 +225,14 @@ const getSelectThumbnail = (value) => {
 const getSelectAttach = (value) => {
     state.ruleForm.attachId = value[0].id;
     state.ruleForm.attachTitle = value[0].fileName;
+};
+
+const onCategoryChange = () => {
+	// const p = categoryCascader.value.getCheckedNodes();
+	// console.log("====p:" + p[0].value)
+    // categoryCascader.value.getCheckedNodes(true).map(item => {
+    //     state.ruleForm.articleCategory.push(item.value);
+    // });
 };
 
 onMounted(() => {
