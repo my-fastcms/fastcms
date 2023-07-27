@@ -108,7 +108,10 @@ const onSaveFile = () => {
         return;
     }
 
-    templateApi.saveTemplateFile({"filePath": state.currEditFile, "fileContent": state.content}).then(() => {
+    let params = {} as any;
+    params.filePath = state.currEditFile;
+    params.content = state.content;
+    templateApi.saveTemplateFile(params).then(() => {
         ElMessage.success("保存成功");
     })
 
