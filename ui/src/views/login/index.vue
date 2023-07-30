@@ -25,7 +25,7 @@
 								<el-tab-pane :label="$t('message.label.one1')" name="account">
 									<Account />
 								</el-tab-pane>
-								<el-tab-pane :label="$t('message.label.two2')" name="mobile">
+								<el-tab-pane v-if="false" :label="$t('message.label.two2')" name="mobile">
 									<Mobile />
 								</el-tab-pane>
 							</el-tabs>

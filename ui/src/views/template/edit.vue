@@ -39,7 +39,7 @@
                     <Codemirror
                             ref="codeMirror"
                             v-model="state.content" 
-                            :style="{ height: '100%', width: '100%' }" 
+                            :style="{ height: state.clientHight, width: '100%' }" 
                             :autofocus="true"
                             @change="onChange"
                             v-bind="$attrs"
@@ -69,6 +69,7 @@ const extensions = [html(), oneDark];
 
 const templateApi = TemplateApi();
 const state = reactive({
+    clientHight: "600px",
     treeLoading: false,
     treeTableData: [],
     treeDefaultProps: {
@@ -110,7 +111,7 @@ const onSaveFile = () => {
 
     let params = {} as any;
     params.filePath = state.currEditFile;
-    params.content = state.content;
+    params.fileContent = state.content;
     templateApi.saveTemplateFile(params).then(() => {
         ElMessage.success("保存成功");
     })
@@ -176,6 +177,9 @@ const onChange = (value: string) => {
 }
 onMounted(() => {
     getFileTree();
+    // codeMirror.value.setSize("auto", 600)
+    let clientHight = document.documentElement.clientHeight;
+    state.clientHight = clientHight + "px";
 });
 </script>
 
@@ -185,7 +189,7 @@ onMounted(() => {
   margin-bottom: 0;
   margin-right: 0;
   padding-bottom: 0;
-  height: 100%;
+  height: 600;
   outline: none;
   position: relative;
   border: 1px solid #dddddd;
@@ -193,6 +197,7 @@ onMounted(() => {
 .code-mirror{
   font-size : 13px;
   line-height : 150%;
+  height: 600px;
   text-align: left;
 }
 </style>

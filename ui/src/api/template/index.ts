@@ -76,7 +76,8 @@ export function TemplateApi() {
 			return request({
 				url: "/admin/template/file/save",
 				method: 'post',
-				params: params
+				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+				data: params
 			});
 		},
 
