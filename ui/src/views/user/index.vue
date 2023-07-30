@@ -8,7 +8,7 @@
 					<el-icon><ele-Search /></el-icon>查询
 				</el-button>
 				<el-button size="default" type="primary" class="ml10" @click="onOpenAddUser()">
-					<el-icon><ele-Plus /></el-icon>新建员工
+					<el-icon><ele-Plus /></el-icon>新建用户
 				</el-button>
 			</div>
 			<el-table :data="state.tableData.data" stripe style="width: 100%">
