@@ -90,7 +90,7 @@ public class DelegatingTokenManager implements TokenManager, ApplicationListener
 
     TokenManager getTokenManager(User user) {
         UserOpenid userOpenid = ApplicationUtils.getBean(IUserService.class).getUserOpenid(user);
-        if (userOpenid != null) {
+        if (userOpenid != null && userOpenid.getType() != null) {
             TokenManager tokenManager = getTokenManager(userOpenid.getType());
             if (tokenManager != null) {
                 return tokenManager;
