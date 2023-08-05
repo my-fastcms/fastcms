@@ -26,6 +26,13 @@ public interface IUserService extends IService<User> {
     User getByUsername(String username);
 
     /**
+     * 根据手机号获取用户信息
+     * @param phone
+     * @return
+     */
+    User getByPhone(String phone);
+
+    /**
      * 修改用户密码
      * @param updatePasswordParam
      */

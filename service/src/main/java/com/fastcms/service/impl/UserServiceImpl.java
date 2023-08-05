@@ -55,6 +55,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     private final String USER_OPENID_BY_USER_CACHE_NAME = "user_openid_by_user_cache_name";
 
+    private final String USER_BY_USER_PHONE_CACHE_NAME = "user_by_user_phone_cache_name";
+
     @Autowired
     private IRoleService roleService;
 
@@ -79,6 +81,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Cacheable(value = USER_BY_USER_NAME_CACHE_NAME, key = "#username")
     public User getByUsername(String username) {
         return getOne(Wrappers.<User>lambdaQuery().eq(User::getUserName, username));
+    }
+
+    @Override
+    @Cacheable(value = USER_BY_USER_PHONE_CACHE_NAME, key = "#phone")
+    public User getByPhone(String phone) {
+        return getOne(Wrappers.<User>lambdaQuery().eq(User::getMobile, phone));
     }
 
     @Override
