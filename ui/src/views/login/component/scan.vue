@@ -143,7 +143,7 @@ onMounted(() => {
 				doLogin(res)
 			}).catch(error => {
 				// console.log(error)
-				ElMessage.error(error)
+				// ElMessage.error(error)
 			})
 		}, 1000);
 

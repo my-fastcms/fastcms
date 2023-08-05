@@ -1,0 +1,1 @@
+import{s as e}from"./index-a636fc92.js";function s(){return{updateUser(r){return e({url:"/client/user/save",method:"post",data:r})},getUserInfo(){return e({url:"/client/user/get",method:"get"})}}}export{s as C};
