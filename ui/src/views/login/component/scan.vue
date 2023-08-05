@@ -142,7 +142,8 @@ onMounted(() => {
 				clearInterval(timer)
 				doLogin(res)
 			}).catch(error => {
-				console.log(error)
+				// console.log(error)
+				ElMessage.error(error)
 			})
 		}, 1000);
 
