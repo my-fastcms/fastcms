@@ -5,8 +5,10 @@ export default {
 		two2: '手机号登录',
 	},
 	link: {
-		one3: '第三方登录',
+		one3: '立即注册',
 		two4: '友情链接',
+		two6: '忘记密码',
+		two67: '微信授权登录',
 	},
 	account: {
 		accountPlaceholder1: '用户名',

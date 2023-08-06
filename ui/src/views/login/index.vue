@@ -25,13 +25,18 @@
 								<el-tab-pane :label="$t('message.label.one1')" name="account">
 									<Account />
 								</el-tab-pane>
-								<el-tab-pane v-if="false" :label="$t('message.label.two2')" name="mobile">
+								<el-tab-pane v-if="state.isEnableMobileLogin" :label="$t('message.label.two2')" name="mobile">
 									<Mobile />
 								</el-tab-pane>
 							</el-tabs>
+							<div class="mt10">
+								<el-button link type="primary" @click.native="toRegister" v-if="state.public_register_enable">{{ $t('message.link.one3') }}</el-button>
+								<el-button link type="primary" @click.native="toRestPassword" v-if="state.public_reset_password_enable">{{ $t('message.link.two6') }}</el-button>
+								<el-button link type="primary" @click.native="toWechatMpOAuth" v-if="state.isWechatBrowser">{{ $t('message.link.two7') }}</el-button>
+							</div>
 						</div>
 						<Scan v-if="state.isScan" />
-						<div class="login-content-main-sacn" @click="state.isScan = !state.isScan">
+						<div v-if="state.isEnableScan" class="login-content-main-sacn" @click="state.isScan = !state.isScan">
 							<i class="iconfont" :class="state.isScan ? 'icon-diannao1' : 'icon-barcode-qr'"></i>
 							<div class="login-content-main-sacn-delta"></div>
 						</div>
@@ -39,6 +44,7 @@
 				</div>
 			</div>
 		</div>
+
 	</div>
 </template>
 
@@ -47,10 +53,15 @@ import { defineAsyncComponent, onMounted, reactive, computed } from 'vue';
 import { storeToRefs } from 'pinia';
 import { useThemeConfig } from '/@/stores/themeConfig';
 import { NextLoading } from '/@/utils/loading';
+import { useRouter } from 'vue-router';
 // import logoMini from '/@/assets/logo-mini.svg';
 import loginMain from '/@/assets/login-main.svg';
 import loginBg from '/@/assets/login-bg.svg';
+import { ConfigApi } from '/@/api/config/index';
+import qs from 'qs';
 
+const router = useRouter();
+const configApi = ConfigApi();
 // 引入组件
 const Account = defineAsyncComponent(() => import('/@/views/login/component/account.vue'));
 const Mobile = defineAsyncComponent(() => import('/@/views/login/component/mobile.vue'));
@@ -61,15 +72,81 @@ const storesThemeConfig = useThemeConfig();
 const { themeConfig } = storeToRefs(storesThemeConfig);
 const state = reactive({
 	tabsActiveName: 'account',
+	public_register_enable: false,
+	public_reset_password_enable: false,
 	isScan: false,
+	isEnableMobileLogin: false,
+	isEnableScan: false,
+	isWechatBrowser: false,
+	public_website_domain: '',
 });
 
 // 获取布局配置信息
 const getThemeConfig = computed(() => {
 	return themeConfig.value;
 });
+
+const toRegister = () => {
+	console.log("========toRegister")
+	router.push('/register');
+}
+const toRestPassword = () => {
+	console.log("========toRestPassword")
+	router.push('/rest/password');
+}
+const toWechatMpOAuth = () => {
+	window.location.href = state.public_website_domain + "/oauth2/authorization/wechat-mp"
+}
+const judgeWechatBrowser = () => {
+	const ua = window.navigator.userAgent.toLowerCase();
+	const match = ua.match(/MicroMessenger/i);
+	if (match === null) {
+		return false;
+	}
+	if (match.includes('micromessenger')) {
+		return true;
+	}
+	return false;
+}
+
 // 页面加载时
 onMounted(() => {
+	state.isWechatBrowser = judgeWechatBrowser();
+	let paramKeys = new Array();
+	paramKeys.push('public_website_domain');
+	paramKeys.push('public_wechat_mp_scan_qrcode_login_enable');
+	paramKeys.push('publicPhoneLoginEnable');
+	paramKeys.push('public_register_enable');
+	paramKeys.push('public_forgot_password_enable');
+	let params = qs.stringify( {"configKeys" : paramKeys}, {arrayFormat: 'repeat'});
+	configApi.getPublicConfigList(params).then((res) => {
+		
+		const b = res.data.map(obj => [obj.key, obj.jsonValue]);
+
+		const map = new Map<string, { key: string; jsonValue: any }>(b);
+
+		if(map.get("public_website_domain")) {
+			state.isEnableMobileLogin = map.get("public_website_domain");
+		}
+
+		if(map.get("public_register_enable")) {
+			state.isEnableMobileLogin = map.get("public_register_enable");
+		}
+
+		if(map.get("public_forgot_password_enable")) {
+			state.isEnableMobileLogin = map.get("public_forgot_password_enable");
+		}
+
+		if(map.get("public_wechat_mp_scan_qrcode_login_enable")) {
+			state.isEnableScan = map.get("public_wechat_mp_scan_qrcode_login_enable");
+		}
+
+		if(map.get("publicPhoneLoginEnable")) {
+			state.isEnableMobileLogin = map.get("publicPhoneLoginEnable");
+		}
+		
+	})
+
 	NextLoading.done();
 });
 </script>
