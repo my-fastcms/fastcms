@@ -11,8 +11,8 @@
 
 						<el-row :gutter="35">
 							<el-col class="mb20">
-								<el-form-item label="公众号appId" prop="wechate_mp_appid">
-									<el-input v-model="state.ruleForm.wechate_mp_appid" placeholder="请输入公众号appId" clearable></el-input>
+								<el-form-item label="公众号appId" prop="wechat_mp_appid">
+									<el-input v-model="state.ruleForm.wechat_mp_appid" placeholder="请输入公众号appId" clearable></el-input>
 								</el-form-item>
 							</el-col>
 							<el-col class="mb20">
@@ -73,7 +73,7 @@ const configApi = ConfigApi();
 const state = reactive({
 	fit: "fill",
 	ruleForm: {
-		wechate_mp_appid: '',
+		wechat_mp_appid: '',
 		wechat_mp_secret: '',
 		wechat_mp_token: '',
 		wechat_mp_aeskey: '',
@@ -83,7 +83,7 @@ const state = reactive({
 		wechat_miniapp_aeskey: '',
 	} as any,
 	rules: {
-		"wechate_mp_appid": [
+		"wechat_mp_appid": [
 			{required: true, message: '请输入公众号appId', trigger: 'blur'},
 		],
 		"wechat_mp_secret": [
