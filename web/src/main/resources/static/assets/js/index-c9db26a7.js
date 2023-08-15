@@ -1,5 +1,0 @@
-<<<<<<< HEAD:web/src/main/resources/static/assets/js/index-a37b0464.js
-import{s as e}from"./index-d6580e65.js";function d(){return{getAttachList(t){return e({url:"/admin/attachment/list",method:"get",params:t})},addAttach(t){return e({url:"/admin/attachment/upload",method:"post",data:t})},getAttach(t){return e({url:"/admin/attachment/get/"+t,method:"get"})},updateAttach(t,a){return e({url:"/admin/attachment/update/"+t,method:"post",params:a})},delAttach(t){return e({url:"/admin/attachment/delete/"+t,method:"post"})}}}export{d as A};
-=======
-import{s as e}from"./index-aa5b7dfa.js";function d(){return{getAttachList(t){return e({url:"/admin/attachment/list",method:"get",params:t})},addAttach(t){return e({url:"/admin/attachment/upload",method:"post",data:t})},getAttach(t){return e({url:"/admin/attachment/get/"+t,method:"get"})},updateAttach(t,a){return e({url:"/admin/attachment/update/"+t,method:"post",params:a})},delAttach(t){return e({url:"/admin/attachment/delete/"+t,method:"post"})}}}export{d as A};
->>>>>>> 192aa1406293d953116f56b9fc878904d9c5643d:web/src/main/resources/static/assets/js/index-c9db26a7.js
