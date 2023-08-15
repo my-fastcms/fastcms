@@ -34,6 +34,7 @@ import com.fastcms.plugin.view.PluginFreeMarkerConfig;
 import com.fastcms.service.IConfigService;
 import com.fastcms.utils.ApplicationUtils;
 import com.fastcms.utils.ConfigUtils;
+import com.fastcms.utils.RequestUtils;
 import com.fastcms.web.filter.AuthInterceptor;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
@@ -280,17 +281,19 @@ public class FastcmsConfiguration implements WebMvcConfigurer, WebSocketConfigur
         @Override
         protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-            String appId = ConfigUtils.getConfig(WECHAT_MINIAPP_APP_ID);
+            if (RequestUtils.isWechatBrowser(request)) {
+                String appId = ConfigUtils.getConfig(WECHAT_MINIAPP_APP_ID);
 
-            if (request.getHeader(APP_ID) != null) {
-                appId = request.getHeader(APP_ID);
-            } else {
-                if (request.getParameter(APP_ID) != null) {
-                    appId = request.getParameter(APP_ID);
+                if (request.getHeader(APP_ID) != null) {
+                    appId = request.getHeader(APP_ID);
+                } else {
+                    if (request.getParameter(APP_ID) != null) {
+                        appId = request.getParameter(APP_ID);
+                    }
                 }
-            }
 
-            WxMaConfigHolder.set(appId);
+                WxMaConfigHolder.set(appId);
+            }
 
             try {
                 filterChain.doFilter(request, response);
