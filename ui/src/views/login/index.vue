@@ -30,9 +30,9 @@
 								</el-tab-pane>
 							</el-tabs>
 							<div class="mt10">
-								<el-button link type="primary" @click.native="toRegister" v-if="state.public_register_enable">{{ $t('message.link.one3') }}</el-button>
-								<el-button link type="primary" @click.native="toRestPassword" v-if="state.public_reset_password_enable">{{ $t('message.link.two6') }}</el-button>
-								<el-button link type="primary" @click.native="toWechatMpOAuth" v-if="state.isWechatBrowser">{{ $t('message.link.two7') }}</el-button>
+								<el-button link type="primary" @click="toRegister" v-if="state.public_register_enable">{{ $t('message.link.one3') }}</el-button>
+								<el-button link type="primary" @click="toRestPassword" v-if="state.public_reset_password_enable">{{ $t('message.link.two6') }}</el-button>
+								<el-button link type="primary" @click="toWechatMpOAuth" v-if="state.isWechatBrowser">{{ $t('message.link.two7') }}</el-button>
 							</div>
 						</div>
 						<Scan v-if="state.isScan" />
@@ -126,15 +126,15 @@ onMounted(() => {
 		const map = new Map<string, { key: string; jsonValue: any }>(b);
 
 		if(map.get("public_website_domain")) {
-			state.isEnableMobileLogin = map.get("public_website_domain");
+			state.public_website_domain = map.get("public_website_domain");
 		}
 
 		if(map.get("public_register_enable")) {
-			state.isEnableMobileLogin = map.get("public_register_enable");
+			state.public_register_enable = map.get("public_register_enable");
 		}
 
 		if(map.get("public_forgot_password_enable")) {
-			state.isEnableMobileLogin = map.get("public_forgot_password_enable");
+			state.public_reset_password_enable = map.get("public_forgot_password_enable");
 		}
 
 		if(map.get("public_wechat_mp_scan_qrcode_login_enable")) {
