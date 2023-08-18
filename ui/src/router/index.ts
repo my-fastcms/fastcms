@@ -95,7 +95,7 @@ router.beforeEach(async (to, from, next) => {
 	NProgress.configure({ showSpinner: false });
 	if (to.meta.title) NProgress.start();
 	const token = Local.get('token');
-	if (to.path === '/login' && !token) {
+	if ((to.path === '/login' || to.path === '/register' || to.path === '/rest/password') && !token) {
 		next();
 		NProgress.done();
 	} else {

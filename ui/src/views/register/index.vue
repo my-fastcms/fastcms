@@ -12,33 +12,39 @@
                             <el-input
                                 type="text"
                                 :placeholder="$t('message.account.accountPlaceholder1')"
-                                prefix-icon="el-icon-user"
                                 v-model="state.myForm.username"
                                 clearable
                                 autocomplete="off"
 								@change="confirmUserName"
                             >
+								<template #prefix>
+									<el-icon class="el-input__icon"><ele-User /></el-icon>
+								</template>
                             </el-input>
                         </el-form-item>
 						<el-form-item prop="nickName">
                             <el-input
                                 type="text"
                                 :placeholder="$t('message.account.accountPlaceholder6')"
-                                prefix-icon="el-icon-user"
                                 v-model="state.myForm.nickName"
                                 clearable
                                 autocomplete="off"
                             >
+								<template #prefix>
+									<el-icon class="el-input__icon"><ele-User /></el-icon>
+								</template>
                             </el-input>
                         </el-form-item>
                         <el-form-item prop="password">
                             <el-input
                                 :type="state.isShowPassword ? 'text' : 'password'"
                                 :placeholder="$t('message.account.accountPlaceholder2')"
-                                prefix-icon="el-icon-lock"
                                 v-model="state.myForm.password"
                                 autocomplete="off"
                             >
+								<template #prefix>
+									<el-icon class="el-input__icon"><ele-Unlock /></el-icon>
+								</template>
                                 <template #suffix>
                                     <i
                                         class="iconfont el-input__icon login-content-password"
@@ -53,10 +59,12 @@
                             <el-input
                                 :type="state.isShowPassword ? 'text' : 'password'"
                                 :placeholder="$t('message.account.accountPlaceholder4')"
-                                prefix-icon="el-icon-lock"
                                 v-model="state.myForm.repeatPassword"
                                 autocomplete="off"
                             >
+								<template #prefix>
+									<el-icon class="el-input__icon"><ele-Unlock /></el-icon>
+								</template>
                                 <template #suffix>
                                     <i
                                         class="iconfont el-input__icon login-content-password"
@@ -74,28 +82,28 @@
                                         type="text"
                                         maxlength="5"
                                         :placeholder="$t('message.account.accountPlaceholder3')"
-                                        prefix-icon="el-icon-position"
                                         v-model="state.myForm.code"
                                         clearable
                                         autocomplete="off"
-                                    ></el-input>
+                                    >
+								</el-input>
                                 </el-col>
                                 <el-col :span="10">
                                     <div class="login-content-code">
-                                        <img class="login-content-code-img" alt="fastcms" @click="refreshCode" :src="captcha">
+                                        <img class="login-content-code-img" alt="fastcms" @click="refreshCode" :src="state.captcha">
                                     </div>
                                 </el-col>
                             </el-row>
                         </el-form-item>
                         <el-form-item>
-                            <el-button type="primary" class="login-content-submit" round @click="onRegisterIn" :loading="loading.registerIn">
+                            <el-button type="primary" class="login-content-submit" round @click="onRegisterIn" :loading="state.loading.registerIn">
                                 <span>{{ $t('message.account.accountRegistBtnText') }}</span>
                             </el-button>
                         </el-form-item>
                     </el-form>
 					<div class="mt10">
-						<el-button type="text" size="small" @click="toLogin">{{ $t('message.link.two5') }}</el-button>
-						<!-- <el-button type="text" size="small">{{ $t('message.link.two4') }}</el-button> -->
+						<el-button link type="primary" @click="toLogin">{{ $t('message.link.two5') }}</el-button>
+						<!-- <el-button link type="primary">{{ $t('message.link.two4') }}</el-button> -->
 					</div>
 				</div>
 			</div>
@@ -123,7 +131,6 @@ const loginApi = LoginApi();
 const configApi = ConfigApi();
 const myRefForm = ref();
 const { t } = useI18n();
-const { proxy } = getCurrentInstance() as any;
 const store = pinia;
 const route = useRoute();
 const router = useRouter();

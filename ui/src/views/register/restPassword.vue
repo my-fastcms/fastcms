@@ -12,18 +12,19 @@
                             <el-input
                                 type="text"
                                 :placeholder="$t('message.account.accountPlaceholder1')"
-                                prefix-icon="el-icon-user"
                                 v-model="state.myForm.username"
                                 clearable
                                 autocomplete="off"
                             >
+								<template #prefix>
+									<el-icon class="el-input__icon"><ele-User /></el-icon>
+								</template>
                             </el-input>
                         </el-form-item>
                         <el-form-item prop="email" v-if="false">
                             <el-input
                                 type="text"
                                 :placeholder="$t('message.account.accountPlaceholder5')"
-                                prefix-icon="el-icon-lock"
                                 v-model="state.myForm.email"
 								clearable
                                 autocomplete="off"
@@ -38,7 +39,6 @@
                                         type="text"
                                         maxlength="5"
                                         :placeholder="$t('message.account.accountPlaceholder3')"
-                                        prefix-icon="el-icon-position"
                                         v-model="state.myForm.code"
                                         clearable
                                         autocomplete="off"
@@ -58,7 +58,7 @@
                         </el-form-item>
                     </el-form>
 					<div class="mt10">
-						<el-button type="text" size="small" @click="toLogin">{{ $t('message.link.two5') }}</el-button>
+						<el-button link type="primary" @click="toLogin">{{ $t('message.link.two5') }}</el-button>
 						<!-- <el-button type="text" size="small">{{ $t('message.link.two4') }}</el-button> -->
 					</div>
 				</div>
