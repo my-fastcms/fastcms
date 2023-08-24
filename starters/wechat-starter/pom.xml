@@ -13,7 +13,7 @@
     <name>fastcms-wechat-starter-${project.version}</name>
 
     <properties>
-        <weixin.version>4.4.0</weixin.version>
+        <weixin.version>4.5.0</weixin.version>
     </properties>
 
     <dependencies>
