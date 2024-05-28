@@ -10,7 +10,7 @@ import com.fastcms.core.utils.AttachUtils;
 import com.fastcms.language.Language;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;

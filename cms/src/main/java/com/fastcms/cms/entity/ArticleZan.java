@@ -2,7 +2,7 @@ package com.fastcms.cms.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 

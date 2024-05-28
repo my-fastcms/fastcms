@@ -105,16 +105,6 @@ public class FastcmsApplicationRunListener implements SpringApplicationRunListen
     }
 
     @Override
-    public void started(ConfigurableApplicationContext context) {
-
-    }
-
-    @Override
-    public void running(ConfigurableApplicationContext context) {
-
-    }
-
-    @Override
     public void failed(ConfigurableApplicationContext context, Throwable exception) {
 
     }

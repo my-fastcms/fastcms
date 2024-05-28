@@ -18,10 +18,10 @@ package com.fastcms.web.security;
 
 import com.fastcms.core.auth.FastcmsAuthUserInfo;
 import com.fastcms.entity.User;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 
 /**

@@ -30,13 +30,13 @@ import org.mybatis.spring.mapper.MapperFactoryBean;
 import org.pf4j.PluginWrapper;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
-import org.springframework.core.NestedIOException;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.web.context.support.GenericWebApplicationContext;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -137,7 +137,7 @@ public class MyBatisMapperRegister extends AbstractPluginRegister {
 						XMLMapperBuilder xmlMapperBuilder = new XMLMapperBuilder(mapperXmlResource.getInputStream(), configuration, mapperXmlResource.toString(), configuration.getSqlFragments());
 						xmlMapperBuilder.parse();
 					} catch (Exception e) {
-						throw new NestedIOException("Failed to parse mapping resource: '" + mapperXmlResource + "'", e);
+						throw new IOException("Failed to parse mapping resource: '" + mapperXmlResource + "'", e);
 					} finally {
 						ErrorContext.instance().reset();
 					}

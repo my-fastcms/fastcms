@@ -17,9 +17,9 @@
 package com.fastcms.core.directive;
 
 import freemarker.template.SimpleScalar;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**

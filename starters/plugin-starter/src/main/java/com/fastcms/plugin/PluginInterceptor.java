@@ -19,8 +19,8 @@ package com.fastcms.plugin;
 import com.fastcms.common.utils.StrUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * 对所有 /fastcms/plugin/**的请求进行拦截，

@@ -25,6 +25,8 @@ import com.fastcms.plugin.FastcmsPluginManager;
 import com.fastcms.plugin.register.CompoundPluginRegister;
 import com.fastcms.utils.ApplicationUtils;
 import com.fastcms.utils.ConfigUtils;
+import jakarta.annotation.Resource;
+import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,8 +37,6 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import javax.annotation.Resource;
-import javax.mail.internet.MimeMessage;
 import java.lang.reflect.Method;
 import java.util.Date;
 

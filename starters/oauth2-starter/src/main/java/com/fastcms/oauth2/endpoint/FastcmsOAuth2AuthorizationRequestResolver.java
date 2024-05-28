@@ -37,7 +37,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -186,9 +186,9 @@ public class FastcmsOAuth2AuthorizationRequestResolver implements OAuth2Authoriz
             }
             return builder;
         }
-        if (AuthorizationGrantType.IMPLICIT.equals(clientRegistration.getAuthorizationGrantType())) {
-            return OAuth2AuthorizationRequest.implicit();
-        }
+//        if (AuthorizationGrantType.IMPLICIT.equals(clientRegistration.getAuthorizationGrantType())) {
+//            return OAuth2AuthorizationRequest.implicit();
+//        }
         throw new IllegalArgumentException(
                 "Invalid Authorization Grant Type (" + clientRegistration.getAuthorizationGrantType().getValue()
                         + ") for Client Registration with Id: " + clientRegistration.getRegistrationId());

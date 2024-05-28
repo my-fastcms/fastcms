@@ -16,6 +16,8 @@
  */
 package com.fastcms.email.autoconfigure;
 
+import jakarta.activation.MimeType;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.mail.MailProperties;
@@ -25,9 +27,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-
-import javax.activation.MimeType;
-import javax.mail.internet.MimeMessage;
 
 /**
  * @author： wjun_java@163.com

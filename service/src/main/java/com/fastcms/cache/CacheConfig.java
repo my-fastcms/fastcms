@@ -16,11 +16,7 @@
  */
 package com.fastcms.cache;
 
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.ehcache.EhCacheCacheManager;
-import org.springframework.cache.ehcache.EhCacheManagerFactoryBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -38,16 +34,18 @@ public class CacheConfig {
     public static final String USER_MENU_PERMISSION_CACHE_NAME = "user_menu_permissions";
     public static final String ADMIN_INDEX_DATA_CACHE_NAME = "admin_index_data";
 
+    /*
     @Bean
     public CacheManager cacheManager() {
         return new EhCacheCacheManager(ehCacheCacheManager().getObject());
     }
+    */
 
-    @Bean
+    /*@Bean
     public EhCacheManagerFactoryBean ehCacheCacheManager() {
         EhCacheManagerFactoryBean ehCacheManagerFactoryBean = new EhCacheManagerFactoryBean();
         ehCacheManagerFactoryBean.setShared(true);
         return ehCacheManagerFactoryBean;
-    }
+    }*/
 
 }

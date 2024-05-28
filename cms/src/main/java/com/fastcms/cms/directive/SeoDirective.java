@@ -23,10 +23,10 @@ import com.fastcms.core.directive.BaseFunction;
 import com.fastcms.utils.ConfigUtils;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateModelException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**

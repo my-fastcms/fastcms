@@ -44,8 +44,7 @@ public class OAuth2AuthorizationGrantRequestEntityUtils {
     static HttpHeaders getTokenRequestHeaders(ClientRegistration clientRegistration) {
         HttpHeaders headers = new HttpHeaders();
         headers.addAll(DEFAULT_TOKEN_REQUEST_HEADERS);
-        if (ClientAuthenticationMethod.CLIENT_SECRET_BASIC.equals(clientRegistration.getClientAuthenticationMethod())
-                || ClientAuthenticationMethod.BASIC.equals(clientRegistration.getClientAuthenticationMethod())) {
+        if (ClientAuthenticationMethod.CLIENT_SECRET_BASIC.equals(clientRegistration.getClientAuthenticationMethod())) {
             String clientId = encodeClientCredential(clientRegistration.getClientId());
             String clientSecret = encodeClientCredential(clientRegistration.getClientSecret());
             headers.setBasicAuth(clientId, clientSecret);

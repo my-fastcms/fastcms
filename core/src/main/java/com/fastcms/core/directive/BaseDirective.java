@@ -20,9 +20,9 @@ import com.fastcms.common.utils.StrUtils;
 import com.fastcms.utils.RequestUtils;
 import freemarker.core.Environment;
 import freemarker.template.*;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

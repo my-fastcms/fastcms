@@ -20,6 +20,10 @@ import freemarker.core.ParseException;
 import freemarker.ext.jsp.TaglibFactory;
 import freemarker.ext.servlet.*;
 import freemarker.template.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactoryUtils;
 import org.springframework.beans.factory.BeanInitializationException;
@@ -31,10 +35,6 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 import org.springframework.web.servlet.view.AbstractTemplateView;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfig;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Collections;
@@ -129,7 +129,7 @@ public class FastcmsFreeMarkerView extends AbstractTemplateView {
 	@Override
 	protected void initServletContext(ServletContext servletContext) throws BeansException {
 		if (getConfiguration() != null) {
-			this.taglibFactory = new TaglibFactory(servletContext);
+//			this.taglibFactory = new TaglibFactory(servletContext);
 		}
 		else {
 			FreeMarkerConfig config = autodetectConfiguration();
@@ -145,7 +145,7 @@ public class FastcmsFreeMarkerView extends AbstractTemplateView {
 		catch (ServletException ex) {
 			throw new BeanInitializationException("Initialization of GenericServlet adapter failed", ex);
 		}
-		this.servletContextHashModel = new ServletContextHashModel(servlet, getObjectWrapper());
+		this.servletContextHashModel = new freemarker.ext.servlet.ServletContextHashModel(servlet, getObjectWrapper());
 
 	}
 

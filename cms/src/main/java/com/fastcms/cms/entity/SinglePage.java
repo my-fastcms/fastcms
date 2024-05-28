@@ -9,7 +9,7 @@ import com.fastcms.core.template.StaticPathHelper;
 import com.fastcms.language.Language;
 import org.apache.commons.lang.StringUtils;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 

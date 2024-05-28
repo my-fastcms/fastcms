@@ -20,7 +20,7 @@ package com.fastcms.oauth2.authentication;
 import com.fastcms.oauth2.registration.FastcmsOAuth2ClientRegistration;
 import org.springframework.security.core.Authentication;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * OAuth2 授权登录成功处理逻辑

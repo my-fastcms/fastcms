@@ -24,13 +24,13 @@ import com.fastcms.core.auth.condition.ParamRequestCondition;
 import com.fastcms.core.auth.condition.PathRequestCondition;
 import com.fastcms.utils.RequestUtils;
 import com.fastcms.utils.CollectionUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;

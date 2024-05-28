@@ -11,8 +11,9 @@
 	<properties>
 		<revision>0.1.6-SNAPSHOT</revision>
 		<!-- Compiler settings properties -->
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<java.version>17</java.version>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<commons.lang.version>2.6</commons.lang.version>
@@ -23,7 +24,7 @@
 		<jjwt.version>0.11.2</jjwt.version>
 		<maven-flatten-version>1.1.0</maven-flatten-version>
 		<maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
-		<spring-boot-dependencies.version>2.7.7</spring-boot-dependencies.version>
+		<spring-boot-dependencies.version>3.2.5</spring-boot-dependencies.version>
 
 	</properties>
 

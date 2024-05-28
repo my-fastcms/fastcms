@@ -64,14 +64,14 @@ public class FastcmsAuthConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().antMatchers(authConfigs.getIgnoreUrls().toArray(new String[] {}))
-                .and().ignoring().antMatchers(RequestUtils.getIgnoreUrls().toArray(new String[] {}));
+        return (web) -> web.ignoring().requestMatchers(authConfigs.getIgnoreUrls().toArray(new String[] {}))
+                .and().ignoring().requestMatchers(RequestUtils.getIgnoreUrls().toArray(new String[] {}));
     }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.formLogin().loginPage("/fastcms.html");
-        http.authorizeRequests().antMatchers("/fastcms/**").authenticated();
+        http.authorizeRequests().requestMatchers("/fastcms/**").authenticated();
         http.csrf().disable().cors()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests().requestMatchers(CorsUtils::isPreFlightRequest).permitAll();

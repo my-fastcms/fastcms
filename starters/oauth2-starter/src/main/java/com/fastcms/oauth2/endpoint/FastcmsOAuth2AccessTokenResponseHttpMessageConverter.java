@@ -27,16 +27,13 @@ import org.springframework.http.converter.GenericHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.security.oauth2.core.endpoint.DefaultOAuth2AccessTokenResponseMapConverter;
-import org.springframework.security.oauth2.core.endpoint.MapOAuth2AccessTokenResponseConverter;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;
-import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponseMapConverter;
 import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
 import org.springframework.util.Assert;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 /** 重写 OAuth2AccessTokenResponseHttpMessageConverter
@@ -52,8 +49,7 @@ public class FastcmsOAuth2AccessTokenResponseHttpMessageConverter extends Abstra
 
     private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
 
-    private static final ParameterizedTypeReference<Map<String, Object>> STRING_OBJECT_MAP = new ParameterizedTypeReference<Map<String, Object>>() {
-    };
+    private static final ParameterizedTypeReference<Map<String, Object>> STRING_OBJECT_MAP = new ParameterizedTypeReference<>() {};
 
     private GenericHttpMessageConverter<Object> jsonMessageConverter = FastcmsHttpMessageConverters.getJsonMessageConverter();
 
@@ -61,7 +57,7 @@ public class FastcmsOAuth2AccessTokenResponseHttpMessageConverter extends Abstra
      * @deprecated This field should no longer be used
      */
     @Deprecated
-    protected Converter<Map<String, String>, OAuth2AccessTokenResponse> tokenResponseConverter = new MapOAuth2AccessTokenResponseConverter();
+    protected Converter<Map<String, Object>, OAuth2AccessTokenResponse> tokenResponseConverter = new FastcmsMapOAuth2AccessTokenResponseConverter();
 
     private Converter<Map<String, Object>, OAuth2AccessTokenResponse> accessTokenResponseConverter = new FastcmsMapOAuth2AccessTokenResponseConverter();
 
@@ -69,7 +65,7 @@ public class FastcmsOAuth2AccessTokenResponseHttpMessageConverter extends Abstra
      * @deprecated This field should no longer be used
      */
     @Deprecated
-    protected Converter<OAuth2AccessTokenResponse, Map<String, String>> tokenResponseParametersConverter = new OAuth2AccessTokenResponseMapConverter();
+    protected Converter<OAuth2AccessTokenResponse, Map<String, Object>> tokenResponseParametersConverter = new DefaultOAuth2AccessTokenResponseMapConverter();
 
     private Converter<OAuth2AccessTokenResponse, Map<String, Object>> accessTokenResponseParametersConverter = new DefaultOAuth2AccessTokenResponseMapConverter();
 
@@ -90,10 +86,10 @@ public class FastcmsOAuth2AccessTokenResponseHttpMessageConverter extends Abstra
             Map<String, Object> tokenResponseParameters = (Map<String, Object>) this.jsonMessageConverter
                     .read(STRING_OBJECT_MAP.getType(), null, inputMessage);
             // Only use deprecated converter if it has been set directly
-            if (this.tokenResponseConverter.getClass() != MapOAuth2AccessTokenResponseConverter.class) {
+            if (this.tokenResponseConverter.getClass() != FastcmsMapOAuth2AccessTokenResponseConverter.class) {
                 // gh-6463: Parse parameter values as Object in order to handle potential
                 // JSON Object and then convert values to String
-                Map<String, String> stringTokenResponseParameters = new HashMap<>();
+                Map<String, Object> stringTokenResponseParameters = new HashMap<>();
                 tokenResponseParameters
                         .forEach((key, value) -> stringTokenResponseParameters.put(key, String.valueOf(value)));
                 return this.tokenResponseConverter.convert(stringTokenResponseParameters);
@@ -113,13 +109,15 @@ public class FastcmsOAuth2AccessTokenResponseHttpMessageConverter extends Abstra
         try {
             Map<String, Object> tokenResponseParameters;
             // Only use deprecated converter if it has been set directly
+            /*
             if (this.tokenResponseParametersConverter.getClass() != OAuth2AccessTokenResponseMapConverter.class) {
                 tokenResponseParameters = new LinkedHashMap<>(
                         this.tokenResponseParametersConverter.convert(tokenResponse));
             }
             else {
                 tokenResponseParameters = this.accessTokenResponseParametersConverter.convert(tokenResponse);
-            }
+            }*/
+            tokenResponseParameters = this.accessTokenResponseParametersConverter.convert(tokenResponse);
             this.jsonMessageConverter.write(tokenResponseParameters, STRING_OBJECT_MAP.getType(),
                     MediaType.APPLICATION_JSON, outputMessage);
         }
@@ -138,7 +136,7 @@ public class FastcmsOAuth2AccessTokenResponseHttpMessageConverter extends Abstra
      */
     @Deprecated
     public final void setTokenResponseConverter(
-            Converter<Map<String, String>, OAuth2AccessTokenResponse> tokenResponseConverter) {
+            Converter<Map<String, Object>, OAuth2AccessTokenResponse> tokenResponseConverter) {
         Assert.notNull(tokenResponseConverter, "tokenResponseConverter cannot be null");
         this.tokenResponseConverter = tokenResponseConverter;
     }
@@ -167,7 +165,7 @@ public class FastcmsOAuth2AccessTokenResponseHttpMessageConverter extends Abstra
      */
     @Deprecated
     public final void setTokenResponseParametersConverter(
-            Converter<OAuth2AccessTokenResponse, Map<String, String>> tokenResponseParametersConverter) {
+            Converter<OAuth2AccessTokenResponse, Map<String, Object>> tokenResponseParametersConverter) {
         Assert.notNull(tokenResponseParametersConverter, "tokenResponseParametersConverter cannot be null");
         this.tokenResponseParametersConverter = tokenResponseParametersConverter;
     }

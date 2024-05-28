@@ -8,7 +8,9 @@ spring:
       max-file-size: 100MB
       max-request-size: 100MB
   cache:
-    type: ehcache
+    type: jcache
+    jcache:
+      config: classpath:ehcache.xml
   freemarker:
     checkTemplateLocation: false
   datasource:

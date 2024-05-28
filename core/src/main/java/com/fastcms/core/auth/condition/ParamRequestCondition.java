@@ -16,9 +16,9 @@
  */
 package com.fastcms.core.auth.condition;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.util.ObjectUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
