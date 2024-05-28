@@ -17,6 +17,7 @@
 package com.baomidou.mybatisplus.core;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.plugins.IgnoreStrategy;
 import com.baomidou.mybatisplus.core.plugins.InterceptorIgnoreHelper;
 import com.baomidou.mybatisplus.core.toolkit.GlobalConfigUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
@@ -96,7 +97,7 @@ public class MybatisMapperAnnotationBuilder extends MapperAnnotationBuilder {
 			assistant.setCurrentNamespace(mapperName);
 			parseCache();
 			parseCacheRef();
-			InterceptorIgnoreHelper.InterceptorIgnoreCache cache = InterceptorIgnoreHelper.initSqlParserInfoCache(type);
+			IgnoreStrategy cache = InterceptorIgnoreHelper.initSqlParserInfoCache(type);
 			for (Method method : type.getMethods()) {
 				if (!canHaveStatement(method)) {
 					continue;
