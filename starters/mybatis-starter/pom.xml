@@ -13,7 +13,7 @@
     <name>fastcms-mybatis-starter-${project.version}</name>
 
     <properties>
-        <mybatis-plus.version>3.5.4.1</mybatis-plus.version>
+        <mybatis-plus.version>3.5.5</mybatis-plus.version>
         <mybatis.version>3.0.3</mybatis.version>
     </properties>
 

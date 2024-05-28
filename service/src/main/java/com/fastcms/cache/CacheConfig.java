@@ -23,11 +23,6 @@ import org.springframework.cache.jcache.JCacheCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.cache.Caching;
-import javax.cache.spi.CachingProvider;
-import java.net.URISyntaxException;
-import java.net.URL;
-
 /**
  * @author： wjun_java@163.com
  * @date： 2021/4/13
@@ -44,11 +39,8 @@ public class CacheConfig {
     public static final String ADMIN_INDEX_DATA_CACHE_NAME = "admin_index_data";
 
     @Bean
-    public CacheManager cacheManager() throws URISyntaxException {
-        URL myUrl = getClass().getResource("/ehcache.xml");
-        CachingProvider cachingProvider = Caching.getCachingProvider(EhcacheCachingProvider.class.getName());
-        javax.cache.CacheManager ehcacheCacheManager = cachingProvider.getCacheManager(myUrl.toURI(), getClass().getClassLoader());
-        return new JCacheCacheManager(ehcacheCacheManager);
+    public CacheManager cacheManager() {
+        return new JCacheCacheManager(new EhcacheCachingProvider().getCacheManager());
     }
 
 }
