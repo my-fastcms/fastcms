@@ -22,6 +22,9 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.jcache.JCacheCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.ResourceUtils;
+
+import java.net.URI;
 
 /**
  * @author： wjun_java@163.com
@@ -39,8 +42,9 @@ public class CacheConfig {
     public static final String ADMIN_INDEX_DATA_CACHE_NAME = "admin_index_data";
 
     @Bean
-    public CacheManager cacheManager() {
-        return new JCacheCacheManager(new EhcacheCachingProvider().getCacheManager());
+    public CacheManager cacheManager() throws Exception {
+        URI uri = ResourceUtils.getURL("classpath:ehcache.xml").toURI();
+        return new JCacheCacheManager(new EhcacheCachingProvider().getCacheManager(uri, this.getClass().getClassLoader()));
     }
 
 }

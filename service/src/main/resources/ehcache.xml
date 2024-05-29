@@ -1,103 +1,69 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!--<eh:config
-        xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
-        xmlns:eh='http://www.ehcache.org/v3'
-        xsi:schemaLocation="http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core-3.3.xsd">
-    &lt;!&ndash;指定缓存目录&ndash;&gt;
-    <eh:persistence directory="${java.io.tmpdir}/cache-data"/>
-
-    &lt;!&ndash;缓存模板&ndash;&gt;
-    <eh:cache-template name="default">
-        <eh:expiry>
-            <eh:ttl unit="seconds">600</eh:ttl>
-        </eh:expiry>
-        <eh:resources>
-            &lt;!&ndash;堆内内存可以放2000个条目，超出部分堆外100MB&ndash;&gt;
-            <eh:heap unit="entries">2000</eh:heap>
-            <eh:offheap unit="MB">100</eh:offheap>
-        </eh:resources>
-    </eh:cache-template>
-
-    &lt;!&ndash;实际的缓存区间，继承了default缓存模板,sample完全使用模板默认&ndash;&gt;
-    <eh:cache alias="role_permissions" uses-template="default"></eh:cache>
-
-    <eh:cache alias="web_code_cache" uses-template="default"></eh:cache>
-
-    <eh:cache alias="admin_index_data" uses-template="default"></eh:cache>
-
-    <eh:cache alias="user_by_user_name_cache_name" uses-template="default"></eh:cache>
-
-    <eh:cache alias="user_by_user_name_cache_name" uses-template="default"></eh:cache>
-
-    <eh:cache alias="user_openid_by_user_cache_name" uses-template="default"></eh:cache>
-
-    &lt;!&ndash;下面两个继承了default缓存模板，但覆盖了缓存的过期时间&ndash;&gt;
-    <eh:cache alias="user_menu_permissions" uses-template="default">
-        <eh:expiry>
-            <eh:ttl unit="hours">1</eh:ttl>
-        </eh:expiry>
-    </eh:cache>
-
-    <eh:cache alias="web_site_menu" uses-template="default">
-        <eh:expiry>
-            <eh:ttl unit="hours">24</eh:ttl>
-        </eh:expiry>
-    </eh:cache>
-</eh:config>-->
-
-
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="http://www.ehcache.org/v3"
         xsi:schemaLocation="http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core-3.0.xsd">
-<!-- 缓存持久化配置: 定义磁盘缓存位置 -->
-<persistence directory="E:/project_home/limit_control/cache/light-element-mybatis"/>
-<!-- 缓存模板: 未填写缓存名时使用的默认缓存，同时也可被继承 -->
-<cache-template name="defaultCache">
-    <key-type>java.lang.String</key-type>
-    <value-type>java.lang.Object</value-type>
-    <resources>
-        <heap unit="MB">64</heap>
-        <offheap unit="MB">128</offheap>
-    </resources>
-</cache-template>
-<!-- 缓存列表: 自定义缓存配置 -->
-<!-- 不过期 -->
-<cache alias="EXPIRE_NONE" uses-template="defaultCache"/>
-    <!-- 24小时过期 -->
-    <cache alias="role_permissions" uses-template="defaultCache">
+    <!-- 持久化 路径 -->
+    <persistence directory="${java.io.tmpdir}/cache-data"/>
+
+    <!-- 缓存模版,此处为了显示其用法,也可以不用模版直接在cache中配置与模版参数相同 -->
+    <cache-template name="oneHourTemplate">
+        <!--        <key-type>java.lang.String</key-type>-->
+        <!--        <value-type>java.lang.String</value-type>-->
         <expiry>
-            <ttl unit="hours">24</ttl>
+            <!-- 单位默认为秒当用秒作单位时,可以不填-->
+            <ttl unit="hours">1</ttl>
         </expiry>
-    </cache>
-    <!-- 5分钟过期 -->
-    <cache alias="web_code_cache" uses-template="defaultCache">
+        <resources>
+            <!-- 单位默认为entries当用entries作单位时,可以不填-->
+            <heap>100</heap>
+            <offheap unit="MB">5</offheap>
+            <!-- persistent 默认为false可以不填-->
+            <disk unit="MB">1024</disk>
+        </resources>
+    </cache-template>
+
+    <cache-template name="tenMinutesTemplate">
+        <!--        <key-type>java.lang.String</key-type>-->
+        <!--        <value-type>java.lang.String</value-type>-->
         <expiry>
-            <ttl unit="minutes">5</ttl>
+            <!-- 单位默认为秒当用秒作单位时,可以不填-->
+            <ttl unit="minutes">10</ttl>
         </expiry>
+        <resources>
+            <!-- 单位默认为entries当用entries作单位时,可以不填-->
+            <heap>100</heap>
+            <offheap unit="MB">5</offheap>
+            <!-- persistent 默认为false可以不填-->
+            <disk unit="MB">1024</disk>
+        </resources>
+    </cache-template>
+
+    <!-- 缓存对象,如果使用了模版会覆盖模版中的内容,使用uses-template=""来引用模版 -->
+    <cache alias="role_permissions" uses-template="oneHourTemplate">
     </cache>
-    <cache alias="admin_index_data" uses-template="defaultCache">
-        <expiry>
-            <ttl unit="minutes">5</ttl>
-        </expiry>
+
+    <cache alias="web_code_cache" uses-template="oneHourTemplate">
+        <!--        <key-type>java.lang.Long</key-type>-->
+        <!--        <value-type>com.coderbbb.blogv2.database.dto.WebsiteArticleDTO</value-type>-->
     </cache>
-    <cache alias="user_by_user_name_cache_name" uses-template="defaultCache">
-        <expiry>
-            <ttl unit="minutes">5</ttl>
-        </expiry>
+    <cache alias="admin_index_data" uses-template="oneHourTemplate" />
+    <cache alias="user_by_user_name_cache_name" uses-template="tenMinutesTemplate">
+        <!--        <key-type>java.lang.Long</key-type>-->
+        <!--        <value-type>com.coderbbb.blogv2.database.dos.ArticleDO</value-type>-->
     </cache>
-    <cache alias="user_openid_by_user_cache_name" uses-template="defaultCache">
-        <expiry>
-            <ttl unit="minutes">5</ttl>
-        </expiry>
+    <cache alias="user_openid_by_user_cache_name" uses-template="oneHourTemplate">
+        <!--        <key-type>java.lang.Long</key-type>-->
+        <!--        <value-type>java.lang.String</value-type>-->
     </cache>
-    <cache alias="user_menu_permissions" uses-template="defaultCache">
-        <expiry>
-            <ttl unit="minutes">5</ttl>
-        </expiry>
+    <cache alias="user_menu_permissions" uses-template="oneHourTemplate">
+        <!--        <key-type>java.lang.String</key-type>-->
+        <!--        <value-type>com.coderbbb.blogv2.database.dos.WebsiteConfigDO</value-type>-->
     </cache>
-    <cache alias="web_site_menu" uses-template="defaultCache">
-        <expiry>
-            <ttl unit="minutes">5</ttl>
-        </expiry>
+    <cache alias="web_site_menu" uses-template="oneHourTemplate">
+        <!--        <key-type>java.lang.Long</key-type>-->
+        <!--        <value-type>java.util.List</value-type>-->
     </cache>
+    <cache alias="cacheUserAgent" uses-template="tenMinutesTemplate">
+    </cache>
+
 </config>
