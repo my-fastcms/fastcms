@@ -16,15 +16,15 @@
  */
 package com.fastcms.cache;
 
-import org.ehcache.jsr107.EhcacheCachingProvider;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.jcache.JCacheCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.util.ResourceUtils;
 
-import java.net.URI;
+import javax.cache.Caching;
+import javax.cache.spi.CachingProvider;
+import java.net.URL;
 
 /**
  * @author： wjun_java@163.com
@@ -43,8 +43,10 @@ public class CacheConfig {
 
     @Bean
     public CacheManager cacheManager() throws Exception {
-        URI uri = ResourceUtils.getURL("classpath:ehcache.xml").toURI();
-        return new JCacheCacheManager(new EhcacheCachingProvider().getCacheManager(uri, this.getClass().getClassLoader()));
+        URL myUrl = getClass().getResource("/ehcache.xml");
+        CachingProvider cachingProvider = Caching.getCachingProvider();
+        javax.cache.CacheManager ehcacheCacheManager = cachingProvider.getCacheManager(myUrl.toURI(), getClass().getClassLoader());
+        return new JCacheCacheManager(ehcacheCacheManager);
     }
 
 }
