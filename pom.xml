@@ -213,6 +213,9 @@
 					<compilerVersion>${maven.compiler.source}</compilerVersion>
 					<showDeprecation>true</showDeprecation>
 					<showWarnings>true</showWarnings>
+					<compilerArgs>
+						<arg>-parameters</arg>
+					</compilerArgs>
 				</configuration>
 			</plugin>
 			<plugin>

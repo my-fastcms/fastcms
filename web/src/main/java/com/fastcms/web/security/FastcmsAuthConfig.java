@@ -74,12 +74,11 @@ public class FastcmsAuthConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.formLogin((formLoginConfigurer) -> formLoginConfigurer.loginPage("/fastcms.html"));
-        http.authorizeHttpRequests((urlRegistry) -> urlRegistry.requestMatchers("/fastcms/**").authenticated());
-        http.csrf(AbstractHttpConfigurer::disable);
-        http.cors(withDefaults());
-        http.sessionManagement((sessionManagementConfigurer) -> sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-        http.authorizeHttpRequests((requestMatcherRegistry) -> requestMatcherRegistry.requestMatchers(CorsUtils::isPreFlightRequest).permitAll());
+        http.formLogin().loginPage("/fastcms.html");
+        http.authorizeRequests().requestMatchers("/fastcms/**").authenticated();
+        http.csrf().disable().cors()
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().authorizeRequests().requestMatchers(CorsUtils::isPreFlightRequest).permitAll();
         http.oauth2Login(oAuth2LoginConfigurer
                 -> oAuth2LoginConfigurer.authorizationEndpoint(
                 authorizationEndpointConfig -> authorizationEndpointConfig.authorizationRequestResolver(
