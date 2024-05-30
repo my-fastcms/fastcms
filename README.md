@@ -8,7 +8,7 @@
 - fastcms可以基于jar, zip包动态热插拔
 - fastcms基于SpringBoot进行插件式开发，具有极强的扩展性，让你彻底从臃肿的项目中解脱出来
 
-# SpringBoot2与Vue2已在2023年底停止维护，新项目建议使用SpringBoot3+Vue3+Jdk17的技术框架，Fastcms已完成升级!!!
+# SpringBoot2与Vue2已在2023年底停止维护，Fastcms已完成SpringBoot3+Vue3+Jdk17的技术框架升级!!!
 
 ### 文档
 - [文档地址](http://doc.xjd2020.com)
