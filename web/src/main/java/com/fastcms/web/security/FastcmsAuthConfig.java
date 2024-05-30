@@ -31,6 +31,8 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,6 +41,8 @@ import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequest
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsUtils;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 /**
  *  @author： wjun_java@163.com
@@ -70,11 +74,12 @@ public class FastcmsAuthConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.formLogin().loginPage("/fastcms.html");
-        http.authorizeRequests().requestMatchers("/fastcms/**").authenticated();
-        http.csrf().disable().cors()
-                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().authorizeRequests().requestMatchers(CorsUtils::isPreFlightRequest).permitAll();
+        http.formLogin((formLoginConfigurer) -> formLoginConfigurer.loginPage("/fastcms.html"));
+        http.authorizeHttpRequests((urlRegistry) -> urlRegistry.requestMatchers("/fastcms/**").authenticated());
+        http.csrf(AbstractHttpConfigurer::disable);
+        http.cors(withDefaults());
+        http.sessionManagement((sessionManagementConfigurer) -> sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.authorizeHttpRequests((requestMatcherRegistry) -> requestMatcherRegistry.requestMatchers(CorsUtils::isPreFlightRequest).permitAll());
         http.oauth2Login(oAuth2LoginConfigurer
                 -> oAuth2LoginConfigurer.authorizationEndpoint(
                 authorizationEndpointConfig -> authorizationEndpointConfig.authorizationRequestResolver(
@@ -85,8 +90,8 @@ public class FastcmsAuthConfig {
                 .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig.userService(new FastcmsOAuth2UserService()))
                 .successHandler(new FastcmsSavedRequestAwareAuthenticationSuccessHandler())
         );
-        http.headers().cacheControl();
-        http.headers().frameOptions().disable();
+        http.headers((headersConfigurer) -> headersConfigurer.cacheControl(withDefaults()));
+        http.headers((headersConfigurer) -> headersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
         http.addFilterBefore(new JwtAuthTokenFilter(tokenManager), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

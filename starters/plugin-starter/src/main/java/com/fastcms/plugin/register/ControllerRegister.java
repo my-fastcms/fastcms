@@ -33,7 +33,6 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.util.pattern.PathPattern;
 
-import jakarta.servlet.Filter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -84,7 +83,7 @@ public class ControllerRegister extends AbstractPluginRegister {
                                 /**
                                  * 必须添加到最前面，spring security 拦截在最前面生效
                                  */
-                                securityFilterChains.add(0, new DefaultSecurityFilterChain(new AntPathRequestMatcher(url), new Filter[0]));
+                                securityFilterChains.add(0, new DefaultSecurityFilterChain(new AntPathRequestMatcher(url)));
                             }
                         }
                     }
@@ -101,7 +100,7 @@ public class ControllerRegister extends AbstractPluginRegister {
 
     private Object getProperty(Object obj, String fieldName) {
         try {
-            Field field = obj.getClass().getDeclaredField(fieldName);
+            Field field = obj.getClass().getSuperclass().getDeclaredField(fieldName);
             field.setAccessible(true);
             return field.get(obj);
         } catch (Exception e) {

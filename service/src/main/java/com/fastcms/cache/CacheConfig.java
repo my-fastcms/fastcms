@@ -16,15 +16,8 @@
  */
 package com.fastcms.cache;
 
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.jcache.JCacheCacheManager;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import javax.cache.Caching;
-import javax.cache.spi.CachingProvider;
-import java.net.URL;
 
 /**
  * @author： wjun_java@163.com
@@ -40,13 +33,5 @@ public class CacheConfig {
     public static final String ROLE_PERMISSION_CACHE_NAME = "role_permissions";
     public static final String USER_MENU_PERMISSION_CACHE_NAME = "user_menu_permissions";
     public static final String ADMIN_INDEX_DATA_CACHE_NAME = "admin_index_data";
-
-    @Bean
-    public CacheManager cacheManager() throws Exception {
-        URL myUrl = getClass().getResource("/ehcache.xml");
-        CachingProvider cachingProvider = Caching.getCachingProvider();
-        javax.cache.CacheManager ehcacheCacheManager = cachingProvider.getCacheManager(myUrl.toURI(), getClass().getClassLoader());
-        return new JCacheCacheManager(ehcacheCacheManager);
-    }
 
 }
