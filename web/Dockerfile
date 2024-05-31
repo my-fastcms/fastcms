@@ -1,4 +1,4 @@
-FROM adoptopenjdk/openjdk8
+FROM openjdk:17
 LABEL maintainer="WangJun<wjun_java@163.com>"
 
 WORKDIR /opt/fastcms

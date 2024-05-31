@@ -32,6 +32,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 /**
@@ -113,6 +114,11 @@ public class FastcmsGlobalExceptionHandler {
     @ExceptionHandler(PayErrorException.class)
     public ResponseEntity<Object> handlePayErrorException(PayErrorException e) {
         return ResponseEntity.status(HttpStatus.OK).body(RestResultUtils.failed(e.getMessage()));
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public void handlerNoResourceFoundException(NoResourceFoundException e) {
+        log.error("not found resource [" + e.getResourcePath() + "]");
     }
 
 }

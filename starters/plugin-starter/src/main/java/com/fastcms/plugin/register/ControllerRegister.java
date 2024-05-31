@@ -18,6 +18,7 @@ package com.fastcms.plugin.register;
 
 import com.fastcms.plugin.FastcmsPluginManager;
 import com.fastcms.plugin.PassFastcms;
+import jakarta.servlet.Filter;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.FilterChainProxy;
@@ -83,7 +84,7 @@ public class ControllerRegister extends AbstractPluginRegister {
                                 /**
                                  * 必须添加到最前面，spring security 拦截在最前面生效
                                  */
-                                securityFilterChains.add(0, new DefaultSecurityFilterChain(new AntPathRequestMatcher(url)));
+                                securityFilterChains.add(0, new DefaultSecurityFilterChain(new AntPathRequestMatcher(url), new Filter[0]));
                             }
                         }
                     }
