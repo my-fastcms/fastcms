@@ -1,0 +1,60 @@
+include:
+  - env_file: ./.env
+
+services:
+  fastcms-mysql:
+    image: mysql:8.0
+    container_name: fastcms-mysql
+    environment:
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - TZ=${TIMEZONE}
+    command:
+      --max_connections=1000
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_general_ci
+      --default-authentication-plugin=mysql_native_password
+    ports:
+      - ${MYSQL_PORT}:3306
+    volumes:
+      - fastcms_mysql_data:/var/lib/mysql
+      - ./mysql/conf.d:/etc/mysql/conf.d
+      - ./mysql/initdb:/docker-entrypoint-initdb.d
+    networks:
+      - fastcms
+    restart: always
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost -p${MYSQL_ROOT_PASSWORD} || exit 1" ]
+      interval: 30s      # 每隔30秒进行一次健康检查
+      timeout: 10s       # 每次健康检查的超时时间为10秒
+      retries: 5         # 重试5次后，如果失败就认为容器不健康
+      start_period: 40s  # 容器启动后的40秒内不进行健康检查
+  fastcms:
+    depends_on:
+      fastcms-mysql:
+        condition: service_healthy
+    image: wangjun/fastcms:${FASTCMS_VERSION}
+    container_name: fastcms
+    volumes:
+      - ./fastcms/config:/opt/fastcms/config
+      - ./fastcms/htmls:/opt/fastcms/htmls
+      - ./fastcms/upload:/opt/fastcms/upload
+      - ./fastcms/plugins:/opt/fastcms/plugins
+      - ./fastcms/logs:/opt/fastcms/logs
+      - ./fastcms/lucene:/opt/fastcms/lucene
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+    networks:
+      - fastcms
+    restart: always
+
+volumes:
+  fastcms_mysql_data:
+    driver: local
+
+networks:
+  fastcms:
+    driver: bridge

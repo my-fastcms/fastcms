@@ -1,0 +1,103 @@
+<#macro header title>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>${title!""}</title>
+<link rel="shortcut icon" href="${ctx()}/favicon.ico" type="image/x-icon" />
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="keywords" content="${seoTag("website_title")!""}">
+<meta name="description" content="${seoTag("website_sub_title")!""}">
+<link rel="stylesheet" href="${ctx()}/css/animate.min.css">
+<link rel="stylesheet" href="${ctx()}/css/bootstrap.min.css">
+<link rel="stylesheet" href="${ctx()}/css/font-awesome.min.css">
+<link rel="stylesheet" href="${ctx()}/css/templatemo-style.css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,700,800' rel='stylesheet' type='text/css'>
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?f8cddee34ca21f05373a9388cfdd798b";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    <#nested/>
+</head>
+</#macro>
+<#macro body>
+<body>
+<div class="preloader">
+    <div class="sk-spinner sk-spinner-rotating-plane"></div>
+</div>
+<nav class="navbar navbar-default navbar-fixed-top templatemo-nav" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon icon-bar"></span>
+                <span class="icon icon-bar"></span>
+                <span class="icon icon-bar"></span>
+            </button>
+            <a href="/" class="navbar-brand">fastcms|小橘灯</a>
+        </div>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav navbar-right text-uppercase">
+                <li><a href="/">首页</a></li>
+                <@menuTag>
+                    <#if data?? &&(data?size>0)>
+                        <#list data as item>
+                            <li>
+                                <a href="${item.url!}" target="${item.target!"_self"}">${item.menuName!}</a>
+                            </li>
+                        </#list>
+                    </#if>
+                </@menuTag>
+            </ul>
+        </div>
+    </div>
+</nav>
+<#nested/>
+
+<footer>
+    <div class="container">
+        <div class="row">
+            <p>Copyright @ 2020 - 至今 <a href="https://www.xjd2020.com" target="_blank">www.xjd2020.com</a>. All Rights Reserved .粤ICP备20053122号.</p>
+        </div>
+    </div>
+</footer>
+</#macro>
+
+<#macro menuChildren children>
+<#if children?? && children?size gt 0>
+<ul class="nav nav-treeview">
+    <#list children as child>
+    <li class="nav-item">
+        <a href="${child.url!'#'}" class="nav-link">
+            <p>${child.menuName!}
+                <#if child.hasChildren>
+                <i class="fas fa-angle-left right"></i>
+            </#if>
+            </p>
+        </a>
+        <#if child.children?? && child.children?size gt 0>
+        <@menuChildren children=child.children></@menuChildren>
+</#if>
+</li>
+</#list>
+</ul>
+</#if>
+</#macro>
+
+<#macro script>
+<script src="${ctx()}/js/jquery.1.10.js"></script>
+<script src="${ctx()}/js/bootstrap.min.js"></script>
+<script src="${ctx()}/js/wow.min.js"></script>
+<#--<script src="/js/jquery.singlePageNav.min.js"></script>-->
+<script src="${ctx()}/js/custom.js"></script>
+<#nested />
+</body>
+</html>
+</#macro>
+
+<#include "_articlePage.html">
