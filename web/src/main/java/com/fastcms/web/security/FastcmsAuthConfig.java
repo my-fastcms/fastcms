@@ -26,6 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -69,8 +71,9 @@ public class FastcmsAuthConfig {
     }
 
     @Bean
+    @Order(Ordered.HIGHEST_PRECEDENCE + 1)
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.formLogin().loginPage("/fastcms.html");
+        http.formLogin().loginPage("/fastcms.html").loginProcessingUrl("/login").successHandler(fastcmsAuthenticationSuccessHandler());
         http.authorizeRequests().antMatchers("/fastcms/**").authenticated();
         http.csrf().disable().cors()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -94,6 +97,11 @@ public class FastcmsAuthConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public FastcmsAuthenticationSuccessHandler fastcmsAuthenticationSuccessHandler() {
+        return new FastcmsAuthenticationSuccessHandler();
     }
 
 }

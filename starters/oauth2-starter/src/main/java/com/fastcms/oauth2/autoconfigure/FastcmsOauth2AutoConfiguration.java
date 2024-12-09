@@ -36,6 +36,9 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
  * @description：
  * @modifiedBy：
  * @version: 1.0
+ *
+ * @see org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter
+ * @see org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter
  */
 @Configuration(proxyBeanMethods = false)
 public class FastcmsOauth2AutoConfiguration {

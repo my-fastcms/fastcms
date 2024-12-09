@@ -26,6 +26,7 @@ import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -42,6 +43,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @modifiedBy：
  * @version: 1.0
  */
+@Primary
 @Component
 public class DelegatingTokenManager implements TokenManager, ApplicationListener<ApplicationStartedEvent> {
 
