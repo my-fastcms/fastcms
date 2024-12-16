@@ -49,12 +49,12 @@ public class FastcmsUserDetails extends User implements FastcmsAuthUserInfo {
 	@Override
 	public Boolean isAdmin() {
 		List<GrantedAuthority> collect = getAuthorities().stream().filter(item -> Objects.equals(Long.valueOf(item.getAuthority()), FastcmsConstants.ADMIN_ROLE_ID)).collect(Collectors.toList());
-		return FastcmsConstants.ADMIN_USER_ID == this.user.getId() || (collect != null && !collect.isEmpty());
+		return FastcmsConstants.ADMIN_USER_ID.equals(this.user.getId()) || !collect.isEmpty();
 	}
 
 	@Override
 	public Boolean hasRole() {
-		return FastcmsConstants.ADMIN_USER_ID == this.user.getId() || getAuthorities().size() > 0;
+		return FastcmsConstants.ADMIN_USER_ID.equals(this.user.getId()) || !getAuthorities().isEmpty();
 	}
 
 	@Override
