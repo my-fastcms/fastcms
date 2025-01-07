@@ -149,16 +149,16 @@ public class FastcmsConfiguration implements WebMvcConfigurer, WebSocketConfigur
     }
 
     @Bean
-    public FilterRegistrationBean filterRegistrationBean(DefaultSiteManager siteManager) {
-        FilterRegistrationBean frBean = new FilterRegistrationBean();
+    public FilterRegistrationBean<SiteContextFilter> filterRegistrationBean(DefaultSiteManager siteManager) {
+        FilterRegistrationBean<SiteContextFilter> frBean = new FilterRegistrationBean<>();
         frBean.setFilter(new SiteContextFilter(siteManager));
         frBean.addUrlPatterns("/*");
         return frBean;
     }
 
     @Bean
-    public FilterRegistrationBean wechatMiniAppFilterRegistrationBean() {
-        FilterRegistrationBean frBean = new FilterRegistrationBean();
+    public FilterRegistrationBean<WechatMiniAppFilter> wechatMiniAppFilterRegistrationBean() {
+        FilterRegistrationBean<WechatMiniAppFilter> frBean = new FilterRegistrationBean<>();
         frBean.setFilter(new WechatMiniAppFilter());
         frBean.addUrlPatterns("/fastcms/api/*");
         frBean.addUrlPatterns("/fastcms/plugin/*");
@@ -215,8 +215,7 @@ public class FastcmsConfiguration implements WebMvcConfigurer, WebSocketConfigur
 
     @Bean
     public FreeMarkerViewResolver freeMarkerViewResolver() {
-        FreeMarkerViewResolver freeMarkerViewResolver = new FastcmsFreeMarkerViewResolver();
-        return freeMarkerViewResolver;
+        return new FastcmsFreeMarkerViewResolver();
     }
 
     void registerFreemarkerDirective(ApplicationStartedEvent event) {
@@ -243,7 +242,7 @@ public class FastcmsConfiguration implements WebMvcConfigurer, WebSocketConfigur
     }
 
     @Configuration
-    public class FastcmsUrlRewriteFilter extends UrlRewriteFilter {
+    public static class FastcmsUrlRewriteFilter extends UrlRewriteFilter {
 
         private static final String URL_REWRITE = "classpath:/urlrewrite.xml";
 
@@ -274,7 +273,7 @@ public class FastcmsConfiguration implements WebMvcConfigurer, WebSocketConfigur
         }
     }
 
-    public class WechatMiniAppFilter extends OncePerRequestFilter {
+    public static class WechatMiniAppFilter extends OncePerRequestFilter {
 
         final String APP_ID = "appId";
 
@@ -305,7 +304,7 @@ public class FastcmsConfiguration implements WebMvcConfigurer, WebSocketConfigur
 
     }
 
-    public class FastcmsLocaleChangeInterceptor extends LocaleChangeInterceptor {
+    public static class FastcmsLocaleChangeInterceptor extends LocaleChangeInterceptor {
 
         public FastcmsLocaleChangeInterceptor(String paramName) {
             setParamName(paramName);

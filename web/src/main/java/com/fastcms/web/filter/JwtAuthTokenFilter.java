@@ -51,7 +51,8 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
             throws IOException, ServletException {
 
         if (request.getRequestURI().startsWith(FastcmsConstants.API_PREFIX_MAPPING)
-                || request.getRequestURI().startsWith(FastcmsConstants.PLUGIN_MAPPING)) {
+                || request.getRequestURI().startsWith(FastcmsConstants.PLUGIN_MAPPING)
+        ) {
 
             final String jwt = tokenManager.resolveToken(request);
 
@@ -60,6 +61,7 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
                     tokenManager.validateToken(jwt);
                     Authentication authentication = this.tokenManager.getAuthentication(jwt);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
+
                     filterChain.doFilter(request, response);
                 } catch (ExpiredJwtException | SignatureException e) {
                     response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());

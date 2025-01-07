@@ -1,0 +1,59 @@
+<#import "/_comm.html" as layout>
+<@layout.header "consent">
+    <style></style>
+</@layout.header>
+<@layout.body>
+<div class="container">
+    <div class="py-5">
+        <h1 class="text-center">${i18n("fastcms.oauth2.auth.title")}</h1>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <p><span class="font-weight-bold text-primary">${registeredClient.clientId}</span> ${i18n("fastcms.oauth2.auth.access.account")} <span class="font-weight-bold">${userDetails.username}</span></p>
+        </div>
+    </div>
+    <div class="row pb-3">
+        <div class="col text-center">
+            <p>${i18n("fastcms.oauth2.auth.access.app")}.<br/>${i18n("fastcms.oauth2.auth.access.consent.approve")}.</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col text-center">
+            <form name="consent_form" method="post" action="oauth2/authorize">
+                <input type="hidden" name="client_id" value="${registeredClient.clientId}">
+                <input type="hidden" name="state" value="${state}">
+
+                <!-- Dynamically added checkboxes for scopesToAuthorize -->
+                <#list scopesToAuthorize as item>
+                <div class="form-group form-check py-1">
+                    <input class="form-check-input" type="checkbox" name="scope" checked value="${item}" id="${item}">
+                    <label class="form-check-label" for="${item}">${item}</label>
+                </div>
+                </#list>
+
+                <div class="form-group pt-3">
+                    <button class="btn btn-primary btn-lg" type="submit" id="submit-consent">${i18n("fastcms.oauth2.auth.access.consent.submit")}</button>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-link regular" type="button" onclick="cancelConsent();" id="cancel-consent">${i18n("fastcms.oauth2.auth.access.consent.cancel")}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row pt-4">
+        <div class="col text-center">
+            <p><small>${i18n("fastcms.oauth2.auth.access.consent.desc1")}.<br/>${i18n("fastcms.oauth2.auth.access.consent.desc2")}.</small></p>
+        </div>
+    </div>
+</div>
+</@layout.body>
+
+<@layout.script>
+    <script>
+        function cancelConsent() {
+            // document.consent_form.reset();
+            // document.consent_form.submit();
+            history.back()
+        }
+    </script>
+</@layout.script>

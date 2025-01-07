@@ -77,7 +77,7 @@ public class DefaultSiteManager implements SiteManager, ApplicationListener<Appl
     @Override
     public void onApplicationEvent(ApplicationStartedEvent event) {
         Map<String, SiteManager> siteManagerMap = ApplicationUtils.getApplicationContext().getBeansOfType(SiteManager.class);
-        siteManagerList.addAll(siteManagerMap.values().stream().filter(item -> item instanceof DefaultSiteManager == false).collect(Collectors.toList()));
+        siteManagerList.addAll(siteManagerMap.values().stream().filter(item -> !(item instanceof DefaultSiteManager)).collect(Collectors.toList()));
         loadSites();
     }
 

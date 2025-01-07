@@ -75,7 +75,7 @@ public class FastcmsDataPermissionInterceptor implements Interceptor {
             return invocation.proceed();
         }
 
-        if (ignoreMappedStatementIds.stream().filter(item -> mappedStatement.getId().contains(item)).count() > 0) {
+        if (ignoreMappedStatementIds.stream().anyMatch(item -> mappedStatement.getId().contains(item))) {
             return invocation.proceed();
         }
 

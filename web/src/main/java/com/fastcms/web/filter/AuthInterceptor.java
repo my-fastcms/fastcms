@@ -56,7 +56,11 @@ public class AuthInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
+<<<<<<< HEAD
 		if (!(handler instanceof HandlerMethod handlerMethod)) {
+=======
+		if (!(handler instanceof HandlerMethod)) {
+>>>>>>> 51c0b03b65513682047c3f609292980dbb3eb943
 			return true;
 		}
 

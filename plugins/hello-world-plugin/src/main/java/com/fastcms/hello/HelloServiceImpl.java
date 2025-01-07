@@ -19,6 +19,7 @@ package com.fastcms.hello;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.pf4j.Extension;
 import org.pf4j.ExtensionPoint;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +33,7 @@ import java.util.List;
  * @version: 1.0
  */
 @Extension
-public class HelloServiceImpl extends ServiceImpl<HelloPluginMapper, Hello> implements HelloService, ExtensionPoint {
+public class HelloServiceImpl extends ServiceImpl<HelloPluginMapper, Hello> implements HelloService, ExtensionPoint, InitializingBean {
 
     @Autowired
     private HelloComponent helloComponent;
@@ -55,6 +56,11 @@ public class HelloServiceImpl extends ServiceImpl<HelloPluginMapper, Hello> impl
     @Override
     public HelloVo findByHelloId(Long id) {
         return getBaseMapper().findByHelloId(id);
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        System.out.println("sayHello.afterPropertiesSet");
     }
 
 }

@@ -42,10 +42,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.*;
 
-import java.util.Arrays;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * 重写 DefaultOAuth2UserService
@@ -78,7 +75,7 @@ public abstract class AbstractOAuth2UserService implements OAuth2UserService<OAu
     public AbstractOAuth2UserService() {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.setErrorHandler(new OAuth2ErrorResponseErrorHandler());
-        restTemplate.setMessageConverters(Arrays.asList(new FastcmsMappingJackson2HttpMessageConverter()));
+        restTemplate.setMessageConverters(Collections.singletonList(new FastcmsMappingJackson2HttpMessageConverter()));
         this.restOperations = restTemplate;
     }
 

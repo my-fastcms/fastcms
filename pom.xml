@@ -24,8 +24,13 @@
 		<jjwt.version>0.11.2</jjwt.version>
 		<maven-flatten-version>1.1.0</maven-flatten-version>
 		<maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>
+<<<<<<< HEAD
 		<spring-boot-dependencies.version>3.2.5</spring-boot-dependencies.version>
 
+=======
+		<spring-boot-dependencies.version>2.7.7</spring-boot-dependencies.version>
+		<docker.plugin.version>0.45.1</docker.plugin.version>
+>>>>>>> 51c0b03b65513682047c3f609292980dbb3eb943
 	</properties>
 
 	<scm>
@@ -202,6 +207,25 @@
 	</dependencies>
 
 	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>io.fabric8</groupId>
+					<artifactId>docker-maven-plugin</artifactId>
+					<version>${docker.plugin.version}</version>
+					<configuration>
+						<images>
+							<image>
+								<name>wangjun/fastcms:${project.version}</name>
+								<build>
+									<dockerFile>${project.basedir}/Dockerfile</dockerFile>
+								</build>
+							</image>
+						</images>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

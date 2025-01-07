@@ -123,9 +123,7 @@ public class TemplateController {
         } catch (Exception e) {
             return RestResultUtils.failed(e.getMessage() == null ? I18nUtils.getMessage(FASTCMS_SYSTEM_ERROR) : e.getMessage());
         } finally {
-            if(uploadFile != null) {
-                uploadFile.delete();
-            }
+            uploadFile.delete();
         }
     }
 

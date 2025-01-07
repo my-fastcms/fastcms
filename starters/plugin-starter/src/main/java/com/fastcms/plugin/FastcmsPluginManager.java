@@ -107,9 +107,9 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
         }
 
         // 记录总数
-        final Integer count = plugins.size();
+        final int count = plugins.size();
         // 总页数
-        Integer pageCount;
+        int pageCount;
         if (count % pageSize == 0) {
             pageCount = count / pageSize;
         } else {

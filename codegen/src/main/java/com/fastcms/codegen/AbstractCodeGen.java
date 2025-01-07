@@ -32,9 +32,9 @@ import java.util.Collections;
  */
 public abstract class AbstractCodeGen {
 
-    final static String url = "jdbc:mysql://localhost:3306/fastcms?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai";
+    final static String url = "jdbc:mysql://localhost:3308/fastcms?autoReconnect=true&useSSL=false&useUnicode=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai";
     final static String username = "root";
-    final static String password = "root";
+    final static String password = "123456";
 
     abstract String getOutputDir();
     abstract String getModelName();

@@ -141,7 +141,7 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
         if(config == null) {
             //#I4NI6J https://gitee.com/xjd2020/fastcms/issues/I4NI6J
             List<Template> templateList = new ArrayList<>(templateMap.values());
-            Template template = templateList != null && templateList.size() > 0 ? templateList.get(0) : null;
+            Template template = !templateList.isEmpty() ? templateList.get(0) : null;
             if(template == null) return null;
             config = configService.saveConfig(FastcmsConstants.TEMPLATE_ENABLE_ID, template.getId());
         }

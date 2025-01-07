@@ -26,6 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -34,6 +36,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
@@ -72,12 +76,18 @@ public class FastcmsAuthConfig {
     }
 
     @Bean
+    @Order(Ordered.HIGHEST_PRECEDENCE + 1)
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+<<<<<<< HEAD
 
         http.formLogin().loginPage("/fastcms.html");
         http.authorizeRequests((authorizeRequests) -> {
             authorizeRequests.requestMatchers("/fastcms/**").authenticated();
         });
+=======
+        http.formLogin().loginPage("/fastcms.html").loginProcessingUrl("/login").successHandler(fastcmsAuthenticationSuccessHandler());
+        http.authorizeRequests().antMatchers("/fastcms/**").authenticated();
+>>>>>>> 51c0b03b65513682047c3f609292980dbb3eb943
         http.csrf().disable().cors()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().authorizeRequests().requestMatchers(CorsUtils::isPreFlightRequest).permitAll();
@@ -99,7 +109,14 @@ public class FastcmsAuthConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
+        DelegatingPasswordEncoder delegatingPasswordEncoder = (DelegatingPasswordEncoder) PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        delegatingPasswordEncoder.setDefaultPasswordEncoderForMatches(new BCryptPasswordEncoder());
+        return delegatingPasswordEncoder;
+    }
+
+    @Bean
+    public FastcmsAuthenticationSuccessHandler fastcmsAuthenticationSuccessHandler() {
+        return new FastcmsAuthenticationSuccessHandler();
     }
 
 }

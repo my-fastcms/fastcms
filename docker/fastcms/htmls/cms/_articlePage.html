@@ -1,0 +1,25 @@
+<#macro _articlePage>
+
+    <@articlePageTag>
+    <div class="row">
+        <div class="col-sm-12 col-md-7">
+            <div class="dataTables_paginate paging_simple_numbers">
+                <ul class="pagination">
+                    <li class="paginate_button page-item">
+                        <a href="${data.prev.url!}" class="page-link">${data.prev.text!}</a>
+                    </li>
+                    <#list data.list as item>
+                        <li class="paginate_button page-item <#if data.current?string == item.text>active</#if>">
+                            <a href="${item.url!}" class="page-link">${item.text!}</a>
+                        </li>
+                    </#list>
+                    <li class="paginate_button page-item">
+                        <a href="${data.next.url!}" class="page-link">${data.next.text!}</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    </@articlePageTag>
+
+</#macro>

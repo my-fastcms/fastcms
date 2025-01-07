@@ -28,14 +28,24 @@ import com.fastcms.cms.service.IArticleService;
 import com.fastcms.cms.service.IArticleTagService;
 import com.fastcms.cms.service.ISinglePageService;
 import com.fastcms.common.utils.StrUtils;
+import com.fastcms.core.auth.FastcmsUserDetails;
 import com.fastcms.core.template.FastcmsStaticHtmlManager;
 import com.fastcms.utils.ApplicationUtils;
+import com.fastcms.utils.RequestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.oauth2.core.oidc.OidcScopes;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
+import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @ignore
@@ -73,6 +83,9 @@ public class TemplateIndexController extends TemplateBaseController {
     @Autowired
     private IArticleTagService articleTagService;
 
+    @Autowired
+    private RegisteredClientRepository registeredClientRepository;
+
     @RequestMapping({"/", "index"})
     public String index() {
         if (ApplicationUtils.getBean(FastcmsStaticHtmlManager.class).isEnable()) {
@@ -104,7 +117,7 @@ public class TemplateIndexController extends TemplateBaseController {
         model.addAttribute(SINGLE_PAGE_ATTR, singlePage);
 
         String view = getTemplatePath() + DEFAULT_PAGE_VIEW;
-        if (singlePage != null && StringUtils.isNotBlank(singlePage.getSuffix())) {
+        if (StringUtils.isNotBlank(singlePage.getSuffix())) {
             view = view.concat(UNDERLINE).concat(singlePage.getSuffix());
         }
 
@@ -122,7 +135,7 @@ public class TemplateIndexController extends TemplateBaseController {
         model.addAttribute(ARTICLE_ATTR, article);
 
         String view = getTemplatePath() + DEFAULT_ARTICLE_VIEW;
-        if(article != null && StringUtils.isNotBlank(article.getSuffix())) {
+        if(StringUtils.isNotBlank(article.getSuffix())) {
             view = view.concat(UNDERLINE).concat(article.getSuffix());
         }
 
@@ -179,6 +192,49 @@ public class TemplateIndexController extends TemplateBaseController {
 
         if(articleTag != null && StringUtils.isNotBlank(articleTag.getSuffix())) {
             view = view.concat(UNDERLINE).concat(articleTag.getSuffix());
+        }
+
+        return view;
+    }
+
+    @RequestMapping("consent")
+    public String consent(@RequestParam(value = "scope") String scope,
+                          @RequestParam(value = "client_id") String clientId,
+                          @RequestParam(value = "state") String state,
+                          Model model) {
+        final String path = "consent";
+
+        SecurityContext securityContext = (SecurityContext) RequestUtils.getRequest().getSession().getAttribute("OAUTH2_SECURITY_CONTEXT");
+        FastcmsUserDetails userDetails = (FastcmsUserDetails) securityContext.getAuthentication().getPrincipal();
+        model.addAttribute("userDetails", userDetails);
+
+        RegisteredClient registeredClient = registeredClientRepository.findByClientId(clientId);
+        model.addAttribute("registeredClient", registeredClient);
+
+        String[] elements = scope.split("\\s+");
+        Set<String> requestedScopes = new HashSet<>(Arrays.asList(elements));
+
+        Set<String> scopesToAuthorize = new HashSet<>();
+        // Set<String> scopesPreviouslyAuthorized = new HashSet<>();
+        for (String req_scope : requestedScopes) {
+            if (!req_scope.equals(OidcScopes.OPENID)) { // openid scope does not require consent
+                scopesToAuthorize.add(req_scope);
+            }
+        }
+
+        model.addAttribute("scopesToAuthorize", scopesToAuthorize);
+        model.addAttribute("state", state);
+
+        String view = "consent";
+
+        SinglePage singlePage = singlePageService.getPageByPath(path);
+
+        if (singlePage != null) {
+            model.addAttribute(SINGLE_PAGE_ATTR, singlePage);
+            view = getTemplatePath() + DEFAULT_PAGE_VIEW;
+            if (StringUtils.isNotBlank(singlePage.getSuffix())) {
+                view = view.concat(UNDERLINE).concat(singlePage.getSuffix());
+            }
         }
 
         return view;
