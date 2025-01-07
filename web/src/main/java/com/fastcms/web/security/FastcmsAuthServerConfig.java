@@ -74,7 +74,7 @@ public class FastcmsAuthServerConfig {
 
     @Bean
     public RegisteredClientRepository registeredClientRepository() {
-        return new InMemoryRegisteredClientRepository();
+        return new FastcmsInMemoryRegisteredClientRepository();
     }
 
     @Bean

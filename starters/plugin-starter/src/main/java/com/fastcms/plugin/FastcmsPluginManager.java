@@ -28,6 +28,7 @@ import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationListener;
+import org.springframework.core.Ordered;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ import java.util.stream.Collectors;
  * @modifiedBy：
  * @version: 1.0
  */
-public class FastcmsPluginManager extends DefaultPluginManager implements PluginManagerService, ApplicationContextAware, InitializingBean, ApplicationListener<ApplicationStartedEvent> {
+public class FastcmsPluginManager extends DefaultPluginManager implements PluginManagerService, ApplicationContextAware, InitializingBean, ApplicationListener<ApplicationStartedEvent>, Ordered {
 
     private ApplicationContext applicationContext;
 
@@ -162,6 +163,11 @@ public class FastcmsPluginManager extends DefaultPluginManager implements Plugin
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    @Override
+    public int getOrder() {
+        return HIGHEST_PRECEDENCE;
     }
 
 }
