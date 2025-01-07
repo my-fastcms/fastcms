@@ -28,6 +28,7 @@ import org.pf4j.PluginWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
@@ -123,6 +124,15 @@ public abstract class AbstractPluginRegister implements PluginRegister {
                 }
             }
             beanFactory.registerSingleton(beanName, extension);
+
+            if (extension instanceof InitializingBean) {
+                try {
+                    ((InitializingBean) extension).afterPropertiesSet();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
         } else {
             log.info("Bean registeration aborted! Extension '{}' already existed as bean!", beanName);
         }

@@ -4,8 +4,6 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.keygen.Base64StringKeyGenerator;
-import org.springframework.security.crypto.keygen.StringKeyGenerator;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationResponseType;
@@ -42,8 +40,6 @@ public class FastcmsOAuth2AuthorizationCodeRequestAuthenticationConverter implem
             "anonymous", "anonymousUser", AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS"));
     private static final RequestMatcher OIDC_REQUEST_MATCHER = createOidcRequestMatcher();
 
-    private static final StringKeyGenerator DEFAULT_STATE_GENERATOR = new Base64StringKeyGenerator(Base64.getUrlEncoder());
-
     @Override
     public Authentication convert(HttpServletRequest request) {
         if (!"GET".equals(request.getMethod()) && !OIDC_REQUEST_MATCHER.matches(request)) {
@@ -56,6 +52,7 @@ public class FastcmsOAuth2AuthorizationCodeRequestAuthenticationConverter implem
             tokenManager.validateToken(jwt);
             Authentication authentication = this.tokenManager.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            request.getSession().setAttribute("OAUTH2_SECURITY_CONTEXT", SecurityContextHolder.getContext());
         } catch (Exception e) {
 
         }
