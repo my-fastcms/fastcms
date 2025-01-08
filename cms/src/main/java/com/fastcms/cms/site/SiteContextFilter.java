@@ -15,8 +15,9 @@
  * limitations under the License.
  */
 
-package com.fastcms.core.site;
+package com.fastcms.cms.site;
 
+import com.fastcms.core.site.SiteContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;

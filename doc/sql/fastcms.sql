@@ -657,6 +657,7 @@ ALTER TABLE single_page_comment CHANGE user_id create_user_id bigint(20);
 ALTER TABLE user_amount CHANGE user_id create_user_id bigint(20);
 ALTER TABLE user_amount_payout CHANGE user_id create_user_id bigint(20);
 ALTER TABLE user_amount_statement CHANGE user_id create_user_id bigint(20);
+ALTER TABLE article_comment CHANGE user_id create_user_id bigint(20);
 
 -- ----------------------------
 -- 0.0.5 表结构变更记录结束

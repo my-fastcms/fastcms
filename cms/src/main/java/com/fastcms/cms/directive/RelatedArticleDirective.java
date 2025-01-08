@@ -27,10 +27,7 @@ import freemarker.core.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -96,7 +93,7 @@ public class RelatedArticleDirective extends BaseDirective {
 			result.addAll(articleList);
 		}
 
-		return result.stream().collect(Collectors.toList());
+		return new ArrayList<>(result);
 	}
 
 }

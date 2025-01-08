@@ -14,8 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.core.site;
+package com.fastcms.cms.site;
 
+
+import com.fastcms.cms.entity.Article;
+import com.fastcms.cms.entity.ArticleCategory;
+import com.fastcms.cms.entity.Menu;
+import com.fastcms.core.site.Site;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -43,5 +48,24 @@ public interface SiteManager<S extends Site> {
      * @return
      */
     List<S> loadSites();
+
+    /**
+     * 加载site menu数据
+     * @return
+     */
+    List<Menu> loadSiteMenus(Site site);
+
+    /**
+     * 加载site article数据
+     * @return
+     */
+    List<Article> loadSiteArticles(Site site);
+
+    /**
+     * 加载site category数据
+     * @param site
+     * @return
+     */
+    List<ArticleCategory> loadSiteCategories(Site site);
 
 }

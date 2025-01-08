@@ -166,13 +166,7 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
     @Override
     public List<Template> getTemplateList() {
         ArrayList<Template> templates = new ArrayList<>(templateMap.values());
-        templates.forEach(item -> {
-            if(getCurrTemplate() != null && item.getId().equals(getCurrTemplate().getId())) {
-                item.setActive(true);
-            }else {
-                item.setActive(false);
-            }
-        });
+        templates.forEach(item -> item.setActive(getCurrTemplate() != null && item.getId().equals(getCurrTemplate().getId())));
         return templates;
     }
 
@@ -188,18 +182,19 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
 
         String templatePath = getTemplateRootPath().toString().concat(path);
 
+        Path tempPath = Paths.get(templatePath);
         try {
             FileUtils.unzip(file.toPath(), DirUtils.getTemplateDir());
         } catch (IOException e) {
-            org.apache.commons.io.FileUtils.deleteDirectory(Paths.get(templatePath).toFile());
+            org.apache.commons.io.FileUtils.deleteDirectory(tempPath.toFile());
             throw new RuntimeException(e.getMessage());
         }
 
         //check properties
-        Template template = templateFinder.find(Paths.get(templatePath));
+        Template template = templateFinder.find(tempPath);
         if (template == null || StringUtils.isBlank(template.getId()) || StringUtils.isBlank(template.getPath())) {
             //上传的zip文件包不符合规范 删除
-            org.apache.commons.io.FileUtils.deleteDirectory(Paths.get(templatePath).toFile());
+            org.apache.commons.io.FileUtils.deleteDirectory(tempPath.toFile());
             throw new RuntimeException(String.format(I18nUtils.getMessage(CMS_TEMPLATE_PATH_MISSING_REQUIRED_ATTR), path));
         }
 
@@ -209,7 +204,7 @@ public class DefaultTemplateService<T extends TreeNode> implements TemplateServi
             //设置i18n
             ApplicationUtils.getBean(ReloadableResourceBundleMessageSource.class).setBasenames(getI18nNames());
         } catch (Exception e) {
-            org.apache.commons.io.FileUtils.deleteDirectory(Paths.get(templatePath).toFile());
+            org.apache.commons.io.FileUtils.deleteDirectory(tempPath.toFile());
             templateMap.remove(template.getId());
             throw new RuntimeException(e.getMessage());
         }

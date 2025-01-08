@@ -14,9 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.fastcms.core.template;
+package com.fastcms.cms.site;
 
 import com.fastcms.core.site.SiteContextHolder;
+import com.fastcms.core.template.Template;
+import com.fastcms.core.template.TemplatePostProcessor;
+import com.fastcms.core.template.TemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

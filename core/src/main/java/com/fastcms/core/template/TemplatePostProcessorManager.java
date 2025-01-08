@@ -16,7 +16,6 @@
  */
 package com.fastcms.core.template;
 
-import com.fastcms.utils.ApplicationUtils;
 import com.fastcms.utils.PluginUtils;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
@@ -53,11 +52,11 @@ public class TemplatePostProcessorManager implements ApplicationListener<Applica
 
 	@Override
 	public void onApplicationEvent(ApplicationStartedEvent event) {
-		Map<String, TemplatePostProcessor> fastcmsSearcherMap = ApplicationUtils.getApplicationContext().getBeansOfType(TemplatePostProcessor.class);
+		Map<String, TemplatePostProcessor> fastcmsSearcherMap = event.getApplicationContext().getBeansOfType(TemplatePostProcessor.class);
 		templatePostProcessorList.addAll(fastcmsSearcherMap.values());
 	}
 
-	class DefaultTemplatePostProcessor implements  TemplatePostProcessor {
+	static class DefaultTemplatePostProcessor implements TemplatePostProcessor {
 
 		@Override
 		public Template postProcess(Template template) {

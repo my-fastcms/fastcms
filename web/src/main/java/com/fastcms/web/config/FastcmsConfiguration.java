@@ -17,12 +17,12 @@
 package com.fastcms.web.config;
 
 import cn.binarywang.wx.miniapp.util.WxMaConfigHolder;
+import com.fastcms.cms.site.DefaultSiteManager;
+import com.fastcms.cms.site.SiteContextFilter;
 import com.fastcms.common.constants.FastcmsConstants;
 import com.fastcms.common.utils.StrUtils;
 import com.fastcms.core.directive.BaseDirective;
 import com.fastcms.core.freemarker.FastcmsFreeMarkerViewResolver;
-import com.fastcms.core.site.DefaultSiteManager;
-import com.fastcms.core.site.SiteContextFilter;
 import com.fastcms.core.template.FastcmsStaticHtmlManager;
 import com.fastcms.core.template.FastcmsTemplateFreeMarkerConfig;
 import com.fastcms.core.template.TemplateService;

@@ -15,15 +15,19 @@
  * limitations under the License.
  */
 
-package com.fastcms.core.site;
+package com.fastcms.cms.site;
 
+import com.fastcms.cms.entity.Article;
+import com.fastcms.cms.entity.ArticleCategory;
+import com.fastcms.cms.entity.Menu;
 import com.fastcms.common.utils.StrUtils;
-import com.fastcms.utils.ApplicationUtils;
+import com.fastcms.core.site.Site;
 import com.fastcms.utils.CollectionUtils;
 import com.fastcms.utils.PluginUtils;
 import com.fastcms.utils.RequestUtils;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,9 +43,10 @@ import java.util.stream.Collectors;
  * @version: 1.0
  */
 @Component
+@Primary
 public class DefaultSiteManager implements SiteManager, ApplicationListener<ApplicationStartedEvent> {
 
-    List<SiteManager> siteManagerList = Collections.synchronizedList(new ArrayList<>());
+    Set<SiteManager> siteManagerList = Collections.synchronizedSet(new HashSet<>());
 
     List<Site> siteList = Collections.synchronizedList(new ArrayList<>());
 
@@ -65,6 +70,7 @@ public class DefaultSiteManager implements SiteManager, ApplicationListener<Appl
 
     @Override
     public List<Site> loadSites() {
+        resetSiteData();
         List<SiteManager> extensions = PluginUtils.getExtensions(SiteManager.class);
         siteManagerList.addAll(extensions);
         siteManagerList.forEach(item -> siteList.addAll(item.loadSites()));
@@ -75,10 +81,40 @@ public class DefaultSiteManager implements SiteManager, ApplicationListener<Appl
     }
 
     @Override
+    public List<Menu> loadSiteMenus(Site site) {
+        for (SiteManager siteManager : siteManagerList) {
+            return siteManager.loadSiteMenus(site);
+        }
+        return null;
+    }
+
+    @Override
+    public List<Article> loadSiteArticles(Site site) {
+        for (SiteManager siteManager : siteManagerList) {
+            return siteManager.loadSiteArticles(site);
+        }
+        return null;
+    }
+
+    @Override
+    public List<ArticleCategory> loadSiteCategories(Site site) {
+        for (SiteManager siteManager : siteManagerList) {
+            return siteManager.loadSiteCategories(site);
+        }
+        return null;
+    }
+
+    @Override
     public void onApplicationEvent(ApplicationStartedEvent event) {
-        Map<String, SiteManager> siteManagerMap = ApplicationUtils.getApplicationContext().getBeansOfType(SiteManager.class);
+        Map<String, SiteManager> siteManagerMap = event.getApplicationContext().getBeansOfType(SiteManager.class);
         siteManagerList.addAll(siteManagerMap.values().stream().filter(item -> !(item instanceof DefaultSiteManager)).collect(Collectors.toList()));
         loadSites();
+    }
+
+    void resetSiteData() {
+        this.siteList.clear();
+        this.domainSiteMap.clear();
+        this.pathSiteMap.clear();
     }
 
 }
