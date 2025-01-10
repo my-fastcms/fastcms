@@ -1,11 +1,11 @@
 import vue from '@vitejs/plugin-vue';
-import vueJsx from "@vitejs/plugin-vue-jsx";
+import vueJsx from '@vitejs/plugin-vue-jsx';
 import { resolve } from 'path';
-import { defineConfig, loadEnv, ConfigEnv } from 'vite';
-import vueSetupExtend from 'vite-plugin-vue-setup-extend-plus';
+import { ConfigEnv, UserConfigExport, defineConfig, loadEnv } from 'vite';
 import viteCompression from 'vite-plugin-compression';
+import vueSetupExtend from 'vite-plugin-vue-setup-extend-plus';
+import CKEditorSvgLoader from './CKEditorSvgLoader';
 import { buildConfig } from './src/utils/build';
-import CKEditorSvgLoader from "./CKEditorSvgLoader";
 
 const pathResolve = (dir: string) => {
 	return resolve(__dirname, '.', dir);
@@ -16,17 +16,26 @@ const alias: Record<string, string> = {
 	'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js',
 };
 
-const viteConfig = defineConfig((mode: ConfigEnv) => {
-	const env = loadEnv(mode.mode, process.cwd());
+const viteConfig: UserConfigExport = defineConfig(({ mode }: ConfigEnv) => {
+	const env = loadEnv(mode, process.cwd());
 	return {
-		plugins: [vue(), vueJsx(), CKEditorSvgLoader(), vueSetupExtend(), viteCompression(), JSON.parse(env.VITE_OPEN_CDN) ? buildConfig.cdn() : null],
+		plugins: [
+			vue(),
+			vueJsx(),
+			CKEditorSvgLoader(),
+			vueSetupExtend(),
+			viteCompression(),
+			JSON.parse(env.VITE_OPEN_CDN) ? buildConfig.cdn() : null,
+		].filter(Boolean),
 		root: process.cwd(),
 		resolve: { alias },
-		base: mode.command === 'serve' ? './' : env.VITE_PUBLIC_PATH,
-		optimizeDeps: { exclude: ['vue-demi'] },
+		base: mode === 'serve' ? './' : env.VITE_PUBLIC_PATH,
+		optimizeDeps: {
+			exclude: ['vue-demi'],
+		},
 		server: {
 			host: '0.0.0.0',
-			port: env.VITE_PORT as unknown as number,
+			port: Number(env.VITE_PORT),
 			open: JSON.parse(env.VITE_OPEN),
 			hmr: true,
 			proxy: {
@@ -58,7 +67,14 @@ const viteConfig = defineConfig((mode: ConfigEnv) => {
 				...(JSON.parse(env.VITE_OPEN_CDN) ? { external: buildConfig.external } : {}),
 			},
 		},
-		css: { preprocessorOptions: { css: { charset: false } } },
+		css: {
+			preprocessorOptions: {
+				scss: {
+					additionalData: '@use "sass:math"; @use "sass:color";',
+				},
+			},
+			devSourcemap: true,
+		},
 		define: {
 			__VUE_I18N_LEGACY_API__: JSON.stringify(false),
 			__VUE_I18N_FULL_INSTALL__: JSON.stringify(false),
