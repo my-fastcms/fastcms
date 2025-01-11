@@ -17,18 +17,10 @@
 
 package com.fastcms.web;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableScheduling;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
 /**
  * @author： wjun_java@163.com
  * @date： 2021/10/24
@@ -44,18 +36,7 @@ public class Fastcms {
     private static final Logger log = LoggerFactory.getLogger(Fastcms.class);
 
     public static void main(String[] args) throws UnknownHostException {
-        ConfigurableApplicationContext application = SpringApplication.run(Fastcms.class, args);
-        Environment env = application.getEnvironment();
-        String ip = InetAddress.getLocalHost().getHostAddress();
-        String port = env.getProperty("server.port");
-
-        log.info("\n----------------------------------------------------------\n\t" +
-                "Application FastCMS is running! Access URLs:\n\t" +
-                "Local web site: \t\thttp://localhost:" + port + "/\n\t" +
-                "External web site: \thttp://" + ip + ":" + port + "/\n\t" +
-                "Local admin: \thttp://localhost" + ":" + port + "/fastcms\n\t" +
-                "External admin: \thttp://" + ip + ":" + port + "/fastcms\n\t" +
-                "----------------------------------------------------------");
+        SpringApplication.run(Fastcms.class, args);
     }
 
 }
