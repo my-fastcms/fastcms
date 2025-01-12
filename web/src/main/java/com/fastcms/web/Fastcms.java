@@ -21,7 +21,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
-
 /**
  * @author： wjun_java@163.com
  * @date： 2021/10/24
@@ -34,7 +33,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class Fastcms {
 
-    public static void main(String[] args) {
+    private static final Logger log = LoggerFactory.getLogger(Fastcms.class);
+
+    public static void main(String[] args) throws UnknownHostException {
         SpringApplication.run(Fastcms.class, args);
     }
 

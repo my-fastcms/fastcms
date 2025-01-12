@@ -39,13 +39,17 @@
 		"@ckeditor/ckeditor5-ui": "^38.0.1",
 		"@ckeditor/ckeditor5-utils": "^38.0.1",
 		"@ckeditor/ckeditor5-widget": "^38.0.1",
+		"@codemirror/commands": "^6.7.1",
 		"@codemirror/lang-html": "^6.4.4",
 		"@codemirror/lang-javascript": "^6.1.9",
+		"@codemirror/language": "^6.10.7",
+		"@codemirror/state": "^6.5.0",
 		"@codemirror/theme-one-dark": "^6.1.2",
-		"@element-plus/icons-vue": "^2.1.0",
+		"@codemirror/view": "^6.36.1",
 		"@wangeditor/editor": "^5.1.23",
 		"@wangeditor/editor-for-vue": "^5.1.12",
 		"axios": "^1.3.5",
+		"codemirror": "^6.0.1",
 		"countup.js": "^2.6.0",
 		"cropperjs": "^1.5.13",
 		"echarts": "^5.4.2",
@@ -86,9 +90,9 @@
 		"eslint": "^8.38.0",
 		"eslint-plugin-vue": "^9.10.0",
 		"prettier": "^2.8.7",
-		"sass": "^1.61.0",
+		"sass": "1.63.6",
 		"typescript": "^5.0.4",
-		"vite": "^4.2.1",
+		"vite": "^5.0.0",
 		"vite-plugin-cdn-import": "^0.3.5",
 		"vite-plugin-compression": "^0.5.1",
 		"vite-plugin-vue-setup-extend-plus": "^0.1.0",
@@ -118,5 +122,8 @@
 	"repository": {
 		"type": "git",
 		"url": "https://gitee.com/xjd2020/fastcms.git"
+	},
+	"overrides": {
+		"sass": "1.63.6"
 	}
 }
