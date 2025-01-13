@@ -33,9 +33,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class Fastcms {
 
-    private static final Logger log = LoggerFactory.getLogger(Fastcms.class);
-
-    public static void main(String[] args) throws UnknownHostException {
+    public static void main(String[] args) {
         SpringApplication.run(Fastcms.class, args);
     }
 
