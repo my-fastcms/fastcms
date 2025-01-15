@@ -62,7 +62,7 @@ import java.util.Map;
  * @modifiedBy：
  * @version: 1.0
  */
-@Component("article")
+@Component("articleTag")
 public class ArticleDirective extends BaseDirective {
 
 	private static final String PARAM_ARTICLE_ID = "articleId";
