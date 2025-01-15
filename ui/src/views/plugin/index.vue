@@ -49,7 +49,7 @@
 			:before-close="handleClose"
       @opened="onRowConfig"
 		>
-			<iframe :src="state.pluginConfigUrl" frameborder="0" style="width:100%;height:600px" ref="iframeRef"></iframe>
+			<iframe :src="state.pluginConfigUrl" frameborder="0" style="width:100%;height:calc(100vh - 5px)" ref="iframeRef"></iframe>
 		</el-dialog>
 
 	</div>
